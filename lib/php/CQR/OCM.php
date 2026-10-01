@@ -306,22 +306,40 @@ class OCM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Whether COVARIANCE_DATA's coverage was measured against independent
+    /// reference states.
+    /**
+     * @return sbyte
+     */
+    public function getCOV_CALIBRATION()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \covarianceCalibration::Unspecified;
+    }
+
+    /// Identifier of that calibration evidence (a report or record).
+    public function getCOV_CALIBRATION_REFERENCE()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOCM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(21);
+        $builder->StartObject(23);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OCM
      */
-    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING)
+    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE)
     {
-        $builder->startObject(21);
+        $builder->startObject(23);
         self::addHEADER($builder, $HEADER);
         self::addMETADATA($builder, $METADATA);
         self::addTRAJ_TYPE($builder, $TRAJ_TYPE);
@@ -343,6 +361,8 @@ class OCM extends Table
         self::addCOV_REF_FRAME($builder, $COV_REF_FRAME);
         self::addORB_REVNUM($builder, $ORB_REVNUM);
         self::addORB_AVERAGING($builder, $ORB_AVERAGING);
+        self::addCOV_CALIBRATION($builder, $COV_CALIBRATION);
+        self::addCOV_CALIBRATION_REFERENCE($builder, $COV_CALIBRATION_REFERENCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -699,6 +719,26 @@ class OCM extends Table
     public static function addORB_AVERAGING(FlatBufferBuilder $builder, $ORB_AVERAGING)
     {
         $builder->addOffsetX(20, $ORB_AVERAGING, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addCOV_CALIBRATION(FlatBufferBuilder $builder, $COV_CALIBRATION)
+    {
+        $builder->addSbyteX(21, $COV_CALIBRATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOV_CALIBRATION_REFERENCE(FlatBufferBuilder $builder, $COV_CALIBRATION_REFERENCE)
+    {
+        $builder->addOffsetX(22, $COV_CALIBRATION_REFERENCE, 0);
     }
 
     /**

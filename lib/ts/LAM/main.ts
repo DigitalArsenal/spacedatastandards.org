@@ -12,6 +12,7 @@ export * from './CAT.js';
 export * from './CelestialFrame.js';
 export * from './CelestialFrameWrapper.js';
 export * from './ChainProof.js';
+export * from './covarianceCalibration.js';
 export * from './covarianceMatrixLine.js';
 export * from './CryptoKey.js';
 export * from './CustomFrame.js';

@@ -358,8 +358,25 @@ class OCM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Whether COVARIANCE_DATA's coverage was measured against independent
+    # reference states.
+    # OCM
+    def COV_CALIBRATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Identifier of that calibration evidence (a report or record).
+    # OCM
+    def COV_CALIBRATION_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def OCMStart(builder):
-    builder.StartObject(21)
+    builder.StartObject(23)
 
 def Start(builder):
     OCMStart(builder)
@@ -570,6 +587,18 @@ def OCMAddORB_AVERAGING(builder, ORB_AVERAGING):
 def AddORB_AVERAGING(builder, ORB_AVERAGING):
     OCMAddORB_AVERAGING(builder, ORB_AVERAGING)
 
+def OCMAddCOV_CALIBRATION(builder, COV_CALIBRATION):
+    builder.PrependInt8Slot(21, COV_CALIBRATION, 0)
+
+def AddCOV_CALIBRATION(builder, COV_CALIBRATION):
+    OCMAddCOV_CALIBRATION(builder, COV_CALIBRATION)
+
+def OCMAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(COV_CALIBRATION_REFERENCE), 0)
+
+def AddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE):
+    OCMAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
+
 def OCMEnd(builder):
     return builder.EndObject()
 
@@ -617,6 +646,8 @@ class OCMT(object):
         COV_REF_FRAME = None,
         ORB_REVNUM = 0,
         ORB_AVERAGING = None,
+        COV_CALIBRATION = 0,
+        COV_CALIBRATION_REFERENCE = None,
     ):
         self.HEADER = HEADER  # type: Optional[Header.HeaderT]
         self.METADATA = METADATA  # type: Optional[Metadata.MetadataT]
@@ -639,6 +670,8 @@ class OCMT(object):
         self.COV_REF_FRAME = COV_REF_FRAME  # type: Optional[RFM.RFMT]
         self.ORB_REVNUM = ORB_REVNUM  # type: int
         self.ORB_AVERAGING = ORB_AVERAGING  # type: Optional[str]
+        self.COV_CALIBRATION = COV_CALIBRATION  # type: int
+        self.COV_CALIBRATION_REFERENCE = COV_CALIBRATION_REFERENCE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -729,6 +762,8 @@ class OCMT(object):
             self.COV_REF_FRAME = RFM.RFMT.InitFromObj(OCM.COV_REF_FRAME())
         self.ORB_REVNUM = OCM.ORB_REVNUM()
         self.ORB_AVERAGING = OCM.ORB_AVERAGING()
+        self.COV_CALIBRATION = OCM.COV_CALIBRATION()
+        self.COV_CALIBRATION_REFERENCE = OCM.COV_CALIBRATION_REFERENCE()
 
     # OCMT
     def Pack(self, builder):
@@ -802,6 +837,8 @@ class OCMT(object):
             COV_REF_FRAME = self.COV_REF_FRAME.Pack(builder)
         if self.ORB_AVERAGING is not None:
             ORB_AVERAGING = builder.CreateString(self.ORB_AVERAGING)
+        if self.COV_CALIBRATION_REFERENCE is not None:
+            COV_CALIBRATION_REFERENCE = builder.CreateString(self.COV_CALIBRATION_REFERENCE)
         OCMStart(builder)
         if self.HEADER is not None:
             OCMAddHEADER(builder, HEADER)
@@ -841,5 +878,8 @@ class OCMT(object):
         OCMAddORB_REVNUM(builder, self.ORB_REVNUM)
         if self.ORB_AVERAGING is not None:
             OCMAddORB_AVERAGING(builder, ORB_AVERAGING)
+        OCMAddCOV_CALIBRATION(builder, self.COV_CALIBRATION)
+        if self.COV_CALIBRATION_REFERENCE is not None:
+            OCMAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
         OCM = OCMEnd(builder)
         return OCM

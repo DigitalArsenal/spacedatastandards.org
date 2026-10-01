@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { CAT, CATT } from './CAT.js';
 import { CQRSourceProvenance, CQRSourceProvenanceT } from './CQRSourceProvenance.js';
 import { OCM, OCMT } from './OCM.js';
 import { OEM, OEMT } from './OEM.js';
@@ -51,6 +52,19 @@ export declare class CQRObjectSource implements flatbuffers.IUnpackableObject<CQ
      * True when APOGEE_ALTITUDE_M carries a value; false means absent.
      */
     HAS_APOGEE_ALTITUDE_M(): boolean;
+    /**
+     * Hard-body radius in metres given with the source.
+     */
+    HARD_BODY_RADIUS_M(): number;
+    /**
+     * True when HARD_BODY_RADIUS_M carries a value; false means absent.
+     */
+    HAS_HARD_BODY_RADIUS_M(): boolean;
+    /**
+     * The object's catalog entry. Without a supplied radius, its SIZE, else
+     * its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+     */
+    CATALOG_ENTRY(obj?: CAT): CAT | null;
     static startCQRObjectSource(builder: flatbuffers.Builder): void;
     static addObjectId(builder: flatbuffers.Builder, OBJECT_IDOffset: flatbuffers.Offset): void;
     static addObjectName(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset): void;
@@ -69,6 +83,9 @@ export declare class CQRObjectSource implements flatbuffers.IUnpackableObject<CQ
     static addHasPerigeeAltitudeM(builder: flatbuffers.Builder, HAS_PERIGEE_ALTITUDE_M: boolean): void;
     static addApogeeAltitudeM(builder: flatbuffers.Builder, APOGEE_ALTITUDE_M: number): void;
     static addHasApogeeAltitudeM(builder: flatbuffers.Builder, HAS_APOGEE_ALTITUDE_M: boolean): void;
+    static addHardBodyRadiusM(builder: flatbuffers.Builder, HARD_BODY_RADIUS_M: number): void;
+    static addHasHardBodyRadiusM(builder: flatbuffers.Builder, HAS_HARD_BODY_RADIUS_M: boolean): void;
+    static addCatalogEntry(builder: flatbuffers.Builder, CATALOG_ENTRYOffset: flatbuffers.Offset): void;
     static endCQRObjectSource(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): CQRObjectSourceT;
     unpackTo(_o: CQRObjectSourceT): void;
@@ -91,7 +108,10 @@ export declare class CQRObjectSourceT implements flatbuffers.IGeneratedObject {
     HAS_PERIGEE_ALTITUDE_M: boolean;
     APOGEE_ALTITUDE_M: number;
     HAS_APOGEE_ALTITUDE_M: boolean;
-    constructor(OBJECT_ID?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, NORAD_CATALOG_ID?: number, INSTANCE?: PRWInstanceT | null, SOURCE_HANDLE?: number, PROPAGATOR_PORT_ID?: string | Uint8Array | null, MEAN_ELEMENTS?: OMMT | null, EPHEMERIS?: OEMT | null, COMPREHENSIVE_ORBIT?: OCMT | null, POLYNOMIAL_EPHEMERIS?: PPET | null, TLE_LINES?: PRWTleLinesT | null, PROVENANCE?: CQRSourceProvenanceT | null, SOURCE_EPOCH?: TIMInstantT | null, PERIGEE_ALTITUDE_M?: number, HAS_PERIGEE_ALTITUDE_M?: boolean, APOGEE_ALTITUDE_M?: number, HAS_APOGEE_ALTITUDE_M?: boolean);
+    HARD_BODY_RADIUS_M: number;
+    HAS_HARD_BODY_RADIUS_M: boolean;
+    CATALOG_ENTRY: CATT | null;
+    constructor(OBJECT_ID?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, NORAD_CATALOG_ID?: number, INSTANCE?: PRWInstanceT | null, SOURCE_HANDLE?: number, PROPAGATOR_PORT_ID?: string | Uint8Array | null, MEAN_ELEMENTS?: OMMT | null, EPHEMERIS?: OEMT | null, COMPREHENSIVE_ORBIT?: OCMT | null, POLYNOMIAL_EPHEMERIS?: PPET | null, TLE_LINES?: PRWTleLinesT | null, PROVENANCE?: CQRSourceProvenanceT | null, SOURCE_EPOCH?: TIMInstantT | null, PERIGEE_ALTITUDE_M?: number, HAS_PERIGEE_ALTITUDE_M?: boolean, APOGEE_ALTITUDE_M?: number, HAS_APOGEE_ALTITUDE_M?: boolean, HARD_BODY_RADIUS_M?: number, HAS_HARD_BODY_RADIUS_M?: boolean, CATALOG_ENTRY?: CATT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CQRObjectSource.d.ts.map

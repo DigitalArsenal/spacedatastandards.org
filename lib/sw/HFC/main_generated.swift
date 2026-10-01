@@ -76,6 +76,25 @@ public enum estimatorCategory: Int8, FlatbuffersVectorInitializable, Enum, Verif
 }
 
 
+///  Whether a covariance's coverage was measured against independent reference
+///  states: the share of reference errors inside its confidence regions matched
+///  what the covariance claims, for the regime and prediction age it covers.
+public enum covarianceCalibration: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Calibration not stated
+  case unspecified = 0
+  ///  Not measured against independent reference states, or measured and failed
+  case uncalibrated = 1
+  ///  Measured against independent reference states and passed
+  case calibrated = 2
+
+  public static var max: covarianceCalibration { return .calibrated }
+  public static var min: covarianceCalibration { return .unspecified }
+}
+
+
 public struct Header: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -1445,6 +1464,8 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let COV_REF_FRAME: VOffset = 40
     static let ORB_REVNUM: VOffset = 42
     static let ORB_AVERAGING: VOffset = 44
+    static let COV_CALIBRATION: VOffset = 46
+    static let COV_CALIBRATION_REFERENCE: VOffset = 48
   }
 
   ///  Header section of the OCM.
@@ -1516,7 +1537,13 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
   public var ORB_AVERAGING: String? { let o = _accessor.offset(VT.ORB_AVERAGING); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORB_AVERAGINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORB_AVERAGING) }
-  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
+  ///  Whether COVARIANCE_DATA's coverage was measured against independent
+  ///  reference states.
+  public var COV_CALIBRATION: covarianceCalibration { let o = _accessor.offset(VT.COV_CALIBRATION); return o == 0 ? .unspecified : covarianceCalibration(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Identifier of that calibration evidence (a report or record).
+  public var COV_CALIBRATION_REFERENCE: String? { let o = _accessor.offset(VT.COV_CALIBRATION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_CALIBRATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_CALIBRATION_REFERENCE) }
+  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
   public static func add(HEADER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEADER, at: VT.HEADER) }
   public static func add(METADATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METADATA, at: VT.METADATA) }
   public static func add(TRAJ_TYPE: trajectoryType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAJ_TYPE.rawValue, def: 0, at: VT.TRAJ_TYPE) }
@@ -1538,6 +1565,8 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(COV_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REF_FRAME, at: VT.COV_REF_FRAME) }
   public static func add(ORB_REVNUM: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORB_REVNUM, def: 0, at: VT.ORB_REVNUM) }
   public static func add(ORB_AVERAGING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORB_AVERAGING, at: VT.ORB_AVERAGING) }
+  public static func add(COV_CALIBRATION: covarianceCalibration, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_CALIBRATION.rawValue, def: 0, at: VT.COV_CALIBRATION) }
+  public static func add(COV_CALIBRATION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_CALIBRATION_REFERENCE, at: VT.COV_CALIBRATION_REFERENCE) }
   public static func endOCM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOCM(
     _ fbb: inout FlatBufferBuilder,
@@ -1561,7 +1590,9 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     TRAJ_FRAME_EPOCHOffset TRAJ_FRAME_EPOCH: Offset = Offset(),
     COV_REF_FRAMEOffset COV_REF_FRAME: Offset = Offset(),
     ORB_REVNUM: UInt32 = 0,
-    ORB_AVERAGINGOffset ORB_AVERAGING: Offset = Offset()
+    ORB_AVERAGINGOffset ORB_AVERAGING: Offset = Offset(),
+    COV_CALIBRATION: covarianceCalibration = .unspecified,
+    COV_CALIBRATION_REFERENCEOffset COV_CALIBRATION_REFERENCE: Offset = Offset()
   ) -> Offset {
     let __start = OCM.startOCM(&fbb)
     OCM.add(HEADER: HEADER, &fbb)
@@ -1585,6 +1616,8 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     OCM.add(COV_REF_FRAME: COV_REF_FRAME, &fbb)
     OCM.add(ORB_REVNUM: ORB_REVNUM, &fbb)
     OCM.add(ORB_AVERAGING: ORB_AVERAGING, &fbb)
+    OCM.add(COV_CALIBRATION: COV_CALIBRATION, &fbb)
+    OCM.add(COV_CALIBRATION_REFERENCE: COV_CALIBRATION_REFERENCE, &fbb)
     return OCM.endOCM(&fbb, start: __start)
   }
 
@@ -1611,6 +1644,8 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.COV_REF_FRAME, fieldName: "COV_REF_FRAME", required: false, type: ForwardOffset<RFM>.self)
     try _v.visit(field: VT.ORB_REVNUM, fieldName: "ORB_REVNUM", required: false, type: UInt32.self)
     try _v.visit(field: VT.ORB_AVERAGING, fieldName: "ORB_AVERAGING", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_CALIBRATION, fieldName: "COV_CALIBRATION", required: false, type: covarianceCalibration.self)
+    try _v.visit(field: VT.COV_CALIBRATION_REFERENCE, fieldName: "COV_CALIBRATION_REFERENCE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

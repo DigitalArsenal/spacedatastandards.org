@@ -129,22 +129,52 @@ class CQRProbabilityResult extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrUncertaintyOrigin::UNSPECIFIED;
     }
 
+    /// For a covariance-based probability: whether the covariance's coverage was
+    /// measured against independent reference states. Only CALIBRATED
+    /// covariance supports a probability beyond "conditional on the stated
+    /// assumptions".
+    /**
+     * @return sbyte
+     */
+    public function getCALIBRATION()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \covarianceCalibration::Unspecified;
+    }
+
+    /// Identifier of the calibration evidence (a report or record).
+    public function getCALIBRATION_REFERENCE()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// The correlation assumed between the two objects' errors.
+    /**
+     * @return byte
+     */
+    public function getCROSS_CORRELATION()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrCovarianceCorrelation::UNSPECIFIED;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCQRProbabilityResult(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(9);
+        $builder->StartObject(12);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CQRProbabilityResult
      */
-    public static function createCQRProbabilityResult(FlatBufferBuilder $builder, $PROBABILITY, $ALGORITHM, $CONVERGED, $ITERATIONS, $MAXIMUM_PROBABILITY, $HAS_MAXIMUM_PROBABILITY, $MAHALANOBIS_SQUARED, $HAS_MAHALANOBIS_SQUARED, $UNCERTAINTY_SOURCE)
+    public static function createCQRProbabilityResult(FlatBufferBuilder $builder, $PROBABILITY, $ALGORITHM, $CONVERGED, $ITERATIONS, $MAXIMUM_PROBABILITY, $HAS_MAXIMUM_PROBABILITY, $MAHALANOBIS_SQUARED, $HAS_MAHALANOBIS_SQUARED, $UNCERTAINTY_SOURCE, $CALIBRATION, $CALIBRATION_REFERENCE, $CROSS_CORRELATION)
     {
-        $builder->startObject(9);
+        $builder->startObject(12);
         self::addPROBABILITY($builder, $PROBABILITY);
         self::addALGORITHM($builder, $ALGORITHM);
         self::addCONVERGED($builder, $CONVERGED);
@@ -154,6 +184,9 @@ class CQRProbabilityResult extends Table
         self::addMAHALANOBIS_SQUARED($builder, $MAHALANOBIS_SQUARED);
         self::addHAS_MAHALANOBIS_SQUARED($builder, $HAS_MAHALANOBIS_SQUARED);
         self::addUNCERTAINTY_SOURCE($builder, $UNCERTAINTY_SOURCE);
+        self::addCALIBRATION($builder, $CALIBRATION);
+        self::addCALIBRATION_REFERENCE($builder, $CALIBRATION_REFERENCE);
+        self::addCROSS_CORRELATION($builder, $CROSS_CORRELATION);
         $o = $builder->endObject();
         return $o;
     }
@@ -246,6 +279,36 @@ class CQRProbabilityResult extends Table
     public static function addUNCERTAINTY_SOURCE(FlatBufferBuilder $builder, $UNCERTAINTY_SOURCE)
     {
         $builder->addByteX(8, $UNCERTAINTY_SOURCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addCALIBRATION(FlatBufferBuilder $builder, $CALIBRATION)
+    {
+        $builder->addSbyteX(9, $CALIBRATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCALIBRATION_REFERENCE(FlatBufferBuilder $builder, $CALIBRATION_REFERENCE)
+    {
+        $builder->addOffsetX(10, $CALIBRATION_REFERENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addCROSS_CORRELATION(FlatBufferBuilder $builder, $CROSS_CORRELATION)
+    {
+        $builder->addByteX(11, $CROSS_CORRELATION, 0);
     }
 
     /**

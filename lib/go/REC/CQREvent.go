@@ -539,8 +539,180 @@ func (rcv *CQREvent) MutateHasCombinedRadiusM(n bool) bool {
 	return rcv.MutateHAS_COMBINED_RADIUS_M(n)
 }
 
+/// Each object's hard-body radius in metres and where it came from;
+/// COMBINED_RADIUS_M is their sum.
+func (rcv *CQREvent) PRIMARY_HARD_BODY_RADIUS_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *CQREvent) PrimaryHardBodyRadiusM() float64 {
+	return rcv.PRIMARY_HARD_BODY_RADIUS_M()
+}
+
+/// Each object's hard-body radius in metres and where it came from;
+/// COMBINED_RADIUS_M is their sum.
+func (rcv *CQREvent) MutatePRIMARY_HARD_BODY_RADIUS_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *CQREvent) MutatePrimaryHardBodyRadiusM(n float64) bool {
+	return rcv.MutatePRIMARY_HARD_BODY_RADIUS_M(n)
+}
+
+/// True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+func (rcv *CQREvent) HAS_PRIMARY_HARD_BODY_RADIUS_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *CQREvent) HasPrimaryHardBodyRadiusM() bool {
+	return rcv.HAS_PRIMARY_HARD_BODY_RADIUS_M()
+}
+
+/// True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+func (rcv *CQREvent) MutateHAS_PRIMARY_HARD_BODY_RADIUS_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(60, n)
+}
+
+func (rcv *CQREvent) MutateHasPrimaryHardBodyRadiusM(n bool) bool {
+	return rcv.MutateHAS_PRIMARY_HARD_BODY_RADIUS_M(n)
+}
+
+func (rcv *CQREvent) SECONDARY_HARD_BODY_RADIUS_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *CQREvent) SecondaryHardBodyRadiusM() float64 {
+	return rcv.SECONDARY_HARD_BODY_RADIUS_M()
+}
+
+func (rcv *CQREvent) MutateSECONDARY_HARD_BODY_RADIUS_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *CQREvent) MutateSecondaryHardBodyRadiusM(n float64) bool {
+	return rcv.MutateSECONDARY_HARD_BODY_RADIUS_M(n)
+}
+
+/// True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+func (rcv *CQREvent) HAS_SECONDARY_HARD_BODY_RADIUS_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *CQREvent) HasSecondaryHardBodyRadiusM() bool {
+	return rcv.HAS_SECONDARY_HARD_BODY_RADIUS_M()
+}
+
+/// True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+func (rcv *CQREvent) MutateHAS_SECONDARY_HARD_BODY_RADIUS_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(64, n)
+}
+
+func (rcv *CQREvent) MutateHasSecondaryHardBodyRadiusM(n bool) bool {
+	return rcv.MutateHAS_SECONDARY_HARD_BODY_RADIUS_M(n)
+}
+
+func (rcv *CQREvent) PRIMARY_RADIUS_BASIS() cqrHardBodyRadiusBasis {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return cqrHardBodyRadiusBasis(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *CQREvent) PrimaryRadiusBasis() cqrHardBodyRadiusBasis {
+	return rcv.PRIMARY_RADIUS_BASIS()
+}
+
+func (rcv *CQREvent) MutatePRIMARY_RADIUS_BASIS(n cqrHardBodyRadiusBasis) bool {
+	return rcv._tab.MutateByteSlot(66, byte(n))
+}
+
+func (rcv *CQREvent) MutatePrimaryRadiusBasis(n cqrHardBodyRadiusBasis) bool {
+	return rcv.MutatePRIMARY_RADIUS_BASIS(n)
+}
+
+func (rcv *CQREvent) SECONDARY_RADIUS_BASIS() cqrHardBodyRadiusBasis {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return cqrHardBodyRadiusBasis(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *CQREvent) SecondaryRadiusBasis() cqrHardBodyRadiusBasis {
+	return rcv.SECONDARY_RADIUS_BASIS()
+}
+
+func (rcv *CQREvent) MutateSECONDARY_RADIUS_BASIS(n cqrHardBodyRadiusBasis) bool {
+	return rcv._tab.MutateByteSlot(68, byte(n))
+}
+
+func (rcv *CQREvent) MutateSecondaryRadiusBasis(n cqrHardBodyRadiusBasis) bool {
+	return rcv.MutateSECONDARY_RADIUS_BASIS(n)
+}
+
+/// Where each object's position covariance came from; NONE means the event
+/// carries no covariance-based quantity for it.
+func (rcv *CQREvent) PRIMARY_COVARIANCE_BASIS() cqrCovarianceBasis {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return cqrCovarianceBasis(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *CQREvent) PrimaryCovarianceBasis() cqrCovarianceBasis {
+	return rcv.PRIMARY_COVARIANCE_BASIS()
+}
+
+/// Where each object's position covariance came from; NONE means the event
+/// carries no covariance-based quantity for it.
+func (rcv *CQREvent) MutatePRIMARY_COVARIANCE_BASIS(n cqrCovarianceBasis) bool {
+	return rcv._tab.MutateByteSlot(70, byte(n))
+}
+
+func (rcv *CQREvent) MutatePrimaryCovarianceBasis(n cqrCovarianceBasis) bool {
+	return rcv.MutatePRIMARY_COVARIANCE_BASIS(n)
+}
+
+func (rcv *CQREvent) SECONDARY_COVARIANCE_BASIS() cqrCovarianceBasis {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return cqrCovarianceBasis(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *CQREvent) SecondaryCovarianceBasis() cqrCovarianceBasis {
+	return rcv.SECONDARY_COVARIANCE_BASIS()
+}
+
+func (rcv *CQREvent) MutateSECONDARY_COVARIANCE_BASIS(n cqrCovarianceBasis) bool {
+	return rcv._tab.MutateByteSlot(72, byte(n))
+}
+
+func (rcv *CQREvent) MutateSecondaryCovarianceBasis(n cqrCovarianceBasis) bool {
+	return rcv.MutateSECONDARY_COVARIANCE_BASIS(n)
+}
+
 func CQREventStart(builder *flatbuffers.Builder) {
-	builder.StartObject(27)
+	builder.StartObject(35)
 }
 func CQREventAddPRIMARY_ID(builder *flatbuffers.Builder, PRIMARY_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PRIMARY_ID), 0)
@@ -703,6 +875,54 @@ func CQREventAddHAS_COMBINED_RADIUS_M(builder *flatbuffers.Builder, HAS_COMBINED
 }
 func CQREventAddHasCombinedRadiusM(builder *flatbuffers.Builder, HAS_COMBINED_RADIUS_M bool) {
 	CQREventAddHAS_COMBINED_RADIUS_M(builder, HAS_COMBINED_RADIUS_M)
+}
+func CQREventAddPRIMARY_HARD_BODY_RADIUS_M(builder *flatbuffers.Builder, PRIMARY_HARD_BODY_RADIUS_M float64) {
+	builder.PrependFloat64Slot(27, PRIMARY_HARD_BODY_RADIUS_M, 0.0)
+}
+func CQREventAddPrimaryHardBodyRadiusM(builder *flatbuffers.Builder, PRIMARY_HARD_BODY_RADIUS_M float64) {
+	CQREventAddPRIMARY_HARD_BODY_RADIUS_M(builder, PRIMARY_HARD_BODY_RADIUS_M)
+}
+func CQREventAddHAS_PRIMARY_HARD_BODY_RADIUS_M(builder *flatbuffers.Builder, HAS_PRIMARY_HARD_BODY_RADIUS_M bool) {
+	builder.PrependBoolSlot(28, HAS_PRIMARY_HARD_BODY_RADIUS_M, false)
+}
+func CQREventAddHasPrimaryHardBodyRadiusM(builder *flatbuffers.Builder, HAS_PRIMARY_HARD_BODY_RADIUS_M bool) {
+	CQREventAddHAS_PRIMARY_HARD_BODY_RADIUS_M(builder, HAS_PRIMARY_HARD_BODY_RADIUS_M)
+}
+func CQREventAddSECONDARY_HARD_BODY_RADIUS_M(builder *flatbuffers.Builder, SECONDARY_HARD_BODY_RADIUS_M float64) {
+	builder.PrependFloat64Slot(29, SECONDARY_HARD_BODY_RADIUS_M, 0.0)
+}
+func CQREventAddSecondaryHardBodyRadiusM(builder *flatbuffers.Builder, SECONDARY_HARD_BODY_RADIUS_M float64) {
+	CQREventAddSECONDARY_HARD_BODY_RADIUS_M(builder, SECONDARY_HARD_BODY_RADIUS_M)
+}
+func CQREventAddHAS_SECONDARY_HARD_BODY_RADIUS_M(builder *flatbuffers.Builder, HAS_SECONDARY_HARD_BODY_RADIUS_M bool) {
+	builder.PrependBoolSlot(30, HAS_SECONDARY_HARD_BODY_RADIUS_M, false)
+}
+func CQREventAddHasSecondaryHardBodyRadiusM(builder *flatbuffers.Builder, HAS_SECONDARY_HARD_BODY_RADIUS_M bool) {
+	CQREventAddHAS_SECONDARY_HARD_BODY_RADIUS_M(builder, HAS_SECONDARY_HARD_BODY_RADIUS_M)
+}
+func CQREventAddPRIMARY_RADIUS_BASIS(builder *flatbuffers.Builder, PRIMARY_RADIUS_BASIS cqrHardBodyRadiusBasis) {
+	builder.PrependByteSlot(31, byte(PRIMARY_RADIUS_BASIS), 0)
+}
+func CQREventAddPrimaryRadiusBasis(builder *flatbuffers.Builder, PRIMARY_RADIUS_BASIS cqrHardBodyRadiusBasis) {
+	CQREventAddPRIMARY_RADIUS_BASIS(builder, PRIMARY_RADIUS_BASIS)
+}
+func CQREventAddSECONDARY_RADIUS_BASIS(builder *flatbuffers.Builder, SECONDARY_RADIUS_BASIS cqrHardBodyRadiusBasis) {
+	builder.PrependByteSlot(32, byte(SECONDARY_RADIUS_BASIS), 0)
+}
+func CQREventAddSecondaryRadiusBasis(builder *flatbuffers.Builder, SECONDARY_RADIUS_BASIS cqrHardBodyRadiusBasis) {
+	CQREventAddSECONDARY_RADIUS_BASIS(builder, SECONDARY_RADIUS_BASIS)
+}
+func CQREventAddPRIMARY_COVARIANCE_BASIS(builder *flatbuffers.Builder, PRIMARY_COVARIANCE_BASIS cqrCovarianceBasis) {
+	builder.PrependByteSlot(33, byte(PRIMARY_COVARIANCE_BASIS), 0)
+}
+func CQREventAddPrimaryCovarianceBasis(builder *flatbuffers.Builder, PRIMARY_COVARIANCE_BASIS cqrCovarianceBasis) {
+	CQREventAddPRIMARY_COVARIANCE_BASIS(builder, PRIMARY_COVARIANCE_BASIS)
+}
+func CQREventAddSECONDARY_COVARIANCE_BASIS(builder *flatbuffers.Builder, SECONDARY_COVARIANCE_BASIS cqrCovarianceBasis) {
+	builder.PrependByteSlot(34, byte(SECONDARY_COVARIANCE_BASIS), 0)
+}
+func CQREventAddSecondaryCovarianceBasis(builder *flatbuffers.Builder, SECONDARY_COVARIANCE_BASIS cqrCovarianceBasis) {
+	CQREventAddSECONDARY_COVARIANCE_BASIS(builder, SECONDARY_COVARIANCE_BASIS)
 }
 func CQREventEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

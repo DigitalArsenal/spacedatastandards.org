@@ -4277,6 +4277,30 @@
         }
       }
     },
+    "covarianceCalibration": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Uncalibrated",
+        "Calibrated"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Calibration not stated"
+        },
+        "Uncalibrated": {
+          "value": 1,
+          "description": "Not measured against independent reference states, or measured and failed"
+        },
+        "Calibrated": {
+          "value": 2,
+          "description": "Measured against independent reference states and passed"
+        }
+      }
+    },
     "KeyType": {
       "type": "string",
       "enum": [
@@ -4389,6 +4413,100 @@
         },
         "MAXIMUM_PROBABILITY_ONLY": {
           "value": 3
+        }
+      }
+    },
+    "cqrHardBodyRadiusBasis": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SUPPLIED",
+        "CATALOG_SIZE",
+        "RADAR_CROSS_SECTION",
+        "REQUEST_DEFAULT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "SUPPLIED": {
+          "value": 1,
+          "description": "Given with the source, by an operator or the requester."
+        },
+        "CATALOG_SIZE": {
+          "value": 2,
+          "description": "Half the catalog entry's characteristic size (CAT SIZE)."
+        },
+        "RADAR_CROSS_SECTION": {
+          "value": 3,
+          "description": "Radius of a sphere of the catalog entry's radar cross section, sqrt(RCS / pi): a radar measure, not a physical size."
+        },
+        "REQUEST_DEFAULT": {
+          "value": 4,
+          "description": "Half the request's COMBINED_RADIUS_M: no object-specific value."
+        }
+      }
+    },
+    "cqrCovarianceBasis": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NONE",
+        "SOURCE_EPHEMERIS",
+        "CONJUNCTION_MESSAGE",
+        "ORBIT_DETERMINATION",
+        "EMPIRICAL_MODEL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "NONE": {
+          "value": 1,
+          "description": "None: the source supplied no covariance (an element set carries none)."
+        },
+        "SOURCE_EPHEMERIS": {
+          "value": 2,
+          "description": "The source's ephemeris or orbit message (OEM or OCM covariance)."
+        },
+        "CONJUNCTION_MESSAGE": {
+          "value": 3,
+          "description": "A conjunction data message."
+        },
+        "ORBIT_DETERMINATION": {
+          "value": 4,
+          "description": "The formal covariance of an orbit-determination fit."
+        },
+        "EMPIRICAL_MODEL": {
+          "value": 5,
+          "description": "An empirical prediction-error model for the source's element sets."
+        }
+      }
+    },
+    "cqrCovarianceCorrelation": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "INDEPENDENT",
+        "SUPPLIED_CROSS_COVARIANCE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "INDEPENDENT": {
+          "value": 1,
+          "description": "Independent errors: the combined covariance is the sum of the two."
+        },
+        "SUPPLIED_CROSS_COVARIANCE": {
+          "value": 2,
+          "description": "A cross covariance was supplied and used."
         }
       }
     },
@@ -17178,6 +17296,32 @@
           "type": "string",
           "description": "For element sets: OSCULATING, or the mean-element theory used (BROUWER,\nKOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.",
           "x-flatbuffer-type": "string"
+        },
+        "COV_CALIBRATION": {
+          "$ref": "#/definitions/covarianceCalibration",
+          "description": "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Calibration not stated"
+            },
+            "Uncalibrated": {
+              "value": 1,
+              "description": "Not measured against independent reference states, or measured and failed"
+            },
+            "Calibrated": {
+              "value": 2,
+              "description": "Measured against independent reference states and passed"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "COV_CALIBRATION_REFERENCE": {
+          "type": "string",
+          "description": "Identifier of that calibration evidence (a report or record).",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false
@@ -18127,6 +18271,22 @@
           "description": "True when APOGEE_ALTITUDE_M carries a value; false means absent.",
           "x-flatbuffer-type": "bool",
           "x-flatbuffer-default": "false"
+        },
+        "HARD_BODY_RADIUS_M": {
+          "type": "number",
+          "description": "Hard-body radius in metres given with the source.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_HARD_BODY_RADIUS_M": {
+          "type": "boolean",
+          "description": "True when HARD_BODY_RADIUS_M carries a value; false means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "CATALOG_ENTRY": {
+          "$ref": "#/definitions/CAT",
+          "description": "The object's catalog entry. Without a supplied radius, its SIZE, else\nits RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).",
+          "x-flatbuffer-type": "CAT"
         }
       },
       "required": [
@@ -18397,6 +18557,52 @@
             },
             "MAXIMUM_PROBABILITY_ONLY": {
               "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CALIBRATION": {
+          "$ref": "#/definitions/covarianceCalibration",
+          "description": "For a covariance-based probability: whether the covariance's coverage was\nmeasured against independent reference states. Only CALIBRATED\ncovariance supports a probability beyond \"conditional on the stated\nassumptions\".",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Calibration not stated"
+            },
+            "Uncalibrated": {
+              "value": 1,
+              "description": "Not measured against independent reference states, or measured and failed"
+            },
+            "Calibrated": {
+              "value": 2,
+              "description": "Measured against independent reference states and passed"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "CALIBRATION_REFERENCE": {
+          "type": "string",
+          "description": "Identifier of the calibration evidence (a report or record).",
+          "x-flatbuffer-type": "string"
+        },
+        "CROSS_CORRELATION": {
+          "$ref": "#/definitions/cqrCovarianceCorrelation",
+          "description": "The correlation assumed between the two objects' errors.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "INDEPENDENT": {
+              "value": 1,
+              "description": "Independent errors: the combined covariance is the sum of the two."
+            },
+            "SUPPLIED_CROSS_COVARIANCE": {
+              "value": 2,
+              "description": "A cross covariance was supplied and used."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -18698,6 +18904,144 @@
           "description": "True when COMBINED_RADIUS_M carries a value; false means absent.",
           "x-flatbuffer-type": "bool",
           "x-flatbuffer-default": "false"
+        },
+        "PRIMARY_HARD_BODY_RADIUS_M": {
+          "type": "number",
+          "description": "Each object's hard-body radius in metres and where it came from;\nCOMBINED_RADIUS_M is their sum.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_PRIMARY_HARD_BODY_RADIUS_M": {
+          "type": "boolean",
+          "description": "True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "SECONDARY_HARD_BODY_RADIUS_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_SECONDARY_HARD_BODY_RADIUS_M": {
+          "type": "boolean",
+          "description": "True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "PRIMARY_RADIUS_BASIS": {
+          "$ref": "#/definitions/cqrHardBodyRadiusBasis",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "SUPPLIED": {
+              "value": 1,
+              "description": "Given with the source, by an operator or the requester."
+            },
+            "CATALOG_SIZE": {
+              "value": 2,
+              "description": "Half the catalog entry's characteristic size (CAT SIZE)."
+            },
+            "RADAR_CROSS_SECTION": {
+              "value": 3,
+              "description": "Radius of a sphere of the catalog entry's radar cross section, sqrt(RCS / pi): a radar measure, not a physical size."
+            },
+            "REQUEST_DEFAULT": {
+              "value": 4,
+              "description": "Half the request's COMBINED_RADIUS_M: no object-specific value."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SECONDARY_RADIUS_BASIS": {
+          "$ref": "#/definitions/cqrHardBodyRadiusBasis",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "SUPPLIED": {
+              "value": 1,
+              "description": "Given with the source, by an operator or the requester."
+            },
+            "CATALOG_SIZE": {
+              "value": 2,
+              "description": "Half the catalog entry's characteristic size (CAT SIZE)."
+            },
+            "RADAR_CROSS_SECTION": {
+              "value": 3,
+              "description": "Radius of a sphere of the catalog entry's radar cross section, sqrt(RCS / pi): a radar measure, not a physical size."
+            },
+            "REQUEST_DEFAULT": {
+              "value": 4,
+              "description": "Half the request's COMBINED_RADIUS_M: no object-specific value."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PRIMARY_COVARIANCE_BASIS": {
+          "$ref": "#/definitions/cqrCovarianceBasis",
+          "description": "Where each object's position covariance came from; NONE means the event\ncarries no covariance-based quantity for it.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NONE": {
+              "value": 1,
+              "description": "None: the source supplied no covariance (an element set carries none)."
+            },
+            "SOURCE_EPHEMERIS": {
+              "value": 2,
+              "description": "The source's ephemeris or orbit message (OEM or OCM covariance)."
+            },
+            "CONJUNCTION_MESSAGE": {
+              "value": 3,
+              "description": "A conjunction data message."
+            },
+            "ORBIT_DETERMINATION": {
+              "value": 4,
+              "description": "The formal covariance of an orbit-determination fit."
+            },
+            "EMPIRICAL_MODEL": {
+              "value": 5,
+              "description": "An empirical prediction-error model for the source's element sets."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SECONDARY_COVARIANCE_BASIS": {
+          "$ref": "#/definitions/cqrCovarianceBasis",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NONE": {
+              "value": 1,
+              "description": "None: the source supplied no covariance (an element set carries none)."
+            },
+            "SOURCE_EPHEMERIS": {
+              "value": 2,
+              "description": "The source's ephemeris or orbit message (OEM or OCM covariance)."
+            },
+            "CONJUNCTION_MESSAGE": {
+              "value": 3,
+              "description": "A conjunction data message."
+            },
+            "ORBIT_DETERMINATION": {
+              "value": 4,
+              "description": "The formal covariance of an orbit-determination fit."
+            },
+            "EMPIRICAL_MODEL": {
+              "value": 5,
+              "description": "An empirical prediction-error model for the source's element sets."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
         }
       },
       "required": [

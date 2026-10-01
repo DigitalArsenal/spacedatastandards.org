@@ -99,8 +99,35 @@ class CQRProbabilityResult(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # For a covariance-based probability: whether the covariance's coverage was
+    # measured against independent reference states. Only CALIBRATED
+    # covariance supports a probability beyond "conditional on the stated
+    # assumptions".
+    # CQRProbabilityResult
+    def CALIBRATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Identifier of the calibration evidence (a report or record).
+    # CQRProbabilityResult
+    def CALIBRATION_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # The correlation assumed between the two objects' errors.
+    # CQRProbabilityResult
+    def CROSS_CORRELATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
 def CQRProbabilityResultStart(builder):
-    builder.StartObject(9)
+    builder.StartObject(12)
 
 def Start(builder):
     CQRProbabilityResultStart(builder)
@@ -159,6 +186,24 @@ def CQRProbabilityResultAddUNCERTAINTY_SOURCE(builder, UNCERTAINTY_SOURCE):
 def AddUNCERTAINTY_SOURCE(builder, UNCERTAINTY_SOURCE):
     CQRProbabilityResultAddUNCERTAINTY_SOURCE(builder, UNCERTAINTY_SOURCE)
 
+def CQRProbabilityResultAddCALIBRATION(builder, CALIBRATION):
+    builder.PrependInt8Slot(9, CALIBRATION, 0)
+
+def AddCALIBRATION(builder, CALIBRATION):
+    CQRProbabilityResultAddCALIBRATION(builder, CALIBRATION)
+
+def CQRProbabilityResultAddCALIBRATION_REFERENCE(builder, CALIBRATION_REFERENCE):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(CALIBRATION_REFERENCE), 0)
+
+def AddCALIBRATION_REFERENCE(builder, CALIBRATION_REFERENCE):
+    CQRProbabilityResultAddCALIBRATION_REFERENCE(builder, CALIBRATION_REFERENCE)
+
+def CQRProbabilityResultAddCROSS_CORRELATION(builder, CROSS_CORRELATION):
+    builder.PrependUint8Slot(11, CROSS_CORRELATION, 0)
+
+def AddCROSS_CORRELATION(builder, CROSS_CORRELATION):
+    CQRProbabilityResultAddCROSS_CORRELATION(builder, CROSS_CORRELATION)
+
 def CQRProbabilityResultEnd(builder):
     return builder.EndObject()
 
@@ -180,6 +225,9 @@ class CQRProbabilityResultT(object):
         MAHALANOBIS_SQUARED = 0.0,
         HAS_MAHALANOBIS_SQUARED = False,
         UNCERTAINTY_SOURCE = 0,
+        CALIBRATION = 0,
+        CALIBRATION_REFERENCE = None,
+        CROSS_CORRELATION = 0,
     ):
         self.PROBABILITY = PROBABILITY  # type: float
         self.ALGORITHM = ALGORITHM  # type: int
@@ -190,6 +238,9 @@ class CQRProbabilityResultT(object):
         self.MAHALANOBIS_SQUARED = MAHALANOBIS_SQUARED  # type: float
         self.HAS_MAHALANOBIS_SQUARED = HAS_MAHALANOBIS_SQUARED  # type: bool
         self.UNCERTAINTY_SOURCE = UNCERTAINTY_SOURCE  # type: int
+        self.CALIBRATION = CALIBRATION  # type: int
+        self.CALIBRATION_REFERENCE = CALIBRATION_REFERENCE  # type: Optional[str]
+        self.CROSS_CORRELATION = CROSS_CORRELATION  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -221,9 +272,14 @@ class CQRProbabilityResultT(object):
         self.MAHALANOBIS_SQUARED = CQRProbabilityResult.MAHALANOBIS_SQUARED()
         self.HAS_MAHALANOBIS_SQUARED = CQRProbabilityResult.HAS_MAHALANOBIS_SQUARED()
         self.UNCERTAINTY_SOURCE = CQRProbabilityResult.UNCERTAINTY_SOURCE()
+        self.CALIBRATION = CQRProbabilityResult.CALIBRATION()
+        self.CALIBRATION_REFERENCE = CQRProbabilityResult.CALIBRATION_REFERENCE()
+        self.CROSS_CORRELATION = CQRProbabilityResult.CROSS_CORRELATION()
 
     # CQRProbabilityResultT
     def Pack(self, builder):
+        if self.CALIBRATION_REFERENCE is not None:
+            CALIBRATION_REFERENCE = builder.CreateString(self.CALIBRATION_REFERENCE)
         CQRProbabilityResultStart(builder)
         CQRProbabilityResultAddPROBABILITY(builder, self.PROBABILITY)
         CQRProbabilityResultAddALGORITHM(builder, self.ALGORITHM)
@@ -234,5 +290,9 @@ class CQRProbabilityResultT(object):
         CQRProbabilityResultAddMAHALANOBIS_SQUARED(builder, self.MAHALANOBIS_SQUARED)
         CQRProbabilityResultAddHAS_MAHALANOBIS_SQUARED(builder, self.HAS_MAHALANOBIS_SQUARED)
         CQRProbabilityResultAddUNCERTAINTY_SOURCE(builder, self.UNCERTAINTY_SOURCE)
+        CQRProbabilityResultAddCALIBRATION(builder, self.CALIBRATION)
+        if self.CALIBRATION_REFERENCE is not None:
+            CQRProbabilityResultAddCALIBRATION_REFERENCE(builder, CALIBRATION_REFERENCE)
+        CQRProbabilityResultAddCROSS_CORRELATION(builder, self.CROSS_CORRELATION)
         CQRProbabilityResult = CQRProbabilityResultEnd(builder)
         return CQRProbabilityResult

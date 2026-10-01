@@ -320,6 +320,29 @@ class OCM : Table() {
         }
     val orbAveragingAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
     fun orbAveragingInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
+    /**
+     * Whether COVARIANCE_DATA's coverage was measured against independent
+     * reference states.
+     */
+    val covCalibration : Byte
+        get() {
+            val o = __offset(46)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Identifier of that calibration evidence (a report or record).
+     */
+    val covCalibrationReference : String?
+        get() {
+            val o = __offset(48)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val covCalibrationReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun covCalibrationReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOCM(_bb: ByteBuffer): OCM = getRootAsOCM(_bb, OCM())
@@ -328,9 +351,10 @@ class OCM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OCM")
-        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int) : Int {
-            builder.startTable(21)
+        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int) : Int {
+            builder.startTable(23)
             addSTATESTEPSIZE(builder, stateStepSize)
+            addCOVCALIBRATIONREFERENCE(builder, covCalibrationReferenceOffset)
             addORBAVERAGING(builder, orbAveragingOffset)
             addORBREVNUM(builder, orbRevnum)
             addCOVREFFRAME(builder, covRefFrameOffset)
@@ -349,11 +373,12 @@ class OCM : Table() {
             addTRAJTYPEDESCRIPTION(builder, trajTypeDescriptionOffset)
             addMETADATA(builder, metadataOffset)
             addHEADER(builder, headerOffset)
+            addCOVCALIBRATION(builder, covCalibration)
             addSTATEVECTORSIZE(builder, stateVectorSize)
             addTRAJTYPE(builder, trajType)
             return endOCM(builder)
         }
-        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(21)
+        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(23)
         fun addHEADER(builder: FlatBufferBuilder, header: Int) = builder.addOffset(0, header, 0)
         fun addMETADATA(builder: FlatBufferBuilder, metadata: Int) = builder.addOffset(1, metadata, 0)
         fun addTRAJTYPE(builder: FlatBufferBuilder, trajType: Byte) = builder.addByte(2, trajType, 0)
@@ -423,6 +448,8 @@ class OCM : Table() {
         fun addCOVREFFRAME(builder: FlatBufferBuilder, covRefFrame: Int) = builder.addOffset(18, covRefFrame, 0)
         fun addORBREVNUM(builder: FlatBufferBuilder, orbRevnum: UInt) = builder.addInt(19, orbRevnum.toInt(), 0)
         fun addORBAVERAGING(builder: FlatBufferBuilder, orbAveraging: Int) = builder.addOffset(20, orbAveraging, 0)
+        fun addCOVCALIBRATION(builder: FlatBufferBuilder, covCalibration: Byte) = builder.addByte(21, covCalibration, 0)
+        fun addCOVCALIBRATIONREFERENCE(builder: FlatBufferBuilder, covCalibrationReference: Int) = builder.addOffset(22, covCalibrationReference, 0)
         fun endOCM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

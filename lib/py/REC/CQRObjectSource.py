@@ -187,8 +187,37 @@ class CQRObjectSource(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Hard-body radius in metres given with the source.
+    # CQRObjectSource
+    def HARD_BODY_RADIUS_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True when HARD_BODY_RADIUS_M carries a value; false means absent.
+    # CQRObjectSource
+    def HAS_HARD_BODY_RADIUS_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # The object's catalog entry. Without a supplied radius, its SIZE, else
+    # its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+    # CQRObjectSource
+    def CATALOG_ENTRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CAT import CAT
+            obj = CAT()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def CQRObjectSourceStart(builder):
-    builder.StartObject(17)
+    builder.StartObject(20)
 
 def Start(builder):
     CQRObjectSourceStart(builder)
@@ -295,12 +324,31 @@ def CQRObjectSourceAddHAS_APOGEE_ALTITUDE_M(builder, HAS_APOGEE_ALTITUDE_M):
 def AddHAS_APOGEE_ALTITUDE_M(builder, HAS_APOGEE_ALTITUDE_M):
     CQRObjectSourceAddHAS_APOGEE_ALTITUDE_M(builder, HAS_APOGEE_ALTITUDE_M)
 
+def CQRObjectSourceAddHARD_BODY_RADIUS_M(builder, HARD_BODY_RADIUS_M):
+    builder.PrependFloat64Slot(17, HARD_BODY_RADIUS_M, 0.0)
+
+def AddHARD_BODY_RADIUS_M(builder, HARD_BODY_RADIUS_M):
+    CQRObjectSourceAddHARD_BODY_RADIUS_M(builder, HARD_BODY_RADIUS_M)
+
+def CQRObjectSourceAddHAS_HARD_BODY_RADIUS_M(builder, HAS_HARD_BODY_RADIUS_M):
+    builder.PrependBoolSlot(18, HAS_HARD_BODY_RADIUS_M, 0)
+
+def AddHAS_HARD_BODY_RADIUS_M(builder, HAS_HARD_BODY_RADIUS_M):
+    CQRObjectSourceAddHAS_HARD_BODY_RADIUS_M(builder, HAS_HARD_BODY_RADIUS_M)
+
+def CQRObjectSourceAddCATALOG_ENTRY(builder, CATALOG_ENTRY):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(CATALOG_ENTRY), 0)
+
+def AddCATALOG_ENTRY(builder, CATALOG_ENTRY):
+    CQRObjectSourceAddCATALOG_ENTRY(builder, CATALOG_ENTRY)
+
 def CQRObjectSourceEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return CQRObjectSourceEnd(builder)
 
+import CAT
 import CQRSourceProvenance
 import OCM
 import OEM
@@ -336,6 +384,9 @@ class CQRObjectSourceT(object):
         HAS_PERIGEE_ALTITUDE_M = False,
         APOGEE_ALTITUDE_M = 0.0,
         HAS_APOGEE_ALTITUDE_M = False,
+        HARD_BODY_RADIUS_M = 0.0,
+        HAS_HARD_BODY_RADIUS_M = False,
+        CATALOG_ENTRY = None,
     ):
         self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
         self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
@@ -354,6 +405,9 @@ class CQRObjectSourceT(object):
         self.HAS_PERIGEE_ALTITUDE_M = HAS_PERIGEE_ALTITUDE_M  # type: bool
         self.APOGEE_ALTITUDE_M = APOGEE_ALTITUDE_M  # type: float
         self.HAS_APOGEE_ALTITUDE_M = HAS_APOGEE_ALTITUDE_M  # type: bool
+        self.HARD_BODY_RADIUS_M = HARD_BODY_RADIUS_M  # type: float
+        self.HAS_HARD_BODY_RADIUS_M = HAS_HARD_BODY_RADIUS_M  # type: bool
+        self.CATALOG_ENTRY = CATALOG_ENTRY  # type: Optional[CAT.CATT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -401,6 +455,10 @@ class CQRObjectSourceT(object):
         self.HAS_PERIGEE_ALTITUDE_M = CQRObjectSource.HAS_PERIGEE_ALTITUDE_M()
         self.APOGEE_ALTITUDE_M = CQRObjectSource.APOGEE_ALTITUDE_M()
         self.HAS_APOGEE_ALTITUDE_M = CQRObjectSource.HAS_APOGEE_ALTITUDE_M()
+        self.HARD_BODY_RADIUS_M = CQRObjectSource.HARD_BODY_RADIUS_M()
+        self.HAS_HARD_BODY_RADIUS_M = CQRObjectSource.HAS_HARD_BODY_RADIUS_M()
+        if CQRObjectSource.CATALOG_ENTRY() is not None:
+            self.CATALOG_ENTRY = CAT.CATT.InitFromObj(CQRObjectSource.CATALOG_ENTRY())
 
     # CQRObjectSourceT
     def Pack(self, builder):
@@ -426,6 +484,8 @@ class CQRObjectSourceT(object):
             PROVENANCE = self.PROVENANCE.Pack(builder)
         if self.SOURCE_EPOCH is not None:
             SOURCE_EPOCH = self.SOURCE_EPOCH.Pack(builder)
+        if self.CATALOG_ENTRY is not None:
+            CATALOG_ENTRY = self.CATALOG_ENTRY.Pack(builder)
         CQRObjectSourceStart(builder)
         if self.OBJECT_ID is not None:
             CQRObjectSourceAddOBJECT_ID(builder, OBJECT_ID)
@@ -455,5 +515,9 @@ class CQRObjectSourceT(object):
         CQRObjectSourceAddHAS_PERIGEE_ALTITUDE_M(builder, self.HAS_PERIGEE_ALTITUDE_M)
         CQRObjectSourceAddAPOGEE_ALTITUDE_M(builder, self.APOGEE_ALTITUDE_M)
         CQRObjectSourceAddHAS_APOGEE_ALTITUDE_M(builder, self.HAS_APOGEE_ALTITUDE_M)
+        CQRObjectSourceAddHARD_BODY_RADIUS_M(builder, self.HARD_BODY_RADIUS_M)
+        CQRObjectSourceAddHAS_HARD_BODY_RADIUS_M(builder, self.HAS_HARD_BODY_RADIUS_M)
+        if self.CATALOG_ENTRY is not None:
+            CQRObjectSourceAddCATALOG_ENTRY(builder, CATALOG_ENTRY)
         CQRObjectSource = CQRObjectSourceEnd(builder)
         return CQRObjectSource

@@ -73,6 +73,20 @@ public final class CQRObjectSource extends com.google.flatbuffers.Table {
    * True when APOGEE_ALTITUDE_M carries a value; false means absent.
    */
   public boolean HAS_APOGEE_ALTITUDE_M() { int o = __offset(36); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Hard-body radius in metres given with the source.
+   */
+  public double HARD_BODY_RADIUS_M() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when HARD_BODY_RADIUS_M carries a value; false means absent.
+   */
+  public boolean HAS_HARD_BODY_RADIUS_M() { int o = __offset(40); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * The object's catalog entry. Without a supplied radius, its SIZE, else
+   * its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+   */
+  public CAT CATALOG_ENTRY() { return CATALOG_ENTRY(new CAT()); }
+  public CAT CATALOG_ENTRY(CAT obj) { int o = __offset(42); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createCQRObjectSource(FlatBufferBuilder builder,
       int OBJECT_IDOffset,
@@ -91,10 +105,15 @@ public final class CQRObjectSource extends com.google.flatbuffers.Table {
       double PERIGEE_ALTITUDE_M,
       boolean HAS_PERIGEE_ALTITUDE_M,
       double APOGEE_ALTITUDE_M,
-      boolean HAS_APOGEE_ALTITUDE_M) {
-    builder.startTable(17);
+      boolean HAS_APOGEE_ALTITUDE_M,
+      double HARD_BODY_RADIUS_M,
+      boolean HAS_HARD_BODY_RADIUS_M,
+      int CATALOG_ENTRYOffset) {
+    builder.startTable(20);
+    CQRObjectSource.addHardBodyRadiusM(builder, HARD_BODY_RADIUS_M);
     CQRObjectSource.addApogeeAltitudeM(builder, APOGEE_ALTITUDE_M);
     CQRObjectSource.addPerigeeAltitudeM(builder, PERIGEE_ALTITUDE_M);
+    CQRObjectSource.addCatalogEntry(builder, CATALOG_ENTRYOffset);
     CQRObjectSource.addSourceEpoch(builder, SOURCE_EPOCHOffset);
     CQRObjectSource.addProvenance(builder, PROVENANCEOffset);
     CQRObjectSource.addTleLines(builder, TLE_LINESOffset);
@@ -108,12 +127,13 @@ public final class CQRObjectSource extends com.google.flatbuffers.Table {
     CQRObjectSource.addNoradCatalogId(builder, NORAD_CATALOG_ID);
     CQRObjectSource.addObjectName(builder, OBJECT_NAMEOffset);
     CQRObjectSource.addObjectId(builder, OBJECT_IDOffset);
+    CQRObjectSource.addHasHardBodyRadiusM(builder, HAS_HARD_BODY_RADIUS_M);
     CQRObjectSource.addHasApogeeAltitudeM(builder, HAS_APOGEE_ALTITUDE_M);
     CQRObjectSource.addHasPerigeeAltitudeM(builder, HAS_PERIGEE_ALTITUDE_M);
     return CQRObjectSource.endCQRObjectSource(builder);
   }
 
-  public static void startCQRObjectSource(FlatBufferBuilder builder) { builder.startTable(17); }
+  public static void startCQRObjectSource(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(0, OBJECT_IDOffset, 0); }
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(1, OBJECT_NAMEOffset, 0); }
   public static void addNoradCatalogId(FlatBufferBuilder builder, long NORAD_CATALOG_ID) { builder.addInt(2, (int) NORAD_CATALOG_ID, (int) 0L); }
@@ -131,6 +151,9 @@ public final class CQRObjectSource extends com.google.flatbuffers.Table {
   public static void addHasPerigeeAltitudeM(FlatBufferBuilder builder, boolean HAS_PERIGEE_ALTITUDE_M) { builder.addBoolean(14, HAS_PERIGEE_ALTITUDE_M, false); }
   public static void addApogeeAltitudeM(FlatBufferBuilder builder, double APOGEE_ALTITUDE_M) { builder.addDouble(15, APOGEE_ALTITUDE_M, 0.0); }
   public static void addHasApogeeAltitudeM(FlatBufferBuilder builder, boolean HAS_APOGEE_ALTITUDE_M) { builder.addBoolean(16, HAS_APOGEE_ALTITUDE_M, false); }
+  public static void addHardBodyRadiusM(FlatBufferBuilder builder, double HARD_BODY_RADIUS_M) { builder.addDouble(17, HARD_BODY_RADIUS_M, 0.0); }
+  public static void addHasHardBodyRadiusM(FlatBufferBuilder builder, boolean HAS_HARD_BODY_RADIUS_M) { builder.addBoolean(18, HAS_HARD_BODY_RADIUS_M, false); }
+  public static void addCatalogEntry(FlatBufferBuilder builder, int CATALOG_ENTRYOffset) { builder.addOffset(19, CATALOG_ENTRYOffset, 0); }
   public static int endCQRObjectSource(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // OBJECT_ID

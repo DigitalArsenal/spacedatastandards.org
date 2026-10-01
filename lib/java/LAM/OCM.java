@@ -174,6 +174,17 @@ public final class OCM extends com.google.flatbuffers.Table {
   public String ORB_AVERAGING() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORB_AVERAGINGAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
   public ByteBuffer ORB_AVERAGINGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  /**
+   * Whether COVARIANCE_DATA's coverage was measured against independent
+   * reference states.
+   */
+  public byte COV_CALIBRATION() { int o = __offset(46); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Identifier of that calibration evidence (a report or record).
+   */
+  public String COV_CALIBRATION_REFERENCE() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COV_CALIBRATION_REFERENCEAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
+  public ByteBuffer COV_CALIBRATION_REFERENCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
 
   public static int createOCM(FlatBufferBuilder builder,
       int HEADEROffset,
@@ -196,9 +207,12 @@ public final class OCM extends com.google.flatbuffers.Table {
       int TRAJ_FRAME_EPOCHOffset,
       int COV_REF_FRAMEOffset,
       long ORB_REVNUM,
-      int ORB_AVERAGINGOffset) {
-    builder.startTable(21);
+      int ORB_AVERAGINGOffset,
+      byte COV_CALIBRATION,
+      int COV_CALIBRATION_REFERENCEOffset) {
+    builder.startTable(23);
     OCM.addStateStepSize(builder, STATE_STEP_SIZE);
+    OCM.addCovCalibrationReference(builder, COV_CALIBRATION_REFERENCEOffset);
     OCM.addOrbAveraging(builder, ORB_AVERAGINGOffset);
     OCM.addOrbRevnum(builder, ORB_REVNUM);
     OCM.addCovRefFrame(builder, COV_REF_FRAMEOffset);
@@ -217,12 +231,13 @@ public final class OCM extends com.google.flatbuffers.Table {
     OCM.addTrajTypeDescription(builder, TRAJ_TYPE_DESCRIPTIONOffset);
     OCM.addMetadata(builder, METADATAOffset);
     OCM.addHeader(builder, HEADEROffset);
+    OCM.addCovCalibration(builder, COV_CALIBRATION);
     OCM.addStateVectorSize(builder, STATE_VECTOR_SIZE);
     OCM.addTrajType(builder, TRAJ_TYPE);
     return OCM.endOCM(builder);
   }
 
-  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(21); }
+  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(23); }
   public static void addHeader(FlatBufferBuilder builder, int HEADEROffset) { builder.addOffset(0, HEADEROffset, 0); }
   public static void addMetadata(FlatBufferBuilder builder, int METADATAOffset) { builder.addOffset(1, METADATAOffset, 0); }
   public static void addTrajType(FlatBufferBuilder builder, byte TRAJ_TYPE) { builder.addByte(2, TRAJ_TYPE, 0); }
@@ -256,6 +271,8 @@ public final class OCM extends com.google.flatbuffers.Table {
   public static void addCovRefFrame(FlatBufferBuilder builder, int COV_REF_FRAMEOffset) { builder.addOffset(18, COV_REF_FRAMEOffset, 0); }
   public static void addOrbRevnum(FlatBufferBuilder builder, long ORB_REVNUM) { builder.addInt(19, (int) ORB_REVNUM, (int) 0L); }
   public static void addOrbAveraging(FlatBufferBuilder builder, int ORB_AVERAGINGOffset) { builder.addOffset(20, ORB_AVERAGINGOffset, 0); }
+  public static void addCovCalibration(FlatBufferBuilder builder, byte COV_CALIBRATION) { builder.addByte(21, COV_CALIBRATION, 0); }
+  public static void addCovCalibrationReference(FlatBufferBuilder builder, int COV_CALIBRATION_REFERENCEOffset) { builder.addOffset(22, COV_CALIBRATION_REFERENCEOffset, 0); }
   public static int endOCM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

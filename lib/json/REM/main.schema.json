@@ -117,6 +117,10 @@
       "type" : "string",
       "enum": ["Unknown", "BatchLeastSquares", "ExtendedKalman", "UnscentedKalman", "Smoother"]
     },
+    "covarianceCalibration" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Uncalibrated", "Calibrated"]
+    },
     "hfcFlowRegime" : {
       "type" : "string",
       "enum": ["UNKNOWN", "SUPERSONIC", "HYPERSONIC", "RAREFIED", "TRANSITIONAL", "CONTINUUM"]
@@ -2090,6 +2094,14 @@
         "ORB_AVERAGING" : {
                 "type" : "string",
                 "description" : "For element sets: OSCULATING, or the mean-element theory used (BROUWER,\nKOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING."
+              },
+        "COV_CALIBRATION" : {
+                "$ref" : "#/definitions/covarianceCalibration",
+                "description" : "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+              },
+        "COV_CALIBRATION_REFERENCE" : {
+                "type" : "string",
+                "description" : "Identifier of that calibration evidence (a report or record)."
               }
       },
       "additionalProperties" : false

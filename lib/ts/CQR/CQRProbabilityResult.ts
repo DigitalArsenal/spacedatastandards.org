@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { covarianceCalibration } from './covarianceCalibration.js';
+import { cqrCovarianceCorrelation } from './cqrCovarianceCorrelation.js';
 import { cqrProbabilityAlgorithm } from './cqrProbabilityAlgorithm.js';
 import { cqrUncertaintyOrigin } from './cqrUncertaintyOrigin.js';
 
@@ -87,8 +89,37 @@ UNCERTAINTY_SOURCE():cqrUncertaintyOrigin {
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrUncertaintyOrigin.UNSPECIFIED;
 }
 
+/**
+ * For a covariance-based probability: whether the covariance's coverage was
+ * measured against independent reference states. Only CALIBRATED
+ * covariance supports a probability beyond "conditional on the stated
+ * assumptions".
+ */
+CALIBRATION():covarianceCalibration {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : covarianceCalibration.Unspecified;
+}
+
+/**
+ * Identifier of the calibration evidence (a report or record).
+ */
+CALIBRATION_REFERENCE():string|null
+CALIBRATION_REFERENCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CALIBRATION_REFERENCE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * The correlation assumed between the two objects' errors.
+ */
+CROSS_CORRELATION():cqrCovarianceCorrelation {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrCovarianceCorrelation.UNSPECIFIED;
+}
+
 static startCQRProbabilityResult(builder:flatbuffers.Builder) {
-  builder.startObject(9);
+  builder.startObject(12);
 }
 
 static addProbability(builder:flatbuffers.Builder, PROBABILITY:number) {
@@ -127,12 +158,24 @@ static addUncertaintySource(builder:flatbuffers.Builder, UNCERTAINTY_SOURCE:cqrU
   builder.addFieldInt8(8, UNCERTAINTY_SOURCE, cqrUncertaintyOrigin.UNSPECIFIED);
 }
 
+static addCalibration(builder:flatbuffers.Builder, CALIBRATION:covarianceCalibration) {
+  builder.addFieldInt8(9, CALIBRATION, covarianceCalibration.Unspecified);
+}
+
+static addCalibrationReference(builder:flatbuffers.Builder, CALIBRATION_REFERENCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, CALIBRATION_REFERENCEOffset, 0);
+}
+
+static addCrossCorrelation(builder:flatbuffers.Builder, CROSS_CORRELATION:cqrCovarianceCorrelation) {
+  builder.addFieldInt8(11, CROSS_CORRELATION, cqrCovarianceCorrelation.UNSPECIFIED);
+}
+
 static endCQRProbabilityResult(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createCQRProbabilityResult(builder:flatbuffers.Builder, PROBABILITY:number, ALGORITHM:cqrProbabilityAlgorithm, CONVERGED:boolean, ITERATIONS:bigint, MAXIMUM_PROBABILITY:number, HAS_MAXIMUM_PROBABILITY:boolean, MAHALANOBIS_SQUARED:number, HAS_MAHALANOBIS_SQUARED:boolean, UNCERTAINTY_SOURCE:cqrUncertaintyOrigin):flatbuffers.Offset {
+static createCQRProbabilityResult(builder:flatbuffers.Builder, PROBABILITY:number, ALGORITHM:cqrProbabilityAlgorithm, CONVERGED:boolean, ITERATIONS:bigint, MAXIMUM_PROBABILITY:number, HAS_MAXIMUM_PROBABILITY:boolean, MAHALANOBIS_SQUARED:number, HAS_MAHALANOBIS_SQUARED:boolean, UNCERTAINTY_SOURCE:cqrUncertaintyOrigin, CALIBRATION:covarianceCalibration, CALIBRATION_REFERENCEOffset:flatbuffers.Offset, CROSS_CORRELATION:cqrCovarianceCorrelation):flatbuffers.Offset {
   CQRProbabilityResult.startCQRProbabilityResult(builder);
   CQRProbabilityResult.addProbability(builder, PROBABILITY);
   CQRProbabilityResult.addAlgorithm(builder, ALGORITHM);
@@ -143,6 +186,9 @@ static createCQRProbabilityResult(builder:flatbuffers.Builder, PROBABILITY:numbe
   CQRProbabilityResult.addMahalanobisSquared(builder, MAHALANOBIS_SQUARED);
   CQRProbabilityResult.addHasMahalanobisSquared(builder, HAS_MAHALANOBIS_SQUARED);
   CQRProbabilityResult.addUncertaintySource(builder, UNCERTAINTY_SOURCE);
+  CQRProbabilityResult.addCalibration(builder, CALIBRATION);
+  CQRProbabilityResult.addCalibrationReference(builder, CALIBRATION_REFERENCEOffset);
+  CQRProbabilityResult.addCrossCorrelation(builder, CROSS_CORRELATION);
   return CQRProbabilityResult.endCQRProbabilityResult(builder);
 }
 
@@ -156,7 +202,10 @@ unpack(): CQRProbabilityResultT {
     this.HAS_MAXIMUM_PROBABILITY(),
     this.MAHALANOBIS_SQUARED(),
     this.HAS_MAHALANOBIS_SQUARED(),
-    this.UNCERTAINTY_SOURCE()
+    this.UNCERTAINTY_SOURCE(),
+    this.CALIBRATION(),
+    this.CALIBRATION_REFERENCE(),
+    this.CROSS_CORRELATION()
   );
 }
 
@@ -171,6 +220,9 @@ unpackTo(_o: CQRProbabilityResultT): void {
   _o.MAHALANOBIS_SQUARED = this.MAHALANOBIS_SQUARED();
   _o.HAS_MAHALANOBIS_SQUARED = this.HAS_MAHALANOBIS_SQUARED();
   _o.UNCERTAINTY_SOURCE = this.UNCERTAINTY_SOURCE();
+  _o.CALIBRATION = this.CALIBRATION();
+  _o.CALIBRATION_REFERENCE = this.CALIBRATION_REFERENCE();
+  _o.CROSS_CORRELATION = this.CROSS_CORRELATION();
 }
 }
 
@@ -184,11 +236,16 @@ constructor(
   public HAS_MAXIMUM_PROBABILITY: boolean = false,
   public MAHALANOBIS_SQUARED: number = 0.0,
   public HAS_MAHALANOBIS_SQUARED: boolean = false,
-  public UNCERTAINTY_SOURCE: cqrUncertaintyOrigin = cqrUncertaintyOrigin.UNSPECIFIED
+  public UNCERTAINTY_SOURCE: cqrUncertaintyOrigin = cqrUncertaintyOrigin.UNSPECIFIED,
+  public CALIBRATION: covarianceCalibration = covarianceCalibration.Unspecified,
+  public CALIBRATION_REFERENCE: string|Uint8Array|null = null,
+  public CROSS_CORRELATION: cqrCovarianceCorrelation = cqrCovarianceCorrelation.UNSPECIFIED
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
+  const CALIBRATION_REFERENCE = (this.CALIBRATION_REFERENCE !== null ? builder.createString(this.CALIBRATION_REFERENCE!) : 0);
+
   return CQRProbabilityResult.createCQRProbabilityResult(builder,
     this.PROBABILITY,
     this.ALGORITHM,
@@ -198,7 +255,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.HAS_MAXIMUM_PROBABILITY,
     this.MAHALANOBIS_SQUARED,
     this.HAS_MAHALANOBIS_SQUARED,
-    this.UNCERTAINTY_SOURCE
+    this.UNCERTAINTY_SOURCE,
+    this.CALIBRATION,
+    CALIBRATION_REFERENCE,
+    this.CROSS_CORRELATION
   );
 }
 }

@@ -1,5 +1,5 @@
-// Hash: 24ec38c3ed840882b727de08f291c8abc7d14b1e721e47350906cd3f7a929722
-// Version: 2.1.3
+// Hash: 77bd4f31fa8ba8598233359e96ade4b4a3633f742459575ce65237af27f8c52e
+// Version: 2.1.4
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../PPE/main.fbs";
@@ -342,6 +342,18 @@ enum estimatorCategory : byte {
   Smoother
 }
 
+/// Whether a covariance's coverage was measured against independent reference
+/// states: the share of reference errors inside its confidence regions matched
+/// what the covariance claims, for the regime and prediction age it covers.
+enum covarianceCalibration : byte {
+  /// Calibration not stated
+  Unspecified,
+  /// Not measured against independent reference states, or measured and failed
+  Uncalibrated,
+  /// Measured against independent reference states and passed
+  Calibrated
+}
+
 table OrbitDetermination {
   /// Unique identifier for the orbit determination.
   OD_ID: string;
@@ -479,6 +491,11 @@ table OCM {
   /// For element sets: OSCULATING, or the mean-element theory used (BROUWER,
   /// KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
   ORB_AVERAGING: string;
+  /// Whether COVARIANCE_DATA's coverage was measured against independent
+  /// reference states.
+  COV_CALIBRATION: covarianceCalibration = Unspecified;
+  /// Identifier of that calibration evidence (a report or record).
+  COV_CALIBRATION_REFERENCE: string;
 }
 
 root_type OCM;

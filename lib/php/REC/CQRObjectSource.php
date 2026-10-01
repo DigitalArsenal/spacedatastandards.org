@@ -176,22 +176,51 @@ class CQRObjectSource extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Hard-body radius in metres given with the source.
+    /**
+     * @return double
+     */
+    public function getHARD_BODY_RADIUS_M()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True when HARD_BODY_RADIUS_M carries a value; false means absent.
+    /**
+     * @return bool
+     */
+    public function getHAS_HARD_BODY_RADIUS_M()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// The object's catalog entry. Without a supplied radius, its SIZE, else
+    /// its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+    public function getCATALOG_ENTRY()
+    {
+        $obj = new CAT();
+        $o = $this->__offset(42);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCQRObjectSource(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(17);
+        $builder->StartObject(20);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CQRObjectSource
      */
-    public static function createCQRObjectSource(FlatBufferBuilder $builder, $OBJECT_ID, $OBJECT_NAME, $NORAD_CATALOG_ID, $INSTANCE, $SOURCE_HANDLE, $PROPAGATOR_PORT_ID, $MEAN_ELEMENTS, $EPHEMERIS, $COMPREHENSIVE_ORBIT, $POLYNOMIAL_EPHEMERIS, $TLE_LINES, $PROVENANCE, $SOURCE_EPOCH, $PERIGEE_ALTITUDE_M, $HAS_PERIGEE_ALTITUDE_M, $APOGEE_ALTITUDE_M, $HAS_APOGEE_ALTITUDE_M)
+    public static function createCQRObjectSource(FlatBufferBuilder $builder, $OBJECT_ID, $OBJECT_NAME, $NORAD_CATALOG_ID, $INSTANCE, $SOURCE_HANDLE, $PROPAGATOR_PORT_ID, $MEAN_ELEMENTS, $EPHEMERIS, $COMPREHENSIVE_ORBIT, $POLYNOMIAL_EPHEMERIS, $TLE_LINES, $PROVENANCE, $SOURCE_EPOCH, $PERIGEE_ALTITUDE_M, $HAS_PERIGEE_ALTITUDE_M, $APOGEE_ALTITUDE_M, $HAS_APOGEE_ALTITUDE_M, $HARD_BODY_RADIUS_M, $HAS_HARD_BODY_RADIUS_M, $CATALOG_ENTRY)
     {
-        $builder->startObject(17);
+        $builder->startObject(20);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addNORAD_CATALOG_ID($builder, $NORAD_CATALOG_ID);
@@ -209,6 +238,9 @@ class CQRObjectSource extends Table
         self::addHAS_PERIGEE_ALTITUDE_M($builder, $HAS_PERIGEE_ALTITUDE_M);
         self::addAPOGEE_ALTITUDE_M($builder, $APOGEE_ALTITUDE_M);
         self::addHAS_APOGEE_ALTITUDE_M($builder, $HAS_APOGEE_ALTITUDE_M);
+        self::addHARD_BODY_RADIUS_M($builder, $HARD_BODY_RADIUS_M);
+        self::addHAS_HARD_BODY_RADIUS_M($builder, $HAS_HARD_BODY_RADIUS_M);
+        self::addCATALOG_ENTRY($builder, $CATALOG_ENTRY);
         $o = $builder->endObject();
         $builder->required($o, 4);  // OBJECT_ID
         return $o;
@@ -382,6 +414,36 @@ class CQRObjectSource extends Table
     public static function addHAS_APOGEE_ALTITUDE_M(FlatBufferBuilder $builder, $HAS_APOGEE_ALTITUDE_M)
     {
         $builder->addBoolX(16, $HAS_APOGEE_ALTITUDE_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addHARD_BODY_RADIUS_M(FlatBufferBuilder $builder, $HARD_BODY_RADIUS_M)
+    {
+        $builder->addDoubleX(17, $HARD_BODY_RADIUS_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_HARD_BODY_RADIUS_M(FlatBufferBuilder $builder, $HAS_HARD_BODY_RADIUS_M)
+    {
+        $builder->addBoolX(18, $HAS_HARD_BODY_RADIUS_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCATALOG_ENTRY(FlatBufferBuilder $builder, $CATALOG_ENTRY)
+    {
+        $builder->addOffsetX(19, $CATALOG_ENTRY, 0);
     }
 
     /**

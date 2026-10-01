@@ -124,6 +124,17 @@ public struct OCM : IFlatbufferObject
   public ArraySegment<byte>? GetORB_AVERAGINGBytes() { return __p.__vector_as_arraysegment(44); }
 #endif
   public byte[] GetORB_AVERAGINGArray() { return __p.__vector_as_array<byte>(44); }
+  /// Whether COVARIANCE_DATA's coverage was measured against independent
+  /// reference states.
+  public covarianceCalibration COV_CALIBRATION { get { int o = __p.__offset(46); return o != 0 ? (covarianceCalibration)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceCalibration.Unspecified; } }
+  /// Identifier of that calibration evidence (a report or record).
+  public string COV_CALIBRATION_REFERENCE { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOV_CALIBRATION_REFERENCEBytes() { return __p.__vector_as_span<byte>(48, 1); }
+#else
+  public ArraySegment<byte>? GetCOV_CALIBRATION_REFERENCEBytes() { return __p.__vector_as_arraysegment(48); }
+#endif
+  public byte[] GetCOV_CALIBRATION_REFERENCEArray() { return __p.__vector_as_array<byte>(48); }
 
   public static Offset<OCM> CreateOCM(FlatBufferBuilder builder,
       Offset<Header> HEADEROffset = default(Offset<Header>),
@@ -146,9 +157,12 @@ public struct OCM : IFlatbufferObject
       StringOffset TRAJ_FRAME_EPOCHOffset = default(StringOffset),
       Offset<RFM> COV_REF_FRAMEOffset = default(Offset<RFM>),
       uint ORB_REVNUM = 0,
-      StringOffset ORB_AVERAGINGOffset = default(StringOffset)) {
-    builder.StartTable(21);
+      StringOffset ORB_AVERAGINGOffset = default(StringOffset),
+      covarianceCalibration COV_CALIBRATION = covarianceCalibration.Unspecified,
+      StringOffset COV_CALIBRATION_REFERENCEOffset = default(StringOffset)) {
+    builder.StartTable(23);
     OCM.AddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE);
+    OCM.AddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCEOffset);
     OCM.AddORB_AVERAGING(builder, ORB_AVERAGINGOffset);
     OCM.AddORB_REVNUM(builder, ORB_REVNUM);
     OCM.AddCOV_REF_FRAME(builder, COV_REF_FRAMEOffset);
@@ -167,12 +181,13 @@ public struct OCM : IFlatbufferObject
     OCM.AddTRAJ_TYPE_DESCRIPTION(builder, TRAJ_TYPE_DESCRIPTIONOffset);
     OCM.AddMETADATA(builder, METADATAOffset);
     OCM.AddHEADER(builder, HEADEROffset);
+    OCM.AddCOV_CALIBRATION(builder, COV_CALIBRATION);
     OCM.AddSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE);
     OCM.AddTRAJ_TYPE(builder, TRAJ_TYPE);
     return OCM.EndOCM(builder);
   }
 
-  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(21); }
+  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(23); }
   public static void AddHEADER(FlatBufferBuilder builder, Offset<Header> HEADEROffset) { builder.AddOffset(0, HEADEROffset.Value, 0); }
   public static void AddMETADATA(FlatBufferBuilder builder, Offset<Metadata> METADATAOffset) { builder.AddOffset(1, METADATAOffset.Value, 0); }
   public static void AddTRAJ_TYPE(FlatBufferBuilder builder, trajectoryType TRAJ_TYPE) { builder.AddSbyte(2, (sbyte)TRAJ_TYPE, 0); }
@@ -224,6 +239,8 @@ public struct OCM : IFlatbufferObject
   public static void AddCOV_REF_FRAME(FlatBufferBuilder builder, Offset<RFM> COV_REF_FRAMEOffset) { builder.AddOffset(18, COV_REF_FRAMEOffset.Value, 0); }
   public static void AddORB_REVNUM(FlatBufferBuilder builder, uint ORB_REVNUM) { builder.AddUint(19, ORB_REVNUM, 0); }
   public static void AddORB_AVERAGING(FlatBufferBuilder builder, StringOffset ORB_AVERAGINGOffset) { builder.AddOffset(20, ORB_AVERAGINGOffset.Value, 0); }
+  public static void AddCOV_CALIBRATION(FlatBufferBuilder builder, covarianceCalibration COV_CALIBRATION) { builder.AddSbyte(21, (sbyte)COV_CALIBRATION, 0); }
+  public static void AddCOV_CALIBRATION_REFERENCE(FlatBufferBuilder builder, StringOffset COV_CALIBRATION_REFERENCEOffset) { builder.AddOffset(22, COV_CALIBRATION_REFERENCEOffset.Value, 0); }
   public static Offset<OCM> EndOCM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OCM>(o);
@@ -263,6 +280,8 @@ public struct OCM : IFlatbufferObject
     _o.COV_REF_FRAME = this.COV_REF_FRAME.HasValue ? this.COV_REF_FRAME.Value.UnPack() : null;
     _o.ORB_REVNUM = this.ORB_REVNUM;
     _o.ORB_AVERAGING = this.ORB_AVERAGING;
+    _o.COV_CALIBRATION = this.COV_CALIBRATION;
+    _o.COV_CALIBRATION_REFERENCE = this.COV_CALIBRATION_REFERENCE;
   }
   public static Offset<OCM> Pack(FlatBufferBuilder builder, OCMT _o) {
     if (_o == null) return default(Offset<OCM>);
@@ -311,6 +330,7 @@ public struct OCM : IFlatbufferObject
     var _TRAJ_FRAME_EPOCH = _o.TRAJ_FRAME_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.TRAJ_FRAME_EPOCH);
     var _COV_REF_FRAME = _o.COV_REF_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.COV_REF_FRAME);
     var _ORB_AVERAGING = _o.ORB_AVERAGING == null ? default(StringOffset) : builder.CreateString(_o.ORB_AVERAGING);
+    var _COV_CALIBRATION_REFERENCE = _o.COV_CALIBRATION_REFERENCE == null ? default(StringOffset) : builder.CreateString(_o.COV_CALIBRATION_REFERENCE);
     return CreateOCM(
       builder,
       _HEADER,
@@ -333,7 +353,9 @@ public struct OCM : IFlatbufferObject
       _TRAJ_FRAME_EPOCH,
       _COV_REF_FRAME,
       _o.ORB_REVNUM,
-      _ORB_AVERAGING);
+      _ORB_AVERAGING,
+      _o.COV_CALIBRATION,
+      _COV_CALIBRATION_REFERENCE);
   }
 }
 
@@ -360,6 +382,8 @@ public class OCMT
   public RFMT COV_REF_FRAME { get; set; }
   public uint ORB_REVNUM { get; set; }
   public string ORB_AVERAGING { get; set; }
+  public covarianceCalibration COV_CALIBRATION { get; set; }
+  public string COV_CALIBRATION_REFERENCE { get; set; }
 
   public OCMT() {
     this.HEADER = null;
@@ -383,6 +407,8 @@ public class OCMT
     this.COV_REF_FRAME = null;
     this.ORB_REVNUM = 0;
     this.ORB_AVERAGING = null;
+    this.COV_CALIBRATION = covarianceCalibration.Unspecified;
+    this.COV_CALIBRATION_REFERENCE = null;
   }
   public static OCMT DeserializeFromBinary(byte[] fbBuffer) {
     return OCM.GetRootAsOCM(new ByteBuffer(fbBuffer)).UnPack();
@@ -421,6 +447,8 @@ static public class OCMVerify
       && verifier.VerifyTable(tablePos, 40 /*COV_REF_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyField(tablePos, 42 /*ORB_REVNUM*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 44 /*ORB_AVERAGING*/, false)
+      && verifier.VerifyField(tablePos, 46 /*COV_CALIBRATION*/, 1 /*covarianceCalibration*/, 1, false)
+      && verifier.VerifyString(tablePos, 48 /*COV_CALIBRATION_REFERENCE*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

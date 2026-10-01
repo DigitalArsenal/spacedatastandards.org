@@ -207,6 +207,135 @@ inline const char *EnumNamecqrUncertaintyOrigin(cqrUncertaintyOrigin e) {
   return EnumNamescqrUncertaintyOrigin()[index];
 }
 
+/// Where an object's hard-body radius came from.
+enum cqrHardBodyRadiusBasis : uint8_t {
+  cqrHardBodyRadiusBasis_UNSPECIFIED = 0,
+  /// Given with the source, by an operator or the requester.
+  cqrHardBodyRadiusBasis_SUPPLIED = 1,
+  /// Half the catalog entry's characteristic size (CAT SIZE).
+  cqrHardBodyRadiusBasis_CATALOG_SIZE = 2,
+  /// Radius of a sphere of the catalog entry's radar cross section,
+  /// sqrt(RCS / pi): a radar measure, not a physical size.
+  cqrHardBodyRadiusBasis_RADAR_CROSS_SECTION = 3,
+  /// Half the request's COMBINED_RADIUS_M: no object-specific value.
+  cqrHardBodyRadiusBasis_REQUEST_DEFAULT = 4,
+  cqrHardBodyRadiusBasis_MIN = cqrHardBodyRadiusBasis_UNSPECIFIED,
+  cqrHardBodyRadiusBasis_MAX = cqrHardBodyRadiusBasis_REQUEST_DEFAULT
+};
+
+inline const cqrHardBodyRadiusBasis (&EnumValuescqrHardBodyRadiusBasis())[5] {
+  static const cqrHardBodyRadiusBasis values[] = {
+    cqrHardBodyRadiusBasis_UNSPECIFIED,
+    cqrHardBodyRadiusBasis_SUPPLIED,
+    cqrHardBodyRadiusBasis_CATALOG_SIZE,
+    cqrHardBodyRadiusBasis_RADAR_CROSS_SECTION,
+    cqrHardBodyRadiusBasis_REQUEST_DEFAULT
+  };
+  return values;
+}
+
+inline const char * const *EnumNamescqrHardBodyRadiusBasis() {
+  static const char * const names[6] = {
+    "UNSPECIFIED",
+    "SUPPLIED",
+    "CATALOG_SIZE",
+    "RADAR_CROSS_SECTION",
+    "REQUEST_DEFAULT",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamecqrHardBodyRadiusBasis(cqrHardBodyRadiusBasis e) {
+  if (::flatbuffers::IsOutRange(e, cqrHardBodyRadiusBasis_UNSPECIFIED, cqrHardBodyRadiusBasis_REQUEST_DEFAULT)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamescqrHardBodyRadiusBasis()[index];
+}
+
+/// Where an object's position covariance at TCA came from.
+enum cqrCovarianceBasis : uint8_t {
+  cqrCovarianceBasis_UNSPECIFIED = 0,
+  /// None: the source supplied no covariance (an element set carries none).
+  cqrCovarianceBasis_NONE = 1,
+  /// The source's ephemeris or orbit message (OEM or OCM covariance).
+  cqrCovarianceBasis_SOURCE_EPHEMERIS = 2,
+  /// A conjunction data message.
+  cqrCovarianceBasis_CONJUNCTION_MESSAGE = 3,
+  /// The formal covariance of an orbit-determination fit.
+  cqrCovarianceBasis_ORBIT_DETERMINATION = 4,
+  /// An empirical prediction-error model for the source's element sets.
+  cqrCovarianceBasis_EMPIRICAL_MODEL = 5,
+  cqrCovarianceBasis_MIN = cqrCovarianceBasis_UNSPECIFIED,
+  cqrCovarianceBasis_MAX = cqrCovarianceBasis_EMPIRICAL_MODEL
+};
+
+inline const cqrCovarianceBasis (&EnumValuescqrCovarianceBasis())[6] {
+  static const cqrCovarianceBasis values[] = {
+    cqrCovarianceBasis_UNSPECIFIED,
+    cqrCovarianceBasis_NONE,
+    cqrCovarianceBasis_SOURCE_EPHEMERIS,
+    cqrCovarianceBasis_CONJUNCTION_MESSAGE,
+    cqrCovarianceBasis_ORBIT_DETERMINATION,
+    cqrCovarianceBasis_EMPIRICAL_MODEL
+  };
+  return values;
+}
+
+inline const char * const *EnumNamescqrCovarianceBasis() {
+  static const char * const names[7] = {
+    "UNSPECIFIED",
+    "NONE",
+    "SOURCE_EPHEMERIS",
+    "CONJUNCTION_MESSAGE",
+    "ORBIT_DETERMINATION",
+    "EMPIRICAL_MODEL",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamecqrCovarianceBasis(cqrCovarianceBasis e) {
+  if (::flatbuffers::IsOutRange(e, cqrCovarianceBasis_UNSPECIFIED, cqrCovarianceBasis_EMPIRICAL_MODEL)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamescqrCovarianceBasis()[index];
+}
+
+/// The assumed correlation between the two objects' position errors.
+enum cqrCovarianceCorrelation : uint8_t {
+  cqrCovarianceCorrelation_UNSPECIFIED = 0,
+  /// Independent errors: the combined covariance is the sum of the two.
+  cqrCovarianceCorrelation_INDEPENDENT = 1,
+  /// A cross covariance was supplied and used.
+  cqrCovarianceCorrelation_SUPPLIED_CROSS_COVARIANCE = 2,
+  cqrCovarianceCorrelation_MIN = cqrCovarianceCorrelation_UNSPECIFIED,
+  cqrCovarianceCorrelation_MAX = cqrCovarianceCorrelation_SUPPLIED_CROSS_COVARIANCE
+};
+
+inline const cqrCovarianceCorrelation (&EnumValuescqrCovarianceCorrelation())[3] {
+  static const cqrCovarianceCorrelation values[] = {
+    cqrCovarianceCorrelation_UNSPECIFIED,
+    cqrCovarianceCorrelation_INDEPENDENT,
+    cqrCovarianceCorrelation_SUPPLIED_CROSS_COVARIANCE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamescqrCovarianceCorrelation() {
+  static const char * const names[4] = {
+    "UNSPECIFIED",
+    "INDEPENDENT",
+    "SUPPLIED_CROSS_COVARIANCE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamecqrCovarianceCorrelation(cqrCovarianceCorrelation e) {
+  if (::flatbuffers::IsOutRange(e, cqrCovarianceCorrelation_UNSPECIFIED, cqrCovarianceCorrelation_SUPPLIED_CROSS_COVARIANCE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamescqrCovarianceCorrelation()[index];
+}
+
 enum cqrDocumentSyntax : uint8_t {
   cqrDocumentSyntax_UNSPECIFIED = 0,
   cqrDocumentSyntax_CCSDS_CDM_KVN = 1,
@@ -655,7 +784,10 @@ struct CQRObjectSource FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PERIGEE_ALTITUDE_M = 30,
     VT_HAS_PERIGEE_ALTITUDE_M = 32,
     VT_APOGEE_ALTITUDE_M = 34,
-    VT_HAS_APOGEE_ALTITUDE_M = 36
+    VT_HAS_APOGEE_ALTITUDE_M = 36,
+    VT_HARD_BODY_RADIUS_M = 38,
+    VT_HAS_HARD_BODY_RADIUS_M = 40,
+    VT_CATALOG_ENTRY = 42
   };
   const ::flatbuffers::String *OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
@@ -713,6 +845,19 @@ struct CQRObjectSource FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool HAS_APOGEE_ALTITUDE_M() const {
     return GetField<uint8_t>(VT_HAS_APOGEE_ALTITUDE_M, 0) != 0;
   }
+  /// Hard-body radius in metres given with the source.
+  double HARD_BODY_RADIUS_M() const {
+    return GetField<double>(VT_HARD_BODY_RADIUS_M, 0.0);
+  }
+  /// True when HARD_BODY_RADIUS_M carries a value; false means absent.
+  bool HAS_HARD_BODY_RADIUS_M() const {
+    return GetField<uint8_t>(VT_HAS_HARD_BODY_RADIUS_M, 0) != 0;
+  }
+  /// The object's catalog entry. Without a supplied radius, its SIZE, else
+  /// its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+  const CAT *CATALOG_ENTRY() const {
+    return GetPointer<const CAT *>(VT_CATALOG_ENTRY);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -744,6 +889,10 @@ struct CQRObjectSource FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_HAS_PERIGEE_ALTITUDE_M, 1) &&
            VerifyField<double>(verifier, VT_APOGEE_ALTITUDE_M, 8) &&
            VerifyField<uint8_t>(verifier, VT_HAS_APOGEE_ALTITUDE_M, 1) &&
+           VerifyField<double>(verifier, VT_HARD_BODY_RADIUS_M, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_HARD_BODY_RADIUS_M, 1) &&
+           VerifyOffset(verifier, VT_CATALOG_ENTRY) &&
+           verifier.VerifyTable(CATALOG_ENTRY()) &&
            verifier.EndTable();
   }
 };
@@ -803,6 +952,15 @@ struct CQRObjectSourceBuilder {
   void add_HAS_APOGEE_ALTITUDE_M(bool HAS_APOGEE_ALTITUDE_M) {
     fbb_.AddElement<uint8_t>(CQRObjectSource::VT_HAS_APOGEE_ALTITUDE_M, static_cast<uint8_t>(HAS_APOGEE_ALTITUDE_M), 0);
   }
+  void add_HARD_BODY_RADIUS_M(double HARD_BODY_RADIUS_M) {
+    fbb_.AddElement<double>(CQRObjectSource::VT_HARD_BODY_RADIUS_M, HARD_BODY_RADIUS_M, 0.0);
+  }
+  void add_HAS_HARD_BODY_RADIUS_M(bool HAS_HARD_BODY_RADIUS_M) {
+    fbb_.AddElement<uint8_t>(CQRObjectSource::VT_HAS_HARD_BODY_RADIUS_M, static_cast<uint8_t>(HAS_HARD_BODY_RADIUS_M), 0);
+  }
+  void add_CATALOG_ENTRY(::flatbuffers::Offset<CAT> CATALOG_ENTRY) {
+    fbb_.AddOffset(CQRObjectSource::VT_CATALOG_ENTRY, CATALOG_ENTRY);
+  }
   explicit CQRObjectSourceBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -833,10 +991,15 @@ inline ::flatbuffers::Offset<CQRObjectSource> CreateCQRObjectSource(
     double PERIGEE_ALTITUDE_M = 0.0,
     bool HAS_PERIGEE_ALTITUDE_M = false,
     double APOGEE_ALTITUDE_M = 0.0,
-    bool HAS_APOGEE_ALTITUDE_M = false) {
+    bool HAS_APOGEE_ALTITUDE_M = false,
+    double HARD_BODY_RADIUS_M = 0.0,
+    bool HAS_HARD_BODY_RADIUS_M = false,
+    ::flatbuffers::Offset<CAT> CATALOG_ENTRY = 0) {
   CQRObjectSourceBuilder builder_(_fbb);
+  builder_.add_HARD_BODY_RADIUS_M(HARD_BODY_RADIUS_M);
   builder_.add_APOGEE_ALTITUDE_M(APOGEE_ALTITUDE_M);
   builder_.add_PERIGEE_ALTITUDE_M(PERIGEE_ALTITUDE_M);
+  builder_.add_CATALOG_ENTRY(CATALOG_ENTRY);
   builder_.add_SOURCE_EPOCH(SOURCE_EPOCH);
   builder_.add_PROVENANCE(PROVENANCE);
   builder_.add_TLE_LINES(TLE_LINES);
@@ -850,6 +1013,7 @@ inline ::flatbuffers::Offset<CQRObjectSource> CreateCQRObjectSource(
   builder_.add_NORAD_CATALOG_ID(NORAD_CATALOG_ID);
   builder_.add_OBJECT_NAME(OBJECT_NAME);
   builder_.add_OBJECT_ID(OBJECT_ID);
+  builder_.add_HAS_HARD_BODY_RADIUS_M(HAS_HARD_BODY_RADIUS_M);
   builder_.add_HAS_APOGEE_ALTITUDE_M(HAS_APOGEE_ALTITUDE_M);
   builder_.add_HAS_PERIGEE_ALTITUDE_M(HAS_PERIGEE_ALTITUDE_M);
   return builder_.Finish();
@@ -873,7 +1037,10 @@ inline ::flatbuffers::Offset<CQRObjectSource> CreateCQRObjectSourceDirect(
     double PERIGEE_ALTITUDE_M = 0.0,
     bool HAS_PERIGEE_ALTITUDE_M = false,
     double APOGEE_ALTITUDE_M = 0.0,
-    bool HAS_APOGEE_ALTITUDE_M = false) {
+    bool HAS_APOGEE_ALTITUDE_M = false,
+    double HARD_BODY_RADIUS_M = 0.0,
+    bool HAS_HARD_BODY_RADIUS_M = false,
+    ::flatbuffers::Offset<CAT> CATALOG_ENTRY = 0) {
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
   auto PROPAGATOR_PORT_ID__ = PROPAGATOR_PORT_ID ? _fbb.CreateString(PROPAGATOR_PORT_ID) : 0;
@@ -895,7 +1062,10 @@ inline ::flatbuffers::Offset<CQRObjectSource> CreateCQRObjectSourceDirect(
       PERIGEE_ALTITUDE_M,
       HAS_PERIGEE_ALTITUDE_M,
       APOGEE_ALTITUDE_M,
-      HAS_APOGEE_ALTITUDE_M);
+      HAS_APOGEE_ALTITUDE_M,
+      HARD_BODY_RADIUS_M,
+      HAS_HARD_BODY_RADIUS_M,
+      CATALOG_ENTRY);
 }
 
 /// Explicit UTC search window and positive resolution, SI seconds/metres.
@@ -1335,7 +1505,10 @@ struct CQRProbabilityResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
     VT_HAS_MAXIMUM_PROBABILITY = 14,
     VT_MAHALANOBIS_SQUARED = 16,
     VT_HAS_MAHALANOBIS_SQUARED = 18,
-    VT_UNCERTAINTY_SOURCE = 20
+    VT_UNCERTAINTY_SOURCE = 20,
+    VT_CALIBRATION = 22,
+    VT_CALIBRATION_REFERENCE = 24,
+    VT_CROSS_CORRELATION = 26
   };
   double PROBABILITY() const {
     return GetField<double>(VT_PROBABILITY, 0.0);
@@ -1367,6 +1540,21 @@ struct CQRProbabilityResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
   cqrUncertaintyOrigin UNCERTAINTY_SOURCE() const {
     return static_cast<cqrUncertaintyOrigin>(GetField<uint8_t>(VT_UNCERTAINTY_SOURCE, 0));
   }
+  /// For a covariance-based probability: whether the covariance's coverage was
+  /// measured against independent reference states. Only CALIBRATED
+  /// covariance supports a probability beyond "conditional on the stated
+  /// assumptions".
+  covarianceCalibration CALIBRATION() const {
+    return static_cast<covarianceCalibration>(GetField<int8_t>(VT_CALIBRATION, 0));
+  }
+  /// Identifier of the calibration evidence (a report or record).
+  const ::flatbuffers::String *CALIBRATION_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CALIBRATION_REFERENCE);
+  }
+  /// The correlation assumed between the two objects' errors.
+  cqrCovarianceCorrelation CROSS_CORRELATION() const {
+    return static_cast<cqrCovarianceCorrelation>(GetField<uint8_t>(VT_CROSS_CORRELATION, 0));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1379,6 +1567,10 @@ struct CQRProbabilityResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
            VerifyField<double>(verifier, VT_MAHALANOBIS_SQUARED, 8) &&
            VerifyField<uint8_t>(verifier, VT_HAS_MAHALANOBIS_SQUARED, 1) &&
            VerifyField<uint8_t>(verifier, VT_UNCERTAINTY_SOURCE, 1) &&
+           VerifyField<int8_t>(verifier, VT_CALIBRATION, 1) &&
+           VerifyOffset(verifier, VT_CALIBRATION_REFERENCE) &&
+           verifier.VerifyString(CALIBRATION_REFERENCE()) &&
+           VerifyField<uint8_t>(verifier, VT_CROSS_CORRELATION, 1) &&
            verifier.EndTable();
   }
 };
@@ -1414,6 +1606,15 @@ struct CQRProbabilityResultBuilder {
   void add_UNCERTAINTY_SOURCE(cqrUncertaintyOrigin UNCERTAINTY_SOURCE) {
     fbb_.AddElement<uint8_t>(CQRProbabilityResult::VT_UNCERTAINTY_SOURCE, static_cast<uint8_t>(UNCERTAINTY_SOURCE), 0);
   }
+  void add_CALIBRATION(covarianceCalibration CALIBRATION) {
+    fbb_.AddElement<int8_t>(CQRProbabilityResult::VT_CALIBRATION, static_cast<int8_t>(CALIBRATION), 0);
+  }
+  void add_CALIBRATION_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> CALIBRATION_REFERENCE) {
+    fbb_.AddOffset(CQRProbabilityResult::VT_CALIBRATION_REFERENCE, CALIBRATION_REFERENCE);
+  }
+  void add_CROSS_CORRELATION(cqrCovarianceCorrelation CROSS_CORRELATION) {
+    fbb_.AddElement<uint8_t>(CQRProbabilityResult::VT_CROSS_CORRELATION, static_cast<uint8_t>(CROSS_CORRELATION), 0);
+  }
   explicit CQRProbabilityResultBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1435,18 +1636,55 @@ inline ::flatbuffers::Offset<CQRProbabilityResult> CreateCQRProbabilityResult(
     bool HAS_MAXIMUM_PROBABILITY = false,
     double MAHALANOBIS_SQUARED = 0.0,
     bool HAS_MAHALANOBIS_SQUARED = false,
-    cqrUncertaintyOrigin UNCERTAINTY_SOURCE = cqrUncertaintyOrigin_UNSPECIFIED) {
+    cqrUncertaintyOrigin UNCERTAINTY_SOURCE = cqrUncertaintyOrigin_UNSPECIFIED,
+    covarianceCalibration CALIBRATION = covarianceCalibration_Unspecified,
+    ::flatbuffers::Offset<::flatbuffers::String> CALIBRATION_REFERENCE = 0,
+    cqrCovarianceCorrelation CROSS_CORRELATION = cqrCovarianceCorrelation_UNSPECIFIED) {
   CQRProbabilityResultBuilder builder_(_fbb);
   builder_.add_MAHALANOBIS_SQUARED(MAHALANOBIS_SQUARED);
   builder_.add_MAXIMUM_PROBABILITY(MAXIMUM_PROBABILITY);
   builder_.add_ITERATIONS(ITERATIONS);
   builder_.add_PROBABILITY(PROBABILITY);
+  builder_.add_CALIBRATION_REFERENCE(CALIBRATION_REFERENCE);
+  builder_.add_CROSS_CORRELATION(CROSS_CORRELATION);
+  builder_.add_CALIBRATION(CALIBRATION);
   builder_.add_UNCERTAINTY_SOURCE(UNCERTAINTY_SOURCE);
   builder_.add_HAS_MAHALANOBIS_SQUARED(HAS_MAHALANOBIS_SQUARED);
   builder_.add_HAS_MAXIMUM_PROBABILITY(HAS_MAXIMUM_PROBABILITY);
   builder_.add_CONVERGED(CONVERGED);
   builder_.add_ALGORITHM(ALGORITHM);
   return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CQRProbabilityResult> CreateCQRProbabilityResultDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double PROBABILITY = 0.0,
+    cqrProbabilityAlgorithm ALGORITHM = cqrProbabilityAlgorithm_UNSPECIFIED,
+    bool CONVERGED = false,
+    uint64_t ITERATIONS = 0,
+    double MAXIMUM_PROBABILITY = 0.0,
+    bool HAS_MAXIMUM_PROBABILITY = false,
+    double MAHALANOBIS_SQUARED = 0.0,
+    bool HAS_MAHALANOBIS_SQUARED = false,
+    cqrUncertaintyOrigin UNCERTAINTY_SOURCE = cqrUncertaintyOrigin_UNSPECIFIED,
+    covarianceCalibration CALIBRATION = covarianceCalibration_Unspecified,
+    const char *CALIBRATION_REFERENCE = nullptr,
+    cqrCovarianceCorrelation CROSS_CORRELATION = cqrCovarianceCorrelation_UNSPECIFIED) {
+  auto CALIBRATION_REFERENCE__ = CALIBRATION_REFERENCE ? _fbb.CreateString(CALIBRATION_REFERENCE) : 0;
+  return CreateCQRProbabilityResult(
+      _fbb,
+      PROBABILITY,
+      ALGORITHM,
+      CONVERGED,
+      ITERATIONS,
+      MAXIMUM_PROBABILITY,
+      HAS_MAXIMUM_PROBABILITY,
+      MAHALANOBIS_SQUARED,
+      HAS_MAHALANOBIS_SQUARED,
+      UNCERTAINTY_SOURCE,
+      CALIBRATION,
+      CALIBRATION_REFERENCE__,
+      CROSS_CORRELATION);
 }
 
 struct CQRAlfanoRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -1889,7 +2127,15 @@ struct CQREvent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MAHALANOBIS_3D_SQUARED = 50,
     VT_HAS_MAHALANOBIS_3D_SQUARED = 52,
     VT_COMBINED_RADIUS_M = 54,
-    VT_HAS_COMBINED_RADIUS_M = 56
+    VT_HAS_COMBINED_RADIUS_M = 56,
+    VT_PRIMARY_HARD_BODY_RADIUS_M = 58,
+    VT_HAS_PRIMARY_HARD_BODY_RADIUS_M = 60,
+    VT_SECONDARY_HARD_BODY_RADIUS_M = 62,
+    VT_HAS_SECONDARY_HARD_BODY_RADIUS_M = 64,
+    VT_PRIMARY_RADIUS_BASIS = 66,
+    VT_SECONDARY_RADIUS_BASIS = 68,
+    VT_PRIMARY_COVARIANCE_BASIS = 70,
+    VT_SECONDARY_COVARIANCE_BASIS = 72
   };
   const ::flatbuffers::String *PRIMARY_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PRIMARY_ID);
@@ -1980,6 +2226,36 @@ struct CQREvent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool HAS_COMBINED_RADIUS_M() const {
     return GetField<uint8_t>(VT_HAS_COMBINED_RADIUS_M, 0) != 0;
   }
+  /// Each object's hard-body radius in metres and where it came from;
+  /// COMBINED_RADIUS_M is their sum.
+  double PRIMARY_HARD_BODY_RADIUS_M() const {
+    return GetField<double>(VT_PRIMARY_HARD_BODY_RADIUS_M, 0.0);
+  }
+  /// True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+  bool HAS_PRIMARY_HARD_BODY_RADIUS_M() const {
+    return GetField<uint8_t>(VT_HAS_PRIMARY_HARD_BODY_RADIUS_M, 0) != 0;
+  }
+  double SECONDARY_HARD_BODY_RADIUS_M() const {
+    return GetField<double>(VT_SECONDARY_HARD_BODY_RADIUS_M, 0.0);
+  }
+  /// True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+  bool HAS_SECONDARY_HARD_BODY_RADIUS_M() const {
+    return GetField<uint8_t>(VT_HAS_SECONDARY_HARD_BODY_RADIUS_M, 0) != 0;
+  }
+  cqrHardBodyRadiusBasis PRIMARY_RADIUS_BASIS() const {
+    return static_cast<cqrHardBodyRadiusBasis>(GetField<uint8_t>(VT_PRIMARY_RADIUS_BASIS, 0));
+  }
+  cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS() const {
+    return static_cast<cqrHardBodyRadiusBasis>(GetField<uint8_t>(VT_SECONDARY_RADIUS_BASIS, 0));
+  }
+  /// Where each object's position covariance came from; NONE means the event
+  /// carries no covariance-based quantity for it.
+  cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS() const {
+    return static_cast<cqrCovarianceBasis>(GetField<uint8_t>(VT_PRIMARY_COVARIANCE_BASIS, 0));
+  }
+  cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS() const {
+    return static_cast<cqrCovarianceBasis>(GetField<uint8_t>(VT_SECONDARY_COVARIANCE_BASIS, 0));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2023,6 +2299,14 @@ struct CQREvent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_HAS_MAHALANOBIS_3D_SQUARED, 1) &&
            VerifyField<double>(verifier, VT_COMBINED_RADIUS_M, 8) &&
            VerifyField<uint8_t>(verifier, VT_HAS_COMBINED_RADIUS_M, 1) &&
+           VerifyField<double>(verifier, VT_PRIMARY_HARD_BODY_RADIUS_M, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_PRIMARY_HARD_BODY_RADIUS_M, 1) &&
+           VerifyField<double>(verifier, VT_SECONDARY_HARD_BODY_RADIUS_M, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_SECONDARY_HARD_BODY_RADIUS_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_PRIMARY_RADIUS_BASIS, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SECONDARY_RADIUS_BASIS, 1) &&
+           VerifyField<uint8_t>(verifier, VT_PRIMARY_COVARIANCE_BASIS, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SECONDARY_COVARIANCE_BASIS, 1) &&
            verifier.EndTable();
   }
 };
@@ -2112,6 +2396,30 @@ struct CQREventBuilder {
   void add_HAS_COMBINED_RADIUS_M(bool HAS_COMBINED_RADIUS_M) {
     fbb_.AddElement<uint8_t>(CQREvent::VT_HAS_COMBINED_RADIUS_M, static_cast<uint8_t>(HAS_COMBINED_RADIUS_M), 0);
   }
+  void add_PRIMARY_HARD_BODY_RADIUS_M(double PRIMARY_HARD_BODY_RADIUS_M) {
+    fbb_.AddElement<double>(CQREvent::VT_PRIMARY_HARD_BODY_RADIUS_M, PRIMARY_HARD_BODY_RADIUS_M, 0.0);
+  }
+  void add_HAS_PRIMARY_HARD_BODY_RADIUS_M(bool HAS_PRIMARY_HARD_BODY_RADIUS_M) {
+    fbb_.AddElement<uint8_t>(CQREvent::VT_HAS_PRIMARY_HARD_BODY_RADIUS_M, static_cast<uint8_t>(HAS_PRIMARY_HARD_BODY_RADIUS_M), 0);
+  }
+  void add_SECONDARY_HARD_BODY_RADIUS_M(double SECONDARY_HARD_BODY_RADIUS_M) {
+    fbb_.AddElement<double>(CQREvent::VT_SECONDARY_HARD_BODY_RADIUS_M, SECONDARY_HARD_BODY_RADIUS_M, 0.0);
+  }
+  void add_HAS_SECONDARY_HARD_BODY_RADIUS_M(bool HAS_SECONDARY_HARD_BODY_RADIUS_M) {
+    fbb_.AddElement<uint8_t>(CQREvent::VT_HAS_SECONDARY_HARD_BODY_RADIUS_M, static_cast<uint8_t>(HAS_SECONDARY_HARD_BODY_RADIUS_M), 0);
+  }
+  void add_PRIMARY_RADIUS_BASIS(cqrHardBodyRadiusBasis PRIMARY_RADIUS_BASIS) {
+    fbb_.AddElement<uint8_t>(CQREvent::VT_PRIMARY_RADIUS_BASIS, static_cast<uint8_t>(PRIMARY_RADIUS_BASIS), 0);
+  }
+  void add_SECONDARY_RADIUS_BASIS(cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS) {
+    fbb_.AddElement<uint8_t>(CQREvent::VT_SECONDARY_RADIUS_BASIS, static_cast<uint8_t>(SECONDARY_RADIUS_BASIS), 0);
+  }
+  void add_PRIMARY_COVARIANCE_BASIS(cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS) {
+    fbb_.AddElement<uint8_t>(CQREvent::VT_PRIMARY_COVARIANCE_BASIS, static_cast<uint8_t>(PRIMARY_COVARIANCE_BASIS), 0);
+  }
+  void add_SECONDARY_COVARIANCE_BASIS(cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS) {
+    fbb_.AddElement<uint8_t>(CQREvent::VT_SECONDARY_COVARIANCE_BASIS, static_cast<uint8_t>(SECONDARY_COVARIANCE_BASIS), 0);
+  }
   explicit CQREventBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2154,8 +2462,18 @@ inline ::flatbuffers::Offset<CQREvent> CreateCQREvent(
     double MAHALANOBIS_3D_SQUARED = 0.0,
     bool HAS_MAHALANOBIS_3D_SQUARED = false,
     double COMBINED_RADIUS_M = 0.0,
-    bool HAS_COMBINED_RADIUS_M = false) {
+    bool HAS_COMBINED_RADIUS_M = false,
+    double PRIMARY_HARD_BODY_RADIUS_M = 0.0,
+    bool HAS_PRIMARY_HARD_BODY_RADIUS_M = false,
+    double SECONDARY_HARD_BODY_RADIUS_M = 0.0,
+    bool HAS_SECONDARY_HARD_BODY_RADIUS_M = false,
+    cqrHardBodyRadiusBasis PRIMARY_RADIUS_BASIS = cqrHardBodyRadiusBasis_UNSPECIFIED,
+    cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS = cqrHardBodyRadiusBasis_UNSPECIFIED,
+    cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS = cqrCovarianceBasis_UNSPECIFIED,
+    cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis_UNSPECIFIED) {
   CQREventBuilder builder_(_fbb);
+  builder_.add_SECONDARY_HARD_BODY_RADIUS_M(SECONDARY_HARD_BODY_RADIUS_M);
+  builder_.add_PRIMARY_HARD_BODY_RADIUS_M(PRIMARY_HARD_BODY_RADIUS_M);
   builder_.add_COMBINED_RADIUS_M(COMBINED_RADIUS_M);
   builder_.add_MAHALANOBIS_3D_SQUARED(MAHALANOBIS_3D_SQUARED);
   builder_.add_SECONDARY_DAYS_SINCE_EPOCH(SECONDARY_DAYS_SINCE_EPOCH);
@@ -2178,6 +2496,12 @@ inline ::flatbuffers::Offset<CQREvent> CreateCQREvent(
   builder_.add_PRIMARY_NAME(PRIMARY_NAME);
   builder_.add_SECONDARY_ID(SECONDARY_ID);
   builder_.add_PRIMARY_ID(PRIMARY_ID);
+  builder_.add_SECONDARY_COVARIANCE_BASIS(SECONDARY_COVARIANCE_BASIS);
+  builder_.add_PRIMARY_COVARIANCE_BASIS(PRIMARY_COVARIANCE_BASIS);
+  builder_.add_SECONDARY_RADIUS_BASIS(SECONDARY_RADIUS_BASIS);
+  builder_.add_PRIMARY_RADIUS_BASIS(PRIMARY_RADIUS_BASIS);
+  builder_.add_HAS_SECONDARY_HARD_BODY_RADIUS_M(HAS_SECONDARY_HARD_BODY_RADIUS_M);
+  builder_.add_HAS_PRIMARY_HARD_BODY_RADIUS_M(HAS_PRIMARY_HARD_BODY_RADIUS_M);
   builder_.add_HAS_COMBINED_RADIUS_M(HAS_COMBINED_RADIUS_M);
   builder_.add_HAS_MAHALANOBIS_3D_SQUARED(HAS_MAHALANOBIS_3D_SQUARED);
   builder_.add_HAS_SECONDARY_DAYS_SINCE_EPOCH(HAS_SECONDARY_DAYS_SINCE_EPOCH);
@@ -2214,7 +2538,15 @@ inline ::flatbuffers::Offset<CQREvent> CreateCQREventDirect(
     double MAHALANOBIS_3D_SQUARED = 0.0,
     bool HAS_MAHALANOBIS_3D_SQUARED = false,
     double COMBINED_RADIUS_M = 0.0,
-    bool HAS_COMBINED_RADIUS_M = false) {
+    bool HAS_COMBINED_RADIUS_M = false,
+    double PRIMARY_HARD_BODY_RADIUS_M = 0.0,
+    bool HAS_PRIMARY_HARD_BODY_RADIUS_M = false,
+    double SECONDARY_HARD_BODY_RADIUS_M = 0.0,
+    bool HAS_SECONDARY_HARD_BODY_RADIUS_M = false,
+    cqrHardBodyRadiusBasis PRIMARY_RADIUS_BASIS = cqrHardBodyRadiusBasis_UNSPECIFIED,
+    cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS = cqrHardBodyRadiusBasis_UNSPECIFIED,
+    cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS = cqrCovarianceBasis_UNSPECIFIED,
+    cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis_UNSPECIFIED) {
   auto PRIMARY_ID__ = PRIMARY_ID ? _fbb.CreateString(PRIMARY_ID) : 0;
   auto SECONDARY_ID__ = SECONDARY_ID ? _fbb.CreateString(SECONDARY_ID) : 0;
   auto PRIMARY_NAME__ = PRIMARY_NAME ? _fbb.CreateString(PRIMARY_NAME) : 0;
@@ -2247,7 +2579,15 @@ inline ::flatbuffers::Offset<CQREvent> CreateCQREventDirect(
       MAHALANOBIS_3D_SQUARED,
       HAS_MAHALANOBIS_3D_SQUARED,
       COMBINED_RADIUS_M,
-      HAS_COMBINED_RADIUS_M);
+      HAS_COMBINED_RADIUS_M,
+      PRIMARY_HARD_BODY_RADIUS_M,
+      HAS_PRIMARY_HARD_BODY_RADIUS_M,
+      SECONDARY_HARD_BODY_RADIUS_M,
+      HAS_SECONDARY_HARD_BODY_RADIUS_M,
+      PRIMARY_RADIUS_BASIS,
+      SECONDARY_RADIUS_BASIS,
+      PRIMARY_COVARIANCE_BASIS,
+      SECONDARY_COVARIANCE_BASIS);
 }
 
 struct CQRScreeningStatistics FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

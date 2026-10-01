@@ -9,6 +9,8 @@ import { CQRProbabilityResult, CQRProbabilityResultT } from './CQRProbabilityRes
 import { FRMVector3, FRMVector3T } from './FRMVector3.js';
 import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
+import { cqrCovarianceBasis } from './cqrCovarianceBasis.js';
+import { cqrHardBodyRadiusBasis } from './cqrHardBodyRadiusBasis.js';
 
 
 /**
@@ -199,8 +201,62 @@ HAS_COMBINED_RADIUS_M():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Each object's hard-body radius in metres and where it came from;
+ * COMBINED_RADIUS_M is their sum.
+ */
+PRIMARY_HARD_BODY_RADIUS_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+ */
+HAS_PRIMARY_HARD_BODY_RADIUS_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+SECONDARY_HARD_BODY_RADIUS_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+ */
+HAS_SECONDARY_HARD_BODY_RADIUS_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+PRIMARY_RADIUS_BASIS():cqrHardBodyRadiusBasis {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrHardBodyRadiusBasis.UNSPECIFIED;
+}
+
+SECONDARY_RADIUS_BASIS():cqrHardBodyRadiusBasis {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrHardBodyRadiusBasis.UNSPECIFIED;
+}
+
+/**
+ * Where each object's position covariance came from; NONE means the event
+ * carries no covariance-based quantity for it.
+ */
+PRIMARY_COVARIANCE_BASIS():cqrCovarianceBasis {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrCovarianceBasis.UNSPECIFIED;
+}
+
+SECONDARY_COVARIANCE_BASIS():cqrCovarianceBasis {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrCovarianceBasis.UNSPECIFIED;
+}
+
 static startCQREvent(builder:flatbuffers.Builder) {
-  builder.startObject(27);
+  builder.startObject(35);
 }
 
 static addPrimaryId(builder:flatbuffers.Builder, PRIMARY_IDOffset:flatbuffers.Offset) {
@@ -311,6 +367,38 @@ static addHasCombinedRadiusM(builder:flatbuffers.Builder, HAS_COMBINED_RADIUS_M:
   builder.addFieldInt8(26, +HAS_COMBINED_RADIUS_M, +false);
 }
 
+static addPrimaryHardBodyRadiusM(builder:flatbuffers.Builder, PRIMARY_HARD_BODY_RADIUS_M:number) {
+  builder.addFieldFloat64(27, PRIMARY_HARD_BODY_RADIUS_M, 0.0);
+}
+
+static addHasPrimaryHardBodyRadiusM(builder:flatbuffers.Builder, HAS_PRIMARY_HARD_BODY_RADIUS_M:boolean) {
+  builder.addFieldInt8(28, +HAS_PRIMARY_HARD_BODY_RADIUS_M, +false);
+}
+
+static addSecondaryHardBodyRadiusM(builder:flatbuffers.Builder, SECONDARY_HARD_BODY_RADIUS_M:number) {
+  builder.addFieldFloat64(29, SECONDARY_HARD_BODY_RADIUS_M, 0.0);
+}
+
+static addHasSecondaryHardBodyRadiusM(builder:flatbuffers.Builder, HAS_SECONDARY_HARD_BODY_RADIUS_M:boolean) {
+  builder.addFieldInt8(30, +HAS_SECONDARY_HARD_BODY_RADIUS_M, +false);
+}
+
+static addPrimaryRadiusBasis(builder:flatbuffers.Builder, PRIMARY_RADIUS_BASIS:cqrHardBodyRadiusBasis) {
+  builder.addFieldInt8(31, PRIMARY_RADIUS_BASIS, cqrHardBodyRadiusBasis.UNSPECIFIED);
+}
+
+static addSecondaryRadiusBasis(builder:flatbuffers.Builder, SECONDARY_RADIUS_BASIS:cqrHardBodyRadiusBasis) {
+  builder.addFieldInt8(32, SECONDARY_RADIUS_BASIS, cqrHardBodyRadiusBasis.UNSPECIFIED);
+}
+
+static addPrimaryCovarianceBasis(builder:flatbuffers.Builder, PRIMARY_COVARIANCE_BASIS:cqrCovarianceBasis) {
+  builder.addFieldInt8(33, PRIMARY_COVARIANCE_BASIS, cqrCovarianceBasis.UNSPECIFIED);
+}
+
+static addSecondaryCovarianceBasis(builder:flatbuffers.Builder, SECONDARY_COVARIANCE_BASIS:cqrCovarianceBasis) {
+  builder.addFieldInt8(34, SECONDARY_COVARIANCE_BASIS, cqrCovarianceBasis.UNSPECIFIED);
+}
+
 static endCQREvent(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // PRIMARY_ID
@@ -348,7 +436,15 @@ unpack(): CQREventT {
     this.MAHALANOBIS_3D_SQUARED(),
     this.HAS_MAHALANOBIS_3D_SQUARED(),
     this.COMBINED_RADIUS_M(),
-    this.HAS_COMBINED_RADIUS_M()
+    this.HAS_COMBINED_RADIUS_M(),
+    this.PRIMARY_HARD_BODY_RADIUS_M(),
+    this.HAS_PRIMARY_HARD_BODY_RADIUS_M(),
+    this.SECONDARY_HARD_BODY_RADIUS_M(),
+    this.HAS_SECONDARY_HARD_BODY_RADIUS_M(),
+    this.PRIMARY_RADIUS_BASIS(),
+    this.SECONDARY_RADIUS_BASIS(),
+    this.PRIMARY_COVARIANCE_BASIS(),
+    this.SECONDARY_COVARIANCE_BASIS()
   );
 }
 
@@ -381,6 +477,14 @@ unpackTo(_o: CQREventT): void {
   _o.HAS_MAHALANOBIS_3D_SQUARED = this.HAS_MAHALANOBIS_3D_SQUARED();
   _o.COMBINED_RADIUS_M = this.COMBINED_RADIUS_M();
   _o.HAS_COMBINED_RADIUS_M = this.HAS_COMBINED_RADIUS_M();
+  _o.PRIMARY_HARD_BODY_RADIUS_M = this.PRIMARY_HARD_BODY_RADIUS_M();
+  _o.HAS_PRIMARY_HARD_BODY_RADIUS_M = this.HAS_PRIMARY_HARD_BODY_RADIUS_M();
+  _o.SECONDARY_HARD_BODY_RADIUS_M = this.SECONDARY_HARD_BODY_RADIUS_M();
+  _o.HAS_SECONDARY_HARD_BODY_RADIUS_M = this.HAS_SECONDARY_HARD_BODY_RADIUS_M();
+  _o.PRIMARY_RADIUS_BASIS = this.PRIMARY_RADIUS_BASIS();
+  _o.SECONDARY_RADIUS_BASIS = this.SECONDARY_RADIUS_BASIS();
+  _o.PRIMARY_COVARIANCE_BASIS = this.PRIMARY_COVARIANCE_BASIS();
+  _o.SECONDARY_COVARIANCE_BASIS = this.SECONDARY_COVARIANCE_BASIS();
 }
 }
 
@@ -412,7 +516,15 @@ constructor(
   public MAHALANOBIS_3D_SQUARED: number = 0.0,
   public HAS_MAHALANOBIS_3D_SQUARED: boolean = false,
   public COMBINED_RADIUS_M: number = 0.0,
-  public HAS_COMBINED_RADIUS_M: boolean = false
+  public HAS_COMBINED_RADIUS_M: boolean = false,
+  public PRIMARY_HARD_BODY_RADIUS_M: number = 0.0,
+  public HAS_PRIMARY_HARD_BODY_RADIUS_M: boolean = false,
+  public SECONDARY_HARD_BODY_RADIUS_M: number = 0.0,
+  public HAS_SECONDARY_HARD_BODY_RADIUS_M: boolean = false,
+  public PRIMARY_RADIUS_BASIS: cqrHardBodyRadiusBasis = cqrHardBodyRadiusBasis.UNSPECIFIED,
+  public SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis = cqrHardBodyRadiusBasis.UNSPECIFIED,
+  public PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis = cqrCovarianceBasis.UNSPECIFIED,
+  public SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis = cqrCovarianceBasis.UNSPECIFIED
 ){}
 
 
@@ -459,6 +571,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CQREvent.addHasMahalanobis3DSquared(builder, this.HAS_MAHALANOBIS_3D_SQUARED);
   CQREvent.addCombinedRadiusM(builder, this.COMBINED_RADIUS_M);
   CQREvent.addHasCombinedRadiusM(builder, this.HAS_COMBINED_RADIUS_M);
+  CQREvent.addPrimaryHardBodyRadiusM(builder, this.PRIMARY_HARD_BODY_RADIUS_M);
+  CQREvent.addHasPrimaryHardBodyRadiusM(builder, this.HAS_PRIMARY_HARD_BODY_RADIUS_M);
+  CQREvent.addSecondaryHardBodyRadiusM(builder, this.SECONDARY_HARD_BODY_RADIUS_M);
+  CQREvent.addHasSecondaryHardBodyRadiusM(builder, this.HAS_SECONDARY_HARD_BODY_RADIUS_M);
+  CQREvent.addPrimaryRadiusBasis(builder, this.PRIMARY_RADIUS_BASIS);
+  CQREvent.addSecondaryRadiusBasis(builder, this.SECONDARY_RADIUS_BASIS);
+  CQREvent.addPrimaryCovarianceBasis(builder, this.PRIMARY_COVARIANCE_BASIS);
+  CQREvent.addSecondaryCovarianceBasis(builder, this.SECONDARY_COVARIANCE_BASIS);
 
   return CQREvent.endCQREvent(builder);
 }

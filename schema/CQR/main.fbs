@@ -1,5 +1,5 @@
-// Hash: e11a3d2bc2d48736346a3682ef4417a1445e0828a1a1fd8016537b7afba146b9
-// Version: 1.219.1
+// Hash: e26e580458eaadad05e7af7b74ebe0578371a71fc0a13f91ac9bf74b796d8ef5
+// Version: 1.219.2
 // -----------------------------------END_HEADER
 include "../PRW/main.fbs";
 include "../OMM/main.fbs";
@@ -32,6 +32,41 @@ enum cqrProbabilityAlgorithm : ubyte {
 enum cqrUncertaintyOrigin : ubyte {
   UNSPECIFIED = 0, SUPPLIED_COVARIANCE = 1, SYNTHESIZED_COVARIANCE = 2,
   MAXIMUM_PROBABILITY_ONLY = 3
+}
+/// Where an object's hard-body radius came from.
+enum cqrHardBodyRadiusBasis : ubyte {
+  UNSPECIFIED = 0,
+  /// Given with the source, by an operator or the requester.
+  SUPPLIED = 1,
+  /// Half the catalog entry's characteristic size (CAT SIZE).
+  CATALOG_SIZE = 2,
+  /// Radius of a sphere of the catalog entry's radar cross section,
+  /// sqrt(RCS / pi): a radar measure, not a physical size.
+  RADAR_CROSS_SECTION = 3,
+  /// Half the request's COMBINED_RADIUS_M: no object-specific value.
+  REQUEST_DEFAULT = 4
+}
+/// Where an object's position covariance at TCA came from.
+enum cqrCovarianceBasis : ubyte {
+  UNSPECIFIED = 0,
+  /// None: the source supplied no covariance (an element set carries none).
+  NONE = 1,
+  /// The source's ephemeris or orbit message (OEM or OCM covariance).
+  SOURCE_EPHEMERIS = 2,
+  /// A conjunction data message.
+  CONJUNCTION_MESSAGE = 3,
+  /// The formal covariance of an orbit-determination fit.
+  ORBIT_DETERMINATION = 4,
+  /// An empirical prediction-error model for the source's element sets.
+  EMPIRICAL_MODEL = 5
+}
+/// The assumed correlation between the two objects' position errors.
+enum cqrCovarianceCorrelation : ubyte {
+  UNSPECIFIED = 0,
+  /// Independent errors: the combined covariance is the sum of the two.
+  INDEPENDENT = 1,
+  /// A cross covariance was supplied and used.
+  SUPPLIED_CROSS_COVARIANCE = 2
 }
 enum cqrDocumentSyntax : ubyte {
   UNSPECIFIED = 0, CCSDS_CDM_KVN = 1, CCSDS_CDM_XML = 2
@@ -89,6 +124,13 @@ table CQRObjectSource {
   APOGEE_ALTITUDE_M:double;
   /// True when APOGEE_ALTITUDE_M carries a value; false means absent.
   HAS_APOGEE_ALTITUDE_M:bool = false;
+  /// Hard-body radius in metres given with the source.
+  HARD_BODY_RADIUS_M:double;
+  /// True when HARD_BODY_RADIUS_M carries a value; false means absent.
+  HAS_HARD_BODY_RADIUS_M:bool = false;
+  /// The object's catalog entry. Without a supplied radius, its SIZE, else
+  /// its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+  CATALOG_ENTRY:CAT;
 }
 
 /// Explicit UTC search window and positive resolution, SI seconds/metres.
@@ -159,6 +201,15 @@ table CQRProbabilityResult {
   /// True when MAHALANOBIS_SQUARED carries a value; false means absent.
   HAS_MAHALANOBIS_SQUARED:bool = false;
   UNCERTAINTY_SOURCE:cqrUncertaintyOrigin = UNSPECIFIED;
+  /// For a covariance-based probability: whether the covariance's coverage was
+  /// measured against independent reference states. Only CALIBRATED
+  /// covariance supports a probability beyond "conditional on the stated
+  /// assumptions".
+  CALIBRATION:covarianceCalibration = Unspecified;
+  /// Identifier of the calibration evidence (a report or record).
+  CALIBRATION_REFERENCE:string;
+  /// The correlation assumed between the two objects' errors.
+  CROSS_CORRELATION:cqrCovarianceCorrelation = UNSPECIFIED;
 }
 
 table CQRAlfanoRequest {
@@ -241,6 +292,20 @@ table CQREvent {
   COMBINED_RADIUS_M:double;
   /// True when COMBINED_RADIUS_M carries a value; false means absent.
   HAS_COMBINED_RADIUS_M:bool = false;
+  /// Each object's hard-body radius in metres and where it came from;
+  /// COMBINED_RADIUS_M is their sum.
+  PRIMARY_HARD_BODY_RADIUS_M:double;
+  /// True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+  HAS_PRIMARY_HARD_BODY_RADIUS_M:bool = false;
+  SECONDARY_HARD_BODY_RADIUS_M:double;
+  /// True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+  HAS_SECONDARY_HARD_BODY_RADIUS_M:bool = false;
+  PRIMARY_RADIUS_BASIS:cqrHardBodyRadiusBasis = UNSPECIFIED;
+  SECONDARY_RADIUS_BASIS:cqrHardBodyRadiusBasis = UNSPECIFIED;
+  /// Where each object's position covariance came from; NONE means the event
+  /// carries no covariance-based quantity for it.
+  PRIMARY_COVARIANCE_BASIS:cqrCovarianceBasis = UNSPECIFIED;
+  SECONDARY_COVARIANCE_BASIS:cqrCovarianceBasis = UNSPECIFIED;
 }
 
 table CQRScreeningStatistics {

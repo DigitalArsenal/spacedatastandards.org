@@ -4,6 +4,8 @@ import { CQRProbabilityResult, CQRProbabilityResultT } from './CQRProbabilityRes
 import { FRMVector3, FRMVector3T } from './FRMVector3.js';
 import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
+import { cqrCovarianceBasis } from './cqrCovarianceBasis.js';
+import { cqrHardBodyRadiusBasis } from './cqrHardBodyRadiusBasis.js';
 /**
  * Explicit summary when legacy source lacks sufficient data for a full CDM.
  */
@@ -68,6 +70,28 @@ export declare class CQREvent implements flatbuffers.IUnpackableObject<CQREventT
      * True when COMBINED_RADIUS_M carries a value; false means absent.
      */
     HAS_COMBINED_RADIUS_M(): boolean;
+    /**
+     * Each object's hard-body radius in metres and where it came from;
+     * COMBINED_RADIUS_M is their sum.
+     */
+    PRIMARY_HARD_BODY_RADIUS_M(): number;
+    /**
+     * True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+     */
+    HAS_PRIMARY_HARD_BODY_RADIUS_M(): boolean;
+    SECONDARY_HARD_BODY_RADIUS_M(): number;
+    /**
+     * True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+     */
+    HAS_SECONDARY_HARD_BODY_RADIUS_M(): boolean;
+    PRIMARY_RADIUS_BASIS(): cqrHardBodyRadiusBasis;
+    SECONDARY_RADIUS_BASIS(): cqrHardBodyRadiusBasis;
+    /**
+     * Where each object's position covariance came from; NONE means the event
+     * carries no covariance-based quantity for it.
+     */
+    PRIMARY_COVARIANCE_BASIS(): cqrCovarianceBasis;
+    SECONDARY_COVARIANCE_BASIS(): cqrCovarianceBasis;
     static startCQREvent(builder: flatbuffers.Builder): void;
     static addPrimaryId(builder: flatbuffers.Builder, PRIMARY_IDOffset: flatbuffers.Offset): void;
     static addSecondaryId(builder: flatbuffers.Builder, SECONDARY_IDOffset: flatbuffers.Offset): void;
@@ -96,6 +120,14 @@ export declare class CQREvent implements flatbuffers.IUnpackableObject<CQREventT
     static addHasMahalanobis3DSquared(builder: flatbuffers.Builder, HAS_MAHALANOBIS_3D_SQUARED: boolean): void;
     static addCombinedRadiusM(builder: flatbuffers.Builder, COMBINED_RADIUS_M: number): void;
     static addHasCombinedRadiusM(builder: flatbuffers.Builder, HAS_COMBINED_RADIUS_M: boolean): void;
+    static addPrimaryHardBodyRadiusM(builder: flatbuffers.Builder, PRIMARY_HARD_BODY_RADIUS_M: number): void;
+    static addHasPrimaryHardBodyRadiusM(builder: flatbuffers.Builder, HAS_PRIMARY_HARD_BODY_RADIUS_M: boolean): void;
+    static addSecondaryHardBodyRadiusM(builder: flatbuffers.Builder, SECONDARY_HARD_BODY_RADIUS_M: number): void;
+    static addHasSecondaryHardBodyRadiusM(builder: flatbuffers.Builder, HAS_SECONDARY_HARD_BODY_RADIUS_M: boolean): void;
+    static addPrimaryRadiusBasis(builder: flatbuffers.Builder, PRIMARY_RADIUS_BASIS: cqrHardBodyRadiusBasis): void;
+    static addSecondaryRadiusBasis(builder: flatbuffers.Builder, SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis): void;
+    static addPrimaryCovarianceBasis(builder: flatbuffers.Builder, PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis): void;
+    static addSecondaryCovarianceBasis(builder: flatbuffers.Builder, SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis): void;
     static endCQREvent(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): CQREventT;
     unpackTo(_o: CQREventT): void;
@@ -128,7 +160,15 @@ export declare class CQREventT implements flatbuffers.IGeneratedObject {
     HAS_MAHALANOBIS_3D_SQUARED: boolean;
     COMBINED_RADIUS_M: number;
     HAS_COMBINED_RADIUS_M: boolean;
-    constructor(PRIMARY_ID?: string | Uint8Array | null, SECONDARY_ID?: string | Uint8Array | null, PRIMARY_NAME?: string | Uint8Array | null, SECONDARY_NAME?: string | Uint8Array | null, PRIMARY_NORAD_ID?: number, SECONDARY_NORAD_ID?: number, TCA?: TIMInstantT | null, MISS_DISTANCE_M?: number, RELATIVE_SPEED_M_S?: number, PROBABILITY?: CQRProbabilityResultT | null, DILUTION_THRESHOLD_M?: number, HAS_DILUTION_THRESHOLD_M?: boolean, RELATIVE_POSITION_RTN?: FRMVector3T | null, RELATIVE_VELOCITY_RTN?: FRMVector3T | null, PRIMARY_SIGMA_RTN_M?: FRMVector3T | null, SECONDARY_SIGMA_RTN_M?: FRMVector3T | null, PRIMARY_DAYS_SINCE_EPOCH?: number, HAS_PRIMARY_DAYS_SINCE_EPOCH?: boolean, SECONDARY_DAYS_SINCE_EPOCH?: number, HAS_SECONDARY_DAYS_SINCE_EPOCH?: boolean, CONJUNCTION_MESSAGE?: CDMT | null, PRIMARY_STATE?: PRWResidentStateT | null, SECONDARY_STATE?: PRWResidentStateT | null, MAHALANOBIS_3D_SQUARED?: number, HAS_MAHALANOBIS_3D_SQUARED?: boolean, COMBINED_RADIUS_M?: number, HAS_COMBINED_RADIUS_M?: boolean);
+    PRIMARY_HARD_BODY_RADIUS_M: number;
+    HAS_PRIMARY_HARD_BODY_RADIUS_M: boolean;
+    SECONDARY_HARD_BODY_RADIUS_M: number;
+    HAS_SECONDARY_HARD_BODY_RADIUS_M: boolean;
+    PRIMARY_RADIUS_BASIS: cqrHardBodyRadiusBasis;
+    SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis;
+    PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis;
+    SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis;
+    constructor(PRIMARY_ID?: string | Uint8Array | null, SECONDARY_ID?: string | Uint8Array | null, PRIMARY_NAME?: string | Uint8Array | null, SECONDARY_NAME?: string | Uint8Array | null, PRIMARY_NORAD_ID?: number, SECONDARY_NORAD_ID?: number, TCA?: TIMInstantT | null, MISS_DISTANCE_M?: number, RELATIVE_SPEED_M_S?: number, PROBABILITY?: CQRProbabilityResultT | null, DILUTION_THRESHOLD_M?: number, HAS_DILUTION_THRESHOLD_M?: boolean, RELATIVE_POSITION_RTN?: FRMVector3T | null, RELATIVE_VELOCITY_RTN?: FRMVector3T | null, PRIMARY_SIGMA_RTN_M?: FRMVector3T | null, SECONDARY_SIGMA_RTN_M?: FRMVector3T | null, PRIMARY_DAYS_SINCE_EPOCH?: number, HAS_PRIMARY_DAYS_SINCE_EPOCH?: boolean, SECONDARY_DAYS_SINCE_EPOCH?: number, HAS_SECONDARY_DAYS_SINCE_EPOCH?: boolean, CONJUNCTION_MESSAGE?: CDMT | null, PRIMARY_STATE?: PRWResidentStateT | null, SECONDARY_STATE?: PRWResidentStateT | null, MAHALANOBIS_3D_SQUARED?: number, HAS_MAHALANOBIS_3D_SQUARED?: boolean, COMBINED_RADIUS_M?: number, HAS_COMBINED_RADIUS_M?: boolean, PRIMARY_HARD_BODY_RADIUS_M?: number, HAS_PRIMARY_HARD_BODY_RADIUS_M?: boolean, SECONDARY_HARD_BODY_RADIUS_M?: number, HAS_SECONDARY_HARD_BODY_RADIUS_M?: boolean, PRIMARY_RADIUS_BASIS?: cqrHardBodyRadiusBasis, SECONDARY_RADIUS_BASIS?: cqrHardBodyRadiusBasis, PRIMARY_COVARIANCE_BASIS?: cqrCovarianceBasis, SECONDARY_COVARIANCE_BASIS?: cqrCovarianceBasis);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CQREvent.d.ts.map

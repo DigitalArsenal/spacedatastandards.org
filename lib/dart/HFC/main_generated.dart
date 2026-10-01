@@ -102,6 +102,45 @@ class _estimatorCategoryReader extends fb.Reader<estimatorCategory> {
       estimatorCategory.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Whether a covariance's coverage was measured against independent reference
+///  states: the share of reference errors inside its confidence regions matched
+///  what the covariance claims, for the regime and prediction age it covers.
+enum covarianceCalibration {
+  Unspecified(0),
+  Uncalibrated(1),
+  Calibrated(2);
+
+  final int value;
+  const covarianceCalibration(this.value);
+
+  factory covarianceCalibration.fromValue(int value) {
+    switch (value) {
+      case 0: return covarianceCalibration.Unspecified;
+      case 1: return covarianceCalibration.Uncalibrated;
+      case 2: return covarianceCalibration.Calibrated;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static covarianceCalibration? _createOrNull(int? value) =>
+      value == null ? null : covarianceCalibration.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<covarianceCalibration> reader = _covarianceCalibrationReader();
+}
+
+class _covarianceCalibrationReader extends fb.Reader<covarianceCalibration> {
+  const _covarianceCalibrationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  covarianceCalibration read(fb.BufferContext bc, int offset) =>
+      covarianceCalibration.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 class Header {
   Header._(this._bc, this._bcOffset);
   factory Header(List<int> bytes) {
@@ -2590,10 +2629,17 @@ class OCM {
   ///  KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
   String? get ORB_AVERAGING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
   String? get orbAveraging => ORB_AVERAGING;
+  ///  Whether COVARIANCE_DATA's coverage was measured against independent
+  ///  reference states.
+  covarianceCalibration get COV_CALIBRATION => covarianceCalibration.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 46, 0));
+  covarianceCalibration get covCalibration => COV_CALIBRATION;
+  ///  Identifier of that calibration evidence (a report or record).
+  String? get COV_CALIBRATION_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get covCalibrationReference => COV_CALIBRATION_REFERENCE;
 
   @override
   String toString() {
-    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, covRefFrame: ${covRefFrame}, orbRevnum: ${orbRevnum}, orbAveraging: ${orbAveraging}}';
+    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, covRefFrame: ${covRefFrame}, orbRevnum: ${orbRevnum}, orbAveraging: ${orbAveraging}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}}';
   }
 }
 
@@ -2611,7 +2657,7 @@ class OCMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(21);
+    fbBuilder.startTable(23);
   }
 
   int addHeaderOffset(int? offset) {
@@ -2698,6 +2744,14 @@ class OCMBuilder {
     fbBuilder.addOffset(20, offset);
     return fbBuilder.offset;
   }
+  int addCovCalibration(covarianceCalibration? COV_CALIBRATION) {
+    fbBuilder.addInt8(21, COV_CALIBRATION?.value);
+    return fbBuilder.offset;
+  }
+  int addCovCalibrationReferenceOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2726,6 +2780,8 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
   final RFMObjectBuilder? _COV_REF_FRAME;
   final int? _ORB_REVNUM;
   final String? _ORB_AVERAGING;
+  final covarianceCalibration? _COV_CALIBRATION;
+  final String? _COV_CALIBRATION_REFERENCE;
 
   OCMObjectBuilder({
     HeaderObjectBuilder? HEADER,
@@ -2767,6 +2823,10 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     int? orbRevnum,
     String? ORB_AVERAGING,
     String? orbAveraging,
+    covarianceCalibration? COV_CALIBRATION,
+    covarianceCalibration? covCalibration,
+    String? COV_CALIBRATION_REFERENCE,
+    String? covCalibrationReference,
   })
       : _HEADER = HEADER,
         _METADATA = METADATA,
@@ -2788,7 +2848,9 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
         _TRAJ_FRAME_EPOCH = trajFrameEpoch ?? TRAJ_FRAME_EPOCH,
         _COV_REF_FRAME = covRefFrame ?? COV_REF_FRAME,
         _ORB_REVNUM = orbRevnum ?? ORB_REVNUM,
-        _ORB_AVERAGING = orbAveraging ?? ORB_AVERAGING;
+        _ORB_AVERAGING = orbAveraging ?? ORB_AVERAGING,
+        _COV_CALIBRATION = covCalibration ?? COV_CALIBRATION,
+        _COV_CALIBRATION_REFERENCE = covCalibrationReference ?? COV_CALIBRATION_REFERENCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2820,7 +2882,9 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     final int? COV_REF_FRAMEOffset = _COV_REF_FRAME?.getOrCreateOffset(fbBuilder);
     final int? ORB_AVERAGINGOffset = _ORB_AVERAGING == null ? null
         : fbBuilder.writeString(_ORB_AVERAGING!);
-    fbBuilder.startTable(21);
+    final int? COV_CALIBRATION_REFERENCEOffset = _COV_CALIBRATION_REFERENCE == null ? null
+        : fbBuilder.writeString(_COV_CALIBRATION_REFERENCE!);
+    fbBuilder.startTable(23);
     fbBuilder.addOffset(0, HEADEROffset);
     fbBuilder.addOffset(1, METADATAOffset);
     fbBuilder.addInt8(2, _TRAJ_TYPE?.value);
@@ -2842,6 +2906,8 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(18, COV_REF_FRAMEOffset);
     fbBuilder.addUint32(19, _ORB_REVNUM);
     fbBuilder.addOffset(20, ORB_AVERAGINGOffset);
+    fbBuilder.addInt8(21, _COV_CALIBRATION?.value);
+    fbBuilder.addOffset(22, COV_CALIBRATION_REFERENCEOffset);
     return fbBuilder.endTable();
   }
 

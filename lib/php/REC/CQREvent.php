@@ -262,22 +262,100 @@ class CQREvent extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Each object's hard-body radius in metres and where it came from;
+    /// COMBINED_RADIUS_M is their sum.
+    /**
+     * @return double
+     */
+    public function getPRIMARY_HARD_BODY_RADIUS_M()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+    /**
+     * @return bool
+     */
+    public function getHAS_PRIMARY_HARD_BODY_RADIUS_M()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return double
+     */
+    public function getSECONDARY_HARD_BODY_RADIUS_M()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+    /**
+     * @return bool
+     */
+    public function getHAS_SECONDARY_HARD_BODY_RADIUS_M()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return byte
+     */
+    public function getPRIMARY_RADIUS_BASIS()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrHardBodyRadiusBasis::UNSPECIFIED;
+    }
+
+    /**
+     * @return byte
+     */
+    public function getSECONDARY_RADIUS_BASIS()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrHardBodyRadiusBasis::UNSPECIFIED;
+    }
+
+    /// Where each object's position covariance came from; NONE means the event
+    /// carries no covariance-based quantity for it.
+    /**
+     * @return byte
+     */
+    public function getPRIMARY_COVARIANCE_BASIS()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrCovarianceBasis::UNSPECIFIED;
+    }
+
+    /**
+     * @return byte
+     */
+    public function getSECONDARY_COVARIANCE_BASIS()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrCovarianceBasis::UNSPECIFIED;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCQREvent(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(27);
+        $builder->StartObject(35);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CQREvent
      */
-    public static function createCQREvent(FlatBufferBuilder $builder, $PRIMARY_ID, $SECONDARY_ID, $PRIMARY_NAME, $SECONDARY_NAME, $PRIMARY_NORAD_ID, $SECONDARY_NORAD_ID, $TCA, $MISS_DISTANCE_M, $RELATIVE_SPEED_M_S, $PROBABILITY, $DILUTION_THRESHOLD_M, $HAS_DILUTION_THRESHOLD_M, $RELATIVE_POSITION_RTN, $RELATIVE_VELOCITY_RTN, $PRIMARY_SIGMA_RTN_M, $SECONDARY_SIGMA_RTN_M, $PRIMARY_DAYS_SINCE_EPOCH, $HAS_PRIMARY_DAYS_SINCE_EPOCH, $SECONDARY_DAYS_SINCE_EPOCH, $HAS_SECONDARY_DAYS_SINCE_EPOCH, $CONJUNCTION_MESSAGE, $PRIMARY_STATE, $SECONDARY_STATE, $MAHALANOBIS_3D_SQUARED, $HAS_MAHALANOBIS_3D_SQUARED, $COMBINED_RADIUS_M, $HAS_COMBINED_RADIUS_M)
+    public static function createCQREvent(FlatBufferBuilder $builder, $PRIMARY_ID, $SECONDARY_ID, $PRIMARY_NAME, $SECONDARY_NAME, $PRIMARY_NORAD_ID, $SECONDARY_NORAD_ID, $TCA, $MISS_DISTANCE_M, $RELATIVE_SPEED_M_S, $PROBABILITY, $DILUTION_THRESHOLD_M, $HAS_DILUTION_THRESHOLD_M, $RELATIVE_POSITION_RTN, $RELATIVE_VELOCITY_RTN, $PRIMARY_SIGMA_RTN_M, $SECONDARY_SIGMA_RTN_M, $PRIMARY_DAYS_SINCE_EPOCH, $HAS_PRIMARY_DAYS_SINCE_EPOCH, $SECONDARY_DAYS_SINCE_EPOCH, $HAS_SECONDARY_DAYS_SINCE_EPOCH, $CONJUNCTION_MESSAGE, $PRIMARY_STATE, $SECONDARY_STATE, $MAHALANOBIS_3D_SQUARED, $HAS_MAHALANOBIS_3D_SQUARED, $COMBINED_RADIUS_M, $HAS_COMBINED_RADIUS_M, $PRIMARY_HARD_BODY_RADIUS_M, $HAS_PRIMARY_HARD_BODY_RADIUS_M, $SECONDARY_HARD_BODY_RADIUS_M, $HAS_SECONDARY_HARD_BODY_RADIUS_M, $PRIMARY_RADIUS_BASIS, $SECONDARY_RADIUS_BASIS, $PRIMARY_COVARIANCE_BASIS, $SECONDARY_COVARIANCE_BASIS)
     {
-        $builder->startObject(27);
+        $builder->startObject(35);
         self::addPRIMARY_ID($builder, $PRIMARY_ID);
         self::addSECONDARY_ID($builder, $SECONDARY_ID);
         self::addPRIMARY_NAME($builder, $PRIMARY_NAME);
@@ -305,6 +383,14 @@ class CQREvent extends Table
         self::addHAS_MAHALANOBIS_3D_SQUARED($builder, $HAS_MAHALANOBIS_3D_SQUARED);
         self::addCOMBINED_RADIUS_M($builder, $COMBINED_RADIUS_M);
         self::addHAS_COMBINED_RADIUS_M($builder, $HAS_COMBINED_RADIUS_M);
+        self::addPRIMARY_HARD_BODY_RADIUS_M($builder, $PRIMARY_HARD_BODY_RADIUS_M);
+        self::addHAS_PRIMARY_HARD_BODY_RADIUS_M($builder, $HAS_PRIMARY_HARD_BODY_RADIUS_M);
+        self::addSECONDARY_HARD_BODY_RADIUS_M($builder, $SECONDARY_HARD_BODY_RADIUS_M);
+        self::addHAS_SECONDARY_HARD_BODY_RADIUS_M($builder, $HAS_SECONDARY_HARD_BODY_RADIUS_M);
+        self::addPRIMARY_RADIUS_BASIS($builder, $PRIMARY_RADIUS_BASIS);
+        self::addSECONDARY_RADIUS_BASIS($builder, $SECONDARY_RADIUS_BASIS);
+        self::addPRIMARY_COVARIANCE_BASIS($builder, $PRIMARY_COVARIANCE_BASIS);
+        self::addSECONDARY_COVARIANCE_BASIS($builder, $SECONDARY_COVARIANCE_BASIS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // PRIMARY_ID
         $builder->required($o, 6);  // SECONDARY_ID
@@ -580,6 +666,86 @@ class CQREvent extends Table
     public static function addHAS_COMBINED_RADIUS_M(FlatBufferBuilder $builder, $HAS_COMBINED_RADIUS_M)
     {
         $builder->addBoolX(26, $HAS_COMBINED_RADIUS_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPRIMARY_HARD_BODY_RADIUS_M(FlatBufferBuilder $builder, $PRIMARY_HARD_BODY_RADIUS_M)
+    {
+        $builder->addDoubleX(27, $PRIMARY_HARD_BODY_RADIUS_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_PRIMARY_HARD_BODY_RADIUS_M(FlatBufferBuilder $builder, $HAS_PRIMARY_HARD_BODY_RADIUS_M)
+    {
+        $builder->addBoolX(28, $HAS_PRIMARY_HARD_BODY_RADIUS_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSECONDARY_HARD_BODY_RADIUS_M(FlatBufferBuilder $builder, $SECONDARY_HARD_BODY_RADIUS_M)
+    {
+        $builder->addDoubleX(29, $SECONDARY_HARD_BODY_RADIUS_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_SECONDARY_HARD_BODY_RADIUS_M(FlatBufferBuilder $builder, $HAS_SECONDARY_HARD_BODY_RADIUS_M)
+    {
+        $builder->addBoolX(30, $HAS_SECONDARY_HARD_BODY_RADIUS_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addPRIMARY_RADIUS_BASIS(FlatBufferBuilder $builder, $PRIMARY_RADIUS_BASIS)
+    {
+        $builder->addByteX(31, $PRIMARY_RADIUS_BASIS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addSECONDARY_RADIUS_BASIS(FlatBufferBuilder $builder, $SECONDARY_RADIUS_BASIS)
+    {
+        $builder->addByteX(32, $SECONDARY_RADIUS_BASIS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addPRIMARY_COVARIANCE_BASIS(FlatBufferBuilder $builder, $PRIMARY_COVARIANCE_BASIS)
+    {
+        $builder->addByteX(33, $PRIMARY_COVARIANCE_BASIS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addSECONDARY_COVARIANCE_BASIS(FlatBufferBuilder $builder, $SECONDARY_COVARIANCE_BASIS)
+    {
+        $builder->addByteX(34, $SECONDARY_COVARIANCE_BASIS, 0);
     }
 
     /**

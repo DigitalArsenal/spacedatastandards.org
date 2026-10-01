@@ -179,6 +179,35 @@ class CQRObjectSource : Table() {
             val o = __offset(36)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Hard-body radius in metres given with the source.
+     */
+    val hardBodyRadiusM : Double
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True when HARD_BODY_RADIUS_M carries a value; false means absent.
+     */
+    val hasHardBodyRadiusM : Boolean
+        get() {
+            val o = __offset(40)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * The object's catalog entry. Without a supplied radius, its SIZE, else
+     * its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+     */
+    val catalogEntry : CAT? get() = catalogEntry(CAT())
+    fun catalogEntry(obj: CAT) : CAT? {
+        val o = __offset(42)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCQRObjectSource(_bb: ByteBuffer): CQRObjectSource = getRootAsCQRObjectSource(_bb, CQRObjectSource())
@@ -186,10 +215,12 @@ class CQRObjectSource : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCQRObjectSource(builder: FlatBufferBuilder, objectIdOffset: Int, objectNameOffset: Int, noradCatalogId: UInt, instanceOffset: Int, sourceHandle: UInt, propagatorPortIdOffset: Int, meanElementsOffset: Int, ephemerisOffset: Int, comprehensiveOrbitOffset: Int, polynomialEphemerisOffset: Int, tleLinesOffset: Int, provenanceOffset: Int, sourceEpochOffset: Int, perigeeAltitudeM: Double, hasPerigeeAltitudeM: Boolean, apogeeAltitudeM: Double, hasApogeeAltitudeM: Boolean) : Int {
-            builder.startTable(17)
+        fun createCQRObjectSource(builder: FlatBufferBuilder, objectIdOffset: Int, objectNameOffset: Int, noradCatalogId: UInt, instanceOffset: Int, sourceHandle: UInt, propagatorPortIdOffset: Int, meanElementsOffset: Int, ephemerisOffset: Int, comprehensiveOrbitOffset: Int, polynomialEphemerisOffset: Int, tleLinesOffset: Int, provenanceOffset: Int, sourceEpochOffset: Int, perigeeAltitudeM: Double, hasPerigeeAltitudeM: Boolean, apogeeAltitudeM: Double, hasApogeeAltitudeM: Boolean, hardBodyRadiusM: Double, hasHardBodyRadiusM: Boolean, catalogEntryOffset: Int) : Int {
+            builder.startTable(20)
+            addHARDBODYRADIUSM(builder, hardBodyRadiusM)
             addAPOGEEALTITUDEM(builder, apogeeAltitudeM)
             addPERIGEEALTITUDEM(builder, perigeeAltitudeM)
+            addCATALOGENTRY(builder, catalogEntryOffset)
             addSOURCEEPOCH(builder, sourceEpochOffset)
             addPROVENANCE(builder, provenanceOffset)
             addTLELINES(builder, tleLinesOffset)
@@ -203,11 +234,12 @@ class CQRObjectSource : Table() {
             addNORADCATALOGID(builder, noradCatalogId)
             addOBJECTNAME(builder, objectNameOffset)
             addOBJECTID(builder, objectIdOffset)
+            addHASHARDBODYRADIUSM(builder, hasHardBodyRadiusM)
             addHASAPOGEEALTITUDEM(builder, hasApogeeAltitudeM)
             addHASPERIGEEALTITUDEM(builder, hasPerigeeAltitudeM)
             return endCQRObjectSource(builder)
         }
-        fun startCQRObjectSource(builder: FlatBufferBuilder) = builder.startTable(17)
+        fun startCQRObjectSource(builder: FlatBufferBuilder) = builder.startTable(20)
         fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(0, objectId, 0)
         fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(1, objectName, 0)
         fun addNORADCATALOGID(builder: FlatBufferBuilder, noradCatalogId: UInt) = builder.addInt(2, noradCatalogId.toInt(), 0)
@@ -225,6 +257,9 @@ class CQRObjectSource : Table() {
         fun addHASPERIGEEALTITUDEM(builder: FlatBufferBuilder, hasPerigeeAltitudeM: Boolean) = builder.addBoolean(14, hasPerigeeAltitudeM, false)
         fun addAPOGEEALTITUDEM(builder: FlatBufferBuilder, apogeeAltitudeM: Double) = builder.addDouble(15, apogeeAltitudeM, 0.0)
         fun addHASAPOGEEALTITUDEM(builder: FlatBufferBuilder, hasApogeeAltitudeM: Boolean) = builder.addBoolean(16, hasApogeeAltitudeM, false)
+        fun addHARDBODYRADIUSM(builder: FlatBufferBuilder, hardBodyRadiusM: Double) = builder.addDouble(17, hardBodyRadiusM, 0.0)
+        fun addHASHARDBODYRADIUSM(builder: FlatBufferBuilder, hasHardBodyRadiusM: Boolean) = builder.addBoolean(18, hasHardBodyRadiusM, false)
+        fun addCATALOGENTRY(builder: FlatBufferBuilder, catalogEntry: Int) = builder.addOffset(19, catalogEntry, 0)
         fun endCQRObjectSource(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

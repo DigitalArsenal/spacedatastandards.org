@@ -262,8 +262,70 @@ class CQREvent(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Each object's hard-body radius in metres and where it came from;
+    # COMBINED_RADIUS_M is their sum.
+    # CQREvent
+    def PRIMARY_HARD_BODY_RADIUS_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+    # CQREvent
+    def HAS_PRIMARY_HARD_BODY_RADIUS_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # CQREvent
+    def SECONDARY_HARD_BODY_RADIUS_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+    # CQREvent
+    def HAS_SECONDARY_HARD_BODY_RADIUS_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # CQREvent
+    def PRIMARY_RADIUS_BASIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # CQREvent
+    def SECONDARY_RADIUS_BASIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Where each object's position covariance came from; NONE means the event
+    # carries no covariance-based quantity for it.
+    # CQREvent
+    def PRIMARY_COVARIANCE_BASIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # CQREvent
+    def SECONDARY_COVARIANCE_BASIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
 def CQREventStart(builder):
-    builder.StartObject(27)
+    builder.StartObject(35)
 
 def Start(builder):
     CQREventStart(builder)
@@ -430,6 +492,54 @@ def CQREventAddHAS_COMBINED_RADIUS_M(builder, HAS_COMBINED_RADIUS_M):
 def AddHAS_COMBINED_RADIUS_M(builder, HAS_COMBINED_RADIUS_M):
     CQREventAddHAS_COMBINED_RADIUS_M(builder, HAS_COMBINED_RADIUS_M)
 
+def CQREventAddPRIMARY_HARD_BODY_RADIUS_M(builder, PRIMARY_HARD_BODY_RADIUS_M):
+    builder.PrependFloat64Slot(27, PRIMARY_HARD_BODY_RADIUS_M, 0.0)
+
+def AddPRIMARY_HARD_BODY_RADIUS_M(builder, PRIMARY_HARD_BODY_RADIUS_M):
+    CQREventAddPRIMARY_HARD_BODY_RADIUS_M(builder, PRIMARY_HARD_BODY_RADIUS_M)
+
+def CQREventAddHAS_PRIMARY_HARD_BODY_RADIUS_M(builder, HAS_PRIMARY_HARD_BODY_RADIUS_M):
+    builder.PrependBoolSlot(28, HAS_PRIMARY_HARD_BODY_RADIUS_M, 0)
+
+def AddHAS_PRIMARY_HARD_BODY_RADIUS_M(builder, HAS_PRIMARY_HARD_BODY_RADIUS_M):
+    CQREventAddHAS_PRIMARY_HARD_BODY_RADIUS_M(builder, HAS_PRIMARY_HARD_BODY_RADIUS_M)
+
+def CQREventAddSECONDARY_HARD_BODY_RADIUS_M(builder, SECONDARY_HARD_BODY_RADIUS_M):
+    builder.PrependFloat64Slot(29, SECONDARY_HARD_BODY_RADIUS_M, 0.0)
+
+def AddSECONDARY_HARD_BODY_RADIUS_M(builder, SECONDARY_HARD_BODY_RADIUS_M):
+    CQREventAddSECONDARY_HARD_BODY_RADIUS_M(builder, SECONDARY_HARD_BODY_RADIUS_M)
+
+def CQREventAddHAS_SECONDARY_HARD_BODY_RADIUS_M(builder, HAS_SECONDARY_HARD_BODY_RADIUS_M):
+    builder.PrependBoolSlot(30, HAS_SECONDARY_HARD_BODY_RADIUS_M, 0)
+
+def AddHAS_SECONDARY_HARD_BODY_RADIUS_M(builder, HAS_SECONDARY_HARD_BODY_RADIUS_M):
+    CQREventAddHAS_SECONDARY_HARD_BODY_RADIUS_M(builder, HAS_SECONDARY_HARD_BODY_RADIUS_M)
+
+def CQREventAddPRIMARY_RADIUS_BASIS(builder, PRIMARY_RADIUS_BASIS):
+    builder.PrependUint8Slot(31, PRIMARY_RADIUS_BASIS, 0)
+
+def AddPRIMARY_RADIUS_BASIS(builder, PRIMARY_RADIUS_BASIS):
+    CQREventAddPRIMARY_RADIUS_BASIS(builder, PRIMARY_RADIUS_BASIS)
+
+def CQREventAddSECONDARY_RADIUS_BASIS(builder, SECONDARY_RADIUS_BASIS):
+    builder.PrependUint8Slot(32, SECONDARY_RADIUS_BASIS, 0)
+
+def AddSECONDARY_RADIUS_BASIS(builder, SECONDARY_RADIUS_BASIS):
+    CQREventAddSECONDARY_RADIUS_BASIS(builder, SECONDARY_RADIUS_BASIS)
+
+def CQREventAddPRIMARY_COVARIANCE_BASIS(builder, PRIMARY_COVARIANCE_BASIS):
+    builder.PrependUint8Slot(33, PRIMARY_COVARIANCE_BASIS, 0)
+
+def AddPRIMARY_COVARIANCE_BASIS(builder, PRIMARY_COVARIANCE_BASIS):
+    CQREventAddPRIMARY_COVARIANCE_BASIS(builder, PRIMARY_COVARIANCE_BASIS)
+
+def CQREventAddSECONDARY_COVARIANCE_BASIS(builder, SECONDARY_COVARIANCE_BASIS):
+    builder.PrependUint8Slot(34, SECONDARY_COVARIANCE_BASIS, 0)
+
+def AddSECONDARY_COVARIANCE_BASIS(builder, SECONDARY_COVARIANCE_BASIS):
+    CQREventAddSECONDARY_COVARIANCE_BASIS(builder, SECONDARY_COVARIANCE_BASIS)
+
 def CQREventEnd(builder):
     return builder.EndObject()
 
@@ -478,6 +588,14 @@ class CQREventT(object):
         HAS_MAHALANOBIS_3D_SQUARED = False,
         COMBINED_RADIUS_M = 0.0,
         HAS_COMBINED_RADIUS_M = False,
+        PRIMARY_HARD_BODY_RADIUS_M = 0.0,
+        HAS_PRIMARY_HARD_BODY_RADIUS_M = False,
+        SECONDARY_HARD_BODY_RADIUS_M = 0.0,
+        HAS_SECONDARY_HARD_BODY_RADIUS_M = False,
+        PRIMARY_RADIUS_BASIS = 0,
+        SECONDARY_RADIUS_BASIS = 0,
+        PRIMARY_COVARIANCE_BASIS = 0,
+        SECONDARY_COVARIANCE_BASIS = 0,
     ):
         self.PRIMARY_ID = PRIMARY_ID  # type: Optional[str]
         self.SECONDARY_ID = SECONDARY_ID  # type: Optional[str]
@@ -506,6 +624,14 @@ class CQREventT(object):
         self.HAS_MAHALANOBIS_3D_SQUARED = HAS_MAHALANOBIS_3D_SQUARED  # type: bool
         self.COMBINED_RADIUS_M = COMBINED_RADIUS_M  # type: float
         self.HAS_COMBINED_RADIUS_M = HAS_COMBINED_RADIUS_M  # type: bool
+        self.PRIMARY_HARD_BODY_RADIUS_M = PRIMARY_HARD_BODY_RADIUS_M  # type: float
+        self.HAS_PRIMARY_HARD_BODY_RADIUS_M = HAS_PRIMARY_HARD_BODY_RADIUS_M  # type: bool
+        self.SECONDARY_HARD_BODY_RADIUS_M = SECONDARY_HARD_BODY_RADIUS_M  # type: float
+        self.HAS_SECONDARY_HARD_BODY_RADIUS_M = HAS_SECONDARY_HARD_BODY_RADIUS_M  # type: bool
+        self.PRIMARY_RADIUS_BASIS = PRIMARY_RADIUS_BASIS  # type: int
+        self.SECONDARY_RADIUS_BASIS = SECONDARY_RADIUS_BASIS  # type: int
+        self.PRIMARY_COVARIANCE_BASIS = PRIMARY_COVARIANCE_BASIS  # type: int
+        self.SECONDARY_COVARIANCE_BASIS = SECONDARY_COVARIANCE_BASIS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -564,6 +690,14 @@ class CQREventT(object):
         self.HAS_MAHALANOBIS_3D_SQUARED = CQREvent.HAS_MAHALANOBIS_3D_SQUARED()
         self.COMBINED_RADIUS_M = CQREvent.COMBINED_RADIUS_M()
         self.HAS_COMBINED_RADIUS_M = CQREvent.HAS_COMBINED_RADIUS_M()
+        self.PRIMARY_HARD_BODY_RADIUS_M = CQREvent.PRIMARY_HARD_BODY_RADIUS_M()
+        self.HAS_PRIMARY_HARD_BODY_RADIUS_M = CQREvent.HAS_PRIMARY_HARD_BODY_RADIUS_M()
+        self.SECONDARY_HARD_BODY_RADIUS_M = CQREvent.SECONDARY_HARD_BODY_RADIUS_M()
+        self.HAS_SECONDARY_HARD_BODY_RADIUS_M = CQREvent.HAS_SECONDARY_HARD_BODY_RADIUS_M()
+        self.PRIMARY_RADIUS_BASIS = CQREvent.PRIMARY_RADIUS_BASIS()
+        self.SECONDARY_RADIUS_BASIS = CQREvent.SECONDARY_RADIUS_BASIS()
+        self.PRIMARY_COVARIANCE_BASIS = CQREvent.PRIMARY_COVARIANCE_BASIS()
+        self.SECONDARY_COVARIANCE_BASIS = CQREvent.SECONDARY_COVARIANCE_BASIS()
 
     # CQREventT
     def Pack(self, builder):
@@ -634,5 +768,13 @@ class CQREventT(object):
         CQREventAddHAS_MAHALANOBIS_3D_SQUARED(builder, self.HAS_MAHALANOBIS_3D_SQUARED)
         CQREventAddCOMBINED_RADIUS_M(builder, self.COMBINED_RADIUS_M)
         CQREventAddHAS_COMBINED_RADIUS_M(builder, self.HAS_COMBINED_RADIUS_M)
+        CQREventAddPRIMARY_HARD_BODY_RADIUS_M(builder, self.PRIMARY_HARD_BODY_RADIUS_M)
+        CQREventAddHAS_PRIMARY_HARD_BODY_RADIUS_M(builder, self.HAS_PRIMARY_HARD_BODY_RADIUS_M)
+        CQREventAddSECONDARY_HARD_BODY_RADIUS_M(builder, self.SECONDARY_HARD_BODY_RADIUS_M)
+        CQREventAddHAS_SECONDARY_HARD_BODY_RADIUS_M(builder, self.HAS_SECONDARY_HARD_BODY_RADIUS_M)
+        CQREventAddPRIMARY_RADIUS_BASIS(builder, self.PRIMARY_RADIUS_BASIS)
+        CQREventAddSECONDARY_RADIUS_BASIS(builder, self.SECONDARY_RADIUS_BASIS)
+        CQREventAddPRIMARY_COVARIANCE_BASIS(builder, self.PRIMARY_COVARIANCE_BASIS)
+        CQREventAddSECONDARY_COVARIANCE_BASIS(builder, self.SECONDARY_COVARIANCE_BASIS)
         CQREvent = CQREventEnd(builder)
         return CQREvent

@@ -8,6 +8,7 @@ export * from './Band.js';
 export * from './CAT.js';
 export * from './CelestialFrame.js';
 export * from './CelestialFrameWrapper.js';
+export * from './covarianceCalibration.js';
 export * from './CustomFrame.js';
 export * from './CustomFrameWrapper.js';
 export * from './dataAvailability.js';

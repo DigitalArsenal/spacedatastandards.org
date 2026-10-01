@@ -346,8 +346,73 @@ func (rcv *CQRObjectSource) MutateHasApogeeAltitudeM(n bool) bool {
 	return rcv.MutateHAS_APOGEE_ALTITUDE_M(n)
 }
 
+/// Hard-body radius in metres given with the source.
+func (rcv *CQRObjectSource) HARD_BODY_RADIUS_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *CQRObjectSource) HardBodyRadiusM() float64 {
+	return rcv.HARD_BODY_RADIUS_M()
+}
+
+/// Hard-body radius in metres given with the source.
+func (rcv *CQRObjectSource) MutateHARD_BODY_RADIUS_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *CQRObjectSource) MutateHardBodyRadiusM(n float64) bool {
+	return rcv.MutateHARD_BODY_RADIUS_M(n)
+}
+
+/// True when HARD_BODY_RADIUS_M carries a value; false means absent.
+func (rcv *CQRObjectSource) HAS_HARD_BODY_RADIUS_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *CQRObjectSource) HasHardBodyRadiusM() bool {
+	return rcv.HAS_HARD_BODY_RADIUS_M()
+}
+
+/// True when HARD_BODY_RADIUS_M carries a value; false means absent.
+func (rcv *CQRObjectSource) MutateHAS_HARD_BODY_RADIUS_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(40, n)
+}
+
+func (rcv *CQRObjectSource) MutateHasHardBodyRadiusM(n bool) bool {
+	return rcv.MutateHAS_HARD_BODY_RADIUS_M(n)
+}
+
+/// The object's catalog entry. Without a supplied radius, its SIZE, else
+/// its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+func (rcv *CQRObjectSource) CATALOG_ENTRY(obj *CAT) *CAT {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CAT)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *CQRObjectSource) CatalogEntry(obj *CAT) *CAT {
+	return rcv.CATALOG_ENTRY(obj)
+}
+
+/// The object's catalog entry. Without a supplied radius, its SIZE, else
+/// its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
 func CQRObjectSourceStart(builder *flatbuffers.Builder) {
-	builder.StartObject(17)
+	builder.StartObject(20)
 }
 func CQRObjectSourceAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_ID), 0)
@@ -450,6 +515,24 @@ func CQRObjectSourceAddHAS_APOGEE_ALTITUDE_M(builder *flatbuffers.Builder, HAS_A
 }
 func CQRObjectSourceAddHasApogeeAltitudeM(builder *flatbuffers.Builder, HAS_APOGEE_ALTITUDE_M bool) {
 	CQRObjectSourceAddHAS_APOGEE_ALTITUDE_M(builder, HAS_APOGEE_ALTITUDE_M)
+}
+func CQRObjectSourceAddHARD_BODY_RADIUS_M(builder *flatbuffers.Builder, HARD_BODY_RADIUS_M float64) {
+	builder.PrependFloat64Slot(17, HARD_BODY_RADIUS_M, 0.0)
+}
+func CQRObjectSourceAddHardBodyRadiusM(builder *flatbuffers.Builder, HARD_BODY_RADIUS_M float64) {
+	CQRObjectSourceAddHARD_BODY_RADIUS_M(builder, HARD_BODY_RADIUS_M)
+}
+func CQRObjectSourceAddHAS_HARD_BODY_RADIUS_M(builder *flatbuffers.Builder, HAS_HARD_BODY_RADIUS_M bool) {
+	builder.PrependBoolSlot(18, HAS_HARD_BODY_RADIUS_M, false)
+}
+func CQRObjectSourceAddHasHardBodyRadiusM(builder *flatbuffers.Builder, HAS_HARD_BODY_RADIUS_M bool) {
+	CQRObjectSourceAddHAS_HARD_BODY_RADIUS_M(builder, HAS_HARD_BODY_RADIUS_M)
+}
+func CQRObjectSourceAddCATALOG_ENTRY(builder *flatbuffers.Builder, CATALOG_ENTRY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(CATALOG_ENTRY), 0)
+}
+func CQRObjectSourceAddCatalogEntry(builder *flatbuffers.Builder, CATALOG_ENTRY flatbuffers.UOffsetT) {
+	CQRObjectSourceAddCATALOG_ENTRY(builder, CATALOG_ENTRY)
 }
 func CQRObjectSourceEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -9,6 +9,7 @@ import { Perturbations, PerturbationsT } from './Perturbations.js';
 import { PhysicalProperties, PhysicalPropertiesT } from './PhysicalProperties.js';
 import { RFM, RFMT } from './RFM.js';
 import { UserDefinedParameters, UserDefinedParametersT } from './UserDefinedParameters.js';
+import { covarianceCalibration } from './covarianceCalibration.js';
 import { trajectoryType } from './trajectoryType.js';
 /**
  * Orbit Comprehensive Message
@@ -137,6 +138,16 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
      */
     ORB_AVERAGING(): string | null;
     ORB_AVERAGING(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Whether COVARIANCE_DATA's coverage was measured against independent
+     * reference states.
+     */
+    COV_CALIBRATION(): covarianceCalibration;
+    /**
+     * Identifier of that calibration evidence (a report or record).
+     */
+    COV_CALIBRATION_REFERENCE(): string | null;
+    COV_CALIBRATION_REFERENCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startOCM(builder: flatbuffers.Builder): void;
     static addHeader(builder: flatbuffers.Builder, HEADEROffset: flatbuffers.Offset): void;
     static addMetadata(builder: flatbuffers.Builder, METADATAOffset: flatbuffers.Offset): void;
@@ -179,6 +190,8 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
     static addCovRefFrame(builder: flatbuffers.Builder, COV_REF_FRAMEOffset: flatbuffers.Offset): void;
     static addOrbRevnum(builder: flatbuffers.Builder, ORB_REVNUM: number): void;
     static addOrbAveraging(builder: flatbuffers.Builder, ORB_AVERAGINGOffset: flatbuffers.Offset): void;
+    static addCovCalibration(builder: flatbuffers.Builder, COV_CALIBRATION: covarianceCalibration): void;
+    static addCovCalibrationReference(builder: flatbuffers.Builder, COV_CALIBRATION_REFERENCEOffset: flatbuffers.Offset): void;
     static endOCM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishOCMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedOCMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -207,7 +220,9 @@ export declare class OCMT implements flatbuffers.IGeneratedObject {
     COV_REF_FRAME: RFMT | null;
     ORB_REVNUM: number;
     ORB_AVERAGING: string | Uint8Array | null;
-    constructor(HEADER?: HeaderT | null, METADATA?: MetadataT | null, TRAJ_TYPE?: trajectoryType, TRAJ_TYPE_DESCRIPTION?: string | Uint8Array | null, STATE_STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], COVARIANCE_DATA?: (number)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], POLYNOMIAL_OE_RECORDS?: (PPEOrbitalElementRecordT)[], PHYSICAL_PROPERTIES?: PhysicalPropertiesT | null, MANEUVER_DATA?: (ManeuverT)[], PERTURBATIONS?: PerturbationsT | null, ORBIT_DETERMINATION?: OrbitDeterminationT | null, USER_DEFINED_PARAMETERS?: (UserDefinedParametersT)[], CENTER_NAME?: string | Uint8Array | null, TRAJ_REF_FRAME?: RFMT | null, TRAJ_FRAME_EPOCH?: string | Uint8Array | null, COV_REF_FRAME?: RFMT | null, ORB_REVNUM?: number, ORB_AVERAGING?: string | Uint8Array | null);
+    COV_CALIBRATION: covarianceCalibration;
+    COV_CALIBRATION_REFERENCE: string | Uint8Array | null;
+    constructor(HEADER?: HeaderT | null, METADATA?: MetadataT | null, TRAJ_TYPE?: trajectoryType, TRAJ_TYPE_DESCRIPTION?: string | Uint8Array | null, STATE_STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], COVARIANCE_DATA?: (number)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], POLYNOMIAL_OE_RECORDS?: (PPEOrbitalElementRecordT)[], PHYSICAL_PROPERTIES?: PhysicalPropertiesT | null, MANEUVER_DATA?: (ManeuverT)[], PERTURBATIONS?: PerturbationsT | null, ORBIT_DETERMINATION?: OrbitDeterminationT | null, USER_DEFINED_PARAMETERS?: (UserDefinedParametersT)[], CENTER_NAME?: string | Uint8Array | null, TRAJ_REF_FRAME?: RFMT | null, TRAJ_FRAME_EPOCH?: string | Uint8Array | null, COV_REF_FRAME?: RFMT | null, ORB_REVNUM?: number, ORB_AVERAGING?: string | Uint8Array | null, COV_CALIBRATION?: covarianceCalibration, COV_CALIBRATION_REFERENCE?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OCM.d.ts.map

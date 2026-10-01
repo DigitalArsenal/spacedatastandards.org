@@ -76,6 +76,20 @@ public struct CQREvent : IFlatbufferObject
   public double COMBINED_RADIUS_M { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// True when COMBINED_RADIUS_M carries a value; false means absent.
   public bool HAS_COMBINED_RADIUS_M { get { int o = __p.__offset(56); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Each object's hard-body radius in metres and where it came from;
+  /// COMBINED_RADIUS_M is their sum.
+  public double PRIMARY_HARD_BODY_RADIUS_M { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+  public bool HAS_PRIMARY_HARD_BODY_RADIUS_M { get { int o = __p.__offset(60); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public double SECONDARY_HARD_BODY_RADIUS_M { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+  public bool HAS_SECONDARY_HARD_BODY_RADIUS_M { get { int o = __p.__offset(64); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public cqrHardBodyRadiusBasis PRIMARY_RADIUS_BASIS { get { int o = __p.__offset(66); return o != 0 ? (cqrHardBodyRadiusBasis)__p.bb.Get(o + __p.bb_pos) : cqrHardBodyRadiusBasis.UNSPECIFIED; } }
+  public cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS { get { int o = __p.__offset(68); return o != 0 ? (cqrHardBodyRadiusBasis)__p.bb.Get(o + __p.bb_pos) : cqrHardBodyRadiusBasis.UNSPECIFIED; } }
+  /// Where each object's position covariance came from; NONE means the event
+  /// carries no covariance-based quantity for it.
+  public cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS { get { int o = __p.__offset(70); return o != 0 ? (cqrCovarianceBasis)__p.bb.Get(o + __p.bb_pos) : cqrCovarianceBasis.UNSPECIFIED; } }
+  public cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS { get { int o = __p.__offset(72); return o != 0 ? (cqrCovarianceBasis)__p.bb.Get(o + __p.bb_pos) : cqrCovarianceBasis.UNSPECIFIED; } }
 
   public static Offset<CQREvent> CreateCQREvent(FlatBufferBuilder builder,
       StringOffset PRIMARY_IDOffset = default(StringOffset),
@@ -104,8 +118,18 @@ public struct CQREvent : IFlatbufferObject
       double MAHALANOBIS_3D_SQUARED = 0.0,
       bool HAS_MAHALANOBIS_3D_SQUARED = false,
       double COMBINED_RADIUS_M = 0.0,
-      bool HAS_COMBINED_RADIUS_M = false) {
-    builder.StartTable(27);
+      bool HAS_COMBINED_RADIUS_M = false,
+      double PRIMARY_HARD_BODY_RADIUS_M = 0.0,
+      bool HAS_PRIMARY_HARD_BODY_RADIUS_M = false,
+      double SECONDARY_HARD_BODY_RADIUS_M = 0.0,
+      bool HAS_SECONDARY_HARD_BODY_RADIUS_M = false,
+      cqrHardBodyRadiusBasis PRIMARY_RADIUS_BASIS = cqrHardBodyRadiusBasis.UNSPECIFIED,
+      cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS = cqrHardBodyRadiusBasis.UNSPECIFIED,
+      cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS = cqrCovarianceBasis.UNSPECIFIED,
+      cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis.UNSPECIFIED) {
+    builder.StartTable(35);
+    CQREvent.AddSECONDARY_HARD_BODY_RADIUS_M(builder, SECONDARY_HARD_BODY_RADIUS_M);
+    CQREvent.AddPRIMARY_HARD_BODY_RADIUS_M(builder, PRIMARY_HARD_BODY_RADIUS_M);
     CQREvent.AddCOMBINED_RADIUS_M(builder, COMBINED_RADIUS_M);
     CQREvent.AddMAHALANOBIS_3D_SQUARED(builder, MAHALANOBIS_3D_SQUARED);
     CQREvent.AddSECONDARY_DAYS_SINCE_EPOCH(builder, SECONDARY_DAYS_SINCE_EPOCH);
@@ -128,6 +152,12 @@ public struct CQREvent : IFlatbufferObject
     CQREvent.AddPRIMARY_NAME(builder, PRIMARY_NAMEOffset);
     CQREvent.AddSECONDARY_ID(builder, SECONDARY_IDOffset);
     CQREvent.AddPRIMARY_ID(builder, PRIMARY_IDOffset);
+    CQREvent.AddSECONDARY_COVARIANCE_BASIS(builder, SECONDARY_COVARIANCE_BASIS);
+    CQREvent.AddPRIMARY_COVARIANCE_BASIS(builder, PRIMARY_COVARIANCE_BASIS);
+    CQREvent.AddSECONDARY_RADIUS_BASIS(builder, SECONDARY_RADIUS_BASIS);
+    CQREvent.AddPRIMARY_RADIUS_BASIS(builder, PRIMARY_RADIUS_BASIS);
+    CQREvent.AddHAS_SECONDARY_HARD_BODY_RADIUS_M(builder, HAS_SECONDARY_HARD_BODY_RADIUS_M);
+    CQREvent.AddHAS_PRIMARY_HARD_BODY_RADIUS_M(builder, HAS_PRIMARY_HARD_BODY_RADIUS_M);
     CQREvent.AddHAS_COMBINED_RADIUS_M(builder, HAS_COMBINED_RADIUS_M);
     CQREvent.AddHAS_MAHALANOBIS_3D_SQUARED(builder, HAS_MAHALANOBIS_3D_SQUARED);
     CQREvent.AddHAS_SECONDARY_DAYS_SINCE_EPOCH(builder, HAS_SECONDARY_DAYS_SINCE_EPOCH);
@@ -136,7 +166,7 @@ public struct CQREvent : IFlatbufferObject
     return CQREvent.EndCQREvent(builder);
   }
 
-  public static void StartCQREvent(FlatBufferBuilder builder) { builder.StartTable(27); }
+  public static void StartCQREvent(FlatBufferBuilder builder) { builder.StartTable(35); }
   public static void AddPRIMARY_ID(FlatBufferBuilder builder, StringOffset PRIMARY_IDOffset) { builder.AddOffset(0, PRIMARY_IDOffset.Value, 0); }
   public static void AddSECONDARY_ID(FlatBufferBuilder builder, StringOffset SECONDARY_IDOffset) { builder.AddOffset(1, SECONDARY_IDOffset.Value, 0); }
   public static void AddPRIMARY_NAME(FlatBufferBuilder builder, StringOffset PRIMARY_NAMEOffset) { builder.AddOffset(2, PRIMARY_NAMEOffset.Value, 0); }
@@ -164,6 +194,14 @@ public struct CQREvent : IFlatbufferObject
   public static void AddHAS_MAHALANOBIS_3D_SQUARED(FlatBufferBuilder builder, bool HAS_MAHALANOBIS_3D_SQUARED) { builder.AddBool(24, HAS_MAHALANOBIS_3D_SQUARED, false); }
   public static void AddCOMBINED_RADIUS_M(FlatBufferBuilder builder, double COMBINED_RADIUS_M) { builder.AddDouble(25, COMBINED_RADIUS_M, 0.0); }
   public static void AddHAS_COMBINED_RADIUS_M(FlatBufferBuilder builder, bool HAS_COMBINED_RADIUS_M) { builder.AddBool(26, HAS_COMBINED_RADIUS_M, false); }
+  public static void AddPRIMARY_HARD_BODY_RADIUS_M(FlatBufferBuilder builder, double PRIMARY_HARD_BODY_RADIUS_M) { builder.AddDouble(27, PRIMARY_HARD_BODY_RADIUS_M, 0.0); }
+  public static void AddHAS_PRIMARY_HARD_BODY_RADIUS_M(FlatBufferBuilder builder, bool HAS_PRIMARY_HARD_BODY_RADIUS_M) { builder.AddBool(28, HAS_PRIMARY_HARD_BODY_RADIUS_M, false); }
+  public static void AddSECONDARY_HARD_BODY_RADIUS_M(FlatBufferBuilder builder, double SECONDARY_HARD_BODY_RADIUS_M) { builder.AddDouble(29, SECONDARY_HARD_BODY_RADIUS_M, 0.0); }
+  public static void AddHAS_SECONDARY_HARD_BODY_RADIUS_M(FlatBufferBuilder builder, bool HAS_SECONDARY_HARD_BODY_RADIUS_M) { builder.AddBool(30, HAS_SECONDARY_HARD_BODY_RADIUS_M, false); }
+  public static void AddPRIMARY_RADIUS_BASIS(FlatBufferBuilder builder, cqrHardBodyRadiusBasis PRIMARY_RADIUS_BASIS) { builder.AddByte(31, (byte)PRIMARY_RADIUS_BASIS, 0); }
+  public static void AddSECONDARY_RADIUS_BASIS(FlatBufferBuilder builder, cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS) { builder.AddByte(32, (byte)SECONDARY_RADIUS_BASIS, 0); }
+  public static void AddPRIMARY_COVARIANCE_BASIS(FlatBufferBuilder builder, cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS) { builder.AddByte(33, (byte)PRIMARY_COVARIANCE_BASIS, 0); }
+  public static void AddSECONDARY_COVARIANCE_BASIS(FlatBufferBuilder builder, cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS) { builder.AddByte(34, (byte)SECONDARY_COVARIANCE_BASIS, 0); }
   public static Offset<CQREvent> EndCQREvent(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // PRIMARY_ID
@@ -204,6 +242,14 @@ public struct CQREvent : IFlatbufferObject
     _o.HAS_MAHALANOBIS_3D_SQUARED = this.HAS_MAHALANOBIS_3D_SQUARED;
     _o.COMBINED_RADIUS_M = this.COMBINED_RADIUS_M;
     _o.HAS_COMBINED_RADIUS_M = this.HAS_COMBINED_RADIUS_M;
+    _o.PRIMARY_HARD_BODY_RADIUS_M = this.PRIMARY_HARD_BODY_RADIUS_M;
+    _o.HAS_PRIMARY_HARD_BODY_RADIUS_M = this.HAS_PRIMARY_HARD_BODY_RADIUS_M;
+    _o.SECONDARY_HARD_BODY_RADIUS_M = this.SECONDARY_HARD_BODY_RADIUS_M;
+    _o.HAS_SECONDARY_HARD_BODY_RADIUS_M = this.HAS_SECONDARY_HARD_BODY_RADIUS_M;
+    _o.PRIMARY_RADIUS_BASIS = this.PRIMARY_RADIUS_BASIS;
+    _o.SECONDARY_RADIUS_BASIS = this.SECONDARY_RADIUS_BASIS;
+    _o.PRIMARY_COVARIANCE_BASIS = this.PRIMARY_COVARIANCE_BASIS;
+    _o.SECONDARY_COVARIANCE_BASIS = this.SECONDARY_COVARIANCE_BASIS;
   }
   public static Offset<CQREvent> Pack(FlatBufferBuilder builder, CQREventT _o) {
     if (_o == null) return default(Offset<CQREvent>);
@@ -248,7 +294,15 @@ public struct CQREvent : IFlatbufferObject
       _o.MAHALANOBIS_3D_SQUARED,
       _o.HAS_MAHALANOBIS_3D_SQUARED,
       _o.COMBINED_RADIUS_M,
-      _o.HAS_COMBINED_RADIUS_M);
+      _o.HAS_COMBINED_RADIUS_M,
+      _o.PRIMARY_HARD_BODY_RADIUS_M,
+      _o.HAS_PRIMARY_HARD_BODY_RADIUS_M,
+      _o.SECONDARY_HARD_BODY_RADIUS_M,
+      _o.HAS_SECONDARY_HARD_BODY_RADIUS_M,
+      _o.PRIMARY_RADIUS_BASIS,
+      _o.SECONDARY_RADIUS_BASIS,
+      _o.PRIMARY_COVARIANCE_BASIS,
+      _o.SECONDARY_COVARIANCE_BASIS);
   }
 }
 
@@ -281,6 +335,14 @@ public class CQREventT
   public bool HAS_MAHALANOBIS_3D_SQUARED { get; set; }
   public double COMBINED_RADIUS_M { get; set; }
   public bool HAS_COMBINED_RADIUS_M { get; set; }
+  public double PRIMARY_HARD_BODY_RADIUS_M { get; set; }
+  public bool HAS_PRIMARY_HARD_BODY_RADIUS_M { get; set; }
+  public double SECONDARY_HARD_BODY_RADIUS_M { get; set; }
+  public bool HAS_SECONDARY_HARD_BODY_RADIUS_M { get; set; }
+  public cqrHardBodyRadiusBasis PRIMARY_RADIUS_BASIS { get; set; }
+  public cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS { get; set; }
+  public cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS { get; set; }
+  public cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS { get; set; }
 
   public CQREventT() {
     this.PRIMARY_ID = null;
@@ -310,6 +372,14 @@ public class CQREventT
     this.HAS_MAHALANOBIS_3D_SQUARED = false;
     this.COMBINED_RADIUS_M = 0.0;
     this.HAS_COMBINED_RADIUS_M = false;
+    this.PRIMARY_HARD_BODY_RADIUS_M = 0.0;
+    this.HAS_PRIMARY_HARD_BODY_RADIUS_M = false;
+    this.SECONDARY_HARD_BODY_RADIUS_M = 0.0;
+    this.HAS_SECONDARY_HARD_BODY_RADIUS_M = false;
+    this.PRIMARY_RADIUS_BASIS = cqrHardBodyRadiusBasis.UNSPECIFIED;
+    this.SECONDARY_RADIUS_BASIS = cqrHardBodyRadiusBasis.UNSPECIFIED;
+    this.PRIMARY_COVARIANCE_BASIS = cqrCovarianceBasis.UNSPECIFIED;
+    this.SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis.UNSPECIFIED;
   }
 }
 
@@ -346,6 +416,14 @@ static public class CQREventVerify
       && verifier.VerifyField(tablePos, 52 /*HAS_MAHALANOBIS_3D_SQUARED*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 54 /*COMBINED_RADIUS_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 56 /*HAS_COMBINED_RADIUS_M*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 58 /*PRIMARY_HARD_BODY_RADIUS_M*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 60 /*HAS_PRIMARY_HARD_BODY_RADIUS_M*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 62 /*SECONDARY_HARD_BODY_RADIUS_M*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 64 /*HAS_SECONDARY_HARD_BODY_RADIUS_M*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 66 /*PRIMARY_RADIUS_BASIS*/, 1 /*cqrHardBodyRadiusBasis*/, 1, false)
+      && verifier.VerifyField(tablePos, 68 /*SECONDARY_RADIUS_BASIS*/, 1 /*cqrHardBodyRadiusBasis*/, 1, false)
+      && verifier.VerifyField(tablePos, 70 /*PRIMARY_COVARIANCE_BASIS*/, 1 /*cqrCovarianceBasis*/, 1, false)
+      && verifier.VerifyField(tablePos, 72 /*SECONDARY_COVARIANCE_BASIS*/, 1 /*cqrCovarianceBasis*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

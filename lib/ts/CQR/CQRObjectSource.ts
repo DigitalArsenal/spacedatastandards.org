@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { CAT, CATT } from './CAT.js';
 import { CQRSourceProvenance, CQRSourceProvenanceT } from './CQRSourceProvenance.js';
 import { OCM, OCMT } from './OCM.js';
 import { OEM, OEMT } from './OEM.js';
@@ -141,8 +142,33 @@ HAS_APOGEE_ALTITUDE_M():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Hard-body radius in metres given with the source.
+ */
+HARD_BODY_RADIUS_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True when HARD_BODY_RADIUS_M carries a value; false means absent.
+ */
+HAS_HARD_BODY_RADIUS_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * The object's catalog entry. Without a supplied radius, its SIZE, else
+ * its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+ */
+CATALOG_ENTRY(obj?:CAT):CAT|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? (obj || new CAT()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startCQRObjectSource(builder:flatbuffers.Builder) {
-  builder.startObject(17);
+  builder.startObject(20);
 }
 
 static addObjectId(builder:flatbuffers.Builder, OBJECT_IDOffset:flatbuffers.Offset) {
@@ -213,6 +239,18 @@ static addHasApogeeAltitudeM(builder:flatbuffers.Builder, HAS_APOGEE_ALTITUDE_M:
   builder.addFieldInt8(16, +HAS_APOGEE_ALTITUDE_M, +false);
 }
 
+static addHardBodyRadiusM(builder:flatbuffers.Builder, HARD_BODY_RADIUS_M:number) {
+  builder.addFieldFloat64(17, HARD_BODY_RADIUS_M, 0.0);
+}
+
+static addHasHardBodyRadiusM(builder:flatbuffers.Builder, HAS_HARD_BODY_RADIUS_M:boolean) {
+  builder.addFieldInt8(18, +HAS_HARD_BODY_RADIUS_M, +false);
+}
+
+static addCatalogEntry(builder:flatbuffers.Builder, CATALOG_ENTRYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, CATALOG_ENTRYOffset, 0);
+}
+
 static endCQRObjectSource(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // OBJECT_ID
@@ -238,7 +276,10 @@ unpack(): CQRObjectSourceT {
     this.PERIGEE_ALTITUDE_M(),
     this.HAS_PERIGEE_ALTITUDE_M(),
     this.APOGEE_ALTITUDE_M(),
-    this.HAS_APOGEE_ALTITUDE_M()
+    this.HAS_APOGEE_ALTITUDE_M(),
+    this.HARD_BODY_RADIUS_M(),
+    this.HAS_HARD_BODY_RADIUS_M(),
+    (this.CATALOG_ENTRY() !== null ? this.CATALOG_ENTRY()!.unpack() : null)
   );
 }
 
@@ -261,6 +302,9 @@ unpackTo(_o: CQRObjectSourceT): void {
   _o.HAS_PERIGEE_ALTITUDE_M = this.HAS_PERIGEE_ALTITUDE_M();
   _o.APOGEE_ALTITUDE_M = this.APOGEE_ALTITUDE_M();
   _o.HAS_APOGEE_ALTITUDE_M = this.HAS_APOGEE_ALTITUDE_M();
+  _o.HARD_BODY_RADIUS_M = this.HARD_BODY_RADIUS_M();
+  _o.HAS_HARD_BODY_RADIUS_M = this.HAS_HARD_BODY_RADIUS_M();
+  _o.CATALOG_ENTRY = (this.CATALOG_ENTRY() !== null ? this.CATALOG_ENTRY()!.unpack() : null);
 }
 }
 
@@ -282,7 +326,10 @@ constructor(
   public PERIGEE_ALTITUDE_M: number = 0.0,
   public HAS_PERIGEE_ALTITUDE_M: boolean = false,
   public APOGEE_ALTITUDE_M: number = 0.0,
-  public HAS_APOGEE_ALTITUDE_M: boolean = false
+  public HAS_APOGEE_ALTITUDE_M: boolean = false,
+  public HARD_BODY_RADIUS_M: number = 0.0,
+  public HAS_HARD_BODY_RADIUS_M: boolean = false,
+  public CATALOG_ENTRY: CATT|null = null
 ){}
 
 
@@ -298,6 +345,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TLE_LINES = (this.TLE_LINES !== null ? this.TLE_LINES!.pack(builder) : 0);
   const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
   const SOURCE_EPOCH = (this.SOURCE_EPOCH !== null ? this.SOURCE_EPOCH!.pack(builder) : 0);
+  const CATALOG_ENTRY = (this.CATALOG_ENTRY !== null ? this.CATALOG_ENTRY!.pack(builder) : 0);
 
   CQRObjectSource.startCQRObjectSource(builder);
   CQRObjectSource.addObjectId(builder, OBJECT_ID);
@@ -317,6 +365,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CQRObjectSource.addHasPerigeeAltitudeM(builder, this.HAS_PERIGEE_ALTITUDE_M);
   CQRObjectSource.addApogeeAltitudeM(builder, this.APOGEE_ALTITUDE_M);
   CQRObjectSource.addHasApogeeAltitudeM(builder, this.HAS_APOGEE_ALTITUDE_M);
+  CQRObjectSource.addHardBodyRadiusM(builder, this.HARD_BODY_RADIUS_M);
+  CQRObjectSource.addHasHardBodyRadiusM(builder, this.HAS_HARD_BODY_RADIUS_M);
+  CQRObjectSource.addCatalogEntry(builder, CATALOG_ENTRY);
 
   return CQRObjectSource.endCQRObjectSource(builder);
 }

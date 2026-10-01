@@ -170,6 +170,45 @@ inline const char *EnumNameestimatorCategory(estimatorCategory e) {
   return EnumNamesestimatorCategory()[index];
 }
 
+/// Whether a covariance's coverage was measured against independent reference
+/// states: the share of reference errors inside its confidence regions matched
+/// what the covariance claims, for the regime and prediction age it covers.
+enum covarianceCalibration : int8_t {
+  /// Calibration not stated
+  covarianceCalibration_Unspecified = 0,
+  /// Not measured against independent reference states, or measured and failed
+  covarianceCalibration_Uncalibrated = 1,
+  /// Measured against independent reference states and passed
+  covarianceCalibration_Calibrated = 2,
+  covarianceCalibration_MIN = covarianceCalibration_Unspecified,
+  covarianceCalibration_MAX = covarianceCalibration_Calibrated
+};
+
+inline const covarianceCalibration (&EnumValuescovarianceCalibration())[3] {
+  static const covarianceCalibration values[] = {
+    covarianceCalibration_Unspecified,
+    covarianceCalibration_Uncalibrated,
+    covarianceCalibration_Calibrated
+  };
+  return values;
+}
+
+inline const char * const *EnumNamescovarianceCalibration() {
+  static const char * const names[4] = {
+    "Unspecified",
+    "Uncalibrated",
+    "Calibrated",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamecovarianceCalibration(covarianceCalibration e) {
+  if (::flatbuffers::IsOutRange(e, covarianceCalibration_Unspecified, covarianceCalibration_Calibrated)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamescovarianceCalibration()[index];
+}
+
 struct Header FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef HeaderBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -2594,7 +2633,9 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_TRAJ_FRAME_EPOCH = 38,
     VT_COV_REF_FRAME = 40,
     VT_ORB_REVNUM = 42,
-    VT_ORB_AVERAGING = 44
+    VT_ORB_AVERAGING = 44,
+    VT_COV_CALIBRATION = 46,
+    VT_COV_CALIBRATION_REFERENCE = 48
   };
   /// Header section of the OCM.
   const Header *HEADER() const {
@@ -2701,6 +2742,15 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *ORB_AVERAGING() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORB_AVERAGING);
   }
+  /// Whether COVARIANCE_DATA's coverage was measured against independent
+  /// reference states.
+  covarianceCalibration COV_CALIBRATION() const {
+    return static_cast<covarianceCalibration>(GetField<int8_t>(VT_COV_CALIBRATION, 0));
+  }
+  /// Identifier of that calibration evidence (a report or record).
+  const ::flatbuffers::String *COV_CALIBRATION_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_CALIBRATION_REFERENCE);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2746,6 +2796,9 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint32_t>(verifier, VT_ORB_REVNUM, 4) &&
            VerifyOffset(verifier, VT_ORB_AVERAGING) &&
            verifier.VerifyString(ORB_AVERAGING()) &&
+           VerifyField<int8_t>(verifier, VT_COV_CALIBRATION, 1) &&
+           VerifyOffset(verifier, VT_COV_CALIBRATION_REFERENCE) &&
+           verifier.VerifyString(COV_CALIBRATION_REFERENCE()) &&
            verifier.EndTable();
   }
 };
@@ -2817,6 +2870,12 @@ struct OCMBuilder {
   void add_ORB_AVERAGING(::flatbuffers::Offset<::flatbuffers::String> ORB_AVERAGING) {
     fbb_.AddOffset(OCM::VT_ORB_AVERAGING, ORB_AVERAGING);
   }
+  void add_COV_CALIBRATION(covarianceCalibration COV_CALIBRATION) {
+    fbb_.AddElement<int8_t>(OCM::VT_COV_CALIBRATION, static_cast<int8_t>(COV_CALIBRATION), 0);
+  }
+  void add_COV_CALIBRATION_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE) {
+    fbb_.AddOffset(OCM::VT_COV_CALIBRATION_REFERENCE, COV_CALIBRATION_REFERENCE);
+  }
   explicit OCMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2850,9 +2909,12 @@ inline ::flatbuffers::Offset<OCM> CreateOCM(
     ::flatbuffers::Offset<::flatbuffers::String> TRAJ_FRAME_EPOCH = 0,
     ::flatbuffers::Offset<RFM> COV_REF_FRAME = 0,
     uint32_t ORB_REVNUM = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORB_AVERAGING = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> ORB_AVERAGING = 0,
+    covarianceCalibration COV_CALIBRATION = covarianceCalibration_Unspecified,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE = 0) {
   OCMBuilder builder_(_fbb);
   builder_.add_STATE_STEP_SIZE(STATE_STEP_SIZE);
+  builder_.add_COV_CALIBRATION_REFERENCE(COV_CALIBRATION_REFERENCE);
   builder_.add_ORB_AVERAGING(ORB_AVERAGING);
   builder_.add_ORB_REVNUM(ORB_REVNUM);
   builder_.add_COV_REF_FRAME(COV_REF_FRAME);
@@ -2871,6 +2933,7 @@ inline ::flatbuffers::Offset<OCM> CreateOCM(
   builder_.add_TRAJ_TYPE_DESCRIPTION(TRAJ_TYPE_DESCRIPTION);
   builder_.add_METADATA(METADATA);
   builder_.add_HEADER(HEADER);
+  builder_.add_COV_CALIBRATION(COV_CALIBRATION);
   builder_.add_STATE_VECTOR_SIZE(STATE_VECTOR_SIZE);
   builder_.add_TRAJ_TYPE(TRAJ_TYPE);
   return builder_.Finish();
@@ -2898,7 +2961,9 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
     const char *TRAJ_FRAME_EPOCH = nullptr,
     ::flatbuffers::Offset<RFM> COV_REF_FRAME = 0,
     uint32_t ORB_REVNUM = 0,
-    const char *ORB_AVERAGING = nullptr) {
+    const char *ORB_AVERAGING = nullptr,
+    covarianceCalibration COV_CALIBRATION = covarianceCalibration_Unspecified,
+    const char *COV_CALIBRATION_REFERENCE = nullptr) {
   auto TRAJ_TYPE_DESCRIPTION__ = TRAJ_TYPE_DESCRIPTION ? _fbb.CreateString(TRAJ_TYPE_DESCRIPTION) : 0;
   auto STATE_DATA__ = STATE_DATA ? _fbb.CreateVector<double>(*STATE_DATA) : 0;
   auto COVARIANCE_DATA__ = COVARIANCE_DATA ? _fbb.CreateVector<double>(*COVARIANCE_DATA) : 0;
@@ -2909,6 +2974,7 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
   auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
   auto TRAJ_FRAME_EPOCH__ = TRAJ_FRAME_EPOCH ? _fbb.CreateString(TRAJ_FRAME_EPOCH) : 0;
   auto ORB_AVERAGING__ = ORB_AVERAGING ? _fbb.CreateString(ORB_AVERAGING) : 0;
+  auto COV_CALIBRATION_REFERENCE__ = COV_CALIBRATION_REFERENCE ? _fbb.CreateString(COV_CALIBRATION_REFERENCE) : 0;
   return CreateOCM(
       _fbb,
       HEADER,
@@ -2931,7 +2997,9 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
       TRAJ_FRAME_EPOCH__,
       COV_REF_FRAME,
       ORB_REVNUM,
-      ORB_AVERAGING__);
+      ORB_AVERAGING__,
+      COV_CALIBRATION,
+      COV_CALIBRATION_REFERENCE__);
 }
 
 inline const OCM *GetOCM(const void *buf) {

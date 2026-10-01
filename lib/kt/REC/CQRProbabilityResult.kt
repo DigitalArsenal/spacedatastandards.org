@@ -87,6 +87,39 @@ class CQRProbabilityResult : Table() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    /**
+     * For a covariance-based probability: whether the covariance's coverage was
+     * measured against independent reference states. Only CALIBRATED
+     * covariance supports a probability beyond "conditional on the stated
+     * assumptions".
+     */
+    val calibration : Byte
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Identifier of the calibration evidence (a report or record).
+     */
+    val calibrationReference : String?
+        get() {
+            val o = __offset(24)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val calibrationReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun calibrationReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * The correlation assumed between the two objects' errors.
+     */
+    val crossCorrelation : UByte
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCQRProbabilityResult(_bb: ByteBuffer): CQRProbabilityResult = getRootAsCQRProbabilityResult(_bb, CQRProbabilityResult())
@@ -94,12 +127,15 @@ class CQRProbabilityResult : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCQRProbabilityResult(builder: FlatBufferBuilder, probability: Double, algorithm: UByte, converged: Boolean, iterations: ULong, maximumProbability: Double, hasMaximumProbability: Boolean, mahalanobisSquared: Double, hasMahalanobisSquared: Boolean, uncertaintySource: UByte) : Int {
-            builder.startTable(9)
+        fun createCQRProbabilityResult(builder: FlatBufferBuilder, probability: Double, algorithm: UByte, converged: Boolean, iterations: ULong, maximumProbability: Double, hasMaximumProbability: Boolean, mahalanobisSquared: Double, hasMahalanobisSquared: Boolean, uncertaintySource: UByte, calibration: Byte, calibrationReferenceOffset: Int, crossCorrelation: UByte) : Int {
+            builder.startTable(12)
             addMAHALANOBISSQUARED(builder, mahalanobisSquared)
             addMAXIMUMPROBABILITY(builder, maximumProbability)
             addITERATIONS(builder, iterations)
             addPROBABILITY(builder, probability)
+            addCALIBRATIONREFERENCE(builder, calibrationReferenceOffset)
+            addCROSSCORRELATION(builder, crossCorrelation)
+            addCALIBRATION(builder, calibration)
             addUNCERTAINTYSOURCE(builder, uncertaintySource)
             addHASMAHALANOBISSQUARED(builder, hasMahalanobisSquared)
             addHASMAXIMUMPROBABILITY(builder, hasMaximumProbability)
@@ -107,7 +143,7 @@ class CQRProbabilityResult : Table() {
             addALGORITHM(builder, algorithm)
             return endCQRProbabilityResult(builder)
         }
-        fun startCQRProbabilityResult(builder: FlatBufferBuilder) = builder.startTable(9)
+        fun startCQRProbabilityResult(builder: FlatBufferBuilder) = builder.startTable(12)
         fun addPROBABILITY(builder: FlatBufferBuilder, probability: Double) = builder.addDouble(0, probability, 0.0)
         fun addALGORITHM(builder: FlatBufferBuilder, algorithm: UByte) = builder.addByte(1, algorithm.toByte(), 0)
         fun addCONVERGED(builder: FlatBufferBuilder, converged: Boolean) = builder.addBoolean(2, converged, false)
@@ -117,6 +153,9 @@ class CQRProbabilityResult : Table() {
         fun addMAHALANOBISSQUARED(builder: FlatBufferBuilder, mahalanobisSquared: Double) = builder.addDouble(6, mahalanobisSquared, 0.0)
         fun addHASMAHALANOBISSQUARED(builder: FlatBufferBuilder, hasMahalanobisSquared: Boolean) = builder.addBoolean(7, hasMahalanobisSquared, false)
         fun addUNCERTAINTYSOURCE(builder: FlatBufferBuilder, uncertaintySource: UByte) = builder.addByte(8, uncertaintySource.toByte(), 0)
+        fun addCALIBRATION(builder: FlatBufferBuilder, calibration: Byte) = builder.addByte(9, calibration, 0)
+        fun addCALIBRATIONREFERENCE(builder: FlatBufferBuilder, calibrationReference: Int) = builder.addOffset(10, calibrationReference, 0)
+        fun addCROSSCORRELATION(builder: FlatBufferBuilder, crossCorrelation: UByte) = builder.addByte(11, crossCorrelation.toByte(), 0)
         fun endCQRProbabilityResult(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

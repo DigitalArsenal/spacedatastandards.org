@@ -1,4 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
+import { covarianceCalibration } from './covarianceCalibration.js';
+import { cqrCovarianceCorrelation } from './cqrCovarianceCorrelation.js';
 import { cqrProbabilityAlgorithm } from './cqrProbabilityAlgorithm.js';
 import { cqrUncertaintyOrigin } from './cqrUncertaintyOrigin.js';
 /**
@@ -32,6 +34,22 @@ export declare class CQRProbabilityResult implements flatbuffers.IUnpackableObje
      */
     HAS_MAHALANOBIS_SQUARED(): boolean;
     UNCERTAINTY_SOURCE(): cqrUncertaintyOrigin;
+    /**
+     * For a covariance-based probability: whether the covariance's coverage was
+     * measured against independent reference states. Only CALIBRATED
+     * covariance supports a probability beyond "conditional on the stated
+     * assumptions".
+     */
+    CALIBRATION(): covarianceCalibration;
+    /**
+     * Identifier of the calibration evidence (a report or record).
+     */
+    CALIBRATION_REFERENCE(): string | null;
+    CALIBRATION_REFERENCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * The correlation assumed between the two objects' errors.
+     */
+    CROSS_CORRELATION(): cqrCovarianceCorrelation;
     static startCQRProbabilityResult(builder: flatbuffers.Builder): void;
     static addProbability(builder: flatbuffers.Builder, PROBABILITY: number): void;
     static addAlgorithm(builder: flatbuffers.Builder, ALGORITHM: cqrProbabilityAlgorithm): void;
@@ -42,8 +60,11 @@ export declare class CQRProbabilityResult implements flatbuffers.IUnpackableObje
     static addMahalanobisSquared(builder: flatbuffers.Builder, MAHALANOBIS_SQUARED: number): void;
     static addHasMahalanobisSquared(builder: flatbuffers.Builder, HAS_MAHALANOBIS_SQUARED: boolean): void;
     static addUncertaintySource(builder: flatbuffers.Builder, UNCERTAINTY_SOURCE: cqrUncertaintyOrigin): void;
+    static addCalibration(builder: flatbuffers.Builder, CALIBRATION: covarianceCalibration): void;
+    static addCalibrationReference(builder: flatbuffers.Builder, CALIBRATION_REFERENCEOffset: flatbuffers.Offset): void;
+    static addCrossCorrelation(builder: flatbuffers.Builder, CROSS_CORRELATION: cqrCovarianceCorrelation): void;
     static endCQRProbabilityResult(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createCQRProbabilityResult(builder: flatbuffers.Builder, PROBABILITY: number, ALGORITHM: cqrProbabilityAlgorithm, CONVERGED: boolean, ITERATIONS: bigint, MAXIMUM_PROBABILITY: number, HAS_MAXIMUM_PROBABILITY: boolean, MAHALANOBIS_SQUARED: number, HAS_MAHALANOBIS_SQUARED: boolean, UNCERTAINTY_SOURCE: cqrUncertaintyOrigin): flatbuffers.Offset;
+    static createCQRProbabilityResult(builder: flatbuffers.Builder, PROBABILITY: number, ALGORITHM: cqrProbabilityAlgorithm, CONVERGED: boolean, ITERATIONS: bigint, MAXIMUM_PROBABILITY: number, HAS_MAXIMUM_PROBABILITY: boolean, MAHALANOBIS_SQUARED: number, HAS_MAHALANOBIS_SQUARED: boolean, UNCERTAINTY_SOURCE: cqrUncertaintyOrigin, CALIBRATION: covarianceCalibration, CALIBRATION_REFERENCEOffset: flatbuffers.Offset, CROSS_CORRELATION: cqrCovarianceCorrelation): flatbuffers.Offset;
     unpack(): CQRProbabilityResultT;
     unpackTo(_o: CQRProbabilityResultT): void;
 }
@@ -57,7 +78,10 @@ export declare class CQRProbabilityResultT implements flatbuffers.IGeneratedObje
     MAHALANOBIS_SQUARED: number;
     HAS_MAHALANOBIS_SQUARED: boolean;
     UNCERTAINTY_SOURCE: cqrUncertaintyOrigin;
-    constructor(PROBABILITY?: number, ALGORITHM?: cqrProbabilityAlgorithm, CONVERGED?: boolean, ITERATIONS?: bigint, MAXIMUM_PROBABILITY?: number, HAS_MAXIMUM_PROBABILITY?: boolean, MAHALANOBIS_SQUARED?: number, HAS_MAHALANOBIS_SQUARED?: boolean, UNCERTAINTY_SOURCE?: cqrUncertaintyOrigin);
+    CALIBRATION: covarianceCalibration;
+    CALIBRATION_REFERENCE: string | Uint8Array | null;
+    CROSS_CORRELATION: cqrCovarianceCorrelation;
+    constructor(PROBABILITY?: number, ALGORITHM?: cqrProbabilityAlgorithm, CONVERGED?: boolean, ITERATIONS?: bigint, MAXIMUM_PROBABILITY?: number, HAS_MAXIMUM_PROBABILITY?: boolean, MAHALANOBIS_SQUARED?: number, HAS_MAHALANOBIS_SQUARED?: boolean, UNCERTAINTY_SOURCE?: cqrUncertaintyOrigin, CALIBRATION?: covarianceCalibration, CALIBRATION_REFERENCE?: string | Uint8Array | null, CROSS_CORRELATION?: cqrCovarianceCorrelation);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CQRProbabilityResult.d.ts.map

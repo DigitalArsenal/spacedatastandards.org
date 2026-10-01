@@ -49,6 +49,23 @@ public final class CQRProbabilityResult extends com.google.flatbuffers.Table {
    */
   public boolean HAS_MAHALANOBIS_SQUARED() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   public int UNCERTAINTY_SOURCE() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * For a covariance-based probability: whether the covariance's coverage was
+   * measured against independent reference states. Only CALIBRATED
+   * covariance supports a probability beyond "conditional on the stated
+   * assumptions".
+   */
+  public byte CALIBRATION() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Identifier of the calibration evidence (a report or record).
+   */
+  public String CALIBRATION_REFERENCE() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CALIBRATION_REFERENCEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer CALIBRATION_REFERENCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * The correlation assumed between the two objects' errors.
+   */
+  public int CROSS_CORRELATION() { int o = __offset(26); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 
   public static int createCQRProbabilityResult(FlatBufferBuilder builder,
       double PROBABILITY,
@@ -59,12 +76,18 @@ public final class CQRProbabilityResult extends com.google.flatbuffers.Table {
       boolean HAS_MAXIMUM_PROBABILITY,
       double MAHALANOBIS_SQUARED,
       boolean HAS_MAHALANOBIS_SQUARED,
-      int UNCERTAINTY_SOURCE) {
-    builder.startTable(9);
+      int UNCERTAINTY_SOURCE,
+      byte CALIBRATION,
+      int CALIBRATION_REFERENCEOffset,
+      int CROSS_CORRELATION) {
+    builder.startTable(12);
     CQRProbabilityResult.addMahalanobisSquared(builder, MAHALANOBIS_SQUARED);
     CQRProbabilityResult.addMaximumProbability(builder, MAXIMUM_PROBABILITY);
     CQRProbabilityResult.addIterations(builder, ITERATIONS);
     CQRProbabilityResult.addProbability(builder, PROBABILITY);
+    CQRProbabilityResult.addCalibrationReference(builder, CALIBRATION_REFERENCEOffset);
+    CQRProbabilityResult.addCrossCorrelation(builder, CROSS_CORRELATION);
+    CQRProbabilityResult.addCalibration(builder, CALIBRATION);
     CQRProbabilityResult.addUncertaintySource(builder, UNCERTAINTY_SOURCE);
     CQRProbabilityResult.addHasMahalanobisSquared(builder, HAS_MAHALANOBIS_SQUARED);
     CQRProbabilityResult.addHasMaximumProbability(builder, HAS_MAXIMUM_PROBABILITY);
@@ -73,7 +96,7 @@ public final class CQRProbabilityResult extends com.google.flatbuffers.Table {
     return CQRProbabilityResult.endCQRProbabilityResult(builder);
   }
 
-  public static void startCQRProbabilityResult(FlatBufferBuilder builder) { builder.startTable(9); }
+  public static void startCQRProbabilityResult(FlatBufferBuilder builder) { builder.startTable(12); }
   public static void addProbability(FlatBufferBuilder builder, double PROBABILITY) { builder.addDouble(0, PROBABILITY, 0.0); }
   public static void addAlgorithm(FlatBufferBuilder builder, int ALGORITHM) { builder.addByte(1, (byte) ALGORITHM, (byte) 0); }
   public static void addConverged(FlatBufferBuilder builder, boolean CONVERGED) { builder.addBoolean(2, CONVERGED, false); }
@@ -83,6 +106,9 @@ public final class CQRProbabilityResult extends com.google.flatbuffers.Table {
   public static void addMahalanobisSquared(FlatBufferBuilder builder, double MAHALANOBIS_SQUARED) { builder.addDouble(6, MAHALANOBIS_SQUARED, 0.0); }
   public static void addHasMahalanobisSquared(FlatBufferBuilder builder, boolean HAS_MAHALANOBIS_SQUARED) { builder.addBoolean(7, HAS_MAHALANOBIS_SQUARED, false); }
   public static void addUncertaintySource(FlatBufferBuilder builder, int UNCERTAINTY_SOURCE) { builder.addByte(8, (byte) UNCERTAINTY_SOURCE, (byte) 0); }
+  public static void addCalibration(FlatBufferBuilder builder, byte CALIBRATION) { builder.addByte(9, CALIBRATION, 0); }
+  public static void addCalibrationReference(FlatBufferBuilder builder, int CALIBRATION_REFERENCEOffset) { builder.addOffset(10, CALIBRATION_REFERENCEOffset, 0); }
+  public static void addCrossCorrelation(FlatBufferBuilder builder, int CROSS_CORRELATION) { builder.addByte(11, (byte) CROSS_CORRELATION, (byte) 0); }
   public static int endCQRProbabilityResult(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

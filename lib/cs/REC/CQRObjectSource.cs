@@ -59,6 +59,13 @@ public struct CQRObjectSource : IFlatbufferObject
   public double APOGEE_ALTITUDE_M { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// True when APOGEE_ALTITUDE_M carries a value; false means absent.
   public bool HAS_APOGEE_ALTITUDE_M { get { int o = __p.__offset(36); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Hard-body radius in metres given with the source.
+  public double HARD_BODY_RADIUS_M { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True when HARD_BODY_RADIUS_M carries a value; false means absent.
+  public bool HAS_HARD_BODY_RADIUS_M { get { int o = __p.__offset(40); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// The object's catalog entry. Without a supplied radius, its SIZE, else
+  /// its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+  public CAT? CATALOG_ENTRY { get { int o = __p.__offset(42); return o != 0 ? (CAT?)(new CAT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<CQRObjectSource> CreateCQRObjectSource(FlatBufferBuilder builder,
       StringOffset OBJECT_IDOffset = default(StringOffset),
@@ -77,10 +84,15 @@ public struct CQRObjectSource : IFlatbufferObject
       double PERIGEE_ALTITUDE_M = 0.0,
       bool HAS_PERIGEE_ALTITUDE_M = false,
       double APOGEE_ALTITUDE_M = 0.0,
-      bool HAS_APOGEE_ALTITUDE_M = false) {
-    builder.StartTable(17);
+      bool HAS_APOGEE_ALTITUDE_M = false,
+      double HARD_BODY_RADIUS_M = 0.0,
+      bool HAS_HARD_BODY_RADIUS_M = false,
+      Offset<CAT> CATALOG_ENTRYOffset = default(Offset<CAT>)) {
+    builder.StartTable(20);
+    CQRObjectSource.AddHARD_BODY_RADIUS_M(builder, HARD_BODY_RADIUS_M);
     CQRObjectSource.AddAPOGEE_ALTITUDE_M(builder, APOGEE_ALTITUDE_M);
     CQRObjectSource.AddPERIGEE_ALTITUDE_M(builder, PERIGEE_ALTITUDE_M);
+    CQRObjectSource.AddCATALOG_ENTRY(builder, CATALOG_ENTRYOffset);
     CQRObjectSource.AddSOURCE_EPOCH(builder, SOURCE_EPOCHOffset);
     CQRObjectSource.AddPROVENANCE(builder, PROVENANCEOffset);
     CQRObjectSource.AddTLE_LINES(builder, TLE_LINESOffset);
@@ -94,12 +106,13 @@ public struct CQRObjectSource : IFlatbufferObject
     CQRObjectSource.AddNORAD_CATALOG_ID(builder, NORAD_CATALOG_ID);
     CQRObjectSource.AddOBJECT_NAME(builder, OBJECT_NAMEOffset);
     CQRObjectSource.AddOBJECT_ID(builder, OBJECT_IDOffset);
+    CQRObjectSource.AddHAS_HARD_BODY_RADIUS_M(builder, HAS_HARD_BODY_RADIUS_M);
     CQRObjectSource.AddHAS_APOGEE_ALTITUDE_M(builder, HAS_APOGEE_ALTITUDE_M);
     CQRObjectSource.AddHAS_PERIGEE_ALTITUDE_M(builder, HAS_PERIGEE_ALTITUDE_M);
     return CQRObjectSource.EndCQRObjectSource(builder);
   }
 
-  public static void StartCQRObjectSource(FlatBufferBuilder builder) { builder.StartTable(17); }
+  public static void StartCQRObjectSource(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(0, OBJECT_IDOffset.Value, 0); }
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(1, OBJECT_NAMEOffset.Value, 0); }
   public static void AddNORAD_CATALOG_ID(FlatBufferBuilder builder, uint NORAD_CATALOG_ID) { builder.AddUint(2, NORAD_CATALOG_ID, 0); }
@@ -117,6 +130,9 @@ public struct CQRObjectSource : IFlatbufferObject
   public static void AddHAS_PERIGEE_ALTITUDE_M(FlatBufferBuilder builder, bool HAS_PERIGEE_ALTITUDE_M) { builder.AddBool(14, HAS_PERIGEE_ALTITUDE_M, false); }
   public static void AddAPOGEE_ALTITUDE_M(FlatBufferBuilder builder, double APOGEE_ALTITUDE_M) { builder.AddDouble(15, APOGEE_ALTITUDE_M, 0.0); }
   public static void AddHAS_APOGEE_ALTITUDE_M(FlatBufferBuilder builder, bool HAS_APOGEE_ALTITUDE_M) { builder.AddBool(16, HAS_APOGEE_ALTITUDE_M, false); }
+  public static void AddHARD_BODY_RADIUS_M(FlatBufferBuilder builder, double HARD_BODY_RADIUS_M) { builder.AddDouble(17, HARD_BODY_RADIUS_M, 0.0); }
+  public static void AddHAS_HARD_BODY_RADIUS_M(FlatBufferBuilder builder, bool HAS_HARD_BODY_RADIUS_M) { builder.AddBool(18, HAS_HARD_BODY_RADIUS_M, false); }
+  public static void AddCATALOG_ENTRY(FlatBufferBuilder builder, Offset<CAT> CATALOG_ENTRYOffset) { builder.AddOffset(19, CATALOG_ENTRYOffset.Value, 0); }
   public static Offset<CQRObjectSource> EndCQRObjectSource(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // OBJECT_ID
@@ -145,6 +161,9 @@ public struct CQRObjectSource : IFlatbufferObject
     _o.HAS_PERIGEE_ALTITUDE_M = this.HAS_PERIGEE_ALTITUDE_M;
     _o.APOGEE_ALTITUDE_M = this.APOGEE_ALTITUDE_M;
     _o.HAS_APOGEE_ALTITUDE_M = this.HAS_APOGEE_ALTITUDE_M;
+    _o.HARD_BODY_RADIUS_M = this.HARD_BODY_RADIUS_M;
+    _o.HAS_HARD_BODY_RADIUS_M = this.HAS_HARD_BODY_RADIUS_M;
+    _o.CATALOG_ENTRY = this.CATALOG_ENTRY.HasValue ? this.CATALOG_ENTRY.Value.UnPack() : null;
   }
   public static Offset<CQRObjectSource> Pack(FlatBufferBuilder builder, CQRObjectSourceT _o) {
     if (_o == null) return default(Offset<CQRObjectSource>);
@@ -159,6 +178,7 @@ public struct CQRObjectSource : IFlatbufferObject
     var _TLE_LINES = _o.TLE_LINES == null ? default(Offset<PRWTleLines>) : PRWTleLines.Pack(builder, _o.TLE_LINES);
     var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<CQRSourceProvenance>) : CQRSourceProvenance.Pack(builder, _o.PROVENANCE);
     var _SOURCE_EPOCH = _o.SOURCE_EPOCH == null ? default(Offset<TIMInstant>) : TIMInstant.Pack(builder, _o.SOURCE_EPOCH);
+    var _CATALOG_ENTRY = _o.CATALOG_ENTRY == null ? default(Offset<CAT>) : CAT.Pack(builder, _o.CATALOG_ENTRY);
     return CreateCQRObjectSource(
       builder,
       _OBJECT_ID,
@@ -177,7 +197,10 @@ public struct CQRObjectSource : IFlatbufferObject
       _o.PERIGEE_ALTITUDE_M,
       _o.HAS_PERIGEE_ALTITUDE_M,
       _o.APOGEE_ALTITUDE_M,
-      _o.HAS_APOGEE_ALTITUDE_M);
+      _o.HAS_APOGEE_ALTITUDE_M,
+      _o.HARD_BODY_RADIUS_M,
+      _o.HAS_HARD_BODY_RADIUS_M,
+      _CATALOG_ENTRY);
   }
 }
 
@@ -200,6 +223,9 @@ public class CQRObjectSourceT
   public bool HAS_PERIGEE_ALTITUDE_M { get; set; }
   public double APOGEE_ALTITUDE_M { get; set; }
   public bool HAS_APOGEE_ALTITUDE_M { get; set; }
+  public double HARD_BODY_RADIUS_M { get; set; }
+  public bool HAS_HARD_BODY_RADIUS_M { get; set; }
+  public CATT CATALOG_ENTRY { get; set; }
 
   public CQRObjectSourceT() {
     this.OBJECT_ID = null;
@@ -219,6 +245,9 @@ public class CQRObjectSourceT
     this.HAS_PERIGEE_ALTITUDE_M = false;
     this.APOGEE_ALTITUDE_M = 0.0;
     this.HAS_APOGEE_ALTITUDE_M = false;
+    this.HARD_BODY_RADIUS_M = 0.0;
+    this.HAS_HARD_BODY_RADIUS_M = false;
+    this.CATALOG_ENTRY = null;
   }
 }
 
@@ -245,6 +274,9 @@ static public class CQRObjectSourceVerify
       && verifier.VerifyField(tablePos, 32 /*HAS_PERIGEE_ALTITUDE_M*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 34 /*APOGEE_ALTITUDE_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 36 /*HAS_APOGEE_ALTITUDE_M*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 38 /*HARD_BODY_RADIUS_M*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*HAS_HARD_BODY_RADIUS_M*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyTable(tablePos, 42 /*CATALOG_ENTRY*/, CATVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -2325,6 +2325,30 @@
         }
       }
     },
+    "covarianceCalibration": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Uncalibrated",
+        "Calibrated"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Calibration not stated"
+        },
+        "Uncalibrated": {
+          "value": 1,
+          "description": "Not measured against independent reference states, or measured and failed"
+        },
+        "Calibrated": {
+          "value": 2,
+          "description": "Measured against independent reference states and passed"
+        }
+      }
+    },
     "hfcFlowRegime": {
       "type": "string",
       "enum": [
@@ -7718,6 +7742,32 @@
         "ORB_AVERAGING": {
           "type": "string",
           "description": "For element sets: OSCULATING, or the mean-element theory used (BROUWER,\nKOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.",
+          "x-flatbuffer-type": "string"
+        },
+        "COV_CALIBRATION": {
+          "$ref": "#/definitions/covarianceCalibration",
+          "description": "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Calibration not stated"
+            },
+            "Uncalibrated": {
+              "value": 1,
+              "description": "Not measured against independent reference states, or measured and failed"
+            },
+            "Calibrated": {
+              "value": 2,
+              "description": "Measured against independent reference states and passed"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "COV_CALIBRATION_REFERENCE": {
+          "type": "string",
+          "description": "Identifier of that calibration evidence (a report or record).",
           "x-flatbuffer-type": "string"
         }
       },

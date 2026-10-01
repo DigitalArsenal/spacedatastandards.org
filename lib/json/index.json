@@ -18994,6 +18994,14 @@
                         "Smoother"
                     ]
                 },
+                "covarianceCalibration": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Uncalibrated",
+                        "Calibrated"
+                    ]
+                },
                 "hfcFlowRegime": {
                     "type": "string",
                     "enum": [
@@ -21208,6 +21216,14 @@
                         "ORB_AVERAGING": {
                             "type": "string",
                             "description": "For element sets: OSCULATING, or the mean-element theory used (BROUWER,\nKOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING."
+                        },
+                        "COV_CALIBRATION": {
+                            "$ref": "#/definitions/covarianceCalibration",
+                            "description": "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+                        },
+                        "COV_CALIBRATION_REFERENCE": {
+                            "type": "string",
+                            "description": "Identifier of that calibration evidence (a report or record)."
                         }
                     },
                     "additionalProperties": false
@@ -30557,6 +30573,14 @@
                         "Smoother"
                     ]
                 },
+                "covarianceCalibration": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Uncalibrated",
+                        "Calibrated"
+                    ]
+                },
                 "hfcFlowRegime": {
                     "type": "string",
                     "enum": [
@@ -32954,6 +32978,14 @@
                         "ORB_AVERAGING": {
                             "type": "string",
                             "description": "For element sets: OSCULATING, or the mean-element theory used (BROUWER,\nKOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING."
+                        },
+                        "COV_CALIBRATION": {
+                            "$ref": "#/definitions/covarianceCalibration",
+                            "description": "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+                        },
+                        "COV_CALIBRATION_REFERENCE": {
+                            "type": "string",
+                            "description": "Identifier of that calibration evidence (a report or record)."
                         }
                     },
                     "additionalProperties": false
@@ -56503,6 +56535,14 @@
                         "Smoother"
                     ]
                 },
+                "covarianceCalibration": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Uncalibrated",
+                        "Calibrated"
+                    ]
+                },
                 "hfcFlowRegime": {
                     "type": "string",
                     "enum": [
@@ -58758,6 +58798,14 @@
                         "ORB_AVERAGING": {
                             "type": "string",
                             "description": "For element sets: OSCULATING, or the mean-element theory used (BROUWER,\nKOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING."
+                        },
+                        "COV_CALIBRATION": {
+                            "$ref": "#/definitions/covarianceCalibration",
+                            "description": "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+                        },
+                        "COV_CALIBRATION_REFERENCE": {
+                            "type": "string",
+                            "description": "Identifier of that calibration evidence (a report or record)."
                         }
                     },
                     "additionalProperties": false
@@ -65237,6 +65285,14 @@
                         "Smoother"
                     ]
                 },
+                "covarianceCalibration": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Uncalibrated",
+                        "Calibrated"
+                    ]
+                },
                 "cqrProbabilityAlgorithm": {
                     "type": "string",
                     "enum": [
@@ -65259,6 +65315,35 @@
                         "SUPPLIED_COVARIANCE",
                         "SYNTHESIZED_COVARIANCE",
                         "MAXIMUM_PROBABILITY_ONLY"
+                    ]
+                },
+                "cqrHardBodyRadiusBasis": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SUPPLIED",
+                        "CATALOG_SIZE",
+                        "RADAR_CROSS_SECTION",
+                        "REQUEST_DEFAULT"
+                    ]
+                },
+                "cqrCovarianceBasis": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "NONE",
+                        "SOURCE_EPHEMERIS",
+                        "CONJUNCTION_MESSAGE",
+                        "ORBIT_DETERMINATION",
+                        "EMPIRICAL_MODEL"
+                    ]
+                },
+                "cqrCovarianceCorrelation": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "INDEPENDENT",
+                        "SUPPLIED_CROSS_COVARIANCE"
                     ]
                 },
                 "cqrDocumentSyntax": {
@@ -84720,6 +84805,14 @@
                         "ORB_AVERAGING": {
                             "type": "string",
                             "description": "For element sets: OSCULATING, or the mean-element theory used (BROUWER,\nKOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING."
+                        },
+                        "COV_CALIBRATION": {
+                            "$ref": "#/definitions/covarianceCalibration",
+                            "description": "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+                        },
+                        "COV_CALIBRATION_REFERENCE": {
+                            "type": "string",
+                            "description": "Identifier of that calibration evidence (a report or record)."
                         }
                     },
                     "additionalProperties": false
@@ -84866,6 +84959,18 @@
                         "HAS_APOGEE_ALTITUDE_M": {
                             "type": "boolean",
                             "description": "True when APOGEE_ALTITUDE_M carries a value; false means absent."
+                        },
+                        "HARD_BODY_RADIUS_M": {
+                            "type": "number",
+                            "description": "Hard-body radius in metres given with the source."
+                        },
+                        "HAS_HARD_BODY_RADIUS_M": {
+                            "type": "boolean",
+                            "description": "True when HARD_BODY_RADIUS_M carries a value; false means absent."
+                        },
+                        "CATALOG_ENTRY": {
+                            "$ref": "#/definitions/CAT",
+                            "description": "The object's catalog entry. Without a supplied radius, its SIZE, else\nits RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis)."
                         }
                     },
                     "required": [
@@ -85033,6 +85138,18 @@
                         },
                         "UNCERTAINTY_SOURCE": {
                             "$ref": "#/definitions/cqrUncertaintyOrigin"
+                        },
+                        "CALIBRATION": {
+                            "$ref": "#/definitions/covarianceCalibration",
+                            "description": "For a covariance-based probability: whether the covariance's coverage was\nmeasured against independent reference states. Only CALIBRATED\ncovariance supports a probability beyond \"conditional on the stated\nassumptions\"."
+                        },
+                        "CALIBRATION_REFERENCE": {
+                            "type": "string",
+                            "description": "Identifier of the calibration evidence (a report or record)."
+                        },
+                        "CROSS_CORRELATION": {
+                            "$ref": "#/definitions/cqrCovarianceCorrelation",
+                            "description": "The correlation assumed between the two objects' errors."
                         }
                     },
                     "additionalProperties": false
@@ -85260,6 +85377,34 @@
                         "HAS_COMBINED_RADIUS_M": {
                             "type": "boolean",
                             "description": "True when COMBINED_RADIUS_M carries a value; false means absent."
+                        },
+                        "PRIMARY_HARD_BODY_RADIUS_M": {
+                            "type": "number",
+                            "description": "Each object's hard-body radius in metres and where it came from;\nCOMBINED_RADIUS_M is their sum."
+                        },
+                        "HAS_PRIMARY_HARD_BODY_RADIUS_M": {
+                            "type": "boolean",
+                            "description": "True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent."
+                        },
+                        "SECONDARY_HARD_BODY_RADIUS_M": {
+                            "type": "number"
+                        },
+                        "HAS_SECONDARY_HARD_BODY_RADIUS_M": {
+                            "type": "boolean",
+                            "description": "True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent."
+                        },
+                        "PRIMARY_RADIUS_BASIS": {
+                            "$ref": "#/definitions/cqrHardBodyRadiusBasis"
+                        },
+                        "SECONDARY_RADIUS_BASIS": {
+                            "$ref": "#/definitions/cqrHardBodyRadiusBasis"
+                        },
+                        "PRIMARY_COVARIANCE_BASIS": {
+                            "$ref": "#/definitions/cqrCovarianceBasis",
+                            "description": "Where each object's position covariance came from; NONE means the event\ncarries no covariance-based quantity for it."
+                        },
+                        "SECONDARY_COVARIANCE_BASIS": {
+                            "$ref": "#/definitions/cqrCovarianceBasis"
                         }
                     },
                     "required": [
@@ -165888,6 +166033,14 @@
                         "Smoother"
                     ]
                 },
+                "covarianceCalibration": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Uncalibrated",
+                        "Calibrated"
+                    ]
+                },
                 "KeyType": {
                     "type": "string",
                     "enum": [
@@ -165938,6 +166091,35 @@
                         "SUPPLIED_COVARIANCE",
                         "SYNTHESIZED_COVARIANCE",
                         "MAXIMUM_PROBABILITY_ONLY"
+                    ]
+                },
+                "cqrHardBodyRadiusBasis": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SUPPLIED",
+                        "CATALOG_SIZE",
+                        "RADAR_CROSS_SECTION",
+                        "REQUEST_DEFAULT"
+                    ]
+                },
+                "cqrCovarianceBasis": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "NONE",
+                        "SOURCE_EPHEMERIS",
+                        "CONJUNCTION_MESSAGE",
+                        "ORBIT_DETERMINATION",
+                        "EMPIRICAL_MODEL"
+                    ]
+                },
+                "cqrCovarianceCorrelation": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "INDEPENDENT",
+                        "SUPPLIED_CROSS_COVARIANCE"
                     ]
                 },
                 "cqrDocumentSyntax": {
@@ -170673,6 +170855,14 @@
                         "ORB_AVERAGING": {
                             "type": "string",
                             "description": "For element sets: OSCULATING, or the mean-element theory used (BROUWER,\nKOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING."
+                        },
+                        "COV_CALIBRATION": {
+                            "$ref": "#/definitions/covarianceCalibration",
+                            "description": "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+                        },
+                        "COV_CALIBRATION_REFERENCE": {
+                            "type": "string",
+                            "description": "Identifier of that calibration evidence (a report or record)."
                         }
                     },
                     "additionalProperties": false
@@ -171409,6 +171599,18 @@
                         "HAS_APOGEE_ALTITUDE_M": {
                             "type": "boolean",
                             "description": "True when APOGEE_ALTITUDE_M carries a value; false means absent."
+                        },
+                        "HARD_BODY_RADIUS_M": {
+                            "type": "number",
+                            "description": "Hard-body radius in metres given with the source."
+                        },
+                        "HAS_HARD_BODY_RADIUS_M": {
+                            "type": "boolean",
+                            "description": "True when HARD_BODY_RADIUS_M carries a value; false means absent."
+                        },
+                        "CATALOG_ENTRY": {
+                            "$ref": "#/definitions/CAT",
+                            "description": "The object's catalog entry. Without a supplied radius, its SIZE, else\nits RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis)."
                         }
                     },
                     "required": [
@@ -171576,6 +171778,18 @@
                         },
                         "UNCERTAINTY_SOURCE": {
                             "$ref": "#/definitions/cqrUncertaintyOrigin"
+                        },
+                        "CALIBRATION": {
+                            "$ref": "#/definitions/covarianceCalibration",
+                            "description": "For a covariance-based probability: whether the covariance's coverage was\nmeasured against independent reference states. Only CALIBRATED\ncovariance supports a probability beyond \"conditional on the stated\nassumptions\"."
+                        },
+                        "CALIBRATION_REFERENCE": {
+                            "type": "string",
+                            "description": "Identifier of the calibration evidence (a report or record)."
+                        },
+                        "CROSS_CORRELATION": {
+                            "$ref": "#/definitions/cqrCovarianceCorrelation",
+                            "description": "The correlation assumed between the two objects' errors."
                         }
                     },
                     "additionalProperties": false
@@ -171803,6 +172017,34 @@
                         "HAS_COMBINED_RADIUS_M": {
                             "type": "boolean",
                             "description": "True when COMBINED_RADIUS_M carries a value; false means absent."
+                        },
+                        "PRIMARY_HARD_BODY_RADIUS_M": {
+                            "type": "number",
+                            "description": "Each object's hard-body radius in metres and where it came from;\nCOMBINED_RADIUS_M is their sum."
+                        },
+                        "HAS_PRIMARY_HARD_BODY_RADIUS_M": {
+                            "type": "boolean",
+                            "description": "True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent."
+                        },
+                        "SECONDARY_HARD_BODY_RADIUS_M": {
+                            "type": "number"
+                        },
+                        "HAS_SECONDARY_HARD_BODY_RADIUS_M": {
+                            "type": "boolean",
+                            "description": "True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent."
+                        },
+                        "PRIMARY_RADIUS_BASIS": {
+                            "$ref": "#/definitions/cqrHardBodyRadiusBasis"
+                        },
+                        "SECONDARY_RADIUS_BASIS": {
+                            "$ref": "#/definitions/cqrHardBodyRadiusBasis"
+                        },
+                        "PRIMARY_COVARIANCE_BASIS": {
+                            "$ref": "#/definitions/cqrCovarianceBasis",
+                            "description": "Where each object's position covariance came from; NONE means the event\ncarries no covariance-based quantity for it."
+                        },
+                        "SECONDARY_COVARIANCE_BASIS": {
+                            "$ref": "#/definitions/cqrCovarianceBasis"
                         }
                     },
                     "required": [
@@ -186087,6 +186329,14 @@
                         "Smoother"
                     ]
                 },
+                "covarianceCalibration": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Uncalibrated",
+                        "Calibrated"
+                    ]
+                },
                 "ATM": {
                     "type": "object",
                     "description": "Atmospheric Model Message",
@@ -187949,6 +188199,14 @@
                         "ORB_AVERAGING": {
                             "type": "string",
                             "description": "For element sets: OSCULATING, or the mean-element theory used (BROUWER,\nKOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING."
+                        },
+                        "COV_CALIBRATION": {
+                            "$ref": "#/definitions/covarianceCalibration",
+                            "description": "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states."
+                        },
+                        "COV_CALIBRATION_REFERENCE": {
+                            "type": "string",
+                            "description": "Identifier of that calibration evidence (a report or record)."
                         }
                     },
                     "additionalProperties": false

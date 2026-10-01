@@ -248,6 +248,60 @@ class CQREvent : Table() {
             val o = __offset(56)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Each object's hard-body radius in metres and where it came from;
+     * COMBINED_RADIUS_M is their sum.
+     */
+    val primaryHardBodyRadiusM : Double
+        get() {
+            val o = __offset(58)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+     */
+    val hasPrimaryHardBodyRadiusM : Boolean
+        get() {
+            val o = __offset(60)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val secondaryHardBodyRadiusM : Double
+        get() {
+            val o = __offset(62)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+     */
+    val hasSecondaryHardBodyRadiusM : Boolean
+        get() {
+            val o = __offset(64)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val primaryRadiusBasis : UByte
+        get() {
+            val o = __offset(66)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    val secondaryRadiusBasis : UByte
+        get() {
+            val o = __offset(68)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Where each object's position covariance came from; NONE means the event
+     * carries no covariance-based quantity for it.
+     */
+    val primaryCovarianceBasis : UByte
+        get() {
+            val o = __offset(70)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    val secondaryCovarianceBasis : UByte
+        get() {
+            val o = __offset(72)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCQREvent(_bb: ByteBuffer): CQREvent = getRootAsCQREvent(_bb, CQREvent())
@@ -255,8 +309,10 @@ class CQREvent : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCQREvent(builder: FlatBufferBuilder, primaryIdOffset: Int, secondaryIdOffset: Int, primaryNameOffset: Int, secondaryNameOffset: Int, primaryNoradId: UInt, secondaryNoradId: UInt, tcaOffset: Int, missDistanceM: Double, relativeSpeedMS: Double, probabilityOffset: Int, dilutionThresholdM: Double, hasDilutionThresholdM: Boolean, relativePositionRtnOffset: Int, relativeVelocityRtnOffset: Int, primarySigmaRtnMOffset: Int, secondarySigmaRtnMOffset: Int, primaryDaysSinceEpoch: Double, hasPrimaryDaysSinceEpoch: Boolean, secondaryDaysSinceEpoch: Double, hasSecondaryDaysSinceEpoch: Boolean, conjunctionMessageOffset: Int, primaryStateOffset: Int, secondaryStateOffset: Int, mahalanobis3DSquared: Double, hasMahalanobis3DSquared: Boolean, combinedRadiusM: Double, hasCombinedRadiusM: Boolean) : Int {
-            builder.startTable(27)
+        fun createCQREvent(builder: FlatBufferBuilder, primaryIdOffset: Int, secondaryIdOffset: Int, primaryNameOffset: Int, secondaryNameOffset: Int, primaryNoradId: UInt, secondaryNoradId: UInt, tcaOffset: Int, missDistanceM: Double, relativeSpeedMS: Double, probabilityOffset: Int, dilutionThresholdM: Double, hasDilutionThresholdM: Boolean, relativePositionRtnOffset: Int, relativeVelocityRtnOffset: Int, primarySigmaRtnMOffset: Int, secondarySigmaRtnMOffset: Int, primaryDaysSinceEpoch: Double, hasPrimaryDaysSinceEpoch: Boolean, secondaryDaysSinceEpoch: Double, hasSecondaryDaysSinceEpoch: Boolean, conjunctionMessageOffset: Int, primaryStateOffset: Int, secondaryStateOffset: Int, mahalanobis3DSquared: Double, hasMahalanobis3DSquared: Boolean, combinedRadiusM: Double, hasCombinedRadiusM: Boolean, primaryHardBodyRadiusM: Double, hasPrimaryHardBodyRadiusM: Boolean, secondaryHardBodyRadiusM: Double, hasSecondaryHardBodyRadiusM: Boolean, primaryRadiusBasis: UByte, secondaryRadiusBasis: UByte, primaryCovarianceBasis: UByte, secondaryCovarianceBasis: UByte) : Int {
+            builder.startTable(35)
+            addSECONDARYHARDBODYRADIUSM(builder, secondaryHardBodyRadiusM)
+            addPRIMARYHARDBODYRADIUSM(builder, primaryHardBodyRadiusM)
             addCOMBINEDRADIUSM(builder, combinedRadiusM)
             addMAHALANOBIS3DSQUARED(builder, mahalanobis3DSquared)
             addSECONDARYDAYSSINCEEPOCH(builder, secondaryDaysSinceEpoch)
@@ -279,6 +335,12 @@ class CQREvent : Table() {
             addPRIMARYNAME(builder, primaryNameOffset)
             addSECONDARYID(builder, secondaryIdOffset)
             addPRIMARYID(builder, primaryIdOffset)
+            addSECONDARYCOVARIANCEBASIS(builder, secondaryCovarianceBasis)
+            addPRIMARYCOVARIANCEBASIS(builder, primaryCovarianceBasis)
+            addSECONDARYRADIUSBASIS(builder, secondaryRadiusBasis)
+            addPRIMARYRADIUSBASIS(builder, primaryRadiusBasis)
+            addHASSECONDARYHARDBODYRADIUSM(builder, hasSecondaryHardBodyRadiusM)
+            addHASPRIMARYHARDBODYRADIUSM(builder, hasPrimaryHardBodyRadiusM)
             addHASCOMBINEDRADIUSM(builder, hasCombinedRadiusM)
             addHASMAHALANOBIS3DSQUARED(builder, hasMahalanobis3DSquared)
             addHASSECONDARYDAYSSINCEEPOCH(builder, hasSecondaryDaysSinceEpoch)
@@ -286,7 +348,7 @@ class CQREvent : Table() {
             addHASDILUTIONTHRESHOLDM(builder, hasDilutionThresholdM)
             return endCQREvent(builder)
         }
-        fun startCQREvent(builder: FlatBufferBuilder) = builder.startTable(27)
+        fun startCQREvent(builder: FlatBufferBuilder) = builder.startTable(35)
         fun addPRIMARYID(builder: FlatBufferBuilder, primaryId: Int) = builder.addOffset(0, primaryId, 0)
         fun addSECONDARYID(builder: FlatBufferBuilder, secondaryId: Int) = builder.addOffset(1, secondaryId, 0)
         fun addPRIMARYNAME(builder: FlatBufferBuilder, primaryName: Int) = builder.addOffset(2, primaryName, 0)
@@ -314,6 +376,14 @@ class CQREvent : Table() {
         fun addHASMAHALANOBIS3DSQUARED(builder: FlatBufferBuilder, hasMahalanobis3DSquared: Boolean) = builder.addBoolean(24, hasMahalanobis3DSquared, false)
         fun addCOMBINEDRADIUSM(builder: FlatBufferBuilder, combinedRadiusM: Double) = builder.addDouble(25, combinedRadiusM, 0.0)
         fun addHASCOMBINEDRADIUSM(builder: FlatBufferBuilder, hasCombinedRadiusM: Boolean) = builder.addBoolean(26, hasCombinedRadiusM, false)
+        fun addPRIMARYHARDBODYRADIUSM(builder: FlatBufferBuilder, primaryHardBodyRadiusM: Double) = builder.addDouble(27, primaryHardBodyRadiusM, 0.0)
+        fun addHASPRIMARYHARDBODYRADIUSM(builder: FlatBufferBuilder, hasPrimaryHardBodyRadiusM: Boolean) = builder.addBoolean(28, hasPrimaryHardBodyRadiusM, false)
+        fun addSECONDARYHARDBODYRADIUSM(builder: FlatBufferBuilder, secondaryHardBodyRadiusM: Double) = builder.addDouble(29, secondaryHardBodyRadiusM, 0.0)
+        fun addHASSECONDARYHARDBODYRADIUSM(builder: FlatBufferBuilder, hasSecondaryHardBodyRadiusM: Boolean) = builder.addBoolean(30, hasSecondaryHardBodyRadiusM, false)
+        fun addPRIMARYRADIUSBASIS(builder: FlatBufferBuilder, primaryRadiusBasis: UByte) = builder.addByte(31, primaryRadiusBasis.toByte(), 0)
+        fun addSECONDARYRADIUSBASIS(builder: FlatBufferBuilder, secondaryRadiusBasis: UByte) = builder.addByte(32, secondaryRadiusBasis.toByte(), 0)
+        fun addPRIMARYCOVARIANCEBASIS(builder: FlatBufferBuilder, primaryCovarianceBasis: UByte) = builder.addByte(33, primaryCovarianceBasis.toByte(), 0)
+        fun addSECONDARYCOVARIANCEBASIS(builder: FlatBufferBuilder, secondaryCovarianceBasis: UByte) = builder.addByte(34, secondaryCovarianceBasis.toByte(), 0)
         fun endCQREvent(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

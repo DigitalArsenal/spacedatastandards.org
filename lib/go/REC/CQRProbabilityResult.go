@@ -232,8 +232,72 @@ func (rcv *CQRProbabilityResult) MutateUncertaintySource(n cqrUncertaintyOrigin)
 	return rcv.MutateUNCERTAINTY_SOURCE(n)
 }
 
+/// For a covariance-based probability: whether the covariance's coverage was
+/// measured against independent reference states. Only CALIBRATED
+/// covariance supports a probability beyond "conditional on the stated
+/// assumptions".
+func (rcv *CQRProbabilityResult) CALIBRATION() covarianceCalibration {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return covarianceCalibration(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *CQRProbabilityResult) Calibration() covarianceCalibration {
+	return rcv.CALIBRATION()
+}
+
+/// For a covariance-based probability: whether the covariance's coverage was
+/// measured against independent reference states. Only CALIBRATED
+/// covariance supports a probability beyond "conditional on the stated
+/// assumptions".
+func (rcv *CQRProbabilityResult) MutateCALIBRATION(n covarianceCalibration) bool {
+	return rcv._tab.MutateInt8Slot(22, int8(n))
+}
+
+func (rcv *CQRProbabilityResult) MutateCalibration(n covarianceCalibration) bool {
+	return rcv.MutateCALIBRATION(n)
+}
+
+/// Identifier of the calibration evidence (a report or record).
+func (rcv *CQRProbabilityResult) CALIBRATION_REFERENCE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CQRProbabilityResult) CalibrationReference() []byte {
+	return rcv.CALIBRATION_REFERENCE()
+}
+
+/// Identifier of the calibration evidence (a report or record).
+/// The correlation assumed between the two objects' errors.
+func (rcv *CQRProbabilityResult) CROSS_CORRELATION() cqrCovarianceCorrelation {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return cqrCovarianceCorrelation(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *CQRProbabilityResult) CrossCorrelation() cqrCovarianceCorrelation {
+	return rcv.CROSS_CORRELATION()
+}
+
+/// The correlation assumed between the two objects' errors.
+func (rcv *CQRProbabilityResult) MutateCROSS_CORRELATION(n cqrCovarianceCorrelation) bool {
+	return rcv._tab.MutateByteSlot(26, byte(n))
+}
+
+func (rcv *CQRProbabilityResult) MutateCrossCorrelation(n cqrCovarianceCorrelation) bool {
+	return rcv.MutateCROSS_CORRELATION(n)
+}
+
 func CQRProbabilityResultStart(builder *flatbuffers.Builder) {
-	builder.StartObject(9)
+	builder.StartObject(12)
 }
 func CQRProbabilityResultAddPROBABILITY(builder *flatbuffers.Builder, PROBABILITY float64) {
 	builder.PrependFloat64Slot(0, PROBABILITY, 0.0)
@@ -288,6 +352,24 @@ func CQRProbabilityResultAddUNCERTAINTY_SOURCE(builder *flatbuffers.Builder, UNC
 }
 func CQRProbabilityResultAddUncertaintySource(builder *flatbuffers.Builder, UNCERTAINTY_SOURCE cqrUncertaintyOrigin) {
 	CQRProbabilityResultAddUNCERTAINTY_SOURCE(builder, UNCERTAINTY_SOURCE)
+}
+func CQRProbabilityResultAddCALIBRATION(builder *flatbuffers.Builder, CALIBRATION covarianceCalibration) {
+	builder.PrependInt8Slot(9, int8(CALIBRATION), 0)
+}
+func CQRProbabilityResultAddCalibration(builder *flatbuffers.Builder, CALIBRATION covarianceCalibration) {
+	CQRProbabilityResultAddCALIBRATION(builder, CALIBRATION)
+}
+func CQRProbabilityResultAddCALIBRATION_REFERENCE(builder *flatbuffers.Builder, CALIBRATION_REFERENCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(CALIBRATION_REFERENCE), 0)
+}
+func CQRProbabilityResultAddCalibrationReference(builder *flatbuffers.Builder, CALIBRATION_REFERENCE flatbuffers.UOffsetT) {
+	CQRProbabilityResultAddCALIBRATION_REFERENCE(builder, CALIBRATION_REFERENCE)
+}
+func CQRProbabilityResultAddCROSS_CORRELATION(builder *flatbuffers.Builder, CROSS_CORRELATION cqrCovarianceCorrelation) {
+	builder.PrependByteSlot(11, byte(CROSS_CORRELATION), 0)
+}
+func CQRProbabilityResultAddCrossCorrelation(builder *flatbuffers.Builder, CROSS_CORRELATION cqrCovarianceCorrelation) {
+	CQRProbabilityResultAddCROSS_CORRELATION(builder, CROSS_CORRELATION)
 }
 func CQRProbabilityResultEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

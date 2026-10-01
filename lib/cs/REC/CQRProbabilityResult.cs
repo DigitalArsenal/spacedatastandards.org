@@ -33,6 +33,21 @@ public struct CQRProbabilityResult : IFlatbufferObject
   /// True when MAHALANOBIS_SQUARED carries a value; false means absent.
   public bool HAS_MAHALANOBIS_SQUARED { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public cqrUncertaintyOrigin UNCERTAINTY_SOURCE { get { int o = __p.__offset(20); return o != 0 ? (cqrUncertaintyOrigin)__p.bb.Get(o + __p.bb_pos) : cqrUncertaintyOrigin.UNSPECIFIED; } }
+  /// For a covariance-based probability: whether the covariance's coverage was
+  /// measured against independent reference states. Only CALIBRATED
+  /// covariance supports a probability beyond "conditional on the stated
+  /// assumptions".
+  public covarianceCalibration CALIBRATION { get { int o = __p.__offset(22); return o != 0 ? (covarianceCalibration)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceCalibration.Unspecified; } }
+  /// Identifier of the calibration evidence (a report or record).
+  public string CALIBRATION_REFERENCE { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCALIBRATION_REFERENCEBytes() { return __p.__vector_as_span<byte>(24, 1); }
+#else
+  public ArraySegment<byte>? GetCALIBRATION_REFERENCEBytes() { return __p.__vector_as_arraysegment(24); }
+#endif
+  public byte[] GetCALIBRATION_REFERENCEArray() { return __p.__vector_as_array<byte>(24); }
+  /// The correlation assumed between the two objects' errors.
+  public cqrCovarianceCorrelation CROSS_CORRELATION { get { int o = __p.__offset(26); return o != 0 ? (cqrCovarianceCorrelation)__p.bb.Get(o + __p.bb_pos) : cqrCovarianceCorrelation.UNSPECIFIED; } }
 
   public static Offset<CQRProbabilityResult> CreateCQRProbabilityResult(FlatBufferBuilder builder,
       double PROBABILITY = 0.0,
@@ -43,12 +58,18 @@ public struct CQRProbabilityResult : IFlatbufferObject
       bool HAS_MAXIMUM_PROBABILITY = false,
       double MAHALANOBIS_SQUARED = 0.0,
       bool HAS_MAHALANOBIS_SQUARED = false,
-      cqrUncertaintyOrigin UNCERTAINTY_SOURCE = cqrUncertaintyOrigin.UNSPECIFIED) {
-    builder.StartTable(9);
+      cqrUncertaintyOrigin UNCERTAINTY_SOURCE = cqrUncertaintyOrigin.UNSPECIFIED,
+      covarianceCalibration CALIBRATION = covarianceCalibration.Unspecified,
+      StringOffset CALIBRATION_REFERENCEOffset = default(StringOffset),
+      cqrCovarianceCorrelation CROSS_CORRELATION = cqrCovarianceCorrelation.UNSPECIFIED) {
+    builder.StartTable(12);
     CQRProbabilityResult.AddMAHALANOBIS_SQUARED(builder, MAHALANOBIS_SQUARED);
     CQRProbabilityResult.AddMAXIMUM_PROBABILITY(builder, MAXIMUM_PROBABILITY);
     CQRProbabilityResult.AddITERATIONS(builder, ITERATIONS);
     CQRProbabilityResult.AddPROBABILITY(builder, PROBABILITY);
+    CQRProbabilityResult.AddCALIBRATION_REFERENCE(builder, CALIBRATION_REFERENCEOffset);
+    CQRProbabilityResult.AddCROSS_CORRELATION(builder, CROSS_CORRELATION);
+    CQRProbabilityResult.AddCALIBRATION(builder, CALIBRATION);
     CQRProbabilityResult.AddUNCERTAINTY_SOURCE(builder, UNCERTAINTY_SOURCE);
     CQRProbabilityResult.AddHAS_MAHALANOBIS_SQUARED(builder, HAS_MAHALANOBIS_SQUARED);
     CQRProbabilityResult.AddHAS_MAXIMUM_PROBABILITY(builder, HAS_MAXIMUM_PROBABILITY);
@@ -57,7 +78,7 @@ public struct CQRProbabilityResult : IFlatbufferObject
     return CQRProbabilityResult.EndCQRProbabilityResult(builder);
   }
 
-  public static void StartCQRProbabilityResult(FlatBufferBuilder builder) { builder.StartTable(9); }
+  public static void StartCQRProbabilityResult(FlatBufferBuilder builder) { builder.StartTable(12); }
   public static void AddPROBABILITY(FlatBufferBuilder builder, double PROBABILITY) { builder.AddDouble(0, PROBABILITY, 0.0); }
   public static void AddALGORITHM(FlatBufferBuilder builder, cqrProbabilityAlgorithm ALGORITHM) { builder.AddByte(1, (byte)ALGORITHM, 0); }
   public static void AddCONVERGED(FlatBufferBuilder builder, bool CONVERGED) { builder.AddBool(2, CONVERGED, false); }
@@ -67,6 +88,9 @@ public struct CQRProbabilityResult : IFlatbufferObject
   public static void AddMAHALANOBIS_SQUARED(FlatBufferBuilder builder, double MAHALANOBIS_SQUARED) { builder.AddDouble(6, MAHALANOBIS_SQUARED, 0.0); }
   public static void AddHAS_MAHALANOBIS_SQUARED(FlatBufferBuilder builder, bool HAS_MAHALANOBIS_SQUARED) { builder.AddBool(7, HAS_MAHALANOBIS_SQUARED, false); }
   public static void AddUNCERTAINTY_SOURCE(FlatBufferBuilder builder, cqrUncertaintyOrigin UNCERTAINTY_SOURCE) { builder.AddByte(8, (byte)UNCERTAINTY_SOURCE, 0); }
+  public static void AddCALIBRATION(FlatBufferBuilder builder, covarianceCalibration CALIBRATION) { builder.AddSbyte(9, (sbyte)CALIBRATION, 0); }
+  public static void AddCALIBRATION_REFERENCE(FlatBufferBuilder builder, StringOffset CALIBRATION_REFERENCEOffset) { builder.AddOffset(10, CALIBRATION_REFERENCEOffset.Value, 0); }
+  public static void AddCROSS_CORRELATION(FlatBufferBuilder builder, cqrCovarianceCorrelation CROSS_CORRELATION) { builder.AddByte(11, (byte)CROSS_CORRELATION, 0); }
   public static Offset<CQRProbabilityResult> EndCQRProbabilityResult(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CQRProbabilityResult>(o);
@@ -86,9 +110,13 @@ public struct CQRProbabilityResult : IFlatbufferObject
     _o.MAHALANOBIS_SQUARED = this.MAHALANOBIS_SQUARED;
     _o.HAS_MAHALANOBIS_SQUARED = this.HAS_MAHALANOBIS_SQUARED;
     _o.UNCERTAINTY_SOURCE = this.UNCERTAINTY_SOURCE;
+    _o.CALIBRATION = this.CALIBRATION;
+    _o.CALIBRATION_REFERENCE = this.CALIBRATION_REFERENCE;
+    _o.CROSS_CORRELATION = this.CROSS_CORRELATION;
   }
   public static Offset<CQRProbabilityResult> Pack(FlatBufferBuilder builder, CQRProbabilityResultT _o) {
     if (_o == null) return default(Offset<CQRProbabilityResult>);
+    var _CALIBRATION_REFERENCE = _o.CALIBRATION_REFERENCE == null ? default(StringOffset) : builder.CreateString(_o.CALIBRATION_REFERENCE);
     return CreateCQRProbabilityResult(
       builder,
       _o.PROBABILITY,
@@ -99,7 +127,10 @@ public struct CQRProbabilityResult : IFlatbufferObject
       _o.HAS_MAXIMUM_PROBABILITY,
       _o.MAHALANOBIS_SQUARED,
       _o.HAS_MAHALANOBIS_SQUARED,
-      _o.UNCERTAINTY_SOURCE);
+      _o.UNCERTAINTY_SOURCE,
+      _o.CALIBRATION,
+      _CALIBRATION_REFERENCE,
+      _o.CROSS_CORRELATION);
   }
 }
 
@@ -114,6 +145,9 @@ public class CQRProbabilityResultT
   public double MAHALANOBIS_SQUARED { get; set; }
   public bool HAS_MAHALANOBIS_SQUARED { get; set; }
   public cqrUncertaintyOrigin UNCERTAINTY_SOURCE { get; set; }
+  public covarianceCalibration CALIBRATION { get; set; }
+  public string CALIBRATION_REFERENCE { get; set; }
+  public cqrCovarianceCorrelation CROSS_CORRELATION { get; set; }
 
   public CQRProbabilityResultT() {
     this.PROBABILITY = 0.0;
@@ -125,6 +159,9 @@ public class CQRProbabilityResultT
     this.MAHALANOBIS_SQUARED = 0.0;
     this.HAS_MAHALANOBIS_SQUARED = false;
     this.UNCERTAINTY_SOURCE = cqrUncertaintyOrigin.UNSPECIFIED;
+    this.CALIBRATION = covarianceCalibration.Unspecified;
+    this.CALIBRATION_REFERENCE = null;
+    this.CROSS_CORRELATION = cqrCovarianceCorrelation.UNSPECIFIED;
   }
 }
 
@@ -143,6 +180,9 @@ static public class CQRProbabilityResultVerify
       && verifier.VerifyField(tablePos, 16 /*MAHALANOBIS_SQUARED*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 18 /*HAS_MAHALANOBIS_SQUARED*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 20 /*UNCERTAINTY_SOURCE*/, 1 /*cqrUncertaintyOrigin*/, 1, false)
+      && verifier.VerifyField(tablePos, 22 /*CALIBRATION*/, 1 /*covarianceCalibration*/, 1, false)
+      && verifier.VerifyString(tablePos, 24 /*CALIBRATION_REFERENCE*/, false)
+      && verifier.VerifyField(tablePos, 26 /*CROSS_CORRELATION*/, 1 /*cqrCovarianceCorrelation*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

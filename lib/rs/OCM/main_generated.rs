@@ -277,6 +277,111 @@ impl<'a> ::flatbuffers::Verifiable for estimatorCategory {
 
 impl ::flatbuffers::SimpleToVerifyInSlice for estimatorCategory {}
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_COVARIANCE_CALIBRATION: i8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_COVARIANCE_CALIBRATION: i8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_COVARIANCE_CALIBRATION: [covarianceCalibration; 3] = [
+    covarianceCalibration::Unspecified,
+    covarianceCalibration::Uncalibrated,
+    covarianceCalibration::Calibrated,
+];
+
+/// Whether a covariance's coverage was measured against independent reference
+/// states: the share of reference errors inside its confidence regions matched
+/// what the covariance claims, for the regime and prediction age it covers.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct covarianceCalibration(pub i8);
+
+#[allow(non_upper_case_globals)]
+impl covarianceCalibration {
+    /// Calibration not stated
+    pub const Unspecified: Self = Self(0);
+    /// Not measured against independent reference states, or measured and failed
+    pub const Uncalibrated: Self = Self(1);
+    /// Measured against independent reference states and passed
+    pub const Calibrated: Self = Self(2);
+
+    pub const ENUM_MIN: i8 = 0;
+    pub const ENUM_MAX: i8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::Unspecified,
+        Self::Uncalibrated,
+        Self::Calibrated,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::Unspecified => Some("Unspecified"),
+            Self::Uncalibrated => Some("Uncalibrated"),
+            Self::Calibrated => Some("Calibrated"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for covarianceCalibration {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for covarianceCalibration {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for covarianceCalibration {
+    type Output = covarianceCalibration;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for covarianceCalibration {
+    type Scalar = i8;
+
+    #[inline]
+    fn to_little_endian(self) -> i8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: i8) -> Self {
+        let b = i8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for covarianceCalibration {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        i8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for covarianceCalibration {}
+
 pub enum HeaderOffset {}
 
 #[derive(Copy, Clone, PartialEq)]
@@ -5367,6 +5472,8 @@ impl<'a> OCM<'a> {
     pub const VT_COV_REF_FRAME: ::flatbuffers::VOffsetT = 40;
     pub const VT_ORB_REVNUM: ::flatbuffers::VOffsetT = 42;
     pub const VT_ORB_AVERAGING: ::flatbuffers::VOffsetT = 44;
+    pub const VT_COV_CALIBRATION: ::flatbuffers::VOffsetT = 46;
+    pub const VT_COV_CALIBRATION_REFERENCE: ::flatbuffers::VOffsetT = 48;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5380,6 +5487,7 @@ impl<'a> OCM<'a> {
     ) -> ::flatbuffers::WIPOffset<OCM<'bldr>> {
         let mut builder = OCMBuilder::new(_fbb);
         builder.add_STATE_STEP_SIZE(args.STATE_STEP_SIZE);
+        if let Some(x) = args.COV_CALIBRATION_REFERENCE { builder.add_COV_CALIBRATION_REFERENCE(x); }
         if let Some(x) = args.ORB_AVERAGING { builder.add_ORB_AVERAGING(x); }
         builder.add_ORB_REVNUM(args.ORB_REVNUM);
         if let Some(x) = args.COV_REF_FRAME { builder.add_COV_REF_FRAME(x); }
@@ -5398,6 +5506,7 @@ impl<'a> OCM<'a> {
         if let Some(x) = args.TRAJ_TYPE_DESCRIPTION { builder.add_TRAJ_TYPE_DESCRIPTION(x); }
         if let Some(x) = args.METADATA { builder.add_METADATA(x); }
         if let Some(x) = args.HEADER { builder.add_HEADER(x); }
+        builder.add_COV_CALIBRATION(args.COV_CALIBRATION);
         builder.add_STATE_VECTOR_SIZE(args.STATE_VECTOR_SIZE);
         builder.add_TRAJ_TYPE(args.TRAJ_TYPE);
         builder.finish()
@@ -5459,6 +5568,10 @@ impl<'a> OCM<'a> {
         let ORB_AVERAGING = self.ORB_AVERAGING().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let COV_CALIBRATION = self.COV_CALIBRATION();
+        let COV_CALIBRATION_REFERENCE = self.COV_CALIBRATION_REFERENCE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         OCMT {
             HEADER,
             METADATA,
@@ -5481,6 +5594,8 @@ impl<'a> OCM<'a> {
             COV_REF_FRAME,
             ORB_REVNUM,
             ORB_AVERAGING,
+            COV_CALIBRATION,
+            COV_CALIBRATION_REFERENCE,
         }
     }
 
@@ -5693,6 +5808,25 @@ impl<'a> OCM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCM::VT_ORB_AVERAGING, None)}
     }
+
+    /// Whether COVARIANCE_DATA's coverage was measured against independent
+    /// reference states.
+    #[inline]
+    pub fn COV_CALIBRATION(&self) -> covarianceCalibration {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<covarianceCalibration>(OCM::VT_COV_CALIBRATION, Some(covarianceCalibration::Unspecified)).unwrap()}
+    }
+
+    /// Identifier of that calibration evidence (a report or record).
+    #[inline]
+    pub fn COV_CALIBRATION_REFERENCE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCM::VT_COV_CALIBRATION_REFERENCE, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OCM<'_> {
@@ -5722,6 +5856,8 @@ impl ::flatbuffers::Verifiable for OCM<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("COV_REF_FRAME", Self::VT_COV_REF_FRAME, false)?
             .visit_field::<u32>("ORB_REVNUM", Self::VT_ORB_REVNUM, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORB_AVERAGING", Self::VT_ORB_AVERAGING, false)?
+            .visit_field::<covarianceCalibration>("COV_CALIBRATION", Self::VT_COV_CALIBRATION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_CALIBRATION_REFERENCE", Self::VT_COV_CALIBRATION_REFERENCE, false)?
             .finish();
         Ok(())
     }
@@ -5749,6 +5885,8 @@ pub struct OCMArgs<'a> {
     pub COV_REF_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
     pub ORB_REVNUM: u32,
     pub ORB_AVERAGING: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_CALIBRATION: covarianceCalibration,
+    pub COV_CALIBRATION_REFERENCE: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for OCMArgs<'a> {
@@ -5776,6 +5914,8 @@ impl<'a> Default for OCMArgs<'a> {
             COV_REF_FRAME: None,
             ORB_REVNUM: 0,
             ORB_AVERAGING: None,
+            COV_CALIBRATION: covarianceCalibration::Unspecified,
+            COV_CALIBRATION_REFERENCE: None,
         }
     }
 }
@@ -5892,6 +6032,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_COV_CALIBRATION(&mut self, COV_CALIBRATION: covarianceCalibration) {
+        self.fbb_.push_slot::<covarianceCalibration>(OCM::VT_COV_CALIBRATION, COV_CALIBRATION, covarianceCalibration::Unspecified);
+    }
+
+    #[inline]
+    pub fn add_COV_CALIBRATION_REFERENCE(&mut self, COV_CALIBRATION_REFERENCE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_COV_CALIBRATION_REFERENCE, COV_CALIBRATION_REFERENCE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OCMBuilder {
@@ -5931,6 +6081,8 @@ impl ::core::fmt::Debug for OCM<'_> {
         ds.field("COV_REF_FRAME", &self.COV_REF_FRAME());
         ds.field("ORB_REVNUM", &self.ORB_REVNUM());
         ds.field("ORB_AVERAGING", &self.ORB_AVERAGING());
+        ds.field("COV_CALIBRATION", &self.COV_CALIBRATION());
+        ds.field("COV_CALIBRATION_REFERENCE", &self.COV_CALIBRATION_REFERENCE());
         ds.finish()
     }
 }
@@ -5959,6 +6111,8 @@ pub struct OCMT {
     pub COV_REF_FRAME: Option<alloc::boxed::Box<RFMT>>,
     pub ORB_REVNUM: u32,
     pub ORB_AVERAGING: Option<alloc::string::String>,
+    pub COV_CALIBRATION: covarianceCalibration,
+    pub COV_CALIBRATION_REFERENCE: Option<alloc::string::String>,
 }
 
 impl Default for OCMT {
@@ -5985,6 +6139,8 @@ impl Default for OCMT {
             COV_REF_FRAME: None,
             ORB_REVNUM: 0,
             ORB_AVERAGING: None,
+            COV_CALIBRATION: covarianceCalibration::Unspecified,
+            COV_CALIBRATION_REFERENCE: None,
         }
     }
 }
@@ -6049,6 +6205,10 @@ impl OCMT {
         let ORB_AVERAGING = self.ORB_AVERAGING.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let COV_CALIBRATION = self.COV_CALIBRATION;
+        let COV_CALIBRATION_REFERENCE = self.COV_CALIBRATION_REFERENCE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         OCM::create(_fbb, &OCMArgs{
             HEADER,
             METADATA,
@@ -6071,6 +6231,8 @@ impl OCMT {
             COV_REF_FRAME,
             ORB_REVNUM,
             ORB_AVERAGING,
+            COV_CALIBRATION,
+            COV_CALIBRATION_REFERENCE,
         })
     }
 }

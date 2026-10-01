@@ -585,8 +585,46 @@ func (rcv *OCM) OrbAveraging() []byte {
 
 /// For element sets: OSCULATING, or the mean-element theory used (BROUWER,
 /// KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+/// Whether COVARIANCE_DATA's coverage was measured against independent
+/// reference states.
+func (rcv *OCM) COV_CALIBRATION() covarianceCalibration {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return covarianceCalibration(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *OCM) CovCalibration() covarianceCalibration {
+	return rcv.COV_CALIBRATION()
+}
+
+/// Whether COVARIANCE_DATA's coverage was measured against independent
+/// reference states.
+func (rcv *OCM) MutateCOV_CALIBRATION(n covarianceCalibration) bool {
+	return rcv._tab.MutateInt8Slot(46, int8(n))
+}
+
+func (rcv *OCM) MutateCovCalibration(n covarianceCalibration) bool {
+	return rcv.MutateCOV_CALIBRATION(n)
+}
+
+/// Identifier of that calibration evidence (a report or record).
+func (rcv *OCM) COV_CALIBRATION_REFERENCE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OCM) CovCalibrationReference() []byte {
+	return rcv.COV_CALIBRATION_REFERENCE()
+}
+
+/// Identifier of that calibration evidence (a report or record).
 func OCMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(21)
+	builder.StartObject(23)
 }
 func OCMAddHEADER(builder *flatbuffers.Builder, HEADER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(HEADER), 0)
@@ -749,6 +787,18 @@ func OCMAddORB_AVERAGING(builder *flatbuffers.Builder, ORB_AVERAGING flatbuffers
 }
 func OCMAddOrbAveraging(builder *flatbuffers.Builder, ORB_AVERAGING flatbuffers.UOffsetT) {
 	OCMAddORB_AVERAGING(builder, ORB_AVERAGING)
+}
+func OCMAddCOV_CALIBRATION(builder *flatbuffers.Builder, COV_CALIBRATION covarianceCalibration) {
+	builder.PrependInt8Slot(21, int8(COV_CALIBRATION), 0)
+}
+func OCMAddCovCalibration(builder *flatbuffers.Builder, COV_CALIBRATION covarianceCalibration) {
+	OCMAddCOV_CALIBRATION(builder, COV_CALIBRATION)
+}
+func OCMAddCOV_CALIBRATION_REFERENCE(builder *flatbuffers.Builder, COV_CALIBRATION_REFERENCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(COV_CALIBRATION_REFERENCE), 0)
+}
+func OCMAddCovCalibrationReference(builder *flatbuffers.Builder, COV_CALIBRATION_REFERENCE flatbuffers.UOffsetT) {
+	OCMAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
 }
 func OCMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

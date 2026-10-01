@@ -14,6 +14,7 @@ import { Perturbations, PerturbationsT } from './Perturbations.js';
 import { PhysicalProperties, PhysicalPropertiesT } from './PhysicalProperties.js';
 import { RFM, RFMT } from './RFM.js';
 import { UserDefinedParameters, UserDefinedParametersT } from './UserDefinedParameters.js';
+import { covarianceCalibration } from './covarianceCalibration.js';
 import { trajectoryType } from './trajectoryType.js';
 
 
@@ -279,8 +280,27 @@ ORB_AVERAGING(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Whether COVARIANCE_DATA's coverage was measured against independent
+ * reference states.
+ */
+COV_CALIBRATION():covarianceCalibration {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : covarianceCalibration.Unspecified;
+}
+
+/**
+ * Identifier of that calibration evidence (a report or record).
+ */
+COV_CALIBRATION_REFERENCE():string|null
+COV_CALIBRATION_REFERENCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COV_CALIBRATION_REFERENCE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startOCM(builder:flatbuffers.Builder) {
-  builder.startObject(21);
+  builder.startObject(23);
 }
 
 static addHeader(builder:flatbuffers.Builder, HEADEROffset:flatbuffers.Offset) {
@@ -449,6 +469,14 @@ static addOrbAveraging(builder:flatbuffers.Builder, ORB_AVERAGINGOffset:flatbuff
   builder.addFieldOffset(20, ORB_AVERAGINGOffset, 0);
 }
 
+static addCovCalibration(builder:flatbuffers.Builder, COV_CALIBRATION:covarianceCalibration) {
+  builder.addFieldInt8(21, COV_CALIBRATION, covarianceCalibration.Unspecified);
+}
+
+static addCovCalibrationReference(builder:flatbuffers.Builder, COV_CALIBRATION_REFERENCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, COV_CALIBRATION_REFERENCEOffset, 0);
+}
+
 static endOCM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -485,7 +513,9 @@ unpack(): OCMT {
     this.TRAJ_FRAME_EPOCH(),
     (this.COV_REF_FRAME() !== null ? this.COV_REF_FRAME()!.unpack() : null),
     this.ORB_REVNUM(),
-    this.ORB_AVERAGING()
+    this.ORB_AVERAGING(),
+    this.COV_CALIBRATION(),
+    this.COV_CALIBRATION_REFERENCE()
   );
 }
 
@@ -512,6 +542,8 @@ unpackTo(_o: OCMT): void {
   _o.COV_REF_FRAME = (this.COV_REF_FRAME() !== null ? this.COV_REF_FRAME()!.unpack() : null);
   _o.ORB_REVNUM = this.ORB_REVNUM();
   _o.ORB_AVERAGING = this.ORB_AVERAGING();
+  _o.COV_CALIBRATION = this.COV_CALIBRATION();
+  _o.COV_CALIBRATION_REFERENCE = this.COV_CALIBRATION_REFERENCE();
 }
 }
 
@@ -537,7 +569,9 @@ constructor(
   public TRAJ_FRAME_EPOCH: string|Uint8Array|null = null,
   public COV_REF_FRAME: RFMT|null = null,
   public ORB_REVNUM: number = 0,
-  public ORB_AVERAGING: string|Uint8Array|null = null
+  public ORB_AVERAGING: string|Uint8Array|null = null,
+  public COV_CALIBRATION: covarianceCalibration = covarianceCalibration.Unspecified,
+  public COV_CALIBRATION_REFERENCE: string|Uint8Array|null = null
 ){}
 
 
@@ -559,6 +593,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TRAJ_FRAME_EPOCH = (this.TRAJ_FRAME_EPOCH !== null ? builder.createString(this.TRAJ_FRAME_EPOCH!) : 0);
   const COV_REF_FRAME = (this.COV_REF_FRAME !== null ? this.COV_REF_FRAME!.pack(builder) : 0);
   const ORB_AVERAGING = (this.ORB_AVERAGING !== null ? builder.createString(this.ORB_AVERAGING!) : 0);
+  const COV_CALIBRATION_REFERENCE = (this.COV_CALIBRATION_REFERENCE !== null ? builder.createString(this.COV_CALIBRATION_REFERENCE!) : 0);
 
   OCM.startOCM(builder);
   OCM.addHeader(builder, HEADER);
@@ -582,6 +617,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OCM.addCovRefFrame(builder, COV_REF_FRAME);
   OCM.addOrbRevnum(builder, this.ORB_REVNUM);
   OCM.addOrbAveraging(builder, ORB_AVERAGING);
+  OCM.addCovCalibration(builder, this.COV_CALIBRATION);
+  OCM.addCovCalibrationReference(builder, COV_CALIBRATION_REFERENCE);
 
   return OCM.endOCM(builder);
 }

@@ -95,6 +95,28 @@ public final class CQREvent extends com.google.flatbuffers.Table {
    * True when COMBINED_RADIUS_M carries a value; false means absent.
    */
   public boolean HAS_COMBINED_RADIUS_M() { int o = __offset(56); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Each object's hard-body radius in metres and where it came from;
+   * COMBINED_RADIUS_M is their sum.
+   */
+  public double PRIMARY_HARD_BODY_RADIUS_M() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+   */
+  public boolean HAS_PRIMARY_HARD_BODY_RADIUS_M() { int o = __offset(60); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public double SECONDARY_HARD_BODY_RADIUS_M() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+   */
+  public boolean HAS_SECONDARY_HARD_BODY_RADIUS_M() { int o = __offset(64); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public int PRIMARY_RADIUS_BASIS() { int o = __offset(66); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  public int SECONDARY_RADIUS_BASIS() { int o = __offset(68); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Where each object's position covariance came from; NONE means the event
+   * carries no covariance-based quantity for it.
+   */
+  public int PRIMARY_COVARIANCE_BASIS() { int o = __offset(70); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  public int SECONDARY_COVARIANCE_BASIS() { int o = __offset(72); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 
   public static int createCQREvent(FlatBufferBuilder builder,
       int PRIMARY_IDOffset,
@@ -123,8 +145,18 @@ public final class CQREvent extends com.google.flatbuffers.Table {
       double MAHALANOBIS_3D_SQUARED,
       boolean HAS_MAHALANOBIS_3D_SQUARED,
       double COMBINED_RADIUS_M,
-      boolean HAS_COMBINED_RADIUS_M) {
-    builder.startTable(27);
+      boolean HAS_COMBINED_RADIUS_M,
+      double PRIMARY_HARD_BODY_RADIUS_M,
+      boolean HAS_PRIMARY_HARD_BODY_RADIUS_M,
+      double SECONDARY_HARD_BODY_RADIUS_M,
+      boolean HAS_SECONDARY_HARD_BODY_RADIUS_M,
+      int PRIMARY_RADIUS_BASIS,
+      int SECONDARY_RADIUS_BASIS,
+      int PRIMARY_COVARIANCE_BASIS,
+      int SECONDARY_COVARIANCE_BASIS) {
+    builder.startTable(35);
+    CQREvent.addSecondaryHardBodyRadiusM(builder, SECONDARY_HARD_BODY_RADIUS_M);
+    CQREvent.addPrimaryHardBodyRadiusM(builder, PRIMARY_HARD_BODY_RADIUS_M);
     CQREvent.addCombinedRadiusM(builder, COMBINED_RADIUS_M);
     CQREvent.addMahalanobis3DSquared(builder, MAHALANOBIS_3D_SQUARED);
     CQREvent.addSecondaryDaysSinceEpoch(builder, SECONDARY_DAYS_SINCE_EPOCH);
@@ -147,6 +179,12 @@ public final class CQREvent extends com.google.flatbuffers.Table {
     CQREvent.addPrimaryName(builder, PRIMARY_NAMEOffset);
     CQREvent.addSecondaryId(builder, SECONDARY_IDOffset);
     CQREvent.addPrimaryId(builder, PRIMARY_IDOffset);
+    CQREvent.addSecondaryCovarianceBasis(builder, SECONDARY_COVARIANCE_BASIS);
+    CQREvent.addPrimaryCovarianceBasis(builder, PRIMARY_COVARIANCE_BASIS);
+    CQREvent.addSecondaryRadiusBasis(builder, SECONDARY_RADIUS_BASIS);
+    CQREvent.addPrimaryRadiusBasis(builder, PRIMARY_RADIUS_BASIS);
+    CQREvent.addHasSecondaryHardBodyRadiusM(builder, HAS_SECONDARY_HARD_BODY_RADIUS_M);
+    CQREvent.addHasPrimaryHardBodyRadiusM(builder, HAS_PRIMARY_HARD_BODY_RADIUS_M);
     CQREvent.addHasCombinedRadiusM(builder, HAS_COMBINED_RADIUS_M);
     CQREvent.addHasMahalanobis3DSquared(builder, HAS_MAHALANOBIS_3D_SQUARED);
     CQREvent.addHasSecondaryDaysSinceEpoch(builder, HAS_SECONDARY_DAYS_SINCE_EPOCH);
@@ -155,7 +193,7 @@ public final class CQREvent extends com.google.flatbuffers.Table {
     return CQREvent.endCQREvent(builder);
   }
 
-  public static void startCQREvent(FlatBufferBuilder builder) { builder.startTable(27); }
+  public static void startCQREvent(FlatBufferBuilder builder) { builder.startTable(35); }
   public static void addPrimaryId(FlatBufferBuilder builder, int PRIMARY_IDOffset) { builder.addOffset(0, PRIMARY_IDOffset, 0); }
   public static void addSecondaryId(FlatBufferBuilder builder, int SECONDARY_IDOffset) { builder.addOffset(1, SECONDARY_IDOffset, 0); }
   public static void addPrimaryName(FlatBufferBuilder builder, int PRIMARY_NAMEOffset) { builder.addOffset(2, PRIMARY_NAMEOffset, 0); }
@@ -183,6 +221,14 @@ public final class CQREvent extends com.google.flatbuffers.Table {
   public static void addHasMahalanobis3DSquared(FlatBufferBuilder builder, boolean HAS_MAHALANOBIS_3D_SQUARED) { builder.addBoolean(24, HAS_MAHALANOBIS_3D_SQUARED, false); }
   public static void addCombinedRadiusM(FlatBufferBuilder builder, double COMBINED_RADIUS_M) { builder.addDouble(25, COMBINED_RADIUS_M, 0.0); }
   public static void addHasCombinedRadiusM(FlatBufferBuilder builder, boolean HAS_COMBINED_RADIUS_M) { builder.addBoolean(26, HAS_COMBINED_RADIUS_M, false); }
+  public static void addPrimaryHardBodyRadiusM(FlatBufferBuilder builder, double PRIMARY_HARD_BODY_RADIUS_M) { builder.addDouble(27, PRIMARY_HARD_BODY_RADIUS_M, 0.0); }
+  public static void addHasPrimaryHardBodyRadiusM(FlatBufferBuilder builder, boolean HAS_PRIMARY_HARD_BODY_RADIUS_M) { builder.addBoolean(28, HAS_PRIMARY_HARD_BODY_RADIUS_M, false); }
+  public static void addSecondaryHardBodyRadiusM(FlatBufferBuilder builder, double SECONDARY_HARD_BODY_RADIUS_M) { builder.addDouble(29, SECONDARY_HARD_BODY_RADIUS_M, 0.0); }
+  public static void addHasSecondaryHardBodyRadiusM(FlatBufferBuilder builder, boolean HAS_SECONDARY_HARD_BODY_RADIUS_M) { builder.addBoolean(30, HAS_SECONDARY_HARD_BODY_RADIUS_M, false); }
+  public static void addPrimaryRadiusBasis(FlatBufferBuilder builder, int PRIMARY_RADIUS_BASIS) { builder.addByte(31, (byte) PRIMARY_RADIUS_BASIS, (byte) 0); }
+  public static void addSecondaryRadiusBasis(FlatBufferBuilder builder, int SECONDARY_RADIUS_BASIS) { builder.addByte(32, (byte) SECONDARY_RADIUS_BASIS, (byte) 0); }
+  public static void addPrimaryCovarianceBasis(FlatBufferBuilder builder, int PRIMARY_COVARIANCE_BASIS) { builder.addByte(33, (byte) PRIMARY_COVARIANCE_BASIS, (byte) 0); }
+  public static void addSecondaryCovarianceBasis(FlatBufferBuilder builder, int SECONDARY_COVARIANCE_BASIS) { builder.addByte(34, (byte) SECONDARY_COVARIANCE_BASIS, (byte) 0); }
   public static int endCQREvent(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // PRIMARY_ID

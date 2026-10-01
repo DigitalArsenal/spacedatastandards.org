@@ -269,6 +269,338 @@ impl<'a> ::flatbuffers::Verifiable for cqrUncertaintyOrigin {
 impl ::flatbuffers::SimpleToVerifyInSlice for cqrUncertaintyOrigin {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CQR_HARD_BODY_RADIUS_BASIS: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CQR_HARD_BODY_RADIUS_BASIS: u8 = 4;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CQR_HARD_BODY_RADIUS_BASIS: [cqrHardBodyRadiusBasis; 5] = [
+    cqrHardBodyRadiusBasis::UNSPECIFIED,
+    cqrHardBodyRadiusBasis::SUPPLIED,
+    cqrHardBodyRadiusBasis::CATALOG_SIZE,
+    cqrHardBodyRadiusBasis::RADAR_CROSS_SECTION,
+    cqrHardBodyRadiusBasis::REQUEST_DEFAULT,
+];
+
+/// Where an object's hard-body radius came from.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct cqrHardBodyRadiusBasis(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl cqrHardBodyRadiusBasis {
+    pub const UNSPECIFIED: Self = Self(0);
+    /// Given with the source, by an operator or the requester.
+    pub const SUPPLIED: Self = Self(1);
+    /// Half the catalog entry's characteristic size (CAT SIZE).
+    pub const CATALOG_SIZE: Self = Self(2);
+    /// Radius of a sphere of the catalog entry's radar cross section,
+    /// sqrt(RCS / pi): a radar measure, not a physical size.
+    pub const RADAR_CROSS_SECTION: Self = Self(3);
+    /// Half the request's COMBINED_RADIUS_M: no object-specific value.
+    pub const REQUEST_DEFAULT: Self = Self(4);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 4;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::SUPPLIED,
+        Self::CATALOG_SIZE,
+        Self::RADAR_CROSS_SECTION,
+        Self::REQUEST_DEFAULT,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::SUPPLIED => Some("SUPPLIED"),
+            Self::CATALOG_SIZE => Some("CATALOG_SIZE"),
+            Self::RADAR_CROSS_SECTION => Some("RADAR_CROSS_SECTION"),
+            Self::REQUEST_DEFAULT => Some("REQUEST_DEFAULT"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for cqrHardBodyRadiusBasis {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for cqrHardBodyRadiusBasis {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for cqrHardBodyRadiusBasis {
+    type Output = cqrHardBodyRadiusBasis;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for cqrHardBodyRadiusBasis {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for cqrHardBodyRadiusBasis {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for cqrHardBodyRadiusBasis {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CQR_COVARIANCE_BASIS: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CQR_COVARIANCE_BASIS: u8 = 5;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CQR_COVARIANCE_BASIS: [cqrCovarianceBasis; 6] = [
+    cqrCovarianceBasis::UNSPECIFIED,
+    cqrCovarianceBasis::NONE,
+    cqrCovarianceBasis::SOURCE_EPHEMERIS,
+    cqrCovarianceBasis::CONJUNCTION_MESSAGE,
+    cqrCovarianceBasis::ORBIT_DETERMINATION,
+    cqrCovarianceBasis::EMPIRICAL_MODEL,
+];
+
+/// Where an object's position covariance at TCA came from.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct cqrCovarianceBasis(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl cqrCovarianceBasis {
+    pub const UNSPECIFIED: Self = Self(0);
+    /// None: the source supplied no covariance (an element set carries none).
+    pub const NONE: Self = Self(1);
+    /// The source's ephemeris or orbit message (OEM or OCM covariance).
+    pub const SOURCE_EPHEMERIS: Self = Self(2);
+    /// A conjunction data message.
+    pub const CONJUNCTION_MESSAGE: Self = Self(3);
+    /// The formal covariance of an orbit-determination fit.
+    pub const ORBIT_DETERMINATION: Self = Self(4);
+    /// An empirical prediction-error model for the source's element sets.
+    pub const EMPIRICAL_MODEL: Self = Self(5);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 5;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::NONE,
+        Self::SOURCE_EPHEMERIS,
+        Self::CONJUNCTION_MESSAGE,
+        Self::ORBIT_DETERMINATION,
+        Self::EMPIRICAL_MODEL,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::NONE => Some("NONE"),
+            Self::SOURCE_EPHEMERIS => Some("SOURCE_EPHEMERIS"),
+            Self::CONJUNCTION_MESSAGE => Some("CONJUNCTION_MESSAGE"),
+            Self::ORBIT_DETERMINATION => Some("ORBIT_DETERMINATION"),
+            Self::EMPIRICAL_MODEL => Some("EMPIRICAL_MODEL"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for cqrCovarianceBasis {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for cqrCovarianceBasis {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for cqrCovarianceBasis {
+    type Output = cqrCovarianceBasis;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for cqrCovarianceBasis {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for cqrCovarianceBasis {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for cqrCovarianceBasis {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CQR_COVARIANCE_CORRELATION: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CQR_COVARIANCE_CORRELATION: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CQR_COVARIANCE_CORRELATION: [cqrCovarianceCorrelation; 3] = [
+    cqrCovarianceCorrelation::UNSPECIFIED,
+    cqrCovarianceCorrelation::INDEPENDENT,
+    cqrCovarianceCorrelation::SUPPLIED_CROSS_COVARIANCE,
+];
+
+/// The assumed correlation between the two objects' position errors.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct cqrCovarianceCorrelation(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl cqrCovarianceCorrelation {
+    pub const UNSPECIFIED: Self = Self(0);
+    /// Independent errors: the combined covariance is the sum of the two.
+    pub const INDEPENDENT: Self = Self(1);
+    /// A cross covariance was supplied and used.
+    pub const SUPPLIED_CROSS_COVARIANCE: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::INDEPENDENT,
+        Self::SUPPLIED_CROSS_COVARIANCE,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::INDEPENDENT => Some("INDEPENDENT"),
+            Self::SUPPLIED_CROSS_COVARIANCE => Some("SUPPLIED_CROSS_COVARIANCE"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for cqrCovarianceCorrelation {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for cqrCovarianceCorrelation {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for cqrCovarianceCorrelation {
+    type Output = cqrCovarianceCorrelation;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for cqrCovarianceCorrelation {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for cqrCovarianceCorrelation {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for cqrCovarianceCorrelation {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_CQR_DOCUMENT_SYNTAX: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -1357,6 +1689,9 @@ impl<'a> CQRObjectSource<'a> {
     pub const VT_HAS_PERIGEE_ALTITUDE_M: ::flatbuffers::VOffsetT = 32;
     pub const VT_APOGEE_ALTITUDE_M: ::flatbuffers::VOffsetT = 34;
     pub const VT_HAS_APOGEE_ALTITUDE_M: ::flatbuffers::VOffsetT = 36;
+    pub const VT_HARD_BODY_RADIUS_M: ::flatbuffers::VOffsetT = 38;
+    pub const VT_HAS_HARD_BODY_RADIUS_M: ::flatbuffers::VOffsetT = 40;
+    pub const VT_CATALOG_ENTRY: ::flatbuffers::VOffsetT = 42;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1369,8 +1704,10 @@ impl<'a> CQRObjectSource<'a> {
         args: &'args CQRObjectSourceArgs<'args>
     ) -> ::flatbuffers::WIPOffset<CQRObjectSource<'bldr>> {
         let mut builder = CQRObjectSourceBuilder::new(_fbb);
+        builder.add_HARD_BODY_RADIUS_M(args.HARD_BODY_RADIUS_M);
         builder.add_APOGEE_ALTITUDE_M(args.APOGEE_ALTITUDE_M);
         builder.add_PERIGEE_ALTITUDE_M(args.PERIGEE_ALTITUDE_M);
+        if let Some(x) = args.CATALOG_ENTRY { builder.add_CATALOG_ENTRY(x); }
         if let Some(x) = args.SOURCE_EPOCH { builder.add_SOURCE_EPOCH(x); }
         if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
         if let Some(x) = args.TLE_LINES { builder.add_TLE_LINES(x); }
@@ -1384,6 +1721,7 @@ impl<'a> CQRObjectSource<'a> {
         builder.add_NORAD_CATALOG_ID(args.NORAD_CATALOG_ID);
         if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
         if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
+        builder.add_HAS_HARD_BODY_RADIUS_M(args.HAS_HARD_BODY_RADIUS_M);
         builder.add_HAS_APOGEE_ALTITUDE_M(args.HAS_APOGEE_ALTITUDE_M);
         builder.add_HAS_PERIGEE_ALTITUDE_M(args.HAS_PERIGEE_ALTITUDE_M);
         builder.finish()
@@ -1430,6 +1768,11 @@ impl<'a> CQRObjectSource<'a> {
         let HAS_PERIGEE_ALTITUDE_M = self.HAS_PERIGEE_ALTITUDE_M();
         let APOGEE_ALTITUDE_M = self.APOGEE_ALTITUDE_M();
         let HAS_APOGEE_ALTITUDE_M = self.HAS_APOGEE_ALTITUDE_M();
+        let HARD_BODY_RADIUS_M = self.HARD_BODY_RADIUS_M();
+        let HAS_HARD_BODY_RADIUS_M = self.HAS_HARD_BODY_RADIUS_M();
+        let CATALOG_ENTRY = self.CATALOG_ENTRY().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         CQRObjectSourceT {
             OBJECT_ID,
             OBJECT_NAME,
@@ -1448,6 +1791,9 @@ impl<'a> CQRObjectSource<'a> {
             HAS_PERIGEE_ALTITUDE_M,
             APOGEE_ALTITUDE_M,
             HAS_APOGEE_ALTITUDE_M,
+            HARD_BODY_RADIUS_M,
+            HAS_HARD_BODY_RADIUS_M,
+            CATALOG_ENTRY,
         }
     }
 
@@ -1591,6 +1937,34 @@ impl<'a> CQRObjectSource<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<bool>(CQRObjectSource::VT_HAS_APOGEE_ALTITUDE_M, Some(false)).unwrap()}
     }
+
+    /// Hard-body radius in metres given with the source.
+    #[inline]
+    pub fn HARD_BODY_RADIUS_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CQRObjectSource::VT_HARD_BODY_RADIUS_M, Some(0.0)).unwrap()}
+    }
+
+    /// True when HARD_BODY_RADIUS_M carries a value; false means absent.
+    #[inline]
+    pub fn HAS_HARD_BODY_RADIUS_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(CQRObjectSource::VT_HAS_HARD_BODY_RADIUS_M, Some(false)).unwrap()}
+    }
+
+    /// The object's catalog entry. Without a supplied radius, its SIZE, else
+    /// its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+    #[inline]
+    pub fn CATALOG_ENTRY(&self) -> Option<CAT<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CAT>>(CQRObjectSource::VT_CATALOG_ENTRY, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CQRObjectSource<'_> {
@@ -1616,6 +1990,9 @@ impl ::flatbuffers::Verifiable for CQRObjectSource<'_> {
             .visit_field::<bool>("HAS_PERIGEE_ALTITUDE_M", Self::VT_HAS_PERIGEE_ALTITUDE_M, false)?
             .visit_field::<f64>("APOGEE_ALTITUDE_M", Self::VT_APOGEE_ALTITUDE_M, false)?
             .visit_field::<bool>("HAS_APOGEE_ALTITUDE_M", Self::VT_HAS_APOGEE_ALTITUDE_M, false)?
+            .visit_field::<f64>("HARD_BODY_RADIUS_M", Self::VT_HARD_BODY_RADIUS_M, false)?
+            .visit_field::<bool>("HAS_HARD_BODY_RADIUS_M", Self::VT_HAS_HARD_BODY_RADIUS_M, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<CAT>>("CATALOG_ENTRY", Self::VT_CATALOG_ENTRY, false)?
             .finish();
         Ok(())
     }
@@ -1639,6 +2016,9 @@ pub struct CQRObjectSourceArgs<'a> {
     pub HAS_PERIGEE_ALTITUDE_M: bool,
     pub APOGEE_ALTITUDE_M: f64,
     pub HAS_APOGEE_ALTITUDE_M: bool,
+    pub HARD_BODY_RADIUS_M: f64,
+    pub HAS_HARD_BODY_RADIUS_M: bool,
+    pub CATALOG_ENTRY: Option<::flatbuffers::WIPOffset<CAT<'a>>>,
 }
 
 impl<'a> Default for CQRObjectSourceArgs<'a> {
@@ -1662,6 +2042,9 @@ impl<'a> Default for CQRObjectSourceArgs<'a> {
             HAS_PERIGEE_ALTITUDE_M: false,
             APOGEE_ALTITUDE_M: 0.0,
             HAS_APOGEE_ALTITUDE_M: false,
+            HARD_BODY_RADIUS_M: 0.0,
+            HAS_HARD_BODY_RADIUS_M: false,
+            CATALOG_ENTRY: None,
         }
     }
 }
@@ -1758,6 +2141,21 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRObjectSourceBuilder<'a, 'b
     }
 
     #[inline]
+    pub fn add_HARD_BODY_RADIUS_M(&mut self, HARD_BODY_RADIUS_M: f64) {
+        self.fbb_.push_slot::<f64>(CQRObjectSource::VT_HARD_BODY_RADIUS_M, HARD_BODY_RADIUS_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_HARD_BODY_RADIUS_M(&mut self, HAS_HARD_BODY_RADIUS_M: bool) {
+        self.fbb_.push_slot::<bool>(CQRObjectSource::VT_HAS_HARD_BODY_RADIUS_M, HAS_HARD_BODY_RADIUS_M, false);
+    }
+
+    #[inline]
+    pub fn add_CATALOG_ENTRY(&mut self, CATALOG_ENTRY: ::flatbuffers::WIPOffset<CAT<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CAT>>(CQRObjectSource::VT_CATALOG_ENTRY, CATALOG_ENTRY);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRObjectSourceBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CQRObjectSourceBuilder {
@@ -1794,6 +2192,9 @@ impl ::core::fmt::Debug for CQRObjectSource<'_> {
         ds.field("HAS_PERIGEE_ALTITUDE_M", &self.HAS_PERIGEE_ALTITUDE_M());
         ds.field("APOGEE_ALTITUDE_M", &self.APOGEE_ALTITUDE_M());
         ds.field("HAS_APOGEE_ALTITUDE_M", &self.HAS_APOGEE_ALTITUDE_M());
+        ds.field("HARD_BODY_RADIUS_M", &self.HARD_BODY_RADIUS_M());
+        ds.field("HAS_HARD_BODY_RADIUS_M", &self.HAS_HARD_BODY_RADIUS_M());
+        ds.field("CATALOG_ENTRY", &self.CATALOG_ENTRY());
         ds.finish()
     }
 }
@@ -1818,6 +2219,9 @@ pub struct CQRObjectSourceT {
     pub HAS_PERIGEE_ALTITUDE_M: bool,
     pub APOGEE_ALTITUDE_M: f64,
     pub HAS_APOGEE_ALTITUDE_M: bool,
+    pub HARD_BODY_RADIUS_M: f64,
+    pub HAS_HARD_BODY_RADIUS_M: bool,
+    pub CATALOG_ENTRY: Option<alloc::boxed::Box<CATT>>,
 }
 
 impl Default for CQRObjectSourceT {
@@ -1840,6 +2244,9 @@ impl Default for CQRObjectSourceT {
             HAS_PERIGEE_ALTITUDE_M: false,
             APOGEE_ALTITUDE_M: 0.0,
             HAS_APOGEE_ALTITUDE_M: false,
+            HARD_BODY_RADIUS_M: 0.0,
+            HAS_HARD_BODY_RADIUS_M: false,
+            CATALOG_ENTRY: None,
         }
     }
 }
@@ -1889,6 +2296,11 @@ impl CQRObjectSourceT {
         let HAS_PERIGEE_ALTITUDE_M = self.HAS_PERIGEE_ALTITUDE_M;
         let APOGEE_ALTITUDE_M = self.APOGEE_ALTITUDE_M;
         let HAS_APOGEE_ALTITUDE_M = self.HAS_APOGEE_ALTITUDE_M;
+        let HARD_BODY_RADIUS_M = self.HARD_BODY_RADIUS_M;
+        let HAS_HARD_BODY_RADIUS_M = self.HAS_HARD_BODY_RADIUS_M;
+        let CATALOG_ENTRY = self.CATALOG_ENTRY.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         CQRObjectSource::create(_fbb, &CQRObjectSourceArgs{
             OBJECT_ID,
             OBJECT_NAME,
@@ -1907,6 +2319,9 @@ impl CQRObjectSourceT {
             HAS_PERIGEE_ALTITUDE_M,
             APOGEE_ALTITUDE_M,
             HAS_APOGEE_ALTITUDE_M,
+            HARD_BODY_RADIUS_M,
+            HAS_HARD_BODY_RADIUS_M,
+            CATALOG_ENTRY,
         })
     }
 }
@@ -3114,6 +3529,9 @@ impl<'a> CQRProbabilityResult<'a> {
     pub const VT_MAHALANOBIS_SQUARED: ::flatbuffers::VOffsetT = 16;
     pub const VT_HAS_MAHALANOBIS_SQUARED: ::flatbuffers::VOffsetT = 18;
     pub const VT_UNCERTAINTY_SOURCE: ::flatbuffers::VOffsetT = 20;
+    pub const VT_CALIBRATION: ::flatbuffers::VOffsetT = 22;
+    pub const VT_CALIBRATION_REFERENCE: ::flatbuffers::VOffsetT = 24;
+    pub const VT_CROSS_CORRELATION: ::flatbuffers::VOffsetT = 26;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3123,13 +3541,16 @@ impl<'a> CQRProbabilityResult<'a> {
     #[allow(unused_mut)]
     pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
         _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-        args: &'args CQRProbabilityResultArgs
+        args: &'args CQRProbabilityResultArgs<'args>
     ) -> ::flatbuffers::WIPOffset<CQRProbabilityResult<'bldr>> {
         let mut builder = CQRProbabilityResultBuilder::new(_fbb);
         builder.add_MAHALANOBIS_SQUARED(args.MAHALANOBIS_SQUARED);
         builder.add_MAXIMUM_PROBABILITY(args.MAXIMUM_PROBABILITY);
         builder.add_ITERATIONS(args.ITERATIONS);
         builder.add_PROBABILITY(args.PROBABILITY);
+        if let Some(x) = args.CALIBRATION_REFERENCE { builder.add_CALIBRATION_REFERENCE(x); }
+        builder.add_CROSS_CORRELATION(args.CROSS_CORRELATION);
+        builder.add_CALIBRATION(args.CALIBRATION);
         builder.add_UNCERTAINTY_SOURCE(args.UNCERTAINTY_SOURCE);
         builder.add_HAS_MAHALANOBIS_SQUARED(args.HAS_MAHALANOBIS_SQUARED);
         builder.add_HAS_MAXIMUM_PROBABILITY(args.HAS_MAXIMUM_PROBABILITY);
@@ -3148,6 +3569,11 @@ impl<'a> CQRProbabilityResult<'a> {
         let MAHALANOBIS_SQUARED = self.MAHALANOBIS_SQUARED();
         let HAS_MAHALANOBIS_SQUARED = self.HAS_MAHALANOBIS_SQUARED();
         let UNCERTAINTY_SOURCE = self.UNCERTAINTY_SOURCE();
+        let CALIBRATION = self.CALIBRATION();
+        let CALIBRATION_REFERENCE = self.CALIBRATION_REFERENCE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let CROSS_CORRELATION = self.CROSS_CORRELATION();
         CQRProbabilityResultT {
             PROBABILITY,
             ALGORITHM,
@@ -3158,6 +3584,9 @@ impl<'a> CQRProbabilityResult<'a> {
             MAHALANOBIS_SQUARED,
             HAS_MAHALANOBIS_SQUARED,
             UNCERTAINTY_SOURCE,
+            CALIBRATION,
+            CALIBRATION_REFERENCE,
+            CROSS_CORRELATION,
         }
     }
 
@@ -3235,6 +3664,36 @@ impl<'a> CQRProbabilityResult<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<cqrUncertaintyOrigin>(CQRProbabilityResult::VT_UNCERTAINTY_SOURCE, Some(cqrUncertaintyOrigin::UNSPECIFIED)).unwrap()}
     }
+
+    /// For a covariance-based probability: whether the covariance's coverage was
+    /// measured against independent reference states. Only CALIBRATED
+    /// covariance supports a probability beyond "conditional on the stated
+    /// assumptions".
+    #[inline]
+    pub fn CALIBRATION(&self) -> covarianceCalibration {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<covarianceCalibration>(CQRProbabilityResult::VT_CALIBRATION, Some(covarianceCalibration::Unspecified)).unwrap()}
+    }
+
+    /// Identifier of the calibration evidence (a report or record).
+    #[inline]
+    pub fn CALIBRATION_REFERENCE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CQRProbabilityResult::VT_CALIBRATION_REFERENCE, None)}
+    }
+
+    /// The correlation assumed between the two objects' errors.
+    #[inline]
+    pub fn CROSS_CORRELATION(&self) -> cqrCovarianceCorrelation {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<cqrCovarianceCorrelation>(CQRProbabilityResult::VT_CROSS_CORRELATION, Some(cqrCovarianceCorrelation::UNSPECIFIED)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CQRProbabilityResult<'_> {
@@ -3252,12 +3711,15 @@ impl ::flatbuffers::Verifiable for CQRProbabilityResult<'_> {
             .visit_field::<f64>("MAHALANOBIS_SQUARED", Self::VT_MAHALANOBIS_SQUARED, false)?
             .visit_field::<bool>("HAS_MAHALANOBIS_SQUARED", Self::VT_HAS_MAHALANOBIS_SQUARED, false)?
             .visit_field::<cqrUncertaintyOrigin>("UNCERTAINTY_SOURCE", Self::VT_UNCERTAINTY_SOURCE, false)?
+            .visit_field::<covarianceCalibration>("CALIBRATION", Self::VT_CALIBRATION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CALIBRATION_REFERENCE", Self::VT_CALIBRATION_REFERENCE, false)?
+            .visit_field::<cqrCovarianceCorrelation>("CROSS_CORRELATION", Self::VT_CROSS_CORRELATION, false)?
             .finish();
         Ok(())
     }
 }
 
-pub struct CQRProbabilityResultArgs {
+pub struct CQRProbabilityResultArgs<'a> {
     pub PROBABILITY: f64,
     pub ALGORITHM: cqrProbabilityAlgorithm,
     pub CONVERGED: bool,
@@ -3267,9 +3729,12 @@ pub struct CQRProbabilityResultArgs {
     pub MAHALANOBIS_SQUARED: f64,
     pub HAS_MAHALANOBIS_SQUARED: bool,
     pub UNCERTAINTY_SOURCE: cqrUncertaintyOrigin,
+    pub CALIBRATION: covarianceCalibration,
+    pub CALIBRATION_REFERENCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CROSS_CORRELATION: cqrCovarianceCorrelation,
 }
 
-impl<'a> Default for CQRProbabilityResultArgs {
+impl<'a> Default for CQRProbabilityResultArgs<'a> {
     #[inline]
     fn default() -> Self {
         CQRProbabilityResultArgs {
@@ -3282,6 +3747,9 @@ impl<'a> Default for CQRProbabilityResultArgs {
             MAHALANOBIS_SQUARED: 0.0,
             HAS_MAHALANOBIS_SQUARED: false,
             UNCERTAINTY_SOURCE: cqrUncertaintyOrigin::UNSPECIFIED,
+            CALIBRATION: covarianceCalibration::Unspecified,
+            CALIBRATION_REFERENCE: None,
+            CROSS_CORRELATION: cqrCovarianceCorrelation::UNSPECIFIED,
         }
     }
 }
@@ -3338,6 +3806,21 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRProbabilityResultBuilder<'
     }
 
     #[inline]
+    pub fn add_CALIBRATION(&mut self, CALIBRATION: covarianceCalibration) {
+        self.fbb_.push_slot::<covarianceCalibration>(CQRProbabilityResult::VT_CALIBRATION, CALIBRATION, covarianceCalibration::Unspecified);
+    }
+
+    #[inline]
+    pub fn add_CALIBRATION_REFERENCE(&mut self, CALIBRATION_REFERENCE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRProbabilityResult::VT_CALIBRATION_REFERENCE, CALIBRATION_REFERENCE);
+    }
+
+    #[inline]
+    pub fn add_CROSS_CORRELATION(&mut self, CROSS_CORRELATION: cqrCovarianceCorrelation) {
+        self.fbb_.push_slot::<cqrCovarianceCorrelation>(CQRProbabilityResult::VT_CROSS_CORRELATION, CROSS_CORRELATION, cqrCovarianceCorrelation::UNSPECIFIED);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRProbabilityResultBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CQRProbabilityResultBuilder {
@@ -3365,6 +3848,9 @@ impl ::core::fmt::Debug for CQRProbabilityResult<'_> {
         ds.field("MAHALANOBIS_SQUARED", &self.MAHALANOBIS_SQUARED());
         ds.field("HAS_MAHALANOBIS_SQUARED", &self.HAS_MAHALANOBIS_SQUARED());
         ds.field("UNCERTAINTY_SOURCE", &self.UNCERTAINTY_SOURCE());
+        ds.field("CALIBRATION", &self.CALIBRATION());
+        ds.field("CALIBRATION_REFERENCE", &self.CALIBRATION_REFERENCE());
+        ds.field("CROSS_CORRELATION", &self.CROSS_CORRELATION());
         ds.finish()
     }
 }
@@ -3381,6 +3867,9 @@ pub struct CQRProbabilityResultT {
     pub MAHALANOBIS_SQUARED: f64,
     pub HAS_MAHALANOBIS_SQUARED: bool,
     pub UNCERTAINTY_SOURCE: cqrUncertaintyOrigin,
+    pub CALIBRATION: covarianceCalibration,
+    pub CALIBRATION_REFERENCE: Option<alloc::string::String>,
+    pub CROSS_CORRELATION: cqrCovarianceCorrelation,
 }
 
 impl Default for CQRProbabilityResultT {
@@ -3395,6 +3884,9 @@ impl Default for CQRProbabilityResultT {
             MAHALANOBIS_SQUARED: 0.0,
             HAS_MAHALANOBIS_SQUARED: false,
             UNCERTAINTY_SOURCE: cqrUncertaintyOrigin::UNSPECIFIED,
+            CALIBRATION: covarianceCalibration::Unspecified,
+            CALIBRATION_REFERENCE: None,
+            CROSS_CORRELATION: cqrCovarianceCorrelation::UNSPECIFIED,
         }
     }
 }
@@ -3413,6 +3905,11 @@ impl CQRProbabilityResultT {
         let MAHALANOBIS_SQUARED = self.MAHALANOBIS_SQUARED;
         let HAS_MAHALANOBIS_SQUARED = self.HAS_MAHALANOBIS_SQUARED;
         let UNCERTAINTY_SOURCE = self.UNCERTAINTY_SOURCE;
+        let CALIBRATION = self.CALIBRATION;
+        let CALIBRATION_REFERENCE = self.CALIBRATION_REFERENCE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let CROSS_CORRELATION = self.CROSS_CORRELATION;
         CQRProbabilityResult::create(_fbb, &CQRProbabilityResultArgs{
             PROBABILITY,
             ALGORITHM,
@@ -3423,6 +3920,9 @@ impl CQRProbabilityResultT {
             MAHALANOBIS_SQUARED,
             HAS_MAHALANOBIS_SQUARED,
             UNCERTAINTY_SOURCE,
+            CALIBRATION,
+            CALIBRATION_REFERENCE,
+            CROSS_CORRELATION,
         })
     }
 }
@@ -4488,6 +4988,14 @@ impl<'a> CQREvent<'a> {
     pub const VT_HAS_MAHALANOBIS_3D_SQUARED: ::flatbuffers::VOffsetT = 52;
     pub const VT_COMBINED_RADIUS_M: ::flatbuffers::VOffsetT = 54;
     pub const VT_HAS_COMBINED_RADIUS_M: ::flatbuffers::VOffsetT = 56;
+    pub const VT_PRIMARY_HARD_BODY_RADIUS_M: ::flatbuffers::VOffsetT = 58;
+    pub const VT_HAS_PRIMARY_HARD_BODY_RADIUS_M: ::flatbuffers::VOffsetT = 60;
+    pub const VT_SECONDARY_HARD_BODY_RADIUS_M: ::flatbuffers::VOffsetT = 62;
+    pub const VT_HAS_SECONDARY_HARD_BODY_RADIUS_M: ::flatbuffers::VOffsetT = 64;
+    pub const VT_PRIMARY_RADIUS_BASIS: ::flatbuffers::VOffsetT = 66;
+    pub const VT_SECONDARY_RADIUS_BASIS: ::flatbuffers::VOffsetT = 68;
+    pub const VT_PRIMARY_COVARIANCE_BASIS: ::flatbuffers::VOffsetT = 70;
+    pub const VT_SECONDARY_COVARIANCE_BASIS: ::flatbuffers::VOffsetT = 72;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4500,6 +5008,8 @@ impl<'a> CQREvent<'a> {
         args: &'args CQREventArgs<'args>
     ) -> ::flatbuffers::WIPOffset<CQREvent<'bldr>> {
         let mut builder = CQREventBuilder::new(_fbb);
+        builder.add_SECONDARY_HARD_BODY_RADIUS_M(args.SECONDARY_HARD_BODY_RADIUS_M);
+        builder.add_PRIMARY_HARD_BODY_RADIUS_M(args.PRIMARY_HARD_BODY_RADIUS_M);
         builder.add_COMBINED_RADIUS_M(args.COMBINED_RADIUS_M);
         builder.add_MAHALANOBIS_3D_SQUARED(args.MAHALANOBIS_3D_SQUARED);
         builder.add_SECONDARY_DAYS_SINCE_EPOCH(args.SECONDARY_DAYS_SINCE_EPOCH);
@@ -4522,6 +5032,12 @@ impl<'a> CQREvent<'a> {
         if let Some(x) = args.PRIMARY_NAME { builder.add_PRIMARY_NAME(x); }
         if let Some(x) = args.SECONDARY_ID { builder.add_SECONDARY_ID(x); }
         if let Some(x) = args.PRIMARY_ID { builder.add_PRIMARY_ID(x); }
+        builder.add_SECONDARY_COVARIANCE_BASIS(args.SECONDARY_COVARIANCE_BASIS);
+        builder.add_PRIMARY_COVARIANCE_BASIS(args.PRIMARY_COVARIANCE_BASIS);
+        builder.add_SECONDARY_RADIUS_BASIS(args.SECONDARY_RADIUS_BASIS);
+        builder.add_PRIMARY_RADIUS_BASIS(args.PRIMARY_RADIUS_BASIS);
+        builder.add_HAS_SECONDARY_HARD_BODY_RADIUS_M(args.HAS_SECONDARY_HARD_BODY_RADIUS_M);
+        builder.add_HAS_PRIMARY_HARD_BODY_RADIUS_M(args.HAS_PRIMARY_HARD_BODY_RADIUS_M);
         builder.add_HAS_COMBINED_RADIUS_M(args.HAS_COMBINED_RADIUS_M);
         builder.add_HAS_MAHALANOBIS_3D_SQUARED(args.HAS_MAHALANOBIS_3D_SQUARED);
         builder.add_HAS_SECONDARY_DAYS_SINCE_EPOCH(args.HAS_SECONDARY_DAYS_SINCE_EPOCH);
@@ -4587,6 +5103,14 @@ impl<'a> CQREvent<'a> {
         let HAS_MAHALANOBIS_3D_SQUARED = self.HAS_MAHALANOBIS_3D_SQUARED();
         let COMBINED_RADIUS_M = self.COMBINED_RADIUS_M();
         let HAS_COMBINED_RADIUS_M = self.HAS_COMBINED_RADIUS_M();
+        let PRIMARY_HARD_BODY_RADIUS_M = self.PRIMARY_HARD_BODY_RADIUS_M();
+        let HAS_PRIMARY_HARD_BODY_RADIUS_M = self.HAS_PRIMARY_HARD_BODY_RADIUS_M();
+        let SECONDARY_HARD_BODY_RADIUS_M = self.SECONDARY_HARD_BODY_RADIUS_M();
+        let HAS_SECONDARY_HARD_BODY_RADIUS_M = self.HAS_SECONDARY_HARD_BODY_RADIUS_M();
+        let PRIMARY_RADIUS_BASIS = self.PRIMARY_RADIUS_BASIS();
+        let SECONDARY_RADIUS_BASIS = self.SECONDARY_RADIUS_BASIS();
+        let PRIMARY_COVARIANCE_BASIS = self.PRIMARY_COVARIANCE_BASIS();
+        let SECONDARY_COVARIANCE_BASIS = self.SECONDARY_COVARIANCE_BASIS();
         CQREventT {
             PRIMARY_ID,
             SECONDARY_ID,
@@ -4615,6 +5139,14 @@ impl<'a> CQREvent<'a> {
             HAS_MAHALANOBIS_3D_SQUARED,
             COMBINED_RADIUS_M,
             HAS_COMBINED_RADIUS_M,
+            PRIMARY_HARD_BODY_RADIUS_M,
+            HAS_PRIMARY_HARD_BODY_RADIUS_M,
+            SECONDARY_HARD_BODY_RADIUS_M,
+            HAS_SECONDARY_HARD_BODY_RADIUS_M,
+            PRIMARY_RADIUS_BASIS,
+            SECONDARY_RADIUS_BASIS,
+            PRIMARY_COVARIANCE_BASIS,
+            SECONDARY_COVARIANCE_BASIS,
         }
     }
 
@@ -4841,6 +5373,76 @@ impl<'a> CQREvent<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<bool>(CQREvent::VT_HAS_COMBINED_RADIUS_M, Some(false)).unwrap()}
     }
+
+    /// Each object's hard-body radius in metres and where it came from;
+    /// COMBINED_RADIUS_M is their sum.
+    #[inline]
+    pub fn PRIMARY_HARD_BODY_RADIUS_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CQREvent::VT_PRIMARY_HARD_BODY_RADIUS_M, Some(0.0)).unwrap()}
+    }
+
+    /// True when PRIMARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+    #[inline]
+    pub fn HAS_PRIMARY_HARD_BODY_RADIUS_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(CQREvent::VT_HAS_PRIMARY_HARD_BODY_RADIUS_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SECONDARY_HARD_BODY_RADIUS_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CQREvent::VT_SECONDARY_HARD_BODY_RADIUS_M, Some(0.0)).unwrap()}
+    }
+
+    /// True when SECONDARY_HARD_BODY_RADIUS_M carries a value; false means absent.
+    #[inline]
+    pub fn HAS_SECONDARY_HARD_BODY_RADIUS_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(CQREvent::VT_HAS_SECONDARY_HARD_BODY_RADIUS_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn PRIMARY_RADIUS_BASIS(&self) -> cqrHardBodyRadiusBasis {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<cqrHardBodyRadiusBasis>(CQREvent::VT_PRIMARY_RADIUS_BASIS, Some(cqrHardBodyRadiusBasis::UNSPECIFIED)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SECONDARY_RADIUS_BASIS(&self) -> cqrHardBodyRadiusBasis {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<cqrHardBodyRadiusBasis>(CQREvent::VT_SECONDARY_RADIUS_BASIS, Some(cqrHardBodyRadiusBasis::UNSPECIFIED)).unwrap()}
+    }
+
+    /// Where each object's position covariance came from; NONE means the event
+    /// carries no covariance-based quantity for it.
+    #[inline]
+    pub fn PRIMARY_COVARIANCE_BASIS(&self) -> cqrCovarianceBasis {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<cqrCovarianceBasis>(CQREvent::VT_PRIMARY_COVARIANCE_BASIS, Some(cqrCovarianceBasis::UNSPECIFIED)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SECONDARY_COVARIANCE_BASIS(&self) -> cqrCovarianceBasis {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<cqrCovarianceBasis>(CQREvent::VT_SECONDARY_COVARIANCE_BASIS, Some(cqrCovarianceBasis::UNSPECIFIED)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CQREvent<'_> {
@@ -4876,6 +5478,14 @@ impl ::flatbuffers::Verifiable for CQREvent<'_> {
             .visit_field::<bool>("HAS_MAHALANOBIS_3D_SQUARED", Self::VT_HAS_MAHALANOBIS_3D_SQUARED, false)?
             .visit_field::<f64>("COMBINED_RADIUS_M", Self::VT_COMBINED_RADIUS_M, false)?
             .visit_field::<bool>("HAS_COMBINED_RADIUS_M", Self::VT_HAS_COMBINED_RADIUS_M, false)?
+            .visit_field::<f64>("PRIMARY_HARD_BODY_RADIUS_M", Self::VT_PRIMARY_HARD_BODY_RADIUS_M, false)?
+            .visit_field::<bool>("HAS_PRIMARY_HARD_BODY_RADIUS_M", Self::VT_HAS_PRIMARY_HARD_BODY_RADIUS_M, false)?
+            .visit_field::<f64>("SECONDARY_HARD_BODY_RADIUS_M", Self::VT_SECONDARY_HARD_BODY_RADIUS_M, false)?
+            .visit_field::<bool>("HAS_SECONDARY_HARD_BODY_RADIUS_M", Self::VT_HAS_SECONDARY_HARD_BODY_RADIUS_M, false)?
+            .visit_field::<cqrHardBodyRadiusBasis>("PRIMARY_RADIUS_BASIS", Self::VT_PRIMARY_RADIUS_BASIS, false)?
+            .visit_field::<cqrHardBodyRadiusBasis>("SECONDARY_RADIUS_BASIS", Self::VT_SECONDARY_RADIUS_BASIS, false)?
+            .visit_field::<cqrCovarianceBasis>("PRIMARY_COVARIANCE_BASIS", Self::VT_PRIMARY_COVARIANCE_BASIS, false)?
+            .visit_field::<cqrCovarianceBasis>("SECONDARY_COVARIANCE_BASIS", Self::VT_SECONDARY_COVARIANCE_BASIS, false)?
             .finish();
         Ok(())
     }
@@ -4909,6 +5519,14 @@ pub struct CQREventArgs<'a> {
     pub HAS_MAHALANOBIS_3D_SQUARED: bool,
     pub COMBINED_RADIUS_M: f64,
     pub HAS_COMBINED_RADIUS_M: bool,
+    pub PRIMARY_HARD_BODY_RADIUS_M: f64,
+    pub HAS_PRIMARY_HARD_BODY_RADIUS_M: bool,
+    pub SECONDARY_HARD_BODY_RADIUS_M: f64,
+    pub HAS_SECONDARY_HARD_BODY_RADIUS_M: bool,
+    pub PRIMARY_RADIUS_BASIS: cqrHardBodyRadiusBasis,
+    pub SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis,
+    pub PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis,
+    pub SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis,
 }
 
 impl<'a> Default for CQREventArgs<'a> {
@@ -4942,6 +5560,14 @@ impl<'a> Default for CQREventArgs<'a> {
             HAS_MAHALANOBIS_3D_SQUARED: false,
             COMBINED_RADIUS_M: 0.0,
             HAS_COMBINED_RADIUS_M: false,
+            PRIMARY_HARD_BODY_RADIUS_M: 0.0,
+            HAS_PRIMARY_HARD_BODY_RADIUS_M: false,
+            SECONDARY_HARD_BODY_RADIUS_M: 0.0,
+            HAS_SECONDARY_HARD_BODY_RADIUS_M: false,
+            PRIMARY_RADIUS_BASIS: cqrHardBodyRadiusBasis::UNSPECIFIED,
+            SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis::UNSPECIFIED,
+            PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis::UNSPECIFIED,
+            SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis::UNSPECIFIED,
         }
     }
 }
@@ -5088,6 +5714,46 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQREventBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_PRIMARY_HARD_BODY_RADIUS_M(&mut self, PRIMARY_HARD_BODY_RADIUS_M: f64) {
+        self.fbb_.push_slot::<f64>(CQREvent::VT_PRIMARY_HARD_BODY_RADIUS_M, PRIMARY_HARD_BODY_RADIUS_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_PRIMARY_HARD_BODY_RADIUS_M(&mut self, HAS_PRIMARY_HARD_BODY_RADIUS_M: bool) {
+        self.fbb_.push_slot::<bool>(CQREvent::VT_HAS_PRIMARY_HARD_BODY_RADIUS_M, HAS_PRIMARY_HARD_BODY_RADIUS_M, false);
+    }
+
+    #[inline]
+    pub fn add_SECONDARY_HARD_BODY_RADIUS_M(&mut self, SECONDARY_HARD_BODY_RADIUS_M: f64) {
+        self.fbb_.push_slot::<f64>(CQREvent::VT_SECONDARY_HARD_BODY_RADIUS_M, SECONDARY_HARD_BODY_RADIUS_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_SECONDARY_HARD_BODY_RADIUS_M(&mut self, HAS_SECONDARY_HARD_BODY_RADIUS_M: bool) {
+        self.fbb_.push_slot::<bool>(CQREvent::VT_HAS_SECONDARY_HARD_BODY_RADIUS_M, HAS_SECONDARY_HARD_BODY_RADIUS_M, false);
+    }
+
+    #[inline]
+    pub fn add_PRIMARY_RADIUS_BASIS(&mut self, PRIMARY_RADIUS_BASIS: cqrHardBodyRadiusBasis) {
+        self.fbb_.push_slot::<cqrHardBodyRadiusBasis>(CQREvent::VT_PRIMARY_RADIUS_BASIS, PRIMARY_RADIUS_BASIS, cqrHardBodyRadiusBasis::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_SECONDARY_RADIUS_BASIS(&mut self, SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis) {
+        self.fbb_.push_slot::<cqrHardBodyRadiusBasis>(CQREvent::VT_SECONDARY_RADIUS_BASIS, SECONDARY_RADIUS_BASIS, cqrHardBodyRadiusBasis::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_PRIMARY_COVARIANCE_BASIS(&mut self, PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis) {
+        self.fbb_.push_slot::<cqrCovarianceBasis>(CQREvent::VT_PRIMARY_COVARIANCE_BASIS, PRIMARY_COVARIANCE_BASIS, cqrCovarianceBasis::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_SECONDARY_COVARIANCE_BASIS(&mut self, SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis) {
+        self.fbb_.push_slot::<cqrCovarianceBasis>(CQREvent::VT_SECONDARY_COVARIANCE_BASIS, SECONDARY_COVARIANCE_BASIS, cqrCovarianceBasis::UNSPECIFIED);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQREventBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CQREventBuilder {
@@ -5136,6 +5802,14 @@ impl ::core::fmt::Debug for CQREvent<'_> {
         ds.field("HAS_MAHALANOBIS_3D_SQUARED", &self.HAS_MAHALANOBIS_3D_SQUARED());
         ds.field("COMBINED_RADIUS_M", &self.COMBINED_RADIUS_M());
         ds.field("HAS_COMBINED_RADIUS_M", &self.HAS_COMBINED_RADIUS_M());
+        ds.field("PRIMARY_HARD_BODY_RADIUS_M", &self.PRIMARY_HARD_BODY_RADIUS_M());
+        ds.field("HAS_PRIMARY_HARD_BODY_RADIUS_M", &self.HAS_PRIMARY_HARD_BODY_RADIUS_M());
+        ds.field("SECONDARY_HARD_BODY_RADIUS_M", &self.SECONDARY_HARD_BODY_RADIUS_M());
+        ds.field("HAS_SECONDARY_HARD_BODY_RADIUS_M", &self.HAS_SECONDARY_HARD_BODY_RADIUS_M());
+        ds.field("PRIMARY_RADIUS_BASIS", &self.PRIMARY_RADIUS_BASIS());
+        ds.field("SECONDARY_RADIUS_BASIS", &self.SECONDARY_RADIUS_BASIS());
+        ds.field("PRIMARY_COVARIANCE_BASIS", &self.PRIMARY_COVARIANCE_BASIS());
+        ds.field("SECONDARY_COVARIANCE_BASIS", &self.SECONDARY_COVARIANCE_BASIS());
         ds.finish()
     }
 }
@@ -5170,6 +5844,14 @@ pub struct CQREventT {
     pub HAS_MAHALANOBIS_3D_SQUARED: bool,
     pub COMBINED_RADIUS_M: f64,
     pub HAS_COMBINED_RADIUS_M: bool,
+    pub PRIMARY_HARD_BODY_RADIUS_M: f64,
+    pub HAS_PRIMARY_HARD_BODY_RADIUS_M: bool,
+    pub SECONDARY_HARD_BODY_RADIUS_M: f64,
+    pub HAS_SECONDARY_HARD_BODY_RADIUS_M: bool,
+    pub PRIMARY_RADIUS_BASIS: cqrHardBodyRadiusBasis,
+    pub SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis,
+    pub PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis,
+    pub SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis,
 }
 
 impl Default for CQREventT {
@@ -5202,6 +5884,14 @@ impl Default for CQREventT {
             HAS_MAHALANOBIS_3D_SQUARED: false,
             COMBINED_RADIUS_M: 0.0,
             HAS_COMBINED_RADIUS_M: false,
+            PRIMARY_HARD_BODY_RADIUS_M: 0.0,
+            HAS_PRIMARY_HARD_BODY_RADIUS_M: false,
+            SECONDARY_HARD_BODY_RADIUS_M: 0.0,
+            HAS_SECONDARY_HARD_BODY_RADIUS_M: false,
+            PRIMARY_RADIUS_BASIS: cqrHardBodyRadiusBasis::UNSPECIFIED,
+            SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis::UNSPECIFIED,
+            PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis::UNSPECIFIED,
+            SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis::UNSPECIFIED,
         }
     }
 }
@@ -5267,6 +5957,14 @@ impl CQREventT {
         let HAS_MAHALANOBIS_3D_SQUARED = self.HAS_MAHALANOBIS_3D_SQUARED;
         let COMBINED_RADIUS_M = self.COMBINED_RADIUS_M;
         let HAS_COMBINED_RADIUS_M = self.HAS_COMBINED_RADIUS_M;
+        let PRIMARY_HARD_BODY_RADIUS_M = self.PRIMARY_HARD_BODY_RADIUS_M;
+        let HAS_PRIMARY_HARD_BODY_RADIUS_M = self.HAS_PRIMARY_HARD_BODY_RADIUS_M;
+        let SECONDARY_HARD_BODY_RADIUS_M = self.SECONDARY_HARD_BODY_RADIUS_M;
+        let HAS_SECONDARY_HARD_BODY_RADIUS_M = self.HAS_SECONDARY_HARD_BODY_RADIUS_M;
+        let PRIMARY_RADIUS_BASIS = self.PRIMARY_RADIUS_BASIS;
+        let SECONDARY_RADIUS_BASIS = self.SECONDARY_RADIUS_BASIS;
+        let PRIMARY_COVARIANCE_BASIS = self.PRIMARY_COVARIANCE_BASIS;
+        let SECONDARY_COVARIANCE_BASIS = self.SECONDARY_COVARIANCE_BASIS;
         CQREvent::create(_fbb, &CQREventArgs{
             PRIMARY_ID,
             SECONDARY_ID,
@@ -5295,6 +5993,14 @@ impl CQREventT {
             HAS_MAHALANOBIS_3D_SQUARED,
             COMBINED_RADIUS_M,
             HAS_COMBINED_RADIUS_M,
+            PRIMARY_HARD_BODY_RADIUS_M,
+            HAS_PRIMARY_HARD_BODY_RADIUS_M,
+            SECONDARY_HARD_BODY_RADIUS_M,
+            HAS_SECONDARY_HARD_BODY_RADIUS_M,
+            PRIMARY_RADIUS_BASIS,
+            SECONDARY_RADIUS_BASIS,
+            PRIMARY_COVARIANCE_BASIS,
+            SECONDARY_COVARIANCE_BASIS,
         })
     }
 }

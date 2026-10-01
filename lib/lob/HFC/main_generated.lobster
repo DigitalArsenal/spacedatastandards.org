@@ -53,6 +53,17 @@ enum estimatorCategory:
     /// Smoothed sequential solution
     estimatorCategory_Smoother = 4
 
+/// Whether a covariance's coverage was measured against independent reference
+/// states: the share of reference errors inside its confidence regions matched
+/// what the covariance claims, for the regime and prediction age it covers.
+enum covarianceCalibration:
+    /// Calibration not stated
+    covarianceCalibration_Unspecified = 0
+    /// Not measured against independent reference states, or measured and failed
+    covarianceCalibration_Uncalibrated = 1
+    /// Measured against independent reference states and passed
+    covarianceCalibration_Calibrated = 2
+
 class Header
 
 class Metadata
@@ -1283,13 +1294,20 @@ class OCM : flatbuffers.handle
     /// KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
     def ORB_AVERAGING() -> string:
         return flatbuffers.field_string(buf_, pos_, 44)
+    /// Whether COVARIANCE_DATA's coverage was measured against independent
+    /// reference states.
+    def COV_CALIBRATION() -> covarianceCalibration:
+        return covarianceCalibration(flatbuffers.field_int8(buf_, pos_, 46, 0))
+    /// Identifier of that calibration evidence (a report or record).
+    def COV_CALIBRATION_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 48)
 
 def GetRootAsOCM(buf:string): return OCM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OCMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(21)
+        b_.StartObject(23)
         return this
     def add_HEADER(HEADER:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, HEADER)
@@ -1353,6 +1371,12 @@ struct OCMBuilder:
         return this
     def add_ORB_AVERAGING(ORB_AVERAGING:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(20, ORB_AVERAGING)
+        return this
+    def add_COV_CALIBRATION(COV_CALIBRATION:covarianceCalibration):
+        b_.PrependInt8Slot(21, COV_CALIBRATION, 0)
+        return this
+    def add_COV_CALIBRATION_REFERENCE(COV_CALIBRATION_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(22, COV_CALIBRATION_REFERENCE)
         return this
     def end():
         return b_.EndObject()
