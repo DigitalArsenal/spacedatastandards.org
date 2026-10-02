@@ -3,6 +3,7 @@ import { PRWFiniteBurn, PRWFiniteBurnT } from './PRWFiniteBurn.js';
 import { PRWForceConfiguration, PRWForceConfigurationT } from './PRWForceConfiguration.js';
 import { PRWImpulse, PRWImpulseT } from './PRWImpulse.js';
 import { PRWIntegratorSettings, PRWIntegratorSettingsT } from './PRWIntegratorSettings.js';
+import { PRWProcessNoise, PRWProcessNoiseT } from './PRWProcessNoise.js';
 import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
 import { PRWStateMatrix, PRWStateMatrixT } from './PRWStateMatrix.js';
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
@@ -36,6 +37,10 @@ export declare class PRWExecutionRequest implements flatbuffers.IUnpackableObjec
     INCLUDE_MASS_DYNAMICS(): boolean;
     FINITE_BURNS(index: number, obj?: PRWFiniteBurn): PRWFiniteBurn | null;
     finiteBurnsLength(): number;
+    /**
+     * Process noise added to the propagated covariance. Absent means none.
+     */
+    PROCESS_NOISE(obj?: PRWProcessNoise): PRWProcessNoise | null;
     static startPRWExecutionRequest(builder: flatbuffers.Builder): void;
     static addInitial(builder: flatbuffers.Builder, INITIALOffset: flatbuffers.Offset): void;
     static addTargetEpoch(builder: flatbuffers.Builder, TARGET_EPOCHOffset: flatbuffers.Offset): void;
@@ -56,6 +61,7 @@ export declare class PRWExecutionRequest implements flatbuffers.IUnpackableObjec
     static addFiniteBurns(builder: flatbuffers.Builder, FINITE_BURNSOffset: flatbuffers.Offset): void;
     static createFiniteBurnsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startFiniteBurnsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addProcessNoise(builder: flatbuffers.Builder, PROCESS_NOISEOffset: flatbuffers.Offset): void;
     static endPRWExecutionRequest(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PRWExecutionRequestT;
     unpackTo(_o: PRWExecutionRequestT): void;
@@ -74,7 +80,8 @@ export declare class PRWExecutionRequestT implements flatbuffers.IGeneratedObjec
     IMPULSES: (PRWImpulseT)[];
     INCLUDE_MASS_DYNAMICS: boolean;
     FINITE_BURNS: (PRWFiniteBurnT)[];
-    constructor(INITIAL?: PRWResidentStateT | null, TARGET_EPOCH?: TIMInstantT | null, INTEGRATOR?: PRWIntegratorSettingsT | null, FORCES?: PRWForceConfigurationT | null, INCLUDE_STM?: boolean, STM_TECHNIQUE?: prwDerivativeTechnique, DENSITY_TREATMENT?: prwDensityTreatment, INITIAL_COVARIANCE?: PRWStateMatrixT | null, INITIAL_MASS_COVARIANCE?: PRWStateMatrixT | null, SAMPLE_EPOCHS?: (TIMInstantT)[], IMPULSES?: (PRWImpulseT)[], INCLUDE_MASS_DYNAMICS?: boolean, FINITE_BURNS?: (PRWFiniteBurnT)[]);
+    PROCESS_NOISE: PRWProcessNoiseT | null;
+    constructor(INITIAL?: PRWResidentStateT | null, TARGET_EPOCH?: TIMInstantT | null, INTEGRATOR?: PRWIntegratorSettingsT | null, FORCES?: PRWForceConfigurationT | null, INCLUDE_STM?: boolean, STM_TECHNIQUE?: prwDerivativeTechnique, DENSITY_TREATMENT?: prwDensityTreatment, INITIAL_COVARIANCE?: PRWStateMatrixT | null, INITIAL_MASS_COVARIANCE?: PRWStateMatrixT | null, SAMPLE_EPOCHS?: (TIMInstantT)[], IMPULSES?: (PRWImpulseT)[], INCLUDE_MASS_DYNAMICS?: boolean, FINITE_BURNS?: (PRWFiniteBurnT)[], PROCESS_NOISE?: PRWProcessNoiseT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PRWExecutionRequest.d.ts.map

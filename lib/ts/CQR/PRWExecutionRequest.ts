@@ -8,6 +8,7 @@ import { PRWFiniteBurn, PRWFiniteBurnT } from './PRWFiniteBurn.js';
 import { PRWForceConfiguration, PRWForceConfigurationT } from './PRWForceConfiguration.js';
 import { PRWImpulse, PRWImpulseT } from './PRWImpulse.js';
 import { PRWIntegratorSettings, PRWIntegratorSettingsT } from './PRWIntegratorSettings.js';
+import { PRWProcessNoise, PRWProcessNoiseT } from './PRWProcessNoise.js';
 import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
 import { PRWStateMatrix, PRWStateMatrixT } from './PRWStateMatrix.js';
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
@@ -119,8 +120,16 @@ finiteBurnsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Process noise added to the propagated covariance. Absent means none.
+ */
+PROCESS_NOISE(obj?:PRWProcessNoise):PRWProcessNoise|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? (obj || new PRWProcessNoise()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startPRWExecutionRequest(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(14);
 }
 
 static addInitial(builder:flatbuffers.Builder, INITIALOffset:flatbuffers.Offset) {
@@ -211,6 +220,10 @@ static startFiniteBurnsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addProcessNoise(builder:flatbuffers.Builder, PROCESS_NOISEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, PROCESS_NOISEOffset, 0);
+}
+
 static endPRWExecutionRequest(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // INITIAL
@@ -235,7 +248,8 @@ unpack(): PRWExecutionRequestT {
     this.bb!.createObjList<TIMInstant, TIMInstantT>(this.SAMPLE_EPOCHS.bind(this), this.sampleEpochsLength()),
     this.bb!.createObjList<PRWImpulse, PRWImpulseT>(this.IMPULSES.bind(this), this.impulsesLength()),
     this.INCLUDE_MASS_DYNAMICS(),
-    this.bb!.createObjList<PRWFiniteBurn, PRWFiniteBurnT>(this.FINITE_BURNS.bind(this), this.finiteBurnsLength())
+    this.bb!.createObjList<PRWFiniteBurn, PRWFiniteBurnT>(this.FINITE_BURNS.bind(this), this.finiteBurnsLength()),
+    (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null)
   );
 }
 
@@ -254,6 +268,7 @@ unpackTo(_o: PRWExecutionRequestT): void {
   _o.IMPULSES = this.bb!.createObjList<PRWImpulse, PRWImpulseT>(this.IMPULSES.bind(this), this.impulsesLength());
   _o.INCLUDE_MASS_DYNAMICS = this.INCLUDE_MASS_DYNAMICS();
   _o.FINITE_BURNS = this.bb!.createObjList<PRWFiniteBurn, PRWFiniteBurnT>(this.FINITE_BURNS.bind(this), this.finiteBurnsLength());
+  _o.PROCESS_NOISE = (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null);
 }
 }
 
@@ -271,7 +286,8 @@ constructor(
   public SAMPLE_EPOCHS: (TIMInstantT)[] = [],
   public IMPULSES: (PRWImpulseT)[] = [],
   public INCLUDE_MASS_DYNAMICS: boolean = false,
-  public FINITE_BURNS: (PRWFiniteBurnT)[] = []
+  public FINITE_BURNS: (PRWFiniteBurnT)[] = [],
+  public PROCESS_NOISE: PRWProcessNoiseT|null = null
 ){}
 
 
@@ -285,6 +301,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SAMPLE_EPOCHS = PRWExecutionRequest.createSampleEpochsVector(builder, builder.createObjectOffsetList(this.SAMPLE_EPOCHS));
   const IMPULSES = PRWExecutionRequest.createImpulsesVector(builder, builder.createObjectOffsetList(this.IMPULSES));
   const FINITE_BURNS = PRWExecutionRequest.createFiniteBurnsVector(builder, builder.createObjectOffsetList(this.FINITE_BURNS));
+  const PROCESS_NOISE = (this.PROCESS_NOISE !== null ? this.PROCESS_NOISE!.pack(builder) : 0);
 
   PRWExecutionRequest.startPRWExecutionRequest(builder);
   PRWExecutionRequest.addInitial(builder, INITIAL);
@@ -300,6 +317,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PRWExecutionRequest.addImpulses(builder, IMPULSES);
   PRWExecutionRequest.addIncludeMassDynamics(builder, this.INCLUDE_MASS_DYNAMICS);
   PRWExecutionRequest.addFiniteBurns(builder, FINITE_BURNS);
+  PRWExecutionRequest.addProcessNoise(builder, PROCESS_NOISE);
 
   return PRWExecutionRequest.endPRWExecutionRequest(builder);
 }

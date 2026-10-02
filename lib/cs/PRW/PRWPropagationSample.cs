@@ -26,6 +26,8 @@ public struct PRWPropagationSample : IFlatbufferObject
   public ulong REJECTED_STEPS { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   public PRWBurnReport? BURNS(int j) { int o = __p.__offset(18); return o != 0 ? (PRWBurnReport?)(new PRWBurnReport()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int BURNSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// The process noise COVARIANCE includes. Absent means none.
+  public PRWProcessNoise? PROCESS_NOISE { get { int o = __p.__offset(20); return o != 0 ? (PRWProcessNoise?)(new PRWProcessNoise()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<PRWPropagationSample> CreatePRWPropagationSample(FlatBufferBuilder builder,
       Offset<PRWResidentState> STATEOffset = default(Offset<PRWResidentState>),
@@ -35,10 +37,12 @@ public struct PRWPropagationSample : IFlatbufferObject
       Offset<PRWStateMatrix> MASS_COVARIANCEOffset = default(Offset<PRWStateMatrix>),
       ulong ACCEPTED_STEPS = 0,
       ulong REJECTED_STEPS = 0,
-      VectorOffset BURNSOffset = default(VectorOffset)) {
-    builder.StartTable(8);
+      VectorOffset BURNSOffset = default(VectorOffset),
+      Offset<PRWProcessNoise> PROCESS_NOISEOffset = default(Offset<PRWProcessNoise>)) {
+    builder.StartTable(9);
     PRWPropagationSample.AddREJECTED_STEPS(builder, REJECTED_STEPS);
     PRWPropagationSample.AddACCEPTED_STEPS(builder, ACCEPTED_STEPS);
+    PRWPropagationSample.AddPROCESS_NOISE(builder, PROCESS_NOISEOffset);
     PRWPropagationSample.AddBURNS(builder, BURNSOffset);
     PRWPropagationSample.AddMASS_COVARIANCE(builder, MASS_COVARIANCEOffset);
     PRWPropagationSample.AddCOVARIANCE(builder, COVARIANCEOffset);
@@ -48,7 +52,7 @@ public struct PRWPropagationSample : IFlatbufferObject
     return PRWPropagationSample.EndPRWPropagationSample(builder);
   }
 
-  public static void StartPRWPropagationSample(FlatBufferBuilder builder) { builder.StartTable(8); }
+  public static void StartPRWPropagationSample(FlatBufferBuilder builder) { builder.StartTable(9); }
   public static void AddSTATE(FlatBufferBuilder builder, Offset<PRWResidentState> STATEOffset) { builder.AddOffset(0, STATEOffset.Value, 0); }
   public static void AddSTM(FlatBufferBuilder builder, Offset<PRWStateMatrix> STMOffset) { builder.AddOffset(1, STMOffset.Value, 0); }
   public static void AddMASS_STM(FlatBufferBuilder builder, Offset<PRWStateMatrix> MASS_STMOffset) { builder.AddOffset(2, MASS_STMOffset.Value, 0); }
@@ -62,6 +66,7 @@ public struct PRWPropagationSample : IFlatbufferObject
   public static VectorOffset CreateBURNSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PRWBurnReport>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateBURNSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PRWBurnReport>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartBURNSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPROCESS_NOISE(FlatBufferBuilder builder, Offset<PRWProcessNoise> PROCESS_NOISEOffset) { builder.AddOffset(8, PROCESS_NOISEOffset.Value, 0); }
   public static Offset<PRWPropagationSample> EndPRWPropagationSample(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // STATE
@@ -82,6 +87,7 @@ public struct PRWPropagationSample : IFlatbufferObject
     _o.REJECTED_STEPS = this.REJECTED_STEPS;
     _o.BURNS = new List<PRWBurnReportT>();
     for (var _j = 0; _j < this.BURNSLength; ++_j) {_o.BURNS.Add(this.BURNS(_j).HasValue ? this.BURNS(_j).Value.UnPack() : null);}
+    _o.PROCESS_NOISE = this.PROCESS_NOISE.HasValue ? this.PROCESS_NOISE.Value.UnPack() : null;
   }
   public static Offset<PRWPropagationSample> Pack(FlatBufferBuilder builder, PRWPropagationSampleT _o) {
     if (_o == null) return default(Offset<PRWPropagationSample>);
@@ -96,6 +102,7 @@ public struct PRWPropagationSample : IFlatbufferObject
       for (var _j = 0; _j < __BURNS.Length; ++_j) { __BURNS[_j] = PRWBurnReport.Pack(builder, _o.BURNS[_j]); }
       _BURNS = CreateBURNSVector(builder, __BURNS);
     }
+    var _PROCESS_NOISE = _o.PROCESS_NOISE == null ? default(Offset<PRWProcessNoise>) : PRWProcessNoise.Pack(builder, _o.PROCESS_NOISE);
     return CreatePRWPropagationSample(
       builder,
       _STATE,
@@ -105,7 +112,8 @@ public struct PRWPropagationSample : IFlatbufferObject
       _MASS_COVARIANCE,
       _o.ACCEPTED_STEPS,
       _o.REJECTED_STEPS,
-      _BURNS);
+      _BURNS,
+      _PROCESS_NOISE);
   }
 }
 
@@ -119,6 +127,7 @@ public class PRWPropagationSampleT
   public ulong ACCEPTED_STEPS { get; set; }
   public ulong REJECTED_STEPS { get; set; }
   public List<PRWBurnReportT> BURNS { get; set; }
+  public PRWProcessNoiseT PROCESS_NOISE { get; set; }
 
   public PRWPropagationSampleT() {
     this.STATE = null;
@@ -129,6 +138,7 @@ public class PRWPropagationSampleT
     this.ACCEPTED_STEPS = 0;
     this.REJECTED_STEPS = 0;
     this.BURNS = null;
+    this.PROCESS_NOISE = null;
   }
 }
 
@@ -146,6 +156,7 @@ static public class PRWPropagationSampleVerify
       && verifier.VerifyField(tablePos, 14 /*ACCEPTED_STEPS*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyField(tablePos, 16 /*REJECTED_STEPS*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyVectorOfTables(tablePos, 18 /*BURNS*/, PRWBurnReportVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 20 /*PROCESS_NOISE*/, PRWProcessNoiseVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

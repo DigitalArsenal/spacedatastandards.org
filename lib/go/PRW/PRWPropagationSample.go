@@ -199,8 +199,27 @@ func (rcv *PRWPropagationSample) BurnsLength() int {
 	return rcv.BURNSLength()
 }
 
+/// The process noise COVARIANCE includes. Absent means none.
+func (rcv *PRWPropagationSample) PROCESS_NOISE(obj *PRWProcessNoise) *PRWProcessNoise {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWProcessNoise)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRWPropagationSample) ProcessNoise(obj *PRWProcessNoise) *PRWProcessNoise {
+	return rcv.PROCESS_NOISE(obj)
+}
+
+/// The process noise COVARIANCE includes. Absent means none.
 func PRWPropagationSampleStart(builder *flatbuffers.Builder) {
-	builder.StartObject(8)
+	builder.StartObject(9)
 }
 func PRWPropagationSampleAddSTATE(builder *flatbuffers.Builder, STATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(STATE), 0)
@@ -255,6 +274,12 @@ func PRWPropagationSampleStartBURNSVector(builder *flatbuffers.Builder, numElems
 }
 func PRWPropagationSampleStartBurnsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PRWPropagationSampleStartBURNSVector(builder, numElems)
+}
+func PRWPropagationSampleAddPROCESS_NOISE(builder *flatbuffers.Builder, PROCESS_NOISE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(PROCESS_NOISE), 0)
+}
+func PRWPropagationSampleAddProcessNoise(builder *flatbuffers.Builder, PROCESS_NOISE flatbuffers.UOffsetT) {
+	PRWPropagationSampleAddPROCESS_NOISE(builder, PROCESS_NOISE)
 }
 func PRWPropagationSampleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

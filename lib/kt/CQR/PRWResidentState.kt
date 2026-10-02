@@ -137,6 +137,19 @@ class PRWResidentState : Table() {
             val o = __offset(30)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else true
         }
+    /**
+     * Process noise for COVARIANCE: on input, what propagation adds; on
+     * output, what the propagated COVARIANCE includes. Absent means none.
+     */
+    val processNoise : PRWProcessNoise? get() = processNoise(PRWProcessNoise())
+    fun processNoise(obj: PRWProcessNoise) : PRWProcessNoise? {
+        val o = __offset(32)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPRWResidentState(_bb: ByteBuffer): PRWResidentState = getRootAsPRWResidentState(_bb, PRWResidentState())
@@ -144,11 +157,12 @@ class PRWResidentState : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPRWResidentState(builder: FlatBufferBuilder, instanceOffset: Int, entityHandle: UInt, catalogNumber: UInt, objectIdOffset: Int, stateOffset: Int, coordinateSystemOffset: Int, covarianceOffset: Int, massKg: Double, hasMassKg: Boolean, dragAreaOverMassM2Kg: Double, hasDragAreaOverMassM2Kg: Boolean, srpAreaOverMassM2Kg: Double, hasSrpAreaOverMassM2Kg: Boolean, valid: Boolean) : Int {
-            builder.startTable(14)
+        fun createPRWResidentState(builder: FlatBufferBuilder, instanceOffset: Int, entityHandle: UInt, catalogNumber: UInt, objectIdOffset: Int, stateOffset: Int, coordinateSystemOffset: Int, covarianceOffset: Int, massKg: Double, hasMassKg: Boolean, dragAreaOverMassM2Kg: Double, hasDragAreaOverMassM2Kg: Boolean, srpAreaOverMassM2Kg: Double, hasSrpAreaOverMassM2Kg: Boolean, valid: Boolean, processNoiseOffset: Int) : Int {
+            builder.startTable(15)
             addSRPAREAOVERMASSM2KG(builder, srpAreaOverMassM2Kg)
             addDRAGAREAOVERMASSM2KG(builder, dragAreaOverMassM2Kg)
             addMASSKG(builder, massKg)
+            addPROCESSNOISE(builder, processNoiseOffset)
             addCOVARIANCE(builder, covarianceOffset)
             addCOORDINATESYSTEM(builder, coordinateSystemOffset)
             addSTATE(builder, stateOffset)
@@ -162,7 +176,7 @@ class PRWResidentState : Table() {
             addHASMASSKG(builder, hasMassKg)
             return endPRWResidentState(builder)
         }
-        fun startPRWResidentState(builder: FlatBufferBuilder) = builder.startTable(14)
+        fun startPRWResidentState(builder: FlatBufferBuilder) = builder.startTable(15)
         fun addINSTANCE(builder: FlatBufferBuilder, instance: Int) = builder.addOffset(0, instance, 0)
         fun addENTITYHANDLE(builder: FlatBufferBuilder, entityHandle: UInt) = builder.addInt(1, entityHandle.toInt(), 0)
         fun addCATALOGNUMBER(builder: FlatBufferBuilder, catalogNumber: UInt) = builder.addInt(2, catalogNumber.toInt(), 0)
@@ -177,6 +191,7 @@ class PRWResidentState : Table() {
         fun addSRPAREAOVERMASSM2KG(builder: FlatBufferBuilder, srpAreaOverMassM2Kg: Double) = builder.addDouble(11, srpAreaOverMassM2Kg, 0.0)
         fun addHASSRPAREAOVERMASSM2KG(builder: FlatBufferBuilder, hasSrpAreaOverMassM2Kg: Boolean) = builder.addBoolean(12, hasSrpAreaOverMassM2Kg, false)
         fun addVALID(builder: FlatBufferBuilder, valid: Boolean) = builder.addBoolean(13, valid, true)
+        fun addPROCESSNOISE(builder: FlatBufferBuilder, processNoise: Int) = builder.addOffset(14, processNoise, 0)
         fun endPRWResidentState(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 12)

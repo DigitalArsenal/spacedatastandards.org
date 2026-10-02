@@ -43,6 +43,9 @@ public struct PRWResidentState : IFlatbufferObject
   /// True when SRP_AREA_OVER_MASS_M2_KG carries a value; false means absent.
   public bool HAS_SRP_AREA_OVER_MASS_M2_KG { get { int o = __p.__offset(28); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public bool VALID { get { int o = __p.__offset(30); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
+  /// Process noise for COVARIANCE: on input, what propagation adds; on
+  /// output, what the propagated COVARIANCE includes. Absent means none.
+  public PRWProcessNoise? PROCESS_NOISE { get { int o = __p.__offset(32); return o != 0 ? (PRWProcessNoise?)(new PRWProcessNoise()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<PRWResidentState> CreatePRWResidentState(FlatBufferBuilder builder,
       Offset<PRWInstance> INSTANCEOffset = default(Offset<PRWInstance>),
@@ -58,11 +61,13 @@ public struct PRWResidentState : IFlatbufferObject
       bool HAS_DRAG_AREA_OVER_MASS_M2_KG = false,
       double SRP_AREA_OVER_MASS_M2_KG = 0.0,
       bool HAS_SRP_AREA_OVER_MASS_M2_KG = false,
-      bool VALID = true) {
-    builder.StartTable(14);
+      bool VALID = true,
+      Offset<PRWProcessNoise> PROCESS_NOISEOffset = default(Offset<PRWProcessNoise>)) {
+    builder.StartTable(15);
     PRWResidentState.AddSRP_AREA_OVER_MASS_M2_KG(builder, SRP_AREA_OVER_MASS_M2_KG);
     PRWResidentState.AddDRAG_AREA_OVER_MASS_M2_KG(builder, DRAG_AREA_OVER_MASS_M2_KG);
     PRWResidentState.AddMASS_KG(builder, MASS_KG);
+    PRWResidentState.AddPROCESS_NOISE(builder, PROCESS_NOISEOffset);
     PRWResidentState.AddCOVARIANCE(builder, COVARIANCEOffset);
     PRWResidentState.AddCOORDINATE_SYSTEM(builder, COORDINATE_SYSTEMOffset);
     PRWResidentState.AddSTATE(builder, STATEOffset);
@@ -77,7 +82,7 @@ public struct PRWResidentState : IFlatbufferObject
     return PRWResidentState.EndPRWResidentState(builder);
   }
 
-  public static void StartPRWResidentState(FlatBufferBuilder builder) { builder.StartTable(14); }
+  public static void StartPRWResidentState(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddINSTANCE(FlatBufferBuilder builder, Offset<PRWInstance> INSTANCEOffset) { builder.AddOffset(0, INSTANCEOffset.Value, 0); }
   public static void AddENTITY_HANDLE(FlatBufferBuilder builder, uint ENTITY_HANDLE) { builder.AddUint(1, ENTITY_HANDLE, 0); }
   public static void AddCATALOG_NUMBER(FlatBufferBuilder builder, uint CATALOG_NUMBER) { builder.AddUint(2, CATALOG_NUMBER, 0); }
@@ -92,6 +97,7 @@ public struct PRWResidentState : IFlatbufferObject
   public static void AddSRP_AREA_OVER_MASS_M2_KG(FlatBufferBuilder builder, double SRP_AREA_OVER_MASS_M2_KG) { builder.AddDouble(11, SRP_AREA_OVER_MASS_M2_KG, 0.0); }
   public static void AddHAS_SRP_AREA_OVER_MASS_M2_KG(FlatBufferBuilder builder, bool HAS_SRP_AREA_OVER_MASS_M2_KG) { builder.AddBool(12, HAS_SRP_AREA_OVER_MASS_M2_KG, false); }
   public static void AddVALID(FlatBufferBuilder builder, bool VALID) { builder.AddBool(13, VALID, true); }
+  public static void AddPROCESS_NOISE(FlatBufferBuilder builder, Offset<PRWProcessNoise> PROCESS_NOISEOffset) { builder.AddOffset(14, PROCESS_NOISEOffset.Value, 0); }
   public static Offset<PRWResidentState> EndPRWResidentState(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 12);  // STATE
@@ -118,6 +124,7 @@ public struct PRWResidentState : IFlatbufferObject
     _o.SRP_AREA_OVER_MASS_M2_KG = this.SRP_AREA_OVER_MASS_M2_KG;
     _o.HAS_SRP_AREA_OVER_MASS_M2_KG = this.HAS_SRP_AREA_OVER_MASS_M2_KG;
     _o.VALID = this.VALID;
+    _o.PROCESS_NOISE = this.PROCESS_NOISE.HasValue ? this.PROCESS_NOISE.Value.UnPack() : null;
   }
   public static Offset<PRWResidentState> Pack(FlatBufferBuilder builder, PRWResidentStateT _o) {
     if (_o == null) return default(Offset<PRWResidentState>);
@@ -126,6 +133,7 @@ public struct PRWResidentState : IFlatbufferObject
     var _STATE = _o.STATE == null ? default(Offset<FRMStateVector>) : FRMStateVector.Pack(builder, _o.STATE);
     var _COORDINATE_SYSTEM = _o.COORDINATE_SYSTEM == null ? default(Offset<RFMCoordinateSystem>) : RFMCoordinateSystem.Pack(builder, _o.COORDINATE_SYSTEM);
     var _COVARIANCE = _o.COVARIANCE == null ? default(Offset<PRWStateMatrix>) : PRWStateMatrix.Pack(builder, _o.COVARIANCE);
+    var _PROCESS_NOISE = _o.PROCESS_NOISE == null ? default(Offset<PRWProcessNoise>) : PRWProcessNoise.Pack(builder, _o.PROCESS_NOISE);
     return CreatePRWResidentState(
       builder,
       _INSTANCE,
@@ -141,7 +149,8 @@ public struct PRWResidentState : IFlatbufferObject
       _o.HAS_DRAG_AREA_OVER_MASS_M2_KG,
       _o.SRP_AREA_OVER_MASS_M2_KG,
       _o.HAS_SRP_AREA_OVER_MASS_M2_KG,
-      _o.VALID);
+      _o.VALID,
+      _PROCESS_NOISE);
   }
 }
 
@@ -161,6 +170,7 @@ public class PRWResidentStateT
   public double SRP_AREA_OVER_MASS_M2_KG { get; set; }
   public bool HAS_SRP_AREA_OVER_MASS_M2_KG { get; set; }
   public bool VALID { get; set; }
+  public PRWProcessNoiseT PROCESS_NOISE { get; set; }
 
   public PRWResidentStateT() {
     this.INSTANCE = null;
@@ -177,6 +187,7 @@ public class PRWResidentStateT
     this.SRP_AREA_OVER_MASS_M2_KG = 0.0;
     this.HAS_SRP_AREA_OVER_MASS_M2_KG = false;
     this.VALID = true;
+    this.PROCESS_NOISE = null;
   }
 }
 
@@ -200,6 +211,7 @@ static public class PRWResidentStateVerify
       && verifier.VerifyField(tablePos, 26 /*SRP_AREA_OVER_MASS_M2_KG*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 28 /*HAS_SRP_AREA_OVER_MASS_M2_KG*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 30 /*VALID*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyTable(tablePos, 32 /*PROCESS_NOISE*/, PRWProcessNoiseVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

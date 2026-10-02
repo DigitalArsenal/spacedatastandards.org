@@ -44,6 +44,11 @@ public final class PRWPropagationSample extends com.google.flatbuffers.Table {
   public int BURNSLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
   public PRWBurnReport.Vector burnsVector() { return burnsVector(new PRWBurnReport.Vector()); }
   public PRWBurnReport.Vector burnsVector(PRWBurnReport.Vector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * The process noise COVARIANCE includes. Absent means none.
+   */
+  public PRWProcessNoise PROCESS_NOISE() { return PROCESS_NOISE(new PRWProcessNoise()); }
+  public PRWProcessNoise PROCESS_NOISE(PRWProcessNoise obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createPRWPropagationSample(FlatBufferBuilder builder,
       int STATEOffset,
@@ -53,10 +58,12 @@ public final class PRWPropagationSample extends com.google.flatbuffers.Table {
       int MASS_COVARIANCEOffset,
       long ACCEPTED_STEPS,
       long REJECTED_STEPS,
-      int BURNSOffset) {
-    builder.startTable(8);
+      int BURNSOffset,
+      int PROCESS_NOISEOffset) {
+    builder.startTable(9);
     PRWPropagationSample.addRejectedSteps(builder, REJECTED_STEPS);
     PRWPropagationSample.addAcceptedSteps(builder, ACCEPTED_STEPS);
+    PRWPropagationSample.addProcessNoise(builder, PROCESS_NOISEOffset);
     PRWPropagationSample.addBurns(builder, BURNSOffset);
     PRWPropagationSample.addMassCovariance(builder, MASS_COVARIANCEOffset);
     PRWPropagationSample.addCovariance(builder, COVARIANCEOffset);
@@ -66,7 +73,7 @@ public final class PRWPropagationSample extends com.google.flatbuffers.Table {
     return PRWPropagationSample.endPRWPropagationSample(builder);
   }
 
-  public static void startPRWPropagationSample(FlatBufferBuilder builder) { builder.startTable(8); }
+  public static void startPRWPropagationSample(FlatBufferBuilder builder) { builder.startTable(9); }
   public static void addState(FlatBufferBuilder builder, int STATEOffset) { builder.addOffset(0, STATEOffset, 0); }
   public static void addStm(FlatBufferBuilder builder, int STMOffset) { builder.addOffset(1, STMOffset, 0); }
   public static void addMassStm(FlatBufferBuilder builder, int MASS_STMOffset) { builder.addOffset(2, MASS_STMOffset, 0); }
@@ -77,6 +84,7 @@ public final class PRWPropagationSample extends com.google.flatbuffers.Table {
   public static void addBurns(FlatBufferBuilder builder, int BURNSOffset) { builder.addOffset(7, BURNSOffset, 0); }
   public static int createBurnsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startBurnsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addProcessNoise(FlatBufferBuilder builder, int PROCESS_NOISEOffset) { builder.addOffset(8, PROCESS_NOISEOffset, 0); }
   public static int endPRWPropagationSample(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // STATE

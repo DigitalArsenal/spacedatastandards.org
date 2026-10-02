@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { PRWBurnReport, PRWBurnReportT } from './PRWBurnReport.js';
+import { PRWProcessNoise, PRWProcessNoiseT } from './PRWProcessNoise.js';
 import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
 import { PRWStateMatrix, PRWStateMatrixT } from './PRWStateMatrix.js';
 
@@ -75,8 +76,16 @@ burnsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * The process noise COVARIANCE includes. Absent means none.
+ */
+PROCESS_NOISE(obj?:PRWProcessNoise):PRWProcessNoise|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? (obj || new PRWProcessNoise()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startPRWPropagationSample(builder:flatbuffers.Builder) {
-  builder.startObject(8);
+  builder.startObject(9);
 }
 
 static addState(builder:flatbuffers.Builder, STATEOffset:flatbuffers.Offset) {
@@ -123,6 +132,10 @@ static startBurnsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addProcessNoise(builder:flatbuffers.Builder, PROCESS_NOISEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, PROCESS_NOISEOffset, 0);
+}
+
 static endPRWPropagationSample(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // STATE
@@ -139,7 +152,8 @@ unpack(): PRWPropagationSampleT {
     (this.MASS_COVARIANCE() !== null ? this.MASS_COVARIANCE()!.unpack() : null),
     this.ACCEPTED_STEPS(),
     this.REJECTED_STEPS(),
-    this.bb!.createObjList<PRWBurnReport, PRWBurnReportT>(this.BURNS.bind(this), this.burnsLength())
+    this.bb!.createObjList<PRWBurnReport, PRWBurnReportT>(this.BURNS.bind(this), this.burnsLength()),
+    (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null)
   );
 }
 
@@ -153,6 +167,7 @@ unpackTo(_o: PRWPropagationSampleT): void {
   _o.ACCEPTED_STEPS = this.ACCEPTED_STEPS();
   _o.REJECTED_STEPS = this.REJECTED_STEPS();
   _o.BURNS = this.bb!.createObjList<PRWBurnReport, PRWBurnReportT>(this.BURNS.bind(this), this.burnsLength());
+  _o.PROCESS_NOISE = (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null);
 }
 }
 
@@ -165,7 +180,8 @@ constructor(
   public MASS_COVARIANCE: PRWStateMatrixT|null = null,
   public ACCEPTED_STEPS: bigint = BigInt('0'),
   public REJECTED_STEPS: bigint = BigInt('0'),
-  public BURNS: (PRWBurnReportT)[] = []
+  public BURNS: (PRWBurnReportT)[] = [],
+  public PROCESS_NOISE: PRWProcessNoiseT|null = null
 ){}
 
 
@@ -176,6 +192,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COVARIANCE = (this.COVARIANCE !== null ? this.COVARIANCE!.pack(builder) : 0);
   const MASS_COVARIANCE = (this.MASS_COVARIANCE !== null ? this.MASS_COVARIANCE!.pack(builder) : 0);
   const BURNS = PRWPropagationSample.createBurnsVector(builder, builder.createObjectOffsetList(this.BURNS));
+  const PROCESS_NOISE = (this.PROCESS_NOISE !== null ? this.PROCESS_NOISE!.pack(builder) : 0);
 
   PRWPropagationSample.startPRWPropagationSample(builder);
   PRWPropagationSample.addState(builder, STATE);
@@ -186,6 +203,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PRWPropagationSample.addAcceptedSteps(builder, this.ACCEPTED_STEPS);
   PRWPropagationSample.addRejectedSteps(builder, this.REJECTED_STEPS);
   PRWPropagationSample.addBurns(builder, BURNS);
+  PRWPropagationSample.addProcessNoise(builder, PROCESS_NOISE);
 
   return PRWPropagationSample.endPRWPropagationSample(builder);
 }

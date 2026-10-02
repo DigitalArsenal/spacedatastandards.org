@@ -319,8 +319,27 @@ func (rcv *PRWExecutionRequest) FiniteBurnsLength() int {
 	return rcv.FINITE_BURNSLength()
 }
 
+/// Process noise added to the propagated covariance. Absent means none.
+func (rcv *PRWExecutionRequest) PROCESS_NOISE(obj *PRWProcessNoise) *PRWProcessNoise {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWProcessNoise)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRWExecutionRequest) ProcessNoise(obj *PRWProcessNoise) *PRWProcessNoise {
+	return rcv.PROCESS_NOISE(obj)
+}
+
+/// Process noise added to the propagated covariance. Absent means none.
 func PRWExecutionRequestStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(14)
 }
 func PRWExecutionRequestAddINITIAL(builder *flatbuffers.Builder, INITIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(INITIAL), 0)
@@ -417,6 +436,12 @@ func PRWExecutionRequestStartFINITE_BURNSVector(builder *flatbuffers.Builder, nu
 }
 func PRWExecutionRequestStartFiniteBurnsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PRWExecutionRequestStartFINITE_BURNSVector(builder, numElems)
+}
+func PRWExecutionRequestAddPROCESS_NOISE(builder *flatbuffers.Builder, PROCESS_NOISE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(PROCESS_NOISE), 0)
+}
+func PRWExecutionRequestAddProcessNoise(builder *flatbuffers.Builder, PROCESS_NOISE flatbuffers.UOffsetT) {
+	PRWExecutionRequestAddPROCESS_NOISE(builder, PROCESS_NOISE)
 }
 func PRWExecutionRequestEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

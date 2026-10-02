@@ -6,6 +6,7 @@ import * as flatbuffers from 'flatbuffers';
 
 import { FRMStateVector, FRMStateVectorT } from './FRMStateVector.js';
 import { PRWInstance, PRWInstanceT } from './PRWInstance.js';
+import { PRWProcessNoise, PRWProcessNoiseT } from './PRWProcessNoise.js';
 import { PRWStateMatrix, PRWStateMatrixT } from './PRWStateMatrix.js';
 import { RFMCoordinateSystem, RFMCoordinateSystemT } from './RFMCoordinateSystem.js';
 
@@ -119,8 +120,17 @@ VALID():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : true;
 }
 
+/**
+ * Process noise for COVARIANCE: on input, what propagation adds; on
+ * output, what the propagated COVARIANCE includes. Absent means none.
+ */
+PROCESS_NOISE(obj?:PRWProcessNoise):PRWProcessNoise|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? (obj || new PRWProcessNoise()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startPRWResidentState(builder:flatbuffers.Builder) {
-  builder.startObject(14);
+  builder.startObject(15);
 }
 
 static addInstance(builder:flatbuffers.Builder, INSTANCEOffset:flatbuffers.Offset) {
@@ -179,6 +189,10 @@ static addValid(builder:flatbuffers.Builder, VALID:boolean) {
   builder.addFieldInt8(13, +VALID, +true);
 }
 
+static addProcessNoise(builder:flatbuffers.Builder, PROCESS_NOISEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, PROCESS_NOISEOffset, 0);
+}
+
 static endPRWResidentState(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 12) // STATE
@@ -202,7 +216,8 @@ unpack(): PRWResidentStateT {
     this.HAS_DRAG_AREA_OVER_MASS_M2_KG(),
     this.SRP_AREA_OVER_MASS_M2_KG(),
     this.HAS_SRP_AREA_OVER_MASS_M2_KG(),
-    this.VALID()
+    this.VALID(),
+    (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null)
   );
 }
 
@@ -222,6 +237,7 @@ unpackTo(_o: PRWResidentStateT): void {
   _o.SRP_AREA_OVER_MASS_M2_KG = this.SRP_AREA_OVER_MASS_M2_KG();
   _o.HAS_SRP_AREA_OVER_MASS_M2_KG = this.HAS_SRP_AREA_OVER_MASS_M2_KG();
   _o.VALID = this.VALID();
+  _o.PROCESS_NOISE = (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null);
 }
 }
 
@@ -240,7 +256,8 @@ constructor(
   public HAS_DRAG_AREA_OVER_MASS_M2_KG: boolean = false,
   public SRP_AREA_OVER_MASS_M2_KG: number = 0.0,
   public HAS_SRP_AREA_OVER_MASS_M2_KG: boolean = false,
-  public VALID: boolean = true
+  public VALID: boolean = true,
+  public PROCESS_NOISE: PRWProcessNoiseT|null = null
 ){}
 
 
@@ -250,6 +267,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const STATE = (this.STATE !== null ? this.STATE!.pack(builder) : 0);
   const COORDINATE_SYSTEM = (this.COORDINATE_SYSTEM !== null ? this.COORDINATE_SYSTEM!.pack(builder) : 0);
   const COVARIANCE = (this.COVARIANCE !== null ? this.COVARIANCE!.pack(builder) : 0);
+  const PROCESS_NOISE = (this.PROCESS_NOISE !== null ? this.PROCESS_NOISE!.pack(builder) : 0);
 
   PRWResidentState.startPRWResidentState(builder);
   PRWResidentState.addInstance(builder, INSTANCE);
@@ -266,6 +284,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PRWResidentState.addSrpAreaOverMassM2Kg(builder, this.SRP_AREA_OVER_MASS_M2_KG);
   PRWResidentState.addHasSrpAreaOverMassM2Kg(builder, this.HAS_SRP_AREA_OVER_MASS_M2_KG);
   PRWResidentState.addValid(builder, this.VALID);
+  PRWResidentState.addProcessNoise(builder, PROCESS_NOISE);
 
   return PRWResidentState.endPRWResidentState(builder);
 }

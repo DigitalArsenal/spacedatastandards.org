@@ -162,22 +162,31 @@ class PRWResidentState extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : true;
     }
 
+    /// Process noise for COVARIANCE: on input, what propagation adds; on
+    /// output, what the propagated COVARIANCE includes. Absent means none.
+    public function getPROCESS_NOISE()
+    {
+        $obj = new PRWProcessNoise();
+        $o = $this->__offset(32);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRWResidentState(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(15);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRWResidentState
      */
-    public static function createPRWResidentState(FlatBufferBuilder $builder, $INSTANCE, $ENTITY_HANDLE, $CATALOG_NUMBER, $OBJECT_ID, $STATE, $COORDINATE_SYSTEM, $COVARIANCE, $MASS_KG, $HAS_MASS_KG, $DRAG_AREA_OVER_MASS_M2_KG, $HAS_DRAG_AREA_OVER_MASS_M2_KG, $SRP_AREA_OVER_MASS_M2_KG, $HAS_SRP_AREA_OVER_MASS_M2_KG, $VALID)
+    public static function createPRWResidentState(FlatBufferBuilder $builder, $INSTANCE, $ENTITY_HANDLE, $CATALOG_NUMBER, $OBJECT_ID, $STATE, $COORDINATE_SYSTEM, $COVARIANCE, $MASS_KG, $HAS_MASS_KG, $DRAG_AREA_OVER_MASS_M2_KG, $HAS_DRAG_AREA_OVER_MASS_M2_KG, $SRP_AREA_OVER_MASS_M2_KG, $HAS_SRP_AREA_OVER_MASS_M2_KG, $VALID, $PROCESS_NOISE)
     {
-        $builder->startObject(14);
+        $builder->startObject(15);
         self::addINSTANCE($builder, $INSTANCE);
         self::addENTITY_HANDLE($builder, $ENTITY_HANDLE);
         self::addCATALOG_NUMBER($builder, $CATALOG_NUMBER);
@@ -192,6 +201,7 @@ class PRWResidentState extends Table
         self::addSRP_AREA_OVER_MASS_M2_KG($builder, $SRP_AREA_OVER_MASS_M2_KG);
         self::addHAS_SRP_AREA_OVER_MASS_M2_KG($builder, $HAS_SRP_AREA_OVER_MASS_M2_KG);
         self::addVALID($builder, $VALID);
+        self::addPROCESS_NOISE($builder, $PROCESS_NOISE);
         $o = $builder->endObject();
         $builder->required($o, 12);  // STATE
         $builder->required($o, 14);  // COORDINATE_SYSTEM
@@ -336,6 +346,16 @@ class PRWResidentState extends Table
     public static function addVALID(FlatBufferBuilder $builder, $VALID)
     {
         $builder->addBoolX(13, $VALID, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROCESS_NOISE(FlatBufferBuilder $builder, $PROCESS_NOISE)
+    {
+        $builder->addOffsetX(14, $PROCESS_NOISE, 0);
     }
 
     /**

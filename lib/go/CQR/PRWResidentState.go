@@ -314,8 +314,29 @@ func (rcv *PRWResidentState) MutateValid(n bool) bool {
 	return rcv.MutateVALID(n)
 }
 
+/// Process noise for COVARIANCE: on input, what propagation adds; on
+/// output, what the propagated COVARIANCE includes. Absent means none.
+func (rcv *PRWResidentState) PROCESS_NOISE(obj *PRWProcessNoise) *PRWProcessNoise {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWProcessNoise)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRWResidentState) ProcessNoise(obj *PRWProcessNoise) *PRWProcessNoise {
+	return rcv.PROCESS_NOISE(obj)
+}
+
+/// Process noise for COVARIANCE: on input, what propagation adds; on
+/// output, what the propagated COVARIANCE includes. Absent means none.
 func PRWResidentStateStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(15)
 }
 func PRWResidentStateAddINSTANCE(builder *flatbuffers.Builder, INSTANCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(INSTANCE), 0)
@@ -400,6 +421,12 @@ func PRWResidentStateAddVALID(builder *flatbuffers.Builder, VALID bool) {
 }
 func PRWResidentStateAddValid(builder *flatbuffers.Builder, VALID bool) {
 	PRWResidentStateAddVALID(builder, VALID)
+}
+func PRWResidentStateAddPROCESS_NOISE(builder *flatbuffers.Builder, PROCESS_NOISE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(PROCESS_NOISE), 0)
+}
+func PRWResidentStateAddProcessNoise(builder *flatbuffers.Builder, PROCESS_NOISE flatbuffers.UOffsetT) {
+	PRWResidentStateAddPROCESS_NOISE(builder, PROCESS_NOISE)
 }
 func PRWResidentStateEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

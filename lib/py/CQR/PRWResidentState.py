@@ -149,8 +149,21 @@ class PRWResidentState(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return True
 
+    # Process noise for COVARIANCE: on input, what propagation adds; on
+    # output, what the propagated COVARIANCE includes. Absent means none.
+    # PRWResidentState
+    def PROCESS_NOISE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWProcessNoise import PRWProcessNoise
+            obj = PRWProcessNoise()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def PRWResidentStateStart(builder):
-    builder.StartObject(14)
+    builder.StartObject(15)
 
 def Start(builder):
     PRWResidentStateStart(builder)
@@ -239,6 +252,12 @@ def PRWResidentStateAddVALID(builder, VALID):
 def AddVALID(builder, VALID):
     PRWResidentStateAddVALID(builder, VALID)
 
+def PRWResidentStateAddPROCESS_NOISE(builder, PROCESS_NOISE):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(PROCESS_NOISE), 0)
+
+def AddPROCESS_NOISE(builder, PROCESS_NOISE):
+    PRWResidentStateAddPROCESS_NOISE(builder, PROCESS_NOISE)
+
 def PRWResidentStateEnd(builder):
     return builder.EndObject()
 
@@ -247,6 +266,7 @@ def End(builder):
 
 import FRMStateVector
 import PRWInstance
+import PRWProcessNoise
 import PRWStateMatrix
 import RFMCoordinateSystem
 try:
@@ -273,6 +293,7 @@ class PRWResidentStateT(object):
         SRP_AREA_OVER_MASS_M2_KG = 0.0,
         HAS_SRP_AREA_OVER_MASS_M2_KG = False,
         VALID = True,
+        PROCESS_NOISE = None,
     ):
         self.INSTANCE = INSTANCE  # type: Optional[PRWInstance.PRWInstanceT]
         self.ENTITY_HANDLE = ENTITY_HANDLE  # type: int
@@ -288,6 +309,7 @@ class PRWResidentStateT(object):
         self.SRP_AREA_OVER_MASS_M2_KG = SRP_AREA_OVER_MASS_M2_KG  # type: float
         self.HAS_SRP_AREA_OVER_MASS_M2_KG = HAS_SRP_AREA_OVER_MASS_M2_KG  # type: bool
         self.VALID = VALID  # type: bool
+        self.PROCESS_NOISE = PROCESS_NOISE  # type: Optional[PRWProcessNoise.PRWProcessNoiseT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -328,6 +350,8 @@ class PRWResidentStateT(object):
         self.SRP_AREA_OVER_MASS_M2_KG = PRWResidentState.SRP_AREA_OVER_MASS_M2_KG()
         self.HAS_SRP_AREA_OVER_MASS_M2_KG = PRWResidentState.HAS_SRP_AREA_OVER_MASS_M2_KG()
         self.VALID = PRWResidentState.VALID()
+        if PRWResidentState.PROCESS_NOISE() is not None:
+            self.PROCESS_NOISE = PRWProcessNoise.PRWProcessNoiseT.InitFromObj(PRWResidentState.PROCESS_NOISE())
 
     # PRWResidentStateT
     def Pack(self, builder):
@@ -341,6 +365,8 @@ class PRWResidentStateT(object):
             COORDINATE_SYSTEM = self.COORDINATE_SYSTEM.Pack(builder)
         if self.COVARIANCE is not None:
             COVARIANCE = self.COVARIANCE.Pack(builder)
+        if self.PROCESS_NOISE is not None:
+            PROCESS_NOISE = self.PROCESS_NOISE.Pack(builder)
         PRWResidentStateStart(builder)
         if self.INSTANCE is not None:
             PRWResidentStateAddINSTANCE(builder, INSTANCE)
@@ -361,5 +387,7 @@ class PRWResidentStateT(object):
         PRWResidentStateAddSRP_AREA_OVER_MASS_M2_KG(builder, self.SRP_AREA_OVER_MASS_M2_KG)
         PRWResidentStateAddHAS_SRP_AREA_OVER_MASS_M2_KG(builder, self.HAS_SRP_AREA_OVER_MASS_M2_KG)
         PRWResidentStateAddVALID(builder, self.VALID)
+        if self.PROCESS_NOISE is not None:
+            PRWResidentStateAddPROCESS_NOISE(builder, PROCESS_NOISE)
         PRWResidentState = PRWResidentStateEnd(builder)
         return PRWResidentState

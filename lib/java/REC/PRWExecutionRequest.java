@@ -61,6 +61,11 @@ public final class PRWExecutionRequest extends com.google.flatbuffers.Table {
   public int FINITE_BURNSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
   public PRWFiniteBurn.Vector finiteBurnsVector() { return finiteBurnsVector(new PRWFiniteBurn.Vector()); }
   public PRWFiniteBurn.Vector finiteBurnsVector(PRWFiniteBurn.Vector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Process noise added to the propagated covariance. Absent means none.
+   */
+  public PRWProcessNoise PROCESS_NOISE() { return PROCESS_NOISE(new PRWProcessNoise()); }
+  public PRWProcessNoise PROCESS_NOISE(PRWProcessNoise obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createPRWExecutionRequest(FlatBufferBuilder builder,
       int INITIALOffset,
@@ -75,8 +80,10 @@ public final class PRWExecutionRequest extends com.google.flatbuffers.Table {
       int SAMPLE_EPOCHSOffset,
       int IMPULSESOffset,
       boolean INCLUDE_MASS_DYNAMICS,
-      int FINITE_BURNSOffset) {
-    builder.startTable(13);
+      int FINITE_BURNSOffset,
+      int PROCESS_NOISEOffset) {
+    builder.startTable(14);
+    PRWExecutionRequest.addProcessNoise(builder, PROCESS_NOISEOffset);
     PRWExecutionRequest.addFiniteBurns(builder, FINITE_BURNSOffset);
     PRWExecutionRequest.addImpulses(builder, IMPULSESOffset);
     PRWExecutionRequest.addSampleEpochs(builder, SAMPLE_EPOCHSOffset);
@@ -93,7 +100,7 @@ public final class PRWExecutionRequest extends com.google.flatbuffers.Table {
     return PRWExecutionRequest.endPRWExecutionRequest(builder);
   }
 
-  public static void startPRWExecutionRequest(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startPRWExecutionRequest(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addInitial(FlatBufferBuilder builder, int INITIALOffset) { builder.addOffset(0, INITIALOffset, 0); }
   public static void addTargetEpoch(FlatBufferBuilder builder, int TARGET_EPOCHOffset) { builder.addOffset(1, TARGET_EPOCHOffset, 0); }
   public static void addIntegrator(FlatBufferBuilder builder, int INTEGRATOROffset) { builder.addOffset(2, INTEGRATOROffset, 0); }
@@ -113,6 +120,7 @@ public final class PRWExecutionRequest extends com.google.flatbuffers.Table {
   public static void addFiniteBurns(FlatBufferBuilder builder, int FINITE_BURNSOffset) { builder.addOffset(12, FINITE_BURNSOffset, 0); }
   public static int createFiniteBurnsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startFiniteBurnsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addProcessNoise(FlatBufferBuilder builder, int PROCESS_NOISEOffset) { builder.addOffset(13, PROCESS_NOISEOffset, 0); }
   public static int endPRWExecutionRequest(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // INITIAL

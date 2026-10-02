@@ -123,8 +123,20 @@ class PRWPropagationSample(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         return o == 0
 
+    # The process noise COVARIANCE includes. Absent means none.
+    # PRWPropagationSample
+    def PROCESS_NOISE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWProcessNoise import PRWProcessNoise
+            obj = PRWProcessNoise()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def PRWPropagationSampleStart(builder):
-    builder.StartObject(8)
+    builder.StartObject(9)
 
 def Start(builder):
     PRWPropagationSampleStart(builder)
@@ -189,6 +201,12 @@ def PRWPropagationSampleCreateBURNSVector(builder, data):
 def CreateBURNSVector(builder, data):
     return PRWPropagationSampleCreateBURNSVector(builder, data)
 
+def PRWPropagationSampleAddPROCESS_NOISE(builder, PROCESS_NOISE):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(PROCESS_NOISE), 0)
+
+def AddPROCESS_NOISE(builder, PROCESS_NOISE):
+    PRWPropagationSampleAddPROCESS_NOISE(builder, PROCESS_NOISE)
+
 def PRWPropagationSampleEnd(builder):
     return builder.EndObject()
 
@@ -196,6 +214,7 @@ def End(builder):
     return PRWPropagationSampleEnd(builder)
 
 import PRWBurnReport
+import PRWProcessNoise
 import PRWResidentState
 import PRWStateMatrix
 try:
@@ -216,6 +235,7 @@ class PRWPropagationSampleT(object):
         ACCEPTED_STEPS = 0,
         REJECTED_STEPS = 0,
         BURNS = None,
+        PROCESS_NOISE = None,
     ):
         self.STATE = STATE  # type: Optional[PRWResidentState.PRWResidentStateT]
         self.STM = STM  # type: Optional[PRWStateMatrix.PRWStateMatrixT]
@@ -225,6 +245,7 @@ class PRWPropagationSampleT(object):
         self.ACCEPTED_STEPS = ACCEPTED_STEPS  # type: int
         self.REJECTED_STEPS = REJECTED_STEPS  # type: int
         self.BURNS = BURNS  # type: Optional[List[PRWBurnReport.PRWBurnReportT]]
+        self.PROCESS_NOISE = PROCESS_NOISE  # type: Optional[PRWProcessNoise.PRWProcessNoiseT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -267,6 +288,8 @@ class PRWPropagationSampleT(object):
                 else:
                     pRWBurnReport_ = PRWBurnReport.PRWBurnReportT.InitFromObj(PRWPropagationSample.BURNS(i))
                     self.BURNS.append(pRWBurnReport_)
+        if PRWPropagationSample.PROCESS_NOISE() is not None:
+            self.PROCESS_NOISE = PRWProcessNoise.PRWProcessNoiseT.InitFromObj(PRWPropagationSample.PROCESS_NOISE())
 
     # PRWPropagationSampleT
     def Pack(self, builder):
@@ -288,6 +311,8 @@ class PRWPropagationSampleT(object):
             for i in reversed(range(len(self.BURNS))):
                 builder.PrependUOffsetTRelative(BURNSlist[i])
             BURNS = builder.EndVector()
+        if self.PROCESS_NOISE is not None:
+            PROCESS_NOISE = self.PROCESS_NOISE.Pack(builder)
         PRWPropagationSampleStart(builder)
         if self.STATE is not None:
             PRWPropagationSampleAddSTATE(builder, STATE)
@@ -303,5 +328,7 @@ class PRWPropagationSampleT(object):
         PRWPropagationSampleAddREJECTED_STEPS(builder, self.REJECTED_STEPS)
         if self.BURNS is not None:
             PRWPropagationSampleAddBURNS(builder, BURNS)
+        if self.PROCESS_NOISE is not None:
+            PRWPropagationSampleAddPROCESS_NOISE(builder, PROCESS_NOISE)
         PRWPropagationSample = PRWPropagationSampleEnd(builder)
         return PRWPropagationSample

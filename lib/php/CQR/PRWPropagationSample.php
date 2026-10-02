@@ -113,22 +113,30 @@ class PRWPropagationSample extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// The process noise COVARIANCE includes. Absent means none.
+    public function getPROCESS_NOISE()
+    {
+        $obj = new PRWProcessNoise();
+        $o = $this->__offset(20);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRWPropagationSample(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(8);
+        $builder->StartObject(9);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRWPropagationSample
      */
-    public static function createPRWPropagationSample(FlatBufferBuilder $builder, $STATE, $STM, $MASS_STM, $COVARIANCE, $MASS_COVARIANCE, $ACCEPTED_STEPS, $REJECTED_STEPS, $BURNS)
+    public static function createPRWPropagationSample(FlatBufferBuilder $builder, $STATE, $STM, $MASS_STM, $COVARIANCE, $MASS_COVARIANCE, $ACCEPTED_STEPS, $REJECTED_STEPS, $BURNS, $PROCESS_NOISE)
     {
-        $builder->startObject(8);
+        $builder->startObject(9);
         self::addSTATE($builder, $STATE);
         self::addSTM($builder, $STM);
         self::addMASS_STM($builder, $MASS_STM);
@@ -137,6 +145,7 @@ class PRWPropagationSample extends Table
         self::addACCEPTED_STEPS($builder, $ACCEPTED_STEPS);
         self::addREJECTED_STEPS($builder, $REJECTED_STEPS);
         self::addBURNS($builder, $BURNS);
+        self::addPROCESS_NOISE($builder, $PROCESS_NOISE);
         $o = $builder->endObject();
         $builder->required($o, 4);  // STATE
         return $o;
@@ -244,6 +253,16 @@ class PRWPropagationSample extends Table
     public static function startBURNSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROCESS_NOISE(FlatBufferBuilder $builder, $PROCESS_NOISE)
+    {
+        $builder->addOffsetX(8, $PROCESS_NOISE, 0);
     }
 
     /**

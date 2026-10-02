@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { PRWBurnReport, PRWBurnReportT } from './PRWBurnReport.js';
+import { PRWProcessNoise, PRWProcessNoiseT } from './PRWProcessNoise.js';
 import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
 import { PRWStateMatrix, PRWStateMatrixT } from './PRWStateMatrix.js';
 export declare class PRWPropagationSample implements flatbuffers.IUnpackableObject<PRWPropagationSampleT> {
@@ -20,6 +21,10 @@ export declare class PRWPropagationSample implements flatbuffers.IUnpackableObje
     REJECTED_STEPS(): bigint;
     BURNS(index: number, obj?: PRWBurnReport): PRWBurnReport | null;
     burnsLength(): number;
+    /**
+     * The process noise COVARIANCE includes. Absent means none.
+     */
+    PROCESS_NOISE(obj?: PRWProcessNoise): PRWProcessNoise | null;
     static startPRWPropagationSample(builder: flatbuffers.Builder): void;
     static addState(builder: flatbuffers.Builder, STATEOffset: flatbuffers.Offset): void;
     static addStm(builder: flatbuffers.Builder, STMOffset: flatbuffers.Offset): void;
@@ -31,6 +36,7 @@ export declare class PRWPropagationSample implements flatbuffers.IUnpackableObje
     static addBurns(builder: flatbuffers.Builder, BURNSOffset: flatbuffers.Offset): void;
     static createBurnsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startBurnsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addProcessNoise(builder: flatbuffers.Builder, PROCESS_NOISEOffset: flatbuffers.Offset): void;
     static endPRWPropagationSample(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PRWPropagationSampleT;
     unpackTo(_o: PRWPropagationSampleT): void;
@@ -44,7 +50,8 @@ export declare class PRWPropagationSampleT implements flatbuffers.IGeneratedObje
     ACCEPTED_STEPS: bigint;
     REJECTED_STEPS: bigint;
     BURNS: (PRWBurnReportT)[];
-    constructor(STATE?: PRWResidentStateT | null, STM?: PRWStateMatrixT | null, MASS_STM?: PRWStateMatrixT | null, COVARIANCE?: PRWStateMatrixT | null, MASS_COVARIANCE?: PRWStateMatrixT | null, ACCEPTED_STEPS?: bigint, REJECTED_STEPS?: bigint, BURNS?: (PRWBurnReportT)[]);
+    PROCESS_NOISE: PRWProcessNoiseT | null;
+    constructor(STATE?: PRWResidentStateT | null, STM?: PRWStateMatrixT | null, MASS_STM?: PRWStateMatrixT | null, COVARIANCE?: PRWStateMatrixT | null, MASS_COVARIANCE?: PRWStateMatrixT | null, ACCEPTED_STEPS?: bigint, REJECTED_STEPS?: bigint, BURNS?: (PRWBurnReportT)[], PROCESS_NOISE?: PRWProcessNoiseT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PRWPropagationSample.d.ts.map

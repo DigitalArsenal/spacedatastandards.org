@@ -4000,6 +4000,36 @@
         }
       }
     },
+    "prwProcessNoiseModel": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NONE",
+        "WHITE_ACCELERATION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        }
+      }
+    },
+    "prwProcessNoiseAxes": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "INERTIAL",
+        "RADIAL_TRANSVERSE_NORMAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        }
+      }
+    },
     "prwDensitySpecies": {
       "type": "string",
       "enum": [
@@ -13591,6 +13621,48 @@
       ],
       "additionalProperties": false
     },
+    "PRWProcessNoise": {
+      "type": "object",
+      "description": "The process noise a propagated covariance includes: P(t) = Phi P0 Phi^T + Q.",
+      "properties": {
+        "MODEL": {
+          "$ref": "#/definitions/prwProcessNoiseModel",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "AXES": {
+          "$ref": "#/definitions/prwProcessNoiseAxes",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SPECTRAL_DENSITY_M2_S3": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Acceleration power spectral density per axis (x, y, z or R, T, N), m^2/s^3.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "DISCRETIZATION_SECONDS": {
+          "type": "number",
+          "description": "Interval over which each noise increment enters, seconds.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "PRWResidentState": {
       "type": "object",
       "description": "Identity/state at one epoch. FRM state is m/m/s with named frame/time scale.",
@@ -13665,6 +13737,11 @@
           "type": "boolean",
           "x-flatbuffer-type": "bool",
           "x-flatbuffer-default": "true"
+        },
+        "PROCESS_NOISE": {
+          "$ref": "#/definitions/PRWProcessNoise",
+          "description": "Process noise for COVARIANCE: on input, what propagation adds; on\noutput, what the propagated COVARIANCE includes. Absent means none.",
+          "x-flatbuffer-type": "PRWProcessNoise"
         }
       },
       "required": [
@@ -13917,6 +13994,11 @@
             "$ref": "#/definitions/PRWFiniteBurn"
           },
           "x-flatbuffer-type": "[PRWFiniteBurn]"
+        },
+        "PROCESS_NOISE": {
+          "$ref": "#/definitions/PRWProcessNoise",
+          "description": "Process noise added to the propagated covariance. Absent means none.",
+          "x-flatbuffer-type": "PRWProcessNoise"
         }
       },
       "required": [
@@ -14036,6 +14118,11 @@
             "$ref": "#/definitions/PRWBurnReport"
           },
           "x-flatbuffer-type": "[PRWBurnReport]"
+        },
+        "PROCESS_NOISE": {
+          "$ref": "#/definitions/PRWProcessNoise",
+          "description": "The process noise COVARIANCE includes. Absent means none.",
+          "x-flatbuffer-type": "PRWProcessNoise"
         }
       },
       "required": [

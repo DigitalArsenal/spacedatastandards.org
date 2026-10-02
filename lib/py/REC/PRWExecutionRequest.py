@@ -199,8 +199,20 @@ class PRWExecutionRequest(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
+    # Process noise added to the propagated covariance. Absent means none.
+    # PRWExecutionRequest
+    def PROCESS_NOISE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWProcessNoise import PRWProcessNoise
+            obj = PRWProcessNoise()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def PRWExecutionRequestStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(14)
 
 def Start(builder):
     PRWExecutionRequestStart(builder)
@@ -319,6 +331,12 @@ def PRWExecutionRequestCreateFINITE_BURNSVector(builder, data):
 def CreateFINITE_BURNSVector(builder, data):
     return PRWExecutionRequestCreateFINITE_BURNSVector(builder, data)
 
+def PRWExecutionRequestAddPROCESS_NOISE(builder, PROCESS_NOISE):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(PROCESS_NOISE), 0)
+
+def AddPROCESS_NOISE(builder, PROCESS_NOISE):
+    PRWExecutionRequestAddPROCESS_NOISE(builder, PROCESS_NOISE)
+
 def PRWExecutionRequestEnd(builder):
     return builder.EndObject()
 
@@ -329,6 +347,7 @@ import PRWFiniteBurn
 import PRWForceConfiguration
 import PRWImpulse
 import PRWIntegratorSettings
+import PRWProcessNoise
 import PRWResidentState
 import PRWStateMatrix
 import TIMInstant
@@ -355,6 +374,7 @@ class PRWExecutionRequestT(object):
         IMPULSES = None,
         INCLUDE_MASS_DYNAMICS = False,
         FINITE_BURNS = None,
+        PROCESS_NOISE = None,
     ):
         self.INITIAL = INITIAL  # type: Optional[PRWResidentState.PRWResidentStateT]
         self.TARGET_EPOCH = TARGET_EPOCH  # type: Optional[TIMInstant.TIMInstantT]
@@ -369,6 +389,7 @@ class PRWExecutionRequestT(object):
         self.IMPULSES = IMPULSES  # type: Optional[List[PRWImpulse.PRWImpulseT]]
         self.INCLUDE_MASS_DYNAMICS = INCLUDE_MASS_DYNAMICS  # type: bool
         self.FINITE_BURNS = FINITE_BURNS  # type: Optional[List[PRWFiniteBurn.PRWFiniteBurnT]]
+        self.PROCESS_NOISE = PROCESS_NOISE  # type: Optional[PRWProcessNoise.PRWProcessNoiseT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -431,6 +452,8 @@ class PRWExecutionRequestT(object):
                 else:
                     pRWFiniteBurn_ = PRWFiniteBurn.PRWFiniteBurnT.InitFromObj(PRWExecutionRequest.FINITE_BURNS(i))
                     self.FINITE_BURNS.append(pRWFiniteBurn_)
+        if PRWExecutionRequest.PROCESS_NOISE() is not None:
+            self.PROCESS_NOISE = PRWProcessNoise.PRWProcessNoiseT.InitFromObj(PRWExecutionRequest.PROCESS_NOISE())
 
     # PRWExecutionRequestT
     def Pack(self, builder):
@@ -470,6 +493,8 @@ class PRWExecutionRequestT(object):
             for i in reversed(range(len(self.FINITE_BURNS))):
                 builder.PrependUOffsetTRelative(FINITE_BURNSlist[i])
             FINITE_BURNS = builder.EndVector()
+        if self.PROCESS_NOISE is not None:
+            PROCESS_NOISE = self.PROCESS_NOISE.Pack(builder)
         PRWExecutionRequestStart(builder)
         if self.INITIAL is not None:
             PRWExecutionRequestAddINITIAL(builder, INITIAL)
@@ -493,5 +518,7 @@ class PRWExecutionRequestT(object):
         PRWExecutionRequestAddINCLUDE_MASS_DYNAMICS(builder, self.INCLUDE_MASS_DYNAMICS)
         if self.FINITE_BURNS is not None:
             PRWExecutionRequestAddFINITE_BURNS(builder, FINITE_BURNS)
+        if self.PROCESS_NOISE is not None:
+            PRWExecutionRequestAddPROCESS_NOISE(builder, PROCESS_NOISE)
         PRWExecutionRequest = PRWExecutionRequestEnd(builder)
         return PRWExecutionRequest

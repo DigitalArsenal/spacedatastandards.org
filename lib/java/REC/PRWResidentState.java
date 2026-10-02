@@ -63,6 +63,12 @@ public final class PRWResidentState extends com.google.flatbuffers.Table {
    */
   public boolean HAS_SRP_AREA_OVER_MASS_M2_KG() { int o = __offset(28); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   public boolean VALID() { int o = __offset(30); return o != 0 ? 0!=bb.get(o + bb_pos) : true; }
+  /**
+   * Process noise for COVARIANCE: on input, what propagation adds; on
+   * output, what the propagated COVARIANCE includes. Absent means none.
+   */
+  public PRWProcessNoise PROCESS_NOISE() { return PROCESS_NOISE(new PRWProcessNoise()); }
+  public PRWProcessNoise PROCESS_NOISE(PRWProcessNoise obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createPRWResidentState(FlatBufferBuilder builder,
       int INSTANCEOffset,
@@ -78,11 +84,13 @@ public final class PRWResidentState extends com.google.flatbuffers.Table {
       boolean HAS_DRAG_AREA_OVER_MASS_M2_KG,
       double SRP_AREA_OVER_MASS_M2_KG,
       boolean HAS_SRP_AREA_OVER_MASS_M2_KG,
-      boolean VALID) {
-    builder.startTable(14);
+      boolean VALID,
+      int PROCESS_NOISEOffset) {
+    builder.startTable(15);
     PRWResidentState.addSrpAreaOverMassM2Kg(builder, SRP_AREA_OVER_MASS_M2_KG);
     PRWResidentState.addDragAreaOverMassM2Kg(builder, DRAG_AREA_OVER_MASS_M2_KG);
     PRWResidentState.addMassKg(builder, MASS_KG);
+    PRWResidentState.addProcessNoise(builder, PROCESS_NOISEOffset);
     PRWResidentState.addCovariance(builder, COVARIANCEOffset);
     PRWResidentState.addCoordinateSystem(builder, COORDINATE_SYSTEMOffset);
     PRWResidentState.addState(builder, STATEOffset);
@@ -97,7 +105,7 @@ public final class PRWResidentState extends com.google.flatbuffers.Table {
     return PRWResidentState.endPRWResidentState(builder);
   }
 
-  public static void startPRWResidentState(FlatBufferBuilder builder) { builder.startTable(14); }
+  public static void startPRWResidentState(FlatBufferBuilder builder) { builder.startTable(15); }
   public static void addInstance(FlatBufferBuilder builder, int INSTANCEOffset) { builder.addOffset(0, INSTANCEOffset, 0); }
   public static void addEntityHandle(FlatBufferBuilder builder, long ENTITY_HANDLE) { builder.addInt(1, (int) ENTITY_HANDLE, (int) 0L); }
   public static void addCatalogNumber(FlatBufferBuilder builder, long CATALOG_NUMBER) { builder.addInt(2, (int) CATALOG_NUMBER, (int) 0L); }
@@ -112,6 +120,7 @@ public final class PRWResidentState extends com.google.flatbuffers.Table {
   public static void addSrpAreaOverMassM2Kg(FlatBufferBuilder builder, double SRP_AREA_OVER_MASS_M2_KG) { builder.addDouble(11, SRP_AREA_OVER_MASS_M2_KG, 0.0); }
   public static void addHasSrpAreaOverMassM2Kg(FlatBufferBuilder builder, boolean HAS_SRP_AREA_OVER_MASS_M2_KG) { builder.addBoolean(12, HAS_SRP_AREA_OVER_MASS_M2_KG, false); }
   public static void addValid(FlatBufferBuilder builder, boolean VALID) { builder.addBoolean(13, VALID, true); }
+  public static void addProcessNoise(FlatBufferBuilder builder, int PROCESS_NOISEOffset) { builder.addOffset(14, PROCESS_NOISEOffset, 0); }
   public static int endPRWResidentState(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 12);  // STATE

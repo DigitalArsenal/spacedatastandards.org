@@ -177,22 +177,30 @@ class PRWExecutionRequest extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Process noise added to the propagated covariance. Absent means none.
+    public function getPROCESS_NOISE()
+    {
+        $obj = new PRWProcessNoise();
+        $o = $this->__offset(30);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRWExecutionRequest(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRWExecutionRequest
      */
-    public static function createPRWExecutionRequest(FlatBufferBuilder $builder, $INITIAL, $TARGET_EPOCH, $INTEGRATOR, $FORCES, $INCLUDE_STM, $STM_TECHNIQUE, $DENSITY_TREATMENT, $INITIAL_COVARIANCE, $INITIAL_MASS_COVARIANCE, $SAMPLE_EPOCHS, $IMPULSES, $INCLUDE_MASS_DYNAMICS, $FINITE_BURNS)
+    public static function createPRWExecutionRequest(FlatBufferBuilder $builder, $INITIAL, $TARGET_EPOCH, $INTEGRATOR, $FORCES, $INCLUDE_STM, $STM_TECHNIQUE, $DENSITY_TREATMENT, $INITIAL_COVARIANCE, $INITIAL_MASS_COVARIANCE, $SAMPLE_EPOCHS, $IMPULSES, $INCLUDE_MASS_DYNAMICS, $FINITE_BURNS, $PROCESS_NOISE)
     {
-        $builder->startObject(13);
+        $builder->startObject(14);
         self::addINITIAL($builder, $INITIAL);
         self::addTARGET_EPOCH($builder, $TARGET_EPOCH);
         self::addINTEGRATOR($builder, $INTEGRATOR);
@@ -206,6 +214,7 @@ class PRWExecutionRequest extends Table
         self::addIMPULSES($builder, $IMPULSES);
         self::addINCLUDE_MASS_DYNAMICS($builder, $INCLUDE_MASS_DYNAMICS);
         self::addFINITE_BURNS($builder, $FINITE_BURNS);
+        self::addPROCESS_NOISE($builder, $PROCESS_NOISE);
         $o = $builder->endObject();
         $builder->required($o, 4);  // INITIAL
         $builder->required($o, 6);  // TARGET_EPOCH
@@ -414,6 +423,16 @@ class PRWExecutionRequest extends Table
     public static function startFINITE_BURNSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROCESS_NOISE(FlatBufferBuilder $builder, $PROCESS_NOISE)
+    {
+        $builder->addOffsetX(13, $PROCESS_NOISE, 0);
     }
 
     /**

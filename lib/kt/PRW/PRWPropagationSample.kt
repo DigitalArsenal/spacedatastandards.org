@@ -97,6 +97,18 @@ class PRWPropagationSample : Table() {
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * The process noise COVARIANCE includes. Absent means none.
+     */
+    val processNoise : PRWProcessNoise? get() = processNoise(PRWProcessNoise())
+    fun processNoise(obj: PRWProcessNoise) : PRWProcessNoise? {
+        val o = __offset(20)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPRWPropagationSample(_bb: ByteBuffer): PRWPropagationSample = getRootAsPRWPropagationSample(_bb, PRWPropagationSample())
@@ -104,10 +116,11 @@ class PRWPropagationSample : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPRWPropagationSample(builder: FlatBufferBuilder, stateOffset: Int, stmOffset: Int, massStmOffset: Int, covarianceOffset: Int, massCovarianceOffset: Int, acceptedSteps: ULong, rejectedSteps: ULong, burnsOffset: Int) : Int {
-            builder.startTable(8)
+        fun createPRWPropagationSample(builder: FlatBufferBuilder, stateOffset: Int, stmOffset: Int, massStmOffset: Int, covarianceOffset: Int, massCovarianceOffset: Int, acceptedSteps: ULong, rejectedSteps: ULong, burnsOffset: Int, processNoiseOffset: Int) : Int {
+            builder.startTable(9)
             addREJECTEDSTEPS(builder, rejectedSteps)
             addACCEPTEDSTEPS(builder, acceptedSteps)
+            addPROCESSNOISE(builder, processNoiseOffset)
             addBURNS(builder, burnsOffset)
             addMASSCOVARIANCE(builder, massCovarianceOffset)
             addCOVARIANCE(builder, covarianceOffset)
@@ -116,7 +129,7 @@ class PRWPropagationSample : Table() {
             addSTATE(builder, stateOffset)
             return endPRWPropagationSample(builder)
         }
-        fun startPRWPropagationSample(builder: FlatBufferBuilder) = builder.startTable(8)
+        fun startPRWPropagationSample(builder: FlatBufferBuilder) = builder.startTable(9)
         fun addSTATE(builder: FlatBufferBuilder, state: Int) = builder.addOffset(0, state, 0)
         fun addSTM(builder: FlatBufferBuilder, stm: Int) = builder.addOffset(1, stm, 0)
         fun addMASSSTM(builder: FlatBufferBuilder, massStm: Int) = builder.addOffset(2, massStm, 0)
@@ -133,6 +146,7 @@ class PRWPropagationSample : Table() {
             return builder.endVector()
         }
         fun startBurnsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPROCESSNOISE(builder: FlatBufferBuilder, processNoise: Int) = builder.addOffset(8, processNoise, 0)
         fun endPRWPropagationSample(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

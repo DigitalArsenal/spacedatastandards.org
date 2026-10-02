@@ -1194,6 +1194,210 @@ impl<'a> ::flatbuffers::Verifiable for prwQualityEvidence {
 impl ::flatbuffers::SimpleToVerifyInSlice for prwQualityEvidence {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PRW_PROCESS_NOISE_MODEL: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PRW_PROCESS_NOISE_MODEL: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PRW_PROCESS_NOISE_MODEL: [prwProcessNoiseModel; 3] = [
+    prwProcessNoiseModel::UNSPECIFIED,
+    prwProcessNoiseModel::NONE,
+    prwProcessNoiseModel::WHITE_ACCELERATION,
+];
+
+/// Process noise added to a propagated covariance. WHITE_ACCELERATION is
+/// zero-mean white acceleration noise (state noise compensation): over each
+/// discretization interval h it adds, per axis with spectral density q,
+/// q * [[h^3/3, h^2/2], [h^2/2, h]] to the position-velocity block, which the
+/// linearized dynamics then carry forward with the covariance.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct prwProcessNoiseModel(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl prwProcessNoiseModel {
+    pub const UNSPECIFIED: Self = Self(0);
+    pub const NONE: Self = Self(1);
+    pub const WHITE_ACCELERATION: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::NONE,
+        Self::WHITE_ACCELERATION,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::NONE => Some("NONE"),
+            Self::WHITE_ACCELERATION => Some("WHITE_ACCELERATION"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for prwProcessNoiseModel {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for prwProcessNoiseModel {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for prwProcessNoiseModel {
+    type Output = prwProcessNoiseModel;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for prwProcessNoiseModel {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for prwProcessNoiseModel {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for prwProcessNoiseModel {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PRW_PROCESS_NOISE_AXES: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PRW_PROCESS_NOISE_AXES: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PRW_PROCESS_NOISE_AXES: [prwProcessNoiseAxes; 3] = [
+    prwProcessNoiseAxes::UNSPECIFIED,
+    prwProcessNoiseAxes::INERTIAL,
+    prwProcessNoiseAxes::RADIAL_TRANSVERSE_NORMAL,
+];
+
+/// Axes of the process noise spectral densities.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct prwProcessNoiseAxes(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl prwProcessNoiseAxes {
+    pub const UNSPECIFIED: Self = Self(0);
+    pub const INERTIAL: Self = Self(1);
+    pub const RADIAL_TRANSVERSE_NORMAL: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::INERTIAL,
+        Self::RADIAL_TRANSVERSE_NORMAL,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::INERTIAL => Some("INERTIAL"),
+            Self::RADIAL_TRANSVERSE_NORMAL => Some("RADIAL_TRANSVERSE_NORMAL"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for prwProcessNoiseAxes {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for prwProcessNoiseAxes {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for prwProcessNoiseAxes {
+    type Output = prwProcessNoiseAxes;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for prwProcessNoiseAxes {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for prwProcessNoiseAxes {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for prwProcessNoiseAxes {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PRW_DENSITY_SPECIES: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -4455,6 +4659,224 @@ impl PRWStateMatrixT {
     }
 }
 
+pub enum PRWProcessNoiseOffset {}
+
+/// The process noise a propagated covariance includes: P(t) = Phi P0 Phi^T + Q.
+#[derive(Copy, Clone, PartialEq)]
+pub struct PRWProcessNoise<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PRWProcessNoise<'a> {
+    type Inner = PRWProcessNoise<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> PRWProcessNoise<'a> {
+    pub const VT_MODEL: ::flatbuffers::VOffsetT = 4;
+    pub const VT_AXES: ::flatbuffers::VOffsetT = 6;
+    pub const VT_SPECTRAL_DENSITY_M2_S3: ::flatbuffers::VOffsetT = 8;
+    pub const VT_DISCRETIZATION_SECONDS: ::flatbuffers::VOffsetT = 10;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        PRWProcessNoise { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args PRWProcessNoiseArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<PRWProcessNoise<'bldr>> {
+        let mut builder = PRWProcessNoiseBuilder::new(_fbb);
+        builder.add_DISCRETIZATION_SECONDS(args.DISCRETIZATION_SECONDS);
+        if let Some(x) = args.SPECTRAL_DENSITY_M2_S3 { builder.add_SPECTRAL_DENSITY_M2_S3(x); }
+        builder.add_AXES(args.AXES);
+        builder.add_MODEL(args.MODEL);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> PRWProcessNoiseT {
+        let MODEL = self.MODEL();
+        let AXES = self.AXES();
+        let SPECTRAL_DENSITY_M2_S3 = self.SPECTRAL_DENSITY_M2_S3().map(|x| {
+            x.into_iter().collect()
+        });
+        let DISCRETIZATION_SECONDS = self.DISCRETIZATION_SECONDS();
+        PRWProcessNoiseT {
+            MODEL,
+            AXES,
+            SPECTRAL_DENSITY_M2_S3,
+            DISCRETIZATION_SECONDS,
+        }
+    }
+
+    #[inline]
+    pub fn MODEL(&self) -> prwProcessNoiseModel {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<prwProcessNoiseModel>(PRWProcessNoise::VT_MODEL, Some(prwProcessNoiseModel::UNSPECIFIED)).unwrap()}
+    }
+
+    #[inline]
+    pub fn AXES(&self) -> prwProcessNoiseAxes {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<prwProcessNoiseAxes>(PRWProcessNoise::VT_AXES, Some(prwProcessNoiseAxes::UNSPECIFIED)).unwrap()}
+    }
+
+    /// Acceleration power spectral density per axis (x, y, z or R, T, N), m^2/s^3.
+    #[inline]
+    pub fn SPECTRAL_DENSITY_M2_S3(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PRWProcessNoise::VT_SPECTRAL_DENSITY_M2_S3, None)}
+    }
+
+    /// Interval over which each noise increment enters, seconds.
+    #[inline]
+    pub fn DISCRETIZATION_SECONDS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWProcessNoise::VT_DISCRETIZATION_SECONDS, Some(0.0)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for PRWProcessNoise<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<prwProcessNoiseModel>("MODEL", Self::VT_MODEL, false)?
+            .visit_field::<prwProcessNoiseAxes>("AXES", Self::VT_AXES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SPECTRAL_DENSITY_M2_S3", Self::VT_SPECTRAL_DENSITY_M2_S3, false)?
+            .visit_field::<f64>("DISCRETIZATION_SECONDS", Self::VT_DISCRETIZATION_SECONDS, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct PRWProcessNoiseArgs<'a> {
+    pub MODEL: prwProcessNoiseModel,
+    pub AXES: prwProcessNoiseAxes,
+    pub SPECTRAL_DENSITY_M2_S3: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub DISCRETIZATION_SECONDS: f64,
+}
+
+impl<'a> Default for PRWProcessNoiseArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        PRWProcessNoiseArgs {
+            MODEL: prwProcessNoiseModel::UNSPECIFIED,
+            AXES: prwProcessNoiseAxes::UNSPECIFIED,
+            SPECTRAL_DENSITY_M2_S3: None,
+            DISCRETIZATION_SECONDS: 0.0,
+        }
+    }
+}
+
+pub struct PRWProcessNoiseBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWProcessNoiseBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_MODEL(&mut self, MODEL: prwProcessNoiseModel) {
+        self.fbb_.push_slot::<prwProcessNoiseModel>(PRWProcessNoise::VT_MODEL, MODEL, prwProcessNoiseModel::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_AXES(&mut self, AXES: prwProcessNoiseAxes) {
+        self.fbb_.push_slot::<prwProcessNoiseAxes>(PRWProcessNoise::VT_AXES, AXES, prwProcessNoiseAxes::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_SPECTRAL_DENSITY_M2_S3(&mut self, SPECTRAL_DENSITY_M2_S3: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PRWProcessNoise::VT_SPECTRAL_DENSITY_M2_S3, SPECTRAL_DENSITY_M2_S3);
+    }
+
+    #[inline]
+    pub fn add_DISCRETIZATION_SECONDS(&mut self, DISCRETIZATION_SECONDS: f64) {
+        self.fbb_.push_slot::<f64>(PRWProcessNoise::VT_DISCRETIZATION_SECONDS, DISCRETIZATION_SECONDS, 0.0);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWProcessNoiseBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        PRWProcessNoiseBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<PRWProcessNoise<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for PRWProcessNoise<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("PRWProcessNoise");
+        ds.field("MODEL", &self.MODEL());
+        ds.field("AXES", &self.AXES());
+        ds.field("SPECTRAL_DENSITY_M2_S3", &self.SPECTRAL_DENSITY_M2_S3());
+        ds.field("DISCRETIZATION_SECONDS", &self.DISCRETIZATION_SECONDS());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PRWProcessNoiseT {
+    pub MODEL: prwProcessNoiseModel,
+    pub AXES: prwProcessNoiseAxes,
+    pub SPECTRAL_DENSITY_M2_S3: Option<alloc::vec::Vec<f64>>,
+    pub DISCRETIZATION_SECONDS: f64,
+}
+
+impl Default for PRWProcessNoiseT {
+    fn default() -> Self {
+        Self {
+            MODEL: prwProcessNoiseModel::UNSPECIFIED,
+            AXES: prwProcessNoiseAxes::UNSPECIFIED,
+            SPECTRAL_DENSITY_M2_S3: None,
+            DISCRETIZATION_SECONDS: 0.0,
+        }
+    }
+}
+
+impl PRWProcessNoiseT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<PRWProcessNoise<'b>> {
+        let MODEL = self.MODEL;
+        let AXES = self.AXES;
+        let SPECTRAL_DENSITY_M2_S3 = self.SPECTRAL_DENSITY_M2_S3.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let DISCRETIZATION_SECONDS = self.DISCRETIZATION_SECONDS;
+        PRWProcessNoise::create(_fbb, &PRWProcessNoiseArgs{
+            MODEL,
+            AXES,
+            SPECTRAL_DENSITY_M2_S3,
+            DISCRETIZATION_SECONDS,
+        })
+    }
+}
+
 pub enum PRWResidentStateOffset {}
 
 /// Identity/state at one epoch. FRM state is m/m/s with named frame/time scale.
@@ -4487,6 +4909,7 @@ impl<'a> PRWResidentState<'a> {
     pub const VT_SRP_AREA_OVER_MASS_M2_KG: ::flatbuffers::VOffsetT = 26;
     pub const VT_HAS_SRP_AREA_OVER_MASS_M2_KG: ::flatbuffers::VOffsetT = 28;
     pub const VT_VALID: ::flatbuffers::VOffsetT = 30;
+    pub const VT_PROCESS_NOISE: ::flatbuffers::VOffsetT = 32;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4502,6 +4925,7 @@ impl<'a> PRWResidentState<'a> {
         builder.add_SRP_AREA_OVER_MASS_M2_KG(args.SRP_AREA_OVER_MASS_M2_KG);
         builder.add_DRAG_AREA_OVER_MASS_M2_KG(args.DRAG_AREA_OVER_MASS_M2_KG);
         builder.add_MASS_KG(args.MASS_KG);
+        if let Some(x) = args.PROCESS_NOISE { builder.add_PROCESS_NOISE(x); }
         if let Some(x) = args.COVARIANCE { builder.add_COVARIANCE(x); }
         if let Some(x) = args.COORDINATE_SYSTEM { builder.add_COORDINATE_SYSTEM(x); }
         if let Some(x) = args.STATE { builder.add_STATE(x); }
@@ -4543,6 +4967,9 @@ impl<'a> PRWResidentState<'a> {
         let SRP_AREA_OVER_MASS_M2_KG = self.SRP_AREA_OVER_MASS_M2_KG();
         let HAS_SRP_AREA_OVER_MASS_M2_KG = self.HAS_SRP_AREA_OVER_MASS_M2_KG();
         let VALID = self.VALID();
+        let PROCESS_NOISE = self.PROCESS_NOISE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         PRWResidentStateT {
             INSTANCE,
             ENTITY_HANDLE,
@@ -4558,6 +4985,7 @@ impl<'a> PRWResidentState<'a> {
             SRP_AREA_OVER_MASS_M2_KG,
             HAS_SRP_AREA_OVER_MASS_M2_KG,
             VALID,
+            PROCESS_NOISE,
         }
     }
 
@@ -4678,6 +5106,16 @@ impl<'a> PRWResidentState<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<bool>(PRWResidentState::VT_VALID, Some(true)).unwrap()}
     }
+
+    /// Process noise for COVARIANCE: on input, what propagation adds; on
+    /// output, what the propagated COVARIANCE includes. Absent means none.
+    #[inline]
+    pub fn PROCESS_NOISE(&self) -> Option<PRWProcessNoise<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWProcessNoise>>(PRWResidentState::VT_PROCESS_NOISE, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PRWResidentState<'_> {
@@ -4700,6 +5138,7 @@ impl ::flatbuffers::Verifiable for PRWResidentState<'_> {
             .visit_field::<f64>("SRP_AREA_OVER_MASS_M2_KG", Self::VT_SRP_AREA_OVER_MASS_M2_KG, false)?
             .visit_field::<bool>("HAS_SRP_AREA_OVER_MASS_M2_KG", Self::VT_HAS_SRP_AREA_OVER_MASS_M2_KG, false)?
             .visit_field::<bool>("VALID", Self::VT_VALID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PRWProcessNoise>>("PROCESS_NOISE", Self::VT_PROCESS_NOISE, false)?
             .finish();
         Ok(())
     }
@@ -4720,6 +5159,7 @@ pub struct PRWResidentStateArgs<'a> {
     pub SRP_AREA_OVER_MASS_M2_KG: f64,
     pub HAS_SRP_AREA_OVER_MASS_M2_KG: bool,
     pub VALID: bool,
+    pub PROCESS_NOISE: Option<::flatbuffers::WIPOffset<PRWProcessNoise<'a>>>,
 }
 
 impl<'a> Default for PRWResidentStateArgs<'a> {
@@ -4740,6 +5180,7 @@ impl<'a> Default for PRWResidentStateArgs<'a> {
             SRP_AREA_OVER_MASS_M2_KG: 0.0,
             HAS_SRP_AREA_OVER_MASS_M2_KG: false,
             VALID: true,
+            PROCESS_NOISE: None,
         }
     }
 }
@@ -4821,6 +5262,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWResidentStateBuilder<'a, '
     }
 
     #[inline]
+    pub fn add_PROCESS_NOISE(&mut self, PROCESS_NOISE: ::flatbuffers::WIPOffset<PRWProcessNoise<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PRWProcessNoise>>(PRWResidentState::VT_PROCESS_NOISE, PROCESS_NOISE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWResidentStateBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PRWResidentStateBuilder {
@@ -4855,6 +5301,7 @@ impl ::core::fmt::Debug for PRWResidentState<'_> {
         ds.field("SRP_AREA_OVER_MASS_M2_KG", &self.SRP_AREA_OVER_MASS_M2_KG());
         ds.field("HAS_SRP_AREA_OVER_MASS_M2_KG", &self.HAS_SRP_AREA_OVER_MASS_M2_KG());
         ds.field("VALID", &self.VALID());
+        ds.field("PROCESS_NOISE", &self.PROCESS_NOISE());
         ds.finish()
     }
 }
@@ -4876,6 +5323,7 @@ pub struct PRWResidentStateT {
     pub SRP_AREA_OVER_MASS_M2_KG: f64,
     pub HAS_SRP_AREA_OVER_MASS_M2_KG: bool,
     pub VALID: bool,
+    pub PROCESS_NOISE: Option<alloc::boxed::Box<PRWProcessNoiseT>>,
 }
 
 impl Default for PRWResidentStateT {
@@ -4895,6 +5343,7 @@ impl Default for PRWResidentStateT {
             SRP_AREA_OVER_MASS_M2_KG: 0.0,
             HAS_SRP_AREA_OVER_MASS_M2_KG: false,
             VALID: true,
+            PROCESS_NOISE: None,
         }
     }
 }
@@ -4930,6 +5379,9 @@ impl PRWResidentStateT {
         let SRP_AREA_OVER_MASS_M2_KG = self.SRP_AREA_OVER_MASS_M2_KG;
         let HAS_SRP_AREA_OVER_MASS_M2_KG = self.HAS_SRP_AREA_OVER_MASS_M2_KG;
         let VALID = self.VALID;
+        let PROCESS_NOISE = self.PROCESS_NOISE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         PRWResidentState::create(_fbb, &PRWResidentStateArgs{
             INSTANCE,
             ENTITY_HANDLE,
@@ -4945,6 +5397,7 @@ impl PRWResidentStateT {
             SRP_AREA_OVER_MASS_M2_KG,
             HAS_SRP_AREA_OVER_MASS_M2_KG,
             VALID,
+            PROCESS_NOISE,
         })
     }
 }
@@ -5979,6 +6432,7 @@ impl<'a> PRWExecutionRequest<'a> {
     pub const VT_IMPULSES: ::flatbuffers::VOffsetT = 24;
     pub const VT_INCLUDE_MASS_DYNAMICS: ::flatbuffers::VOffsetT = 26;
     pub const VT_FINITE_BURNS: ::flatbuffers::VOffsetT = 28;
+    pub const VT_PROCESS_NOISE: ::flatbuffers::VOffsetT = 30;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5991,6 +6445,7 @@ impl<'a> PRWExecutionRequest<'a> {
         args: &'args PRWExecutionRequestArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PRWExecutionRequest<'bldr>> {
         let mut builder = PRWExecutionRequestBuilder::new(_fbb);
+        if let Some(x) = args.PROCESS_NOISE { builder.add_PROCESS_NOISE(x); }
         if let Some(x) = args.FINITE_BURNS { builder.add_FINITE_BURNS(x); }
         if let Some(x) = args.IMPULSES { builder.add_IMPULSES(x); }
         if let Some(x) = args.SAMPLE_EPOCHS { builder.add_SAMPLE_EPOCHS(x); }
@@ -6043,6 +6498,9 @@ impl<'a> PRWExecutionRequest<'a> {
         let FINITE_BURNS = self.FINITE_BURNS().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let PROCESS_NOISE = self.PROCESS_NOISE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         PRWExecutionRequestT {
             INITIAL,
             TARGET_EPOCH,
@@ -6057,6 +6515,7 @@ impl<'a> PRWExecutionRequest<'a> {
             IMPULSES,
             INCLUDE_MASS_DYNAMICS,
             FINITE_BURNS,
+            PROCESS_NOISE,
         }
     }
 
@@ -6164,6 +6623,15 @@ impl<'a> PRWExecutionRequest<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWFiniteBurn>>>>(PRWExecutionRequest::VT_FINITE_BURNS, None)}
     }
+
+    /// Process noise added to the propagated covariance. Absent means none.
+    #[inline]
+    pub fn PROCESS_NOISE(&self) -> Option<PRWProcessNoise<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWProcessNoise>>(PRWExecutionRequest::VT_PROCESS_NOISE, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PRWExecutionRequest<'_> {
@@ -6185,6 +6653,7 @@ impl ::flatbuffers::Verifiable for PRWExecutionRequest<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PRWImpulse>>>>("IMPULSES", Self::VT_IMPULSES, false)?
             .visit_field::<bool>("INCLUDE_MASS_DYNAMICS", Self::VT_INCLUDE_MASS_DYNAMICS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PRWFiniteBurn>>>>("FINITE_BURNS", Self::VT_FINITE_BURNS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PRWProcessNoise>>("PROCESS_NOISE", Self::VT_PROCESS_NOISE, false)?
             .finish();
         Ok(())
     }
@@ -6204,6 +6673,7 @@ pub struct PRWExecutionRequestArgs<'a> {
     pub IMPULSES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWImpulse<'a>>>>>,
     pub INCLUDE_MASS_DYNAMICS: bool,
     pub FINITE_BURNS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWFiniteBurn<'a>>>>>,
+    pub PROCESS_NOISE: Option<::flatbuffers::WIPOffset<PRWProcessNoise<'a>>>,
 }
 
 impl<'a> Default for PRWExecutionRequestArgs<'a> {
@@ -6223,6 +6693,7 @@ impl<'a> Default for PRWExecutionRequestArgs<'a> {
             IMPULSES: None,
             INCLUDE_MASS_DYNAMICS: false,
             FINITE_BURNS: None,
+            PROCESS_NOISE: None,
         }
     }
 }
@@ -6299,6 +6770,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWExecutionRequestBuilder<'a
     }
 
     #[inline]
+    pub fn add_PROCESS_NOISE(&mut self, PROCESS_NOISE: ::flatbuffers::WIPOffset<PRWProcessNoise<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PRWProcessNoise>>(PRWExecutionRequest::VT_PROCESS_NOISE, PROCESS_NOISE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWExecutionRequestBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PRWExecutionRequestBuilder {
@@ -6334,6 +6810,7 @@ impl ::core::fmt::Debug for PRWExecutionRequest<'_> {
         ds.field("IMPULSES", &self.IMPULSES());
         ds.field("INCLUDE_MASS_DYNAMICS", &self.INCLUDE_MASS_DYNAMICS());
         ds.field("FINITE_BURNS", &self.FINITE_BURNS());
+        ds.field("PROCESS_NOISE", &self.PROCESS_NOISE());
         ds.finish()
     }
 }
@@ -6354,6 +6831,7 @@ pub struct PRWExecutionRequestT {
     pub IMPULSES: Option<alloc::vec::Vec<PRWImpulseT>>,
     pub INCLUDE_MASS_DYNAMICS: bool,
     pub FINITE_BURNS: Option<alloc::vec::Vec<PRWFiniteBurnT>>,
+    pub PROCESS_NOISE: Option<alloc::boxed::Box<PRWProcessNoiseT>>,
 }
 
 impl Default for PRWExecutionRequestT {
@@ -6372,6 +6850,7 @@ impl Default for PRWExecutionRequestT {
             IMPULSES: None,
             INCLUDE_MASS_DYNAMICS: false,
             FINITE_BURNS: None,
+            PROCESS_NOISE: None,
         }
     }
 }
@@ -6416,6 +6895,9 @@ impl PRWExecutionRequestT {
         let FINITE_BURNS = self.FINITE_BURNS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let PROCESS_NOISE = self.PROCESS_NOISE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         PRWExecutionRequest::create(_fbb, &PRWExecutionRequestArgs{
             INITIAL,
             TARGET_EPOCH,
@@ -6430,6 +6912,7 @@ impl PRWExecutionRequestT {
             IMPULSES,
             INCLUDE_MASS_DYNAMICS,
             FINITE_BURNS,
+            PROCESS_NOISE,
         })
     }
 }
@@ -6907,6 +7390,7 @@ impl<'a> PRWPropagationSample<'a> {
     pub const VT_ACCEPTED_STEPS: ::flatbuffers::VOffsetT = 14;
     pub const VT_REJECTED_STEPS: ::flatbuffers::VOffsetT = 16;
     pub const VT_BURNS: ::flatbuffers::VOffsetT = 18;
+    pub const VT_PROCESS_NOISE: ::flatbuffers::VOffsetT = 20;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -6921,6 +7405,7 @@ impl<'a> PRWPropagationSample<'a> {
         let mut builder = PRWPropagationSampleBuilder::new(_fbb);
         builder.add_REJECTED_STEPS(args.REJECTED_STEPS);
         builder.add_ACCEPTED_STEPS(args.ACCEPTED_STEPS);
+        if let Some(x) = args.PROCESS_NOISE { builder.add_PROCESS_NOISE(x); }
         if let Some(x) = args.BURNS { builder.add_BURNS(x); }
         if let Some(x) = args.MASS_COVARIANCE { builder.add_MASS_COVARIANCE(x); }
         if let Some(x) = args.COVARIANCE { builder.add_COVARIANCE(x); }
@@ -6952,6 +7437,9 @@ impl<'a> PRWPropagationSample<'a> {
         let BURNS = self.BURNS().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let PROCESS_NOISE = self.PROCESS_NOISE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         PRWPropagationSampleT {
             STATE,
             STM,
@@ -6961,6 +7449,7 @@ impl<'a> PRWPropagationSample<'a> {
             ACCEPTED_STEPS,
             REJECTED_STEPS,
             BURNS,
+            PROCESS_NOISE,
         }
     }
 
@@ -7028,6 +7517,15 @@ impl<'a> PRWPropagationSample<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWBurnReport>>>>(PRWPropagationSample::VT_BURNS, None)}
     }
+
+    /// The process noise COVARIANCE includes. Absent means none.
+    #[inline]
+    pub fn PROCESS_NOISE(&self) -> Option<PRWProcessNoise<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWProcessNoise>>(PRWPropagationSample::VT_PROCESS_NOISE, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PRWPropagationSample<'_> {
@@ -7044,6 +7542,7 @@ impl ::flatbuffers::Verifiable for PRWPropagationSample<'_> {
             .visit_field::<u64>("ACCEPTED_STEPS", Self::VT_ACCEPTED_STEPS, false)?
             .visit_field::<u64>("REJECTED_STEPS", Self::VT_REJECTED_STEPS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PRWBurnReport>>>>("BURNS", Self::VT_BURNS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PRWProcessNoise>>("PROCESS_NOISE", Self::VT_PROCESS_NOISE, false)?
             .finish();
         Ok(())
     }
@@ -7058,6 +7557,7 @@ pub struct PRWPropagationSampleArgs<'a> {
     pub ACCEPTED_STEPS: u64,
     pub REJECTED_STEPS: u64,
     pub BURNS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWBurnReport<'a>>>>>,
+    pub PROCESS_NOISE: Option<::flatbuffers::WIPOffset<PRWProcessNoise<'a>>>,
 }
 
 impl<'a> Default for PRWPropagationSampleArgs<'a> {
@@ -7072,6 +7572,7 @@ impl<'a> Default for PRWPropagationSampleArgs<'a> {
             ACCEPTED_STEPS: 0,
             REJECTED_STEPS: 0,
             BURNS: None,
+            PROCESS_NOISE: None,
         }
     }
 }
@@ -7123,6 +7624,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWPropagationSampleBuilder<'
     }
 
     #[inline]
+    pub fn add_PROCESS_NOISE(&mut self, PROCESS_NOISE: ::flatbuffers::WIPOffset<PRWProcessNoise<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PRWProcessNoise>>(PRWPropagationSample::VT_PROCESS_NOISE, PROCESS_NOISE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWPropagationSampleBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PRWPropagationSampleBuilder {
@@ -7150,6 +7656,7 @@ impl ::core::fmt::Debug for PRWPropagationSample<'_> {
         ds.field("ACCEPTED_STEPS", &self.ACCEPTED_STEPS());
         ds.field("REJECTED_STEPS", &self.REJECTED_STEPS());
         ds.field("BURNS", &self.BURNS());
+        ds.field("PROCESS_NOISE", &self.PROCESS_NOISE());
         ds.finish()
     }
 }
@@ -7165,6 +7672,7 @@ pub struct PRWPropagationSampleT {
     pub ACCEPTED_STEPS: u64,
     pub REJECTED_STEPS: u64,
     pub BURNS: Option<alloc::vec::Vec<PRWBurnReportT>>,
+    pub PROCESS_NOISE: Option<alloc::boxed::Box<PRWProcessNoiseT>>,
 }
 
 impl Default for PRWPropagationSampleT {
@@ -7178,6 +7686,7 @@ impl Default for PRWPropagationSampleT {
             ACCEPTED_STEPS: 0,
             REJECTED_STEPS: 0,
             BURNS: None,
+            PROCESS_NOISE: None,
         }
     }
 }
@@ -7208,6 +7717,9 @@ impl PRWPropagationSampleT {
         let BURNS = self.BURNS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let PROCESS_NOISE = self.PROCESS_NOISE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         PRWPropagationSample::create(_fbb, &PRWPropagationSampleArgs{
             STATE,
             STM,
@@ -7217,6 +7729,7 @@ impl PRWPropagationSampleT {
             ACCEPTED_STEPS,
             REJECTED_STEPS,
             BURNS,
+            PROCESS_NOISE,
         })
     }
 }

@@ -34,6 +34,8 @@ public struct PRWExecutionRequest : IFlatbufferObject
   public bool INCLUDE_MASS_DYNAMICS { get { int o = __p.__offset(26); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public PRWFiniteBurn? FINITE_BURNS(int j) { int o = __p.__offset(28); return o != 0 ? (PRWFiniteBurn?)(new PRWFiniteBurn()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int FINITE_BURNSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Process noise added to the propagated covariance. Absent means none.
+  public PRWProcessNoise? PROCESS_NOISE { get { int o = __p.__offset(30); return o != 0 ? (PRWProcessNoise?)(new PRWProcessNoise()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<PRWExecutionRequest> CreatePRWExecutionRequest(FlatBufferBuilder builder,
       Offset<PRWResidentState> INITIALOffset = default(Offset<PRWResidentState>),
@@ -48,8 +50,10 @@ public struct PRWExecutionRequest : IFlatbufferObject
       VectorOffset SAMPLE_EPOCHSOffset = default(VectorOffset),
       VectorOffset IMPULSESOffset = default(VectorOffset),
       bool INCLUDE_MASS_DYNAMICS = false,
-      VectorOffset FINITE_BURNSOffset = default(VectorOffset)) {
-    builder.StartTable(13);
+      VectorOffset FINITE_BURNSOffset = default(VectorOffset),
+      Offset<PRWProcessNoise> PROCESS_NOISEOffset = default(Offset<PRWProcessNoise>)) {
+    builder.StartTable(14);
+    PRWExecutionRequest.AddPROCESS_NOISE(builder, PROCESS_NOISEOffset);
     PRWExecutionRequest.AddFINITE_BURNS(builder, FINITE_BURNSOffset);
     PRWExecutionRequest.AddIMPULSES(builder, IMPULSESOffset);
     PRWExecutionRequest.AddSAMPLE_EPOCHS(builder, SAMPLE_EPOCHSOffset);
@@ -66,7 +70,7 @@ public struct PRWExecutionRequest : IFlatbufferObject
     return PRWExecutionRequest.EndPRWExecutionRequest(builder);
   }
 
-  public static void StartPRWExecutionRequest(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartPRWExecutionRequest(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddINITIAL(FlatBufferBuilder builder, Offset<PRWResidentState> INITIALOffset) { builder.AddOffset(0, INITIALOffset.Value, 0); }
   public static void AddTARGET_EPOCH(FlatBufferBuilder builder, Offset<TIMInstant> TARGET_EPOCHOffset) { builder.AddOffset(1, TARGET_EPOCHOffset.Value, 0); }
   public static void AddINTEGRATOR(FlatBufferBuilder builder, Offset<PRWIntegratorSettings> INTEGRATOROffset) { builder.AddOffset(2, INTEGRATOROffset.Value, 0); }
@@ -95,6 +99,7 @@ public struct PRWExecutionRequest : IFlatbufferObject
   public static VectorOffset CreateFINITE_BURNSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PRWFiniteBurn>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateFINITE_BURNSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PRWFiniteBurn>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartFINITE_BURNSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPROCESS_NOISE(FlatBufferBuilder builder, Offset<PRWProcessNoise> PROCESS_NOISEOffset) { builder.AddOffset(13, PROCESS_NOISEOffset.Value, 0); }
   public static Offset<PRWExecutionRequest> EndPRWExecutionRequest(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // INITIAL
@@ -125,6 +130,7 @@ public struct PRWExecutionRequest : IFlatbufferObject
     _o.INCLUDE_MASS_DYNAMICS = this.INCLUDE_MASS_DYNAMICS;
     _o.FINITE_BURNS = new List<PRWFiniteBurnT>();
     for (var _j = 0; _j < this.FINITE_BURNSLength; ++_j) {_o.FINITE_BURNS.Add(this.FINITE_BURNS(_j).HasValue ? this.FINITE_BURNS(_j).Value.UnPack() : null);}
+    _o.PROCESS_NOISE = this.PROCESS_NOISE.HasValue ? this.PROCESS_NOISE.Value.UnPack() : null;
   }
   public static Offset<PRWExecutionRequest> Pack(FlatBufferBuilder builder, PRWExecutionRequestT _o) {
     if (_o == null) return default(Offset<PRWExecutionRequest>);
@@ -152,6 +158,7 @@ public struct PRWExecutionRequest : IFlatbufferObject
       for (var _j = 0; _j < __FINITE_BURNS.Length; ++_j) { __FINITE_BURNS[_j] = PRWFiniteBurn.Pack(builder, _o.FINITE_BURNS[_j]); }
       _FINITE_BURNS = CreateFINITE_BURNSVector(builder, __FINITE_BURNS);
     }
+    var _PROCESS_NOISE = _o.PROCESS_NOISE == null ? default(Offset<PRWProcessNoise>) : PRWProcessNoise.Pack(builder, _o.PROCESS_NOISE);
     return CreatePRWExecutionRequest(
       builder,
       _INITIAL,
@@ -166,7 +173,8 @@ public struct PRWExecutionRequest : IFlatbufferObject
       _SAMPLE_EPOCHS,
       _IMPULSES,
       _o.INCLUDE_MASS_DYNAMICS,
-      _FINITE_BURNS);
+      _FINITE_BURNS,
+      _PROCESS_NOISE);
   }
 }
 
@@ -185,6 +193,7 @@ public class PRWExecutionRequestT
   public List<PRWImpulseT> IMPULSES { get; set; }
   public bool INCLUDE_MASS_DYNAMICS { get; set; }
   public List<PRWFiniteBurnT> FINITE_BURNS { get; set; }
+  public PRWProcessNoiseT PROCESS_NOISE { get; set; }
 
   public PRWExecutionRequestT() {
     this.INITIAL = null;
@@ -200,6 +209,7 @@ public class PRWExecutionRequestT
     this.IMPULSES = null;
     this.INCLUDE_MASS_DYNAMICS = false;
     this.FINITE_BURNS = null;
+    this.PROCESS_NOISE = null;
   }
 }
 
@@ -222,6 +232,7 @@ static public class PRWExecutionRequestVerify
       && verifier.VerifyVectorOfTables(tablePos, 24 /*IMPULSES*/, PRWImpulseVerify.Verify, false)
       && verifier.VerifyField(tablePos, 26 /*INCLUDE_MASS_DYNAMICS*/, 1 /*bool*/, 1, false)
       && verifier.VerifyVectorOfTables(tablePos, 28 /*FINITE_BURNS*/, PRWFiniteBurnVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 30 /*PROCESS_NOISE*/, PRWProcessNoiseVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }
