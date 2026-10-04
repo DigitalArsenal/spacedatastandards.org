@@ -892,7 +892,7 @@ CN_N           = 6.789e-3`
 
 <canvas bind:this={canvas} class="tech-grid-background" data-sdn-dark-only></canvas>
 
-<section class="hero">
+<section class="hero" data-sdn-hero>
   <h1 class="hero-title">Space Data Standards</h1>
   <p class="hero-subtitle">
     Open schemas for every kind of space data, readable by any software in any programming language.
@@ -1591,7 +1591,7 @@ CN_N           = 6.789e-3`
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     text-align: center;
     padding: 120px 24px 80px;

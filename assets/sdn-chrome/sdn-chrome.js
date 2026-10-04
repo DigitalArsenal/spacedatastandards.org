@@ -9,6 +9,8 @@
 //                                         repeats the bar's links
 //   <section class="sdn-stack" data-sdn-stack="<site key>">
 //                                         the stack cards, this site marked
+//   [data-sdn-hero]                       a hero whose .reel-frame is placed at
+//                                         the vertical center of the screen
 //
 // Pages a single-page app renders later are picked up as they appear.
 (function () {
@@ -161,13 +163,68 @@
     section.replaceChildren(inner);
   }
 
+  // The hero's reel sits at the vertical center of the screen, or as close as
+  // the title above it allows: the hero lays its content out top-down, so its
+  // top padding places the reel. The reel gives up to a quarter of its width
+  // before it slides below the center.
+  // Layout position from the top of the page (or of a fixed overlay) at rest:
+  // offsets ignore scrolling and entrance transforms.
+  function restTop(el) {
+    var y = 0;
+    for (var e = el; e; e = e.offsetParent) y += e.offsetTop + (e === el ? 0 : e.clientTop);
+    return y;
+  }
+
+  function centerHero(hero) {
+    var reel = hero.querySelector('.reel-frame');
+    if (!reel || hero.getClientRects().length === 0) return;
+    hero.style.paddingTop = '';
+    reel.style.width = '';
+    var view = window.innerHeight;
+    var top = restTop(hero);
+    var above = restTop(reel) - top - (parseFloat(getComputedStyle(hero).paddingTop) || 0);
+    var bar = document.querySelector('.sdn-header');
+    var floor = Math.max(0, (bar ? bar.offsetHeight : 0) + 16 - top);
+    var width = reel.offsetWidth;
+    var height = reel.offsetHeight;
+    var want = view / 2 - height / 2 - top - above;
+    if (want < floor && height > 0) {
+      var fit = Math.max(width * 0.75, 2 * (view / 2 - top - floor - above) * width / height);
+      if (fit < width) {
+        reel.style.width = fit + 'px';
+        want = view / 2 - reel.offsetHeight / 2 - top - above;
+      }
+    }
+    hero.style.paddingTop = Math.max(floor, want) + 'px';
+  }
+
+  var heroes = [];
+  var heroFrame = 0;
+  var heroWatch = 'ResizeObserver' in window ? new ResizeObserver(function () { queueHeroes(); }) : null;
+  function queueHeroes() {
+    if (heroFrame) return;
+    heroFrame = requestAnimationFrame(function () {
+      heroFrame = 0;
+      heroes = heroes.filter(function (hero) { return hero.isConnected; });
+      heroes.forEach(centerHero);
+    });
+  }
+  window.addEventListener('resize', queueHeroes);
+
   function scan() {
-    var nodes = document.querySelectorAll('[data-sdn-theme-toggle]:not([data-sdn-ready]), .sdn-header:not([data-sdn-ready]), [data-sdn-stack]:not([data-sdn-ready])');
+    var nodes = document.querySelectorAll('[data-sdn-theme-toggle]:not([data-sdn-ready]), .sdn-header:not([data-sdn-ready]), [data-sdn-stack]:not([data-sdn-ready]), [data-sdn-hero]:not([data-sdn-ready])');
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
       node.setAttribute('data-sdn-ready', '');
       if (node.hasAttribute('data-sdn-theme-toggle')) wireThemeToggle(node);
       else if (node.hasAttribute('data-sdn-stack')) renderStack(node);
+      else if (node.hasAttribute('data-sdn-hero')) {
+        heroes.push(node);
+        centerHero(node);
+        // Text that changes later (a translation, a count) resizes a child,
+        // not a hero with a fixed height, so the children are watched too.
+        if (heroWatch) [node].concat(Array.prototype.slice.call(node.querySelectorAll('*'), 0, 40)).forEach(function (el) { heroWatch.observe(el); });
+      }
       else {
         var button = node.querySelector('[data-sdn-menu-toggle]');
         if (button) wireMenu(node, button);
