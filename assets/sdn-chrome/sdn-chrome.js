@@ -25,7 +25,7 @@
       'The network itself: nodes that publish, find and deliver digitally signed space data, with a dashboard, a desktop app and an SDK.',
       '<circle cx="5" cy="12" r="2.2"/><circle cx="19" cy="5" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M7 11l10-5M7 13l10 5M19 7.2v9.6"/>'],
     ['standards', 'Space Data Standards', 'https://spacedatastandards.org/', 'spacedatastandards.org', 'Apache-2.0',
-      'Open schemas for every kind of space data (orbits, catalogs, conjunctions, tracking, radio, weather) with code for every major language.',
+      'Open schemas for every kind of space data (orbits, conjunctions, tracking, sensors, radio, weather) with code for every major language.',
       '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/>'],
     ['flatbuffers', 'FlatBuffers', 'https://digitalarsenal.github.io/flatbuffers/', 'FlatBuffers docs', 'Apache-2.0',
       'Fast binary encoding with field-level encryption, and the schema compiler built to run in browsers and on servers.',
