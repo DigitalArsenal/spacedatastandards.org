@@ -61,14 +61,9 @@ body {
 main {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: calc(var(--sdn-stack-footer-height, 40px) + 80px);
+  padding-bottom: var(--sdn-stack-footer-height, 40px);
 }
 
-@media (max-width: 768px) {
-  main {
-    padding-bottom: calc(var(--sdn-stack-footer-height, 40px) + 24px);
-  }
-}
 
 a {
   color: inherit;

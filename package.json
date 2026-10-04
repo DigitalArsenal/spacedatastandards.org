@@ -118,7 +118,7 @@
         "build:wasm": "node ./scripts/buildWasm.mjs",
         "dev": "npm --prefix website run dev",
         "build:nav-release": "node scripts/build-sdn-stack-nav-release.mjs",
-        "check:nav": "node scripts/check-sdn-stack-nav.mjs standards website/index.html index.html website/src/app.css website/src/lib/Nav.svelte website/src/lib/Landing.svelte --asset sdn-stack-nav.js",
+        "check:nav": "node scripts/check-sdn-stack-nav.mjs standards website/index.html index.html website/src/app.css website/src/App.svelte website/src/lib/Nav.svelte website/src/lib/Landing.svelte assets/sdn-chrome/sdn-chrome.css --asset sdn-stack-nav.js",
         "dev:static": "npx serve . -l 8601",
         "prepare": "husky"
     },

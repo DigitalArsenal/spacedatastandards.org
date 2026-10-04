@@ -2,7 +2,8 @@
 // Space Data Network family of sites. The canonical copy lives in
 // spacedatanetwork.org docs/assets/ai-credits/; the other stack sites carry
 // verbatim copies. The panel sits in the lower right above any fixed footer
-// bar (in the page flow above the footer on phones), at 45% opacity, and no
+// bar, and rides above the page footer once that scrolls into view (in the
+// page flow above the footer on phones), at 45% opacity, and no
 // part of it is selectable. Only the header takes a click: it starts
 // collapsed, and the header grows the panel to show the list, then collapses
 // it again.
@@ -26,7 +27,7 @@
   ];
 
   var CSS =
-    '.ai-credits{position:fixed;right:14px;bottom:calc(var(--sdn-stack-footer-height,0px) + 14px);z-index:9000;' +
+    '.ai-credits{position:fixed;right:14px;bottom:calc(max(var(--sdn-stack-footer-height,0px),var(--ai-credits-lift,0px)) + 14px);z-index:9000;' +
       'width:max-content;max-width:calc(100vw - 28px);box-sizing:border-box;padding:11px 13px 12px;' +
       'font:500 9.5px/1.5 ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;letter-spacing:.05em;' +
       'color:#fff;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.28);border-radius:3px;' +
@@ -95,9 +96,21 @@
       box.classList.toggle('is-open', open);
       toggle.setAttribute('aria-expanded', String(open));
     });
-    var footers = document.querySelectorAll('body > footer, body > .site-footer');
+    var footers = document.querySelectorAll('.sdn-footer, body > footer, body > .site-footer');
     var footer = footers[footers.length - 1];
     if (footer) footer.parentNode.insertBefore(box, footer); else document.body.appendChild(box);
+    // Lift the fixed panel by however much of the page footer is on screen.
+    var frame = 0;
+    function place() {
+      frame = 0;
+      var pageFooter = document.querySelector('.sdn-footer');
+      var lift = pageFooter ? Math.max(0, window.innerHeight - pageFooter.getBoundingClientRect().top) : 0;
+      box.style.setProperty('--ai-credits-lift', lift + 'px');
+    }
+    function queue() { if (!frame) frame = requestAnimationFrame(place); }
+    window.addEventListener('scroll', queue, { passive: true, capture: true });
+    window.addEventListener('resize', queue);
+    queue();
   }
   if (document.body) mount(); else document.addEventListener('DOMContentLoaded', mount);
 })();

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Router, { location, push } from "svelte-spa-router";
+  import Router, { link, location, push } from "svelte-spa-router";
   import { derived } from "svelte/store";
   import { onMount } from "svelte";
   import "./app.css";
@@ -42,6 +42,20 @@
 <Nav {currentPath} />
 <main>
   <Router {routes} />
+  <section id="stack" data-sdn-stack="standards"></section>
+  <footer class="sdn-footer">
+    <div class="sdn-footer-inner">
+      <a class="sdn-footer-brand" href="https://spacedatanetwork.org/">Space Data Network</a>
+      <nav class="sdn-footer-links" aria-label="Footer">
+        <a href="/schemas" use:link>Schemas</a>
+        <a href="/docs" use:link>Docs</a>
+        <a href="/converter" use:link>Converter</a>
+        <a href="/download" use:link>Download</a>
+        <a href="https://github.com/DigitalArsenal/spacedatastandards.org">GitHub</a>
+      </nav>
+      <p class="sdn-footer-legal">Apache-2.0 License &middot; &copy; Edgesource Corporation &middot; <a href="mailto:tj@edgesource.com">tj@edgesource.com</a></p>
+    </div>
+  </footer>
 </main>
 {#if appVersion}
   <div class="version-badge">{appVersion}</div>

@@ -890,7 +890,7 @@ CN_N           = 6.789e-3`
   });
 </script>
 
-<canvas bind:this={canvas} class="tech-grid-background"></canvas>
+<canvas bind:this={canvas} class="tech-grid-background" data-sdn-dark-only></canvas>
 
 <section class="hero">
   <h1 class="hero-title">Space Data Standards</h1>
@@ -1559,40 +1559,6 @@ CN_N           = 6.789e-3`
   </div>
 </section>
 
-<section id="stack" class="stack-section">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-label">SDN Stack</div>
-      <h2 class="section-title">One stack for standards, storage, modules, and network transport</h2>
-      <p class="section-subtitle">
-        Move between the public SDN Stack sites without leaving the documentation flow.
-      </p>
-    </div>
-    <div class="stack-grid">
-      <a href="https://spacedatastandards.org/" class="stack-card active">
-        <span>Standards</span>
-        <p>Canonical FlatBuffer schemas and bindings for space data records.</p>
-      </a>
-      <a href="https://digitalarsenal.github.io/flatbuffers/" class="stack-card">
-        <span>FlatBuffers</span>
-        <p>Binary serialization, schema tooling, and runtime documentation.</p>
-      </a>
-      <a href="https://digitalarsenal.github.io/flatsql/" class="stack-card">
-        <span>FlatSQL</span>
-        <p>SQL-style querying over FlatBuffer-backed datasets and streams.</p>
-      </a>
-      <a href="https://spacedatanetwork.org/" class="stack-card">
-        <span>SDN</span>
-        <p>Decentralized publication, discovery, delivery, and marketplace infrastructure.</p>
-      </a>
-      <a href="https://digitalarsenal.github.io/space-data-module-sdk/" class="stack-card">
-        <span>Module SDK</span>
-        <p>Build and validate WebAssembly modules that run inside SDN hosts.</p>
-      </a>
-    </div>
-  </div>
-</section>
-
 <section id="cta" class="cta-section">
   <div class="container">
     <div class="cta-content">
@@ -1620,55 +1586,6 @@ CN_N           = 6.789e-3`
     z-index: -1;
     background: #000000;
   }
-
-
-
-
-
-  .stack-section {
-    padding: 120px 24px;
-  }
-
-  .stack-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 16px;
-  }
-
-  .stack-card {
-    display: grid;
-    gap: 10px;
-    min-height: 168px;
-    padding: 24px;
-    border: 1px solid var(--ui-border);
-    border-radius: var(--radius-sm);
-    background: rgba(255, 255, 255, 0.055);
-    transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
-  }
-
-  .stack-card:hover,
-  .stack-card.active {
-    border-color: var(--ui-border-hover);
-    background: rgba(245, 165, 36, 0.14);
-    transform: translateY(-2px);
-  }
-
-  .stack-card span {
-    color: var(--text-primary);
-    font-size: 17px;
-    font-weight: 700;
-  }
-
-  .stack-card p {
-    margin: 0;
-    color: var(--text-secondary);
-    font-size: 14px;
-    line-height: 1.55;
-  }
-
-
-
-
 
   .hero {
     min-height: 100vh;
