@@ -216,8 +216,8 @@
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(0, 119, 182, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 119, 182, 0.03) 1px, transparent 1px);
+      linear-gradient(rgba(245, 165, 36, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245, 165, 36, 0.03) 1px, transparent 1px);
     background-size: 60px 60px;
     mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
     pointer-events: none;
@@ -238,8 +238,8 @@
   .version-badge {
     display: inline-block;
     padding: 6px 14px;
-    background: rgba(0, 119, 182, 0.1);
-    border: 1px solid rgba(0, 119, 182, 0.2);
+    background: rgba(245, 165, 36, 0.1);
+    border: 1px solid rgba(245, 165, 36, 0.2);
     border-radius: 20px;
     font-family: var(--font-mono);
     font-size: 13px;
@@ -321,7 +321,7 @@
 
   .dropdown.open .dropdown-trigger {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
+    box-shadow: 0 0 0 3px rgba(245, 165, 36, 0.1);
   }
 
   .lang-badge {
@@ -393,7 +393,7 @@
   }
 
   .dropdown-item.selected {
-    background: rgba(0, 119, 182, 0.1);
+    background: rgba(245, 165, 36, 0.1);
   }
 
   .dropdown-item .lang-badge {

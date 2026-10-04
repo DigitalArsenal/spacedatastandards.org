@@ -1,0 +1,53 @@
+/* Reel player for the Space Data Network family of sites (style guide:
+   spacedatanetwork.org/style-guide.html). The canonical copy lives in
+   spacedatanetwork.org docs/media/reel/; other sites carry verbatim copies.
+   A framed 16:9 stage; the controls live in a footer bar inside the frame and
+   stay hidden until someone hovers, taps or tabs into it (reel.js sets
+   .is-awake). Page tokens are used when present, with style-guide fallbacks. */
+.reel-frame { max-width: 1040px; margin: 0 auto; }
+.reel-stage { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--radius, 20px); border: 1px solid var(--border-strong, rgba(255,255,255,.22)); background: #000; box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 30px 80px rgba(0,0,0,.55), 0 0 120px rgba(245,165,36,.08); text-shadow: none; }
+.reel-stage video { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
+.reel-stage:fullscreen { border: 0; border-radius: 0; aspect-ratio: auto; width: 100vw; height: 100vh; }
+.reel-stage:fullscreen video { object-fit: contain; }
+.reel-stage:-webkit-full-screen { border: 0; border-radius: 0; width: 100vw; height: 100vh; }
+.reel-stage:-webkit-full-screen video { object-fit: contain; }
+.reel-big-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%; border: 1px solid rgba(255,255,255,.28); background: rgba(0,0,0,.55); color: #f5f5f7; cursor: pointer; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: background .2s, color .2s, opacity .25s; }
+.reel-big-play svg { width: 28px; height: 28px; }
+.reel-big-play:hover { background: #f5f5f7; color: #000; }
+.reel-stage.is-playing .reel-big-play { display: none; }
+.reel-stage.is-ended .reel-big-play, .reel-stage.is-starting .reel-big-play { display: none; }
+/* Before the reel has ever played (reduced motion, autoplay refused) the play button is the only cue, so it stays. */
+.reel-stage.has-played:not(.is-awake):not(:has(:focus-visible)) .reel-big-play { opacity: 0; pointer-events: none; }
+.reel-again { position: absolute; left: 50%; bottom: 84px; transform: translate(-50%, 8px); display: none; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 999px; border: 1px solid #f5f5f7; background: #f5f5f7; color: #000; font: 600 15px var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif); cursor: pointer; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s cubic-bezier(.2,.7,.2,1); }
+.reel-again svg { width: 17px; height: 17px; }
+.reel-again:hover { background: #fff; }
+.reel-stage.is-ended .reel-again { display: inline-flex; }
+.reel-stage.is-ended.is-awake .reel-again, .reel-stage.is-ended:has(:focus-visible) .reel-again { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+@media (max-width: 620px) { .reel-again { bottom: 64px; padding: 8px 16px; font-size: 14px; } }
+.reel-bar { position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 14px 10px; background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.72)); color: #f5f5f7; opacity: 0; pointer-events: none; transition: opacity .3s; }
+.reel-stage.is-awake .reel-bar, .reel-stage:has(:focus-visible) .reel-bar { opacity: 1; pointer-events: auto; transition-duration: .15s; }
+.reel-stage.is-playing:not(.is-awake) { cursor: none; }
+@media (prefers-reduced-motion: reduce) { .reel-bar, .reel-again, .reel-big-play { transition: none; } }
+/* The progress bar is a seek slider: a 22 px hit area around a 3 px track (5 px on hover or drag). */
+.reel-progress { position: relative; height: 22px; margin: 0 4px 2px; cursor: pointer; touch-action: none; }
+.reel-progress::before, .reel-progress span { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 3px; margin-top: -1.5px; border-radius: 2px; transition: height .12s ease, margin-top .12s ease; }
+.reel-progress::before { background: rgba(255,255,255,.22); }
+.reel-progress span { display: block; background: #f5a524; transform-origin: left center; transform: scaleX(0); }
+.reel-progress:hover::before, .reel-progress:hover span, .reel-stage.is-seeking .reel-progress::before, .reel-stage.is-seeking .reel-progress span { height: 5px; margin-top: -2.5px; }
+.reel-knob { position: absolute; top: 50%; left: 0; width: 13px; height: 13px; margin: -6.5px 0 0 -6.5px; border-radius: 50%; background: #f5a524; box-shadow: 0 0 0 3px rgba(0,0,0,.35); transform: scale(0); transition: transform .12s ease; pointer-events: none; }
+.reel-progress:hover .reel-knob, .reel-progress:focus-visible .reel-knob, .reel-stage.is-seeking .reel-knob { transform: scale(1); }
+.reel-progress:focus-visible { outline: 2px solid #f5a524; outline-offset: 2px; border-radius: 4px; }
+.reel-controls { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.reel-btn { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; border: 0; background: transparent; color: #f5f5f7; cursor: pointer; transition: background .15s; }
+.reel-btn:hover { background: rgba(255,255,255,.14); }
+.reel-btn svg { width: 18px; height: 18px; }
+.reel-play .i-pause, .reel-fs .i-exit, .reel-sound .i-sound { display: none; }
+.reel-group { display: flex; align-items: center; gap: 2px; }
+.reel-stage.is-sounding .reel-sound .i-muted { display: none; }
+.reel-stage.is-sounding .reel-sound .i-sound { display: block; }
+.reel-stage.is-playing .reel-play .i-play { display: none; }
+.reel-stage.is-playing .reel-play .i-pause { display: block; }
+.reel-stage.is-full .reel-fs .i-enter { display: none; }
+.reel-stage.is-full .reel-fs .i-exit { display: block; }
+.reel-stage button:focus-visible { outline: 2px solid #f5a524; outline-offset: 2px; }
+@media (max-width: 760px) { .reel-stage { border-radius: var(--radius-sm, 12px); } }

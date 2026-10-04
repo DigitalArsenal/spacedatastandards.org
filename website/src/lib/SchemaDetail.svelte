@@ -935,9 +935,9 @@
   .field-required {
     font-size: 11px;
     padding: 2px 6px;
-    background: rgba(245, 87, 108, 0.2);
+    background: rgba(245, 165, 36, 0.2);
     border-radius: 4px;
-    color: #f5576c;
+    color: #f5a524;
     font-weight: 500;
   }
 
@@ -988,7 +988,7 @@
   }
 
   .code-error {
-    color: #f5576c;
+    color: #f5a524;
   }
 
   .spinner {

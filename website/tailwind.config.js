@@ -17,12 +17,12 @@ export default {
         'ui-border-hover': 'rgba(134, 134, 139, 0.5)',
         'nav-bg': 'rgba(22, 22, 23, 0.95)',
         'code-bg': 'rgba(30, 30, 32, 0.9)',
-        'accent': '#667eea',
-        'accent-hover': '#764ba2',
+        'accent': '#f5a524',
+        'accent-hover': '#c77d00',
       },
       fontFamily: {
-        'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-        'mono': ['JetBrains Mono', 'SF Mono', 'Fira Code', 'monospace'],
+        'sans': ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        'mono': ['ui-monospace', 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', 'monospace'],
       },
       borderRadius: {
         'pill': '28px',

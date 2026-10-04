@@ -668,7 +668,7 @@
       position: new Cesium.Cartesian3(satPos.x, satPos.y, satPos.z),
       point: {
         pixelSize: 12,
-        color: Cesium.Color.fromCssColorString("#38ef7d"),
+        color: Cesium.Color.fromCssColorString("#f5a524"),
         outlineColor: Cesium.Color.WHITE,
         outlineWidth: 2
       },
@@ -769,7 +769,7 @@
         position: new Cesium.Cartesian3(sv.x, sv.y, sv.z),
         point: {
           pixelSize: idx === 0 ? 10 : 4,
-          color: idx === 0 ? Cesium.Color.fromCssColorString("#38ef7d") : Cesium.Color.YELLOW,
+          color: idx === 0 ? Cesium.Color.fromCssColorString("#f5a524") : Cesium.Color.YELLOW,
           outlineColor: Cesium.Color.WHITE,
           outlineWidth: idx === 0 ? 2 : 1
         },
@@ -806,7 +806,7 @@
         position: pos1,
         point: {
           pixelSize: 14,
-          color: Cesium.Color.fromCssColorString("#0077b6"),
+          color: Cesium.Color.fromCssColorString("#f5a524"),
           outlineColor: Cesium.Color.WHITE,
           outlineWidth: 2
         },
@@ -836,7 +836,7 @@
         position: pos2,
         point: {
           pixelSize: 14,
-          color: Cesium.Color.fromCssColorString("#f5576c"),
+          color: Cesium.Color.fromCssColorString("#f5a524"),
           outlineColor: Cesium.Color.WHITE,
           outlineWidth: 2
         },
@@ -870,7 +870,7 @@
           ],
           width: 2,
           material: new Cesium.PolylineDashMaterialProperty({
-            color: Cesium.Color.fromCssColorString("#f7971e"),
+            color: Cesium.Color.fromCssColorString("#f5a524"),
             dashLength: 16
           })
         }
@@ -882,7 +882,7 @@
         label: {
           text: `TCA: ${data.TCA || "Unknown"}\nMiss: ${data.MISS_DISTANCE || "?"} km\nPc: ${data.COLLISION_PROBABILITY || "?"}`,
           font: "12px JetBrains Mono, monospace",
-          fillColor: Cesium.Color.fromCssColorString("#f7971e"),
+          fillColor: Cesium.Color.fromCssColorString("#f5a524"),
           outlineColor: Cesium.Color.BLACK,
           outlineWidth: 2,
           style: Cesium.LabelStyle.FILL_AND_OUTLINE,
@@ -912,7 +912,7 @@
         position: position,
         point: {
           pixelSize: 16,
-          color: Cesium.Color.fromCssColorString("#38ef7d"),
+          color: Cesium.Color.fromCssColorString("#f5a524"),
           outlineColor: Cesium.Color.WHITE,
           outlineWidth: 2
         },
@@ -963,10 +963,10 @@
 
     // Color map for site types
     const siteTypeColors: Record<string, string> = {
-      LAUNCH_SITE: "#ff6b6b",
+      LAUNCH_SITE: "#ff3b30",
       OBSERVATION_STATION: "#4ecdc4",
       HOBBYIST_OBSERVER: "#95e1d3",
-      SATELLITE_GROUND_STATION: "#f9ca24",
+      SATELLITE_GROUND_STATION: "#f5a524",
       SPACEPORT: "#eb4d4b",
       MILITARY_BASE: "#686de0",
       ASTRONOMICAL_OBSERVATORY: "#be2edd",
@@ -1054,7 +1054,7 @@
       position: launchPosition,
       point: {
         pixelSize: 18,
-        color: Cesium.Color.fromCssColorString("#ff6b6b"),
+        color: Cesium.Color.fromCssColorString("#ff3b30"),
         outlineColor: Cesium.Color.WHITE,
         outlineWidth: 3
       },
@@ -1088,7 +1088,7 @@
           positions: [launchPosition, azimuthEnd],
           width: 4,
           material: new Cesium.PolylineArrowMaterialProperty(
-            Cesium.Color.fromCssColorString("#f9ca24")
+            Cesium.Color.fromCssColorString("#f5a524")
           )
         }
       });
@@ -1113,7 +1113,7 @@
           position: pos,
           point: {
             pixelSize: 8,
-            color: Cesium.Color.fromCssColorString("#f9ca24"),
+            color: Cesium.Color.fromCssColorString("#f5a524"),
             outlineColor: Cesium.Color.WHITE,
             outlineWidth: 1
           }
@@ -1126,7 +1126,7 @@
         polyline: {
           positions: bovPositions,
           width: 3,
-          material: Cesium.Color.fromCssColorString("#f9ca24").withAlpha(0.8)
+          material: Cesium.Color.fromCssColorString("#f5a524").withAlpha(0.8)
         }
       });
     }
@@ -1213,7 +1213,7 @@
         position: targetPosition,
         point: {
           pixelSize: 12,
-          color: Cesium.Color.fromCssColorString("#38ef7d"),
+          color: Cesium.Color.fromCssColorString("#f5a524"),
           outlineColor: Cesium.Color.WHITE,
           outlineWidth: 2
         },
@@ -1236,7 +1236,7 @@
           positions: [observerPosition, targetPosition],
           width: 2,
           material: new Cesium.PolylineDashMaterialProperty({
-            color: Cesium.Color.fromCssColorString("#f9ca24"),
+            color: Cesium.Color.fromCssColorString("#f5a524"),
             dashLength: 16.0
           })
         }
@@ -1286,7 +1286,7 @@
           polyline: {
             positions: [observerPosition, targetPos],
             width: 1,
-            material: Cesium.Color.fromCssColorString("#f9ca24").withAlpha(0.4)
+            material: Cesium.Color.fromCssColorString("#f5a524").withAlpha(0.4)
           }
         });
       }
@@ -1341,7 +1341,7 @@
       data.SATELLITE.OBJECT_NAME.replace('-1', '-3'),
       data.SATELLITE.OBJECT_NAME.replace('-1', '-4')
     ];
-    const satColors = ['#38ef7d', '#00bcd4', '#ab47bc', '#ffeb3b'];
+    const satColors = ['#f5a524', '#00bcd4', '#ab47bc', '#ffeb3b'];
     const incOffsets = [0, 3, -4, 7]; // degrees offset from base inclination
     const anomalyOffsets = [0, 90, 180, 270]; // degrees offset in mean anomaly
 
@@ -1406,14 +1406,14 @@
       position: opsPos,
       point: {
         pixelSize: 18,
-        color: Cesium.Color.fromCssColorString("#4fc3f7"),
+        color: Cesium.Color.fromCssColorString("#59d9ff"),
         outlineColor: Cesium.Color.WHITE,
         outlineWidth: 3
       },
       label: {
         text: `${ops.NAME}\n${ops.LOCATION}`,
         font: "13px JetBrains Mono, monospace",
-        fillColor: Cesium.Color.fromCssColorString("#4fc3f7"),
+        fillColor: Cesium.Color.fromCssColorString("#59d9ff"),
         outlineColor: Cesium.Color.BLACK,
         outlineWidth: 2,
         style: Cesium.LabelStyle.FILL_AND_OUTLINE,
@@ -1429,14 +1429,14 @@
         position: gs.pos,
         point: {
           pixelSize: 14,
-          color: Cesium.Color.fromCssColorString("#ff9800"),
+          color: Cesium.Color.fromCssColorString("#f5a524"),
           outlineColor: Cesium.Color.WHITE,
           outlineWidth: 2
         },
         label: {
           text: `${gs.NAME}\n${gs.ANTENNA_BAND}`,
           font: "11px JetBrains Mono, monospace",
-          fillColor: Cesium.Color.fromCssColorString("#ff9800"),
+          fillColor: Cesium.Color.fromCssColorString("#f5a524"),
           outlineColor: Cesium.Color.BLACK,
           outlineWidth: 2,
           style: Cesium.LabelStyle.FILL_AND_OUTLINE,
@@ -1452,7 +1452,7 @@
           positions: [opsPos, gs.pos],
           width: 1,
           material: new Cesium.PolylineDashMaterialProperty({
-            color: Cesium.Color.fromCssColorString("#4fc3f7").withAlpha(0.12),
+            color: Cesium.Color.fromCssColorString("#59d9ff").withAlpha(0.12),
             dashLength: 12
           })
         }
@@ -1470,7 +1470,7 @@
         }, false),
         width: 2,
         material: new Cesium.PolylineDashMaterialProperty({
-          color: Cesium.Color.fromCssColorString("#4fc3f7").withAlpha(0.6),
+          color: Cesium.Color.fromCssColorString("#59d9ff").withAlpha(0.6),
           dashLength: 12
         })
       }
@@ -1562,7 +1562,7 @@
         }, false),
         point: {
           pixelSize: 7,
-          color: Cesium.Color.fromCssColorString("#ff9800"),
+          color: Cesium.Color.fromCssColorString("#f5a524"),
           outlineColor: Cesium.Color.fromCssColorString("#ffcc80"),
           outlineWidth: 1,
           disableDepthTestDistance: Number.POSITIVE_INFINITY
@@ -1590,7 +1590,7 @@
         }, false),
         point: {
           pixelSize: 6,
-          color: Cesium.Color.fromCssColorString("#38ef7d"),
+          color: Cesium.Color.fromCssColorString("#f5a524"),
           outlineColor: Cesium.Color.fromCssColorString("#80ffb0"),
           outlineWidth: 1,
           disableDepthTestDistance: Number.POSITIVE_INFINITY
@@ -1764,7 +1764,7 @@
       );
 
       // Set dark background
-      viewer.scene.backgroundColor = Cesium.Color.fromCssColorString("#030308");
+      viewer.scene.backgroundColor = Cesium.Color.fromCssColorString("#000000");
       viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString("#1a1a2e");
 
       // Configure atmosphere for dark theme
@@ -2007,7 +2007,7 @@
     right: 0;
     bottom: 0;
     overflow: hidden;
-    background: #030308;
+    background: #000000;
   }
 
   .playground-layout {
@@ -2038,7 +2038,7 @@
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 8px;
-    background: linear-gradient(135deg, #ffffff 0%, #b8f0ff 50%, #ffffff 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #f5f5f7 50%, #ffffff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -2119,13 +2119,13 @@
     flex: 1;
     min-height: 180px;
     padding: 16px;
-    background: #0d1117;
-    border: 1px solid #30363d;
+    background: #0b0b0c;
+    border: 1px solid #2c2c2e;
     border-radius: 12px;
     font-family: var(--font-mono);
     font-size: 12px;
     line-height: 1.6;
-    color: #c9d1d9;
+    color: #e5e5ea;
     resize: vertical;
     transition: all 0.2s;
   }
@@ -2136,7 +2136,7 @@
   }
 
   .data-input.invalid {
-    border-color: #f5576c;
+    border-color: #f5a524;
   }
 
   .data-input::placeholder {
@@ -2153,21 +2153,21 @@
   }
 
   .validation-badge.valid {
-    background: rgba(56, 239, 125, 0.15);
-    color: #38ef7d;
+    background: rgba(245, 165, 36, 0.15);
+    color: #f5a524;
   }
 
   .validation-badge.invalid {
-    background: rgba(245, 87, 108, 0.15);
-    color: #f5576c;
+    background: rgba(245, 165, 36, 0.15);
+    color: #f5a524;
   }
 
   .error-message {
     font-size: 12px;
-    color: #f5576c;
+    color: #f5a524;
     font-family: var(--font-mono);
     padding: 8px 12px;
-    background: rgba(245, 87, 108, 0.1);
+    background: rgba(245, 165, 36, 0.1);
     border-radius: 8px;
   }
 
@@ -2281,33 +2281,33 @@
   }
 
   .help-badge.omm {
-    background: rgba(0, 119, 182, 0.2);
-    color: #0077b6;
+    background: rgba(245, 165, 36, 0.2);
+    color: #f5a524;
   }
 
   .help-badge.oem {
-    background: rgba(23, 234, 217, 0.2);
-    color: #17ead9;
+    background: rgba(89, 217, 255, 0.2);
+    color: #59d9ff;
   }
 
   .help-badge.cdm {
-    background: rgba(245, 87, 108, 0.2);
-    color: #f5576c;
+    background: rgba(245, 165, 36, 0.2);
+    color: #f5a524;
   }
 
   .help-badge.epm {
-    background: rgba(56, 239, 125, 0.2);
-    color: #38ef7d;
+    background: rgba(245, 165, 36, 0.2);
+    color: #f5a524;
   }
 
   .help-badge.sit {
     background: rgba(249, 202, 36, 0.2);
-    color: #f9ca24;
+    color: #f5a524;
   }
 
   .help-badge.ldm {
     background: rgba(255, 107, 107, 0.2);
-    color: #ff6b6b;
+    color: #ff3b30;
   }
 
   .help-badge.tdm {
@@ -2403,13 +2403,13 @@
   }
 
   .xtc-hud-tlm {
-    color: #38ef7d;
+    color: #f5a524;
     background: rgba(0, 8, 0, 0.9);
-    border: 1px solid rgba(56, 239, 125, 0.2);
+    border: 1px solid rgba(245, 165, 36, 0.2);
   }
 
   .xtc-hud-cmd {
-    color: #ff9800;
+    color: #f5a524;
     background: rgba(8, 4, 0, 0.9);
     border: 1px solid rgba(255, 152, 0, 0.2);
   }
@@ -2418,7 +2418,7 @@
   .globe-container {
     flex: 1;
     position: relative;
-    background: #030308;
+    background: #000000;
   }
 
   .cesium-wrapper {
@@ -2470,12 +2470,12 @@
   }
 
   .error-icon {
-    color: #f5576c;
+    color: #f5a524;
     margin-bottom: 16px;
   }
 
   .error-text {
-    color: #f5576c;
+    color: #f5a524;
     font-weight: 600;
     margin-bottom: 8px;
   }

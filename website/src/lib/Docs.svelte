@@ -1135,7 +1135,7 @@ for (const container of containers) {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 119, 182, 0.1);
+    background: rgba(245, 165, 36, 0.1);
     border-radius: 8px;
     font-size: 18px;
     font-weight: 600;
@@ -1288,12 +1288,12 @@ for (const container of containers) {
   }
 
   .ascii-diagram {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
     font-size: 12px;
     line-height: 1.4;
     color: var(--text-secondary);
-    background: #0d1117;
-    border: 1px solid #30363d;
+    background: #0b0b0c;
+    border: 1px solid #2c2c2e;
     border-radius: 12px;
     padding: 24px;
     overflow-x: auto;
@@ -1332,15 +1332,15 @@ for (const container of containers) {
   }
 
   .comparison-row .good {
-    color: #38ef7d;
+    color: #f5a524;
   }
 
   .comparison-row .bad {
-    color: #f5576c;
+    color: #f5a524;
   }
 
   .comparison-row .neutral {
-    color: #f7971e;
+    color: #f5a524;
   }
 
   /* Integration Cards */
@@ -1403,10 +1403,10 @@ for (const container of containers) {
     color: white;
   }
 
-  .size-icon { background: linear-gradient(135deg, #0077b6 0%, #005f8a 100%); }
-  .latency-icon { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-  .cpu-icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-  .memory-icon { background: linear-gradient(135deg, #17ead9 0%, #005f8a 100%); }
+  .size-icon { background: linear-gradient(135deg, #f5a524 0%, #c77d00 100%); }
+  .latency-icon { background: linear-gradient(135deg, #11998e 0%, #f5a524 100%); }
+  .cpu-icon { background: linear-gradient(135deg, #f093fb 0%, #f5a524 100%); }
+  .memory-icon { background: linear-gradient(135deg, #59d9ff 0%, #c77d00 100%); }
 
   .benefit-card h3 {
     font-size: 18px;
@@ -1424,7 +1424,7 @@ for (const container of containers) {
   .stat-number {
     font-size: 32px;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--accent) 0%, #17ead9 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, #59d9ff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1462,8 +1462,8 @@ for (const container of containers) {
   }
 
   .example-box {
-    background: #0d1117;
-    border: 1px solid #30363d;
+    background: #0b0b0c;
+    border: 1px solid #2c2c2e;
     border-radius: 8px;
     padding: 16px;
     margin-top: auto;
@@ -1471,7 +1471,7 @@ for (const container of containers) {
 
   .example-title {
     font-size: 12px;
-    color: #8b949e;
+    color: #8e8e93;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 12px;
@@ -1491,21 +1491,21 @@ for (const container of containers) {
 
   .example-item .format {
     font-size: 12px;
-    color: #8b949e;
+    color: #8e8e93;
   }
 
   .example-item .size {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
     font-size: 14px;
   }
 
-  .example-item.bad .size { color: #f5576c; }
-  .example-item.good .size { color: #38ef7d; }
+  .example-item.bad .size { color: #f5a524; }
+  .example-item.good .size { color: #f5a524; }
 
   .inline-code {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
     font-size: 13px;
-    color: #c9d1d9;
+    color: #e5e5ea;
   }
 
   .code-compare {
@@ -1515,7 +1515,7 @@ for (const container of containers) {
   }
 
   .code-compare code {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
     font-size: 11px;
     display: block;
     word-break: break-all;
@@ -1524,25 +1524,25 @@ for (const container of containers) {
 
   .code-compare .note {
     font-size: 11px;
-    color: #8b949e;
+    color: #8e8e93;
     display: block;
     margin-top: 4px;
   }
 
-  .code-compare .bad code { color: #f5576c; }
-  .code-compare .good code { color: #38ef7d; }
+  .code-compare .bad code { color: #f5a524; }
+  .code-compare .good code { color: #f5a524; }
 
   .mini-code {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
     font-size: 12px;
     line-height: 1.5;
-    color: #c9d1d9;
+    color: #e5e5ea;
     margin: 0;
   }
 
   /* XTCE Section */
   .xtce-intro {
-    background: linear-gradient(135deg, rgba(0, 119, 182, 0.1) 0%, rgba(23, 234, 217, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(245, 165, 36, 0.1) 0%, rgba(89, 217, 255, 0.1) 100%);
     border: 1px solid var(--ui-border);
     border-radius: 16px;
     padding: 24px;
@@ -1603,12 +1603,12 @@ for (const container of containers) {
   }
 
   .schema-code {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
     font-size: 13px;
     line-height: 1.5;
-    color: #c9d1d9;
-    background: #0d1117;
-    border: 1px solid #30363d;
+    color: #e5e5ea;
+    background: #0b0b0c;
+    border: 1px solid #2c2c2e;
     border-radius: 12px;
     padding: 20px;
     overflow-x: auto;
@@ -1789,19 +1789,19 @@ for (const container of containers) {
     font-weight: 600;
     color: var(--text-secondary);
     padding: 12px 16px;
-    background: #161b22;
-    border: 1px solid #30363d;
+    background: #161617;
+    border: 1px solid #2c2c2e;
     border-bottom: none;
     border-radius: 12px 12px 0 0;
   }
 
   .code-block-mini {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
     font-size: 13px;
     line-height: 1.5;
-    color: #c9d1d9;
-    background: #0d1117;
-    border: 1px solid #30363d;
+    color: #e5e5ea;
+    background: #0b0b0c;
+    border: 1px solid #2c2c2e;
     border-radius: 0 0 12px 12px;
     padding: 16px;
     margin: 0;
@@ -1831,7 +1831,7 @@ for (const container of containers) {
     font-size: 16px;
     font-weight: 600;
     color: var(--accent);
-    background: rgba(0, 119, 182, 0.1);
+    background: rgba(245, 165, 36, 0.1);
     padding: 4px 10px;
     border-radius: 6px;
   }
@@ -1844,7 +1844,7 @@ for (const container of containers) {
   }
 
   .annotation-example {
-    background: var(--code-bg, #0d1117);
+    background: var(--code-bg, #0b0b0c);
     border-radius: 8px;
     padding: 12px;
     margin-bottom: 12px;
