@@ -43,10 +43,7 @@
       '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/>'],
     ['tudat', 'Tudat WASM', 'https://digitalarsenal.github.io/tudat-wasm/', 'Tudat in your browser', 'BSD-3-Clause',
       'The TU Delft Astrodynamics Toolbox compiled to WebAssembly: orbits, maneuvers and planetary motion, computed in your browser.',
-      '<circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9.5" ry="4.5" transform="rotate(-30 12 12)"/><circle cx="20.2" cy="7.2" r="1.4" fill="currentColor" stroke="none"/>'],
-    ['asset-models', 'SDN Models', 'https://digitalarsenal.github.io/asset-models/', 'Browse the models', 'Licensed per model',
-      '3D models of satellites, rockets and stations, checked and ready to show in any 3D viewer.',
-      '<path d="M12 2.8l8 4.6v9.2l-8 4.6-8-4.6V7.4z"/><path d="M4 7.4l8 4.6 8-4.6M12 12v9.2"/>']
+      '<circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9.5" ry="4.5" transform="rotate(-30 12 12)"/><circle cx="20.2" cy="7.2" r="1.4" fill="currentColor" stroke="none"/>']
   ];
 
   var ICONS = {
