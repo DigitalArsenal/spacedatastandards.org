@@ -42,6 +42,8 @@
 <Nav {currentPath} />
 <main>
   <Router {routes} />
+  <!-- The Viz Demo fills the screen under the bar: no stack cards or footer over it (owner 2026-10-05). -->
+  {#if $currentPath !== "/playground"}
   <section id="stack" data-sdn-stack="standards"></section>
   <footer class="sdn-footer">
     <div class="sdn-footer-inner">
@@ -56,6 +58,7 @@
       <p class="sdn-footer-legal">Apache-2.0 License &middot; &copy; Edgesource Corporation &middot; <a href="mailto:tj@edgesource.com">tj@edgesource.com</a></p>
     </div>
   </footer>
+  {/if}
 </main>
 {#if appVersion}
   <div class="version-badge">{appVersion}</div>

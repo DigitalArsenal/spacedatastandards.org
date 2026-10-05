@@ -1,12 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-
-  type XtcHudMetric = {
-    label: string;
-    value: string;
-    wide?: boolean;
-    active?: boolean;
-  };
+  import { createMission, MODE_COLORS, type Mission, type MissionView } from "./playground/xtcMission";
+  import { parseCommandLine, type ArgValues } from "./playground/xtcPacket";
 
   // Cesium viewer reference
   let cesiumContainer: HTMLDivElement;
@@ -22,10 +17,12 @@
   let isLoading = false;
   let visualizationActive = false;
   let xtcHudActive = false;
-  let xtcTlmMetrics: XtcHudMetric[] = [];
-  let xtcCmdMetrics: XtcHudMetric[] = [];
-  let xtcHudTimer: ReturnType<typeof setInterval> | null = null;
-  let xtcPreRenderCb: (() => void) | null = null;
+  // XTC mission control: the simulation, its published view, and the command form.
+  let mission: Mission | null = null;
+  let missionView: MissionView | null = null;
+  let cmdName = "";
+  let cmdArgs: ArgValues = {};
+  $: cmdDef = mission?.commands.find((c) => c.NAME === cmdName);
 
   // Schema options
   const schemaTypes = [
@@ -452,10 +449,17 @@
         ]
       },
       COMMANDS: {
+        ARGUMENT_TYPES: [
+          { NAME: "angle_t", ENCODING: "IEEE754_1985", SIZE_BITS: 32, UNIT: "deg" },
+          { NAME: "duration_t", ENCODING: "UNSIGNED", SIZE_BITS: 16, UNIT: "s", MIN: 10, MAX: 3600 },
+          { NAME: "sensor_t", ENCODING: "STRING", SIZE_BITS: 64 }
+        ],
         META_COMMANDS: [
-          { NAME: "SET_MODE", DESC: "Set spacecraft operating mode", ARGS: [{ NAME: "TARGET_MODE", TYPE: "mode_t" }], VERIFY: ["ACCEPTANCE","EXECUTION"] },
-          { NAME: "REPOINT", DESC: "Slew to target attitude", ARGS: [{ NAME: "RA_DEG" },{ NAME: "DEC_DEG" }] },
-          { NAME: "COLLECT_DATA", DESC: "Start science collection", ARGS: [{ NAME: "DURATION_S" },{ NAME: "SENSOR_ID" }] }
+          { NAME: "SET_MODE", OPCODE: 1, DESC: "Set spacecraft operating mode", ARGS: [{ NAME: "TARGET_MODE", TYPE: "mode_t", DEFAULT: "SCIENCE" }], VERIFY: ["ACCEPTANCE","EXECUTION"] },
+          { NAME: "REPOINT", OPCODE: 2, DESC: "Slew to target attitude", ARGS: [{ NAME: "RA_DEG", TYPE: "angle_t", DEFAULT: 185.2 },{ NAME: "DEC_DEG", TYPE: "angle_t", DEFAULT: 45.8 }], VERIFY: ["ACCEPTANCE","EXECUTION"] },
+          { NAME: "COLLECT_DATA", OPCODE: 3, DESC: "Start science collection (needs SCIENCE mode)", ARGS: [{ NAME: "DURATION_S", TYPE: "duration_t", DEFAULT: 600 },{ NAME: "SENSOR_ID", TYPE: "sensor_t", DEFAULT: "IMG-1" }], VERIFY: ["ACCEPTANCE","EXECUTION"] },
+          { NAME: "DOWNLINK", OPCODE: 4, DESC: "Dump the recorder to the ground at every pass until empty", ARGS: [], VERIFY: ["ACCEPTANCE","EXECUTION"] },
+          { NAME: "NOOP", OPCODE: 0, DESC: "No operation: proves the link end to end", ARGS: [], VERIFY: ["ACCEPTANCE","EXECUTION"] }
         ]
       },
       SIM_VALUES: {
@@ -464,7 +468,7 @@
         SC_MODE: "NOMINAL", LINK_MARGIN_DB: 8.5, RSSI_DBM: -98.4,
         BIT_RATE_KBPS: 2048, PKT_COUNT: 14582, CMD_ACCEPT: 847, CMD_REJECT: 0,
         UL_FREQ_MHZ: 2025.0, DL_FREQ_MHZ: 8200.0,
-        CMD_QUEUE: ["SET_MODE SCIENCE", "REPOINT 185.2 45.8", "COLLECT_DATA 600 IMG-1"]
+        CMD_QUEUE: ["SET_MODE SCIENCE", "REPOINT 185.2 45.8", "COLLECT_DATA 600 IMG-1", "DOWNLINK"]
       }
     }
   };
@@ -1319,362 +1323,51 @@
     viewer.zoomTo(viewer.entities);
   }
 
-  // Visualize XTC (XTCE Command & Telemetry Data Flow)
-  // Shows full end-to-end: SoCal ops center → AWS Ground Station → LEO satellite → back
+  // Visualize XTC (XTCE Command & Telemetry Data Flow): mission control.
   async function visualizeXTC(data: any) {
     const Cesium = getCesium();
-
-    // === LOCATIONS ===
-    const ops = data.OPERATIONS_CENTER;
-    const opsPos = Cesium.Cartesian3.fromDegrees(ops.LONGITUDE, ops.LATITUDE, 100);
-
-    const stations = data.GROUND_NETWORK.STATIONS;
-    const gsData = stations.map((gs: any) => ({
-      pos: Cesium.Cartesian3.fromDegrees(gs.LONGITUDE, gs.LATITUDE, 100),
-      ...gs
-    }));
-
-    // === SATELLITE CONSTELLATION (4 sats, different inclinations, spaced in anomaly) ===
-    const satNames = [
-      data.SATELLITE.OBJECT_NAME,
-      data.SATELLITE.OBJECT_NAME.replace('-1', '-2'),
-      data.SATELLITE.OBJECT_NAME.replace('-1', '-3'),
-      data.SATELLITE.OBJECT_NAME.replace('-1', '-4')
-    ];
-    const satColors = ['#f5a524', '#00bcd4', '#ab47bc', '#ffeb3b'];
-    const incOffsets = [0, 3, -4, 7]; // degrees offset from base inclination
-    const anomalyOffsets = [0, 90, 180, 270]; // degrees offset in mean anomaly
-
-    // Generate per-satellite orbit positions with slightly different inclinations
-    const satOrbits = incOffsets.map((dInc, i) => {
-      const satParams = { ...data.SATELLITE, INCLINATION: data.SATELLITE.INCLINATION + dInc, MEAN_ANOMALY: data.SATELLITE.MEAN_ANOMALY + anomalyOffsets[i] };
-      return ommToOrbitPositions(satParams);
+    mission = createMission({
+      Cesium,
+      viewer,
+      data,
+      addEntity,
+      orbitPositions: ommToOrbitPositions,
+      onView: (view) => (missionView = view),
     });
-    const numPos = satOrbits[0].length;
-
-    // Animation phase offsets (90° apart around orbit)
-    const satAnimOffsets = [0, numPos / 4, numPos / 2, (3 * numPos) / 4];
-
-    // Smooth interpolated satellite position (50% slower: /240)
-    function getSatPosition(timeMs: number, satIdx: number): any {
-      const orbit = satOrbits[satIdx];
-      const t = ((timeMs / 240) + satAnimOffsets[satIdx]) % numPos;
-      const idx = Math.floor(t);
-      const frac = t - idx;
-      const p1 = orbit[idx % numPos];
-      const p2 = orbit[(idx + 1) % numPos];
-      return new Cesium.Cartesian3(
-        p1.x + (p2.x - p1.x) * frac,
-        p1.y + (p2.y - p1.y) * frac,
-        p1.z + (p2.z - p1.z) * frac
-      );
-    }
-
-    // === LINE-OF-SIGHT: EllipsoidalOccluder per ground station ===
-    const gsOccluders = gsData.map((gs: any) =>
-      new Cesium.EllipsoidalOccluder(viewer.scene.globe.ellipsoid, gs.pos)
-    );
-
-    // Compute visibility ONCE per Cesium render frame via preRender event.
-    // All CallbackProperty callbacks read this shared result, so they're consistent.
-    let _visResult: { gs: any; satIdx: number } | null = null;
-
-    function updateVisibility() {
-      const now = Date.now();
-      for (let s = 0; s < satOrbits.length; s++) {
-        const satPos = getSatPosition(now, s);
-        for (let g = 0; g < gsData.length; g++) {
-          if (gsOccluders[g].isPointVisible(satPos)) {
-            _visResult = { gs: gsData[g], satIdx: s };
-            return;
-          }
-        }
-      }
-      _visResult = null;
-    }
-
-    xtcPreRenderCb = updateVisibility;
-    viewer.scene.preRender.addEventListener(updateVisibility);
-
-    function getVisibleGs(): { gs: any; satIdx: number } | null {
-      return _visResult;
-    }
-
-    // === 1. OPERATIONS CENTER ===
-    addEntity({
-      name: ops.NAME,
-      position: opsPos,
-      point: {
-        pixelSize: 18,
-        color: Cesium.Color.fromCssColorString("#59d9ff"),
-        outlineColor: Cesium.Color.WHITE,
-        outlineWidth: 3
-      },
-      label: {
-        text: `${ops.NAME}\n${ops.LOCATION}`,
-        font: "13px JetBrains Mono, monospace",
-        fillColor: Cesium.Color.fromCssColorString("#59d9ff"),
-        outlineColor: Cesium.Color.BLACK,
-        outlineWidth: 2,
-        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-        verticalOrigin: Cesium.VerticalOrigin.TOP,
-        pixelOffset: new Cesium.Cartesian2(0, 16)
-      }
-    });
-
-    // === 2. GROUND STATIONS (all shown equally, active one determined dynamically) ===
-    gsData.forEach((gs: any) => {
-      addEntity({
-        name: gs.NAME,
-        position: gs.pos,
-        point: {
-          pixelSize: 14,
-          color: Cesium.Color.fromCssColorString("#f5a524"),
-          outlineColor: Cesium.Color.WHITE,
-          outlineWidth: 2
-        },
-        label: {
-          text: `${gs.NAME}\n${gs.ANTENNA_BAND}`,
-          font: "11px JetBrains Mono, monospace",
-          fillColor: Cesium.Color.fromCssColorString("#f5a524"),
-          outlineColor: Cesium.Color.BLACK,
-          outlineWidth: 2,
-          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-          verticalOrigin: Cesium.VerticalOrigin.TOP,
-          pixelOffset: new Cesium.Cartesian2(0, 14)
-        }
-      });
-
-      // Static dim fiber link to every GS
-      addEntity({
-        name: `Internet: Ops → ${gs.NAME}`,
-        polyline: {
-          positions: [opsPos, gs.pos],
-          width: 1,
-          material: new Cesium.PolylineDashMaterialProperty({
-            color: Cesium.Color.fromCssColorString("#59d9ff").withAlpha(0.12),
-            dashLength: 12
-          })
-        }
-      });
-    });
-
-    // Dynamic bright fiber link — lights up to whichever GS has contact
-    addEntity({
-      name: "Active Internet Link",
-      polyline: {
-        positions: new Cesium.CallbackProperty(() => {
-          const vis = getVisibleGs();
-          if (!vis) return [opsPos, opsPos];
-          return [opsPos, vis.gs.pos];
-        }, false),
-        width: 2,
-        material: new Cesium.PolylineDashMaterialProperty({
-          color: Cesium.Color.fromCssColorString("#59d9ff").withAlpha(0.6),
-          dashLength: 12
-        })
-      }
-    });
-
-    // === 3. SATELLITE ORBIT TRACKS (one per satellite, colored) ===
-    for (let s = 0; s < satOrbits.length; s++) {
-      addEntity({
-        name: `Orbit Track ${satNames[s]}`,
-        polyline: {
-          positions: satOrbits[s].map((p: any) => new Cesium.Cartesian3(p.x, p.y, p.z)),
-          width: 1.5,
-          material: Cesium.Color.fromCssColorString(satColors[s]).withAlpha(0.15)
-        }
-      });
-    }
-
-    // === 4. ANIMATED SATELLITES (4 sats, different inclinations) ===
-    for (let s = 0; s < satNames.length; s++) {
-      const idx = s;
-      const col = Cesium.Color.fromCssColorString(satColors[s]);
-      addEntity({
-        name: satNames[s],
-        position: new Cesium.CallbackProperty(() => getSatPosition(Date.now(), idx), false),
-        point: {
-          pixelSize: 14,
-          color: col,
-          outlineColor: Cesium.Color.WHITE,
-          outlineWidth: 2
-        },
-        label: {
-          text: satNames[s],
-          font: "13px JetBrains Mono, monospace",
-          fillColor: col,
-          outlineColor: Cesium.Color.BLACK,
-          outlineWidth: 2,
-          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-          verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-          pixelOffset: new Cesium.Cartesian2(0, -16)
-        }
-      });
-    }
-
-    // === 5. RF LINK (dynamically connects to whichever GS + sat has LOS) ===
-    addEntity({
-      name: "RF Link (TC/TM)",
-      polyline: {
-        positions: new Cesium.CallbackProperty(() => {
-          const vis = getVisibleGs();
-          if (!vis) return [opsPos, opsPos];
-          return [vis.gs.pos, getSatPosition(Date.now(), vis.satIdx)];
-        }, false),
-        width: 2,
-        material: new Cesium.PolylineDashMaterialProperty({
-          color: Cesium.Color.WHITE.withAlpha(0.3),
-          dashLength: 10
-        })
-      }
-    });
-
-    // === 6. ANIMATED DATA PACKETS ===
-    // All packet flow gated on LOS. Packets route through whichever GS has contact.
-
-    // Surface-arc interpolation: lerp in Cartesian then project back to surface
-    function surfaceLerp(a: any, b: any, t: number): any {
-      const mid = Cesium.Cartesian3.lerp(a, b, t, new Cesium.Cartesian3());
-      const carto = Cesium.Cartographic.fromCartesian(mid);
-      carto.height = 50000; // 50 km above surface so dot stays visible
-      return Cesium.Cartesian3.fromRadians(carto.longitude, carto.latitude, carto.height);
-    }
-
-    // Command uplink packets (orange): ops → visible GS → satellite
-    for (let i = 0; i < 3; i++) {
-      const phase = i / 3;
-      addEntity({
-        name: `TC Packet ${i}`,
-        position: new Cesium.CallbackProperty(() => {
-          const vis = getVisibleGs();
-          if (!vis) return opsPos;
-          const t = ((Date.now() / 15000 + phase) % 1);
-          const satPos = getSatPosition(Date.now(), vis.satIdx);
-          if (t < 0.35) {
-            const ft = t / 0.35;
-            return surfaceLerp(opsPos, vis.gs.pos, ft);
-          } else {
-            const rt = (t - 0.35) / 0.65;
-            return Cesium.Cartesian3.lerp(vis.gs.pos, satPos, rt, new Cesium.Cartesian3());
-          }
-        }, false),
-        point: {
-          pixelSize: 7,
-          color: Cesium.Color.fromCssColorString("#f5a524"),
-          outlineColor: Cesium.Color.fromCssColorString("#ffcc80"),
-          outlineWidth: 1,
-          disableDepthTestDistance: Number.POSITIVE_INFINITY
-        }
-      });
-    }
-
-    // Telemetry downlink packets (green): satellite → visible GS → ops
-    for (let i = 0; i < 5; i++) {
-      const phase = i / 5;
-      addEntity({
-        name: `TM Packet ${i}`,
-        position: new Cesium.CallbackProperty(() => {
-          const vis = getVisibleGs();
-          if (!vis) return opsPos;
-          const t = ((Date.now() / 10500 + phase) % 1);
-          const satPos = getSatPosition(Date.now(), vis.satIdx);
-          if (t < 0.65) {
-            const rt = t / 0.65;
-            return Cesium.Cartesian3.lerp(satPos, vis.gs.pos, rt, new Cesium.Cartesian3());
-          } else {
-            const ft = (t - 0.65) / 0.35;
-            return surfaceLerp(vis.gs.pos, opsPos, ft);
-          }
-        }, false),
-        point: {
-          pixelSize: 6,
-          color: Cesium.Color.fromCssColorString("#f5a524"),
-          outlineColor: Cesium.Color.fromCssColorString("#80ffb0"),
-          outlineWidth: 1,
-          disableDepthTestDistance: Number.POSITIVE_INFINITY
-        }
-      });
-    }
-
-    // === 7. HTML HUDs (stacked upper-left, updated via interval) ===
-    const sim = data.SIM_VALUES;
+    cmdName = mission.commands[0]?.NAME ?? "";
+    resetArgs();
+    // The selected satellite's facts live in the panels, not in Cesium's info box.
+    if (viewer.infoBox) viewer.infoBox.container.style.display = "none";
     xtcHudActive = true;
+  }
 
-    xtcHudTimer = setInterval(() => {
-      const now = Date.now();
-      const vis = getVisibleGs();
-      const visible = vis !== null;
-      const battV = (sim.BATT_V + Math.sin(now / 2000) * 0.3).toFixed(1);
-      const solarI = (sim.SOLAR_I + Math.sin(now / 1500) * 0.15).toFixed(2);
-      const obcTemp = (sim.OBC_TEMP + Math.sin(now / 3000) * 1.2).toFixed(1);
-      const rssi = (sim.RSSI_DBM + Math.sin(now / 1000) * 1.5).toFixed(1);
-      const margin = (sim.LINK_MARGIN_DB + Math.sin(now / 2500) * 0.5).toFixed(1);
-      const hkSeq = Math.floor(now / 1000) % 16384;
-      const attSeq = Math.floor(now / 100) % 16384;
-      const pktCount = sim.PKT_COUNT + Math.floor(now / 1000) % 1000;
-      const linkTrack = visible ? satNames[vis.satIdx] : 'NONE';
-      const linkSite = visible ? vis.gs.NAME : 'WAITING';
+  function resetArgs() {
+    const next: ArgValues = {};
+    for (const arg of mission?.commands.find((c) => c.NAME === cmdName)?.ARGS ?? []) {
+      const type = mission?.types.get(arg.TYPE ?? "");
+      next[arg.NAME] = arg.DEFAULT ?? type?.ENUM?.[0] ?? 0;
+    }
+    cmdArgs = next;
+  }
 
-      const cmds = sim.CMD_QUEUE || [];
-      const cmdIdx = cmds.length > 0 ? Math.floor(now / 24000) % cmds.length : 0;
-      const accepted = sim.CMD_ACCEPT + Math.floor(now / 24000);
-      const gsLabel = visible ? vis.gs.NAME : 'NONE';
-      const satLabel = visible ? satNames[vis.satIdx] : 'NONE';
-      const activeCommand = cmds.length > 0 ? cmds[cmdIdx] : 'NONE';
-      const nextCommand = cmds.length > 1 ? cmds[(cmdIdx + 1) % cmds.length] : 'NONE';
+  function sendCommand() {
+    if (!mission || !missionView || !cmdDef) return;
+    mission.send(missionView.selected, cmdDef, { ...cmdArgs });
+  }
 
-      xtcTlmMetrics = [
-        { label: 'Batt', value: `${battV} V` },
-        { label: 'Solar', value: `${solarI} A` },
-        { label: 'OBC', value: `${obcTemp} C` },
-        { label: 'Mode', value: sim.SC_MODE },
-        { label: 'HK Seq', value: `0x01 / ${String(hkSeq).padStart(5, '0')}` },
-        { label: 'ATT Seq', value: `0x02 / ${String(attSeq).padStart(5, '0')}` },
-        { label: 'Packets', value: `${pktCount}` },
-        { label: 'Eb/N0', value: `${margin} dB` },
-        { label: 'Track', value: linkTrack },
-        { label: 'Site', value: linkSite },
-        { label: 'DL', value: `${sim.BIT_RATE_KBPS}k / ${sim.DL_FREQ_MHZ}MHz`, wide: true },
-        { label: 'RSSI', value: `${rssi} dBm` },
-      ];
-
-      xtcCmdMetrics = [
-        { label: 'Active TC', value: activeCommand, wide: true, active: true },
-        { label: 'Next TC', value: nextCommand, wide: true },
-        { label: 'Queue', value: `${cmds.length}` },
-        { label: 'Accept', value: `${accepted}` },
-        { label: 'Reject', value: `${sim.CMD_REJECT}` },
-        { label: 'Uplink', value: `${sim.UL_FREQ_MHZ} MHz` },
-        { label: 'Band', value: 'S-Band' },
-        { label: 'Sat', value: satLabel },
-        { label: 'GS', value: gsLabel },
-      ];
-    }, 100);
-
-    // === 8. XTCE SYSTEM INFO (follows first satellite) ===
-    addEntity({
-      name: "XTCE SpaceSystem Info",
-      position: new Cesium.CallbackProperty(() => getSatPosition(Date.now(), 0), false),
-      label: {
-        text: [
-          `XTCE: ${data.SPACE_SYSTEM_NAME}`,
-          `TM: ${data.TELEMETRY.CONTAINERS.map((c: any) => c.NAME).join(', ')}`,
-          `TC: ${data.COMMANDS.META_COMMANDS.map((c: any) => c.NAME).join(', ')}`
-        ].join('\n'),
-        font: "10px JetBrains Mono, monospace",
-        fillColor: Cesium.Color.WHITE.withAlpha(0.85),
-        showBackground: true,
-        backgroundColor: Cesium.Color.fromCssColorString("rgba(0, 0, 0, 0.8)"),
-        backgroundPadding: new Cesium.Cartesian2(10, 6),
-        horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
-        verticalOrigin: Cesium.VerticalOrigin.TOP,
-        pixelOffset: new Cesium.Cartesian2(18, 8)
-      }
-    });
-
-    // Camera stays at its current position — no flyTo
+  /** One-tap sequences: each line is an XTCE command as an operator would type it. */
+  const QUICK = [
+    { label: "Image a target", lines: ["SET_MODE SCIENCE", "REPOINT 210 -12", "COLLECT_DATA 900 IMG-2"] },
+    { label: "Dump the recorder", lines: ["DOWNLINK"] },
+    { label: "Safe it", lines: ["SET_MODE SAFE"] },
+    { label: "Ping", lines: ["NOOP"] },
+  ];
+  function sendQuick(lines: string[]) {
+    if (!mission || !missionView) return;
+    for (const line of lines) {
+      const parsed = parseCommandLine(line, mission.commands);
+      if (parsed) mission.send(missionView.selected, parsed.command, parsed.args);
+    }
   }
 
   // Clear visualization
@@ -1684,16 +1377,10 @@
     }
     visualizationActive = false;
     xtcHudActive = false;
-    xtcTlmMetrics = [];
-    xtcCmdMetrics = [];
-    if (xtcHudTimer) {
-      clearInterval(xtcHudTimer);
-      xtcHudTimer = null;
-    }
-    if (xtcPreRenderCb && viewer) {
-      viewer.scene.preRender.removeEventListener(xtcPreRenderCb);
-      xtcPreRenderCb = null;
-    }
+    mission?.destroy();
+    mission = null;
+    missionView = null;
+    if (viewer?.infoBox) viewer.infoBox.container.style.display = "";
   }
 
   // Load Cesium script via CDN
@@ -1743,8 +1430,8 @@
         skyAtmosphere: new Cesium.SkyAtmosphere(),
         // Use simple ellipsoid terrain (no Cesium Ion required)
         terrain: undefined,
-        // Start with no imagery (we'll add our own)
-        imageryProvider: false,
+        // No default imagery (it would need a key); the single tiles below replace it
+        baseLayer: false,
         contextOptions: {
           webgl: {
             alpha: true
@@ -1752,23 +1439,26 @@
         }
       });
 
-      // Add dark base layer (CartoDB dark tiles)
-      // Limit max level to reduce tile requests for orbit visualization
-      viewer.imageryLayers.addImageryProvider(
-        new Cesium.UrlTemplateImageryProvider({
-          url: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
-          subdomains: ['a', 'b', 'c', 'd'],
-          maximumLevel: 5,
-          credit: "CartoDB, OpenStreetMap contributors"
-        })
-      );
+      // Keyless imagery (owner 2026-10-05: "single tile works fine"): NASA Blue
+      // Marble by day and Black Marble by night, one image each, served by this
+      // site, blended across the real day/night line.
+      const [day, night] = await Promise.all([
+        Cesium.SingleTileImageryProvider.fromUrl("/media/playground/earth-day.webp", { credit: "NASA Blue Marble" }),
+        Cesium.SingleTileImageryProvider.fromUrl("/media/playground/earth-night.webp", { credit: "NASA Black Marble" }),
+      ]);
+      const dayLayer = viewer.imageryLayers.addImageryProvider(day);
+      dayLayer.nightAlpha = 0.0;
+      dayLayer.brightness = 0.85;
+      const nightLayer = viewer.imageryLayers.addImageryProvider(night);
+      nightLayer.dayAlpha = 0.0;
+      nightLayer.brightness = 1.6;
 
       // Set dark background
       viewer.scene.backgroundColor = Cesium.Color.fromCssColorString("#000000");
       viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString("#1a1a2e");
 
-      // Configure atmosphere for dark theme
-      viewer.scene.globe.enableLighting = false;
+      // Lighting draws the day/night line between the two layers
+      viewer.scene.globe.enableLighting = true;
       viewer.scene.globe.showGroundAtmosphere = true;
 
       // Set initial camera view
@@ -1790,25 +1480,18 @@
   }
 
   onMount(async () => {
-    // Prevent body scroll and hide footer while playground is active
+    // Prevent body scroll while the playground is active
     document.body.style.overflow = 'hidden';
-    const footer = document.querySelector('footer');
-    if (footer) (footer as HTMLElement).style.display = 'none';
 
     await initCesium();
     loadSample("XTC");
   });
 
   onDestroy(() => {
-    // Restore body scroll and footer
+    // Restore body scroll
     document.body.style.overflow = '';
-    const footer = document.querySelector('footer');
-    if (footer) (footer as HTMLElement).style.display = '';
-
-    if (xtcHudTimer) {
-      clearInterval(xtcHudTimer);
-      xtcHudTimer = null;
-    }
+    mission?.destroy();
+    mission = null;
 
     if (viewer) {
       viewer.destroy();
@@ -1949,29 +1632,120 @@
     <!-- Globe Container -->
     <div class="globe-container">
       <div class="cesium-wrapper" bind:this={cesiumContainer}></div>
-      {#if xtcHudActive}
+      {#if xtcHudActive && mission && missionView}
+        {@const sat = missionView.sats[missionView.selected]}
         <div class="xtc-hud-stack">
           <div class="xtc-hud xtc-hud-tlm">
-            <div class="xtc-hud-title">Telemetry (XTCE)</div>
+            <div class="xtc-hud-title"><i class="xtc-dot" style="background:{sat.color}"></i>Telemetry · {sat.name}</div>
             <div class="xtc-hud-grid">
-              {#each xtcTlmMetrics as metric}
-                <div class="xtc-hud-item" class:wide={metric.wide}>
-                  <span class="xtc-hud-label">{metric.label}</span>
-                  <span class="xtc-hud-value">{metric.value}</span>
-                </div>
-              {/each}
+              <div class="xtc-hud-item">
+                <span class="xtc-hud-label">Mode</span>
+                <span class="xtc-hud-value" style="color:{MODE_COLORS[sat.mode] ?? 'inherit'}">{sat.mode}</span>
+              </div>
+              <div class="xtc-hud-item">
+                <span class="xtc-hud-label">Battery</span>
+                <span class="xtc-hud-value" class:warn={sat.soc < 35}>{sat.battV.toFixed(1)} V · {sat.soc.toFixed(0)}%</span>
+              </div>
+              <div class="xtc-hud-item wide">
+                <span class="xtc-hud-label">Recorder</span>
+                <div class="xtc-bar"><i style="width:{Math.min(100, (sat.recorderMb / 4096) * 100)}%"></i></div>
+                <span class="xtc-hud-value">{Math.round(sat.recorderMb)} / 4096 MB{sat.collecting ? " · collecting" : ""}{sat.downlinking ? " · dumping" : ""}</span>
+              </div>
+              <div class="xtc-hud-item wide">
+                <span class="xtc-hud-label">Pointing</span>
+                <span class="xtc-hud-value">{sat.pointing}</span>
+              </div>
+              <div class="xtc-hud-item wide" class:active={Boolean(sat.contact)}>
+                <span class="xtc-hud-label">Link</span>
+                <span class="xtc-hud-value">
+                  {#if sat.contact}{sat.contact} · {sat.rangeKm?.toFixed(0)} km · {sat.rssiDbm?.toFixed(1)} dBm · Eb/N0 {sat.marginDb?.toFixed(1)} dB
+                  {:else if sat.aosInS !== null}No contact · next pass in {sat.aosInS.toFixed(0)} s
+                  {:else}No contact{/if}
+                </span>
+              </div>
+              <div class="xtc-hud-item">
+                <span class="xtc-hud-label">TC accepted</span>
+                <span class="xtc-hud-value">{sat.accepted}</span>
+              </div>
+              <div class="xtc-hud-item">
+                <span class="xtc-hud-label">TC rejected</span>
+                <span class="xtc-hud-value" class:warn={sat.rejected > 0}>{sat.rejected}</span>
+              </div>
             </div>
           </div>
-          <div class="xtc-hud xtc-hud-cmd">
-            <div class="xtc-hud-title">Command Queue (XTCE)</div>
-            <div class="xtc-hud-grid">
-              {#each xtcCmdMetrics as metric}
-                <div class="xtc-hud-item" class:wide={metric.wide} class:active={metric.active}>
-                  <span class="xtc-hud-label">{metric.label}</span>
-                  <span class="xtc-hud-value">{metric.value}</span>
-                </div>
-              {/each}
+          <div class="xtc-hud xtc-hud-passes">
+            <div class="xtc-hud-title">Passes</div>
+            {#each missionView.sats as s, i (s.name)}
+              <button type="button" class="xtc-pass" class:on={i === missionView.selected} on:click={() => mission?.select(i)}>
+                <i class="xtc-dot" style="background:{s.color}"></i>
+                <span class="xtc-pass-name">{s.name}</span>
+                <span class="xtc-pass-state" class:live={Boolean(s.contact)}>
+                  {s.contact ? `IN CONTACT · ${s.contact}` : s.aosInS !== null ? `AOS ${s.aosInS.toFixed(0)} s` : "—"}
+                </span>
+              </button>
+            {/each}
+          </div>
+        </div>
+
+        <div class="xtc-console">
+          <div class="xtc-hud-title">Command · XTCE → CCSDS telecommand</div>
+          <div class="xtc-chips" role="radiogroup" aria-label="Target satellite">
+            {#each missionView.sats as s, i (s.name)}
+              <button type="button" role="radio" aria-checked={i === missionView.selected} class="xtc-chip" class:on={i === missionView.selected} style="--c:{s.color}" on:click={() => mission?.select(i)}>
+                {s.name.replace(/^.*-/, "SAT-")}
+                <small style="color:{MODE_COLORS[s.mode] ?? 'inherit'}">{s.mode}</small>
+              </button>
+            {/each}
+          </div>
+          <form class="xtc-form" on:submit|preventDefault={sendCommand}>
+            <label class="xtc-arg wide">
+              <span>Command</span>
+              <select bind:value={cmdName} on:change={resetArgs}>
+                {#each mission.commands as c (c.NAME)}<option value={c.NAME}>{c.NAME}</option>{/each}
+              </select>
+            </label>
+            {#each cmdDef?.ARGS ?? [] as arg (arg.NAME)}
+              {@const type = mission.types.get(arg.TYPE ?? "")}
+              <label class="xtc-arg">
+                <span>{arg.NAME}{type?.UNIT ? ` · ${type.UNIT}` : ""}</span>
+                {#if type?.ENUM}
+                  <select bind:value={cmdArgs[arg.NAME]}>
+                    {#each type.ENUM as value}<option {value}>{value}</option>{/each}
+                  </select>
+                {:else if type?.ENCODING === "STRING"}
+                  <input type="text" maxlength={Math.round((type.SIZE_BITS ?? 64) / 8)} bind:value={cmdArgs[arg.NAME]} />
+                {:else}
+                  <input type="number" step="any" min={type?.MIN} max={type?.MAX} bind:value={cmdArgs[arg.NAME]} />
+                {/if}
+              </label>
+            {/each}
+            <button type="submit" class="xtc-send">Send to {sat.name}</button>
+          </form>
+          {#if cmdDef?.DESC}<p class="xtc-desc">{cmdDef.DESC}</p>{/if}
+          <div class="xtc-quick">
+            {#each QUICK as q (q.label)}
+              <button type="button" on:click={() => sendQuick(q.lines)} title={q.lines.join(" · ")}>{q.label}</button>
+            {/each}
+            <button type="button" class:on={missionView.following} on:click={() => mission?.follow(!missionView?.following)}>{missionView.following ? "Stop following" : "Follow"}</button>
+          </div>
+          {#if missionView.lastHex}
+            <div class="xtc-hex" title="CCSDS space packet: primary header, opcode, arguments, CRC-16">
+              <span class="xtc-hex-head">LAST TC · APID {missionView.lastApid} · {missionView.lastBytes} B</span>
+              <code>{missionView.lastHex}</code>
             </div>
+          {/if}
+          {#if missionView.queue.length}
+            <div class="xtc-queue">
+              {#each missionView.queue as q (q.id)}
+                <div class="xtc-queue-row"><i class="xtc-dot" style="background:{q.color}"></i><span>{q.label}</span><b class={q.state.toLowerCase()}>{q.state}</b></div>
+              {/each}
+              <button type="button" class="xtc-clear" on:click={() => mission?.clearQueue()}>Clear queue</button>
+            </div>
+          {/if}
+          <div class="xtc-log" aria-live="polite">
+            {#each missionView.log as line (line.id)}
+              <div class="xtc-log-line {line.kind}"><span>{line.time}</span>{line.text}</div>
+            {/each}
           </div>
         </div>
       {/if}
@@ -2005,7 +1779,8 @@
     top: 52px;
     left: 0;
     right: 0;
-    bottom: 0;
+    /* Ends above the stack bar fixed to the bottom of every page. */
+    bottom: var(--sdn-stack-footer-height, 40px);
     overflow: hidden;
     background: #000000;
   }
@@ -2326,93 +2101,300 @@
     color: #ce93d8 !important;
   }
 
-  /* XTC HUD Overlay */
+  /* XTC mission control: telemetry + passes (left), command console (right) */
   .xtc-hud-stack {
     position: absolute;
     top: 16px;
     left: 16px;
+    bottom: 16px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 340px;
+    width: 330px;
     z-index: 10;
+    overflow-y: auto;
     pointer-events: none;
   }
 
-  .xtc-hud {
-    width: 340px;
-    padding: 12px 14px;
-    border-radius: 8px;
-    margin: 0;
-    max-width: 340px;
-    font-family: var(--font-mono);
+  .xtc-hud,
+  .xtc-console {
     box-sizing: border-box;
+    padding: 12px 14px;
+    border-radius: 10px;
+    color: #f5f5f7;
+    font-family: var(--font-mono);
+    background: rgba(8, 8, 10, 0.88);
+    border: 1px solid rgba(245, 165, 36, 0.22);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    pointer-events: auto;
   }
 
   .xtc-hud-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     margin-bottom: 10px;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    opacity: 0.85;
+    color: #f5a524;
+  }
+
+  .xtc-dot {
+    flex: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    box-shadow: 0 0 8px currentColor;
   }
 
   .xtc-hud-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    gap: 6px;
   }
 
   .xtc-hud-item {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    padding: 7px 8px;
+    gap: 4px;
+    padding: 7px 9px;
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  .xtc-hud-item.wide {
-    grid-column: 1 / -1;
-  }
-
-  .xtc-hud-item.active {
-    background: rgba(255, 255, 255, 0.08);
-  }
+  .xtc-hud-item.wide { grid-column: 1 / -1; }
+  .xtc-hud-item.active { border-color: rgba(128, 255, 176, 0.45); background: rgba(128, 255, 176, 0.06); }
 
   .xtc-hud-label {
-    font-size: 8px;
-    line-height: 1.2;
+    font-size: 11px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    opacity: 0.7;
-    white-space: normal;
-    overflow-wrap: anywhere;
+    color: rgba(245, 245, 247, 0.55);
   }
 
   .xtc-hud-value {
     min-width: 0;
-    font-size: 10px;
-    line-height: 1.3;
-    white-space: normal;
+    font-size: 13px;
+    line-height: 1.35;
     overflow-wrap: anywhere;
-    word-break: break-word;
   }
 
-  .xtc-hud-tlm {
-    color: #f5a524;
-    background: rgba(0, 8, 0, 0.9);
-    border: 1px solid rgba(245, 165, 36, 0.2);
+  .xtc-hud-value.warn { color: #ff5252; }
+
+  .xtc-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
   }
 
-  .xtc-hud-cmd {
-    color: #f5a524;
-    background: rgba(8, 4, 0, 0.9);
-    border: 1px solid rgba(255, 152, 0, 0.2);
+  .xtc-bar i {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, #00e5ff, #f5a524);
+    transition: width 0.3s linear;
   }
+
+  .xtc-pass {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 6px 4px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+    font: 13px var(--font-mono);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .xtc-pass:hover, .xtc-pass.on { background: rgba(255, 255, 255, 0.06); }
+  .xtc-pass-name { flex: 1; }
+  .xtc-pass-state { color: rgba(245, 245, 247, 0.55); font-size: 12px; }
+  .xtc-pass-state.live { color: #80ffb0; }
+
+  .xtc-console {
+    position: absolute;
+    top: 56px;
+    right: 16px;
+    /* Clear of the AI-credits panel in the lower-right corner. */
+    bottom: 96px;
+    z-index: 10;
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+  }
+
+  .xtc-console .xtc-hud-title { margin-bottom: 0; }
+
+  .xtc-chips {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .xtc-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 7px 4px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--c);
+    font: 600 12px var(--font-mono);
+    cursor: pointer;
+  }
+
+  .xtc-chip small { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; }
+  .xtc-chip.on { border-color: var(--c); background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 14px -4px var(--c); }
+
+  .xtc-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .xtc-arg {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .xtc-arg.wide { grid-column: 1 / -1; }
+
+  .xtc-arg span {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(245, 245, 247, 0.55);
+  }
+
+  .xtc-arg select,
+  .xtc-arg input {
+    width: 100%;
+    box-sizing: border-box;
+    height: 34px;
+    padding: 0 9px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.6);
+    color: #f5f5f7;
+    font: 13px var(--font-mono);
+  }
+
+  .xtc-send {
+    grid-column: 1 / -1;
+    height: 38px;
+    border: 1px solid #f5a524;
+    border-radius: 6px;
+    background: #f5a524;
+    color: #000;
+    font: 700 13px var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 18px -4px rgba(245, 165, 36, 0.7);
+  }
+
+  .xtc-send:hover { filter: brightness(1.08); }
+  .xtc-send:active { transform: translateY(1px); }
+
+  .xtc-desc {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: rgba(245, 245, 247, 0.65);
+  }
+
+  .xtc-quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .xtc-quick button,
+  .xtc-clear {
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.04);
+    color: #f5f5f7;
+    font: 12px var(--font-mono);
+    cursor: pointer;
+  }
+
+  .xtc-quick button:hover,
+  .xtc-quick button.on { border-color: #f5a524; color: #f5a524; }
+
+  .xtc-hex {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: rgba(245, 165, 36, 0.06);
+    border: 1px solid rgba(245, 165, 36, 0.25);
+  }
+
+  .xtc-hex-head { font-size: 11px; letter-spacing: 0.06em; color: rgba(245, 165, 36, 0.85); }
+  .xtc-hex code { font-size: 13px; line-height: 1.5; color: #f5a524; word-spacing: 2px; overflow-wrap: anywhere; }
+
+  .xtc-queue {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .xtc-queue-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  .xtc-queue-row span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .xtc-queue-row b { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; color: rgba(245, 245, 247, 0.55); }
+  .xtc-queue-row b.uplink { color: #f5a524; }
+  .xtc-queue-row b.onboard { color: #80ffb0; }
+  .xtc-clear { align-self: flex-start; margin-top: 2px; }
+
+  .xtc-log {
+    flex: 1;
+    min-height: 80px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .xtc-log-line {
+    font-size: 12px;
+    line-height: 1.4;
+    color: rgba(245, 245, 247, 0.8);
+  }
+
+  .xtc-log-line span { margin-right: 8px; color: rgba(245, 245, 247, 0.4); }
+  .xtc-log-line.tc { color: #f5f5f7; }
+  .xtc-log-line.up { color: #f5a524; }
+  .xtc-log-line.ack { color: #80ffb0; }
+  .xtc-log-line.exec { color: #00e5ff; }
+  .xtc-log-line.rej,
+  .xtc-log-line.fdir { color: #ff5252; }
+  .xtc-log-line.tm { color: #b9f6ca; }
 
   /* Globe Container */
   .globe-container {
@@ -2526,6 +2508,7 @@
       min-height: calc(100dvh - 52px);
       margin-top: 52px;
       overflow: visible;
+      padding-bottom: var(--sdn-stack-footer-height, 40px);
     }
 
     .playground-layout {
@@ -2559,67 +2542,17 @@
       min-height: 0;
     }
 
-    .xtc-hud-stack {
+    /* Phones: the panels follow the globe, full width. */
+    .xtc-hud-stack,
+    .xtc-console {
       position: static;
-      width: 100%;
-      padding: 12px;
-      gap: 8px;
-      background: linear-gradient(180deg, rgba(3, 3, 8, 0) 0%, rgba(3, 3, 8, 0.94) 18%);
-      pointer-events: auto;
+      width: auto;
+      margin: 10px 12px 0;
+      overflow: visible;
     }
 
-    .xtc-hud {
-      width: 175px;
-      max-width: 175px;
-      min-width: 0;
-      padding: 9px 10px;
-    }
-
-    .xtc-hud-title {
-      margin-bottom: 6px;
-      font-size: 8px;
-    }
-
-    .xtc-hud-stack {
-      display: grid;
-      grid-template-columns: repeat(2, 175px);
-      justify-content: center;
-      align-items: start;
-      gap: 8px;
-      width: 100%;
-    }
-
-    .xtc-hud-grid {
-      grid-template-columns: 1fr;
-      gap: 4px;
-    }
-
-    .xtc-hud-item {
-      flex-direction: row;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 6px;
-      padding: 5px 6px;
-    }
-
-    .xtc-hud-item.wide {
-      grid-column: auto;
-    }
-
-    .xtc-hud-item.active {
-      align-items: flex-start;
-    }
-
-    .xtc-hud-label {
-      font-size: 7px;
-      flex: 0 0 auto;
-    }
-
-    .xtc-hud-value {
-      font-size: 8px;
-      line-height: 1.25;
-      flex: 1 1 auto;
-      text-align: right;
-    }
+    .xtc-hud-stack { pointer-events: auto; }
+    .xtc-console { margin-bottom: 12px; }
+    .xtc-log { max-height: 220px; }
   }
 </style>
