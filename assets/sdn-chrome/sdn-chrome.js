@@ -21,7 +21,9 @@
     if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
   } catch (e) {}
 
-  // The stack, in the order every site lists it.
+  // The stack, in the order every site lists it. LOCKED by the owner
+  // (2026-10-05): these six and no others — Asset Models and Tudat WASM were
+  // taken out, and nothing is added without the owner's word.
   var SITES = [
     ['sdn', 'Space Data Network', 'https://spacedatanetwork.org/', 'spacedatanetwork.org', 'MIT',
       'The network itself: nodes that publish, find and deliver digitally signed space data, with a dashboard, a desktop app and an SDK.',
@@ -40,10 +42,7 @@
       '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 9l1.5 6 1.5-4 1.5 4L13 9M15 15l1.5-6 1.5 6M15.5 13h2"/>'],
     ['hd-wallet', 'HD Wallet', 'https://wallet.spacedatanetwork.org/', 'wallet.spacedatanetwork.org', 'Apache-2.0',
       'One set of keys, kept in your browser, for signing in, digitally signing data and paying on many networks.',
-      '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/>'],
-    ['tudat', 'Tudat WASM', 'https://digitalarsenal.github.io/tudat-wasm/', 'Tudat in your browser', 'BSD-3-Clause',
-      'The TU Delft Astrodynamics Toolbox compiled to WebAssembly: orbits, maneuvers and planetary motion, computed in your browser.',
-      '<circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9.5" ry="4.5" transform="rotate(-30 12 12)"/><circle cx="20.2" cy="7.2" r="1.4" fill="currentColor" stroke="none"/>']
+      '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/>']
   ];
 
   var ICONS = {
