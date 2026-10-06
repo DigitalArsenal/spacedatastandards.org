@@ -133,6 +133,21 @@ table CQRObjectSource {
   CATALOG_ENTRY:CAT;
 }
 
+/// On-orbit screening geometry; dimensions are metres.
+enum cqrVolumeGeometry : ubyte {
+  SPHERICAL = 0,
+  ELLIPSOIDAL = 1,
+  BOX = 2
+}
+
+/// Object defining the centre and instantaneous RTN axes of a volume.
+enum cqrVolumeAnchor : ubyte {
+  UNSPECIFIED = 0,
+  PRIMARY = 1,
+  SECONDARY = 2,
+  BOTH = 3
+}
+
 /// Explicit UTC search window and positive resolution, SI seconds/metres.
 table CQRScreeningControls {
   START_EPOCH:TIMInstant (required);
@@ -150,6 +165,18 @@ table CQRScreeningControls {
   /// True when PROGRESS_INTERVAL_SECONDS carries a value; false means absent.
   HAS_PROGRESS_INTERVAL_SECONDS:bool = false;
   ALGORITHM:cqrProbabilityAlgorithm = ALFANO_MAXIMUM;
+  /// SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+  /// Admit local minima of relative distance inside or on the selected volume.
+  SCREENING:cqrVolumeGeometry = SPHERICAL;
+  /// RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+  RADIAL_M:double;
+  IN_TRACK_M:double;
+  CROSS_TRACK_M:double;
+  /// PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+  /// R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+  /// BOTH tests each object's volume independently and admits their union.
+  /// UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+  VOLUME_CENTER:cqrVolumeAnchor = PRIMARY;
 }
 
 /// CONTROLS.COMBINED_RADIUS_M must equal PRIMARY_RADIUS_M + SECONDARY_RADIUS_M.
@@ -306,6 +333,11 @@ table CQREvent {
   /// carries no covariance-based quantity for it.
   PRIMARY_COVARIANCE_BASIS:cqrCovarianceBasis = UNSPECIFIED;
   SECONDARY_COVARIANCE_BASIS:cqrCovarianceBasis = UNSPECIFIED;
+  /// Geometry used by the screening request that admitted this event.
+  SCREENING:cqrVolumeGeometry = SPHERICAL;
+  /// Volume(s) containing the other object at TCA; BOTH means both tests passed.
+  /// UNSPECIFIED means admission provenance was not reported.
+  ADMITTED_BY:cqrVolumeAnchor = UNSPECIFIED;
 }
 
 table CQRScreeningStatistics {
