@@ -1,0 +1,868 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TrkTrackStatus": {
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "DROPPED",
+        "TENTATIVE",
+        "CONFIRMED",
+        "COASTED",
+        "DEAD"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ACTIVE": {
+          "value": 0
+        },
+        "DROPPED": {
+          "value": 1
+        },
+        "TENTATIVE": {
+          "value": 2
+        },
+        "CONFIRMED": {
+          "value": 3
+        },
+        "COASTED": {
+          "value": 4
+        },
+        "DEAD": {
+          "value": 5
+        }
+      }
+    },
+    "trackEnvironment": {
+      "type": "string",
+      "enum": [
+        "SPACE",
+        "AIR",
+        "SURFACE",
+        "SUBSURFACE",
+        "LAND",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SPACE": {
+          "value": 0
+        },
+        "AIR": {
+          "value": 1
+        },
+        "SURFACE": {
+          "value": 2
+        },
+        "SUBSURFACE": {
+          "value": 3
+        },
+        "LAND": {
+          "value": 4
+        },
+        "UNKNOWN": {
+          "value": 5
+        }
+      }
+    },
+    "etsCodec": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "TRK2"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Unset. A record carrying this is not decodable."
+        },
+        "TRK2": {
+          "value": 1,
+          "description": "Bounded-error predictive knot track: time-domain simplification, adaptive position and time quanta, velocity-predicted residuals, local WGS 84 east-north-up frame anchored at the first observation."
+        }
+      }
+    },
+    "etsAltitudeDatum": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NONE",
+        "GEOMETRIC_WGS84",
+        "BAROMETRIC_STANDARD",
+        "UNSTATED_3D"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Unset. A writer MUST state one of the members below."
+        },
+        "NONE": {
+          "value": 1,
+          "description": "No altitude channel: a 2-D track. ALTITUDE_MIN_M, ALTITUDE_MAX_M and TOLERANCE_V_M / ACHIEVED_MAX_ERROR_V_M are NaN."
+        },
+        "GEOMETRIC_WGS84": {
+          "value": 2,
+          "description": "Height above the WGS 84 ellipsoid, metres."
+        },
+        "BAROMETRIC_STANDARD": {
+          "value": 3,
+          "description": "Pressure altitude on the standard atmosphere at the standard sea-level pressure setting (no local pressure correction), metres."
+        },
+        "UNSTATED_3D": {
+          "value": 4,
+          "description": "Altitude is present but its source does not state the datum. The value is carried and the datum is never guessed."
+        }
+      }
+    },
+    "TRK": {
+      "type": "object",
+      "description": "Track",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "CNTCT": {
+          "type": "string",
+          "description": "Contact reference",
+          "x-flatbuffer-type": "string"
+        },
+        "MSG_TS": {
+          "type": "string",
+          "description": "Message timestamp (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "MSN_ID": {
+          "type": "string",
+          "description": "Mission identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ASSET_NAT": {
+          "type": "string",
+          "description": "Asset nationality",
+          "x-flatbuffer-type": "string"
+        },
+        "ASSET": {
+          "type": "string",
+          "description": "Asset identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SENSOR_ID": {
+          "type": "string",
+          "description": "Sensor identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SEN_QUAL": {
+          "type": "string",
+          "description": "Sensor quality assessment",
+          "x-flatbuffer-type": "string"
+        },
+        "TRK_ID": {
+          "type": "string",
+          "description": "Track identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "TRK_NUM": {
+          "type": "string",
+          "description": "Track number",
+          "x-flatbuffer-type": "string"
+        },
+        "TRK_STAT": {
+          "$ref": "#/definitions/TrkTrackStatus",
+          "description": "Track status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ACTIVE": {
+              "value": 0
+            },
+            "DROPPED": {
+              "value": 1
+            },
+            "TENTATIVE": {
+              "value": 2
+            },
+            "CONFIRMED": {
+              "value": 3
+            },
+            "COASTED": {
+              "value": 4
+            },
+            "DEAD": {
+              "value": 5
+            }
+          }
+        },
+        "OBJ_NAT": {
+          "type": "string",
+          "description": "Object nationality",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_ID": {
+          "type": "string",
+          "description": "Object identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_TYPE": {
+          "type": "string",
+          "description": "Object type classification",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_SPEC": {
+          "type": "string",
+          "description": "Object specific type",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_PLAT": {
+          "type": "string",
+          "description": "Object platform type",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_ACT": {
+          "type": "string",
+          "description": "Object activity",
+          "x-flatbuffer-type": "string"
+        },
+        "MOD_TYPE": {
+          "type": "string",
+          "description": "Mode type",
+          "x-flatbuffer-type": "string"
+        },
+        "TRK_ITM_ID": {
+          "type": "string",
+          "description": "Track item identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "TS": {
+          "type": "string",
+          "description": "Track point timestamp (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "TRK_QUAL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Track quality (0-15)",
+          "x-flatbuffer-type": "uint8"
+        },
+        "TRK_PT_TYPE": {
+          "type": "string",
+          "description": "Track point type",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_IDENT": {
+          "type": "string",
+          "description": "Object identity assessment",
+          "x-flatbuffer-type": "string"
+        },
+        "IDENT_CRED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Identity credibility (1-6)",
+          "x-flatbuffer-type": "uint8"
+        },
+        "IDENT_REL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Identity reliability (A-F)",
+          "x-flatbuffer-type": "uint8"
+        },
+        "IDENT_AMP": {
+          "type": "string",
+          "description": "Identity amplification",
+          "x-flatbuffer-type": "string"
+        },
+        "ENVIRONMENT": {
+          "$ref": "#/definitions/trackEnvironment",
+          "description": "Track environment",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SPACE": {
+              "value": 0
+            },
+            "AIR": {
+              "value": 1
+            },
+            "SURFACE": {
+              "value": 2
+            },
+            "SUBSURFACE": {
+              "value": 3
+            },
+            "LAND": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          }
+        },
+        "ENVIRONMENT_CONF": {
+          "type": "number",
+          "description": "Environment confidence (0-1)",
+          "x-flatbuffer-type": "double"
+        },
+        "TRK_CONF": {
+          "type": "number",
+          "description": "Track confidence (0-1)",
+          "x-flatbuffer-type": "double"
+        },
+        "LAT": {
+          "type": "number",
+          "description": "Latitude (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "LON": {
+          "type": "number",
+          "description": "Longitude (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "ALT": {
+          "type": "number",
+          "description": "Altitude (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "SPD": {
+          "type": "number",
+          "description": "Speed (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "HDNG": {
+          "type": "number",
+          "description": "Heading (degrees from north)",
+          "x-flatbuffer-type": "double"
+        },
+        "COURSE": {
+          "type": "number",
+          "description": "Course (degrees from north)",
+          "x-flatbuffer-type": "double"
+        },
+        "SRC_TYPS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Source types",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SRC_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Source identifiers",
+          "x-flatbuffer-type": "[string]"
+        },
+        "CALL_SIGN": {
+          "type": "string",
+          "description": "Call sign",
+          "x-flatbuffer-type": "string"
+        },
+        "MULTI_SOURCE": {
+          "type": "boolean",
+          "description": "True if fused from multiple sources",
+          "x-flatbuffer-type": "bool"
+        },
+        "J_SERIES": {
+          "type": "string",
+          "description": "J-series message type",
+          "x-flatbuffer-type": "string"
+        },
+        "STRENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Force strength indicator",
+          "x-flatbuffer-type": "uint16"
+        },
+        "M1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Mode 1 code",
+          "x-flatbuffer-type": "uint16"
+        },
+        "M1V": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Mode 1 validity",
+          "x-flatbuffer-type": "uint8"
+        },
+        "M2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Mode 2 code",
+          "x-flatbuffer-type": "uint16"
+        },
+        "M2V": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Mode 2 validity",
+          "x-flatbuffer-type": "uint8"
+        },
+        "M3A": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Mode 3A code",
+          "x-flatbuffer-type": "uint16"
+        },
+        "M3AV": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Mode 3A validity",
+          "x-flatbuffer-type": "uint8"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Associated tags",
+          "x-flatbuffer-type": "[string]"
+        },
+        "TRACK_START_TIME": {
+          "type": "string",
+          "description": "Start time for track data (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACK_STEP_SIZE": {
+          "type": "number",
+          "description": "Time interval between track points (seconds)",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACK_COMPONENTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of components per point (default 3 for X, Y, Z)",
+          "x-flatbuffer-type": "uint8",
+          "x-flatbuffer-default": "3"
+        },
+        "ECEF_POS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "ECEF_VEL": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "ECEF_ACC": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "LC_POS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Local coordinate position as flat array",
+          "x-flatbuffer-type": "[double]"
+        },
+        "LC_VEL": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Local coordinate velocity as flat array",
+          "x-flatbuffer-type": "[double]"
+        },
+        "LC_ACC": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Local coordinate acceleration as flat array",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COV": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Covariance data (21 elements per point for 6x6 lower triangular)",
+          "x-flatbuffer-type": "[double]"
+        },
+        "ERR_ELLP": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Error ellipse data (6 elements per point)",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ETSIdentifier": {
+      "type": "object",
+      "description": "One identity the tracked object is known by in a named identity scheme.\nSame shape and meaning as `TMSIdentifier`.",
+      "properties": {
+        "SCHEME": {
+          "type": "string",
+          "description": "Identity scheme token, verbatim (the identity system's own name).\nNever a field name and never normalized by the publisher.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "The identifier within that scheme, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "SCHEME",
+        "VALUE"
+      ],
+      "additionalProperties": false
+    },
+    "ETSProvenance": {
+      "type": "object",
+      "description": "Dataset lineage and redistribution terms for one encoded segment.\n\nIn a store that keeps one table per source, the table carries provenance\nand its records omit SOURCE. A writer fills SOURCE when a record leaves\nthe store (export, or sharing by content identifier, where the record\ntravels without its table); the required fields below then apply. A\nredistributed track whose feed, epoch and licence are unstated is not\npublishable. Same fields, same meaning as `TMSProvenance`. The standard\nnames no feed, provider or site.",
+      "properties": {
+        "DATASET_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier for the feed or dataset the\nobservations came from, unique within the publisher's own dataset\nregistry. Never a display name and never a URL.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_NAME": {
+          "type": "string",
+          "description": "The feed or dataset's own name, verbatim as its publisher states it.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_URL": {
+          "type": "string",
+          "description": "Replayable URL of the feed or dataset as published.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_EPOCH": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond epoch of the dataset edition or feed\nsession the observations came from.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATASET_CID": {
+          "type": "string",
+          "description": "Content identifier of the exact dataset artifact, when one exists.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Replayable URL identifying the source material within the dataset.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "The exact query, filter or subscription used.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond retrieval timestamp of the last\nobservation in this segment.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Redistribution terms verbatim. Unknown terms are never public domain\nand never an implied grant.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the full licence text as the source publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "description": "Attribution text the licence requires a redistributor to display.",
+          "x-flatbuffer-type": "string"
+        },
+        "NON_COMMERCIAL_ONLY": {
+          "type": "boolean",
+          "description": "The licence forbids commercial use.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "SHARE_ALIKE": {
+          "type": "boolean",
+          "description": "The licence obliges derived works to carry the same terms.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "NATIVE_ID": {
+          "type": "string",
+          "description": "The source's own identifier for the track or observation stream the\nsegment was built from, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NATIVE_MODIFIED": {
+          "type": "string",
+          "description": "RFC 3339 UTC instant the source last modified or emitted the underlying\nobservations, as the source states it.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "DATASET_ID",
+        "DATASET_EPOCH",
+        "RETRIEVED_AT",
+        "LICENSE",
+        "NATIVE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "ETS": {
+      "type": "object",
+      "description": "Encoded Track Segment",
+      "properties": {
+        "TRACK_ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier of the continuous track this segment belongs\nto, held constant across every segment of the same track. Joins to\n`TMS.TRACK_ID`. Not an object identifier: one object has many tracks.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SEGMENT_SEQ": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Zero-based position of this window within its track. Consecutive\nsegments of a track differ by 1; a jump is a missing window.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "0"
+        },
+        "TRACK_CLOSED": {
+          "type": "boolean",
+          "description": "True only when the publisher knows no later segment of this track will\nexist (a complete historical track, or a live track it has ended). False\nmeans more may follow or the publisher does not know.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "IDENTIFIERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ETSIdentifier"
+          },
+          "description": "Every identity the tracked object is known by, scheme-tagged.",
+          "x-flatbuffer-type": "[ETSIdentifier]"
+        },
+        "ENVIRONMENT": {
+          "$ref": "#/definitions/trackEnvironment",
+          "description": "Domain the object moves in. The `$TRK` enum reused verbatim; ordinal 0 is\nSPACE, so it is defaulted to UNKNOWN explicitly. SPACE is invalid here:\nthe codec's frame is geodetic WGS 84, and orbital state belongs to the\norbit standards.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SPACE": {
+              "value": 0
+            },
+            "AIR": {
+              "value": 1
+            },
+            "SURFACE": {
+              "value": 2
+            },
+            "SUBSURFACE": {
+              "value": 3
+            },
+            "LAND": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond instant of the FIRST observation in this\nsegment: the segment's start and its store epoch. Equals the instant in\nthe PAYLOAD header. Fixed-millisecond UTC strings sort chronologically\nas text.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "END_EPOCH": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond instant of the LAST knot in this segment\n(the last observation is always a knot). EPOCH <= END_EPOCH. The\nsegment is covered over the closed interval [EPOCH, END_EPOCH]; the\ncodec rejects times outside it.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "OBSERVATION_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Observations the writer encoded, before simplification.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "0"
+        },
+        "KNOT_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Knots retained in PAYLOAD. At least 2 for a decodable segment.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "0"
+        },
+        "SOUTH_DEG": {
+          "type": "number",
+          "description": "Bounding box of the DECODED path: it contains the decoded position at\nevery knot and at the midpoint between every pair of knots, as the\nwriter evaluated the decoder. It is a prefilter, not an error bound: a\nsource observation may lie outside by up to ACHIEVED_MAX_ERROR_H_M.\nDegrees on WGS 84. WEST_DEG > EAST_DEG means the box crosses the\nantimeridian (longitudes in [-180, 180]).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "NORTH_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "WEST_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EAST_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ALTITUDE_REFERENCE": {
+          "$ref": "#/definitions/etsAltitudeDatum",
+          "description": "Vertical datum of the altitude channel; NONE for a 2-D track.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Unset. A writer MUST state one of the members below."
+            },
+            "NONE": {
+              "value": 1,
+              "description": "No altitude channel: a 2-D track. ALTITUDE_MIN_M, ALTITUDE_MAX_M and TOLERANCE_V_M / ACHIEVED_MAX_ERROR_V_M are NaN."
+            },
+            "GEOMETRIC_WGS84": {
+              "value": 2,
+              "description": "Height above the WGS 84 ellipsoid, metres."
+            },
+            "BAROMETRIC_STANDARD": {
+              "value": 3,
+              "description": "Pressure altitude on the standard atmosphere at the standard sea-level pressure setting (no local pressure correction), metres."
+            },
+            "UNSTATED_3D": {
+              "value": 4,
+              "description": "Altitude is present but its source does not state the datum. The value is carried and the datum is never guessed."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ALTITUDE_MIN_M": {
+          "type": "number",
+          "description": "Lowest and highest decoded altitude of the same evaluation, metres in\nALTITUDE_REFERENCE. NaN for a 2-D track.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ALTITUDE_MAX_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "TOLERANCE_H_M": {
+          "type": "number",
+          "description": "Horizontal tolerance the writer was asked to meet, metres. The bound is\nthe Euclidean east-north distance in the local WGS 84 east-north-up\nframe between the decoded and the source position, at each source\nobservation instant.",
+          "x-flatbuffer-type": "float",
+          "x-flatbuffer-default": "nan"
+        },
+        "TOLERANCE_V_M": {
+          "type": "number",
+          "description": "Vertical tolerance the writer was asked to meet, metres: the absolute\naltitude difference at each observation instant. NaN for a 2-D track.",
+          "x-flatbuffer-type": "float",
+          "x-flatbuffer-default": "nan"
+        },
+        "ACHIEVED_MAX_ERROR_H_M": {
+          "type": "number",
+          "description": "Largest horizontal error the writer MEASURED by decoding PAYLOAD and\ncomparing with every source observation. Never above TOLERANCE_H_M.",
+          "x-flatbuffer-type": "float",
+          "x-flatbuffer-default": "nan"
+        },
+        "ACHIEVED_MAX_ERROR_V_M": {
+          "type": "number",
+          "description": "Largest vertical error measured the same way. NaN for a 2-D track.",
+          "x-flatbuffer-type": "float",
+          "x-flatbuffer-default": "nan"
+        },
+        "CODEC": {
+          "$ref": "#/definitions/etsCodec",
+          "description": "Codec that produced PAYLOAD.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Unset. A record carrying this is not decodable."
+            },
+            "TRK2": {
+              "value": 1,
+              "description": "Bounded-error predictive knot track: time-domain simplification, adaptive position and time quanta, velocity-predicted residuals, local WGS 84 east-north-up frame anchored at the first observation."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CODEC_VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Revision of the codec's DECODING SEMANTICS within the codec named by\nCODEC. Starts at 1. It increases whenever the same payload bytes would\ndecode to different positions; a layout change is a new codec member,\nnever a new revision. A reader MUST refuse to decode a revision newer\nthan its decoder supports.",
+          "x-flatbuffer-type": "uint16",
+          "x-flatbuffer-default": "0"
+        },
+        "PAYLOAD": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "The codec bitstream, verbatim and opaque. Little-endian; begins with the\ncodec's magic (see etsCodec). Decodable only by the codec's decoder.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE": {
+          "$ref": "#/definitions/ETSProvenance",
+          "description": "Feed lineage and licence. Absent in a per-source store table, which\ncarries it; filled when the record leaves the store (export or sharing\nby content identifier). See ETSProvenance.",
+          "x-flatbuffer-type": "ETSProvenance"
+        }
+      },
+      "required": [
+        "TRACK_ID",
+        "EPOCH",
+        "END_EPOCH",
+        "PAYLOAD"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ETS",
+  "x-flatbuffer-root-type": "ETS",
+  "x-flatbuffer-file-identifier": "$ETS"
+}

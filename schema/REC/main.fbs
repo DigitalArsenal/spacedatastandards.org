@@ -1,5 +1,5 @@
-// Hash: f8a563561ba3dc5b4ce58a65436aaf10f3770a7ed9eab33ee31f66446f8376ec
-// Version: 1.44.77
+// Hash: d607035e7f0232fbdbe64618280329ef647211e719aa30bfdc3a37585411161d
+// Version: 1.44.78
 // -----------------------------------END_HEADER
 include "../ACI/main.fbs";
 include "../ACL/main.fbs";
@@ -69,6 +69,7 @@ include "../EPF/main.fbs";
 include "../EPM/main.fbs";
 include "../ESL/main.fbs";
 include "../ETM/main.fbs";
+include "../ETS/main.fbs";
 include "../EVL/main.fbs";
 include "../EWR/main.fbs";
 include "../FCS/main.fbs";
@@ -334,7 +335,7 @@ union RecordType {
   NDS, NST, QRP, TCT,
   WXF, CLM, GCT, CQR,
   RPC, CSO, PHB, SKT,
-  SKQ, SKR
+  SKQ, SKR, ETS
 }  // Union of all record types
 
 /// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.

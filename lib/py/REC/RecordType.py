@@ -272,6 +272,7 @@ class RecordType(object):
     SKT = 252
     SKQ = 253
     SKR = 254
+    ETS = 255
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -1039,4 +1040,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.SKR:
         import SKR
         return SKR.SKRT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.ETS:
+        import ETS
+        return ETS.ETST.InitFromBuf(table.Bytes, table.Pos)
     return None

@@ -267,6 +267,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -544,11 +545,12 @@ enum RecordType : uint8_t {
   RecordType_SKT = 252,
   RecordType_SKQ = 253,
   RecordType_SKR = 254,
+  RecordType_ETS = 255,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_SKR
+  RecordType_MAX = RecordType_ETS
 };
 
-inline const RecordType (&EnumValuesRecordType())[255] {
+inline const RecordType (&EnumValuesRecordType())[256] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -804,13 +806,14 @@ inline const RecordType (&EnumValuesRecordType())[255] {
     RecordType_PHB,
     RecordType_SKT,
     RecordType_SKQ,
-    RecordType_SKR
+    RecordType_SKR,
+    RecordType_ETS
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[256] = {
+  static const char * const names[257] = {
     "NONE",
     "ACL",
     "ACM",
@@ -1066,13 +1069,14 @@ inline const char * const *EnumNamesRecordType() {
     "SKT",
     "SKQ",
     "SKR",
+    "ETS",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_SKR)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_ETS)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -2097,6 +2101,10 @@ template<> struct RecordTypeTraits<SKR> {
   static const RecordType enum_value = RecordType_SKR;
 };
 
+template<> struct RecordTypeTraits<ETS> {
+  static const RecordType enum_value = RecordType_ETS;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2915,6 +2923,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const SKR *value_as_SKR() const {
     return value_type() == RecordType_SKR ? static_cast<const SKR *>(value()) : nullptr;
+  }
+  const ETS *value_as_ETS() const {
+    return value_type() == RecordType_ETS ? static_cast<const ETS *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3960,6 +3971,10 @@ template<> inline const SKQ *Record::value_as<SKQ>() const {
 
 template<> inline const SKR *Record::value_as<SKR>() const {
   return value_as_SKR();
+}
+
+template<> inline const ETS *Record::value_as<ETS>() const {
+  return value_as_ETS();
 }
 
 struct RecordBuilder {
@@ -5116,6 +5131,10 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_SKR: {
       auto ptr = reinterpret_cast<const SKR *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_ETS: {
+      auto ptr = reinterpret_cast<const ETS *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

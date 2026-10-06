@@ -272,6 +272,7 @@ class RecordType
     const SKT = 252;
     const SKQ = 253;
     const SKR = 254;
+    const ETS = 255;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -529,6 +530,7 @@ class RecordType
         RecordType::SKT=>"SKT",
         RecordType::SKQ=>"SKQ",
         RecordType::SKR=>"SKR",
+        RecordType::ETS=>"ETS",
     );
 
     public static function Name($e)

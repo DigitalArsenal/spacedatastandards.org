@@ -254,6 +254,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 pub mod flatbuffers_encryption {
 //! Field-encryption format 3: encrypts or decrypts, in place, every
@@ -718,11 +719,11 @@ pub fn crypt_buffer(buf: &mut [u8], key: &[u8], record_index: u32, program: &[u3
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 254;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 255;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 255] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 256] = [
     RecordType::NONE,
     RecordType::ACL,
     RecordType::ACM,
@@ -978,6 +979,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 255] = [
     RecordType::SKT,
     RecordType::SKQ,
     RecordType::SKR,
+    RecordType::ETS,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -1255,9 +1257,10 @@ impl RecordType {
     pub const SKT: Self = Self(252);
     pub const SKQ: Self = Self(253);
     pub const SKR: Self = Self(254);
+    pub const ETS: Self = Self(255);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 254;
+    pub const ENUM_MAX: u8 = 255;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::NONE,
         Self::ACL,
@@ -1514,6 +1517,7 @@ impl RecordType {
         Self::SKT,
         Self::SKQ,
         Self::SKR,
+        Self::ETS,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -1774,6 +1778,7 @@ impl RecordType {
             Self::SKT => Some("SKT"),
             Self::SKQ => Some("SKQ"),
             Self::SKR => Some("SKR"),
+            Self::ETS => Some("ETS"),
             _ => None,
         }
     }
@@ -2096,6 +2101,7 @@ pub enum RecordTypeT {
     SKT(alloc::boxed::Box<SKTT>),
     SKQ(alloc::boxed::Box<SKQT>),
     SKR(alloc::boxed::Box<SKRT>),
+    ETS(alloc::boxed::Box<ETST>),
 }
 
 impl Default for RecordTypeT {
@@ -2362,6 +2368,7 @@ impl RecordTypeT {
             Self::SKT(_) => RecordType::SKT,
             Self::SKQ(_) => RecordType::SKQ,
             Self::SKR(_) => RecordType::SKR,
+            Self::ETS(_) => RecordType::ETS,
         }
     }
 
@@ -2622,6 +2629,7 @@ impl RecordTypeT {
             Self::SKT(v) => Some(v.pack(fbb).as_union_value()),
             Self::SKQ(v) => Some(v.pack(fbb).as_union_value()),
             Self::SKR(v) => Some(v.pack(fbb).as_union_value()),
+            Self::ETS(v) => Some(v.pack(fbb).as_union_value()),
         }
     }
 
@@ -8720,6 +8728,30 @@ impl RecordTypeT {
     pub fn as_skr_mut(&mut self) -> Option<&mut SKRT> {
         if let Self::SKR(v) = self { Some(v.as_mut()) } else { None }
     }
+
+    /// If the union variant matches, return the owned ETST, setting the union to NONE.
+    pub fn take_ets(&mut self) -> Option<alloc::boxed::Box<ETST>> {
+        if let Self::ETS(_) = self {
+            let v = ::core::mem::replace(self, Self::NONE);
+            if let Self::ETS(w) = v {
+                Some(w)
+            } else {
+                unreachable!()
+            }
+        } else {
+            None
+        }
+    }
+
+    /// If the union variant matches, return a reference to the ETST.
+    pub fn as_ets(&self) -> Option<&ETST> {
+        if let Self::ETS(v) = self { Some(v.as_ref()) } else { None }
+    }
+
+    /// If the union variant matches, return a mutable reference to the ETST.
+    pub fn as_ets_mut(&mut self) -> Option<&mut ETST> {
+        if let Self::ETS(v) = self { Some(v.as_mut()) } else { None }
+    }
 }
 
 
@@ -10155,6 +10187,11 @@ impl<'a> Record<'a> {
             RecordType::SKR => RecordTypeT::SKR(alloc::boxed::Box::new(
                 self.value_as_skr()
                     .expect("Invalid union table, expected `RecordType::SKR`.")
+                    .unpack()
+            )),
+            RecordType::ETS => RecordTypeT::ETS(alloc::boxed::Box::new(
+                self.value_as_ets()
+                    .expect("Invalid union table, expected `RecordType::ETS`.")
                     .unpack()
             )),
             _ => RecordTypeT::NONE,
@@ -14030,6 +14067,21 @@ impl<'a> Record<'a> {
             None
         }
     }
+
+    #[inline]
+    #[allow(non_snake_case)]
+    pub fn value_as_ets(&self) -> Option<ETS<'a>> {
+        if self.value_type() == RecordType::ETS {
+            self.value().map(|t| {
+                // Safety:
+                // Created from a valid Table for this object
+                // Which contains a valid union in this slot
+                unsafe { ETS::init_from_table(t) }
+            })
+        } else {
+            None
+        }
+    }
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -14294,6 +14346,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
                     RecordType::SKT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SKT>>("RecordType::SKT", pos),
                     RecordType::SKQ => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SKQ>>("RecordType::SKQ", pos),
                     RecordType::SKR => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SKR>>("RecordType::SKR", pos),
+                    RecordType::ETS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<ETS>>("RecordType::ETS", pos),
                     _ => Ok(()),
                 }
             })?
@@ -16151,6 +16204,13 @@ impl ::core::fmt::Debug for Record<'_> {
             },
             RecordType::SKR => {
                 if let Some(x) = self.value_as_skr() {
+                    ds.field("value", &x)
+                } else {
+                    ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+                }
+            },
+            RecordType::ETS => {
+                if let Some(x) = self.value_as_ets() {
                     ds.field("value", &x)
                 } else {
                     ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

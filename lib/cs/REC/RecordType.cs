@@ -273,6 +273,7 @@ public enum RecordType : byte
   SKT = 252,
   SKQ = 253,
   SKR = 254,
+  ETS = 255,
 };
 
 public class RecordTypeUnion {
@@ -793,6 +794,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromSKQ(SKQT _skq) { return new RecordTypeUnion{ Type = RecordType.SKQ, Value = _skq }; }
   public SKRT AsSKR() { return this.As<SKRT>(); }
   public static RecordTypeUnion FromSKR(SKRT _skr) { return new RecordTypeUnion{ Type = RecordType.SKR, Value = _skr }; }
+  public ETST AsETS() { return this.As<ETST>(); }
+  public static RecordTypeUnion FromETS(ETST _ets) { return new RecordTypeUnion{ Type = RecordType.ETS, Value = _ets }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -1051,6 +1054,7 @@ public class RecordTypeUnion {
       case RecordType.SKT: return SKT.Pack(builder, _o.AsSKT()).Value;
       case RecordType.SKQ: return SKQ.Pack(builder, _o.AsSKQ()).Value;
       case RecordType.SKR: return SKR.Pack(builder, _o.AsSKR()).Value;
+      case RecordType.ETS: return ETS.Pack(builder, _o.AsETS()).Value;
     }
   }
 }
@@ -1825,6 +1829,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.SKR:
         result = SKRVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.ETS:
+        result = ETSVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;
