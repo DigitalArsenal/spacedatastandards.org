@@ -29,8 +29,13 @@ function schema(code, root = code, legacy = false) {
 }
 const epoch = { TIME_SYSTEM: 'UTC', EPOCH_FORMAT: 'JULIAN_DATE', JULIAN_DATE: 2461320.5 };
 let flatc;
-function encode(s, value) { return flatc.generateBinary(s, JSON.stringify(value)); }
-function json(s, bytes) { return JSON.parse(flatc.generateJSON(s, { path: '/record.bin', data: bytes }, { strictJson: true, defaultsJson: true })); }
+function encode(s, value) { return flatc.generateBinary(s, JSON.stringify(value), { unknownJson: false, strictJson: true }); }
+function json(s, bytes) {
+  // flatc spells absent NaN defaults as bare nan even with strictJson.
+  // Map only those nonfinite default tokens to JSON null for the projection.
+  const text = flatc.generateJSON(s, { path: '/record.bin', data: bytes }, { strictJson: true, defaultsJson: true });
+  return JSON.parse(text.replace(/(:\s*)nan(?=\s*[,}])/g, '$1null'));
+}
 function generated(code, root, bytes) {
   return ({ CQR, OCM })[code][root][`getSizePrefixedRootAs${root}`](new flatbuffers.ByteBuffer(bytes)).unpack();
 }
