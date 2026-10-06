@@ -1,0 +1,731 @@
+{
+  "CQR": {
+    "cqrProbabilityAlgorithm": {
+      "kind": "enum",
+      "fields": [
+        "UNSPECIFIED=0",
+        "FOSTER=1",
+        "PATERA=2",
+        "ALFANO_MAXIMUM=3",
+        "CHAN=4",
+        "ALFRIEND_1999=5",
+        "ALFRIEND_1999_MAXIMUM=6",
+        "ALFANO_2005=7",
+        "LAAS_2015=8",
+        "ALFRIEND_2D=9"
+      ]
+    },
+    "cqrUncertaintyOrigin": {
+      "kind": "enum",
+      "fields": [
+        "UNSPECIFIED=0",
+        "SUPPLIED_COVARIANCE=1",
+        "SYNTHESIZED_COVARIANCE=2",
+        "MAXIMUM_PROBABILITY_ONLY=3"
+      ]
+    },
+    "cqrHardBodyRadiusBasis": {
+      "kind": "enum",
+      "fields": [
+        "UNSPECIFIED=0",
+        "SUPPLIED=1",
+        "CATALOG_SIZE=2",
+        "RADAR_CROSS_SECTION=3",
+        "REQUEST_DEFAULT=4"
+      ]
+    },
+    "cqrCovarianceBasis": {
+      "kind": "enum",
+      "fields": [
+        "UNSPECIFIED=0",
+        "NONE=1",
+        "SOURCE_EPHEMERIS=2",
+        "CONJUNCTION_MESSAGE=3",
+        "ORBIT_DETERMINATION=4",
+        "EMPIRICAL_MODEL=5"
+      ]
+    },
+    "cqrCovarianceCorrelation": {
+      "kind": "enum",
+      "fields": [
+        "UNSPECIFIED=0",
+        "INDEPENDENT=1",
+        "SUPPLIED_CROSS_COVARIANCE=2"
+      ]
+    },
+    "cqrDocumentSyntax": {
+      "kind": "enum",
+      "fields": [
+        "UNSPECIFIED=0",
+        "CCSDS_CDM_KVN=1",
+        "CCSDS_CDM_XML=2"
+      ]
+    },
+    "cqrIndexRepresentation": {
+      "kind": "enum",
+      "fields": [
+        "UNSPECIFIED=0",
+        "SOURCE_DESCRIPTIONS=1",
+        "POLYNOMIAL_SEGMENTS=2",
+        "SAMPLED_STATES=3"
+      ]
+    },
+    "cqrRefinementStrategy": {
+      "kind": "enum",
+      "fields": [
+        "UNSPECIFIED=0",
+        "EXACT_ONLY=1",
+        "POLYNOMIAL_ONLY=2",
+        "POLYNOMIAL_WITH_EXACT_POLISH=3"
+      ]
+    },
+    "cqrDataOrigin": {
+      "kind": "enum",
+      "fields": [
+        "UNSPECIFIED=0",
+        "OMM_RECORD=1",
+        "OCM_RECORD=2",
+        "OEM_RECORD=3",
+        "CDM_RECORD=4",
+        "QUERY_SELECTION=5",
+        "PUBLICATION=6",
+        "PUBSUB_TOPIC=7"
+      ]
+    },
+    "CQRSourceProvenance": {
+      "kind": "table",
+      "fields": [
+        "ORIGIN_CLASS:cqrDataOrigin=UNSPECIFIED",
+        "SOURCE_ID:string",
+        "PROVIDER_ID:string",
+        "SCHEMA_NAME:string",
+        "FILE_IDENTIFIER:string",
+        "QUERY:string",
+        "QUERY_HASH:string",
+        "PNM_CID:string",
+        "MANIFEST_CID:string",
+        "TOPIC:string"
+      ]
+    },
+    "CQRObjectSource": {
+      "kind": "table",
+      "fields": [
+        "OBJECT_ID:string(required)",
+        "OBJECT_NAME:string",
+        "NORAD_CATALOG_ID:uint",
+        "INSTANCE:PRWInstance",
+        "SOURCE_HANDLE:uint",
+        "PROPAGATOR_PORT_ID:string",
+        "MEAN_ELEMENTS:OMM",
+        "EPHEMERIS:OEM",
+        "COMPREHENSIVE_ORBIT:OCM",
+        "POLYNOMIAL_EPHEMERIS:PPE",
+        "TLE_LINES:PRWTleLines",
+        "PROVENANCE:CQRSourceProvenance",
+        "SOURCE_EPOCH:TIMInstant",
+        "PERIGEE_ALTITUDE_M:double",
+        "HAS_PERIGEE_ALTITUDE_M:bool=false",
+        "APOGEE_ALTITUDE_M:double",
+        "HAS_APOGEE_ALTITUDE_M:bool=false",
+        "HARD_BODY_RADIUS_M:double",
+        "HAS_HARD_BODY_RADIUS_M:bool=false",
+        "CATALOG_ENTRY:CAT"
+      ]
+    },
+    "CQRScreeningControls": {
+      "kind": "table",
+      "fields": [
+        "START_EPOCH:TIMInstant(required)",
+        "DURATION_SECONDS:double=604800",
+        "THRESHOLD_M:double=5000",
+        "REQUESTED_WORKERS:uint=1",
+        "COARSE_STEP_SECONDS:double=60",
+        "REFINEMENT_TOLERANCE_SECONDS:double=0.001",
+        "COMBINED_RADIUS_M:double=10",
+        "USE_KD_TREE:bool=true",
+        "USE_DYNAMIC_WINDOW:bool=true",
+        "USE_PERIGEE_FILTER:bool=true",
+        "PROGRESS_INTERVAL_SECONDS:double",
+        "HAS_PROGRESS_INTERVAL_SECONDS:bool=false",
+        "ALGORITHM:cqrProbabilityAlgorithm=ALFANO_MAXIMUM"
+      ]
+    },
+    "CQRPairRequest": {
+      "kind": "table",
+      "fields": [
+        "PRIMARY:CQRObjectSource(required)",
+        "SECONDARY:CQRObjectSource(required)",
+        "CONTROLS:CQRScreeningControls(required)",
+        "PRIMARY_RADIUS_M:double=5",
+        "SECONDARY_RADIUS_M:double=5",
+        "EVALUATION_FRAME:RFMCoordinateSystem(required)"
+      ]
+    },
+    "CQRPlaneGeometry": {
+      "kind": "table",
+      "fields": [
+        "XI_M:double",
+        "ZETA_M:double",
+        "VARIANCE_XI_M2:double",
+        "COVARIANCE_XI_ZETA_M2:double",
+        "VARIANCE_ZETA_M2:double",
+        "COMBINED_RADIUS_M:double=10"
+      ]
+    },
+    "CQRProbabilityRequest": {
+      "kind": "table",
+      "fields": [
+        "GEOMETRY:CQRPlaneGeometry(required)",
+        "ALGORITHM:cqrProbabilityAlgorithm=FOSTER"
+      ]
+    },
+    "CQRProbabilityResult": {
+      "kind": "table",
+      "fields": [
+        "PROBABILITY:double",
+        "ALGORITHM:cqrProbabilityAlgorithm=UNSPECIFIED",
+        "CONVERGED:bool",
+        "ITERATIONS:ulong",
+        "MAXIMUM_PROBABILITY:double",
+        "HAS_MAXIMUM_PROBABILITY:bool=false",
+        "MAHALANOBIS_SQUARED:double",
+        "HAS_MAHALANOBIS_SQUARED:bool=false",
+        "UNCERTAINTY_SOURCE:cqrUncertaintyOrigin=UNSPECIFIED",
+        "CALIBRATION:covarianceCalibration=Unspecified",
+        "CALIBRATION_REFERENCE:string",
+        "CROSS_CORRELATION:cqrCovarianceCorrelation=UNSPECIFIED"
+      ]
+    },
+    "CQRAlfanoRequest": {
+      "kind": "table",
+      "fields": [
+        "MISS_DISTANCE_M:double",
+        "COMBINED_RADIUS_M:double=10"
+      ]
+    },
+    "CQRAlfanoResult": {
+      "kind": "table",
+      "fields": [
+        "MAXIMUM_PROBABILITY:double",
+        "DILUTION_THRESHOLD_M:double",
+        "SIGMA_STAR_M:double"
+      ]
+    },
+    "CQRNativeDocument": {
+      "kind": "table",
+      "fields": [
+        "SERIALIZATION:cqrDocumentSyntax=UNSPECIFIED",
+        "CONTENT:[ubyte](required)"
+      ]
+    },
+    "CQRCatalogRequest": {
+      "kind": "table",
+      "fields": [
+        "PRIMARIES:[CQRObjectSource]",
+        "SECONDARIES:[CQRObjectSource]",
+        "CONTROLS:CQRScreeningControls(required)",
+        "EVALUATION_FRAME:RFMCoordinateSystem(required)",
+        "ORDERED_CATALOG_INDICES:[uint]",
+        "START_ORDER_INDEX:uint",
+        "HAS_START_ORDER_INDEX:bool=false",
+        "END_ORDER_INDEX:uint",
+        "HAS_END_ORDER_INDEX:bool=false",
+        "SECONDARY_START_ORDER_INDEX:uint",
+        "HAS_SECONDARY_START_ORDER_INDEX:bool=false",
+        "SECONDARY_END_ORDER_INDEX:uint",
+        "HAS_SECONDARY_END_ORDER_INDEX:bool=false",
+        "SELECTED_SOURCES:[CQRSourceProvenance]"
+      ]
+    },
+    "CQREvent": {
+      "kind": "table",
+      "fields": [
+        "PRIMARY_ID:string(required)",
+        "SECONDARY_ID:string(required)",
+        "PRIMARY_NAME:string",
+        "SECONDARY_NAME:string",
+        "PRIMARY_NORAD_ID:uint",
+        "SECONDARY_NORAD_ID:uint",
+        "TCA:TIMInstant(required)",
+        "MISS_DISTANCE_M:double",
+        "RELATIVE_SPEED_M_S:double",
+        "PROBABILITY:CQRProbabilityResult",
+        "DILUTION_THRESHOLD_M:double",
+        "HAS_DILUTION_THRESHOLD_M:bool=false",
+        "RELATIVE_POSITION_RTN:FRMVector3",
+        "RELATIVE_VELOCITY_RTN:FRMVector3",
+        "PRIMARY_SIGMA_RTN_M:FRMVector3",
+        "SECONDARY_SIGMA_RTN_M:FRMVector3",
+        "PRIMARY_DAYS_SINCE_EPOCH:double",
+        "HAS_PRIMARY_DAYS_SINCE_EPOCH:bool=false",
+        "SECONDARY_DAYS_SINCE_EPOCH:double",
+        "HAS_SECONDARY_DAYS_SINCE_EPOCH:bool=false",
+        "CONJUNCTION_MESSAGE:CDM",
+        "PRIMARY_STATE:PRWResidentState",
+        "SECONDARY_STATE:PRWResidentState",
+        "MAHALANOBIS_3D_SQUARED:double",
+        "HAS_MAHALANOBIS_3D_SQUARED:bool=false",
+        "COMBINED_RADIUS_M:double",
+        "HAS_COMBINED_RADIUS_M:bool=false",
+        "PRIMARY_HARD_BODY_RADIUS_M:double",
+        "HAS_PRIMARY_HARD_BODY_RADIUS_M:bool=false",
+        "SECONDARY_HARD_BODY_RADIUS_M:double",
+        "HAS_SECONDARY_HARD_BODY_RADIUS_M:bool=false",
+        "PRIMARY_RADIUS_BASIS:cqrHardBodyRadiusBasis=UNSPECIFIED",
+        "SECONDARY_RADIUS_BASIS:cqrHardBodyRadiusBasis=UNSPECIFIED",
+        "PRIMARY_COVARIANCE_BASIS:cqrCovarianceBasis=UNSPECIFIED",
+        "SECONDARY_COVARIANCE_BASIS:cqrCovarianceBasis=UNSPECIFIED"
+      ]
+    },
+    "CQRScreeningStatistics": {
+      "kind": "table",
+      "fields": [
+        "TOTAL_OBJECTS:ulong",
+        "PAIRS_SCREENED:ulong",
+        "PAIRS_PREFILTERED:ulong",
+        "KD_TREE_CANDIDATES:ulong",
+        "TCA_REFINED:ulong",
+        "CONJUNCTIONS_FOUND:ulong",
+        "PROPAGATIONS:ulong",
+        "FAILED_PAIRS:ulong"
+      ]
+    },
+    "CQRCatalogResult": {
+      "kind": "table",
+      "fields": [
+        "OBJECTS_PARSED:ulong",
+        "CONJUNCTIONS_FOUND:ulong",
+        "EVENTS:[CQREvent]",
+        "STATISTICS:CQRScreeningStatistics",
+        "EVENT_OFFSET:ulong",
+        "FINAL_CHUNK:bool=true"
+      ]
+    },
+    "CQRIndexRequest": {
+      "kind": "table",
+      "fields": [
+        "INSTANCE:PRWInstance(required)",
+        "CATALOG_HANDLE:uint",
+        "SOURCE_HANDLES:[uint]",
+        "SEGMENT_SET_HANDLE:uint",
+        "PRIMARY_SOURCE_HANDLES:[uint]",
+        "INDEX_CONTENT:cqrIndexRepresentation=UNSPECIFIED",
+        "REFINEMENT_MODE:cqrRefinementStrategy=UNSPECIFIED",
+        "SOURCES:[CQRObjectSource]",
+        "SEGMENTS:PRWDescribeResult"
+      ]
+    },
+    "CQRIndexResult": {
+      "kind": "table",
+      "fields": [
+        "INSTANCE:PRWInstance(required)",
+        "SCREENING_INDEX_HANDLE:uint",
+        "SOURCE_COUNT:ulong",
+        "CANDIDATE_PAIR_COUNT:ulong"
+      ]
+    },
+    "CQRWindowRequest": {
+      "kind": "table",
+      "fields": [
+        "INSTANCE:PRWInstance(required)",
+        "SCREENING_INDEX_HANDLE:uint",
+        "CONTROLS:CQRScreeningControls(required)",
+        "EVALUATION_FRAME:RFMCoordinateSystem(required)"
+      ]
+    },
+    "CQRDestroyRequest": {
+      "kind": "table",
+      "fields": [
+        "INSTANCE:PRWInstance(required)",
+        "SCREENING_INDEX_HANDLE:uint"
+      ]
+    },
+    "CQRVersionResult": {
+      "kind": "table",
+      "fields": [
+        "VERSION:string(required)"
+      ]
+    },
+    "cqrLaunchObjectClass": {
+      "kind": "enum",
+      "fields": [
+        "UNSPECIFIED=0",
+        "INHABITABLE=1",
+        "NON_DEBRIS=2",
+        "DEBRIS=3"
+      ]
+    },
+    "cqrLaunchScreening": {
+      "kind": "enum",
+      "fields": [
+        "UNSPECIFIED=0",
+        "SPHERICAL=1",
+        "ELLIPSOIDAL=2",
+        "PROBABILITY=3"
+      ]
+    },
+    "CQRLaunchCriterion": {
+      "kind": "table",
+      "fields": [
+        "OBJECT_CLASS:cqrLaunchObjectClass=UNSPECIFIED",
+        "SCREENING:cqrLaunchScreening=UNSPECIFIED",
+        "RADIUS_M:double",
+        "RADIAL_M:double",
+        "IN_TRACK_M:double",
+        "CROSS_TRACK_M:double",
+        "MAX_PROBABILITY:double",
+        "ALGORITHM:cqrProbabilityAlgorithm=UNSPECIFIED"
+      ]
+    },
+    "CQRLaunchSegment": {
+      "kind": "table",
+      "fields": [
+        "SEGMENT_ID:string(required)",
+        "SEGMENT_NAME:string",
+        "TRAJECTORY:OEM(required)",
+        "RADIUS_M:double=5",
+        "RADAR_CROSS_SECTION_M2:double",
+        "HAS_RADAR_CROSS_SECTION_M2:bool=false",
+        "VALID_FROM:TIMInstant",
+        "VALID_UNTIL:TIMInstant"
+      ]
+    },
+    "CQRLaunchObject": {
+      "kind": "table",
+      "fields": [
+        "SOURCE:CQRObjectSource(required)",
+        "OBJECT_CLASS:cqrLaunchObjectClass=UNSPECIFIED",
+        "RENDEZVOUS_COORDINATED:bool=false"
+      ]
+    },
+    "CQRLaunchRequest": {
+      "kind": "table",
+      "fields": [
+        "MISSION_NAME:string",
+        "NOMINAL_LIFTOFF:TIMInstant(required)",
+        "WINDOW_OPEN:TIMInstant(required)",
+        "WINDOW_CLOSE:TIMInstant(required)",
+        "LIFTOFF_STEP_SECONDS:double=1",
+        "SEGMENTS:[CQRLaunchSegment](required)",
+        "OBJECTS:[CQRLaunchObject](required)",
+        "CRITERIA:[CQRLaunchCriterion](required)",
+        "MINIMUM_ALTITUDE_M:double=150000",
+        "SCREEN_SECONDS_AFTER_LIFTOFF:double=10800",
+        "CLOSURE_PAD_SECONDS:double=0",
+        "REPORT_RATIO:double=1",
+        "EVALUATION_FRAME:RFMCoordinateSystem(required)"
+      ]
+    },
+    "CQRLaunchClosure": {
+      "kind": "table",
+      "fields": [
+        "START:TIMInstant(required)",
+        "END:TIMInstant(required)",
+        "OBJECT_IDS:[string]",
+        "SEGMENT_IDS:[string]"
+      ]
+    },
+    "CQRLaunchApproach": {
+      "kind": "table",
+      "fields": [
+        "SEGMENT_ID:string(required)",
+        "OBJECT_ID:string(required)",
+        "OBJECT_CLASS:cqrLaunchObjectClass=UNSPECIFIED",
+        "LIFTOFF:TIMInstant(required)",
+        "TCA:TIMInstant(required)",
+        "MISS_DISTANCE_M:double",
+        "RELATIVE_SPEED_M_S:double",
+        "RELATIVE_POSITION_RTN:FRMVector3",
+        "CRITERION_RATIO:double",
+        "VIOLATES:bool=false",
+        "RENDEZVOUS_COORDINATED:bool=false",
+        "RUN_START:TIMInstant",
+        "RUN_END:TIMInstant"
+      ]
+    },
+    "CQRLaunchResult": {
+      "kind": "table",
+      "fields": [
+        "MISSION_NAME:string",
+        "WINDOW_OPEN:TIMInstant",
+        "WINDOW_CLOSE:TIMInstant",
+        "LIFTOFF_STEP_SECONDS:double",
+        "LIFTOFF_TIMES_EVALUATED:ulong",
+        "CLOSURES:[CQRLaunchClosure]",
+        "APPROACHES:[CQRLaunchApproach]",
+        "STATISTICS:CQRScreeningStatistics"
+      ]
+    },
+    "CQR": {
+      "kind": "table",
+      "fields": [
+        "PAIR_REQUEST:CQRPairRequest",
+        "CATALOG_REQUEST:CQRCatalogRequest",
+        "PROBABILITY_REQUEST:CQRProbabilityRequest",
+        "PROBABILITY_RESULT:CQRProbabilityResult",
+        "ALFANO_REQUEST:CQRAlfanoRequest",
+        "ALFANO_RESULT:CQRAlfanoResult",
+        "EVENT_RESULT:CQREvent",
+        "TCA_RESULT:TIMInstant",
+        "CATALOG_RESULT:CQRCatalogResult",
+        "NATIVE_DOCUMENT:CQRNativeDocument",
+        "INDEX_REQUEST:CQRIndexRequest",
+        "INDEX_RESULT:CQRIndexResult",
+        "WINDOW_REQUEST:CQRWindowRequest",
+        "DESTROY_REQUEST:CQRDestroyRequest",
+        "VERSION_QUERY:bool=false",
+        "VERSION_RESULT:CQRVersionResult",
+        "LAUNCH_REQUEST:CQRLaunchRequest",
+        "LAUNCH_RESULT:CQRLaunchResult"
+      ]
+    }
+  },
+  "OCM": {
+    "trajectoryType": {
+      "kind": "enum",
+      "fields": [
+        "CARTESIAN_PV",
+        "CARTESIAN_PVA",
+        "POLYNOMIAL_POS",
+        "POLYNOMIAL_OE",
+        "HERMITE",
+        "LAGRANGE",
+        "KEPLERIAN",
+        "KEPLERIAN_MEAN",
+        "EQUINOCTIAL",
+        "EQUINOCTIAL_MOD"
+      ]
+    },
+    "Header": {
+      "kind": "table",
+      "fields": [
+        "CCSDS_OCM_VERS:string",
+        "COMMENT:[string]",
+        "CLASSIFICATION:string",
+        "CREATION_DATE:string",
+        "ORIGINATOR:string",
+        "MESSAGE_ID:string"
+      ]
+    },
+    "Metadata": {
+      "kind": "table",
+      "fields": [
+        "COMMENT:[string]",
+        "OBJECT_NAME:string",
+        "INTERNATIONAL_DESIGNATOR:string",
+        "CATALOG_NAME:string",
+        "OBJECT_DESIGNATOR:string",
+        "ALTERNATE_NAMES:[string]",
+        "ORIGINATOR_POC:string",
+        "ORIGINATOR_POSITION:string",
+        "ORIGINATOR_PHONE:string",
+        "ORIGINATOR_EMAIL:string",
+        "ORIGINATOR_ADDRESS:string",
+        "TECH_ORG:string",
+        "TECH_POC:string",
+        "TECH_POSITION:string",
+        "TECH_PHONE:string",
+        "TECH_EMAIL:string",
+        "TECH_ADDRESS:string",
+        "PREVIOUS_MESSAGE_ID:string",
+        "NEXT_MESSAGE_ID:string",
+        "ADM_MSG_LINK:string",
+        "CDM_MSG_LINK:string",
+        "PRM_MSG_LINK:string",
+        "RDM_MSG_LINK:string",
+        "TDM_MSG_LINK:[string]",
+        "OPERATOR:string",
+        "OWNER:string",
+        "COUNTRY:string",
+        "CONSTELLATION:string",
+        "OBJECT_TYPE:string",
+        "TIME_SYSTEM:string",
+        "EPOCH_TZERO:string",
+        "OPS_STATUS:string",
+        "ORBIT_CATEGORY:string",
+        "OCM_DATA_ELEMENTS:[string]",
+        "SCLK_OFFSET_AT_EPOCH:double",
+        "SCLK_SEC_PER_SI_SEC:double",
+        "PREVIOUS_MESSAGE_EPOCH:string",
+        "NEXT_MESSAGE_EPOCH:string",
+        "START_TIME:string",
+        "STOP_TIME:string",
+        "TIME_SPAN:double",
+        "TAIMUTC_AT_TZERO:double",
+        "NEXT_LEAP_EPOCH:string",
+        "NEXT_LEAP_TAIMUTC:double",
+        "UT1MUTC_AT_TZERO:double",
+        "EOP_SOURCE:string",
+        "INTERP_METHOD_EOP:string",
+        "CELESTIAL_SOURCE:string"
+      ]
+    },
+    "StateVector": {
+      "kind": "table",
+      "fields": [
+        "EPOCH:string",
+        "X:double",
+        "Y:double",
+        "Z:double",
+        "X_DOT:double",
+        "Y_DOT:double",
+        "Z_DOT:double",
+        "X_DDOT:double",
+        "Y_DDOT:double",
+        "Z_DDOT:double"
+      ]
+    },
+    "PhysicalProperties": {
+      "kind": "table",
+      "fields": [
+        "COMMENT:[string]",
+        "WET_MASS:double",
+        "DRY_MASS:double",
+        "MASS_UNITS:string",
+        "OEB_Q1:double",
+        "OEB_Q2:double",
+        "OEB_Q3:double",
+        "OEB_QC:double",
+        "OEB_MAX:double",
+        "OEB_INT:double",
+        "OEB_MIN:double",
+        "AREA_ALONG_OEB_MAX:double",
+        "AREA_ALONG_OEB_INT:double",
+        "AREA_ALONG_OEB_MIN:double",
+        "AREA_UNITS:string",
+        "DRAG_CONST_AREA:double",
+        "DRAG_COEFF_NOM:double",
+        "DRAG_UNCERTAINTY:double",
+        "SRP_CONST_AREA:double",
+        "SOLAR_RAD_COEFF:double",
+        "SRP_UNCERTAINTY:double"
+      ]
+    },
+    "Perturbations": {
+      "kind": "table",
+      "fields": [
+        "COMMENT:[string]",
+        "ATMOSPHERIC_MODEL:ATM",
+        "GRAVITY_MODEL:string",
+        "GRAVITY_DEGREE:int",
+        "GRAVITY_ORDER:int",
+        "GM:double",
+        "N_BODY_PERTURBATIONS:[string]",
+        "OCEAN_TIDES_MODEL:string",
+        "SOLID_TIDES_MODEL:string",
+        "ATMOSPHERIC_TIDES_MODEL:string",
+        "GEOPOTENTIAL_MODEL:string",
+        "SOLAR_RAD_PRESSURE:string",
+        "ALBEDO:string",
+        "THERMAL:string",
+        "RELATIVITY:string",
+        "ATMOSPHERIC_DRAG:string",
+        "FIXED_GEOMAG_KP:double",
+        "FIXED_F10P7:double",
+        "FIXED_F10P7_MEAN:double",
+        "FIXED_GEOMAG_AP:double"
+      ]
+    },
+    "Maneuver": {
+      "kind": "table",
+      "fields": [
+        "MAN_ID:string",
+        "MAN_BASIS:string",
+        "MAN_DEVICE_ID:string",
+        "MAN_PREV_ID:string",
+        "MAN_PURPOSE:string",
+        "MAN_REF_FRAME:string",
+        "MAN_FRAME_EPOCH:string",
+        "MAN_TYPE:string",
+        "MAN_EPOCH_START:string",
+        "MAN_DURATION:double",
+        "MAN_UNITS:[string]",
+        "DATA:[string]",
+        "MAN_COMMENT:[string]"
+      ]
+    },
+    "estimatorCategory": {
+      "kind": "enum",
+      "fields": [
+        "Unknown",
+        "BatchLeastSquares",
+        "ExtendedKalman",
+        "UnscentedKalman",
+        "Smoother"
+      ]
+    },
+    "covarianceCalibration": {
+      "kind": "enum",
+      "fields": [
+        "Unspecified",
+        "Uncalibrated",
+        "Calibrated"
+      ]
+    },
+    "OrbitDetermination": {
+      "kind": "table",
+      "fields": [
+        "OD_ID:string",
+        "OD_PREV_ID:string",
+        "OD_ALGORITHM:string",
+        "OD_METHOD:string",
+        "OD_EPOCH:string",
+        "OD_TIME_TAG:string",
+        "OD_PROCESS_NOISE:string",
+        "OD_COV_REDUCTION:string",
+        "OD_NOISE_MODELS:string",
+        "OD_OBSERVATIONS_TYPE:[string]",
+        "OD_OBSERVATIONS_USED:int",
+        "OD_TRACKS_USED:int",
+        "OD_DATA_WEIGHTING:string",
+        "OD_CONVERGENCE_CRITERIA:string",
+        "OD_EST_PARAMETERS:[string]",
+        "OD_APRIORI_DATA:string",
+        "OD_RESIDUALS:string",
+        "OD_ESTIMATOR:estimatorCategory",
+        "OD_RESIDUAL_RMS:double",
+        "OD_RESIDUALS_SERIES:[double]",
+        "OD_RESIDUAL_EPOCHS:[double]",
+        "OD_BATCH_BASELINE_ID:string",
+        "OD_BATCH_BASELINE_RMS:double",
+        "SEDR:double",
+        "WEIGHTED_RMS:double"
+      ]
+    },
+    "UserDefinedParameters": {
+      "kind": "table",
+      "fields": [
+        "PARAM_NAME:string",
+        "PARAM_VALUE:string"
+      ]
+    },
+    "OCM": {
+      "kind": "table",
+      "fields": [
+        "HEADER:Header",
+        "METADATA:Metadata",
+        "TRAJ_TYPE:trajectoryType=CARTESIAN_PV",
+        "TRAJ_TYPE_DESCRIPTION:string",
+        "STATE_STEP_SIZE:double",
+        "STATE_VECTOR_SIZE:uint8=6",
+        "STATE_DATA:[double]",
+        "COVARIANCE_DATA:[double]",
+        "POLYNOMIAL_POSITION_RECORDS:[PPEPositionRecord]",
+        "POLYNOMIAL_OE_RECORDS:[PPEOrbitalElementRecord]",
+        "PHYSICAL_PROPERTIES:PhysicalProperties",
+        "MANEUVER_DATA:[Maneuver]",
+        "PERTURBATIONS:Perturbations",
+        "ORBIT_DETERMINATION:OrbitDetermination",
+        "USER_DEFINED_PARAMETERS:[UserDefinedParameters]",
+        "CENTER_NAME:string",
+        "TRAJ_REF_FRAME:RFM",
+        "TRAJ_FRAME_EPOCH:string",
+        "COV_REF_FRAME:RFM",
+        "ORB_REVNUM:uint",
+        "ORB_AVERAGING:string",
+        "COV_CALIBRATION:covarianceCalibration=Unspecified",
+        "COV_CALIBRATION_REFERENCE:string"
+      ]
+    }
+  }
+}

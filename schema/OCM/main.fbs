@@ -349,19 +349,22 @@ table Maneuver {
   DC_WIN_OPEN: string;
   /// Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
   DC_WIN_CLOSE: string;
-  /// Minimum and maximum ON cycles; absent means unspecified (Table 6-7).
-  DC_MIN_CYCLES: uint = null;
-  DC_MAX_CYCLES: uint = null;
+  /// Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+  DC_MIN_CYCLES: uint;
+  DC_MAX_CYCLES: uint;
+  /// Presence of the corresponding cycle bound; zero remains representable.
+  HAS_DC_MIN_CYCLES: bool = false;
+  HAS_DC_MAX_CYCLES: bool = false;
   /// First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
   /// Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
   DC_EXEC_START: string;
   DC_EXEC_STOP: string;
   /// Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
   DC_REF_TIME: string;
-  /// Pulse ON duration and start-to-start period, seconds (Table 6-7).
+  /// Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
   /// Required with DC_REF_TIME for non-continuous cycles; period >= duration.
-  DC_TIME_PULSE_DURATION: double = null;
-  DC_TIME_PULSE_PERIOD: double = null;
+  DC_TIME_PULSE_DURATION: double = nan;
+  DC_TIME_PULSE_PERIOD: double = nan;
   /// Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
   /// Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
   DC_REF_DIR: [double];
@@ -369,10 +372,10 @@ table Maneuver {
   DC_BODY_FRAME: string;
   /// Three-component body-frame trigger unit direction (Table 6-7).
   DC_BODY_TRIGGER: [double];
-  /// Pulse start and stop phase angles, degrees; absent means unspecified.
+  /// Pulse start and stop phase angles, degrees; NaN means unspecified.
   /// CCSDS 502.0-B-3 Table 6-7.
-  DC_PA_START_ANGLE: double = null;
-  DC_PA_STOP_ANGLE: double = null;
+  DC_PA_START_ANGLE: double = nan;
+  DC_PA_STOP_ANGLE: double = nan;
 }
 
 /// Estimator class that produced an orbit-determination solution
