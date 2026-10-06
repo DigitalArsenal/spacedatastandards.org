@@ -11,3 +11,4 @@
 # Guard:    node scripts/checkRecordTypeOrdinals.mjs
 class RecordTypeExtended(object):
     NONE = 0
+    ABA = 256

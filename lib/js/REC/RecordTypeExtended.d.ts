@@ -8,6 +8,7 @@
  * Guard:    node scripts/checkRecordTypeOrdinals.mjs
  */
 export declare enum RecordTypeExtended {
-    NONE = 0
+    NONE = 0,
+    ABA = 256
 }
 //# sourceMappingURL=RecordTypeExtended.d.ts.map

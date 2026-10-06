@@ -13,5 +13,6 @@
 class RecordTypeExtended private constructor() {
     companion object {
         const val NONE: UShort = 0u
+        const val ABA: UShort = 256u
     }
 }

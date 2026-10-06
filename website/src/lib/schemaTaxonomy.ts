@@ -319,7 +319,7 @@ export const landingFeatureCategories: LandingFeatureCategory[] = [
     icon: "network",
     iconClass: "icon-blue",
     title: "Network Operations",
-    description: "PGM, PRR, TNR, TRE - peer registry state, peer groups, and trust graph assertions for SDN operational state",
-    schemas: ["PGM", "PRR", "TNR", "TRE"],
+    description: "ABA, PGM, PRR, TNR, TRE - signed address book entries, peer registry state, peer groups, and trust graph assertions for SDN operational state",
+    schemas: ["ABA", "PGM", "PRR", "TNR", "TRE"],
   },
 ];

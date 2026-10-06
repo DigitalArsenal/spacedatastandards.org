@@ -268,6 +268,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -2119,29 +2120,25 @@ bool VerifyRecordTypeVector(::flatbuffers::VerifierTemplate<B> &verifier, const 
 /// Guard:    node scripts/checkRecordTypeOrdinals.mjs
 enum RecordTypeExtended : uint16_t {
   RecordTypeExtended_NONE = 0,
+  RecordTypeExtended_ABA = 256,
   RecordTypeExtended_MIN = RecordTypeExtended_NONE,
-  RecordTypeExtended_MAX = RecordTypeExtended_NONE
+  RecordTypeExtended_MAX = RecordTypeExtended_ABA
 };
 
-inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[1] {
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[2] {
   static const RecordTypeExtended values[] = {
-    RecordTypeExtended_NONE
+    RecordTypeExtended_NONE,
+    RecordTypeExtended_ABA
   };
   return values;
 }
 
-inline const char * const *EnumNamesRecordTypeExtended() {
-  static const char * const names[2] = {
-    "NONE",
-    nullptr
-  };
-  return names;
-}
-
 inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
-  if (::flatbuffers::IsOutRange(e, RecordTypeExtended_NONE, RecordTypeExtended_NONE)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamesRecordTypeExtended()[index];
+  switch (e) {
+    case RecordTypeExtended_NONE: return "NONE";
+    case RecordTypeExtended_ABA: return "ABA";
+    default: return "";
+  }
 }
 
 /// Individual record wrapper for any standard type

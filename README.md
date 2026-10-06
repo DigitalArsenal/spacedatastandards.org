@@ -88,6 +88,8 @@ Space Data Standards modernizes decades-old formats while maintaining compatibil
 
 ### Network Operations
 
+**ABA** — [Address Book Attestation](docs/ABA.md): node-signed, byte-exact EPM contact entries with visibility and revocation
+
 **PGM, PRR, TNR, TRE** — Peer group membership, trusted peer registry state, trust graph node state, and directed trust edge assertions for SDN operational state
 
 ### Geospatial

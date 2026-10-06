@@ -255,6 +255,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 pub mod flatbuffers_encryption {
 //! Field-encryption format 3: encrypts or decrypts, in place, every
@@ -8759,12 +8760,13 @@ impl RecordTypeT {
 pub const ENUM_MIN_RECORD_TYPE_EXTENDED: u16 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 0;
+pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 256;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 1] = [
+pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 2] = [
     RecordTypeExtended::NONE,
+    RecordTypeExtended::ABA,
 ];
 
 /// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
@@ -8781,17 +8783,20 @@ pub struct RecordTypeExtended(pub u16);
 #[allow(non_upper_case_globals)]
 impl RecordTypeExtended {
     pub const NONE: Self = Self(0);
+    pub const ABA: Self = Self(256);
 
     pub const ENUM_MIN: u16 = 0;
-    pub const ENUM_MAX: u16 = 0;
+    pub const ENUM_MAX: u16 = 256;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::NONE,
+        Self::ABA,
     ];
 
     /// Returns the variant's name or "" if unknown.
     pub fn variant_name(self) -> Option<&'static str> {
         match self {
             Self::NONE => Some("NONE"),
+            Self::ABA => Some("ABA"),
             _ => None,
         }
     }

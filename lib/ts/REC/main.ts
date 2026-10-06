@@ -2,6 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
+export * from './ABA.js';
+export * from './abaDisclosure.js';
 export * from './AbsoluteTimeParameterType.js';
 export * from './accessCategory.js';
 export * from './ACI.js';

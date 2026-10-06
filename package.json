@@ -1,6 +1,6 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.233.0+1791307037074",
+    "version": "1.234.0+1791313272596",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -13,7 +13,8 @@
         "src/js",
         "dist/",
         "wasm/",
-        "README"
+        "README",
+        "docs/ABA.md"
     ],
     "keywords": [
         "celestrak",
@@ -151,6 +152,8 @@
         "playwright": "^1.58.2",
         "pure-ipfs-only-hash": "^4.0.2",
         "sdn-emception": "1.0.0",
-        "typescript": "^5.2.2"
+        "typescript": "^5.2.2",
+        "@libp2p/crypto": "5.1.23",
+        "@libp2p/peer-id": "6.0.15"
     }
 }

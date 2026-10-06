@@ -41,6 +41,7 @@ const descriptionOverrides = {
   "STF": "Data Storefront - marketplace listings with pricing and access types",
   "PLG": "Plugin Marketplace Manifest - canonical signed storefront and WASM distribution metadata",
   "TNR": "Trust Node Record - durable SDN trust graph node state and tombstones",
+  "ABA": "Address Book Attestation - signed node address book entries binding exact EPM profiles, visibility, and revocation",
   "TRE": "Trust Edge Record - directed SDN trust assertions, weights, and tombstones",
   "PGM": "Peer Group Membership Record - durable SDN peer group membership state and tombstones",
   "PRR": "Peer Registry Record - durable SDN trusted-peer registry state and tombstones",
@@ -214,7 +215,7 @@ const categories = [
   { tag: "Security", types: ["EME","ENC","EPM","PLK"] },
   { tag: "Reference", types: ["RFM","CRD","TIM","TME","MET","LCC","CTR","SIT","SCM"] },
   { tag: "Exchange", types: ["CRM","PNM","ACL","PUR","REV","REC","STF","PLG"] },
-  { tag: "Network Operations", types: ["PGM","PRR","TNR","TRE"] },
+  { tag: "Network Operations", types: ["ABA","PGM","PRR","TNR","TRE"] },
   { tag: "Geospatial", types: ["GJN","CZM","KML","GPX","COT"] },
 ];
 for (const cat of categories) {

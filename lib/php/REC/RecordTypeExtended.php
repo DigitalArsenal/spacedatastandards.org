@@ -11,9 +11,11 @@
 class RecordTypeExtended
 {
     const NONE = 0;
+    const ABA = 256;
 
     private static $names = array(
         RecordTypeExtended::NONE=>"NONE",
+        RecordTypeExtended::ABA=>"ABA",
     );
 
     public static function Name($e)

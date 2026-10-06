@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "abaDisclosure" : {
+      "type" : "string",
+      "enum": ["PRIVATE", "PUBLIC"]
+    },
+    "ABA" : {
+      "type" : "object",
+      "description" : "Address Book Attestation - one node's signed, byte-exact contact entry.",
+      "properties" : {
+        "ENTRY_ID" : {
+                "type" : "string",
+                "description" : "Stable opaque entry identifier, unique within NODE_PEER_ID. Keep it\nthrough profile updates and revocation; do not use the profile digest."
+              },
+        "NODE_PEER_ID" : {
+                "type" : "string",
+                "description" : "Issuing node's libp2p Peer ID, in base58btc multihash form."
+              },
+        "PUBLIC_KEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Literal public key bytes verifying SIGNATURE. For secp256k1 this is\nthe 33-byte compressed SEC1 public key, without a protobuf wrapper."
+              },
+        "SIGNATURE_ALGORITHM" : {
+                "type" : "string",
+                "description" : "Signature algorithm identifier. \"secp256k1\" means libp2p signing:\nSHA-256 of canonical bytes followed by low-S ECDSA, encoded as ASN.1\nDER. Reject unsupported algorithms; never guess from the key bytes."
+              },
+        "PROFILE_BYTES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "The complete EPM FlatBuffer exactly as attested, including its $EPM\nidentifier and any size prefix. Preserve the bytes even in tombstones."
+              },
+        "PROFILE_SHA256" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Exactly 32 raw SHA-256 digest bytes of PROFILE_BYTES."
+              },
+        "VISIBILITY" : {
+                "$ref" : "#/definitions/abaDisclosure",
+                "description" : "Disclosure flag only. The node enforces PRIVATE by excluding the entry\nand its attestation from everything it serves or synchronizes publicly."
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this entry was first attested."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds of this signed revision; at least\nCREATED_AT, and strictly greater than the preceding revision."
+              },
+        "DELETED" : {
+                "type" : "boolean",
+                "description" : "True revokes the stable entry. A tombstone must still pass signature,\nnode identity and profile-digest verification."
+              },
+        "NOTE" : {
+                "type" : "string",
+                "description" : "Optional short operator note; part of the signed record."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Node identity signature over UTF-8 RFC 8785 canonical JSON with every\nABA field present under its exact IDL name. Byte vectors are arrays of\nintegers in [0,255]; SIGNATURE is []. CREATED_AT and UPDATED_AT are\nunsigned decimal strings without leading zeroes (except \"0\").\nVISIBILITY is its numeric ordinal; DELETED is a boolean; remaining\nfields are strings, with absent NOTE represented as \"\". Include defaults,\nno extra keys, no Unicode normalization, BOM or trailing newline.\nEmpty is allowed only while signing; consumers reject unsigned records."
+              }
+      },
+      "required" : ["ENTRY_ID", "NODE_PEER_ID", "PUBLIC_KEY", "SIGNATURE_ALGORITHM", "PROFILE_BYTES", "PROFILE_SHA256"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ABA"
+}

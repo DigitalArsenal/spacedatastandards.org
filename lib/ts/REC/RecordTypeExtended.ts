@@ -12,5 +12,6 @@
  * Guard:    node scripts/checkRecordTypeOrdinals.mjs
  */
 export enum RecordTypeExtended {
-  NONE = 0
+  NONE = 0,
+  ABA = 256
 }

@@ -13,8 +13,5 @@
 public final class RecordTypeExtended {
   private RecordTypeExtended() { }
   public static final int NONE = 0;
-
-  public static final String[] names = { "NONE", };
-
-  public static String name(int e) { return names[e]; }
+  public static final int ABA = 256;
 }
