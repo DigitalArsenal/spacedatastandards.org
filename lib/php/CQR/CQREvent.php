@@ -340,22 +340,43 @@ class CQREvent extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrCovarianceBasis::UNSPECIFIED;
     }
 
+    /// Geometry used by the screening request that admitted this event.
+    /**
+     * @return byte
+     */
+    public function getSCREENING()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrVolumeGeometry::SPHERICAL;
+    }
+
+    /// Volume(s) containing the other object at TCA; BOTH means both tests passed.
+    /// UNSPECIFIED means admission provenance was not reported.
+    /**
+     * @return byte
+     */
+    public function getADMITTED_BY()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrVolumeAnchor::UNSPECIFIED;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCQREvent(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(35);
+        $builder->StartObject(37);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CQREvent
      */
-    public static function createCQREvent(FlatBufferBuilder $builder, $PRIMARY_ID, $SECONDARY_ID, $PRIMARY_NAME, $SECONDARY_NAME, $PRIMARY_NORAD_ID, $SECONDARY_NORAD_ID, $TCA, $MISS_DISTANCE_M, $RELATIVE_SPEED_M_S, $PROBABILITY, $DILUTION_THRESHOLD_M, $HAS_DILUTION_THRESHOLD_M, $RELATIVE_POSITION_RTN, $RELATIVE_VELOCITY_RTN, $PRIMARY_SIGMA_RTN_M, $SECONDARY_SIGMA_RTN_M, $PRIMARY_DAYS_SINCE_EPOCH, $HAS_PRIMARY_DAYS_SINCE_EPOCH, $SECONDARY_DAYS_SINCE_EPOCH, $HAS_SECONDARY_DAYS_SINCE_EPOCH, $CONJUNCTION_MESSAGE, $PRIMARY_STATE, $SECONDARY_STATE, $MAHALANOBIS_3D_SQUARED, $HAS_MAHALANOBIS_3D_SQUARED, $COMBINED_RADIUS_M, $HAS_COMBINED_RADIUS_M, $PRIMARY_HARD_BODY_RADIUS_M, $HAS_PRIMARY_HARD_BODY_RADIUS_M, $SECONDARY_HARD_BODY_RADIUS_M, $HAS_SECONDARY_HARD_BODY_RADIUS_M, $PRIMARY_RADIUS_BASIS, $SECONDARY_RADIUS_BASIS, $PRIMARY_COVARIANCE_BASIS, $SECONDARY_COVARIANCE_BASIS)
+    public static function createCQREvent(FlatBufferBuilder $builder, $PRIMARY_ID, $SECONDARY_ID, $PRIMARY_NAME, $SECONDARY_NAME, $PRIMARY_NORAD_ID, $SECONDARY_NORAD_ID, $TCA, $MISS_DISTANCE_M, $RELATIVE_SPEED_M_S, $PROBABILITY, $DILUTION_THRESHOLD_M, $HAS_DILUTION_THRESHOLD_M, $RELATIVE_POSITION_RTN, $RELATIVE_VELOCITY_RTN, $PRIMARY_SIGMA_RTN_M, $SECONDARY_SIGMA_RTN_M, $PRIMARY_DAYS_SINCE_EPOCH, $HAS_PRIMARY_DAYS_SINCE_EPOCH, $SECONDARY_DAYS_SINCE_EPOCH, $HAS_SECONDARY_DAYS_SINCE_EPOCH, $CONJUNCTION_MESSAGE, $PRIMARY_STATE, $SECONDARY_STATE, $MAHALANOBIS_3D_SQUARED, $HAS_MAHALANOBIS_3D_SQUARED, $COMBINED_RADIUS_M, $HAS_COMBINED_RADIUS_M, $PRIMARY_HARD_BODY_RADIUS_M, $HAS_PRIMARY_HARD_BODY_RADIUS_M, $SECONDARY_HARD_BODY_RADIUS_M, $HAS_SECONDARY_HARD_BODY_RADIUS_M, $PRIMARY_RADIUS_BASIS, $SECONDARY_RADIUS_BASIS, $PRIMARY_COVARIANCE_BASIS, $SECONDARY_COVARIANCE_BASIS, $SCREENING, $ADMITTED_BY)
     {
-        $builder->startObject(35);
+        $builder->startObject(37);
         self::addPRIMARY_ID($builder, $PRIMARY_ID);
         self::addSECONDARY_ID($builder, $SECONDARY_ID);
         self::addPRIMARY_NAME($builder, $PRIMARY_NAME);
@@ -391,6 +412,8 @@ class CQREvent extends Table
         self::addSECONDARY_RADIUS_BASIS($builder, $SECONDARY_RADIUS_BASIS);
         self::addPRIMARY_COVARIANCE_BASIS($builder, $PRIMARY_COVARIANCE_BASIS);
         self::addSECONDARY_COVARIANCE_BASIS($builder, $SECONDARY_COVARIANCE_BASIS);
+        self::addSCREENING($builder, $SCREENING);
+        self::addADMITTED_BY($builder, $ADMITTED_BY);
         $o = $builder->endObject();
         $builder->required($o, 4);  // PRIMARY_ID
         $builder->required($o, 6);  // SECONDARY_ID
@@ -746,6 +769,26 @@ class CQREvent extends Table
     public static function addSECONDARY_COVARIANCE_BASIS(FlatBufferBuilder $builder, $SECONDARY_COVARIANCE_BASIS)
     {
         $builder->addByteX(34, $SECONDARY_COVARIANCE_BASIS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addSCREENING(FlatBufferBuilder $builder, $SCREENING)
+    {
+        $builder->addByteX(35, $SCREENING, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addADMITTED_BY(FlatBufferBuilder $builder, $ADMITTED_BY)
+    {
+        $builder->addByteX(36, $ADMITTED_BY, 0);
     }
 
     /**

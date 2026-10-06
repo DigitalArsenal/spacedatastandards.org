@@ -1917,7 +1917,31 @@ struct Maneuver FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MAN_DURATION = 22,
     VT_MAN_UNITS = 24,
     VT_DATA = 26,
-    VT_MAN_COMMENT = 28
+    VT_MAN_COMMENT = 28,
+    VT_MAN_COMPOSITION = 30,
+    VT_MAN_NEXT_ID = 32,
+    VT_MAN_BASIS_ID = 34,
+    VT_MAN_PREV_EPOCH = 36,
+    VT_MAN_NEXT_EPOCH = 38,
+    VT_MAN_PRED_SOURCE = 40,
+    VT_GRAV_ASSIST_NAME = 42,
+    VT_DC_TYPE = 44,
+    VT_DC_WIN_OPEN = 46,
+    VT_DC_WIN_CLOSE = 48,
+    VT_DC_MIN_CYCLES = 50,
+    VT_DC_MAX_CYCLES = 52,
+    VT_HAS_DC_MIN_CYCLES = 54,
+    VT_HAS_DC_MAX_CYCLES = 56,
+    VT_DC_EXEC_START = 58,
+    VT_DC_EXEC_STOP = 60,
+    VT_DC_REF_TIME = 62,
+    VT_DC_TIME_PULSE_DURATION = 64,
+    VT_DC_TIME_PULSE_PERIOD = 66,
+    VT_DC_REF_DIR = 68,
+    VT_DC_BODY_FRAME = 70,
+    VT_DC_BODY_TRIGGER = 72,
+    VT_DC_PA_START_ANGLE = 74,
+    VT_DC_PA_STOP_ANGLE = 76
   };
   /// Unique identifier for the maneuver.
   const ::flatbuffers::String *MAN_ID() const {
@@ -1971,6 +1995,105 @@ struct Maneuver FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MAN_COMMENT() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MAN_COMMENT);
   }
+  /// Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+  /// CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+  /// DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+  /// Relative time tags are seconds from METADATA.EPOCH_TZERO.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MAN_COMPOSITION() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MAN_COMPOSITION);
+  }
+  /// Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+  const ::flatbuffers::String *MAN_NEXT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MAN_NEXT_ID);
+  }
+  /// OD, navigation solution or simulation identifier (Table 6-7).
+  const ::flatbuffers::String *MAN_BASIS_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MAN_BASIS_ID);
+  }
+  /// Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+  /// CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+  const ::flatbuffers::String *MAN_PREV_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MAN_PREV_EPOCH);
+  }
+  /// Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+  const ::flatbuffers::String *MAN_NEXT_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MAN_NEXT_EPOCH);
+  }
+  /// Source of predicted orbit or attitude states (Table 6-7).
+  const ::flatbuffers::String *MAN_PRED_SOURCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MAN_PRED_SOURCE);
+  }
+  /// Gravitational assist body name (Table 6-7).
+  const ::flatbuffers::String *GRAV_ASSIST_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_GRAV_ASSIST_NAME);
+  }
+  /// CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+  const ::flatbuffers::String *DC_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DC_TYPE);
+  }
+  /// Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+  const ::flatbuffers::String *DC_WIN_OPEN() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DC_WIN_OPEN);
+  }
+  /// Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+  const ::flatbuffers::String *DC_WIN_CLOSE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DC_WIN_CLOSE);
+  }
+  /// Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+  uint32_t DC_MIN_CYCLES() const {
+    return GetField<uint32_t>(VT_DC_MIN_CYCLES, 0);
+  }
+  uint32_t DC_MAX_CYCLES() const {
+    return GetField<uint32_t>(VT_DC_MAX_CYCLES, 0);
+  }
+  /// Presence of the corresponding cycle bound; zero remains representable.
+  bool HAS_DC_MIN_CYCLES() const {
+    return GetField<uint8_t>(VT_HAS_DC_MIN_CYCLES, 0) != 0;
+  }
+  bool HAS_DC_MAX_CYCLES() const {
+    return GetField<uint8_t>(VT_HAS_DC_MAX_CYCLES, 0) != 0;
+  }
+  /// First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+  /// Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+  const ::flatbuffers::String *DC_EXEC_START() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DC_EXEC_START);
+  }
+  const ::flatbuffers::String *DC_EXEC_STOP() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DC_EXEC_STOP);
+  }
+  /// Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+  const ::flatbuffers::String *DC_REF_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DC_REF_TIME);
+  }
+  /// Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+  /// Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+  double DC_TIME_PULSE_DURATION() const {
+    return GetField<double>(VT_DC_TIME_PULSE_DURATION, std::numeric_limits<double>::quiet_NaN());
+  }
+  double DC_TIME_PULSE_PERIOD() const {
+    return GetField<double>(VT_DC_TIME_PULSE_PERIOD, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+  /// Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+  const ::flatbuffers::Vector<double> *DC_REF_DIR() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_DC_REF_DIR);
+  }
+  /// Body frame of DC_BODY_TRIGGER (Table 6-7).
+  const ::flatbuffers::String *DC_BODY_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DC_BODY_FRAME);
+  }
+  /// Three-component body-frame trigger unit direction (Table 6-7).
+  const ::flatbuffers::Vector<double> *DC_BODY_TRIGGER() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_DC_BODY_TRIGGER);
+  }
+  /// Pulse start and stop phase angles, degrees; NaN means unspecified.
+  /// CCSDS 502.0-B-3 Table 6-7.
+  double DC_PA_START_ANGLE() const {
+    return GetField<double>(VT_DC_PA_START_ANGLE, std::numeric_limits<double>::quiet_NaN());
+  }
+  double DC_PA_STOP_ANGLE() const {
+    return GetField<double>(VT_DC_PA_STOP_ANGLE, std::numeric_limits<double>::quiet_NaN());
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2002,6 +2125,47 @@ struct Maneuver FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_MAN_COMMENT) &&
            verifier.VerifyVector(MAN_COMMENT()) &&
            verifier.VerifyVectorOfStrings(MAN_COMMENT()) &&
+           VerifyOffset(verifier, VT_MAN_COMPOSITION) &&
+           verifier.VerifyVector(MAN_COMPOSITION()) &&
+           verifier.VerifyVectorOfStrings(MAN_COMPOSITION()) &&
+           VerifyOffset(verifier, VT_MAN_NEXT_ID) &&
+           verifier.VerifyString(MAN_NEXT_ID()) &&
+           VerifyOffset(verifier, VT_MAN_BASIS_ID) &&
+           verifier.VerifyString(MAN_BASIS_ID()) &&
+           VerifyOffset(verifier, VT_MAN_PREV_EPOCH) &&
+           verifier.VerifyString(MAN_PREV_EPOCH()) &&
+           VerifyOffset(verifier, VT_MAN_NEXT_EPOCH) &&
+           verifier.VerifyString(MAN_NEXT_EPOCH()) &&
+           VerifyOffset(verifier, VT_MAN_PRED_SOURCE) &&
+           verifier.VerifyString(MAN_PRED_SOURCE()) &&
+           VerifyOffset(verifier, VT_GRAV_ASSIST_NAME) &&
+           verifier.VerifyString(GRAV_ASSIST_NAME()) &&
+           VerifyOffset(verifier, VT_DC_TYPE) &&
+           verifier.VerifyString(DC_TYPE()) &&
+           VerifyOffset(verifier, VT_DC_WIN_OPEN) &&
+           verifier.VerifyString(DC_WIN_OPEN()) &&
+           VerifyOffset(verifier, VT_DC_WIN_CLOSE) &&
+           verifier.VerifyString(DC_WIN_CLOSE()) &&
+           VerifyField<uint32_t>(verifier, VT_DC_MIN_CYCLES, 4) &&
+           VerifyField<uint32_t>(verifier, VT_DC_MAX_CYCLES, 4) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_DC_MIN_CYCLES, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_DC_MAX_CYCLES, 1) &&
+           VerifyOffset(verifier, VT_DC_EXEC_START) &&
+           verifier.VerifyString(DC_EXEC_START()) &&
+           VerifyOffset(verifier, VT_DC_EXEC_STOP) &&
+           verifier.VerifyString(DC_EXEC_STOP()) &&
+           VerifyOffset(verifier, VT_DC_REF_TIME) &&
+           verifier.VerifyString(DC_REF_TIME()) &&
+           VerifyField<double>(verifier, VT_DC_TIME_PULSE_DURATION, 8) &&
+           VerifyField<double>(verifier, VT_DC_TIME_PULSE_PERIOD, 8) &&
+           VerifyOffset(verifier, VT_DC_REF_DIR) &&
+           verifier.VerifyVector(DC_REF_DIR()) &&
+           VerifyOffset(verifier, VT_DC_BODY_FRAME) &&
+           verifier.VerifyString(DC_BODY_FRAME()) &&
+           VerifyOffset(verifier, VT_DC_BODY_TRIGGER) &&
+           verifier.VerifyVector(DC_BODY_TRIGGER()) &&
+           VerifyField<double>(verifier, VT_DC_PA_START_ANGLE, 8) &&
+           VerifyField<double>(verifier, VT_DC_PA_STOP_ANGLE, 8) &&
            verifier.EndTable();
   }
 };
@@ -2049,6 +2213,78 @@ struct ManeuverBuilder {
   void add_MAN_COMMENT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MAN_COMMENT) {
     fbb_.AddOffset(Maneuver::VT_MAN_COMMENT, MAN_COMMENT);
   }
+  void add_MAN_COMPOSITION(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MAN_COMPOSITION) {
+    fbb_.AddOffset(Maneuver::VT_MAN_COMPOSITION, MAN_COMPOSITION);
+  }
+  void add_MAN_NEXT_ID(::flatbuffers::Offset<::flatbuffers::String> MAN_NEXT_ID) {
+    fbb_.AddOffset(Maneuver::VT_MAN_NEXT_ID, MAN_NEXT_ID);
+  }
+  void add_MAN_BASIS_ID(::flatbuffers::Offset<::flatbuffers::String> MAN_BASIS_ID) {
+    fbb_.AddOffset(Maneuver::VT_MAN_BASIS_ID, MAN_BASIS_ID);
+  }
+  void add_MAN_PREV_EPOCH(::flatbuffers::Offset<::flatbuffers::String> MAN_PREV_EPOCH) {
+    fbb_.AddOffset(Maneuver::VT_MAN_PREV_EPOCH, MAN_PREV_EPOCH);
+  }
+  void add_MAN_NEXT_EPOCH(::flatbuffers::Offset<::flatbuffers::String> MAN_NEXT_EPOCH) {
+    fbb_.AddOffset(Maneuver::VT_MAN_NEXT_EPOCH, MAN_NEXT_EPOCH);
+  }
+  void add_MAN_PRED_SOURCE(::flatbuffers::Offset<::flatbuffers::String> MAN_PRED_SOURCE) {
+    fbb_.AddOffset(Maneuver::VT_MAN_PRED_SOURCE, MAN_PRED_SOURCE);
+  }
+  void add_GRAV_ASSIST_NAME(::flatbuffers::Offset<::flatbuffers::String> GRAV_ASSIST_NAME) {
+    fbb_.AddOffset(Maneuver::VT_GRAV_ASSIST_NAME, GRAV_ASSIST_NAME);
+  }
+  void add_DC_TYPE(::flatbuffers::Offset<::flatbuffers::String> DC_TYPE) {
+    fbb_.AddOffset(Maneuver::VT_DC_TYPE, DC_TYPE);
+  }
+  void add_DC_WIN_OPEN(::flatbuffers::Offset<::flatbuffers::String> DC_WIN_OPEN) {
+    fbb_.AddOffset(Maneuver::VT_DC_WIN_OPEN, DC_WIN_OPEN);
+  }
+  void add_DC_WIN_CLOSE(::flatbuffers::Offset<::flatbuffers::String> DC_WIN_CLOSE) {
+    fbb_.AddOffset(Maneuver::VT_DC_WIN_CLOSE, DC_WIN_CLOSE);
+  }
+  void add_DC_MIN_CYCLES(uint32_t DC_MIN_CYCLES) {
+    fbb_.AddElement<uint32_t>(Maneuver::VT_DC_MIN_CYCLES, DC_MIN_CYCLES, 0);
+  }
+  void add_DC_MAX_CYCLES(uint32_t DC_MAX_CYCLES) {
+    fbb_.AddElement<uint32_t>(Maneuver::VT_DC_MAX_CYCLES, DC_MAX_CYCLES, 0);
+  }
+  void add_HAS_DC_MIN_CYCLES(bool HAS_DC_MIN_CYCLES) {
+    fbb_.AddElement<uint8_t>(Maneuver::VT_HAS_DC_MIN_CYCLES, static_cast<uint8_t>(HAS_DC_MIN_CYCLES), 0);
+  }
+  void add_HAS_DC_MAX_CYCLES(bool HAS_DC_MAX_CYCLES) {
+    fbb_.AddElement<uint8_t>(Maneuver::VT_HAS_DC_MAX_CYCLES, static_cast<uint8_t>(HAS_DC_MAX_CYCLES), 0);
+  }
+  void add_DC_EXEC_START(::flatbuffers::Offset<::flatbuffers::String> DC_EXEC_START) {
+    fbb_.AddOffset(Maneuver::VT_DC_EXEC_START, DC_EXEC_START);
+  }
+  void add_DC_EXEC_STOP(::flatbuffers::Offset<::flatbuffers::String> DC_EXEC_STOP) {
+    fbb_.AddOffset(Maneuver::VT_DC_EXEC_STOP, DC_EXEC_STOP);
+  }
+  void add_DC_REF_TIME(::flatbuffers::Offset<::flatbuffers::String> DC_REF_TIME) {
+    fbb_.AddOffset(Maneuver::VT_DC_REF_TIME, DC_REF_TIME);
+  }
+  void add_DC_TIME_PULSE_DURATION(double DC_TIME_PULSE_DURATION) {
+    fbb_.AddElement<double>(Maneuver::VT_DC_TIME_PULSE_DURATION, DC_TIME_PULSE_DURATION, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_DC_TIME_PULSE_PERIOD(double DC_TIME_PULSE_PERIOD) {
+    fbb_.AddElement<double>(Maneuver::VT_DC_TIME_PULSE_PERIOD, DC_TIME_PULSE_PERIOD, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_DC_REF_DIR(::flatbuffers::Offset<::flatbuffers::Vector<double>> DC_REF_DIR) {
+    fbb_.AddOffset(Maneuver::VT_DC_REF_DIR, DC_REF_DIR);
+  }
+  void add_DC_BODY_FRAME(::flatbuffers::Offset<::flatbuffers::String> DC_BODY_FRAME) {
+    fbb_.AddOffset(Maneuver::VT_DC_BODY_FRAME, DC_BODY_FRAME);
+  }
+  void add_DC_BODY_TRIGGER(::flatbuffers::Offset<::flatbuffers::Vector<double>> DC_BODY_TRIGGER) {
+    fbb_.AddOffset(Maneuver::VT_DC_BODY_TRIGGER, DC_BODY_TRIGGER);
+  }
+  void add_DC_PA_START_ANGLE(double DC_PA_START_ANGLE) {
+    fbb_.AddElement<double>(Maneuver::VT_DC_PA_START_ANGLE, DC_PA_START_ANGLE, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_DC_PA_STOP_ANGLE(double DC_PA_STOP_ANGLE) {
+    fbb_.AddElement<double>(Maneuver::VT_DC_PA_STOP_ANGLE, DC_PA_STOP_ANGLE, std::numeric_limits<double>::quiet_NaN());
+  }
   explicit ManeuverBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2074,9 +2310,55 @@ inline ::flatbuffers::Offset<Maneuver> CreateManeuver(
     double MAN_DURATION = 0.0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MAN_UNITS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> DATA = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MAN_COMMENT = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MAN_COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MAN_COMPOSITION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MAN_NEXT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MAN_BASIS_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MAN_PREV_EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MAN_NEXT_EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MAN_PRED_SOURCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> GRAV_ASSIST_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DC_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DC_WIN_OPEN = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DC_WIN_CLOSE = 0,
+    uint32_t DC_MIN_CYCLES = 0,
+    uint32_t DC_MAX_CYCLES = 0,
+    bool HAS_DC_MIN_CYCLES = false,
+    bool HAS_DC_MAX_CYCLES = false,
+    ::flatbuffers::Offset<::flatbuffers::String> DC_EXEC_START = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DC_EXEC_STOP = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DC_REF_TIME = 0,
+    double DC_TIME_PULSE_DURATION = std::numeric_limits<double>::quiet_NaN(),
+    double DC_TIME_PULSE_PERIOD = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> DC_REF_DIR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DC_BODY_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> DC_BODY_TRIGGER = 0,
+    double DC_PA_START_ANGLE = std::numeric_limits<double>::quiet_NaN(),
+    double DC_PA_STOP_ANGLE = std::numeric_limits<double>::quiet_NaN()) {
   ManeuverBuilder builder_(_fbb);
+  builder_.add_DC_PA_STOP_ANGLE(DC_PA_STOP_ANGLE);
+  builder_.add_DC_PA_START_ANGLE(DC_PA_START_ANGLE);
+  builder_.add_DC_TIME_PULSE_PERIOD(DC_TIME_PULSE_PERIOD);
+  builder_.add_DC_TIME_PULSE_DURATION(DC_TIME_PULSE_DURATION);
   builder_.add_MAN_DURATION(MAN_DURATION);
+  builder_.add_DC_BODY_TRIGGER(DC_BODY_TRIGGER);
+  builder_.add_DC_BODY_FRAME(DC_BODY_FRAME);
+  builder_.add_DC_REF_DIR(DC_REF_DIR);
+  builder_.add_DC_REF_TIME(DC_REF_TIME);
+  builder_.add_DC_EXEC_STOP(DC_EXEC_STOP);
+  builder_.add_DC_EXEC_START(DC_EXEC_START);
+  builder_.add_DC_MAX_CYCLES(DC_MAX_CYCLES);
+  builder_.add_DC_MIN_CYCLES(DC_MIN_CYCLES);
+  builder_.add_DC_WIN_CLOSE(DC_WIN_CLOSE);
+  builder_.add_DC_WIN_OPEN(DC_WIN_OPEN);
+  builder_.add_DC_TYPE(DC_TYPE);
+  builder_.add_GRAV_ASSIST_NAME(GRAV_ASSIST_NAME);
+  builder_.add_MAN_PRED_SOURCE(MAN_PRED_SOURCE);
+  builder_.add_MAN_NEXT_EPOCH(MAN_NEXT_EPOCH);
+  builder_.add_MAN_PREV_EPOCH(MAN_PREV_EPOCH);
+  builder_.add_MAN_BASIS_ID(MAN_BASIS_ID);
+  builder_.add_MAN_NEXT_ID(MAN_NEXT_ID);
+  builder_.add_MAN_COMPOSITION(MAN_COMPOSITION);
   builder_.add_MAN_COMMENT(MAN_COMMENT);
   builder_.add_DATA(DATA);
   builder_.add_MAN_UNITS(MAN_UNITS);
@@ -2089,6 +2371,8 @@ inline ::flatbuffers::Offset<Maneuver> CreateManeuver(
   builder_.add_MAN_DEVICE_ID(MAN_DEVICE_ID);
   builder_.add_MAN_BASIS(MAN_BASIS);
   builder_.add_MAN_ID(MAN_ID);
+  builder_.add_HAS_DC_MAX_CYCLES(HAS_DC_MAX_CYCLES);
+  builder_.add_HAS_DC_MIN_CYCLES(HAS_DC_MIN_CYCLES);
   return builder_.Finish();
 }
 
@@ -2106,7 +2390,31 @@ inline ::flatbuffers::Offset<Maneuver> CreateManeuverDirect(
     double MAN_DURATION = 0.0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MAN_UNITS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *DATA = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MAN_COMMENT = nullptr) {
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MAN_COMMENT = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MAN_COMPOSITION = nullptr,
+    const char *MAN_NEXT_ID = nullptr,
+    const char *MAN_BASIS_ID = nullptr,
+    const char *MAN_PREV_EPOCH = nullptr,
+    const char *MAN_NEXT_EPOCH = nullptr,
+    const char *MAN_PRED_SOURCE = nullptr,
+    const char *GRAV_ASSIST_NAME = nullptr,
+    const char *DC_TYPE = nullptr,
+    const char *DC_WIN_OPEN = nullptr,
+    const char *DC_WIN_CLOSE = nullptr,
+    uint32_t DC_MIN_CYCLES = 0,
+    uint32_t DC_MAX_CYCLES = 0,
+    bool HAS_DC_MIN_CYCLES = false,
+    bool HAS_DC_MAX_CYCLES = false,
+    const char *DC_EXEC_START = nullptr,
+    const char *DC_EXEC_STOP = nullptr,
+    const char *DC_REF_TIME = nullptr,
+    double DC_TIME_PULSE_DURATION = std::numeric_limits<double>::quiet_NaN(),
+    double DC_TIME_PULSE_PERIOD = std::numeric_limits<double>::quiet_NaN(),
+    const std::vector<double> *DC_REF_DIR = nullptr,
+    const char *DC_BODY_FRAME = nullptr,
+    const std::vector<double> *DC_BODY_TRIGGER = nullptr,
+    double DC_PA_START_ANGLE = std::numeric_limits<double>::quiet_NaN(),
+    double DC_PA_STOP_ANGLE = std::numeric_limits<double>::quiet_NaN()) {
   auto MAN_ID__ = MAN_ID ? _fbb.CreateString(MAN_ID) : 0;
   auto MAN_BASIS__ = MAN_BASIS ? _fbb.CreateString(MAN_BASIS) : 0;
   auto MAN_DEVICE_ID__ = MAN_DEVICE_ID ? _fbb.CreateString(MAN_DEVICE_ID) : 0;
@@ -2119,6 +2427,22 @@ inline ::flatbuffers::Offset<Maneuver> CreateManeuverDirect(
   auto MAN_UNITS__ = MAN_UNITS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MAN_UNITS) : 0;
   auto DATA__ = DATA ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*DATA) : 0;
   auto MAN_COMMENT__ = MAN_COMMENT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MAN_COMMENT) : 0;
+  auto MAN_COMPOSITION__ = MAN_COMPOSITION ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MAN_COMPOSITION) : 0;
+  auto MAN_NEXT_ID__ = MAN_NEXT_ID ? _fbb.CreateString(MAN_NEXT_ID) : 0;
+  auto MAN_BASIS_ID__ = MAN_BASIS_ID ? _fbb.CreateString(MAN_BASIS_ID) : 0;
+  auto MAN_PREV_EPOCH__ = MAN_PREV_EPOCH ? _fbb.CreateString(MAN_PREV_EPOCH) : 0;
+  auto MAN_NEXT_EPOCH__ = MAN_NEXT_EPOCH ? _fbb.CreateString(MAN_NEXT_EPOCH) : 0;
+  auto MAN_PRED_SOURCE__ = MAN_PRED_SOURCE ? _fbb.CreateString(MAN_PRED_SOURCE) : 0;
+  auto GRAV_ASSIST_NAME__ = GRAV_ASSIST_NAME ? _fbb.CreateString(GRAV_ASSIST_NAME) : 0;
+  auto DC_TYPE__ = DC_TYPE ? _fbb.CreateString(DC_TYPE) : 0;
+  auto DC_WIN_OPEN__ = DC_WIN_OPEN ? _fbb.CreateString(DC_WIN_OPEN) : 0;
+  auto DC_WIN_CLOSE__ = DC_WIN_CLOSE ? _fbb.CreateString(DC_WIN_CLOSE) : 0;
+  auto DC_EXEC_START__ = DC_EXEC_START ? _fbb.CreateString(DC_EXEC_START) : 0;
+  auto DC_EXEC_STOP__ = DC_EXEC_STOP ? _fbb.CreateString(DC_EXEC_STOP) : 0;
+  auto DC_REF_TIME__ = DC_REF_TIME ? _fbb.CreateString(DC_REF_TIME) : 0;
+  auto DC_REF_DIR__ = DC_REF_DIR ? _fbb.CreateVector<double>(*DC_REF_DIR) : 0;
+  auto DC_BODY_FRAME__ = DC_BODY_FRAME ? _fbb.CreateString(DC_BODY_FRAME) : 0;
+  auto DC_BODY_TRIGGER__ = DC_BODY_TRIGGER ? _fbb.CreateVector<double>(*DC_BODY_TRIGGER) : 0;
   return CreateManeuver(
       _fbb,
       MAN_ID__,
@@ -2133,7 +2457,31 @@ inline ::flatbuffers::Offset<Maneuver> CreateManeuverDirect(
       MAN_DURATION,
       MAN_UNITS__,
       DATA__,
-      MAN_COMMENT__);
+      MAN_COMMENT__,
+      MAN_COMPOSITION__,
+      MAN_NEXT_ID__,
+      MAN_BASIS_ID__,
+      MAN_PREV_EPOCH__,
+      MAN_NEXT_EPOCH__,
+      MAN_PRED_SOURCE__,
+      GRAV_ASSIST_NAME__,
+      DC_TYPE__,
+      DC_WIN_OPEN__,
+      DC_WIN_CLOSE__,
+      DC_MIN_CYCLES,
+      DC_MAX_CYCLES,
+      HAS_DC_MIN_CYCLES,
+      HAS_DC_MAX_CYCLES,
+      DC_EXEC_START__,
+      DC_EXEC_STOP__,
+      DC_REF_TIME__,
+      DC_TIME_PULSE_DURATION,
+      DC_TIME_PULSE_PERIOD,
+      DC_REF_DIR__,
+      DC_BODY_FRAME__,
+      DC_BODY_TRIGGER__,
+      DC_PA_START_ANGLE,
+      DC_PA_STOP_ANGLE);
 }
 
 struct OrbitDetermination FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -2635,7 +2983,8 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ORB_REVNUM = 42,
     VT_ORB_AVERAGING = 44,
     VT_COV_CALIBRATION = 46,
-    VT_COV_CALIBRATION_REFERENCE = 48
+    VT_COV_CALIBRATION_REFERENCE = 48,
+    VT_STATE_EPOCHS = 50
   };
   /// Header section of the OCM.
   const Header *HEADER() const {
@@ -2657,7 +3006,7 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *TRAJ_TYPE_DESCRIPTION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRAJ_TYPE_DESCRIPTION);
   }
-  /// Time interval between state vectors in seconds (required for time-series data).
+  /// Time interval between state vectors in seconds; required without STATE_EPOCHS.
   double STATE_STEP_SIZE() const {
     return GetField<double>(VT_STATE_STEP_SIZE, 0.0);
   }
@@ -2670,7 +3019,7 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   /// State data as row-major array of doubles.
   /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
-  /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+  /// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
   /// Length must be divisible by STATE_VECTOR_SIZE.
   /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
   const ::flatbuffers::Vector<double> *STATE_DATA() const {
@@ -2751,6 +3100,13 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *COV_CALIBRATION_REFERENCE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COV_CALIBRATION_REFERENCE);
   }
+  /// Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+  /// section 6.2.4). When nonempty, length equals STATE_DATA.length /
+  /// STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+  /// Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *STATE_EPOCHS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_STATE_EPOCHS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2799,6 +3155,9 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int8_t>(verifier, VT_COV_CALIBRATION, 1) &&
            VerifyOffset(verifier, VT_COV_CALIBRATION_REFERENCE) &&
            verifier.VerifyString(COV_CALIBRATION_REFERENCE()) &&
+           VerifyOffset(verifier, VT_STATE_EPOCHS) &&
+           verifier.VerifyVector(STATE_EPOCHS()) &&
+           verifier.VerifyVectorOfStrings(STATE_EPOCHS()) &&
            verifier.EndTable();
   }
 };
@@ -2876,6 +3235,9 @@ struct OCMBuilder {
   void add_COV_CALIBRATION_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE) {
     fbb_.AddOffset(OCM::VT_COV_CALIBRATION_REFERENCE, COV_CALIBRATION_REFERENCE);
   }
+  void add_STATE_EPOCHS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> STATE_EPOCHS) {
+    fbb_.AddOffset(OCM::VT_STATE_EPOCHS, STATE_EPOCHS);
+  }
   explicit OCMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2911,9 +3273,11 @@ inline ::flatbuffers::Offset<OCM> CreateOCM(
     uint32_t ORB_REVNUM = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORB_AVERAGING = 0,
     covarianceCalibration COV_CALIBRATION = covarianceCalibration_Unspecified,
-    ::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> STATE_EPOCHS = 0) {
   OCMBuilder builder_(_fbb);
   builder_.add_STATE_STEP_SIZE(STATE_STEP_SIZE);
+  builder_.add_STATE_EPOCHS(STATE_EPOCHS);
   builder_.add_COV_CALIBRATION_REFERENCE(COV_CALIBRATION_REFERENCE);
   builder_.add_ORB_AVERAGING(ORB_AVERAGING);
   builder_.add_ORB_REVNUM(ORB_REVNUM);
@@ -2963,7 +3327,8 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
     uint32_t ORB_REVNUM = 0,
     const char *ORB_AVERAGING = nullptr,
     covarianceCalibration COV_CALIBRATION = covarianceCalibration_Unspecified,
-    const char *COV_CALIBRATION_REFERENCE = nullptr) {
+    const char *COV_CALIBRATION_REFERENCE = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *STATE_EPOCHS = nullptr) {
   auto TRAJ_TYPE_DESCRIPTION__ = TRAJ_TYPE_DESCRIPTION ? _fbb.CreateString(TRAJ_TYPE_DESCRIPTION) : 0;
   auto STATE_DATA__ = STATE_DATA ? _fbb.CreateVector<double>(*STATE_DATA) : 0;
   auto COVARIANCE_DATA__ = COVARIANCE_DATA ? _fbb.CreateVector<double>(*COVARIANCE_DATA) : 0;
@@ -2975,6 +3340,7 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
   auto TRAJ_FRAME_EPOCH__ = TRAJ_FRAME_EPOCH ? _fbb.CreateString(TRAJ_FRAME_EPOCH) : 0;
   auto ORB_AVERAGING__ = ORB_AVERAGING ? _fbb.CreateString(ORB_AVERAGING) : 0;
   auto COV_CALIBRATION_REFERENCE__ = COV_CALIBRATION_REFERENCE ? _fbb.CreateString(COV_CALIBRATION_REFERENCE) : 0;
+  auto STATE_EPOCHS__ = STATE_EPOCHS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*STATE_EPOCHS) : 0;
   return CreateOCM(
       _fbb,
       HEADER,
@@ -2999,7 +3365,8 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
       ORB_REVNUM,
       ORB_AVERAGING__,
       COV_CALIBRATION,
-      COV_CALIBRATION_REFERENCE__);
+      COV_CALIBRATION_REFERENCE__,
+      STATE_EPOCHS__);
 }
 
 inline const OCM *GetOCM(const void *buf) {

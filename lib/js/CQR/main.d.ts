@@ -48,6 +48,8 @@ export * from './CQRScreeningStatistics.js';
 export * from './CQRSourceProvenance.js';
 export * from './cqrUncertaintyOrigin.js';
 export * from './CQRVersionResult.js';
+export * from './cqrVolumeAnchor.js';
+export * from './cqrVolumeGeometry.js';
 export * from './CQRWindowRequest.js';
 export * from './CryptoKey.js';
 export * from './CSM.js';

@@ -4,6 +4,7 @@ package OCM
 
 import (
 	flatbuffers "github.com/google/flatbuffers/go"
+	"math"
 )
 
 type Maneuver struct {
@@ -270,8 +271,479 @@ func (rcv *Maneuver) ManCommentLength() int {
 }
 
 /// Comments related to the maneuver.
+/// Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+/// CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+/// DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+/// Relative time tags are seconds from METADATA.EPOCH_TZERO.
+func (rcv *Maneuver) MAN_COMPOSITION(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *Maneuver) ManComposition(j int) []byte {
+	return rcv.MAN_COMPOSITION(j)
+}
+
+func (rcv *Maneuver) MAN_COMPOSITIONLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *Maneuver) ManCompositionLength() int {
+	return rcv.MAN_COMPOSITIONLength()
+}
+
+/// Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+/// CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+/// DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+/// Relative time tags are seconds from METADATA.EPOCH_TZERO.
+/// Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+func (rcv *Maneuver) MAN_NEXT_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) ManNextId() []byte {
+	return rcv.MAN_NEXT_ID()
+}
+
+/// Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+/// OD, navigation solution or simulation identifier (Table 6-7).
+func (rcv *Maneuver) MAN_BASIS_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) ManBasisId() []byte {
+	return rcv.MAN_BASIS_ID()
+}
+
+/// OD, navigation solution or simulation identifier (Table 6-7).
+/// Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+/// CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+func (rcv *Maneuver) MAN_PREV_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) ManPrevEpoch() []byte {
+	return rcv.MAN_PREV_EPOCH()
+}
+
+/// Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+/// CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+/// Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+func (rcv *Maneuver) MAN_NEXT_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) ManNextEpoch() []byte {
+	return rcv.MAN_NEXT_EPOCH()
+}
+
+/// Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+/// Source of predicted orbit or attitude states (Table 6-7).
+func (rcv *Maneuver) MAN_PRED_SOURCE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) ManPredSource() []byte {
+	return rcv.MAN_PRED_SOURCE()
+}
+
+/// Source of predicted orbit or attitude states (Table 6-7).
+/// Gravitational assist body name (Table 6-7).
+func (rcv *Maneuver) GRAV_ASSIST_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) GravAssistName() []byte {
+	return rcv.GRAV_ASSIST_NAME()
+}
+
+/// Gravitational assist body name (Table 6-7).
+/// CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+func (rcv *Maneuver) DC_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) DcType() []byte {
+	return rcv.DC_TYPE()
+}
+
+/// CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+/// Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+func (rcv *Maneuver) DC_WIN_OPEN() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) DcWinOpen() []byte {
+	return rcv.DC_WIN_OPEN()
+}
+
+/// Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+/// Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+func (rcv *Maneuver) DC_WIN_CLOSE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) DcWinClose() []byte {
+	return rcv.DC_WIN_CLOSE()
+}
+
+/// Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+/// Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+func (rcv *Maneuver) DC_MIN_CYCLES() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Maneuver) DcMinCycles() uint32 {
+	return rcv.DC_MIN_CYCLES()
+}
+
+/// Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+func (rcv *Maneuver) MutateDC_MIN_CYCLES(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(50, n)
+}
+
+func (rcv *Maneuver) MutateDcMinCycles(n uint32) bool {
+	return rcv.MutateDC_MIN_CYCLES(n)
+}
+
+func (rcv *Maneuver) DC_MAX_CYCLES() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Maneuver) DcMaxCycles() uint32 {
+	return rcv.DC_MAX_CYCLES()
+}
+
+func (rcv *Maneuver) MutateDC_MAX_CYCLES(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(52, n)
+}
+
+func (rcv *Maneuver) MutateDcMaxCycles(n uint32) bool {
+	return rcv.MutateDC_MAX_CYCLES(n)
+}
+
+/// Presence of the corresponding cycle bound; zero remains representable.
+func (rcv *Maneuver) HAS_DC_MIN_CYCLES() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *Maneuver) HasDcMinCycles() bool {
+	return rcv.HAS_DC_MIN_CYCLES()
+}
+
+/// Presence of the corresponding cycle bound; zero remains representable.
+func (rcv *Maneuver) MutateHAS_DC_MIN_CYCLES(n bool) bool {
+	return rcv._tab.MutateBoolSlot(54, n)
+}
+
+func (rcv *Maneuver) MutateHasDcMinCycles(n bool) bool {
+	return rcv.MutateHAS_DC_MIN_CYCLES(n)
+}
+
+func (rcv *Maneuver) HAS_DC_MAX_CYCLES() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *Maneuver) HasDcMaxCycles() bool {
+	return rcv.HAS_DC_MAX_CYCLES()
+}
+
+func (rcv *Maneuver) MutateHAS_DC_MAX_CYCLES(n bool) bool {
+	return rcv._tab.MutateBoolSlot(56, n)
+}
+
+func (rcv *Maneuver) MutateHasDcMaxCycles(n bool) bool {
+	return rcv.MutateHAS_DC_MAX_CYCLES(n)
+}
+
+/// First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+/// Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+func (rcv *Maneuver) DC_EXEC_START() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) DcExecStart() []byte {
+	return rcv.DC_EXEC_START()
+}
+
+/// First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+/// Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+func (rcv *Maneuver) DC_EXEC_STOP() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) DcExecStop() []byte {
+	return rcv.DC_EXEC_STOP()
+}
+
+/// Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+func (rcv *Maneuver) DC_REF_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) DcRefTime() []byte {
+	return rcv.DC_REF_TIME()
+}
+
+/// Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+/// Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+/// Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+func (rcv *Maneuver) DC_TIME_PULSE_DURATION() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Maneuver) DcTimePulseDuration() float64 {
+	return rcv.DC_TIME_PULSE_DURATION()
+}
+
+/// Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+/// Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+func (rcv *Maneuver) MutateDC_TIME_PULSE_DURATION(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *Maneuver) MutateDcTimePulseDuration(n float64) bool {
+	return rcv.MutateDC_TIME_PULSE_DURATION(n)
+}
+
+func (rcv *Maneuver) DC_TIME_PULSE_PERIOD() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Maneuver) DcTimePulsePeriod() float64 {
+	return rcv.DC_TIME_PULSE_PERIOD()
+}
+
+func (rcv *Maneuver) MutateDC_TIME_PULSE_PERIOD(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *Maneuver) MutateDcTimePulsePeriod(n float64) bool {
+	return rcv.MutateDC_TIME_PULSE_PERIOD(n)
+}
+
+/// Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+/// Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+func (rcv *Maneuver) DC_REF_DIR(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *Maneuver) DcRefDir(j int) float64 {
+	return rcv.DC_REF_DIR(j)
+}
+
+func (rcv *Maneuver) DC_REF_DIRLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *Maneuver) DcRefDirLength() int {
+	return rcv.DC_REF_DIRLength()
+}
+
+/// Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+/// Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+func (rcv *Maneuver) MutateDC_REF_DIR(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *Maneuver) MutateDcRefDir(j int, n float64) bool {
+	return rcv.MutateDC_REF_DIR(j, n)
+}
+
+/// Body frame of DC_BODY_TRIGGER (Table 6-7).
+func (rcv *Maneuver) DC_BODY_FRAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Maneuver) DcBodyFrame() []byte {
+	return rcv.DC_BODY_FRAME()
+}
+
+/// Body frame of DC_BODY_TRIGGER (Table 6-7).
+/// Three-component body-frame trigger unit direction (Table 6-7).
+func (rcv *Maneuver) DC_BODY_TRIGGER(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *Maneuver) DcBodyTrigger(j int) float64 {
+	return rcv.DC_BODY_TRIGGER(j)
+}
+
+func (rcv *Maneuver) DC_BODY_TRIGGERLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *Maneuver) DcBodyTriggerLength() int {
+	return rcv.DC_BODY_TRIGGERLength()
+}
+
+/// Three-component body-frame trigger unit direction (Table 6-7).
+func (rcv *Maneuver) MutateDC_BODY_TRIGGER(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *Maneuver) MutateDcBodyTrigger(j int, n float64) bool {
+	return rcv.MutateDC_BODY_TRIGGER(j, n)
+}
+
+/// Pulse start and stop phase angles, degrees; NaN means unspecified.
+/// CCSDS 502.0-B-3 Table 6-7.
+func (rcv *Maneuver) DC_PA_START_ANGLE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Maneuver) DcPaStartAngle() float64 {
+	return rcv.DC_PA_START_ANGLE()
+}
+
+/// Pulse start and stop phase angles, degrees; NaN means unspecified.
+/// CCSDS 502.0-B-3 Table 6-7.
+func (rcv *Maneuver) MutateDC_PA_START_ANGLE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(74, n)
+}
+
+func (rcv *Maneuver) MutateDcPaStartAngle(n float64) bool {
+	return rcv.MutateDC_PA_START_ANGLE(n)
+}
+
+func (rcv *Maneuver) DC_PA_STOP_ANGLE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Maneuver) DcPaStopAngle() float64 {
+	return rcv.DC_PA_STOP_ANGLE()
+}
+
+func (rcv *Maneuver) MutateDC_PA_STOP_ANGLE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(76, n)
+}
+
+func (rcv *Maneuver) MutateDcPaStopAngle(n float64) bool {
+	return rcv.MutateDC_PA_STOP_ANGLE(n)
+}
+
 func ManeuverStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(37)
 }
 func ManeuverAddMAN_ID(builder *flatbuffers.Builder, MAN_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MAN_ID), 0)
@@ -368,6 +840,168 @@ func ManeuverStartMAN_COMMENTVector(builder *flatbuffers.Builder, numElems int) 
 }
 func ManeuverStartManCommentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return ManeuverStartMAN_COMMENTVector(builder, numElems)
+}
+func ManeuverAddMAN_COMPOSITION(builder *flatbuffers.Builder, MAN_COMPOSITION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(MAN_COMPOSITION), 0)
+}
+func ManeuverAddManComposition(builder *flatbuffers.Builder, MAN_COMPOSITION flatbuffers.UOffsetT) {
+	ManeuverAddMAN_COMPOSITION(builder, MAN_COMPOSITION)
+}
+func ManeuverStartMAN_COMPOSITIONVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ManeuverStartManCompositionVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ManeuverStartMAN_COMPOSITIONVector(builder, numElems)
+}
+func ManeuverAddMAN_NEXT_ID(builder *flatbuffers.Builder, MAN_NEXT_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(MAN_NEXT_ID), 0)
+}
+func ManeuverAddManNextId(builder *flatbuffers.Builder, MAN_NEXT_ID flatbuffers.UOffsetT) {
+	ManeuverAddMAN_NEXT_ID(builder, MAN_NEXT_ID)
+}
+func ManeuverAddMAN_BASIS_ID(builder *flatbuffers.Builder, MAN_BASIS_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(MAN_BASIS_ID), 0)
+}
+func ManeuverAddManBasisId(builder *flatbuffers.Builder, MAN_BASIS_ID flatbuffers.UOffsetT) {
+	ManeuverAddMAN_BASIS_ID(builder, MAN_BASIS_ID)
+}
+func ManeuverAddMAN_PREV_EPOCH(builder *flatbuffers.Builder, MAN_PREV_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(MAN_PREV_EPOCH), 0)
+}
+func ManeuverAddManPrevEpoch(builder *flatbuffers.Builder, MAN_PREV_EPOCH flatbuffers.UOffsetT) {
+	ManeuverAddMAN_PREV_EPOCH(builder, MAN_PREV_EPOCH)
+}
+func ManeuverAddMAN_NEXT_EPOCH(builder *flatbuffers.Builder, MAN_NEXT_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(MAN_NEXT_EPOCH), 0)
+}
+func ManeuverAddManNextEpoch(builder *flatbuffers.Builder, MAN_NEXT_EPOCH flatbuffers.UOffsetT) {
+	ManeuverAddMAN_NEXT_EPOCH(builder, MAN_NEXT_EPOCH)
+}
+func ManeuverAddMAN_PRED_SOURCE(builder *flatbuffers.Builder, MAN_PRED_SOURCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(MAN_PRED_SOURCE), 0)
+}
+func ManeuverAddManPredSource(builder *flatbuffers.Builder, MAN_PRED_SOURCE flatbuffers.UOffsetT) {
+	ManeuverAddMAN_PRED_SOURCE(builder, MAN_PRED_SOURCE)
+}
+func ManeuverAddGRAV_ASSIST_NAME(builder *flatbuffers.Builder, GRAV_ASSIST_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(GRAV_ASSIST_NAME), 0)
+}
+func ManeuverAddGravAssistName(builder *flatbuffers.Builder, GRAV_ASSIST_NAME flatbuffers.UOffsetT) {
+	ManeuverAddGRAV_ASSIST_NAME(builder, GRAV_ASSIST_NAME)
+}
+func ManeuverAddDC_TYPE(builder *flatbuffers.Builder, DC_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(DC_TYPE), 0)
+}
+func ManeuverAddDcType(builder *flatbuffers.Builder, DC_TYPE flatbuffers.UOffsetT) {
+	ManeuverAddDC_TYPE(builder, DC_TYPE)
+}
+func ManeuverAddDC_WIN_OPEN(builder *flatbuffers.Builder, DC_WIN_OPEN flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(DC_WIN_OPEN), 0)
+}
+func ManeuverAddDcWinOpen(builder *flatbuffers.Builder, DC_WIN_OPEN flatbuffers.UOffsetT) {
+	ManeuverAddDC_WIN_OPEN(builder, DC_WIN_OPEN)
+}
+func ManeuverAddDC_WIN_CLOSE(builder *flatbuffers.Builder, DC_WIN_CLOSE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(DC_WIN_CLOSE), 0)
+}
+func ManeuverAddDcWinClose(builder *flatbuffers.Builder, DC_WIN_CLOSE flatbuffers.UOffsetT) {
+	ManeuverAddDC_WIN_CLOSE(builder, DC_WIN_CLOSE)
+}
+func ManeuverAddDC_MIN_CYCLES(builder *flatbuffers.Builder, DC_MIN_CYCLES uint32) {
+	builder.PrependUint32Slot(23, DC_MIN_CYCLES, 0)
+}
+func ManeuverAddDcMinCycles(builder *flatbuffers.Builder, DC_MIN_CYCLES uint32) {
+	ManeuverAddDC_MIN_CYCLES(builder, DC_MIN_CYCLES)
+}
+func ManeuverAddDC_MAX_CYCLES(builder *flatbuffers.Builder, DC_MAX_CYCLES uint32) {
+	builder.PrependUint32Slot(24, DC_MAX_CYCLES, 0)
+}
+func ManeuverAddDcMaxCycles(builder *flatbuffers.Builder, DC_MAX_CYCLES uint32) {
+	ManeuverAddDC_MAX_CYCLES(builder, DC_MAX_CYCLES)
+}
+func ManeuverAddHAS_DC_MIN_CYCLES(builder *flatbuffers.Builder, HAS_DC_MIN_CYCLES bool) {
+	builder.PrependBoolSlot(25, HAS_DC_MIN_CYCLES, false)
+}
+func ManeuverAddHasDcMinCycles(builder *flatbuffers.Builder, HAS_DC_MIN_CYCLES bool) {
+	ManeuverAddHAS_DC_MIN_CYCLES(builder, HAS_DC_MIN_CYCLES)
+}
+func ManeuverAddHAS_DC_MAX_CYCLES(builder *flatbuffers.Builder, HAS_DC_MAX_CYCLES bool) {
+	builder.PrependBoolSlot(26, HAS_DC_MAX_CYCLES, false)
+}
+func ManeuverAddHasDcMaxCycles(builder *flatbuffers.Builder, HAS_DC_MAX_CYCLES bool) {
+	ManeuverAddHAS_DC_MAX_CYCLES(builder, HAS_DC_MAX_CYCLES)
+}
+func ManeuverAddDC_EXEC_START(builder *flatbuffers.Builder, DC_EXEC_START flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(DC_EXEC_START), 0)
+}
+func ManeuverAddDcExecStart(builder *flatbuffers.Builder, DC_EXEC_START flatbuffers.UOffsetT) {
+	ManeuverAddDC_EXEC_START(builder, DC_EXEC_START)
+}
+func ManeuverAddDC_EXEC_STOP(builder *flatbuffers.Builder, DC_EXEC_STOP flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(DC_EXEC_STOP), 0)
+}
+func ManeuverAddDcExecStop(builder *flatbuffers.Builder, DC_EXEC_STOP flatbuffers.UOffsetT) {
+	ManeuverAddDC_EXEC_STOP(builder, DC_EXEC_STOP)
+}
+func ManeuverAddDC_REF_TIME(builder *flatbuffers.Builder, DC_REF_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(DC_REF_TIME), 0)
+}
+func ManeuverAddDcRefTime(builder *flatbuffers.Builder, DC_REF_TIME flatbuffers.UOffsetT) {
+	ManeuverAddDC_REF_TIME(builder, DC_REF_TIME)
+}
+func ManeuverAddDC_TIME_PULSE_DURATION(builder *flatbuffers.Builder, DC_TIME_PULSE_DURATION float64) {
+	builder.PrependFloat64Slot(30, DC_TIME_PULSE_DURATION, float64(math.NaN()))
+}
+func ManeuverAddDcTimePulseDuration(builder *flatbuffers.Builder, DC_TIME_PULSE_DURATION float64) {
+	ManeuverAddDC_TIME_PULSE_DURATION(builder, DC_TIME_PULSE_DURATION)
+}
+func ManeuverAddDC_TIME_PULSE_PERIOD(builder *flatbuffers.Builder, DC_TIME_PULSE_PERIOD float64) {
+	builder.PrependFloat64Slot(31, DC_TIME_PULSE_PERIOD, float64(math.NaN()))
+}
+func ManeuverAddDcTimePulsePeriod(builder *flatbuffers.Builder, DC_TIME_PULSE_PERIOD float64) {
+	ManeuverAddDC_TIME_PULSE_PERIOD(builder, DC_TIME_PULSE_PERIOD)
+}
+func ManeuverAddDC_REF_DIR(builder *flatbuffers.Builder, DC_REF_DIR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(DC_REF_DIR), 0)
+}
+func ManeuverAddDcRefDir(builder *flatbuffers.Builder, DC_REF_DIR flatbuffers.UOffsetT) {
+	ManeuverAddDC_REF_DIR(builder, DC_REF_DIR)
+}
+func ManeuverStartDC_REF_DIRVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func ManeuverStartDcRefDirVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ManeuverStartDC_REF_DIRVector(builder, numElems)
+}
+func ManeuverAddDC_BODY_FRAME(builder *flatbuffers.Builder, DC_BODY_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(DC_BODY_FRAME), 0)
+}
+func ManeuverAddDcBodyFrame(builder *flatbuffers.Builder, DC_BODY_FRAME flatbuffers.UOffsetT) {
+	ManeuverAddDC_BODY_FRAME(builder, DC_BODY_FRAME)
+}
+func ManeuverAddDC_BODY_TRIGGER(builder *flatbuffers.Builder, DC_BODY_TRIGGER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(DC_BODY_TRIGGER), 0)
+}
+func ManeuverAddDcBodyTrigger(builder *flatbuffers.Builder, DC_BODY_TRIGGER flatbuffers.UOffsetT) {
+	ManeuverAddDC_BODY_TRIGGER(builder, DC_BODY_TRIGGER)
+}
+func ManeuverStartDC_BODY_TRIGGERVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func ManeuverStartDcBodyTriggerVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ManeuverStartDC_BODY_TRIGGERVector(builder, numElems)
+}
+func ManeuverAddDC_PA_START_ANGLE(builder *flatbuffers.Builder, DC_PA_START_ANGLE float64) {
+	builder.PrependFloat64Slot(35, DC_PA_START_ANGLE, float64(math.NaN()))
+}
+func ManeuverAddDcPaStartAngle(builder *flatbuffers.Builder, DC_PA_START_ANGLE float64) {
+	ManeuverAddDC_PA_START_ANGLE(builder, DC_PA_START_ANGLE)
+}
+func ManeuverAddDC_PA_STOP_ANGLE(builder *flatbuffers.Builder, DC_PA_STOP_ANGLE float64) {
+	builder.PrependFloat64Slot(36, DC_PA_STOP_ANGLE, float64(math.NaN()))
+}
+func ManeuverAddDcPaStopAngle(builder *flatbuffers.Builder, DC_PA_STOP_ANGLE float64) {
+	ManeuverAddDC_PA_STOP_ANGLE(builder, DC_PA_STOP_ANGLE)
 }
 func ManeuverEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -167,8 +167,246 @@ manCommentLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+ * CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+ * DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+ * Relative time tags are seconds from METADATA.EPOCH_TZERO.
+ */
+MAN_COMPOSITION(index: number):string
+MAN_COMPOSITION(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+MAN_COMPOSITION(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+manCompositionLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+ */
+MAN_NEXT_ID():string|null
+MAN_NEXT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MAN_NEXT_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * OD, navigation solution or simulation identifier (Table 6-7).
+ */
+MAN_BASIS_ID():string|null
+MAN_BASIS_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MAN_BASIS_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+ * CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+ */
+MAN_PREV_EPOCH():string|null
+MAN_PREV_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MAN_PREV_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+ */
+MAN_NEXT_EPOCH():string|null
+MAN_NEXT_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MAN_NEXT_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Source of predicted orbit or attitude states (Table 6-7).
+ */
+MAN_PRED_SOURCE():string|null
+MAN_PRED_SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MAN_PRED_SOURCE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Gravitational assist body name (Table 6-7).
+ */
+GRAV_ASSIST_NAME():string|null
+GRAV_ASSIST_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+GRAV_ASSIST_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+ */
+DC_TYPE():string|null
+DC_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DC_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+ */
+DC_WIN_OPEN():string|null
+DC_WIN_OPEN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DC_WIN_OPEN(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+ */
+DC_WIN_CLOSE():string|null
+DC_WIN_CLOSE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DC_WIN_CLOSE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+ */
+DC_MIN_CYCLES():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+DC_MAX_CYCLES():number {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Presence of the corresponding cycle bound; zero remains representable.
+ */
+HAS_DC_MIN_CYCLES():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_DC_MAX_CYCLES():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+ * Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+ */
+DC_EXEC_START():string|null
+DC_EXEC_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DC_EXEC_START(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+DC_EXEC_STOP():string|null
+DC_EXEC_STOP(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DC_EXEC_STOP(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+ */
+DC_REF_TIME():string|null
+DC_REF_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DC_REF_TIME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+ * Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+ */
+DC_TIME_PULSE_DURATION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+DC_TIME_PULSE_PERIOD():number {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+ * Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+ */
+DC_REF_DIR(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+dcRefDirLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+dcRefDirArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Body frame of DC_BODY_TRIGGER (Table 6-7).
+ */
+DC_BODY_FRAME():string|null
+DC_BODY_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DC_BODY_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Three-component body-frame trigger unit direction (Table 6-7).
+ */
+DC_BODY_TRIGGER(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+dcBodyTriggerLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+dcBodyTriggerArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Pulse start and stop phase angles, degrees; NaN means unspecified.
+ * CCSDS 502.0-B-3 Table 6-7.
+ */
+DC_PA_START_ANGLE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+DC_PA_STOP_ANGLE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
 static startManeuver(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(37);
 }
 
 static addManId(builder:flatbuffers.Builder, MAN_IDOffset:flatbuffers.Offset) {
@@ -259,12 +497,154 @@ static startManCommentVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addManComposition(builder:flatbuffers.Builder, MAN_COMPOSITIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, MAN_COMPOSITIONOffset, 0);
+}
+
+static createManCompositionVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startManCompositionVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addManNextId(builder:flatbuffers.Builder, MAN_NEXT_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, MAN_NEXT_IDOffset, 0);
+}
+
+static addManBasisId(builder:flatbuffers.Builder, MAN_BASIS_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, MAN_BASIS_IDOffset, 0);
+}
+
+static addManPrevEpoch(builder:flatbuffers.Builder, MAN_PREV_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, MAN_PREV_EPOCHOffset, 0);
+}
+
+static addManNextEpoch(builder:flatbuffers.Builder, MAN_NEXT_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, MAN_NEXT_EPOCHOffset, 0);
+}
+
+static addManPredSource(builder:flatbuffers.Builder, MAN_PRED_SOURCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, MAN_PRED_SOURCEOffset, 0);
+}
+
+static addGravAssistName(builder:flatbuffers.Builder, GRAV_ASSIST_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, GRAV_ASSIST_NAMEOffset, 0);
+}
+
+static addDcType(builder:flatbuffers.Builder, DC_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, DC_TYPEOffset, 0);
+}
+
+static addDcWinOpen(builder:flatbuffers.Builder, DC_WIN_OPENOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, DC_WIN_OPENOffset, 0);
+}
+
+static addDcWinClose(builder:flatbuffers.Builder, DC_WIN_CLOSEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, DC_WIN_CLOSEOffset, 0);
+}
+
+static addDcMinCycles(builder:flatbuffers.Builder, DC_MIN_CYCLES:number) {
+  builder.addFieldInt32(23, DC_MIN_CYCLES, 0);
+}
+
+static addDcMaxCycles(builder:flatbuffers.Builder, DC_MAX_CYCLES:number) {
+  builder.addFieldInt32(24, DC_MAX_CYCLES, 0);
+}
+
+static addHasDcMinCycles(builder:flatbuffers.Builder, HAS_DC_MIN_CYCLES:boolean) {
+  builder.addFieldInt8(25, +HAS_DC_MIN_CYCLES, +false);
+}
+
+static addHasDcMaxCycles(builder:flatbuffers.Builder, HAS_DC_MAX_CYCLES:boolean) {
+  builder.addFieldInt8(26, +HAS_DC_MAX_CYCLES, +false);
+}
+
+static addDcExecStart(builder:flatbuffers.Builder, DC_EXEC_STARTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, DC_EXEC_STARTOffset, 0);
+}
+
+static addDcExecStop(builder:flatbuffers.Builder, DC_EXEC_STOPOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, DC_EXEC_STOPOffset, 0);
+}
+
+static addDcRefTime(builder:flatbuffers.Builder, DC_REF_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, DC_REF_TIMEOffset, 0);
+}
+
+static addDcTimePulseDuration(builder:flatbuffers.Builder, DC_TIME_PULSE_DURATION:number) {
+  builder.addFieldFloat64(30, DC_TIME_PULSE_DURATION, NaN);
+}
+
+static addDcTimePulsePeriod(builder:flatbuffers.Builder, DC_TIME_PULSE_PERIOD:number) {
+  builder.addFieldFloat64(31, DC_TIME_PULSE_PERIOD, NaN);
+}
+
+static addDcRefDir(builder:flatbuffers.Builder, DC_REF_DIROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(32, DC_REF_DIROffset, 0);
+}
+
+static createDcRefDirVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createDcRefDirVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createDcRefDirVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDcRefDirVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addDcBodyFrame(builder:flatbuffers.Builder, DC_BODY_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, DC_BODY_FRAMEOffset, 0);
+}
+
+static addDcBodyTrigger(builder:flatbuffers.Builder, DC_BODY_TRIGGEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(34, DC_BODY_TRIGGEROffset, 0);
+}
+
+static createDcBodyTriggerVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createDcBodyTriggerVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createDcBodyTriggerVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDcBodyTriggerVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addDcPaStartAngle(builder:flatbuffers.Builder, DC_PA_START_ANGLE:number) {
+  builder.addFieldFloat64(35, DC_PA_START_ANGLE, NaN);
+}
+
+static addDcPaStopAngle(builder:flatbuffers.Builder, DC_PA_STOP_ANGLE:number) {
+  builder.addFieldFloat64(36, DC_PA_STOP_ANGLE, NaN);
+}
+
 static endManeuver(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createManeuver(builder:flatbuffers.Builder, MAN_IDOffset:flatbuffers.Offset, MAN_BASISOffset:flatbuffers.Offset, MAN_DEVICE_IDOffset:flatbuffers.Offset, MAN_PREV_IDOffset:flatbuffers.Offset, MAN_PURPOSEOffset:flatbuffers.Offset, MAN_REF_FRAMEOffset:flatbuffers.Offset, MAN_FRAME_EPOCHOffset:flatbuffers.Offset, MAN_TYPEOffset:flatbuffers.Offset, MAN_EPOCH_STARTOffset:flatbuffers.Offset, MAN_DURATION:number, MAN_UNITSOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset, MAN_COMMENTOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createManeuver(builder:flatbuffers.Builder, MAN_IDOffset:flatbuffers.Offset, MAN_BASISOffset:flatbuffers.Offset, MAN_DEVICE_IDOffset:flatbuffers.Offset, MAN_PREV_IDOffset:flatbuffers.Offset, MAN_PURPOSEOffset:flatbuffers.Offset, MAN_REF_FRAMEOffset:flatbuffers.Offset, MAN_FRAME_EPOCHOffset:flatbuffers.Offset, MAN_TYPEOffset:flatbuffers.Offset, MAN_EPOCH_STARTOffset:flatbuffers.Offset, MAN_DURATION:number, MAN_UNITSOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset, MAN_COMMENTOffset:flatbuffers.Offset, MAN_COMPOSITIONOffset:flatbuffers.Offset, MAN_NEXT_IDOffset:flatbuffers.Offset, MAN_BASIS_IDOffset:flatbuffers.Offset, MAN_PREV_EPOCHOffset:flatbuffers.Offset, MAN_NEXT_EPOCHOffset:flatbuffers.Offset, MAN_PRED_SOURCEOffset:flatbuffers.Offset, GRAV_ASSIST_NAMEOffset:flatbuffers.Offset, DC_TYPEOffset:flatbuffers.Offset, DC_WIN_OPENOffset:flatbuffers.Offset, DC_WIN_CLOSEOffset:flatbuffers.Offset, DC_MIN_CYCLES:number, DC_MAX_CYCLES:number, HAS_DC_MIN_CYCLES:boolean, HAS_DC_MAX_CYCLES:boolean, DC_EXEC_STARTOffset:flatbuffers.Offset, DC_EXEC_STOPOffset:flatbuffers.Offset, DC_REF_TIMEOffset:flatbuffers.Offset, DC_TIME_PULSE_DURATION:number, DC_TIME_PULSE_PERIOD:number, DC_REF_DIROffset:flatbuffers.Offset, DC_BODY_FRAMEOffset:flatbuffers.Offset, DC_BODY_TRIGGEROffset:flatbuffers.Offset, DC_PA_START_ANGLE:number, DC_PA_STOP_ANGLE:number):flatbuffers.Offset {
   Maneuver.startManeuver(builder);
   Maneuver.addManId(builder, MAN_IDOffset);
   Maneuver.addManBasis(builder, MAN_BASISOffset);
@@ -279,6 +659,30 @@ static createManeuver(builder:flatbuffers.Builder, MAN_IDOffset:flatbuffers.Offs
   Maneuver.addManUnits(builder, MAN_UNITSOffset);
   Maneuver.addData(builder, DATAOffset);
   Maneuver.addManComment(builder, MAN_COMMENTOffset);
+  Maneuver.addManComposition(builder, MAN_COMPOSITIONOffset);
+  Maneuver.addManNextId(builder, MAN_NEXT_IDOffset);
+  Maneuver.addManBasisId(builder, MAN_BASIS_IDOffset);
+  Maneuver.addManPrevEpoch(builder, MAN_PREV_EPOCHOffset);
+  Maneuver.addManNextEpoch(builder, MAN_NEXT_EPOCHOffset);
+  Maneuver.addManPredSource(builder, MAN_PRED_SOURCEOffset);
+  Maneuver.addGravAssistName(builder, GRAV_ASSIST_NAMEOffset);
+  Maneuver.addDcType(builder, DC_TYPEOffset);
+  Maneuver.addDcWinOpen(builder, DC_WIN_OPENOffset);
+  Maneuver.addDcWinClose(builder, DC_WIN_CLOSEOffset);
+  Maneuver.addDcMinCycles(builder, DC_MIN_CYCLES);
+  Maneuver.addDcMaxCycles(builder, DC_MAX_CYCLES);
+  Maneuver.addHasDcMinCycles(builder, HAS_DC_MIN_CYCLES);
+  Maneuver.addHasDcMaxCycles(builder, HAS_DC_MAX_CYCLES);
+  Maneuver.addDcExecStart(builder, DC_EXEC_STARTOffset);
+  Maneuver.addDcExecStop(builder, DC_EXEC_STOPOffset);
+  Maneuver.addDcRefTime(builder, DC_REF_TIMEOffset);
+  Maneuver.addDcTimePulseDuration(builder, DC_TIME_PULSE_DURATION);
+  Maneuver.addDcTimePulsePeriod(builder, DC_TIME_PULSE_PERIOD);
+  Maneuver.addDcRefDir(builder, DC_REF_DIROffset);
+  Maneuver.addDcBodyFrame(builder, DC_BODY_FRAMEOffset);
+  Maneuver.addDcBodyTrigger(builder, DC_BODY_TRIGGEROffset);
+  Maneuver.addDcPaStartAngle(builder, DC_PA_START_ANGLE);
+  Maneuver.addDcPaStopAngle(builder, DC_PA_STOP_ANGLE);
   return Maneuver.endManeuver(builder);
 }
 
@@ -296,7 +700,31 @@ unpack(): ManeuverT {
     this.MAN_DURATION(),
     this.bb!.createScalarList<string>(this.MAN_UNITS.bind(this), this.manUnitsLength()),
     this.bb!.createScalarList<string>(this.DATA.bind(this), this.dataLength()),
-    this.bb!.createScalarList<string>(this.MAN_COMMENT.bind(this), this.manCommentLength())
+    this.bb!.createScalarList<string>(this.MAN_COMMENT.bind(this), this.manCommentLength()),
+    this.bb!.createScalarList<string>(this.MAN_COMPOSITION.bind(this), this.manCompositionLength()),
+    this.MAN_NEXT_ID(),
+    this.MAN_BASIS_ID(),
+    this.MAN_PREV_EPOCH(),
+    this.MAN_NEXT_EPOCH(),
+    this.MAN_PRED_SOURCE(),
+    this.GRAV_ASSIST_NAME(),
+    this.DC_TYPE(),
+    this.DC_WIN_OPEN(),
+    this.DC_WIN_CLOSE(),
+    this.DC_MIN_CYCLES(),
+    this.DC_MAX_CYCLES(),
+    this.HAS_DC_MIN_CYCLES(),
+    this.HAS_DC_MAX_CYCLES(),
+    this.DC_EXEC_START(),
+    this.DC_EXEC_STOP(),
+    this.DC_REF_TIME(),
+    this.DC_TIME_PULSE_DURATION(),
+    this.DC_TIME_PULSE_PERIOD(),
+    this.bb!.createScalarList<number>(this.DC_REF_DIR.bind(this), this.dcRefDirLength()),
+    this.DC_BODY_FRAME(),
+    this.bb!.createScalarList<number>(this.DC_BODY_TRIGGER.bind(this), this.dcBodyTriggerLength()),
+    this.DC_PA_START_ANGLE(),
+    this.DC_PA_STOP_ANGLE()
   );
 }
 
@@ -315,6 +743,30 @@ unpackTo(_o: ManeuverT): void {
   _o.MAN_UNITS = this.bb!.createScalarList<string>(this.MAN_UNITS.bind(this), this.manUnitsLength());
   _o.DATA = this.bb!.createScalarList<string>(this.DATA.bind(this), this.dataLength());
   _o.MAN_COMMENT = this.bb!.createScalarList<string>(this.MAN_COMMENT.bind(this), this.manCommentLength());
+  _o.MAN_COMPOSITION = this.bb!.createScalarList<string>(this.MAN_COMPOSITION.bind(this), this.manCompositionLength());
+  _o.MAN_NEXT_ID = this.MAN_NEXT_ID();
+  _o.MAN_BASIS_ID = this.MAN_BASIS_ID();
+  _o.MAN_PREV_EPOCH = this.MAN_PREV_EPOCH();
+  _o.MAN_NEXT_EPOCH = this.MAN_NEXT_EPOCH();
+  _o.MAN_PRED_SOURCE = this.MAN_PRED_SOURCE();
+  _o.GRAV_ASSIST_NAME = this.GRAV_ASSIST_NAME();
+  _o.DC_TYPE = this.DC_TYPE();
+  _o.DC_WIN_OPEN = this.DC_WIN_OPEN();
+  _o.DC_WIN_CLOSE = this.DC_WIN_CLOSE();
+  _o.DC_MIN_CYCLES = this.DC_MIN_CYCLES();
+  _o.DC_MAX_CYCLES = this.DC_MAX_CYCLES();
+  _o.HAS_DC_MIN_CYCLES = this.HAS_DC_MIN_CYCLES();
+  _o.HAS_DC_MAX_CYCLES = this.HAS_DC_MAX_CYCLES();
+  _o.DC_EXEC_START = this.DC_EXEC_START();
+  _o.DC_EXEC_STOP = this.DC_EXEC_STOP();
+  _o.DC_REF_TIME = this.DC_REF_TIME();
+  _o.DC_TIME_PULSE_DURATION = this.DC_TIME_PULSE_DURATION();
+  _o.DC_TIME_PULSE_PERIOD = this.DC_TIME_PULSE_PERIOD();
+  _o.DC_REF_DIR = this.bb!.createScalarList<number>(this.DC_REF_DIR.bind(this), this.dcRefDirLength());
+  _o.DC_BODY_FRAME = this.DC_BODY_FRAME();
+  _o.DC_BODY_TRIGGER = this.bb!.createScalarList<number>(this.DC_BODY_TRIGGER.bind(this), this.dcBodyTriggerLength());
+  _o.DC_PA_START_ANGLE = this.DC_PA_START_ANGLE();
+  _o.DC_PA_STOP_ANGLE = this.DC_PA_STOP_ANGLE();
 }
 }
 
@@ -332,7 +784,31 @@ constructor(
   public MAN_DURATION: number = 0.0,
   public MAN_UNITS: (string)[] = [],
   public DATA: (string)[] = [],
-  public MAN_COMMENT: (string)[] = []
+  public MAN_COMMENT: (string)[] = [],
+  public MAN_COMPOSITION: (string)[] = [],
+  public MAN_NEXT_ID: string|Uint8Array|null = null,
+  public MAN_BASIS_ID: string|Uint8Array|null = null,
+  public MAN_PREV_EPOCH: string|Uint8Array|null = null,
+  public MAN_NEXT_EPOCH: string|Uint8Array|null = null,
+  public MAN_PRED_SOURCE: string|Uint8Array|null = null,
+  public GRAV_ASSIST_NAME: string|Uint8Array|null = null,
+  public DC_TYPE: string|Uint8Array|null = null,
+  public DC_WIN_OPEN: string|Uint8Array|null = null,
+  public DC_WIN_CLOSE: string|Uint8Array|null = null,
+  public DC_MIN_CYCLES: number = 0,
+  public DC_MAX_CYCLES: number = 0,
+  public HAS_DC_MIN_CYCLES: boolean = false,
+  public HAS_DC_MAX_CYCLES: boolean = false,
+  public DC_EXEC_START: string|Uint8Array|null = null,
+  public DC_EXEC_STOP: string|Uint8Array|null = null,
+  public DC_REF_TIME: string|Uint8Array|null = null,
+  public DC_TIME_PULSE_DURATION: number = NaN,
+  public DC_TIME_PULSE_PERIOD: number = NaN,
+  public DC_REF_DIR: (number)[] = [],
+  public DC_BODY_FRAME: string|Uint8Array|null = null,
+  public DC_BODY_TRIGGER: (number)[] = [],
+  public DC_PA_START_ANGLE: number = NaN,
+  public DC_PA_STOP_ANGLE: number = NaN
 ){}
 
 
@@ -349,6 +825,22 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const MAN_UNITS = Maneuver.createManUnitsVector(builder, builder.createObjectOffsetList(this.MAN_UNITS));
   const DATA = Maneuver.createDataVector(builder, builder.createObjectOffsetList(this.DATA));
   const MAN_COMMENT = Maneuver.createManCommentVector(builder, builder.createObjectOffsetList(this.MAN_COMMENT));
+  const MAN_COMPOSITION = Maneuver.createManCompositionVector(builder, builder.createObjectOffsetList(this.MAN_COMPOSITION));
+  const MAN_NEXT_ID = (this.MAN_NEXT_ID !== null ? builder.createString(this.MAN_NEXT_ID!) : 0);
+  const MAN_BASIS_ID = (this.MAN_BASIS_ID !== null ? builder.createString(this.MAN_BASIS_ID!) : 0);
+  const MAN_PREV_EPOCH = (this.MAN_PREV_EPOCH !== null ? builder.createString(this.MAN_PREV_EPOCH!) : 0);
+  const MAN_NEXT_EPOCH = (this.MAN_NEXT_EPOCH !== null ? builder.createString(this.MAN_NEXT_EPOCH!) : 0);
+  const MAN_PRED_SOURCE = (this.MAN_PRED_SOURCE !== null ? builder.createString(this.MAN_PRED_SOURCE!) : 0);
+  const GRAV_ASSIST_NAME = (this.GRAV_ASSIST_NAME !== null ? builder.createString(this.GRAV_ASSIST_NAME!) : 0);
+  const DC_TYPE = (this.DC_TYPE !== null ? builder.createString(this.DC_TYPE!) : 0);
+  const DC_WIN_OPEN = (this.DC_WIN_OPEN !== null ? builder.createString(this.DC_WIN_OPEN!) : 0);
+  const DC_WIN_CLOSE = (this.DC_WIN_CLOSE !== null ? builder.createString(this.DC_WIN_CLOSE!) : 0);
+  const DC_EXEC_START = (this.DC_EXEC_START !== null ? builder.createString(this.DC_EXEC_START!) : 0);
+  const DC_EXEC_STOP = (this.DC_EXEC_STOP !== null ? builder.createString(this.DC_EXEC_STOP!) : 0);
+  const DC_REF_TIME = (this.DC_REF_TIME !== null ? builder.createString(this.DC_REF_TIME!) : 0);
+  const DC_REF_DIR = Maneuver.createDcRefDirVector(builder, this.DC_REF_DIR);
+  const DC_BODY_FRAME = (this.DC_BODY_FRAME !== null ? builder.createString(this.DC_BODY_FRAME!) : 0);
+  const DC_BODY_TRIGGER = Maneuver.createDcBodyTriggerVector(builder, this.DC_BODY_TRIGGER);
 
   return Maneuver.createManeuver(builder,
     MAN_ID,
@@ -363,7 +855,31 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.MAN_DURATION,
     MAN_UNITS,
     DATA,
-    MAN_COMMENT
+    MAN_COMMENT,
+    MAN_COMPOSITION,
+    MAN_NEXT_ID,
+    MAN_BASIS_ID,
+    MAN_PREV_EPOCH,
+    MAN_NEXT_EPOCH,
+    MAN_PRED_SOURCE,
+    GRAV_ASSIST_NAME,
+    DC_TYPE,
+    DC_WIN_OPEN,
+    DC_WIN_CLOSE,
+    this.DC_MIN_CYCLES,
+    this.DC_MAX_CYCLES,
+    this.HAS_DC_MIN_CYCLES,
+    this.HAS_DC_MAX_CYCLES,
+    DC_EXEC_START,
+    DC_EXEC_STOP,
+    DC_REF_TIME,
+    this.DC_TIME_PULSE_DURATION,
+    this.DC_TIME_PULSE_PERIOD,
+    DC_REF_DIR,
+    DC_BODY_FRAME,
+    DC_BODY_TRIGGER,
+    this.DC_PA_START_ANGLE,
+    this.DC_PA_STOP_ANGLE
   );
 }
 }

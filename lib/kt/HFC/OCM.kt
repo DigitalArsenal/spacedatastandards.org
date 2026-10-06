@@ -80,7 +80,7 @@ class OCM : Table() {
     val trajTypeDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
     fun trajTypeDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
-     * Time interval between state vectors in seconds (required for time-series data).
+     * Time interval between state vectors in seconds; required without STATE_EPOCHS.
      */
     val stateStepSize : Double
         get() {
@@ -101,7 +101,7 @@ class OCM : Table() {
     /**
      * State data as row-major array of doubles.
      * Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
-     * Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+     * Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
      * Length must be divisible by STATE_VECTOR_SIZE.
      * Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
      */
@@ -343,6 +343,24 @@ class OCM : Table() {
         }
     val covCalibrationReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
     fun covCalibrationReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
+    /**
+     * Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+     * section 6.2.4). When nonempty, length equals STATE_DATA.length /
+     * STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+     * Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+     */
+    fun stateEpochs(j: Int) : String? {
+        val o = __offset(50)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val stateEpochsLength : Int
+        get() {
+            val o = __offset(50); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOCM(_bb: ByteBuffer): OCM = getRootAsOCM(_bb, OCM())
@@ -351,9 +369,10 @@ class OCM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OCM")
-        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int) : Int {
-            builder.startTable(23)
+        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int, stateEpochsOffset: Int) : Int {
+            builder.startTable(24)
             addSTATESTEPSIZE(builder, stateStepSize)
+            addSTATEEPOCHS(builder, stateEpochsOffset)
             addCOVCALIBRATIONREFERENCE(builder, covCalibrationReferenceOffset)
             addORBAVERAGING(builder, orbAveragingOffset)
             addORBREVNUM(builder, orbRevnum)
@@ -378,7 +397,7 @@ class OCM : Table() {
             addTRAJTYPE(builder, trajType)
             return endOCM(builder)
         }
-        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(23)
+        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(24)
         fun addHEADER(builder: FlatBufferBuilder, header: Int) = builder.addOffset(0, header, 0)
         fun addMETADATA(builder: FlatBufferBuilder, metadata: Int) = builder.addOffset(1, metadata, 0)
         fun addTRAJTYPE(builder: FlatBufferBuilder, trajType: Byte) = builder.addByte(2, trajType, 0)
@@ -450,6 +469,15 @@ class OCM : Table() {
         fun addORBAVERAGING(builder: FlatBufferBuilder, orbAveraging: Int) = builder.addOffset(20, orbAveraging, 0)
         fun addCOVCALIBRATION(builder: FlatBufferBuilder, covCalibration: Byte) = builder.addByte(21, covCalibration, 0)
         fun addCOVCALIBRATIONREFERENCE(builder: FlatBufferBuilder, covCalibrationReference: Int) = builder.addOffset(22, covCalibrationReference, 0)
+        fun addSTATEEPOCHS(builder: FlatBufferBuilder, stateEpochs: Int) = builder.addOffset(23, stateEpochs, 0)
+        fun createStateEpochsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startStateEpochsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endOCM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

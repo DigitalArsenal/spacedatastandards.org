@@ -73,7 +73,7 @@ class OCM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Time interval between state vectors in seconds (required for time-series data).
+    # Time interval between state vectors in seconds; required without STATE_EPOCHS.
     # OCM
     def STATE_STEP_SIZE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -94,7 +94,7 @@ class OCM(object):
 
     # State data as row-major array of doubles.
     # Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
-    # Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+    # Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
     # Length must be divisible by STATE_VECTOR_SIZE.
     # Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
     # OCM
@@ -375,8 +375,32 @@ class OCM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+    # section 6.2.4). When nonempty, length equals STATE_DATA.length /
+    # STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+    # Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+    # OCM
+    def STATE_EPOCHS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # OCM
+    def STATE_EPOCHSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def STATE_EPOCHSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        return o == 0
+
 def OCMStart(builder):
-    builder.StartObject(23)
+    builder.StartObject(24)
 
 def Start(builder):
     OCMStart(builder)
@@ -599,6 +623,24 @@ def OCMAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE):
 def AddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE):
     OCMAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
 
+def OCMAddSTATE_EPOCHS(builder, STATE_EPOCHS):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_EPOCHS), 0)
+
+def AddSTATE_EPOCHS(builder, STATE_EPOCHS):
+    OCMAddSTATE_EPOCHS(builder, STATE_EPOCHS)
+
+def OCMStartSTATE_EPOCHSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSTATE_EPOCHSVector(builder, numElems):
+    return OCMStartSTATE_EPOCHSVector(builder, numElems)
+
+def OCMCreateSTATE_EPOCHSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTATE_EPOCHSVector(builder, data):
+    return OCMCreateSTATE_EPOCHSVector(builder, data)
+
 def OCMEnd(builder):
     return builder.EndObject()
 
@@ -648,6 +690,7 @@ class OCMT(object):
         ORB_AVERAGING = None,
         COV_CALIBRATION = 0,
         COV_CALIBRATION_REFERENCE = None,
+        STATE_EPOCHS = None,
     ):
         self.HEADER = HEADER  # type: Optional[Header.HeaderT]
         self.METADATA = METADATA  # type: Optional[Metadata.MetadataT]
@@ -672,6 +715,7 @@ class OCMT(object):
         self.ORB_AVERAGING = ORB_AVERAGING  # type: Optional[str]
         self.COV_CALIBRATION = COV_CALIBRATION  # type: int
         self.COV_CALIBRATION_REFERENCE = COV_CALIBRATION_REFERENCE  # type: Optional[str]
+        self.STATE_EPOCHS = STATE_EPOCHS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -764,6 +808,10 @@ class OCMT(object):
         self.ORB_AVERAGING = OCM.ORB_AVERAGING()
         self.COV_CALIBRATION = OCM.COV_CALIBRATION()
         self.COV_CALIBRATION_REFERENCE = OCM.COV_CALIBRATION_REFERENCE()
+        if not OCM.STATE_EPOCHSIsNone():
+            self.STATE_EPOCHS = []
+            for i in range(OCM.STATE_EPOCHSLength()):
+                self.STATE_EPOCHS.append(OCM.STATE_EPOCHS(i))
 
     # OCMT
     def Pack(self, builder):
@@ -839,6 +887,14 @@ class OCMT(object):
             ORB_AVERAGING = builder.CreateString(self.ORB_AVERAGING)
         if self.COV_CALIBRATION_REFERENCE is not None:
             COV_CALIBRATION_REFERENCE = builder.CreateString(self.COV_CALIBRATION_REFERENCE)
+        if self.STATE_EPOCHS is not None:
+            STATE_EPOCHSlist = []
+            for i in range(len(self.STATE_EPOCHS)):
+                STATE_EPOCHSlist.append(builder.CreateString(self.STATE_EPOCHS[i]))
+            OCMStartSTATE_EPOCHSVector(builder, len(self.STATE_EPOCHS))
+            for i in reversed(range(len(self.STATE_EPOCHS))):
+                builder.PrependUOffsetTRelative(STATE_EPOCHSlist[i])
+            STATE_EPOCHS = builder.EndVector()
         OCMStart(builder)
         if self.HEADER is not None:
             OCMAddHEADER(builder, HEADER)
@@ -881,5 +937,7 @@ class OCMT(object):
         OCMAddCOV_CALIBRATION(builder, self.COV_CALIBRATION)
         if self.COV_CALIBRATION_REFERENCE is not None:
             OCMAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
+        if self.STATE_EPOCHS is not None:
+            OCMAddSTATE_EPOCHS(builder, STATE_EPOCHS)
         OCM = OCMEnd(builder)
         return OCM

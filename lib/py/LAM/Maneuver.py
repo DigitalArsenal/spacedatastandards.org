@@ -171,8 +171,256 @@ class Maneuver(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
+    # Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+    # CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+    # DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+    # Relative time tags are seconds from METADATA.EPOCH_TZERO.
+    # Maneuver
+    def MAN_COMPOSITION(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # Maneuver
+    def MAN_COMPOSITIONLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Maneuver
+    def MAN_COMPOSITIONIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        return o == 0
+
+    # Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+    # Maneuver
+    def MAN_NEXT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # OD, navigation solution or simulation identifier (Table 6-7).
+    # Maneuver
+    def MAN_BASIS_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+    # CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+    # Maneuver
+    def MAN_PREV_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+    # Maneuver
+    def MAN_NEXT_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source of predicted orbit or attitude states (Table 6-7).
+    # Maneuver
+    def MAN_PRED_SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Gravitational assist body name (Table 6-7).
+    # Maneuver
+    def GRAV_ASSIST_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+    # Maneuver
+    def DC_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+    # Maneuver
+    def DC_WIN_OPEN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+    # Maneuver
+    def DC_WIN_CLOSE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+    # Maneuver
+    def DC_MIN_CYCLES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Maneuver
+    def DC_MAX_CYCLES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Presence of the corresponding cycle bound; zero remains representable.
+    # Maneuver
+    def HAS_DC_MIN_CYCLES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Maneuver
+    def HAS_DC_MAX_CYCLES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+    # Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+    # Maneuver
+    def DC_EXEC_START(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Maneuver
+    def DC_EXEC_STOP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+    # Maneuver
+    def DC_REF_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+    # Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+    # Maneuver
+    def DC_TIME_PULSE_DURATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Maneuver
+    def DC_TIME_PULSE_PERIOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+    # Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+    # Maneuver
+    def DC_REF_DIR(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # Maneuver
+    def DC_REF_DIRAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # Maneuver
+    def DC_REF_DIRLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Maneuver
+    def DC_REF_DIRIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        return o == 0
+
+    # Body frame of DC_BODY_TRIGGER (Table 6-7).
+    # Maneuver
+    def DC_BODY_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Three-component body-frame trigger unit direction (Table 6-7).
+    # Maneuver
+    def DC_BODY_TRIGGER(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # Maneuver
+    def DC_BODY_TRIGGERAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # Maneuver
+    def DC_BODY_TRIGGERLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Maneuver
+    def DC_BODY_TRIGGERIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        return o == 0
+
+    # Pulse start and stop phase angles, degrees; NaN means unspecified.
+    # CCSDS 502.0-B-3 Table 6-7.
+    # Maneuver
+    def DC_PA_START_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Maneuver
+    def DC_PA_STOP_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
 def ManeuverStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(37)
 
 def Start(builder):
     ManeuverStart(builder)
@@ -291,6 +539,194 @@ def ManeuverCreateMAN_COMMENTVector(builder, data):
 def CreateMAN_COMMENTVector(builder, data):
     return ManeuverCreateMAN_COMMENTVector(builder, data)
 
+def ManeuverAddMAN_COMPOSITION(builder, MAN_COMPOSITION):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_COMPOSITION), 0)
+
+def AddMAN_COMPOSITION(builder, MAN_COMPOSITION):
+    ManeuverAddMAN_COMPOSITION(builder, MAN_COMPOSITION)
+
+def ManeuverStartMAN_COMPOSITIONVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMAN_COMPOSITIONVector(builder, numElems):
+    return ManeuverStartMAN_COMPOSITIONVector(builder, numElems)
+
+def ManeuverCreateMAN_COMPOSITIONVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMAN_COMPOSITIONVector(builder, data):
+    return ManeuverCreateMAN_COMPOSITIONVector(builder, data)
+
+def ManeuverAddMAN_NEXT_ID(builder, MAN_NEXT_ID):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_NEXT_ID), 0)
+
+def AddMAN_NEXT_ID(builder, MAN_NEXT_ID):
+    ManeuverAddMAN_NEXT_ID(builder, MAN_NEXT_ID)
+
+def ManeuverAddMAN_BASIS_ID(builder, MAN_BASIS_ID):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_BASIS_ID), 0)
+
+def AddMAN_BASIS_ID(builder, MAN_BASIS_ID):
+    ManeuverAddMAN_BASIS_ID(builder, MAN_BASIS_ID)
+
+def ManeuverAddMAN_PREV_EPOCH(builder, MAN_PREV_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_PREV_EPOCH), 0)
+
+def AddMAN_PREV_EPOCH(builder, MAN_PREV_EPOCH):
+    ManeuverAddMAN_PREV_EPOCH(builder, MAN_PREV_EPOCH)
+
+def ManeuverAddMAN_NEXT_EPOCH(builder, MAN_NEXT_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_NEXT_EPOCH), 0)
+
+def AddMAN_NEXT_EPOCH(builder, MAN_NEXT_EPOCH):
+    ManeuverAddMAN_NEXT_EPOCH(builder, MAN_NEXT_EPOCH)
+
+def ManeuverAddMAN_PRED_SOURCE(builder, MAN_PRED_SOURCE):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_PRED_SOURCE), 0)
+
+def AddMAN_PRED_SOURCE(builder, MAN_PRED_SOURCE):
+    ManeuverAddMAN_PRED_SOURCE(builder, MAN_PRED_SOURCE)
+
+def ManeuverAddGRAV_ASSIST_NAME(builder, GRAV_ASSIST_NAME):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(GRAV_ASSIST_NAME), 0)
+
+def AddGRAV_ASSIST_NAME(builder, GRAV_ASSIST_NAME):
+    ManeuverAddGRAV_ASSIST_NAME(builder, GRAV_ASSIST_NAME)
+
+def ManeuverAddDC_TYPE(builder, DC_TYPE):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(DC_TYPE), 0)
+
+def AddDC_TYPE(builder, DC_TYPE):
+    ManeuverAddDC_TYPE(builder, DC_TYPE)
+
+def ManeuverAddDC_WIN_OPEN(builder, DC_WIN_OPEN):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(DC_WIN_OPEN), 0)
+
+def AddDC_WIN_OPEN(builder, DC_WIN_OPEN):
+    ManeuverAddDC_WIN_OPEN(builder, DC_WIN_OPEN)
+
+def ManeuverAddDC_WIN_CLOSE(builder, DC_WIN_CLOSE):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(DC_WIN_CLOSE), 0)
+
+def AddDC_WIN_CLOSE(builder, DC_WIN_CLOSE):
+    ManeuverAddDC_WIN_CLOSE(builder, DC_WIN_CLOSE)
+
+def ManeuverAddDC_MIN_CYCLES(builder, DC_MIN_CYCLES):
+    builder.PrependUint32Slot(23, DC_MIN_CYCLES, 0)
+
+def AddDC_MIN_CYCLES(builder, DC_MIN_CYCLES):
+    ManeuverAddDC_MIN_CYCLES(builder, DC_MIN_CYCLES)
+
+def ManeuverAddDC_MAX_CYCLES(builder, DC_MAX_CYCLES):
+    builder.PrependUint32Slot(24, DC_MAX_CYCLES, 0)
+
+def AddDC_MAX_CYCLES(builder, DC_MAX_CYCLES):
+    ManeuverAddDC_MAX_CYCLES(builder, DC_MAX_CYCLES)
+
+def ManeuverAddHAS_DC_MIN_CYCLES(builder, HAS_DC_MIN_CYCLES):
+    builder.PrependBoolSlot(25, HAS_DC_MIN_CYCLES, 0)
+
+def AddHAS_DC_MIN_CYCLES(builder, HAS_DC_MIN_CYCLES):
+    ManeuverAddHAS_DC_MIN_CYCLES(builder, HAS_DC_MIN_CYCLES)
+
+def ManeuverAddHAS_DC_MAX_CYCLES(builder, HAS_DC_MAX_CYCLES):
+    builder.PrependBoolSlot(26, HAS_DC_MAX_CYCLES, 0)
+
+def AddHAS_DC_MAX_CYCLES(builder, HAS_DC_MAX_CYCLES):
+    ManeuverAddHAS_DC_MAX_CYCLES(builder, HAS_DC_MAX_CYCLES)
+
+def ManeuverAddDC_EXEC_START(builder, DC_EXEC_START):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(DC_EXEC_START), 0)
+
+def AddDC_EXEC_START(builder, DC_EXEC_START):
+    ManeuverAddDC_EXEC_START(builder, DC_EXEC_START)
+
+def ManeuverAddDC_EXEC_STOP(builder, DC_EXEC_STOP):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(DC_EXEC_STOP), 0)
+
+def AddDC_EXEC_STOP(builder, DC_EXEC_STOP):
+    ManeuverAddDC_EXEC_STOP(builder, DC_EXEC_STOP)
+
+def ManeuverAddDC_REF_TIME(builder, DC_REF_TIME):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(DC_REF_TIME), 0)
+
+def AddDC_REF_TIME(builder, DC_REF_TIME):
+    ManeuverAddDC_REF_TIME(builder, DC_REF_TIME)
+
+def ManeuverAddDC_TIME_PULSE_DURATION(builder, DC_TIME_PULSE_DURATION):
+    builder.PrependFloat64Slot(30, DC_TIME_PULSE_DURATION, float('nan'))
+
+def AddDC_TIME_PULSE_DURATION(builder, DC_TIME_PULSE_DURATION):
+    ManeuverAddDC_TIME_PULSE_DURATION(builder, DC_TIME_PULSE_DURATION)
+
+def ManeuverAddDC_TIME_PULSE_PERIOD(builder, DC_TIME_PULSE_PERIOD):
+    builder.PrependFloat64Slot(31, DC_TIME_PULSE_PERIOD, float('nan'))
+
+def AddDC_TIME_PULSE_PERIOD(builder, DC_TIME_PULSE_PERIOD):
+    ManeuverAddDC_TIME_PULSE_PERIOD(builder, DC_TIME_PULSE_PERIOD)
+
+def ManeuverAddDC_REF_DIR(builder, DC_REF_DIR):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(DC_REF_DIR), 0)
+
+def AddDC_REF_DIR(builder, DC_REF_DIR):
+    ManeuverAddDC_REF_DIR(builder, DC_REF_DIR)
+
+def ManeuverStartDC_REF_DIRVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartDC_REF_DIRVector(builder, numElems):
+    return ManeuverStartDC_REF_DIRVector(builder, numElems)
+
+def ManeuverCreateDC_REF_DIRVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDC_REF_DIRVector(builder, data):
+    return ManeuverCreateDC_REF_DIRVector(builder, data)
+
+def ManeuverAddDC_BODY_FRAME(builder, DC_BODY_FRAME):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(DC_BODY_FRAME), 0)
+
+def AddDC_BODY_FRAME(builder, DC_BODY_FRAME):
+    ManeuverAddDC_BODY_FRAME(builder, DC_BODY_FRAME)
+
+def ManeuverAddDC_BODY_TRIGGER(builder, DC_BODY_TRIGGER):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(DC_BODY_TRIGGER), 0)
+
+def AddDC_BODY_TRIGGER(builder, DC_BODY_TRIGGER):
+    ManeuverAddDC_BODY_TRIGGER(builder, DC_BODY_TRIGGER)
+
+def ManeuverStartDC_BODY_TRIGGERVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartDC_BODY_TRIGGERVector(builder, numElems):
+    return ManeuverStartDC_BODY_TRIGGERVector(builder, numElems)
+
+def ManeuverCreateDC_BODY_TRIGGERVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDC_BODY_TRIGGERVector(builder, data):
+    return ManeuverCreateDC_BODY_TRIGGERVector(builder, data)
+
+def ManeuverAddDC_PA_START_ANGLE(builder, DC_PA_START_ANGLE):
+    builder.PrependFloat64Slot(35, DC_PA_START_ANGLE, float('nan'))
+
+def AddDC_PA_START_ANGLE(builder, DC_PA_START_ANGLE):
+    ManeuverAddDC_PA_START_ANGLE(builder, DC_PA_START_ANGLE)
+
+def ManeuverAddDC_PA_STOP_ANGLE(builder, DC_PA_STOP_ANGLE):
+    builder.PrependFloat64Slot(36, DC_PA_STOP_ANGLE, float('nan'))
+
+def AddDC_PA_STOP_ANGLE(builder, DC_PA_STOP_ANGLE):
+    ManeuverAddDC_PA_STOP_ANGLE(builder, DC_PA_STOP_ANGLE)
+
 def ManeuverEnd(builder):
     return builder.EndObject()
 
@@ -320,6 +756,30 @@ class ManeuverT(object):
         MAN_UNITS = None,
         DATA = None,
         MAN_COMMENT = None,
+        MAN_COMPOSITION = None,
+        MAN_NEXT_ID = None,
+        MAN_BASIS_ID = None,
+        MAN_PREV_EPOCH = None,
+        MAN_NEXT_EPOCH = None,
+        MAN_PRED_SOURCE = None,
+        GRAV_ASSIST_NAME = None,
+        DC_TYPE = None,
+        DC_WIN_OPEN = None,
+        DC_WIN_CLOSE = None,
+        DC_MIN_CYCLES = 0,
+        DC_MAX_CYCLES = 0,
+        HAS_DC_MIN_CYCLES = False,
+        HAS_DC_MAX_CYCLES = False,
+        DC_EXEC_START = None,
+        DC_EXEC_STOP = None,
+        DC_REF_TIME = None,
+        DC_TIME_PULSE_DURATION = float('nan'),
+        DC_TIME_PULSE_PERIOD = float('nan'),
+        DC_REF_DIR = None,
+        DC_BODY_FRAME = None,
+        DC_BODY_TRIGGER = None,
+        DC_PA_START_ANGLE = float('nan'),
+        DC_PA_STOP_ANGLE = float('nan'),
     ):
         self.MAN_ID = MAN_ID  # type: Optional[str]
         self.MAN_BASIS = MAN_BASIS  # type: Optional[str]
@@ -334,6 +794,30 @@ class ManeuverT(object):
         self.MAN_UNITS = MAN_UNITS  # type: Optional[List[Optional[str]]]
         self.DATA = DATA  # type: Optional[List[Optional[str]]]
         self.MAN_COMMENT = MAN_COMMENT  # type: Optional[List[Optional[str]]]
+        self.MAN_COMPOSITION = MAN_COMPOSITION  # type: Optional[List[Optional[str]]]
+        self.MAN_NEXT_ID = MAN_NEXT_ID  # type: Optional[str]
+        self.MAN_BASIS_ID = MAN_BASIS_ID  # type: Optional[str]
+        self.MAN_PREV_EPOCH = MAN_PREV_EPOCH  # type: Optional[str]
+        self.MAN_NEXT_EPOCH = MAN_NEXT_EPOCH  # type: Optional[str]
+        self.MAN_PRED_SOURCE = MAN_PRED_SOURCE  # type: Optional[str]
+        self.GRAV_ASSIST_NAME = GRAV_ASSIST_NAME  # type: Optional[str]
+        self.DC_TYPE = DC_TYPE  # type: Optional[str]
+        self.DC_WIN_OPEN = DC_WIN_OPEN  # type: Optional[str]
+        self.DC_WIN_CLOSE = DC_WIN_CLOSE  # type: Optional[str]
+        self.DC_MIN_CYCLES = DC_MIN_CYCLES  # type: int
+        self.DC_MAX_CYCLES = DC_MAX_CYCLES  # type: int
+        self.HAS_DC_MIN_CYCLES = HAS_DC_MIN_CYCLES  # type: bool
+        self.HAS_DC_MAX_CYCLES = HAS_DC_MAX_CYCLES  # type: bool
+        self.DC_EXEC_START = DC_EXEC_START  # type: Optional[str]
+        self.DC_EXEC_STOP = DC_EXEC_STOP  # type: Optional[str]
+        self.DC_REF_TIME = DC_REF_TIME  # type: Optional[str]
+        self.DC_TIME_PULSE_DURATION = DC_TIME_PULSE_DURATION  # type: float
+        self.DC_TIME_PULSE_PERIOD = DC_TIME_PULSE_PERIOD  # type: float
+        self.DC_REF_DIR = DC_REF_DIR  # type: Optional[List[float]]
+        self.DC_BODY_FRAME = DC_BODY_FRAME  # type: Optional[str]
+        self.DC_BODY_TRIGGER = DC_BODY_TRIGGER  # type: Optional[List[float]]
+        self.DC_PA_START_ANGLE = DC_PA_START_ANGLE  # type: float
+        self.DC_PA_STOP_ANGLE = DC_PA_STOP_ANGLE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -378,6 +862,45 @@ class ManeuverT(object):
             self.MAN_COMMENT = []
             for i in range(Maneuver.MAN_COMMENTLength()):
                 self.MAN_COMMENT.append(Maneuver.MAN_COMMENT(i))
+        if not Maneuver.MAN_COMPOSITIONIsNone():
+            self.MAN_COMPOSITION = []
+            for i in range(Maneuver.MAN_COMPOSITIONLength()):
+                self.MAN_COMPOSITION.append(Maneuver.MAN_COMPOSITION(i))
+        self.MAN_NEXT_ID = Maneuver.MAN_NEXT_ID()
+        self.MAN_BASIS_ID = Maneuver.MAN_BASIS_ID()
+        self.MAN_PREV_EPOCH = Maneuver.MAN_PREV_EPOCH()
+        self.MAN_NEXT_EPOCH = Maneuver.MAN_NEXT_EPOCH()
+        self.MAN_PRED_SOURCE = Maneuver.MAN_PRED_SOURCE()
+        self.GRAV_ASSIST_NAME = Maneuver.GRAV_ASSIST_NAME()
+        self.DC_TYPE = Maneuver.DC_TYPE()
+        self.DC_WIN_OPEN = Maneuver.DC_WIN_OPEN()
+        self.DC_WIN_CLOSE = Maneuver.DC_WIN_CLOSE()
+        self.DC_MIN_CYCLES = Maneuver.DC_MIN_CYCLES()
+        self.DC_MAX_CYCLES = Maneuver.DC_MAX_CYCLES()
+        self.HAS_DC_MIN_CYCLES = Maneuver.HAS_DC_MIN_CYCLES()
+        self.HAS_DC_MAX_CYCLES = Maneuver.HAS_DC_MAX_CYCLES()
+        self.DC_EXEC_START = Maneuver.DC_EXEC_START()
+        self.DC_EXEC_STOP = Maneuver.DC_EXEC_STOP()
+        self.DC_REF_TIME = Maneuver.DC_REF_TIME()
+        self.DC_TIME_PULSE_DURATION = Maneuver.DC_TIME_PULSE_DURATION()
+        self.DC_TIME_PULSE_PERIOD = Maneuver.DC_TIME_PULSE_PERIOD()
+        if not Maneuver.DC_REF_DIRIsNone():
+            if np is None:
+                self.DC_REF_DIR = []
+                for i in range(Maneuver.DC_REF_DIRLength()):
+                    self.DC_REF_DIR.append(Maneuver.DC_REF_DIR(i))
+            else:
+                self.DC_REF_DIR = Maneuver.DC_REF_DIRAsNumpy()
+        self.DC_BODY_FRAME = Maneuver.DC_BODY_FRAME()
+        if not Maneuver.DC_BODY_TRIGGERIsNone():
+            if np is None:
+                self.DC_BODY_TRIGGER = []
+                for i in range(Maneuver.DC_BODY_TRIGGERLength()):
+                    self.DC_BODY_TRIGGER.append(Maneuver.DC_BODY_TRIGGER(i))
+            else:
+                self.DC_BODY_TRIGGER = Maneuver.DC_BODY_TRIGGERAsNumpy()
+        self.DC_PA_START_ANGLE = Maneuver.DC_PA_START_ANGLE()
+        self.DC_PA_STOP_ANGLE = Maneuver.DC_PA_STOP_ANGLE()
 
     # ManeuverT
     def Pack(self, builder):
@@ -423,6 +946,56 @@ class ManeuverT(object):
             for i in reversed(range(len(self.MAN_COMMENT))):
                 builder.PrependUOffsetTRelative(MAN_COMMENTlist[i])
             MAN_COMMENT = builder.EndVector()
+        if self.MAN_COMPOSITION is not None:
+            MAN_COMPOSITIONlist = []
+            for i in range(len(self.MAN_COMPOSITION)):
+                MAN_COMPOSITIONlist.append(builder.CreateString(self.MAN_COMPOSITION[i]))
+            ManeuverStartMAN_COMPOSITIONVector(builder, len(self.MAN_COMPOSITION))
+            for i in reversed(range(len(self.MAN_COMPOSITION))):
+                builder.PrependUOffsetTRelative(MAN_COMPOSITIONlist[i])
+            MAN_COMPOSITION = builder.EndVector()
+        if self.MAN_NEXT_ID is not None:
+            MAN_NEXT_ID = builder.CreateString(self.MAN_NEXT_ID)
+        if self.MAN_BASIS_ID is not None:
+            MAN_BASIS_ID = builder.CreateString(self.MAN_BASIS_ID)
+        if self.MAN_PREV_EPOCH is not None:
+            MAN_PREV_EPOCH = builder.CreateString(self.MAN_PREV_EPOCH)
+        if self.MAN_NEXT_EPOCH is not None:
+            MAN_NEXT_EPOCH = builder.CreateString(self.MAN_NEXT_EPOCH)
+        if self.MAN_PRED_SOURCE is not None:
+            MAN_PRED_SOURCE = builder.CreateString(self.MAN_PRED_SOURCE)
+        if self.GRAV_ASSIST_NAME is not None:
+            GRAV_ASSIST_NAME = builder.CreateString(self.GRAV_ASSIST_NAME)
+        if self.DC_TYPE is not None:
+            DC_TYPE = builder.CreateString(self.DC_TYPE)
+        if self.DC_WIN_OPEN is not None:
+            DC_WIN_OPEN = builder.CreateString(self.DC_WIN_OPEN)
+        if self.DC_WIN_CLOSE is not None:
+            DC_WIN_CLOSE = builder.CreateString(self.DC_WIN_CLOSE)
+        if self.DC_EXEC_START is not None:
+            DC_EXEC_START = builder.CreateString(self.DC_EXEC_START)
+        if self.DC_EXEC_STOP is not None:
+            DC_EXEC_STOP = builder.CreateString(self.DC_EXEC_STOP)
+        if self.DC_REF_TIME is not None:
+            DC_REF_TIME = builder.CreateString(self.DC_REF_TIME)
+        if self.DC_REF_DIR is not None:
+            if np is not None and type(self.DC_REF_DIR) is np.ndarray:
+                DC_REF_DIR = builder.CreateNumpyVector(self.DC_REF_DIR)
+            else:
+                ManeuverStartDC_REF_DIRVector(builder, len(self.DC_REF_DIR))
+                for i in reversed(range(len(self.DC_REF_DIR))):
+                    builder.PrependFloat64(self.DC_REF_DIR[i])
+                DC_REF_DIR = builder.EndVector()
+        if self.DC_BODY_FRAME is not None:
+            DC_BODY_FRAME = builder.CreateString(self.DC_BODY_FRAME)
+        if self.DC_BODY_TRIGGER is not None:
+            if np is not None and type(self.DC_BODY_TRIGGER) is np.ndarray:
+                DC_BODY_TRIGGER = builder.CreateNumpyVector(self.DC_BODY_TRIGGER)
+            else:
+                ManeuverStartDC_BODY_TRIGGERVector(builder, len(self.DC_BODY_TRIGGER))
+                for i in reversed(range(len(self.DC_BODY_TRIGGER))):
+                    builder.PrependFloat64(self.DC_BODY_TRIGGER[i])
+                DC_BODY_TRIGGER = builder.EndVector()
         ManeuverStart(builder)
         if self.MAN_ID is not None:
             ManeuverAddMAN_ID(builder, MAN_ID)
@@ -449,5 +1022,45 @@ class ManeuverT(object):
             ManeuverAddDATA(builder, DATA)
         if self.MAN_COMMENT is not None:
             ManeuverAddMAN_COMMENT(builder, MAN_COMMENT)
+        if self.MAN_COMPOSITION is not None:
+            ManeuverAddMAN_COMPOSITION(builder, MAN_COMPOSITION)
+        if self.MAN_NEXT_ID is not None:
+            ManeuverAddMAN_NEXT_ID(builder, MAN_NEXT_ID)
+        if self.MAN_BASIS_ID is not None:
+            ManeuverAddMAN_BASIS_ID(builder, MAN_BASIS_ID)
+        if self.MAN_PREV_EPOCH is not None:
+            ManeuverAddMAN_PREV_EPOCH(builder, MAN_PREV_EPOCH)
+        if self.MAN_NEXT_EPOCH is not None:
+            ManeuverAddMAN_NEXT_EPOCH(builder, MAN_NEXT_EPOCH)
+        if self.MAN_PRED_SOURCE is not None:
+            ManeuverAddMAN_PRED_SOURCE(builder, MAN_PRED_SOURCE)
+        if self.GRAV_ASSIST_NAME is not None:
+            ManeuverAddGRAV_ASSIST_NAME(builder, GRAV_ASSIST_NAME)
+        if self.DC_TYPE is not None:
+            ManeuverAddDC_TYPE(builder, DC_TYPE)
+        if self.DC_WIN_OPEN is not None:
+            ManeuverAddDC_WIN_OPEN(builder, DC_WIN_OPEN)
+        if self.DC_WIN_CLOSE is not None:
+            ManeuverAddDC_WIN_CLOSE(builder, DC_WIN_CLOSE)
+        ManeuverAddDC_MIN_CYCLES(builder, self.DC_MIN_CYCLES)
+        ManeuverAddDC_MAX_CYCLES(builder, self.DC_MAX_CYCLES)
+        ManeuverAddHAS_DC_MIN_CYCLES(builder, self.HAS_DC_MIN_CYCLES)
+        ManeuverAddHAS_DC_MAX_CYCLES(builder, self.HAS_DC_MAX_CYCLES)
+        if self.DC_EXEC_START is not None:
+            ManeuverAddDC_EXEC_START(builder, DC_EXEC_START)
+        if self.DC_EXEC_STOP is not None:
+            ManeuverAddDC_EXEC_STOP(builder, DC_EXEC_STOP)
+        if self.DC_REF_TIME is not None:
+            ManeuverAddDC_REF_TIME(builder, DC_REF_TIME)
+        ManeuverAddDC_TIME_PULSE_DURATION(builder, self.DC_TIME_PULSE_DURATION)
+        ManeuverAddDC_TIME_PULSE_PERIOD(builder, self.DC_TIME_PULSE_PERIOD)
+        if self.DC_REF_DIR is not None:
+            ManeuverAddDC_REF_DIR(builder, DC_REF_DIR)
+        if self.DC_BODY_FRAME is not None:
+            ManeuverAddDC_BODY_FRAME(builder, DC_BODY_FRAME)
+        if self.DC_BODY_TRIGGER is not None:
+            ManeuverAddDC_BODY_TRIGGER(builder, DC_BODY_TRIGGER)
+        ManeuverAddDC_PA_START_ANGLE(builder, self.DC_PA_START_ANGLE)
+        ManeuverAddDC_PA_STOP_ANGLE(builder, self.DC_PA_STOP_ANGLE)
         Maneuver = ManeuverEnd(builder)
         return Maneuver

@@ -892,13 +892,94 @@ class Maneuver : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 4)
     def MAN_COMMENT_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 28)
+    /// Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+    /// CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+    /// DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+    /// Relative time tags are seconds from METADATA.EPOCH_TZERO.
+    def MAN_COMPOSITION(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 30) + i * 4)
+    def MAN_COMPOSITION_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 30)
+    /// Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+    def MAN_NEXT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 32)
+    /// OD, navigation solution or simulation identifier (Table 6-7).
+    def MAN_BASIS_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 34)
+    /// Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+    /// CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+    def MAN_PREV_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 36)
+    /// Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+    def MAN_NEXT_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 38)
+    /// Source of predicted orbit or attitude states (Table 6-7).
+    def MAN_PRED_SOURCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 40)
+    /// Gravitational assist body name (Table 6-7).
+    def GRAV_ASSIST_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 42)
+    /// CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+    def DC_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 44)
+    /// Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+    def DC_WIN_OPEN() -> string:
+        return flatbuffers.field_string(buf_, pos_, 46)
+    /// Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+    def DC_WIN_CLOSE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 48)
+    /// Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+    def DC_MIN_CYCLES() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 50, 0)
+    def DC_MAX_CYCLES() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 52, 0)
+    /// Presence of the corresponding cycle bound; zero remains representable.
+    def HAS_DC_MIN_CYCLES() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 54, 0))
+    def HAS_DC_MAX_CYCLES() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 56, 0))
+    /// First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+    /// Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+    def DC_EXEC_START() -> string:
+        return flatbuffers.field_string(buf_, pos_, 58)
+    def DC_EXEC_STOP() -> string:
+        return flatbuffers.field_string(buf_, pos_, 60)
+    /// Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+    def DC_REF_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 62)
+    /// Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+    /// Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+    def DC_TIME_PULSE_DURATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 64, nan)
+    def DC_TIME_PULSE_PERIOD() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 66, nan)
+    /// Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+    /// Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+    def DC_REF_DIR(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 68) + i * 8)
+    def DC_REF_DIR_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 68)
+    /// Body frame of DC_BODY_TRIGGER (Table 6-7).
+    def DC_BODY_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 70)
+    /// Three-component body-frame trigger unit direction (Table 6-7).
+    def DC_BODY_TRIGGER(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 72) + i * 8)
+    def DC_BODY_TRIGGER_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 72)
+    /// Pulse start and stop phase angles, degrees; NaN means unspecified.
+    /// CCSDS 502.0-B-3 Table 6-7.
+    def DC_PA_START_ANGLE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 74, nan)
+    def DC_PA_STOP_ANGLE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 76, nan)
 
 def GetRootAsManeuver(buf:string): return Maneuver { buf, flatbuffers.indirect(buf, 0) }
 
 struct ManeuverBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(13)
+        b_.StartObject(37)
         return this
     def add_MAN_ID(MAN_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, MAN_ID)
@@ -939,6 +1020,78 @@ struct ManeuverBuilder:
     def add_MAN_COMMENT(MAN_COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(12, MAN_COMMENT)
         return this
+    def add_MAN_COMPOSITION(MAN_COMPOSITION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, MAN_COMPOSITION)
+        return this
+    def add_MAN_NEXT_ID(MAN_NEXT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, MAN_NEXT_ID)
+        return this
+    def add_MAN_BASIS_ID(MAN_BASIS_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, MAN_BASIS_ID)
+        return this
+    def add_MAN_PREV_EPOCH(MAN_PREV_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, MAN_PREV_EPOCH)
+        return this
+    def add_MAN_NEXT_EPOCH(MAN_NEXT_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, MAN_NEXT_EPOCH)
+        return this
+    def add_MAN_PRED_SOURCE(MAN_PRED_SOURCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, MAN_PRED_SOURCE)
+        return this
+    def add_GRAV_ASSIST_NAME(GRAV_ASSIST_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, GRAV_ASSIST_NAME)
+        return this
+    def add_DC_TYPE(DC_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, DC_TYPE)
+        return this
+    def add_DC_WIN_OPEN(DC_WIN_OPEN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, DC_WIN_OPEN)
+        return this
+    def add_DC_WIN_CLOSE(DC_WIN_CLOSE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(22, DC_WIN_CLOSE)
+        return this
+    def add_DC_MIN_CYCLES(DC_MIN_CYCLES:int):
+        b_.PrependUint32Slot(23, DC_MIN_CYCLES, 0)
+        return this
+    def add_DC_MAX_CYCLES(DC_MAX_CYCLES:int):
+        b_.PrependUint32Slot(24, DC_MAX_CYCLES, 0)
+        return this
+    def add_HAS_DC_MIN_CYCLES(HAS_DC_MIN_CYCLES:bool):
+        b_.PrependBoolSlot(25, HAS_DC_MIN_CYCLES, 0)
+        return this
+    def add_HAS_DC_MAX_CYCLES(HAS_DC_MAX_CYCLES:bool):
+        b_.PrependBoolSlot(26, HAS_DC_MAX_CYCLES, 0)
+        return this
+    def add_DC_EXEC_START(DC_EXEC_START:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(27, DC_EXEC_START)
+        return this
+    def add_DC_EXEC_STOP(DC_EXEC_STOP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, DC_EXEC_STOP)
+        return this
+    def add_DC_REF_TIME(DC_REF_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(29, DC_REF_TIME)
+        return this
+    def add_DC_TIME_PULSE_DURATION(DC_TIME_PULSE_DURATION:float):
+        b_.PrependFloat64Slot(30, DC_TIME_PULSE_DURATION, nan)
+        return this
+    def add_DC_TIME_PULSE_PERIOD(DC_TIME_PULSE_PERIOD:float):
+        b_.PrependFloat64Slot(31, DC_TIME_PULSE_PERIOD, nan)
+        return this
+    def add_DC_REF_DIR(DC_REF_DIR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(32, DC_REF_DIR)
+        return this
+    def add_DC_BODY_FRAME(DC_BODY_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(33, DC_BODY_FRAME)
+        return this
+    def add_DC_BODY_TRIGGER(DC_BODY_TRIGGER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(34, DC_BODY_TRIGGER)
+        return this
+    def add_DC_PA_START_ANGLE(DC_PA_START_ANGLE:float):
+        b_.PrependFloat64Slot(35, DC_PA_START_ANGLE, nan)
+        return this
+    def add_DC_PA_STOP_ANGLE(DC_PA_STOP_ANGLE:float):
+        b_.PrependFloat64Slot(36, DC_PA_STOP_ANGLE, nan)
+        return this
     def end():
         return b_.EndObject()
 
@@ -961,6 +1114,27 @@ def ManeuverStartMANCOMMENTVector(b_:flatbuffers.builder, n_:int):
 def ManeuverCreateMANCOMMENTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ManeuverStartMANCOMPOSITIONVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ManeuverCreateMANCOMPOSITIONVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ManeuverStartDCREFDIRVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def ManeuverCreateDCREFDIRVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def ManeuverStartDCBODYTRIGGERVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def ManeuverCreateDCBODYTRIGGERVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 class OrbitDetermination : flatbuffers.handle
@@ -1209,7 +1383,7 @@ class OCM : flatbuffers.handle
     /// (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
     def TRAJ_TYPE_DESCRIPTION() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
-    /// Time interval between state vectors in seconds (required for time-series data).
+    /// Time interval between state vectors in seconds; required without STATE_EPOCHS.
     def STATE_STEP_SIZE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
     /// Number of components per state vector.
@@ -1220,7 +1394,7 @@ class OCM : flatbuffers.handle
         return flatbuffers.field_uint8(buf_, pos_, 14, 6)
     /// State data as row-major array of doubles.
     /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
-    /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+    /// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
     /// Length must be divisible by STATE_VECTOR_SIZE.
     /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
     def STATE_DATA(i:int) -> float:
@@ -1301,13 +1475,21 @@ class OCM : flatbuffers.handle
     /// Identifier of that calibration evidence (a report or record).
     def COV_CALIBRATION_REFERENCE() -> string:
         return flatbuffers.field_string(buf_, pos_, 48)
+    /// Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+    /// section 6.2.4). When nonempty, length equals STATE_DATA.length /
+    /// STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+    /// Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+    def STATE_EPOCHS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 50) + i * 4)
+    def STATE_EPOCHS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 50)
 
 def GetRootAsOCM(buf:string): return OCM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OCMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(23)
+        b_.StartObject(24)
         return this
     def add_HEADER(HEADER:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, HEADER)
@@ -1378,6 +1560,9 @@ struct OCMBuilder:
     def add_COV_CALIBRATION_REFERENCE(COV_CALIBRATION_REFERENCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(22, COV_CALIBRATION_REFERENCE)
         return this
+    def add_STATE_EPOCHS(STATE_EPOCHS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(23, STATE_EPOCHS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -1419,6 +1604,13 @@ def OCMCreateMANEUVERDATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset])
 def OCMStartUSERDEFINEDPARAMETERSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def OCMCreateUSERDEFINEDPARAMETERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def OCMStartSTATEEPOCHSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OCMCreateSTATEEPOCHSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

@@ -78,7 +78,7 @@ class OCM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Time interval between state vectors in seconds (required for time-series data).
+    /// Time interval between state vectors in seconds; required without STATE_EPOCHS.
     /**
      * @return double
      */
@@ -103,7 +103,7 @@ class OCM extends Table
 
     /// State data as row-major array of doubles.
     /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
-    /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+    /// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
     /// Length must be divisible by STATE_VECTOR_SIZE.
     /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
     /**
@@ -324,22 +324,45 @@ class OCM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+    /// section 6.2.4). When nonempty, length equals STATE_DATA.length /
+    /// STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+    /// Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getSTATE_EPOCHS($j)
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSTATE_EPOCHSLength()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOCM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(23);
+        $builder->StartObject(24);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OCM
      */
-    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE)
+    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $STATE_EPOCHS)
     {
-        $builder->startObject(23);
+        $builder->startObject(24);
         self::addHEADER($builder, $HEADER);
         self::addMETADATA($builder, $METADATA);
         self::addTRAJ_TYPE($builder, $TRAJ_TYPE);
@@ -363,6 +386,7 @@ class OCM extends Table
         self::addORB_AVERAGING($builder, $ORB_AVERAGING);
         self::addCOV_CALIBRATION($builder, $COV_CALIBRATION);
         self::addCOV_CALIBRATION_REFERENCE($builder, $COV_CALIBRATION_REFERENCE);
+        self::addSTATE_EPOCHS($builder, $STATE_EPOCHS);
         $o = $builder->endObject();
         return $o;
     }
@@ -739,6 +763,40 @@ class OCM extends Table
     public static function addCOV_CALIBRATION_REFERENCE(FlatBufferBuilder $builder, $COV_CALIBRATION_REFERENCE)
     {
         $builder->addOffsetX(22, $COV_CALIBRATION_REFERENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSTATE_EPOCHS(FlatBufferBuilder $builder, $STATE_EPOCHS)
+    {
+        $builder->addOffsetX(23, $STATE_EPOCHS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSTATE_EPOCHSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSTATE_EPOCHSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

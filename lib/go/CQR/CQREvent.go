@@ -711,8 +711,54 @@ func (rcv *CQREvent) MutateSecondaryCovarianceBasis(n cqrCovarianceBasis) bool {
 	return rcv.MutateSECONDARY_COVARIANCE_BASIS(n)
 }
 
+/// Geometry used by the screening request that admitted this event.
+func (rcv *CQREvent) SCREENING() cqrVolumeGeometry {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return cqrVolumeGeometry(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *CQREvent) Screening() cqrVolumeGeometry {
+	return rcv.SCREENING()
+}
+
+/// Geometry used by the screening request that admitted this event.
+func (rcv *CQREvent) MutateSCREENING(n cqrVolumeGeometry) bool {
+	return rcv._tab.MutateByteSlot(74, byte(n))
+}
+
+func (rcv *CQREvent) MutateScreening(n cqrVolumeGeometry) bool {
+	return rcv.MutateSCREENING(n)
+}
+
+/// Volume(s) containing the other object at TCA; BOTH means both tests passed.
+/// UNSPECIFIED means admission provenance was not reported.
+func (rcv *CQREvent) ADMITTED_BY() cqrVolumeAnchor {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		return cqrVolumeAnchor(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *CQREvent) AdmittedBy() cqrVolumeAnchor {
+	return rcv.ADMITTED_BY()
+}
+
+/// Volume(s) containing the other object at TCA; BOTH means both tests passed.
+/// UNSPECIFIED means admission provenance was not reported.
+func (rcv *CQREvent) MutateADMITTED_BY(n cqrVolumeAnchor) bool {
+	return rcv._tab.MutateByteSlot(76, byte(n))
+}
+
+func (rcv *CQREvent) MutateAdmittedBy(n cqrVolumeAnchor) bool {
+	return rcv.MutateADMITTED_BY(n)
+}
+
 func CQREventStart(builder *flatbuffers.Builder) {
-	builder.StartObject(35)
+	builder.StartObject(37)
 }
 func CQREventAddPRIMARY_ID(builder *flatbuffers.Builder, PRIMARY_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PRIMARY_ID), 0)
@@ -923,6 +969,18 @@ func CQREventAddSECONDARY_COVARIANCE_BASIS(builder *flatbuffers.Builder, SECONDA
 }
 func CQREventAddSecondaryCovarianceBasis(builder *flatbuffers.Builder, SECONDARY_COVARIANCE_BASIS cqrCovarianceBasis) {
 	CQREventAddSECONDARY_COVARIANCE_BASIS(builder, SECONDARY_COVARIANCE_BASIS)
+}
+func CQREventAddSCREENING(builder *flatbuffers.Builder, SCREENING cqrVolumeGeometry) {
+	builder.PrependByteSlot(35, byte(SCREENING), 0)
+}
+func CQREventAddScreening(builder *flatbuffers.Builder, SCREENING cqrVolumeGeometry) {
+	CQREventAddSCREENING(builder, SCREENING)
+}
+func CQREventAddADMITTED_BY(builder *flatbuffers.Builder, ADMITTED_BY cqrVolumeAnchor) {
+	builder.PrependByteSlot(36, byte(ADMITTED_BY), 0)
+}
+func CQREventAddAdmittedBy(builder *flatbuffers.Builder, ADMITTED_BY cqrVolumeAnchor) {
+	CQREventAddADMITTED_BY(builder, ADMITTED_BY)
 }
 func CQREventEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

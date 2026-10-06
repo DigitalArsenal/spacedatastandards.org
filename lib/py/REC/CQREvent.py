@@ -324,8 +324,25 @@ class CQREvent(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Geometry used by the screening request that admitted this event.
+    # CQREvent
+    def SCREENING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Volume(s) containing the other object at TCA; BOTH means both tests passed.
+    # UNSPECIFIED means admission provenance was not reported.
+    # CQREvent
+    def ADMITTED_BY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
 def CQREventStart(builder):
-    builder.StartObject(35)
+    builder.StartObject(37)
 
 def Start(builder):
     CQREventStart(builder)
@@ -540,6 +557,18 @@ def CQREventAddSECONDARY_COVARIANCE_BASIS(builder, SECONDARY_COVARIANCE_BASIS):
 def AddSECONDARY_COVARIANCE_BASIS(builder, SECONDARY_COVARIANCE_BASIS):
     CQREventAddSECONDARY_COVARIANCE_BASIS(builder, SECONDARY_COVARIANCE_BASIS)
 
+def CQREventAddSCREENING(builder, SCREENING):
+    builder.PrependUint8Slot(35, SCREENING, 0)
+
+def AddSCREENING(builder, SCREENING):
+    CQREventAddSCREENING(builder, SCREENING)
+
+def CQREventAddADMITTED_BY(builder, ADMITTED_BY):
+    builder.PrependUint8Slot(36, ADMITTED_BY, 0)
+
+def AddADMITTED_BY(builder, ADMITTED_BY):
+    CQREventAddADMITTED_BY(builder, ADMITTED_BY)
+
 def CQREventEnd(builder):
     return builder.EndObject()
 
@@ -596,6 +625,8 @@ class CQREventT(object):
         SECONDARY_RADIUS_BASIS = 0,
         PRIMARY_COVARIANCE_BASIS = 0,
         SECONDARY_COVARIANCE_BASIS = 0,
+        SCREENING = 0,
+        ADMITTED_BY = 0,
     ):
         self.PRIMARY_ID = PRIMARY_ID  # type: Optional[str]
         self.SECONDARY_ID = SECONDARY_ID  # type: Optional[str]
@@ -632,6 +663,8 @@ class CQREventT(object):
         self.SECONDARY_RADIUS_BASIS = SECONDARY_RADIUS_BASIS  # type: int
         self.PRIMARY_COVARIANCE_BASIS = PRIMARY_COVARIANCE_BASIS  # type: int
         self.SECONDARY_COVARIANCE_BASIS = SECONDARY_COVARIANCE_BASIS  # type: int
+        self.SCREENING = SCREENING  # type: int
+        self.ADMITTED_BY = ADMITTED_BY  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -698,6 +731,8 @@ class CQREventT(object):
         self.SECONDARY_RADIUS_BASIS = CQREvent.SECONDARY_RADIUS_BASIS()
         self.PRIMARY_COVARIANCE_BASIS = CQREvent.PRIMARY_COVARIANCE_BASIS()
         self.SECONDARY_COVARIANCE_BASIS = CQREvent.SECONDARY_COVARIANCE_BASIS()
+        self.SCREENING = CQREvent.SCREENING()
+        self.ADMITTED_BY = CQREvent.ADMITTED_BY()
 
     # CQREventT
     def Pack(self, builder):
@@ -776,5 +811,7 @@ class CQREventT(object):
         CQREventAddSECONDARY_RADIUS_BASIS(builder, self.SECONDARY_RADIUS_BASIS)
         CQREventAddPRIMARY_COVARIANCE_BASIS(builder, self.PRIMARY_COVARIANCE_BASIS)
         CQREventAddSECONDARY_COVARIANCE_BASIS(builder, self.SECONDARY_COVARIANCE_BASIS)
+        CQREventAddSCREENING(builder, self.SCREENING)
+        CQREventAddADMITTED_BY(builder, self.ADMITTED_BY)
         CQREvent = CQREventEnd(builder)
         return CQREvent

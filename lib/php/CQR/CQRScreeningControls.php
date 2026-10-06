@@ -158,22 +158,74 @@ class CQRScreeningControls extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrProbabilityAlgorithm::ALFANO_MAXIMUM;
     }
 
+    /// SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+    /// Admit local minima of relative distance inside or on the selected volume.
+    /**
+     * @return byte
+     */
+    public function getSCREENING()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrVolumeGeometry::SPHERICAL;
+    }
+
+    /// RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+    /**
+     * @return double
+     */
+    public function getRADIAL_M()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getIN_TRACK_M()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getCROSS_TRACK_M()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+    /// R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+    /// BOTH tests each object's volume independently and admits their union.
+    /// UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+    /**
+     * @return byte
+     */
+    public function getVOLUME_CENTER()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrVolumeAnchor::PRIMARY;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCQRScreeningControls(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CQRScreeningControls
      */
-    public static function createCQRScreeningControls(FlatBufferBuilder $builder, $START_EPOCH, $DURATION_SECONDS, $THRESHOLD_M, $REQUESTED_WORKERS, $COARSE_STEP_SECONDS, $REFINEMENT_TOLERANCE_SECONDS, $COMBINED_RADIUS_M, $USE_KD_TREE, $USE_DYNAMIC_WINDOW, $USE_PERIGEE_FILTER, $PROGRESS_INTERVAL_SECONDS, $HAS_PROGRESS_INTERVAL_SECONDS, $ALGORITHM)
+    public static function createCQRScreeningControls(FlatBufferBuilder $builder, $START_EPOCH, $DURATION_SECONDS, $THRESHOLD_M, $REQUESTED_WORKERS, $COARSE_STEP_SECONDS, $REFINEMENT_TOLERANCE_SECONDS, $COMBINED_RADIUS_M, $USE_KD_TREE, $USE_DYNAMIC_WINDOW, $USE_PERIGEE_FILTER, $PROGRESS_INTERVAL_SECONDS, $HAS_PROGRESS_INTERVAL_SECONDS, $ALGORITHM, $SCREENING, $RADIAL_M, $IN_TRACK_M, $CROSS_TRACK_M, $VOLUME_CENTER)
     {
-        $builder->startObject(13);
+        $builder->startObject(18);
         self::addSTART_EPOCH($builder, $START_EPOCH);
         self::addDURATION_SECONDS($builder, $DURATION_SECONDS);
         self::addTHRESHOLD_M($builder, $THRESHOLD_M);
@@ -187,6 +239,11 @@ class CQRScreeningControls extends Table
         self::addPROGRESS_INTERVAL_SECONDS($builder, $PROGRESS_INTERVAL_SECONDS);
         self::addHAS_PROGRESS_INTERVAL_SECONDS($builder, $HAS_PROGRESS_INTERVAL_SECONDS);
         self::addALGORITHM($builder, $ALGORITHM);
+        self::addSCREENING($builder, $SCREENING);
+        self::addRADIAL_M($builder, $RADIAL_M);
+        self::addIN_TRACK_M($builder, $IN_TRACK_M);
+        self::addCROSS_TRACK_M($builder, $CROSS_TRACK_M);
+        self::addVOLUME_CENTER($builder, $VOLUME_CENTER);
         $o = $builder->endObject();
         $builder->required($o, 4);  // START_EPOCH
         return $o;
@@ -320,6 +377,56 @@ class CQRScreeningControls extends Table
     public static function addALGORITHM(FlatBufferBuilder $builder, $ALGORITHM)
     {
         $builder->addByteX(12, $ALGORITHM, 3);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addSCREENING(FlatBufferBuilder $builder, $SCREENING)
+    {
+        $builder->addByteX(13, $SCREENING, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRADIAL_M(FlatBufferBuilder $builder, $RADIAL_M)
+    {
+        $builder->addDoubleX(14, $RADIAL_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIN_TRACK_M(FlatBufferBuilder $builder, $IN_TRACK_M)
+    {
+        $builder->addDoubleX(15, $IN_TRACK_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCROSS_TRACK_M(FlatBufferBuilder $builder, $CROSS_TRACK_M)
+    {
+        $builder->addDoubleX(16, $CROSS_TRACK_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addVOLUME_CENTER(FlatBufferBuilder $builder, $VOLUME_CENTER)
+    {
+        $builder->addByteX(17, $VOLUME_CENTER, 1);
     }
 
     /**

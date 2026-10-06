@@ -90,6 +90,11 @@ public struct CQREvent : IFlatbufferObject
   /// carries no covariance-based quantity for it.
   public cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS { get { int o = __p.__offset(70); return o != 0 ? (cqrCovarianceBasis)__p.bb.Get(o + __p.bb_pos) : cqrCovarianceBasis.UNSPECIFIED; } }
   public cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS { get { int o = __p.__offset(72); return o != 0 ? (cqrCovarianceBasis)__p.bb.Get(o + __p.bb_pos) : cqrCovarianceBasis.UNSPECIFIED; } }
+  /// Geometry used by the screening request that admitted this event.
+  public cqrVolumeGeometry SCREENING { get { int o = __p.__offset(74); return o != 0 ? (cqrVolumeGeometry)__p.bb.Get(o + __p.bb_pos) : cqrVolumeGeometry.SPHERICAL; } }
+  /// Volume(s) containing the other object at TCA; BOTH means both tests passed.
+  /// UNSPECIFIED means admission provenance was not reported.
+  public cqrVolumeAnchor ADMITTED_BY { get { int o = __p.__offset(76); return o != 0 ? (cqrVolumeAnchor)__p.bb.Get(o + __p.bb_pos) : cqrVolumeAnchor.UNSPECIFIED; } }
 
   public static Offset<CQREvent> CreateCQREvent(FlatBufferBuilder builder,
       StringOffset PRIMARY_IDOffset = default(StringOffset),
@@ -126,8 +131,10 @@ public struct CQREvent : IFlatbufferObject
       cqrHardBodyRadiusBasis PRIMARY_RADIUS_BASIS = cqrHardBodyRadiusBasis.UNSPECIFIED,
       cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS = cqrHardBodyRadiusBasis.UNSPECIFIED,
       cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS = cqrCovarianceBasis.UNSPECIFIED,
-      cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis.UNSPECIFIED) {
-    builder.StartTable(35);
+      cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis.UNSPECIFIED,
+      cqrVolumeGeometry SCREENING = cqrVolumeGeometry.SPHERICAL,
+      cqrVolumeAnchor ADMITTED_BY = cqrVolumeAnchor.UNSPECIFIED) {
+    builder.StartTable(37);
     CQREvent.AddSECONDARY_HARD_BODY_RADIUS_M(builder, SECONDARY_HARD_BODY_RADIUS_M);
     CQREvent.AddPRIMARY_HARD_BODY_RADIUS_M(builder, PRIMARY_HARD_BODY_RADIUS_M);
     CQREvent.AddCOMBINED_RADIUS_M(builder, COMBINED_RADIUS_M);
@@ -152,6 +159,8 @@ public struct CQREvent : IFlatbufferObject
     CQREvent.AddPRIMARY_NAME(builder, PRIMARY_NAMEOffset);
     CQREvent.AddSECONDARY_ID(builder, SECONDARY_IDOffset);
     CQREvent.AddPRIMARY_ID(builder, PRIMARY_IDOffset);
+    CQREvent.AddADMITTED_BY(builder, ADMITTED_BY);
+    CQREvent.AddSCREENING(builder, SCREENING);
     CQREvent.AddSECONDARY_COVARIANCE_BASIS(builder, SECONDARY_COVARIANCE_BASIS);
     CQREvent.AddPRIMARY_COVARIANCE_BASIS(builder, PRIMARY_COVARIANCE_BASIS);
     CQREvent.AddSECONDARY_RADIUS_BASIS(builder, SECONDARY_RADIUS_BASIS);
@@ -166,7 +175,7 @@ public struct CQREvent : IFlatbufferObject
     return CQREvent.EndCQREvent(builder);
   }
 
-  public static void StartCQREvent(FlatBufferBuilder builder) { builder.StartTable(35); }
+  public static void StartCQREvent(FlatBufferBuilder builder) { builder.StartTable(37); }
   public static void AddPRIMARY_ID(FlatBufferBuilder builder, StringOffset PRIMARY_IDOffset) { builder.AddOffset(0, PRIMARY_IDOffset.Value, 0); }
   public static void AddSECONDARY_ID(FlatBufferBuilder builder, StringOffset SECONDARY_IDOffset) { builder.AddOffset(1, SECONDARY_IDOffset.Value, 0); }
   public static void AddPRIMARY_NAME(FlatBufferBuilder builder, StringOffset PRIMARY_NAMEOffset) { builder.AddOffset(2, PRIMARY_NAMEOffset.Value, 0); }
@@ -202,6 +211,8 @@ public struct CQREvent : IFlatbufferObject
   public static void AddSECONDARY_RADIUS_BASIS(FlatBufferBuilder builder, cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS) { builder.AddByte(32, (byte)SECONDARY_RADIUS_BASIS, 0); }
   public static void AddPRIMARY_COVARIANCE_BASIS(FlatBufferBuilder builder, cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS) { builder.AddByte(33, (byte)PRIMARY_COVARIANCE_BASIS, 0); }
   public static void AddSECONDARY_COVARIANCE_BASIS(FlatBufferBuilder builder, cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS) { builder.AddByte(34, (byte)SECONDARY_COVARIANCE_BASIS, 0); }
+  public static void AddSCREENING(FlatBufferBuilder builder, cqrVolumeGeometry SCREENING) { builder.AddByte(35, (byte)SCREENING, 0); }
+  public static void AddADMITTED_BY(FlatBufferBuilder builder, cqrVolumeAnchor ADMITTED_BY) { builder.AddByte(36, (byte)ADMITTED_BY, 0); }
   public static Offset<CQREvent> EndCQREvent(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // PRIMARY_ID
@@ -250,6 +261,8 @@ public struct CQREvent : IFlatbufferObject
     _o.SECONDARY_RADIUS_BASIS = this.SECONDARY_RADIUS_BASIS;
     _o.PRIMARY_COVARIANCE_BASIS = this.PRIMARY_COVARIANCE_BASIS;
     _o.SECONDARY_COVARIANCE_BASIS = this.SECONDARY_COVARIANCE_BASIS;
+    _o.SCREENING = this.SCREENING;
+    _o.ADMITTED_BY = this.ADMITTED_BY;
   }
   public static Offset<CQREvent> Pack(FlatBufferBuilder builder, CQREventT _o) {
     if (_o == null) return default(Offset<CQREvent>);
@@ -302,7 +315,9 @@ public struct CQREvent : IFlatbufferObject
       _o.PRIMARY_RADIUS_BASIS,
       _o.SECONDARY_RADIUS_BASIS,
       _o.PRIMARY_COVARIANCE_BASIS,
-      _o.SECONDARY_COVARIANCE_BASIS);
+      _o.SECONDARY_COVARIANCE_BASIS,
+      _o.SCREENING,
+      _o.ADMITTED_BY);
   }
 }
 
@@ -343,6 +358,8 @@ public class CQREventT
   public cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS { get; set; }
   public cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS { get; set; }
   public cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS { get; set; }
+  public cqrVolumeGeometry SCREENING { get; set; }
+  public cqrVolumeAnchor ADMITTED_BY { get; set; }
 
   public CQREventT() {
     this.PRIMARY_ID = null;
@@ -380,6 +397,8 @@ public class CQREventT
     this.SECONDARY_RADIUS_BASIS = cqrHardBodyRadiusBasis.UNSPECIFIED;
     this.PRIMARY_COVARIANCE_BASIS = cqrCovarianceBasis.UNSPECIFIED;
     this.SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis.UNSPECIFIED;
+    this.SCREENING = cqrVolumeGeometry.SPHERICAL;
+    this.ADMITTED_BY = cqrVolumeAnchor.UNSPECIFIED;
   }
 }
 
@@ -424,6 +443,8 @@ static public class CQREventVerify
       && verifier.VerifyField(tablePos, 68 /*SECONDARY_RADIUS_BASIS*/, 1 /*cqrHardBodyRadiusBasis*/, 1, false)
       && verifier.VerifyField(tablePos, 70 /*PRIMARY_COVARIANCE_BASIS*/, 1 /*cqrCovarianceBasis*/, 1, false)
       && verifier.VerifyField(tablePos, 72 /*SECONDARY_COVARIANCE_BASIS*/, 1 /*cqrCovarianceBasis*/, 1, false)
+      && verifier.VerifyField(tablePos, 74 /*SCREENING*/, 1 /*cqrVolumeGeometry*/, 1, false)
+      && verifier.VerifyField(tablePos, 76 /*ADMITTED_BY*/, 1 /*cqrVolumeAnchor*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

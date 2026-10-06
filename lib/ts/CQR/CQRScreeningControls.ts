@@ -6,6 +6,8 @@ import * as flatbuffers from 'flatbuffers';
 
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
 import { cqrProbabilityAlgorithm } from './cqrProbabilityAlgorithm.js';
+import { cqrVolumeAnchor } from './cqrVolumeAnchor.js';
+import { cqrVolumeGeometry } from './cqrVolumeGeometry.js';
 
 
 /**
@@ -100,8 +102,46 @@ ALGORITHM():cqrProbabilityAlgorithm {
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrProbabilityAlgorithm.ALFANO_MAXIMUM;
 }
 
+/**
+ * SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+ * Admit local minima of relative distance inside or on the selected volume.
+ */
+SCREENING():cqrVolumeGeometry {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrVolumeGeometry.SPHERICAL;
+}
+
+/**
+ * RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+ */
+RADIAL_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+IN_TRACK_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+CROSS_TRACK_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+ * R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+ * BOTH tests each object's volume independently and admits their union.
+ * UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+ */
+VOLUME_CENTER():cqrVolumeAnchor {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrVolumeAnchor.PRIMARY;
+}
+
 static startCQRScreeningControls(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(18);
 }
 
 static addStartEpoch(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset) {
@@ -156,13 +196,33 @@ static addAlgorithm(builder:flatbuffers.Builder, ALGORITHM:cqrProbabilityAlgorit
   builder.addFieldInt8(12, ALGORITHM, cqrProbabilityAlgorithm.ALFANO_MAXIMUM);
 }
 
+static addScreening(builder:flatbuffers.Builder, SCREENING:cqrVolumeGeometry) {
+  builder.addFieldInt8(13, SCREENING, cqrVolumeGeometry.SPHERICAL);
+}
+
+static addRadialM(builder:flatbuffers.Builder, RADIAL_M:number) {
+  builder.addFieldFloat64(14, RADIAL_M, 0.0);
+}
+
+static addInTrackM(builder:flatbuffers.Builder, IN_TRACK_M:number) {
+  builder.addFieldFloat64(15, IN_TRACK_M, 0.0);
+}
+
+static addCrossTrackM(builder:flatbuffers.Builder, CROSS_TRACK_M:number) {
+  builder.addFieldFloat64(16, CROSS_TRACK_M, 0.0);
+}
+
+static addVolumeCenter(builder:flatbuffers.Builder, VOLUME_CENTER:cqrVolumeAnchor) {
+  builder.addFieldInt8(17, VOLUME_CENTER, cqrVolumeAnchor.PRIMARY);
+}
+
 static endCQRScreeningControls(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // START_EPOCH
   return offset;
 }
 
-static createCQRScreeningControls(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset, DURATION_SECONDS:number, THRESHOLD_M:number, REQUESTED_WORKERS:number, COARSE_STEP_SECONDS:number, REFINEMENT_TOLERANCE_SECONDS:number, COMBINED_RADIUS_M:number, USE_KD_TREE:boolean, USE_DYNAMIC_WINDOW:boolean, USE_PERIGEE_FILTER:boolean, PROGRESS_INTERVAL_SECONDS:number, HAS_PROGRESS_INTERVAL_SECONDS:boolean, ALGORITHM:cqrProbabilityAlgorithm):flatbuffers.Offset {
+static createCQRScreeningControls(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset, DURATION_SECONDS:number, THRESHOLD_M:number, REQUESTED_WORKERS:number, COARSE_STEP_SECONDS:number, REFINEMENT_TOLERANCE_SECONDS:number, COMBINED_RADIUS_M:number, USE_KD_TREE:boolean, USE_DYNAMIC_WINDOW:boolean, USE_PERIGEE_FILTER:boolean, PROGRESS_INTERVAL_SECONDS:number, HAS_PROGRESS_INTERVAL_SECONDS:boolean, ALGORITHM:cqrProbabilityAlgorithm, SCREENING:cqrVolumeGeometry, RADIAL_M:number, IN_TRACK_M:number, CROSS_TRACK_M:number, VOLUME_CENTER:cqrVolumeAnchor):flatbuffers.Offset {
   CQRScreeningControls.startCQRScreeningControls(builder);
   CQRScreeningControls.addStartEpoch(builder, START_EPOCHOffset);
   CQRScreeningControls.addDurationSeconds(builder, DURATION_SECONDS);
@@ -177,6 +237,11 @@ static createCQRScreeningControls(builder:flatbuffers.Builder, START_EPOCHOffset
   CQRScreeningControls.addProgressIntervalSeconds(builder, PROGRESS_INTERVAL_SECONDS);
   CQRScreeningControls.addHasProgressIntervalSeconds(builder, HAS_PROGRESS_INTERVAL_SECONDS);
   CQRScreeningControls.addAlgorithm(builder, ALGORITHM);
+  CQRScreeningControls.addScreening(builder, SCREENING);
+  CQRScreeningControls.addRadialM(builder, RADIAL_M);
+  CQRScreeningControls.addInTrackM(builder, IN_TRACK_M);
+  CQRScreeningControls.addCrossTrackM(builder, CROSS_TRACK_M);
+  CQRScreeningControls.addVolumeCenter(builder, VOLUME_CENTER);
   return CQRScreeningControls.endCQRScreeningControls(builder);
 }
 
@@ -194,7 +259,12 @@ unpack(): CQRScreeningControlsT {
     this.USE_PERIGEE_FILTER(),
     this.PROGRESS_INTERVAL_SECONDS(),
     this.HAS_PROGRESS_INTERVAL_SECONDS(),
-    this.ALGORITHM()
+    this.ALGORITHM(),
+    this.SCREENING(),
+    this.RADIAL_M(),
+    this.IN_TRACK_M(),
+    this.CROSS_TRACK_M(),
+    this.VOLUME_CENTER()
   );
 }
 
@@ -213,6 +283,11 @@ unpackTo(_o: CQRScreeningControlsT): void {
   _o.PROGRESS_INTERVAL_SECONDS = this.PROGRESS_INTERVAL_SECONDS();
   _o.HAS_PROGRESS_INTERVAL_SECONDS = this.HAS_PROGRESS_INTERVAL_SECONDS();
   _o.ALGORITHM = this.ALGORITHM();
+  _o.SCREENING = this.SCREENING();
+  _o.RADIAL_M = this.RADIAL_M();
+  _o.IN_TRACK_M = this.IN_TRACK_M();
+  _o.CROSS_TRACK_M = this.CROSS_TRACK_M();
+  _o.VOLUME_CENTER = this.VOLUME_CENTER();
 }
 }
 
@@ -230,7 +305,12 @@ constructor(
   public USE_PERIGEE_FILTER: boolean = true,
   public PROGRESS_INTERVAL_SECONDS: number = 0.0,
   public HAS_PROGRESS_INTERVAL_SECONDS: boolean = false,
-  public ALGORITHM: cqrProbabilityAlgorithm = cqrProbabilityAlgorithm.ALFANO_MAXIMUM
+  public ALGORITHM: cqrProbabilityAlgorithm = cqrProbabilityAlgorithm.ALFANO_MAXIMUM,
+  public SCREENING: cqrVolumeGeometry = cqrVolumeGeometry.SPHERICAL,
+  public RADIAL_M: number = 0.0,
+  public IN_TRACK_M: number = 0.0,
+  public CROSS_TRACK_M: number = 0.0,
+  public VOLUME_CENTER: cqrVolumeAnchor = cqrVolumeAnchor.PRIMARY
 ){}
 
 
@@ -250,7 +330,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.USE_PERIGEE_FILTER,
     this.PROGRESS_INTERVAL_SECONDS,
     this.HAS_PROGRESS_INTERVAL_SECONDS,
-    this.ALGORITHM
+    this.ALGORITHM,
+    this.SCREENING,
+    this.RADIAL_M,
+    this.IN_TRACK_M,
+    this.CROSS_TRACK_M,
+    this.VOLUME_CENTER
   );
 }
 }

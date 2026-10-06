@@ -173,22 +173,256 @@ class Maneuver extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+    /// CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+    /// DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+    /// Relative time tags are seconds from METADATA.EPOCH_TZERO.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getMAN_COMPOSITION($j)
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMAN_COMPOSITIONLength()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+    public function getMAN_NEXT_ID()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// OD, navigation solution or simulation identifier (Table 6-7).
+    public function getMAN_BASIS_ID()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+    /// CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+    public function getMAN_PREV_EPOCH()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+    public function getMAN_NEXT_EPOCH()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Source of predicted orbit or attitude states (Table 6-7).
+    public function getMAN_PRED_SOURCE()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Gravitational assist body name (Table 6-7).
+    public function getGRAV_ASSIST_NAME()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+    public function getDC_TYPE()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+    public function getDC_WIN_OPEN()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+    public function getDC_WIN_CLOSE()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+    /**
+     * @return uint
+     */
+    public function getDC_MIN_CYCLES()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /**
+     * @return uint
+     */
+    public function getDC_MAX_CYCLES()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Presence of the corresponding cycle bound; zero remains representable.
+    /**
+     * @return bool
+     */
+    public function getHAS_DC_MIN_CYCLES()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_DC_MAX_CYCLES()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+    /// Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+    public function getDC_EXEC_START()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getDC_EXEC_STOP()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+    public function getDC_REF_TIME()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+    /// Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+    /**
+     * @return double
+     */
+    public function getDC_TIME_PULSE_DURATION()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /**
+     * @return double
+     */
+    public function getDC_TIME_PULSE_PERIOD()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+    /// Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getDC_REF_DIR($j)
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDC_REF_DIRLength()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Body frame of DC_BODY_TRIGGER (Table 6-7).
+    public function getDC_BODY_FRAME()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Three-component body-frame trigger unit direction (Table 6-7).
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getDC_BODY_TRIGGER($j)
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDC_BODY_TRIGGERLength()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Pulse start and stop phase angles, degrees; NaN means unspecified.
+    /// CCSDS 502.0-B-3 Table 6-7.
+    /**
+     * @return double
+     */
+    public function getDC_PA_START_ANGLE()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /**
+     * @return double
+     */
+    public function getDC_PA_STOP_ANGLE()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startManeuver(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(37);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return Maneuver
      */
-    public static function createManeuver(FlatBufferBuilder $builder, $MAN_ID, $MAN_BASIS, $MAN_DEVICE_ID, $MAN_PREV_ID, $MAN_PURPOSE, $MAN_REF_FRAME, $MAN_FRAME_EPOCH, $MAN_TYPE, $MAN_EPOCH_START, $MAN_DURATION, $MAN_UNITS, $DATA, $MAN_COMMENT)
+    public static function createManeuver(FlatBufferBuilder $builder, $MAN_ID, $MAN_BASIS, $MAN_DEVICE_ID, $MAN_PREV_ID, $MAN_PURPOSE, $MAN_REF_FRAME, $MAN_FRAME_EPOCH, $MAN_TYPE, $MAN_EPOCH_START, $MAN_DURATION, $MAN_UNITS, $DATA, $MAN_COMMENT, $MAN_COMPOSITION, $MAN_NEXT_ID, $MAN_BASIS_ID, $MAN_PREV_EPOCH, $MAN_NEXT_EPOCH, $MAN_PRED_SOURCE, $GRAV_ASSIST_NAME, $DC_TYPE, $DC_WIN_OPEN, $DC_WIN_CLOSE, $DC_MIN_CYCLES, $DC_MAX_CYCLES, $HAS_DC_MIN_CYCLES, $HAS_DC_MAX_CYCLES, $DC_EXEC_START, $DC_EXEC_STOP, $DC_REF_TIME, $DC_TIME_PULSE_DURATION, $DC_TIME_PULSE_PERIOD, $DC_REF_DIR, $DC_BODY_FRAME, $DC_BODY_TRIGGER, $DC_PA_START_ANGLE, $DC_PA_STOP_ANGLE)
     {
-        $builder->startObject(13);
+        $builder->startObject(37);
         self::addMAN_ID($builder, $MAN_ID);
         self::addMAN_BASIS($builder, $MAN_BASIS);
         self::addMAN_DEVICE_ID($builder, $MAN_DEVICE_ID);
@@ -202,6 +436,30 @@ class Maneuver extends Table
         self::addMAN_UNITS($builder, $MAN_UNITS);
         self::addDATA($builder, $DATA);
         self::addMAN_COMMENT($builder, $MAN_COMMENT);
+        self::addMAN_COMPOSITION($builder, $MAN_COMPOSITION);
+        self::addMAN_NEXT_ID($builder, $MAN_NEXT_ID);
+        self::addMAN_BASIS_ID($builder, $MAN_BASIS_ID);
+        self::addMAN_PREV_EPOCH($builder, $MAN_PREV_EPOCH);
+        self::addMAN_NEXT_EPOCH($builder, $MAN_NEXT_EPOCH);
+        self::addMAN_PRED_SOURCE($builder, $MAN_PRED_SOURCE);
+        self::addGRAV_ASSIST_NAME($builder, $GRAV_ASSIST_NAME);
+        self::addDC_TYPE($builder, $DC_TYPE);
+        self::addDC_WIN_OPEN($builder, $DC_WIN_OPEN);
+        self::addDC_WIN_CLOSE($builder, $DC_WIN_CLOSE);
+        self::addDC_MIN_CYCLES($builder, $DC_MIN_CYCLES);
+        self::addDC_MAX_CYCLES($builder, $DC_MAX_CYCLES);
+        self::addHAS_DC_MIN_CYCLES($builder, $HAS_DC_MIN_CYCLES);
+        self::addHAS_DC_MAX_CYCLES($builder, $HAS_DC_MAX_CYCLES);
+        self::addDC_EXEC_START($builder, $DC_EXEC_START);
+        self::addDC_EXEC_STOP($builder, $DC_EXEC_STOP);
+        self::addDC_REF_TIME($builder, $DC_REF_TIME);
+        self::addDC_TIME_PULSE_DURATION($builder, $DC_TIME_PULSE_DURATION);
+        self::addDC_TIME_PULSE_PERIOD($builder, $DC_TIME_PULSE_PERIOD);
+        self::addDC_REF_DIR($builder, $DC_REF_DIR);
+        self::addDC_BODY_FRAME($builder, $DC_BODY_FRAME);
+        self::addDC_BODY_TRIGGER($builder, $DC_BODY_TRIGGER);
+        self::addDC_PA_START_ANGLE($builder, $DC_PA_START_ANGLE);
+        self::addDC_PA_STOP_ANGLE($builder, $DC_PA_STOP_ANGLE);
         $o = $builder->endObject();
         return $o;
     }
@@ -406,6 +664,318 @@ class Maneuver extends Table
     public static function startMAN_COMMENTVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMAN_COMPOSITION(FlatBufferBuilder $builder, $MAN_COMPOSITION)
+    {
+        $builder->addOffsetX(13, $MAN_COMPOSITION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createMAN_COMPOSITIONVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startMAN_COMPOSITIONVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMAN_NEXT_ID(FlatBufferBuilder $builder, $MAN_NEXT_ID)
+    {
+        $builder->addOffsetX(14, $MAN_NEXT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMAN_BASIS_ID(FlatBufferBuilder $builder, $MAN_BASIS_ID)
+    {
+        $builder->addOffsetX(15, $MAN_BASIS_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMAN_PREV_EPOCH(FlatBufferBuilder $builder, $MAN_PREV_EPOCH)
+    {
+        $builder->addOffsetX(16, $MAN_PREV_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMAN_NEXT_EPOCH(FlatBufferBuilder $builder, $MAN_NEXT_EPOCH)
+    {
+        $builder->addOffsetX(17, $MAN_NEXT_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMAN_PRED_SOURCE(FlatBufferBuilder $builder, $MAN_PRED_SOURCE)
+    {
+        $builder->addOffsetX(18, $MAN_PRED_SOURCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addGRAV_ASSIST_NAME(FlatBufferBuilder $builder, $GRAV_ASSIST_NAME)
+    {
+        $builder->addOffsetX(19, $GRAV_ASSIST_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDC_TYPE(FlatBufferBuilder $builder, $DC_TYPE)
+    {
+        $builder->addOffsetX(20, $DC_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDC_WIN_OPEN(FlatBufferBuilder $builder, $DC_WIN_OPEN)
+    {
+        $builder->addOffsetX(21, $DC_WIN_OPEN, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDC_WIN_CLOSE(FlatBufferBuilder $builder, $DC_WIN_CLOSE)
+    {
+        $builder->addOffsetX(22, $DC_WIN_CLOSE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addDC_MIN_CYCLES(FlatBufferBuilder $builder, $DC_MIN_CYCLES)
+    {
+        $builder->addUintX(23, $DC_MIN_CYCLES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addDC_MAX_CYCLES(FlatBufferBuilder $builder, $DC_MAX_CYCLES)
+    {
+        $builder->addUintX(24, $DC_MAX_CYCLES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_DC_MIN_CYCLES(FlatBufferBuilder $builder, $HAS_DC_MIN_CYCLES)
+    {
+        $builder->addBoolX(25, $HAS_DC_MIN_CYCLES, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_DC_MAX_CYCLES(FlatBufferBuilder $builder, $HAS_DC_MAX_CYCLES)
+    {
+        $builder->addBoolX(26, $HAS_DC_MAX_CYCLES, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDC_EXEC_START(FlatBufferBuilder $builder, $DC_EXEC_START)
+    {
+        $builder->addOffsetX(27, $DC_EXEC_START, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDC_EXEC_STOP(FlatBufferBuilder $builder, $DC_EXEC_STOP)
+    {
+        $builder->addOffsetX(28, $DC_EXEC_STOP, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDC_REF_TIME(FlatBufferBuilder $builder, $DC_REF_TIME)
+    {
+        $builder->addOffsetX(29, $DC_REF_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDC_TIME_PULSE_DURATION(FlatBufferBuilder $builder, $DC_TIME_PULSE_DURATION)
+    {
+        $builder->addDoubleX(30, $DC_TIME_PULSE_DURATION, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDC_TIME_PULSE_PERIOD(FlatBufferBuilder $builder, $DC_TIME_PULSE_PERIOD)
+    {
+        $builder->addDoubleX(31, $DC_TIME_PULSE_PERIOD, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDC_REF_DIR(FlatBufferBuilder $builder, $DC_REF_DIR)
+    {
+        $builder->addOffsetX(32, $DC_REF_DIR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDC_REF_DIRVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDC_REF_DIRVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDC_BODY_FRAME(FlatBufferBuilder $builder, $DC_BODY_FRAME)
+    {
+        $builder->addOffsetX(33, $DC_BODY_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDC_BODY_TRIGGER(FlatBufferBuilder $builder, $DC_BODY_TRIGGER)
+    {
+        $builder->addOffsetX(34, $DC_BODY_TRIGGER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDC_BODY_TRIGGERVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDC_BODY_TRIGGERVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDC_PA_START_ANGLE(FlatBufferBuilder $builder, $DC_PA_START_ANGLE)
+    {
+        $builder->addDoubleX(35, $DC_PA_START_ANGLE, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDC_PA_STOP_ANGLE(FlatBufferBuilder $builder, $DC_PA_STOP_ANGLE)
+    {
+        $builder->addDoubleX(36, $DC_PA_STOP_ANGLE, NAN);
     }
 
     /**

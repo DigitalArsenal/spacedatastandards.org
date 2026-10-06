@@ -205,6 +205,294 @@ class Maneuver : Table() {
         get() {
             val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+     * CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+     * DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+     * Relative time tags are seconds from METADATA.EPOCH_TZERO.
+     */
+    fun manComposition(j: Int) : String? {
+        val o = __offset(30)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val manCompositionLength : Int
+        get() {
+            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+     */
+    val manNextId : String?
+        get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val manNextIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun manNextIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * OD, navigation solution or simulation identifier (Table 6-7).
+     */
+    val manBasisId : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val manBasisIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun manBasisIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+     * CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+     */
+    val manPrevEpoch : String?
+        get() {
+            val o = __offset(36)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val manPrevEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun manPrevEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+     */
+    val manNextEpoch : String?
+        get() {
+            val o = __offset(38)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val manNextEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun manNextEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Source of predicted orbit or attitude states (Table 6-7).
+     */
+    val manPredSource : String?
+        get() {
+            val o = __offset(40)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val manPredSourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun manPredSourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Gravitational assist body name (Table 6-7).
+     */
+    val gravAssistName : String?
+        get() {
+            val o = __offset(42)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val gravAssistNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun gravAssistNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
+    /**
+     * CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+     */
+    val dcType : String?
+        get() {
+            val o = __offset(44)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val dcTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun dcTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
+    /**
+     * Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+     */
+    val dcWinOpen : String?
+        get() {
+            val o = __offset(46)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val dcWinOpenAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
+    fun dcWinOpenInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
+    /**
+     * Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+     */
+    val dcWinClose : String?
+        get() {
+            val o = __offset(48)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val dcWinCloseAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun dcWinCloseInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
+    /**
+     * Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+     */
+    val dcMinCycles : UInt
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    val dcMaxCycles : UInt
+        get() {
+            val o = __offset(52)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Presence of the corresponding cycle bound; zero remains representable.
+     */
+    val hasDcMinCycles : Boolean
+        get() {
+            val o = __offset(54)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasDcMaxCycles : Boolean
+        get() {
+            val o = __offset(56)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+     * Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+     */
+    val dcExecStart : String?
+        get() {
+            val o = __offset(58)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val dcExecStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
+    fun dcExecStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
+    val dcExecStop : String?
+        get() {
+            val o = __offset(60)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val dcExecStopAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun dcExecStopInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+     */
+    val dcRefTime : String?
+        get() {
+            val o = __offset(62)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val dcRefTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun dcRefTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+     * Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+     */
+    val dcTimePulseDuration : Double
+        get() {
+            val o = __offset(64)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    val dcTimePulsePeriod : Double
+        get() {
+            val o = __offset(66)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+     * Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+     */
+    fun dcRefDir(j: Int) : Double {
+        val o = __offset(68)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val dcRefDirLength : Int
+        get() {
+            val o = __offset(68); return if (o != 0) __vector_len(o) else 0
+        }
+    val dcRefDirAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(68, 8)
+    fun dcRefDirInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 68, 8)
+    /**
+     * Body frame of DC_BODY_TRIGGER (Table 6-7).
+     */
+    val dcBodyFrame : String?
+        get() {
+            val o = __offset(70)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val dcBodyFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(70, 1)
+    fun dcBodyFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 70, 1)
+    /**
+     * Three-component body-frame trigger unit direction (Table 6-7).
+     */
+    fun dcBodyTrigger(j: Int) : Double {
+        val o = __offset(72)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val dcBodyTriggerLength : Int
+        get() {
+            val o = __offset(72); return if (o != 0) __vector_len(o) else 0
+        }
+    val dcBodyTriggerAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(72, 8)
+    fun dcBodyTriggerInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 72, 8)
+    /**
+     * Pulse start and stop phase angles, degrees; NaN means unspecified.
+     * CCSDS 502.0-B-3 Table 6-7.
+     */
+    val dcPaStartAngle : Double
+        get() {
+            val o = __offset(74)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    val dcPaStopAngle : Double
+        get() {
+            val o = __offset(76)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsManeuver(_bb: ByteBuffer): Maneuver = getRootAsManeuver(_bb, Maneuver())
@@ -212,9 +500,31 @@ class Maneuver : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createManeuver(builder: FlatBufferBuilder, manIdOffset: Int, manBasisOffset: Int, manDeviceIdOffset: Int, manPrevIdOffset: Int, manPurposeOffset: Int, manRefFrameOffset: Int, manFrameEpochOffset: Int, manTypeOffset: Int, manEpochStartOffset: Int, manDuration: Double, manUnitsOffset: Int, dataOffset: Int, manCommentOffset: Int) : Int {
-            builder.startTable(13)
+        fun createManeuver(builder: FlatBufferBuilder, manIdOffset: Int, manBasisOffset: Int, manDeviceIdOffset: Int, manPrevIdOffset: Int, manPurposeOffset: Int, manRefFrameOffset: Int, manFrameEpochOffset: Int, manTypeOffset: Int, manEpochStartOffset: Int, manDuration: Double, manUnitsOffset: Int, dataOffset: Int, manCommentOffset: Int, manCompositionOffset: Int, manNextIdOffset: Int, manBasisIdOffset: Int, manPrevEpochOffset: Int, manNextEpochOffset: Int, manPredSourceOffset: Int, gravAssistNameOffset: Int, dcTypeOffset: Int, dcWinOpenOffset: Int, dcWinCloseOffset: Int, dcMinCycles: UInt, dcMaxCycles: UInt, hasDcMinCycles: Boolean, hasDcMaxCycles: Boolean, dcExecStartOffset: Int, dcExecStopOffset: Int, dcRefTimeOffset: Int, dcTimePulseDuration: Double, dcTimePulsePeriod: Double, dcRefDirOffset: Int, dcBodyFrameOffset: Int, dcBodyTriggerOffset: Int, dcPaStartAngle: Double, dcPaStopAngle: Double) : Int {
+            builder.startTable(37)
+            addDCPASTOPANGLE(builder, dcPaStopAngle)
+            addDCPASTARTANGLE(builder, dcPaStartAngle)
+            addDCTIMEPULSEPERIOD(builder, dcTimePulsePeriod)
+            addDCTIMEPULSEDURATION(builder, dcTimePulseDuration)
             addMANDURATION(builder, manDuration)
+            addDCBODYTRIGGER(builder, dcBodyTriggerOffset)
+            addDCBODYFRAME(builder, dcBodyFrameOffset)
+            addDCREFDIR(builder, dcRefDirOffset)
+            addDCREFTIME(builder, dcRefTimeOffset)
+            addDCEXECSTOP(builder, dcExecStopOffset)
+            addDCEXECSTART(builder, dcExecStartOffset)
+            addDCMAXCYCLES(builder, dcMaxCycles)
+            addDCMINCYCLES(builder, dcMinCycles)
+            addDCWINCLOSE(builder, dcWinCloseOffset)
+            addDCWINOPEN(builder, dcWinOpenOffset)
+            addDCTYPE(builder, dcTypeOffset)
+            addGRAVASSISTNAME(builder, gravAssistNameOffset)
+            addMANPREDSOURCE(builder, manPredSourceOffset)
+            addMANNEXTEPOCH(builder, manNextEpochOffset)
+            addMANPREVEPOCH(builder, manPrevEpochOffset)
+            addMANBASISID(builder, manBasisIdOffset)
+            addMANNEXTID(builder, manNextIdOffset)
+            addMANCOMPOSITION(builder, manCompositionOffset)
             addMANCOMMENT(builder, manCommentOffset)
             addDATA(builder, dataOffset)
             addMANUNITS(builder, manUnitsOffset)
@@ -227,9 +537,11 @@ class Maneuver : Table() {
             addMANDEVICEID(builder, manDeviceIdOffset)
             addMANBASIS(builder, manBasisOffset)
             addMANID(builder, manIdOffset)
+            addHASDCMAXCYCLES(builder, hasDcMaxCycles)
+            addHASDCMINCYCLES(builder, hasDcMinCycles)
             return endManeuver(builder)
         }
-        fun startManeuver(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startManeuver(builder: FlatBufferBuilder) = builder.startTable(37)
         fun addMANID(builder: FlatBufferBuilder, manId: Int) = builder.addOffset(0, manId, 0)
         fun addMANBASIS(builder: FlatBufferBuilder, manBasis: Int) = builder.addOffset(1, manBasis, 0)
         fun addMANDEVICEID(builder: FlatBufferBuilder, manDeviceId: Int) = builder.addOffset(2, manDeviceId, 0)
@@ -267,6 +579,54 @@ class Maneuver : Table() {
             return builder.endVector()
         }
         fun startManCommentVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMANCOMPOSITION(builder: FlatBufferBuilder, manComposition: Int) = builder.addOffset(13, manComposition, 0)
+        fun createManCompositionVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startManCompositionVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMANNEXTID(builder: FlatBufferBuilder, manNextId: Int) = builder.addOffset(14, manNextId, 0)
+        fun addMANBASISID(builder: FlatBufferBuilder, manBasisId: Int) = builder.addOffset(15, manBasisId, 0)
+        fun addMANPREVEPOCH(builder: FlatBufferBuilder, manPrevEpoch: Int) = builder.addOffset(16, manPrevEpoch, 0)
+        fun addMANNEXTEPOCH(builder: FlatBufferBuilder, manNextEpoch: Int) = builder.addOffset(17, manNextEpoch, 0)
+        fun addMANPREDSOURCE(builder: FlatBufferBuilder, manPredSource: Int) = builder.addOffset(18, manPredSource, 0)
+        fun addGRAVASSISTNAME(builder: FlatBufferBuilder, gravAssistName: Int) = builder.addOffset(19, gravAssistName, 0)
+        fun addDCTYPE(builder: FlatBufferBuilder, dcType: Int) = builder.addOffset(20, dcType, 0)
+        fun addDCWINOPEN(builder: FlatBufferBuilder, dcWinOpen: Int) = builder.addOffset(21, dcWinOpen, 0)
+        fun addDCWINCLOSE(builder: FlatBufferBuilder, dcWinClose: Int) = builder.addOffset(22, dcWinClose, 0)
+        fun addDCMINCYCLES(builder: FlatBufferBuilder, dcMinCycles: UInt) = builder.addInt(23, dcMinCycles.toInt(), 0)
+        fun addDCMAXCYCLES(builder: FlatBufferBuilder, dcMaxCycles: UInt) = builder.addInt(24, dcMaxCycles.toInt(), 0)
+        fun addHASDCMINCYCLES(builder: FlatBufferBuilder, hasDcMinCycles: Boolean) = builder.addBoolean(25, hasDcMinCycles, false)
+        fun addHASDCMAXCYCLES(builder: FlatBufferBuilder, hasDcMaxCycles: Boolean) = builder.addBoolean(26, hasDcMaxCycles, false)
+        fun addDCEXECSTART(builder: FlatBufferBuilder, dcExecStart: Int) = builder.addOffset(27, dcExecStart, 0)
+        fun addDCEXECSTOP(builder: FlatBufferBuilder, dcExecStop: Int) = builder.addOffset(28, dcExecStop, 0)
+        fun addDCREFTIME(builder: FlatBufferBuilder, dcRefTime: Int) = builder.addOffset(29, dcRefTime, 0)
+        fun addDCTIMEPULSEDURATION(builder: FlatBufferBuilder, dcTimePulseDuration: Double) = builder.addDouble(30, dcTimePulseDuration, Double.NaN)
+        fun addDCTIMEPULSEPERIOD(builder: FlatBufferBuilder, dcTimePulsePeriod: Double) = builder.addDouble(31, dcTimePulsePeriod, Double.NaN)
+        fun addDCREFDIR(builder: FlatBufferBuilder, dcRefDir: Int) = builder.addOffset(32, dcRefDir, 0)
+        fun createDcRefDirVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startDcRefDirVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addDCBODYFRAME(builder: FlatBufferBuilder, dcBodyFrame: Int) = builder.addOffset(33, dcBodyFrame, 0)
+        fun addDCBODYTRIGGER(builder: FlatBufferBuilder, dcBodyTrigger: Int) = builder.addOffset(34, dcBodyTrigger, 0)
+        fun createDcBodyTriggerVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startDcBodyTriggerVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addDCPASTARTANGLE(builder: FlatBufferBuilder, dcPaStartAngle: Double) = builder.addDouble(35, dcPaStartAngle, Double.NaN)
+        fun addDCPASTOPANGLE(builder: FlatBufferBuilder, dcPaStopAngle: Double) = builder.addDouble(36, dcPaStopAngle, Double.NaN)
         fun endManeuver(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

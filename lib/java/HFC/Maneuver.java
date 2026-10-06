@@ -103,6 +103,134 @@ public final class Maneuver extends com.google.flatbuffers.Table {
   public int MAN_COMMENTLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
   public StringVector manCommentVector() { return manCommentVector(new StringVector()); }
   public StringVector manCommentVector(StringVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+   * CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+   * DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+   * Relative time tags are seconds from METADATA.EPOCH_TZERO.
+   */
+  public String MAN_COMPOSITION(int j) { int o = __offset(30); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int MAN_COMPOSITIONLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector manCompositionVector() { return manCompositionVector(new StringVector()); }
+  public StringVector manCompositionVector(StringVector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+   */
+  public String MAN_NEXT_ID() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MAN_NEXT_IDAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer MAN_NEXT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * OD, navigation solution or simulation identifier (Table 6-7).
+   */
+  public String MAN_BASIS_ID() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MAN_BASIS_IDAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer MAN_BASIS_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+   * CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+   */
+  public String MAN_PREV_EPOCH() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MAN_PREV_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer MAN_PREV_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+   */
+  public String MAN_NEXT_EPOCH() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MAN_NEXT_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer MAN_NEXT_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Source of predicted orbit or attitude states (Table 6-7).
+   */
+  public String MAN_PRED_SOURCE() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MAN_PRED_SOURCEAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer MAN_PRED_SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Gravitational assist body name (Table 6-7).
+   */
+  public String GRAV_ASSIST_NAME() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer GRAV_ASSIST_NAMEAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer GRAV_ASSIST_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+   */
+  public String DC_TYPE() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DC_TYPEAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer DC_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  /**
+   * Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+   */
+  public String DC_WIN_OPEN() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DC_WIN_OPENAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer DC_WIN_OPENInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+   */
+  public String DC_WIN_CLOSE() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DC_WIN_CLOSEAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
+  public ByteBuffer DC_WIN_CLOSEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
+   * Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+   */
+  public long DC_MIN_CYCLES() { int o = __offset(50); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public long DC_MAX_CYCLES() { int o = __offset(52); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Presence of the corresponding cycle bound; zero remains representable.
+   */
+  public boolean HAS_DC_MIN_CYCLES() { int o = __offset(54); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_DC_MAX_CYCLES() { int o = __offset(56); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+   * Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+   */
+  public String DC_EXEC_START() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DC_EXEC_STARTAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer DC_EXEC_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  public String DC_EXEC_STOP() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DC_EXEC_STOPAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer DC_EXEC_STOPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+   */
+  public String DC_REF_TIME() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DC_REF_TIMEAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer DC_REF_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+   * Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+   */
+  public double DC_TIME_PULSE_DURATION() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  public double DC_TIME_PULSE_PERIOD() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+   * Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+   */
+  public double DC_REF_DIR(int j) { int o = __offset(68); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int DC_REF_DIRLength() { int o = __offset(68); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector dcRefDirVector() { return dcRefDirVector(new DoubleVector()); }
+  public DoubleVector dcRefDirVector(DoubleVector obj) { int o = __offset(68); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer DC_REF_DIRAsByteBuffer() { return __vector_as_bytebuffer(68, 8); }
+  public ByteBuffer DC_REF_DIRInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 8); }
+  /**
+   * Body frame of DC_BODY_TRIGGER (Table 6-7).
+   */
+  public String DC_BODY_FRAME() { int o = __offset(70); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DC_BODY_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(70, 1); }
+  public ByteBuffer DC_BODY_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 1); }
+  /**
+   * Three-component body-frame trigger unit direction (Table 6-7).
+   */
+  public double DC_BODY_TRIGGER(int j) { int o = __offset(72); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int DC_BODY_TRIGGERLength() { int o = __offset(72); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector dcBodyTriggerVector() { return dcBodyTriggerVector(new DoubleVector()); }
+  public DoubleVector dcBodyTriggerVector(DoubleVector obj) { int o = __offset(72); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer DC_BODY_TRIGGERAsByteBuffer() { return __vector_as_bytebuffer(72, 8); }
+  public ByteBuffer DC_BODY_TRIGGERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 8); }
+  /**
+   * Pulse start and stop phase angles, degrees; NaN means unspecified.
+   * CCSDS 502.0-B-3 Table 6-7.
+   */
+  public double DC_PA_START_ANGLE() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  public double DC_PA_STOP_ANGLE() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
 
   public static int createManeuver(FlatBufferBuilder builder,
       int MAN_IDOffset,
@@ -117,9 +245,55 @@ public final class Maneuver extends com.google.flatbuffers.Table {
       double MAN_DURATION,
       int MAN_UNITSOffset,
       int DATAOffset,
-      int MAN_COMMENTOffset) {
-    builder.startTable(13);
+      int MAN_COMMENTOffset,
+      int MAN_COMPOSITIONOffset,
+      int MAN_NEXT_IDOffset,
+      int MAN_BASIS_IDOffset,
+      int MAN_PREV_EPOCHOffset,
+      int MAN_NEXT_EPOCHOffset,
+      int MAN_PRED_SOURCEOffset,
+      int GRAV_ASSIST_NAMEOffset,
+      int DC_TYPEOffset,
+      int DC_WIN_OPENOffset,
+      int DC_WIN_CLOSEOffset,
+      long DC_MIN_CYCLES,
+      long DC_MAX_CYCLES,
+      boolean HAS_DC_MIN_CYCLES,
+      boolean HAS_DC_MAX_CYCLES,
+      int DC_EXEC_STARTOffset,
+      int DC_EXEC_STOPOffset,
+      int DC_REF_TIMEOffset,
+      double DC_TIME_PULSE_DURATION,
+      double DC_TIME_PULSE_PERIOD,
+      int DC_REF_DIROffset,
+      int DC_BODY_FRAMEOffset,
+      int DC_BODY_TRIGGEROffset,
+      double DC_PA_START_ANGLE,
+      double DC_PA_STOP_ANGLE) {
+    builder.startTable(37);
+    Maneuver.addDcPaStopAngle(builder, DC_PA_STOP_ANGLE);
+    Maneuver.addDcPaStartAngle(builder, DC_PA_START_ANGLE);
+    Maneuver.addDcTimePulsePeriod(builder, DC_TIME_PULSE_PERIOD);
+    Maneuver.addDcTimePulseDuration(builder, DC_TIME_PULSE_DURATION);
     Maneuver.addManDuration(builder, MAN_DURATION);
+    Maneuver.addDcBodyTrigger(builder, DC_BODY_TRIGGEROffset);
+    Maneuver.addDcBodyFrame(builder, DC_BODY_FRAMEOffset);
+    Maneuver.addDcRefDir(builder, DC_REF_DIROffset);
+    Maneuver.addDcRefTime(builder, DC_REF_TIMEOffset);
+    Maneuver.addDcExecStop(builder, DC_EXEC_STOPOffset);
+    Maneuver.addDcExecStart(builder, DC_EXEC_STARTOffset);
+    Maneuver.addDcMaxCycles(builder, DC_MAX_CYCLES);
+    Maneuver.addDcMinCycles(builder, DC_MIN_CYCLES);
+    Maneuver.addDcWinClose(builder, DC_WIN_CLOSEOffset);
+    Maneuver.addDcWinOpen(builder, DC_WIN_OPENOffset);
+    Maneuver.addDcType(builder, DC_TYPEOffset);
+    Maneuver.addGravAssistName(builder, GRAV_ASSIST_NAMEOffset);
+    Maneuver.addManPredSource(builder, MAN_PRED_SOURCEOffset);
+    Maneuver.addManNextEpoch(builder, MAN_NEXT_EPOCHOffset);
+    Maneuver.addManPrevEpoch(builder, MAN_PREV_EPOCHOffset);
+    Maneuver.addManBasisId(builder, MAN_BASIS_IDOffset);
+    Maneuver.addManNextId(builder, MAN_NEXT_IDOffset);
+    Maneuver.addManComposition(builder, MAN_COMPOSITIONOffset);
     Maneuver.addManComment(builder, MAN_COMMENTOffset);
     Maneuver.addData(builder, DATAOffset);
     Maneuver.addManUnits(builder, MAN_UNITSOffset);
@@ -132,10 +306,12 @@ public final class Maneuver extends com.google.flatbuffers.Table {
     Maneuver.addManDeviceId(builder, MAN_DEVICE_IDOffset);
     Maneuver.addManBasis(builder, MAN_BASISOffset);
     Maneuver.addManId(builder, MAN_IDOffset);
+    Maneuver.addHasDcMaxCycles(builder, HAS_DC_MAX_CYCLES);
+    Maneuver.addHasDcMinCycles(builder, HAS_DC_MIN_CYCLES);
     return Maneuver.endManeuver(builder);
   }
 
-  public static void startManeuver(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startManeuver(FlatBufferBuilder builder) { builder.startTable(37); }
   public static void addManId(FlatBufferBuilder builder, int MAN_IDOffset) { builder.addOffset(0, MAN_IDOffset, 0); }
   public static void addManBasis(FlatBufferBuilder builder, int MAN_BASISOffset) { builder.addOffset(1, MAN_BASISOffset, 0); }
   public static void addManDeviceId(FlatBufferBuilder builder, int MAN_DEVICE_IDOffset) { builder.addOffset(2, MAN_DEVICE_IDOffset, 0); }
@@ -155,6 +331,36 @@ public final class Maneuver extends com.google.flatbuffers.Table {
   public static void addManComment(FlatBufferBuilder builder, int MAN_COMMENTOffset) { builder.addOffset(12, MAN_COMMENTOffset, 0); }
   public static int createManCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startManCommentVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addManComposition(FlatBufferBuilder builder, int MAN_COMPOSITIONOffset) { builder.addOffset(13, MAN_COMPOSITIONOffset, 0); }
+  public static int createManCompositionVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startManCompositionVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addManNextId(FlatBufferBuilder builder, int MAN_NEXT_IDOffset) { builder.addOffset(14, MAN_NEXT_IDOffset, 0); }
+  public static void addManBasisId(FlatBufferBuilder builder, int MAN_BASIS_IDOffset) { builder.addOffset(15, MAN_BASIS_IDOffset, 0); }
+  public static void addManPrevEpoch(FlatBufferBuilder builder, int MAN_PREV_EPOCHOffset) { builder.addOffset(16, MAN_PREV_EPOCHOffset, 0); }
+  public static void addManNextEpoch(FlatBufferBuilder builder, int MAN_NEXT_EPOCHOffset) { builder.addOffset(17, MAN_NEXT_EPOCHOffset, 0); }
+  public static void addManPredSource(FlatBufferBuilder builder, int MAN_PRED_SOURCEOffset) { builder.addOffset(18, MAN_PRED_SOURCEOffset, 0); }
+  public static void addGravAssistName(FlatBufferBuilder builder, int GRAV_ASSIST_NAMEOffset) { builder.addOffset(19, GRAV_ASSIST_NAMEOffset, 0); }
+  public static void addDcType(FlatBufferBuilder builder, int DC_TYPEOffset) { builder.addOffset(20, DC_TYPEOffset, 0); }
+  public static void addDcWinOpen(FlatBufferBuilder builder, int DC_WIN_OPENOffset) { builder.addOffset(21, DC_WIN_OPENOffset, 0); }
+  public static void addDcWinClose(FlatBufferBuilder builder, int DC_WIN_CLOSEOffset) { builder.addOffset(22, DC_WIN_CLOSEOffset, 0); }
+  public static void addDcMinCycles(FlatBufferBuilder builder, long DC_MIN_CYCLES) { builder.addInt(23, (int) DC_MIN_CYCLES, (int) 0L); }
+  public static void addDcMaxCycles(FlatBufferBuilder builder, long DC_MAX_CYCLES) { builder.addInt(24, (int) DC_MAX_CYCLES, (int) 0L); }
+  public static void addHasDcMinCycles(FlatBufferBuilder builder, boolean HAS_DC_MIN_CYCLES) { builder.addBoolean(25, HAS_DC_MIN_CYCLES, false); }
+  public static void addHasDcMaxCycles(FlatBufferBuilder builder, boolean HAS_DC_MAX_CYCLES) { builder.addBoolean(26, HAS_DC_MAX_CYCLES, false); }
+  public static void addDcExecStart(FlatBufferBuilder builder, int DC_EXEC_STARTOffset) { builder.addOffset(27, DC_EXEC_STARTOffset, 0); }
+  public static void addDcExecStop(FlatBufferBuilder builder, int DC_EXEC_STOPOffset) { builder.addOffset(28, DC_EXEC_STOPOffset, 0); }
+  public static void addDcRefTime(FlatBufferBuilder builder, int DC_REF_TIMEOffset) { builder.addOffset(29, DC_REF_TIMEOffset, 0); }
+  public static void addDcTimePulseDuration(FlatBufferBuilder builder, double DC_TIME_PULSE_DURATION) { builder.addDouble(30, DC_TIME_PULSE_DURATION, Double.NaN); }
+  public static void addDcTimePulsePeriod(FlatBufferBuilder builder, double DC_TIME_PULSE_PERIOD) { builder.addDouble(31, DC_TIME_PULSE_PERIOD, Double.NaN); }
+  public static void addDcRefDir(FlatBufferBuilder builder, int DC_REF_DIROffset) { builder.addOffset(32, DC_REF_DIROffset, 0); }
+  public static int createDcRefDirVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startDcRefDirVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addDcBodyFrame(FlatBufferBuilder builder, int DC_BODY_FRAMEOffset) { builder.addOffset(33, DC_BODY_FRAMEOffset, 0); }
+  public static void addDcBodyTrigger(FlatBufferBuilder builder, int DC_BODY_TRIGGEROffset) { builder.addOffset(34, DC_BODY_TRIGGEROffset, 0); }
+  public static int createDcBodyTriggerVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startDcBodyTriggerVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addDcPaStartAngle(FlatBufferBuilder builder, double DC_PA_START_ANGLE) { builder.addDouble(35, DC_PA_START_ANGLE, Double.NaN); }
+  public static void addDcPaStopAngle(FlatBufferBuilder builder, double DC_PA_STOP_ANGLE) { builder.addDouble(36, DC_PA_STOP_ANGLE, Double.NaN); }
   public static int endManeuver(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

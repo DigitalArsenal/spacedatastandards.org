@@ -11,6 +11,8 @@ import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
 import { cqrCovarianceBasis } from './cqrCovarianceBasis.js';
 import { cqrHardBodyRadiusBasis } from './cqrHardBodyRadiusBasis.js';
+import { cqrVolumeAnchor } from './cqrVolumeAnchor.js';
+import { cqrVolumeGeometry } from './cqrVolumeGeometry.js';
 
 
 /**
@@ -255,8 +257,25 @@ SECONDARY_COVARIANCE_BASIS():cqrCovarianceBasis {
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrCovarianceBasis.UNSPECIFIED;
 }
 
+/**
+ * Geometry used by the screening request that admitted this event.
+ */
+SCREENING():cqrVolumeGeometry {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrVolumeGeometry.SPHERICAL;
+}
+
+/**
+ * Volume(s) containing the other object at TCA; BOTH means both tests passed.
+ * UNSPECIFIED means admission provenance was not reported.
+ */
+ADMITTED_BY():cqrVolumeAnchor {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrVolumeAnchor.UNSPECIFIED;
+}
+
 static startCQREvent(builder:flatbuffers.Builder) {
-  builder.startObject(35);
+  builder.startObject(37);
 }
 
 static addPrimaryId(builder:flatbuffers.Builder, PRIMARY_IDOffset:flatbuffers.Offset) {
@@ -399,6 +418,14 @@ static addSecondaryCovarianceBasis(builder:flatbuffers.Builder, SECONDARY_COVARI
   builder.addFieldInt8(34, SECONDARY_COVARIANCE_BASIS, cqrCovarianceBasis.UNSPECIFIED);
 }
 
+static addScreening(builder:flatbuffers.Builder, SCREENING:cqrVolumeGeometry) {
+  builder.addFieldInt8(35, SCREENING, cqrVolumeGeometry.SPHERICAL);
+}
+
+static addAdmittedBy(builder:flatbuffers.Builder, ADMITTED_BY:cqrVolumeAnchor) {
+  builder.addFieldInt8(36, ADMITTED_BY, cqrVolumeAnchor.UNSPECIFIED);
+}
+
 static endCQREvent(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // PRIMARY_ID
@@ -444,7 +471,9 @@ unpack(): CQREventT {
     this.PRIMARY_RADIUS_BASIS(),
     this.SECONDARY_RADIUS_BASIS(),
     this.PRIMARY_COVARIANCE_BASIS(),
-    this.SECONDARY_COVARIANCE_BASIS()
+    this.SECONDARY_COVARIANCE_BASIS(),
+    this.SCREENING(),
+    this.ADMITTED_BY()
   );
 }
 
@@ -485,6 +514,8 @@ unpackTo(_o: CQREventT): void {
   _o.SECONDARY_RADIUS_BASIS = this.SECONDARY_RADIUS_BASIS();
   _o.PRIMARY_COVARIANCE_BASIS = this.PRIMARY_COVARIANCE_BASIS();
   _o.SECONDARY_COVARIANCE_BASIS = this.SECONDARY_COVARIANCE_BASIS();
+  _o.SCREENING = this.SCREENING();
+  _o.ADMITTED_BY = this.ADMITTED_BY();
 }
 }
 
@@ -524,7 +555,9 @@ constructor(
   public PRIMARY_RADIUS_BASIS: cqrHardBodyRadiusBasis = cqrHardBodyRadiusBasis.UNSPECIFIED,
   public SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis = cqrHardBodyRadiusBasis.UNSPECIFIED,
   public PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis = cqrCovarianceBasis.UNSPECIFIED,
-  public SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis = cqrCovarianceBasis.UNSPECIFIED
+  public SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis = cqrCovarianceBasis.UNSPECIFIED,
+  public SCREENING: cqrVolumeGeometry = cqrVolumeGeometry.SPHERICAL,
+  public ADMITTED_BY: cqrVolumeAnchor = cqrVolumeAnchor.UNSPECIFIED
 ){}
 
 
@@ -579,6 +612,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CQREvent.addSecondaryRadiusBasis(builder, this.SECONDARY_RADIUS_BASIS);
   CQREvent.addPrimaryCovarianceBasis(builder, this.PRIMARY_COVARIANCE_BASIS);
   CQREvent.addSecondaryCovarianceBasis(builder, this.SECONDARY_COVARIANCE_BASIS);
+  CQREvent.addScreening(builder, this.SCREENING);
+  CQREvent.addAdmittedBy(builder, this.ADMITTED_BY);
 
   return CQREvent.endCQREvent(builder);
 }

@@ -1057,6 +1057,30 @@ public struct Maneuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     static let MAN_UNITS: VOffset = 24
     static let DATA: VOffset = 26
     static let MAN_COMMENT: VOffset = 28
+    static let MAN_COMPOSITION: VOffset = 30
+    static let MAN_NEXT_ID: VOffset = 32
+    static let MAN_BASIS_ID: VOffset = 34
+    static let MAN_PREV_EPOCH: VOffset = 36
+    static let MAN_NEXT_EPOCH: VOffset = 38
+    static let MAN_PRED_SOURCE: VOffset = 40
+    static let GRAV_ASSIST_NAME: VOffset = 42
+    static let DC_TYPE: VOffset = 44
+    static let DC_WIN_OPEN: VOffset = 46
+    static let DC_WIN_CLOSE: VOffset = 48
+    static let DC_MIN_CYCLES: VOffset = 50
+    static let DC_MAX_CYCLES: VOffset = 52
+    static let HAS_DC_MIN_CYCLES: VOffset = 54
+    static let HAS_DC_MAX_CYCLES: VOffset = 56
+    static let DC_EXEC_START: VOffset = 58
+    static let DC_EXEC_STOP: VOffset = 60
+    static let DC_REF_TIME: VOffset = 62
+    static let DC_TIME_PULSE_DURATION: VOffset = 64
+    static let DC_TIME_PULSE_PERIOD: VOffset = 66
+    static let DC_REF_DIR: VOffset = 68
+    static let DC_BODY_FRAME: VOffset = 70
+    static let DC_BODY_TRIGGER: VOffset = 72
+    static let DC_PA_START_ANGLE: VOffset = 74
+    static let DC_PA_STOP_ANGLE: VOffset = 76
   }
 
   ///  Unique identifier for the maneuver.
@@ -1094,7 +1118,73 @@ public struct Maneuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   public var DATA: FlatbufferVector<String?> { return _accessor.vector(at: VT.DATA, byteSize: 4) }
   ///  Comments related to the maneuver.
   public var MAN_COMMENT: FlatbufferVector<String?> { return _accessor.vector(at: VT.MAN_COMMENT, byteSize: 4) }
-  public static func startManeuver(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  ///  Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+  ///  CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+  ///  DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+  ///  Relative time tags are seconds from METADATA.EPOCH_TZERO.
+  public var MAN_COMPOSITION: FlatbufferVector<String?> { return _accessor.vector(at: VT.MAN_COMPOSITION, byteSize: 4) }
+  ///  Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+  public var MAN_NEXT_ID: String? { let o = _accessor.offset(VT.MAN_NEXT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_NEXT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_NEXT_ID) }
+  ///  OD, navigation solution or simulation identifier (Table 6-7).
+  public var MAN_BASIS_ID: String? { let o = _accessor.offset(VT.MAN_BASIS_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_BASIS_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_BASIS_ID) }
+  ///  Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+  ///  CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+  public var MAN_PREV_EPOCH: String? { let o = _accessor.offset(VT.MAN_PREV_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_PREV_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_PREV_EPOCH) }
+  ///  Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+  public var MAN_NEXT_EPOCH: String? { let o = _accessor.offset(VT.MAN_NEXT_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_NEXT_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_NEXT_EPOCH) }
+  ///  Source of predicted orbit or attitude states (Table 6-7).
+  public var MAN_PRED_SOURCE: String? { let o = _accessor.offset(VT.MAN_PRED_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_PRED_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_PRED_SOURCE) }
+  ///  Gravitational assist body name (Table 6-7).
+  public var GRAV_ASSIST_NAME: String? { let o = _accessor.offset(VT.GRAV_ASSIST_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GRAV_ASSIST_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GRAV_ASSIST_NAME) }
+  ///  CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+  public var DC_TYPE: String? { let o = _accessor.offset(VT.DC_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_TYPE) }
+  ///  Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+  public var DC_WIN_OPEN: String? { let o = _accessor.offset(VT.DC_WIN_OPEN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_WIN_OPENSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_WIN_OPEN) }
+  ///  Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+  public var DC_WIN_CLOSE: String? { let o = _accessor.offset(VT.DC_WIN_CLOSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_WIN_CLOSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_WIN_CLOSE) }
+  ///  Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+  public var DC_MIN_CYCLES: UInt32 { let o = _accessor.offset(VT.DC_MIN_CYCLES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var DC_MAX_CYCLES: UInt32 { let o = _accessor.offset(VT.DC_MAX_CYCLES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Presence of the corresponding cycle bound; zero remains representable.
+  public var HAS_DC_MIN_CYCLES: Bool { let o = _accessor.offset(VT.HAS_DC_MIN_CYCLES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_DC_MAX_CYCLES: Bool { let o = _accessor.offset(VT.HAS_DC_MAX_CYCLES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+  ///  Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+  public var DC_EXEC_START: String? { let o = _accessor.offset(VT.DC_EXEC_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_EXEC_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_EXEC_START) }
+  public var DC_EXEC_STOP: String? { let o = _accessor.offset(VT.DC_EXEC_STOP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_EXEC_STOPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_EXEC_STOP) }
+  ///  Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+  public var DC_REF_TIME: String? { let o = _accessor.offset(VT.DC_REF_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_REF_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_REF_TIME) }
+  ///  Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+  ///  Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+  public var DC_TIME_PULSE_DURATION: Double { let o = _accessor.offset(VT.DC_TIME_PULSE_DURATION); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DC_TIME_PULSE_PERIOD: Double { let o = _accessor.offset(VT.DC_TIME_PULSE_PERIOD); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+  ///  Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+  public var DC_REF_DIR: FlatbufferVector<Double> { return _accessor.vector(at: VT.DC_REF_DIR, byteSize: 8) }
+  public func withUnsafePointerToDcRefDir<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DC_REF_DIR, body: body) }
+  ///  Body frame of DC_BODY_TRIGGER (Table 6-7).
+  public var DC_BODY_FRAME: String? { let o = _accessor.offset(VT.DC_BODY_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DC_BODY_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DC_BODY_FRAME) }
+  ///  Three-component body-frame trigger unit direction (Table 6-7).
+  public var DC_BODY_TRIGGER: FlatbufferVector<Double> { return _accessor.vector(at: VT.DC_BODY_TRIGGER, byteSize: 8) }
+  public func withUnsafePointerToDcBodyTrigger<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DC_BODY_TRIGGER, body: body) }
+  ///  Pulse start and stop phase angles, degrees; NaN means unspecified.
+  ///  CCSDS 502.0-B-3 Table 6-7.
+  public var DC_PA_START_ANGLE: Double { let o = _accessor.offset(VT.DC_PA_START_ANGLE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DC_PA_STOP_ANGLE: Double { let o = _accessor.offset(VT.DC_PA_STOP_ANGLE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startManeuver(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 37) }
   public static func add(MAN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_ID, at: VT.MAN_ID) }
   public static func add(MAN_BASIS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_BASIS, at: VT.MAN_BASIS) }
   public static func add(MAN_DEVICE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_DEVICE_ID, at: VT.MAN_DEVICE_ID) }
@@ -1108,6 +1198,32 @@ public struct Maneuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   public static func addVectorOf(MAN_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_UNITS, at: VT.MAN_UNITS) }
   public static func addVectorOf(DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA, at: VT.DATA) }
   public static func addVectorOf(MAN_COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_COMMENT, at: VT.MAN_COMMENT) }
+  public static func addVectorOf(MAN_COMPOSITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_COMPOSITION, at: VT.MAN_COMPOSITION) }
+  public static func add(MAN_NEXT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_NEXT_ID, at: VT.MAN_NEXT_ID) }
+  public static func add(MAN_BASIS_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_BASIS_ID, at: VT.MAN_BASIS_ID) }
+  public static func add(MAN_PREV_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_PREV_EPOCH, at: VT.MAN_PREV_EPOCH) }
+  public static func add(MAN_NEXT_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_NEXT_EPOCH, at: VT.MAN_NEXT_EPOCH) }
+  public static func add(MAN_PRED_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_PRED_SOURCE, at: VT.MAN_PRED_SOURCE) }
+  public static func add(GRAV_ASSIST_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRAV_ASSIST_NAME, at: VT.GRAV_ASSIST_NAME) }
+  public static func add(DC_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_TYPE, at: VT.DC_TYPE) }
+  public static func add(DC_WIN_OPEN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_WIN_OPEN, at: VT.DC_WIN_OPEN) }
+  public static func add(DC_WIN_CLOSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_WIN_CLOSE, at: VT.DC_WIN_CLOSE) }
+  public static func add(DC_MIN_CYCLES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_MIN_CYCLES, def: 0, at: VT.DC_MIN_CYCLES) }
+  public static func add(DC_MAX_CYCLES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_MAX_CYCLES, def: 0, at: VT.DC_MAX_CYCLES) }
+  public static func add(HAS_DC_MIN_CYCLES: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DC_MIN_CYCLES, def: false,
+   at: VT.HAS_DC_MIN_CYCLES) }
+  public static func add(HAS_DC_MAX_CYCLES: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DC_MAX_CYCLES, def: false,
+   at: VT.HAS_DC_MAX_CYCLES) }
+  public static func add(DC_EXEC_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_EXEC_START, at: VT.DC_EXEC_START) }
+  public static func add(DC_EXEC_STOP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_EXEC_STOP, at: VT.DC_EXEC_STOP) }
+  public static func add(DC_REF_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_REF_TIME, at: VT.DC_REF_TIME) }
+  public static func add(DC_TIME_PULSE_DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_TIME_PULSE_DURATION, def: .nan, at: VT.DC_TIME_PULSE_DURATION) }
+  public static func add(DC_TIME_PULSE_PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_TIME_PULSE_PERIOD, def: .nan, at: VT.DC_TIME_PULSE_PERIOD) }
+  public static func addVectorOf(DC_REF_DIR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_REF_DIR, at: VT.DC_REF_DIR) }
+  public static func add(DC_BODY_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_BODY_FRAME, at: VT.DC_BODY_FRAME) }
+  public static func addVectorOf(DC_BODY_TRIGGER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DC_BODY_TRIGGER, at: VT.DC_BODY_TRIGGER) }
+  public static func add(DC_PA_START_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_PA_START_ANGLE, def: .nan, at: VT.DC_PA_START_ANGLE) }
+  public static func add(DC_PA_STOP_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DC_PA_STOP_ANGLE, def: .nan, at: VT.DC_PA_STOP_ANGLE) }
   public static func endManeuver(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createManeuver(
     _ fbb: inout FlatBufferBuilder,
@@ -1123,7 +1239,31 @@ public struct Maneuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     MAN_DURATION: Double = 0.0,
     MAN_UNITSVectorOffset MAN_UNITS: Offset = Offset(),
     DATAVectorOffset DATA: Offset = Offset(),
-    MAN_COMMENTVectorOffset MAN_COMMENT: Offset = Offset()
+    MAN_COMMENTVectorOffset MAN_COMMENT: Offset = Offset(),
+    MAN_COMPOSITIONVectorOffset MAN_COMPOSITION: Offset = Offset(),
+    MAN_NEXT_IDOffset MAN_NEXT_ID: Offset = Offset(),
+    MAN_BASIS_IDOffset MAN_BASIS_ID: Offset = Offset(),
+    MAN_PREV_EPOCHOffset MAN_PREV_EPOCH: Offset = Offset(),
+    MAN_NEXT_EPOCHOffset MAN_NEXT_EPOCH: Offset = Offset(),
+    MAN_PRED_SOURCEOffset MAN_PRED_SOURCE: Offset = Offset(),
+    GRAV_ASSIST_NAMEOffset GRAV_ASSIST_NAME: Offset = Offset(),
+    DC_TYPEOffset DC_TYPE: Offset = Offset(),
+    DC_WIN_OPENOffset DC_WIN_OPEN: Offset = Offset(),
+    DC_WIN_CLOSEOffset DC_WIN_CLOSE: Offset = Offset(),
+    DC_MIN_CYCLES: UInt32 = 0,
+    DC_MAX_CYCLES: UInt32 = 0,
+    HAS_DC_MIN_CYCLES: Bool = false,
+    HAS_DC_MAX_CYCLES: Bool = false,
+    DC_EXEC_STARTOffset DC_EXEC_START: Offset = Offset(),
+    DC_EXEC_STOPOffset DC_EXEC_STOP: Offset = Offset(),
+    DC_REF_TIMEOffset DC_REF_TIME: Offset = Offset(),
+    DC_TIME_PULSE_DURATION: Double = .nan,
+    DC_TIME_PULSE_PERIOD: Double = .nan,
+    DC_REF_DIRVectorOffset DC_REF_DIR: Offset = Offset(),
+    DC_BODY_FRAMEOffset DC_BODY_FRAME: Offset = Offset(),
+    DC_BODY_TRIGGERVectorOffset DC_BODY_TRIGGER: Offset = Offset(),
+    DC_PA_START_ANGLE: Double = .nan,
+    DC_PA_STOP_ANGLE: Double = .nan
   ) -> Offset {
     let __start = Maneuver.startManeuver(&fbb)
     Maneuver.add(MAN_ID: MAN_ID, &fbb)
@@ -1139,6 +1279,30 @@ public struct Maneuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     Maneuver.addVectorOf(MAN_UNITS: MAN_UNITS, &fbb)
     Maneuver.addVectorOf(DATA: DATA, &fbb)
     Maneuver.addVectorOf(MAN_COMMENT: MAN_COMMENT, &fbb)
+    Maneuver.addVectorOf(MAN_COMPOSITION: MAN_COMPOSITION, &fbb)
+    Maneuver.add(MAN_NEXT_ID: MAN_NEXT_ID, &fbb)
+    Maneuver.add(MAN_BASIS_ID: MAN_BASIS_ID, &fbb)
+    Maneuver.add(MAN_PREV_EPOCH: MAN_PREV_EPOCH, &fbb)
+    Maneuver.add(MAN_NEXT_EPOCH: MAN_NEXT_EPOCH, &fbb)
+    Maneuver.add(MAN_PRED_SOURCE: MAN_PRED_SOURCE, &fbb)
+    Maneuver.add(GRAV_ASSIST_NAME: GRAV_ASSIST_NAME, &fbb)
+    Maneuver.add(DC_TYPE: DC_TYPE, &fbb)
+    Maneuver.add(DC_WIN_OPEN: DC_WIN_OPEN, &fbb)
+    Maneuver.add(DC_WIN_CLOSE: DC_WIN_CLOSE, &fbb)
+    Maneuver.add(DC_MIN_CYCLES: DC_MIN_CYCLES, &fbb)
+    Maneuver.add(DC_MAX_CYCLES: DC_MAX_CYCLES, &fbb)
+    Maneuver.add(HAS_DC_MIN_CYCLES: HAS_DC_MIN_CYCLES, &fbb)
+    Maneuver.add(HAS_DC_MAX_CYCLES: HAS_DC_MAX_CYCLES, &fbb)
+    Maneuver.add(DC_EXEC_START: DC_EXEC_START, &fbb)
+    Maneuver.add(DC_EXEC_STOP: DC_EXEC_STOP, &fbb)
+    Maneuver.add(DC_REF_TIME: DC_REF_TIME, &fbb)
+    Maneuver.add(DC_TIME_PULSE_DURATION: DC_TIME_PULSE_DURATION, &fbb)
+    Maneuver.add(DC_TIME_PULSE_PERIOD: DC_TIME_PULSE_PERIOD, &fbb)
+    Maneuver.addVectorOf(DC_REF_DIR: DC_REF_DIR, &fbb)
+    Maneuver.add(DC_BODY_FRAME: DC_BODY_FRAME, &fbb)
+    Maneuver.addVectorOf(DC_BODY_TRIGGER: DC_BODY_TRIGGER, &fbb)
+    Maneuver.add(DC_PA_START_ANGLE: DC_PA_START_ANGLE, &fbb)
+    Maneuver.add(DC_PA_STOP_ANGLE: DC_PA_STOP_ANGLE, &fbb)
     return Maneuver.endManeuver(&fbb, start: __start)
   }
 
@@ -1157,6 +1321,30 @@ public struct Maneuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     try _v.visit(field: VT.MAN_UNITS, fieldName: "MAN_UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.DATA, fieldName: "DATA", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.MAN_COMMENT, fieldName: "MAN_COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.MAN_COMPOSITION, fieldName: "MAN_COMPOSITION", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.MAN_NEXT_ID, fieldName: "MAN_NEXT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_BASIS_ID, fieldName: "MAN_BASIS_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_PREV_EPOCH, fieldName: "MAN_PREV_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_NEXT_EPOCH, fieldName: "MAN_NEXT_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_PRED_SOURCE, fieldName: "MAN_PRED_SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GRAV_ASSIST_NAME, fieldName: "GRAV_ASSIST_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_TYPE, fieldName: "DC_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_WIN_OPEN, fieldName: "DC_WIN_OPEN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_WIN_CLOSE, fieldName: "DC_WIN_CLOSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_MIN_CYCLES, fieldName: "DC_MIN_CYCLES", required: false, type: UInt32.self)
+    try _v.visit(field: VT.DC_MAX_CYCLES, fieldName: "DC_MAX_CYCLES", required: false, type: UInt32.self)
+    try _v.visit(field: VT.HAS_DC_MIN_CYCLES, fieldName: "HAS_DC_MIN_CYCLES", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_DC_MAX_CYCLES, fieldName: "HAS_DC_MAX_CYCLES", required: false, type: Bool.self)
+    try _v.visit(field: VT.DC_EXEC_START, fieldName: "DC_EXEC_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_EXEC_STOP, fieldName: "DC_EXEC_STOP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_REF_TIME, fieldName: "DC_REF_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_TIME_PULSE_DURATION, fieldName: "DC_TIME_PULSE_DURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.DC_TIME_PULSE_PERIOD, fieldName: "DC_TIME_PULSE_PERIOD", required: false, type: Double.self)
+    try _v.visit(field: VT.DC_REF_DIR, fieldName: "DC_REF_DIR", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DC_BODY_FRAME, fieldName: "DC_BODY_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DC_BODY_TRIGGER, fieldName: "DC_BODY_TRIGGER", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DC_PA_START_ANGLE, fieldName: "DC_PA_START_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.DC_PA_STOP_ANGLE, fieldName: "DC_PA_STOP_ANGLE", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -1466,6 +1654,7 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let ORB_AVERAGING: VOffset = 44
     static let COV_CALIBRATION: VOffset = 46
     static let COV_CALIBRATION_REFERENCE: VOffset = 48
+    static let STATE_EPOCHS: VOffset = 50
   }
 
   ///  Header section of the OCM.
@@ -1481,7 +1670,7 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
   public var TRAJ_TYPE_DESCRIPTION: String? { let o = _accessor.offset(VT.TRAJ_TYPE_DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRAJ_TYPE_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_TYPE_DESCRIPTION) }
-  ///  Time interval between state vectors in seconds (required for time-series data).
+  ///  Time interval between state vectors in seconds; required without STATE_EPOCHS.
   public var STATE_STEP_SIZE: Double { let o = _accessor.offset(VT.STATE_STEP_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of components per state vector.
   ///  6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
@@ -1490,7 +1679,7 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var STATE_VECTOR_SIZE: UInt8 { let o = _accessor.offset(VT.STATE_VECTOR_SIZE); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  State data as row-major array of doubles.
   ///  Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
-  ///  Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+  ///  Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
   ///  Length must be divisible by STATE_VECTOR_SIZE.
   ///  Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
   public var STATE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.STATE_DATA, byteSize: 8) }
@@ -1543,7 +1732,12 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Identifier of that calibration evidence (a report or record).
   public var COV_CALIBRATION_REFERENCE: String? { let o = _accessor.offset(VT.COV_CALIBRATION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
   public var COV_CALIBRATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_CALIBRATION_REFERENCE) }
-  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
+  ///  Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+  ///  section 6.2.4). When nonempty, length equals STATE_DATA.length /
+  ///  STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+  ///  Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+  public var STATE_EPOCHS: FlatbufferVector<String?> { return _accessor.vector(at: VT.STATE_EPOCHS, byteSize: 4) }
+  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
   public static func add(HEADER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEADER, at: VT.HEADER) }
   public static func add(METADATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METADATA, at: VT.METADATA) }
   public static func add(TRAJ_TYPE: trajectoryType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAJ_TYPE.rawValue, def: 0, at: VT.TRAJ_TYPE) }
@@ -1567,6 +1761,7 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(ORB_AVERAGING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORB_AVERAGING, at: VT.ORB_AVERAGING) }
   public static func add(COV_CALIBRATION: covarianceCalibration, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_CALIBRATION.rawValue, def: 0, at: VT.COV_CALIBRATION) }
   public static func add(COV_CALIBRATION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_CALIBRATION_REFERENCE, at: VT.COV_CALIBRATION_REFERENCE) }
+  public static func addVectorOf(STATE_EPOCHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE_EPOCHS, at: VT.STATE_EPOCHS) }
   public static func endOCM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOCM(
     _ fbb: inout FlatBufferBuilder,
@@ -1592,7 +1787,8 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     ORB_REVNUM: UInt32 = 0,
     ORB_AVERAGINGOffset ORB_AVERAGING: Offset = Offset(),
     COV_CALIBRATION: covarianceCalibration = .unspecified,
-    COV_CALIBRATION_REFERENCEOffset COV_CALIBRATION_REFERENCE: Offset = Offset()
+    COV_CALIBRATION_REFERENCEOffset COV_CALIBRATION_REFERENCE: Offset = Offset(),
+    STATE_EPOCHSVectorOffset STATE_EPOCHS: Offset = Offset()
   ) -> Offset {
     let __start = OCM.startOCM(&fbb)
     OCM.add(HEADER: HEADER, &fbb)
@@ -1618,6 +1814,7 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     OCM.add(ORB_AVERAGING: ORB_AVERAGING, &fbb)
     OCM.add(COV_CALIBRATION: COV_CALIBRATION, &fbb)
     OCM.add(COV_CALIBRATION_REFERENCE: COV_CALIBRATION_REFERENCE, &fbb)
+    OCM.addVectorOf(STATE_EPOCHS: STATE_EPOCHS, &fbb)
     return OCM.endOCM(&fbb, start: __start)
   }
 
@@ -1646,6 +1843,7 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.ORB_AVERAGING, fieldName: "ORB_AVERAGING", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.COV_CALIBRATION, fieldName: "COV_CALIBRATION", required: false, type: covarianceCalibration.self)
     try _v.visit(field: VT.COV_CALIBRATION_REFERENCE, fieldName: "COV_CALIBRATION_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATE_EPOCHS, fieldName: "STATE_EPOCHS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

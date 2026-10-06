@@ -1025,6 +1025,210 @@ impl<'a> ::flatbuffers::Verifiable for cqrDataOrigin {
 impl ::flatbuffers::SimpleToVerifyInSlice for cqrDataOrigin {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CQR_VOLUME_GEOMETRY: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CQR_VOLUME_GEOMETRY: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CQR_VOLUME_GEOMETRY: [cqrVolumeGeometry; 3] = [
+    cqrVolumeGeometry::SPHERICAL,
+    cqrVolumeGeometry::ELLIPSOIDAL,
+    cqrVolumeGeometry::BOX,
+];
+
+/// On-orbit screening geometry; dimensions are metres.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct cqrVolumeGeometry(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl cqrVolumeGeometry {
+    pub const SPHERICAL: Self = Self(0);
+    pub const ELLIPSOIDAL: Self = Self(1);
+    pub const BOX: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::SPHERICAL,
+        Self::ELLIPSOIDAL,
+        Self::BOX,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::SPHERICAL => Some("SPHERICAL"),
+            Self::ELLIPSOIDAL => Some("ELLIPSOIDAL"),
+            Self::BOX => Some("BOX"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for cqrVolumeGeometry {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for cqrVolumeGeometry {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for cqrVolumeGeometry {
+    type Output = cqrVolumeGeometry;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for cqrVolumeGeometry {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for cqrVolumeGeometry {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for cqrVolumeGeometry {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CQR_VOLUME_ANCHOR: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CQR_VOLUME_ANCHOR: u8 = 3;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CQR_VOLUME_ANCHOR: [cqrVolumeAnchor; 4] = [
+    cqrVolumeAnchor::UNSPECIFIED,
+    cqrVolumeAnchor::PRIMARY,
+    cqrVolumeAnchor::SECONDARY,
+    cqrVolumeAnchor::BOTH,
+];
+
+/// Object defining the centre and instantaneous RTN axes of a volume.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct cqrVolumeAnchor(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl cqrVolumeAnchor {
+    pub const UNSPECIFIED: Self = Self(0);
+    pub const PRIMARY: Self = Self(1);
+    pub const SECONDARY: Self = Self(2);
+    pub const BOTH: Self = Self(3);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 3;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::PRIMARY,
+        Self::SECONDARY,
+        Self::BOTH,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::PRIMARY => Some("PRIMARY"),
+            Self::SECONDARY => Some("SECONDARY"),
+            Self::BOTH => Some("BOTH"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for cqrVolumeAnchor {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for cqrVolumeAnchor {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for cqrVolumeAnchor {
+    type Output = cqrVolumeAnchor;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for cqrVolumeAnchor {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for cqrVolumeAnchor {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for cqrVolumeAnchor {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_CQR_LAUNCH_OBJECT_CLASS: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -2357,6 +2561,11 @@ impl<'a> CQRScreeningControls<'a> {
     pub const VT_PROGRESS_INTERVAL_SECONDS: ::flatbuffers::VOffsetT = 24;
     pub const VT_HAS_PROGRESS_INTERVAL_SECONDS: ::flatbuffers::VOffsetT = 26;
     pub const VT_ALGORITHM: ::flatbuffers::VOffsetT = 28;
+    pub const VT_SCREENING: ::flatbuffers::VOffsetT = 30;
+    pub const VT_RADIAL_M: ::flatbuffers::VOffsetT = 32;
+    pub const VT_IN_TRACK_M: ::flatbuffers::VOffsetT = 34;
+    pub const VT_CROSS_TRACK_M: ::flatbuffers::VOffsetT = 36;
+    pub const VT_VOLUME_CENTER: ::flatbuffers::VOffsetT = 38;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2369,6 +2578,9 @@ impl<'a> CQRScreeningControls<'a> {
         args: &'args CQRScreeningControlsArgs<'args>
     ) -> ::flatbuffers::WIPOffset<CQRScreeningControls<'bldr>> {
         let mut builder = CQRScreeningControlsBuilder::new(_fbb);
+        builder.add_CROSS_TRACK_M(args.CROSS_TRACK_M);
+        builder.add_IN_TRACK_M(args.IN_TRACK_M);
+        builder.add_RADIAL_M(args.RADIAL_M);
         builder.add_PROGRESS_INTERVAL_SECONDS(args.PROGRESS_INTERVAL_SECONDS);
         builder.add_COMBINED_RADIUS_M(args.COMBINED_RADIUS_M);
         builder.add_REFINEMENT_TOLERANCE_SECONDS(args.REFINEMENT_TOLERANCE_SECONDS);
@@ -2377,6 +2589,8 @@ impl<'a> CQRScreeningControls<'a> {
         builder.add_DURATION_SECONDS(args.DURATION_SECONDS);
         builder.add_REQUESTED_WORKERS(args.REQUESTED_WORKERS);
         if let Some(x) = args.START_EPOCH { builder.add_START_EPOCH(x); }
+        builder.add_VOLUME_CENTER(args.VOLUME_CENTER);
+        builder.add_SCREENING(args.SCREENING);
         builder.add_ALGORITHM(args.ALGORITHM);
         builder.add_HAS_PROGRESS_INTERVAL_SECONDS(args.HAS_PROGRESS_INTERVAL_SECONDS);
         builder.add_USE_PERIGEE_FILTER(args.USE_PERIGEE_FILTER);
@@ -2402,6 +2616,11 @@ impl<'a> CQRScreeningControls<'a> {
         let PROGRESS_INTERVAL_SECONDS = self.PROGRESS_INTERVAL_SECONDS();
         let HAS_PROGRESS_INTERVAL_SECONDS = self.HAS_PROGRESS_INTERVAL_SECONDS();
         let ALGORITHM = self.ALGORITHM();
+        let SCREENING = self.SCREENING();
+        let RADIAL_M = self.RADIAL_M();
+        let IN_TRACK_M = self.IN_TRACK_M();
+        let CROSS_TRACK_M = self.CROSS_TRACK_M();
+        let VOLUME_CENTER = self.VOLUME_CENTER();
         CQRScreeningControlsT {
             START_EPOCH,
             DURATION_SECONDS,
@@ -2416,6 +2635,11 @@ impl<'a> CQRScreeningControls<'a> {
             PROGRESS_INTERVAL_SECONDS,
             HAS_PROGRESS_INTERVAL_SECONDS,
             ALGORITHM,
+            SCREENING,
+            RADIAL_M,
+            IN_TRACK_M,
+            CROSS_TRACK_M,
+            VOLUME_CENTER,
         }
     }
 
@@ -2524,6 +2748,53 @@ impl<'a> CQRScreeningControls<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<cqrProbabilityAlgorithm>(CQRScreeningControls::VT_ALGORITHM, Some(cqrProbabilityAlgorithm::ALFANO_MAXIMUM)).unwrap()}
     }
+
+    /// SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+    /// Admit local minima of relative distance inside or on the selected volume.
+    #[inline]
+    pub fn SCREENING(&self) -> cqrVolumeGeometry {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<cqrVolumeGeometry>(CQRScreeningControls::VT_SCREENING, Some(cqrVolumeGeometry::SPHERICAL)).unwrap()}
+    }
+
+    /// RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+    #[inline]
+    pub fn RADIAL_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CQRScreeningControls::VT_RADIAL_M, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn IN_TRACK_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CQRScreeningControls::VT_IN_TRACK_M, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn CROSS_TRACK_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CQRScreeningControls::VT_CROSS_TRACK_M, Some(0.0)).unwrap()}
+    }
+
+    /// PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+    /// R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+    /// BOTH tests each object's volume independently and admits their union.
+    /// UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+    #[inline]
+    pub fn VOLUME_CENTER(&self) -> cqrVolumeAnchor {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<cqrVolumeAnchor>(CQRScreeningControls::VT_VOLUME_CENTER, Some(cqrVolumeAnchor::PRIMARY)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CQRScreeningControls<'_> {
@@ -2545,6 +2816,11 @@ impl ::flatbuffers::Verifiable for CQRScreeningControls<'_> {
             .visit_field::<f64>("PROGRESS_INTERVAL_SECONDS", Self::VT_PROGRESS_INTERVAL_SECONDS, false)?
             .visit_field::<bool>("HAS_PROGRESS_INTERVAL_SECONDS", Self::VT_HAS_PROGRESS_INTERVAL_SECONDS, false)?
             .visit_field::<cqrProbabilityAlgorithm>("ALGORITHM", Self::VT_ALGORITHM, false)?
+            .visit_field::<cqrVolumeGeometry>("SCREENING", Self::VT_SCREENING, false)?
+            .visit_field::<f64>("RADIAL_M", Self::VT_RADIAL_M, false)?
+            .visit_field::<f64>("IN_TRACK_M", Self::VT_IN_TRACK_M, false)?
+            .visit_field::<f64>("CROSS_TRACK_M", Self::VT_CROSS_TRACK_M, false)?
+            .visit_field::<cqrVolumeAnchor>("VOLUME_CENTER", Self::VT_VOLUME_CENTER, false)?
             .finish();
         Ok(())
     }
@@ -2564,6 +2840,11 @@ pub struct CQRScreeningControlsArgs<'a> {
     pub PROGRESS_INTERVAL_SECONDS: f64,
     pub HAS_PROGRESS_INTERVAL_SECONDS: bool,
     pub ALGORITHM: cqrProbabilityAlgorithm,
+    pub SCREENING: cqrVolumeGeometry,
+    pub RADIAL_M: f64,
+    pub IN_TRACK_M: f64,
+    pub CROSS_TRACK_M: f64,
+    pub VOLUME_CENTER: cqrVolumeAnchor,
 }
 
 impl<'a> Default for CQRScreeningControlsArgs<'a> {
@@ -2583,6 +2864,11 @@ impl<'a> Default for CQRScreeningControlsArgs<'a> {
             PROGRESS_INTERVAL_SECONDS: 0.0,
             HAS_PROGRESS_INTERVAL_SECONDS: false,
             ALGORITHM: cqrProbabilityAlgorithm::ALFANO_MAXIMUM,
+            SCREENING: cqrVolumeGeometry::SPHERICAL,
+            RADIAL_M: 0.0,
+            IN_TRACK_M: 0.0,
+            CROSS_TRACK_M: 0.0,
+            VOLUME_CENTER: cqrVolumeAnchor::PRIMARY,
         }
     }
 }
@@ -2659,6 +2945,31 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRScreeningControlsBuilder<'
     }
 
     #[inline]
+    pub fn add_SCREENING(&mut self, SCREENING: cqrVolumeGeometry) {
+        self.fbb_.push_slot::<cqrVolumeGeometry>(CQRScreeningControls::VT_SCREENING, SCREENING, cqrVolumeGeometry::SPHERICAL);
+    }
+
+    #[inline]
+    pub fn add_RADIAL_M(&mut self, RADIAL_M: f64) {
+        self.fbb_.push_slot::<f64>(CQRScreeningControls::VT_RADIAL_M, RADIAL_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_IN_TRACK_M(&mut self, IN_TRACK_M: f64) {
+        self.fbb_.push_slot::<f64>(CQRScreeningControls::VT_IN_TRACK_M, IN_TRACK_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_CROSS_TRACK_M(&mut self, CROSS_TRACK_M: f64) {
+        self.fbb_.push_slot::<f64>(CQRScreeningControls::VT_CROSS_TRACK_M, CROSS_TRACK_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_VOLUME_CENTER(&mut self, VOLUME_CENTER: cqrVolumeAnchor) {
+        self.fbb_.push_slot::<cqrVolumeAnchor>(CQRScreeningControls::VT_VOLUME_CENTER, VOLUME_CENTER, cqrVolumeAnchor::PRIMARY);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRScreeningControlsBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CQRScreeningControlsBuilder {
@@ -2691,6 +3002,11 @@ impl ::core::fmt::Debug for CQRScreeningControls<'_> {
         ds.field("PROGRESS_INTERVAL_SECONDS", &self.PROGRESS_INTERVAL_SECONDS());
         ds.field("HAS_PROGRESS_INTERVAL_SECONDS", &self.HAS_PROGRESS_INTERVAL_SECONDS());
         ds.field("ALGORITHM", &self.ALGORITHM());
+        ds.field("SCREENING", &self.SCREENING());
+        ds.field("RADIAL_M", &self.RADIAL_M());
+        ds.field("IN_TRACK_M", &self.IN_TRACK_M());
+        ds.field("CROSS_TRACK_M", &self.CROSS_TRACK_M());
+        ds.field("VOLUME_CENTER", &self.VOLUME_CENTER());
         ds.finish()
     }
 }
@@ -2711,6 +3027,11 @@ pub struct CQRScreeningControlsT {
     pub PROGRESS_INTERVAL_SECONDS: f64,
     pub HAS_PROGRESS_INTERVAL_SECONDS: bool,
     pub ALGORITHM: cqrProbabilityAlgorithm,
+    pub SCREENING: cqrVolumeGeometry,
+    pub RADIAL_M: f64,
+    pub IN_TRACK_M: f64,
+    pub CROSS_TRACK_M: f64,
+    pub VOLUME_CENTER: cqrVolumeAnchor,
 }
 
 impl Default for CQRScreeningControlsT {
@@ -2729,6 +3050,11 @@ impl Default for CQRScreeningControlsT {
             PROGRESS_INTERVAL_SECONDS: 0.0,
             HAS_PROGRESS_INTERVAL_SECONDS: false,
             ALGORITHM: cqrProbabilityAlgorithm::ALFANO_MAXIMUM,
+            SCREENING: cqrVolumeGeometry::SPHERICAL,
+            RADIAL_M: 0.0,
+            IN_TRACK_M: 0.0,
+            CROSS_TRACK_M: 0.0,
+            VOLUME_CENTER: cqrVolumeAnchor::PRIMARY,
         }
     }
 }
@@ -2754,6 +3080,11 @@ impl CQRScreeningControlsT {
         let PROGRESS_INTERVAL_SECONDS = self.PROGRESS_INTERVAL_SECONDS;
         let HAS_PROGRESS_INTERVAL_SECONDS = self.HAS_PROGRESS_INTERVAL_SECONDS;
         let ALGORITHM = self.ALGORITHM;
+        let SCREENING = self.SCREENING;
+        let RADIAL_M = self.RADIAL_M;
+        let IN_TRACK_M = self.IN_TRACK_M;
+        let CROSS_TRACK_M = self.CROSS_TRACK_M;
+        let VOLUME_CENTER = self.VOLUME_CENTER;
         CQRScreeningControls::create(_fbb, &CQRScreeningControlsArgs{
             START_EPOCH,
             DURATION_SECONDS,
@@ -2768,6 +3099,11 @@ impl CQRScreeningControlsT {
             PROGRESS_INTERVAL_SECONDS,
             HAS_PROGRESS_INTERVAL_SECONDS,
             ALGORITHM,
+            SCREENING,
+            RADIAL_M,
+            IN_TRACK_M,
+            CROSS_TRACK_M,
+            VOLUME_CENTER,
         })
     }
 }
@@ -4996,6 +5332,8 @@ impl<'a> CQREvent<'a> {
     pub const VT_SECONDARY_RADIUS_BASIS: ::flatbuffers::VOffsetT = 68;
     pub const VT_PRIMARY_COVARIANCE_BASIS: ::flatbuffers::VOffsetT = 70;
     pub const VT_SECONDARY_COVARIANCE_BASIS: ::flatbuffers::VOffsetT = 72;
+    pub const VT_SCREENING: ::flatbuffers::VOffsetT = 74;
+    pub const VT_ADMITTED_BY: ::flatbuffers::VOffsetT = 76;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5032,6 +5370,8 @@ impl<'a> CQREvent<'a> {
         if let Some(x) = args.PRIMARY_NAME { builder.add_PRIMARY_NAME(x); }
         if let Some(x) = args.SECONDARY_ID { builder.add_SECONDARY_ID(x); }
         if let Some(x) = args.PRIMARY_ID { builder.add_PRIMARY_ID(x); }
+        builder.add_ADMITTED_BY(args.ADMITTED_BY);
+        builder.add_SCREENING(args.SCREENING);
         builder.add_SECONDARY_COVARIANCE_BASIS(args.SECONDARY_COVARIANCE_BASIS);
         builder.add_PRIMARY_COVARIANCE_BASIS(args.PRIMARY_COVARIANCE_BASIS);
         builder.add_SECONDARY_RADIUS_BASIS(args.SECONDARY_RADIUS_BASIS);
@@ -5111,6 +5451,8 @@ impl<'a> CQREvent<'a> {
         let SECONDARY_RADIUS_BASIS = self.SECONDARY_RADIUS_BASIS();
         let PRIMARY_COVARIANCE_BASIS = self.PRIMARY_COVARIANCE_BASIS();
         let SECONDARY_COVARIANCE_BASIS = self.SECONDARY_COVARIANCE_BASIS();
+        let SCREENING = self.SCREENING();
+        let ADMITTED_BY = self.ADMITTED_BY();
         CQREventT {
             PRIMARY_ID,
             SECONDARY_ID,
@@ -5147,6 +5489,8 @@ impl<'a> CQREvent<'a> {
             SECONDARY_RADIUS_BASIS,
             PRIMARY_COVARIANCE_BASIS,
             SECONDARY_COVARIANCE_BASIS,
+            SCREENING,
+            ADMITTED_BY,
         }
     }
 
@@ -5443,6 +5787,25 @@ impl<'a> CQREvent<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<cqrCovarianceBasis>(CQREvent::VT_SECONDARY_COVARIANCE_BASIS, Some(cqrCovarianceBasis::UNSPECIFIED)).unwrap()}
     }
+
+    /// Geometry used by the screening request that admitted this event.
+    #[inline]
+    pub fn SCREENING(&self) -> cqrVolumeGeometry {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<cqrVolumeGeometry>(CQREvent::VT_SCREENING, Some(cqrVolumeGeometry::SPHERICAL)).unwrap()}
+    }
+
+    /// Volume(s) containing the other object at TCA; BOTH means both tests passed.
+    /// UNSPECIFIED means admission provenance was not reported.
+    #[inline]
+    pub fn ADMITTED_BY(&self) -> cqrVolumeAnchor {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<cqrVolumeAnchor>(CQREvent::VT_ADMITTED_BY, Some(cqrVolumeAnchor::UNSPECIFIED)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CQREvent<'_> {
@@ -5486,6 +5849,8 @@ impl ::flatbuffers::Verifiable for CQREvent<'_> {
             .visit_field::<cqrHardBodyRadiusBasis>("SECONDARY_RADIUS_BASIS", Self::VT_SECONDARY_RADIUS_BASIS, false)?
             .visit_field::<cqrCovarianceBasis>("PRIMARY_COVARIANCE_BASIS", Self::VT_PRIMARY_COVARIANCE_BASIS, false)?
             .visit_field::<cqrCovarianceBasis>("SECONDARY_COVARIANCE_BASIS", Self::VT_SECONDARY_COVARIANCE_BASIS, false)?
+            .visit_field::<cqrVolumeGeometry>("SCREENING", Self::VT_SCREENING, false)?
+            .visit_field::<cqrVolumeAnchor>("ADMITTED_BY", Self::VT_ADMITTED_BY, false)?
             .finish();
         Ok(())
     }
@@ -5527,6 +5892,8 @@ pub struct CQREventArgs<'a> {
     pub SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis,
     pub PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis,
     pub SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis,
+    pub SCREENING: cqrVolumeGeometry,
+    pub ADMITTED_BY: cqrVolumeAnchor,
 }
 
 impl<'a> Default for CQREventArgs<'a> {
@@ -5568,6 +5935,8 @@ impl<'a> Default for CQREventArgs<'a> {
             SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis::UNSPECIFIED,
             PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis::UNSPECIFIED,
             SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis::UNSPECIFIED,
+            SCREENING: cqrVolumeGeometry::SPHERICAL,
+            ADMITTED_BY: cqrVolumeAnchor::UNSPECIFIED,
         }
     }
 }
@@ -5754,6 +6123,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQREventBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_SCREENING(&mut self, SCREENING: cqrVolumeGeometry) {
+        self.fbb_.push_slot::<cqrVolumeGeometry>(CQREvent::VT_SCREENING, SCREENING, cqrVolumeGeometry::SPHERICAL);
+    }
+
+    #[inline]
+    pub fn add_ADMITTED_BY(&mut self, ADMITTED_BY: cqrVolumeAnchor) {
+        self.fbb_.push_slot::<cqrVolumeAnchor>(CQREvent::VT_ADMITTED_BY, ADMITTED_BY, cqrVolumeAnchor::UNSPECIFIED);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQREventBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CQREventBuilder {
@@ -5810,6 +6189,8 @@ impl ::core::fmt::Debug for CQREvent<'_> {
         ds.field("SECONDARY_RADIUS_BASIS", &self.SECONDARY_RADIUS_BASIS());
         ds.field("PRIMARY_COVARIANCE_BASIS", &self.PRIMARY_COVARIANCE_BASIS());
         ds.field("SECONDARY_COVARIANCE_BASIS", &self.SECONDARY_COVARIANCE_BASIS());
+        ds.field("SCREENING", &self.SCREENING());
+        ds.field("ADMITTED_BY", &self.ADMITTED_BY());
         ds.finish()
     }
 }
@@ -5852,6 +6233,8 @@ pub struct CQREventT {
     pub SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis,
     pub PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis,
     pub SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis,
+    pub SCREENING: cqrVolumeGeometry,
+    pub ADMITTED_BY: cqrVolumeAnchor,
 }
 
 impl Default for CQREventT {
@@ -5892,6 +6275,8 @@ impl Default for CQREventT {
             SECONDARY_RADIUS_BASIS: cqrHardBodyRadiusBasis::UNSPECIFIED,
             PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis::UNSPECIFIED,
             SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis::UNSPECIFIED,
+            SCREENING: cqrVolumeGeometry::SPHERICAL,
+            ADMITTED_BY: cqrVolumeAnchor::UNSPECIFIED,
         }
     }
 }
@@ -5965,6 +6350,8 @@ impl CQREventT {
         let SECONDARY_RADIUS_BASIS = self.SECONDARY_RADIUS_BASIS;
         let PRIMARY_COVARIANCE_BASIS = self.PRIMARY_COVARIANCE_BASIS;
         let SECONDARY_COVARIANCE_BASIS = self.SECONDARY_COVARIANCE_BASIS;
+        let SCREENING = self.SCREENING;
+        let ADMITTED_BY = self.ADMITTED_BY;
         CQREvent::create(_fbb, &CQREventArgs{
             PRIMARY_ID,
             SECONDARY_ID,
@@ -6001,6 +6388,8 @@ impl CQREventT {
             SECONDARY_RADIUS_BASIS,
             PRIMARY_COVARIANCE_BASIS,
             SECONDARY_COVARIANCE_BASIS,
+            SCREENING,
+            ADMITTED_BY,
         })
     }
 }

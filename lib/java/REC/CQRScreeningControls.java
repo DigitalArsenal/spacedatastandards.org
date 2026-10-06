@@ -47,6 +47,24 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
    */
   public boolean HAS_PROGRESS_INTERVAL_SECONDS() { int o = __offset(26); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   public int ALGORITHM() { int o = __offset(28); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 3; }
+  /**
+   * SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+   * Admit local minima of relative distance inside or on the selected volume.
+   */
+  public int SCREENING() { int o = __offset(30); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+   */
+  public double RADIAL_M() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double IN_TRACK_M() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double CROSS_TRACK_M() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+   * R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+   * BOTH tests each object's volume independently and admits their union.
+   * UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+   */
+  public int VOLUME_CENTER() { int o = __offset(38); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 1; }
 
   public static int createCQRScreeningControls(FlatBufferBuilder builder,
       int START_EPOCHOffset,
@@ -61,8 +79,16 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
       boolean USE_PERIGEE_FILTER,
       double PROGRESS_INTERVAL_SECONDS,
       boolean HAS_PROGRESS_INTERVAL_SECONDS,
-      int ALGORITHM) {
-    builder.startTable(13);
+      int ALGORITHM,
+      int SCREENING,
+      double RADIAL_M,
+      double IN_TRACK_M,
+      double CROSS_TRACK_M,
+      int VOLUME_CENTER) {
+    builder.startTable(18);
+    CQRScreeningControls.addCrossTrackM(builder, CROSS_TRACK_M);
+    CQRScreeningControls.addInTrackM(builder, IN_TRACK_M);
+    CQRScreeningControls.addRadialM(builder, RADIAL_M);
     CQRScreeningControls.addProgressIntervalSeconds(builder, PROGRESS_INTERVAL_SECONDS);
     CQRScreeningControls.addCombinedRadiusM(builder, COMBINED_RADIUS_M);
     CQRScreeningControls.addRefinementToleranceSeconds(builder, REFINEMENT_TOLERANCE_SECONDS);
@@ -71,6 +97,8 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
     CQRScreeningControls.addDurationSeconds(builder, DURATION_SECONDS);
     CQRScreeningControls.addRequestedWorkers(builder, REQUESTED_WORKERS);
     CQRScreeningControls.addStartEpoch(builder, START_EPOCHOffset);
+    CQRScreeningControls.addVolumeCenter(builder, VOLUME_CENTER);
+    CQRScreeningControls.addScreening(builder, SCREENING);
     CQRScreeningControls.addAlgorithm(builder, ALGORITHM);
     CQRScreeningControls.addHasProgressIntervalSeconds(builder, HAS_PROGRESS_INTERVAL_SECONDS);
     CQRScreeningControls.addUsePerigeeFilter(builder, USE_PERIGEE_FILTER);
@@ -79,7 +107,7 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
     return CQRScreeningControls.endCQRScreeningControls(builder);
   }
 
-  public static void startCQRScreeningControls(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startCQRScreeningControls(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addStartEpoch(FlatBufferBuilder builder, int START_EPOCHOffset) { builder.addOffset(0, START_EPOCHOffset, 0); }
   public static void addDurationSeconds(FlatBufferBuilder builder, double DURATION_SECONDS) { builder.addDouble(1, DURATION_SECONDS, 604800.0); }
   public static void addThresholdM(FlatBufferBuilder builder, double THRESHOLD_M) { builder.addDouble(2, THRESHOLD_M, 5000.0); }
@@ -93,6 +121,11 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
   public static void addProgressIntervalSeconds(FlatBufferBuilder builder, double PROGRESS_INTERVAL_SECONDS) { builder.addDouble(10, PROGRESS_INTERVAL_SECONDS, 0.0); }
   public static void addHasProgressIntervalSeconds(FlatBufferBuilder builder, boolean HAS_PROGRESS_INTERVAL_SECONDS) { builder.addBoolean(11, HAS_PROGRESS_INTERVAL_SECONDS, false); }
   public static void addAlgorithm(FlatBufferBuilder builder, int ALGORITHM) { builder.addByte(12, (byte) ALGORITHM, (byte) 3); }
+  public static void addScreening(FlatBufferBuilder builder, int SCREENING) { builder.addByte(13, (byte) SCREENING, (byte) 0); }
+  public static void addRadialM(FlatBufferBuilder builder, double RADIAL_M) { builder.addDouble(14, RADIAL_M, 0.0); }
+  public static void addInTrackM(FlatBufferBuilder builder, double IN_TRACK_M) { builder.addDouble(15, IN_TRACK_M, 0.0); }
+  public static void addCrossTrackM(FlatBufferBuilder builder, double CROSS_TRACK_M) { builder.addDouble(16, CROSS_TRACK_M, 0.0); }
+  public static void addVolumeCenter(FlatBufferBuilder builder, int VOLUME_CENTER) { builder.addByte(17, (byte) VOLUME_CENTER, (byte) 1); }
   public static int endCQRScreeningControls(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // START_EPOCH

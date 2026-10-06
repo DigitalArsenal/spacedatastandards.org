@@ -303,8 +303,122 @@ func (rcv *CQRScreeningControls) MutateAlgorithm(n cqrProbabilityAlgorithm) bool
 	return rcv.MutateALGORITHM(n)
 }
 
+/// SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+/// Admit local minima of relative distance inside or on the selected volume.
+func (rcv *CQRScreeningControls) SCREENING() cqrVolumeGeometry {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return cqrVolumeGeometry(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *CQRScreeningControls) Screening() cqrVolumeGeometry {
+	return rcv.SCREENING()
+}
+
+/// SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+/// Admit local minima of relative distance inside or on the selected volume.
+func (rcv *CQRScreeningControls) MutateSCREENING(n cqrVolumeGeometry) bool {
+	return rcv._tab.MutateByteSlot(30, byte(n))
+}
+
+func (rcv *CQRScreeningControls) MutateScreening(n cqrVolumeGeometry) bool {
+	return rcv.MutateSCREENING(n)
+}
+
+/// RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+func (rcv *CQRScreeningControls) RADIAL_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *CQRScreeningControls) RadialM() float64 {
+	return rcv.RADIAL_M()
+}
+
+/// RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+func (rcv *CQRScreeningControls) MutateRADIAL_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *CQRScreeningControls) MutateRadialM(n float64) bool {
+	return rcv.MutateRADIAL_M(n)
+}
+
+func (rcv *CQRScreeningControls) IN_TRACK_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *CQRScreeningControls) InTrackM() float64 {
+	return rcv.IN_TRACK_M()
+}
+
+func (rcv *CQRScreeningControls) MutateIN_TRACK_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *CQRScreeningControls) MutateInTrackM(n float64) bool {
+	return rcv.MutateIN_TRACK_M(n)
+}
+
+func (rcv *CQRScreeningControls) CROSS_TRACK_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *CQRScreeningControls) CrossTrackM() float64 {
+	return rcv.CROSS_TRACK_M()
+}
+
+func (rcv *CQRScreeningControls) MutateCROSS_TRACK_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *CQRScreeningControls) MutateCrossTrackM(n float64) bool {
+	return rcv.MutateCROSS_TRACK_M(n)
+}
+
+/// PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+/// R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+/// BOTH tests each object's volume independently and admits their union.
+/// UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+func (rcv *CQRScreeningControls) VOLUME_CENTER() cqrVolumeAnchor {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return cqrVolumeAnchor(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 1
+}
+
+func (rcv *CQRScreeningControls) VolumeCenter() cqrVolumeAnchor {
+	return rcv.VOLUME_CENTER()
+}
+
+/// PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+/// R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+/// BOTH tests each object's volume independently and admits their union.
+/// UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+func (rcv *CQRScreeningControls) MutateVOLUME_CENTER(n cqrVolumeAnchor) bool {
+	return rcv._tab.MutateByteSlot(38, byte(n))
+}
+
+func (rcv *CQRScreeningControls) MutateVolumeCenter(n cqrVolumeAnchor) bool {
+	return rcv.MutateVOLUME_CENTER(n)
+}
+
 func CQRScreeningControlsStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(18)
 }
 func CQRScreeningControlsAddSTART_EPOCH(builder *flatbuffers.Builder, START_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(START_EPOCH), 0)
@@ -383,6 +497,36 @@ func CQRScreeningControlsAddALGORITHM(builder *flatbuffers.Builder, ALGORITHM cq
 }
 func CQRScreeningControlsAddAlgorithm(builder *flatbuffers.Builder, ALGORITHM cqrProbabilityAlgorithm) {
 	CQRScreeningControlsAddALGORITHM(builder, ALGORITHM)
+}
+func CQRScreeningControlsAddSCREENING(builder *flatbuffers.Builder, SCREENING cqrVolumeGeometry) {
+	builder.PrependByteSlot(13, byte(SCREENING), 0)
+}
+func CQRScreeningControlsAddScreening(builder *flatbuffers.Builder, SCREENING cqrVolumeGeometry) {
+	CQRScreeningControlsAddSCREENING(builder, SCREENING)
+}
+func CQRScreeningControlsAddRADIAL_M(builder *flatbuffers.Builder, RADIAL_M float64) {
+	builder.PrependFloat64Slot(14, RADIAL_M, 0.0)
+}
+func CQRScreeningControlsAddRadialM(builder *flatbuffers.Builder, RADIAL_M float64) {
+	CQRScreeningControlsAddRADIAL_M(builder, RADIAL_M)
+}
+func CQRScreeningControlsAddIN_TRACK_M(builder *flatbuffers.Builder, IN_TRACK_M float64) {
+	builder.PrependFloat64Slot(15, IN_TRACK_M, 0.0)
+}
+func CQRScreeningControlsAddInTrackM(builder *flatbuffers.Builder, IN_TRACK_M float64) {
+	CQRScreeningControlsAddIN_TRACK_M(builder, IN_TRACK_M)
+}
+func CQRScreeningControlsAddCROSS_TRACK_M(builder *flatbuffers.Builder, CROSS_TRACK_M float64) {
+	builder.PrependFloat64Slot(16, CROSS_TRACK_M, 0.0)
+}
+func CQRScreeningControlsAddCrossTrackM(builder *flatbuffers.Builder, CROSS_TRACK_M float64) {
+	CQRScreeningControlsAddCROSS_TRACK_M(builder, CROSS_TRACK_M)
+}
+func CQRScreeningControlsAddVOLUME_CENTER(builder *flatbuffers.Builder, VOLUME_CENTER cqrVolumeAnchor) {
+	builder.PrependByteSlot(17, byte(VOLUME_CENTER), 1)
+}
+func CQRScreeningControlsAddVolumeCenter(builder *flatbuffers.Builder, VOLUME_CENTER cqrVolumeAnchor) {
+	CQRScreeningControlsAddVOLUME_CENTER(builder, VOLUME_CENTER)
 }
 func CQRScreeningControlsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

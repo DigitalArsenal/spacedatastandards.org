@@ -4616,6 +4616,52 @@
         }
       }
     },
+    "cqrVolumeGeometry": {
+      "type": "string",
+      "enum": [
+        "SPHERICAL",
+        "ELLIPSOIDAL",
+        "BOX"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "SPHERICAL": {
+          "value": 0
+        },
+        "ELLIPSOIDAL": {
+          "value": 1
+        },
+        "BOX": {
+          "value": 2
+        }
+      }
+    },
+    "cqrVolumeAnchor": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "PRIMARY",
+        "SECONDARY",
+        "BOTH"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "PRIMARY": {
+          "value": 1
+        },
+        "SECONDARY": {
+          "value": 2
+        },
+        "BOTH": {
+          "value": 3
+        }
+      }
+    },
     "cqrLaunchObjectClass": {
       "type": "string",
       "enum": [
@@ -17018,6 +17064,140 @@
           },
           "description": "Comments related to the maneuver.",
           "x-flatbuffer-type": "[string]"
+        },
+        "MAN_COMPOSITION": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.\nCCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.\nDATA entries are complete time-history lines; MAN_UNITS excludes time tags.\nRelative time tags are seconds from METADATA.EPOCH_TZERO.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "MAN_NEXT_ID": {
+          "type": "string",
+          "description": "Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).",
+          "x-flatbuffer-type": "string"
+        },
+        "MAN_BASIS_ID": {
+          "type": "string",
+          "description": "OD, navigation solution or simulation identifier (Table 6-7).",
+          "x-flatbuffer-type": "string"
+        },
+        "MAN_PREV_EPOCH": {
+          "type": "string",
+          "description": "Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.\nCCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.",
+          "x-flatbuffer-type": "string"
+        },
+        "MAN_NEXT_EPOCH": {
+          "type": "string",
+          "description": "Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).",
+          "x-flatbuffer-type": "string"
+        },
+        "MAN_PRED_SOURCE": {
+          "type": "string",
+          "description": "Source of predicted orbit or attitude states (Table 6-7).",
+          "x-flatbuffer-type": "string"
+        },
+        "GRAV_ASSIST_NAME": {
+          "type": "string",
+          "description": "Gravitational assist body name (Table 6-7).",
+          "x-flatbuffer-type": "string"
+        },
+        "DC_TYPE": {
+          "type": "string",
+          "description": "CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).",
+          "x-flatbuffer-type": "string"
+        },
+        "DC_WIN_OPEN": {
+          "type": "string",
+          "description": "Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).",
+          "x-flatbuffer-type": "string"
+        },
+        "DC_WIN_CLOSE": {
+          "type": "string",
+          "description": "Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).",
+          "x-flatbuffer-type": "string"
+        },
+        "DC_MIN_CYCLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).",
+          "x-flatbuffer-type": "uint"
+        },
+        "DC_MAX_CYCLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "HAS_DC_MIN_CYCLES": {
+          "type": "boolean",
+          "description": "Presence of the corresponding cycle bound; zero remains representable.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "HAS_DC_MAX_CYCLES": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "DC_EXEC_START": {
+          "type": "string",
+          "description": "First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.\nRequired with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).",
+          "x-flatbuffer-type": "string"
+        },
+        "DC_EXEC_STOP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DC_REF_TIME": {
+          "type": "string",
+          "description": "Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).",
+          "x-flatbuffer-type": "string"
+        },
+        "DC_TIME_PULSE_DURATION": {
+          "type": "number",
+          "description": "Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).\nRequired with DC_REF_TIME for non-continuous cycles; period >= duration.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DC_TIME_PULSE_PERIOD": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DC_REF_DIR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).\nRequired with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "DC_BODY_FRAME": {
+          "type": "string",
+          "description": "Body frame of DC_BODY_TRIGGER (Table 6-7).",
+          "x-flatbuffer-type": "string"
+        },
+        "DC_BODY_TRIGGER": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Three-component body-frame trigger unit direction (Table 6-7).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "DC_PA_START_ANGLE": {
+          "type": "number",
+          "description": "Pulse start and stop phase angles, degrees; NaN means unspecified.\nCCSDS 502.0-B-3 Table 6-7.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DC_PA_STOP_ANGLE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
         }
       },
       "additionalProperties": false
@@ -17278,7 +17458,7 @@
         },
         "STATE_STEP_SIZE": {
           "type": "number",
-          "description": "Time interval between state vectors in seconds (required for time-series data).",
+          "description": "Time interval between state vectors in seconds; required without STATE_EPOCHS.",
           "x-flatbuffer-type": "double"
         },
         "STATE_VECTOR_SIZE": {
@@ -17294,7 +17474,7 @@
           "items": {
             "type": "number"
           },
-          "description": "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)\nLength must be divisible by STATE_VECTOR_SIZE.\nUnits: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.",
+          "description": "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.\nLength must be divisible by STATE_VECTOR_SIZE.\nUnits: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.",
           "x-flatbuffer-type": "[double]"
         },
         "COVARIANCE_DATA": {
@@ -17409,6 +17589,14 @@
           "type": "string",
           "description": "Identifier of that calibration evidence (a report or record).",
           "x-flatbuffer-type": "string"
+        },
+        "STATE_EPOCHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3\nsection 6.2.4). When nonempty, length equals STATE_DATA.length /\nSTATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.\nAbsent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.",
+          "x-flatbuffer-type": "[string]"
         }
       },
       "additionalProperties": false
@@ -18464,6 +18652,58 @@
             }
           },
           "x-flatbuffer-default": "ALFANO_MAXIMUM"
+        },
+        "SCREENING": {
+          "$ref": "#/definitions/cqrVolumeGeometry",
+          "description": "SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.\nAdmit local minima of relative distance inside or on the selected volume.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "SPHERICAL": {
+              "value": 0
+            },
+            "ELLIPSOIDAL": {
+              "value": 1
+            },
+            "BOX": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "SPHERICAL"
+        },
+        "RADIAL_M": {
+          "type": "number",
+          "description": "RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.",
+          "x-flatbuffer-type": "double"
+        },
+        "IN_TRACK_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CROSS_TRACK_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VOLUME_CENTER": {
+          "$ref": "#/definitions/cqrVolumeAnchor",
+          "description": "PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:\nR = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.\nBOTH tests each object's volume independently and admits their union.\nUNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "PRIMARY": {
+              "value": 1
+            },
+            "SECONDARY": {
+              "value": 2
+            },
+            "BOTH": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "PRIMARY"
         }
       },
       "required": [
@@ -19126,6 +19366,45 @@
             "EMPIRICAL_MODEL": {
               "value": 5,
               "description": "An empirical prediction-error model for the source's element sets."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SCREENING": {
+          "$ref": "#/definitions/cqrVolumeGeometry",
+          "description": "Geometry used by the screening request that admitted this event.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "SPHERICAL": {
+              "value": 0
+            },
+            "ELLIPSOIDAL": {
+              "value": 1
+            },
+            "BOX": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "SPHERICAL"
+        },
+        "ADMITTED_BY": {
+          "$ref": "#/definitions/cqrVolumeAnchor",
+          "description": "Volume(s) containing the other object at TCA; BOTH means both tests passed.\nUNSPECIFIED means admission provenance was not reported.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "PRIMARY": {
+              "value": 1
+            },
+            "SECONDARY": {
+              "value": 2
+            },
+            "BOTH": {
+              "value": 3
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"

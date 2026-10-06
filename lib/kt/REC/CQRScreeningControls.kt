@@ -104,6 +104,44 @@ class CQRScreeningControls : Table() {
             val o = __offset(28)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 3u
         }
+    /**
+     * SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+     * Admit local minima of relative distance inside or on the selected volume.
+     */
+    val screening : UByte
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+     */
+    val radialM : Double
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val inTrackM : Double
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val crossTrackM : Double
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+     * R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+     * BOTH tests each object's volume independently and admits their union.
+     * UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+     */
+    val volumeCenter : UByte
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 1u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCQRScreeningControls(_bb: ByteBuffer): CQRScreeningControls = getRootAsCQRScreeningControls(_bb, CQRScreeningControls())
@@ -111,8 +149,11 @@ class CQRScreeningControls : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCQRScreeningControls(builder: FlatBufferBuilder, startEpochOffset: Int, durationSeconds: Double, thresholdM: Double, requestedWorkers: UInt, coarseStepSeconds: Double, refinementToleranceSeconds: Double, combinedRadiusM: Double, useKdTree: Boolean, useDynamicWindow: Boolean, usePerigeeFilter: Boolean, progressIntervalSeconds: Double, hasProgressIntervalSeconds: Boolean, algorithm: UByte) : Int {
-            builder.startTable(13)
+        fun createCQRScreeningControls(builder: FlatBufferBuilder, startEpochOffset: Int, durationSeconds: Double, thresholdM: Double, requestedWorkers: UInt, coarseStepSeconds: Double, refinementToleranceSeconds: Double, combinedRadiusM: Double, useKdTree: Boolean, useDynamicWindow: Boolean, usePerigeeFilter: Boolean, progressIntervalSeconds: Double, hasProgressIntervalSeconds: Boolean, algorithm: UByte, screening: UByte, radialM: Double, inTrackM: Double, crossTrackM: Double, volumeCenter: UByte) : Int {
+            builder.startTable(18)
+            addCROSSTRACKM(builder, crossTrackM)
+            addINTRACKM(builder, inTrackM)
+            addRADIALM(builder, radialM)
             addPROGRESSINTERVALSECONDS(builder, progressIntervalSeconds)
             addCOMBINEDRADIUSM(builder, combinedRadiusM)
             addREFINEMENTTOLERANCESECONDS(builder, refinementToleranceSeconds)
@@ -121,6 +162,8 @@ class CQRScreeningControls : Table() {
             addDURATIONSECONDS(builder, durationSeconds)
             addREQUESTEDWORKERS(builder, requestedWorkers)
             addSTARTEPOCH(builder, startEpochOffset)
+            addVOLUMECENTER(builder, volumeCenter)
+            addSCREENING(builder, screening)
             addALGORITHM(builder, algorithm)
             addHASPROGRESSINTERVALSECONDS(builder, hasProgressIntervalSeconds)
             addUSEPERIGEEFILTER(builder, usePerigeeFilter)
@@ -128,7 +171,7 @@ class CQRScreeningControls : Table() {
             addUSEKDTREE(builder, useKdTree)
             return endCQRScreeningControls(builder)
         }
-        fun startCQRScreeningControls(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startCQRScreeningControls(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addSTARTEPOCH(builder: FlatBufferBuilder, startEpoch: Int) = builder.addOffset(0, startEpoch, 0)
         fun addDURATIONSECONDS(builder: FlatBufferBuilder, durationSeconds: Double) = builder.addDouble(1, durationSeconds, 604800.0)
         fun addTHRESHOLDM(builder: FlatBufferBuilder, thresholdM: Double) = builder.addDouble(2, thresholdM, 5000.0)
@@ -142,6 +185,11 @@ class CQRScreeningControls : Table() {
         fun addPROGRESSINTERVALSECONDS(builder: FlatBufferBuilder, progressIntervalSeconds: Double) = builder.addDouble(10, progressIntervalSeconds, 0.0)
         fun addHASPROGRESSINTERVALSECONDS(builder: FlatBufferBuilder, hasProgressIntervalSeconds: Boolean) = builder.addBoolean(11, hasProgressIntervalSeconds, false)
         fun addALGORITHM(builder: FlatBufferBuilder, algorithm: UByte) = builder.addByte(12, algorithm.toByte(), 3)
+        fun addSCREENING(builder: FlatBufferBuilder, screening: UByte) = builder.addByte(13, screening.toByte(), 0)
+        fun addRADIALM(builder: FlatBufferBuilder, radialM: Double) = builder.addDouble(14, radialM, 0.0)
+        fun addINTRACKM(builder: FlatBufferBuilder, inTrackM: Double) = builder.addDouble(15, inTrackM, 0.0)
+        fun addCROSSTRACKM(builder: FlatBufferBuilder, crossTrackM: Double) = builder.addDouble(16, crossTrackM, 0.0)
+        fun addVOLUMECENTER(builder: FlatBufferBuilder, volumeCenter: UByte) = builder.addByte(17, volumeCenter.toByte(), 1)
         fun endCQRScreeningControls(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

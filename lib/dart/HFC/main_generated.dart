@@ -1855,10 +1855,85 @@ class Maneuver {
   ///  Comments related to the maneuver.
   List<String>? get MAN_COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 28);
   List<String>? get manComment => MAN_COMMENT;
+  ///  Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+  ///  CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+  ///  DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+  ///  Relative time tags are seconds from METADATA.EPOCH_TZERO.
+  List<String>? get MAN_COMPOSITION => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 30);
+  List<String>? get manComposition => MAN_COMPOSITION;
+  ///  Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+  String? get MAN_NEXT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get manNextId => MAN_NEXT_ID;
+  ///  OD, navigation solution or simulation identifier (Table 6-7).
+  String? get MAN_BASIS_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get manBasisId => MAN_BASIS_ID;
+  ///  Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+  ///  CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+  String? get MAN_PREV_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get manPrevEpoch => MAN_PREV_EPOCH;
+  ///  Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+  String? get MAN_NEXT_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get manNextEpoch => MAN_NEXT_EPOCH;
+  ///  Source of predicted orbit or attitude states (Table 6-7).
+  String? get MAN_PRED_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get manPredSource => MAN_PRED_SOURCE;
+  ///  Gravitational assist body name (Table 6-7).
+  String? get GRAV_ASSIST_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get gravAssistName => GRAV_ASSIST_NAME;
+  ///  CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+  String? get DC_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get dcType => DC_TYPE;
+  ///  Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+  String? get DC_WIN_OPEN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get dcWinOpen => DC_WIN_OPEN;
+  ///  Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+  String? get DC_WIN_CLOSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get dcWinClose => DC_WIN_CLOSE;
+  ///  Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+  int get DC_MIN_CYCLES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  int get dcMinCycles => DC_MIN_CYCLES;
+  int get DC_MAX_CYCLES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 52, 0);
+  int get dcMaxCycles => DC_MAX_CYCLES;
+  ///  Presence of the corresponding cycle bound; zero remains representable.
+  bool get HAS_DC_MIN_CYCLES => const fb.BoolReader().vTableGet(_bc, _bcOffset, 54, false);
+  bool get hasDcMinCycles => HAS_DC_MIN_CYCLES;
+  bool get HAS_DC_MAX_CYCLES => const fb.BoolReader().vTableGet(_bc, _bcOffset, 56, false);
+  bool get hasDcMaxCycles => HAS_DC_MAX_CYCLES;
+  ///  First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+  ///  Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+  String? get DC_EXEC_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  String? get dcExecStart => DC_EXEC_START;
+  String? get DC_EXEC_STOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get dcExecStop => DC_EXEC_STOP;
+  ///  Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+  String? get DC_REF_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  String? get dcRefTime => DC_REF_TIME;
+  ///  Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+  ///  Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+  double get DC_TIME_PULSE_DURATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, double.nan);
+  double get dcTimePulseDuration => DC_TIME_PULSE_DURATION;
+  double get DC_TIME_PULSE_PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, double.nan);
+  double get dcTimePulsePeriod => DC_TIME_PULSE_PERIOD;
+  ///  Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+  ///  Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+  List<double>? get DC_REF_DIR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 68);
+  List<double>? get dcRefDir => DC_REF_DIR;
+  ///  Body frame of DC_BODY_TRIGGER (Table 6-7).
+  String? get DC_BODY_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  String? get dcBodyFrame => DC_BODY_FRAME;
+  ///  Three-component body-frame trigger unit direction (Table 6-7).
+  List<double>? get DC_BODY_TRIGGER => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 72);
+  List<double>? get dcBodyTrigger => DC_BODY_TRIGGER;
+  ///  Pulse start and stop phase angles, degrees; NaN means unspecified.
+  ///  CCSDS 502.0-B-3 Table 6-7.
+  double get DC_PA_START_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, double.nan);
+  double get dcPaStartAngle => DC_PA_START_ANGLE;
+  double get DC_PA_STOP_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, double.nan);
+  double get dcPaStopAngle => DC_PA_STOP_ANGLE;
 
   @override
   String toString() {
-    return 'Maneuver{manId: ${manId}, manBasis: ${manBasis}, manDeviceId: ${manDeviceId}, manPrevId: ${manPrevId}, manPurpose: ${manPurpose}, manRefFrame: ${manRefFrame}, manFrameEpoch: ${manFrameEpoch}, manType: ${manType}, manEpochStart: ${manEpochStart}, manDuration: ${manDuration}, manUnits: ${manUnits}, DATA: ${DATA}, manComment: ${manComment}}';
+    return 'Maneuver{manId: ${manId}, manBasis: ${manBasis}, manDeviceId: ${manDeviceId}, manPrevId: ${manPrevId}, manPurpose: ${manPurpose}, manRefFrame: ${manRefFrame}, manFrameEpoch: ${manFrameEpoch}, manType: ${manType}, manEpochStart: ${manEpochStart}, manDuration: ${manDuration}, manUnits: ${manUnits}, DATA: ${DATA}, manComment: ${manComment}, manComposition: ${manComposition}, manNextId: ${manNextId}, manBasisId: ${manBasisId}, manPrevEpoch: ${manPrevEpoch}, manNextEpoch: ${manNextEpoch}, manPredSource: ${manPredSource}, gravAssistName: ${gravAssistName}, dcType: ${dcType}, dcWinOpen: ${dcWinOpen}, dcWinClose: ${dcWinClose}, dcMinCycles: ${dcMinCycles}, dcMaxCycles: ${dcMaxCycles}, hasDcMinCycles: ${hasDcMinCycles}, hasDcMaxCycles: ${hasDcMaxCycles}, dcExecStart: ${dcExecStart}, dcExecStop: ${dcExecStop}, dcRefTime: ${dcRefTime}, dcTimePulseDuration: ${dcTimePulseDuration}, dcTimePulsePeriod: ${dcTimePulsePeriod}, dcRefDir: ${dcRefDir}, dcBodyFrame: ${dcBodyFrame}, dcBodyTrigger: ${dcBodyTrigger}, dcPaStartAngle: ${dcPaStartAngle}, dcPaStopAngle: ${dcPaStopAngle}}';
   }
 }
 
@@ -1876,7 +1951,7 @@ class ManeuverBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(37);
   }
 
   int addManIdOffset(int? offset) {
@@ -1931,6 +2006,102 @@ class ManeuverBuilder {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
+  int addManCompositionOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addManNextIdOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addManBasisIdOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addManPrevEpochOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addManNextEpochOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addManPredSourceOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addGravAssistNameOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addDcTypeOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addDcWinOpenOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addDcWinCloseOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addDcMinCycles(int? DC_MIN_CYCLES) {
+    fbBuilder.addUint32(23, DC_MIN_CYCLES);
+    return fbBuilder.offset;
+  }
+  int addDcMaxCycles(int? DC_MAX_CYCLES) {
+    fbBuilder.addUint32(24, DC_MAX_CYCLES);
+    return fbBuilder.offset;
+  }
+  int addHasDcMinCycles(bool? HAS_DC_MIN_CYCLES) {
+    fbBuilder.addBool(25, HAS_DC_MIN_CYCLES);
+    return fbBuilder.offset;
+  }
+  int addHasDcMaxCycles(bool? HAS_DC_MAX_CYCLES) {
+    fbBuilder.addBool(26, HAS_DC_MAX_CYCLES);
+    return fbBuilder.offset;
+  }
+  int addDcExecStartOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addDcExecStopOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addDcRefTimeOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addDcTimePulseDuration(double? DC_TIME_PULSE_DURATION) {
+    fbBuilder.addFloat64(30, DC_TIME_PULSE_DURATION);
+    return fbBuilder.offset;
+  }
+  int addDcTimePulsePeriod(double? DC_TIME_PULSE_PERIOD) {
+    fbBuilder.addFloat64(31, DC_TIME_PULSE_PERIOD);
+    return fbBuilder.offset;
+  }
+  int addDcRefDirOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addDcBodyFrameOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addDcBodyTriggerOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addDcPaStartAngle(double? DC_PA_START_ANGLE) {
+    fbBuilder.addFloat64(35, DC_PA_START_ANGLE);
+    return fbBuilder.offset;
+  }
+  int addDcPaStopAngle(double? DC_PA_STOP_ANGLE) {
+    fbBuilder.addFloat64(36, DC_PA_STOP_ANGLE);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1951,6 +2122,30 @@ class ManeuverObjectBuilder extends fb.ObjectBuilder {
   final List<String>? _MAN_UNITS;
   final List<String>? _DATA;
   final List<String>? _MAN_COMMENT;
+  final List<String>? _MAN_COMPOSITION;
+  final String? _MAN_NEXT_ID;
+  final String? _MAN_BASIS_ID;
+  final String? _MAN_PREV_EPOCH;
+  final String? _MAN_NEXT_EPOCH;
+  final String? _MAN_PRED_SOURCE;
+  final String? _GRAV_ASSIST_NAME;
+  final String? _DC_TYPE;
+  final String? _DC_WIN_OPEN;
+  final String? _DC_WIN_CLOSE;
+  final int? _DC_MIN_CYCLES;
+  final int? _DC_MAX_CYCLES;
+  final bool? _HAS_DC_MIN_CYCLES;
+  final bool? _HAS_DC_MAX_CYCLES;
+  final String? _DC_EXEC_START;
+  final String? _DC_EXEC_STOP;
+  final String? _DC_REF_TIME;
+  final double? _DC_TIME_PULSE_DURATION;
+  final double? _DC_TIME_PULSE_PERIOD;
+  final List<double>? _DC_REF_DIR;
+  final String? _DC_BODY_FRAME;
+  final List<double>? _DC_BODY_TRIGGER;
+  final double? _DC_PA_START_ANGLE;
+  final double? _DC_PA_STOP_ANGLE;
 
   ManeuverObjectBuilder({
     String? MAN_ID,
@@ -1978,6 +2173,54 @@ class ManeuverObjectBuilder extends fb.ObjectBuilder {
     List<String>? DATA,
     List<String>? MAN_COMMENT,
     List<String>? manComment,
+    List<String>? MAN_COMPOSITION,
+    List<String>? manComposition,
+    String? MAN_NEXT_ID,
+    String? manNextId,
+    String? MAN_BASIS_ID,
+    String? manBasisId,
+    String? MAN_PREV_EPOCH,
+    String? manPrevEpoch,
+    String? MAN_NEXT_EPOCH,
+    String? manNextEpoch,
+    String? MAN_PRED_SOURCE,
+    String? manPredSource,
+    String? GRAV_ASSIST_NAME,
+    String? gravAssistName,
+    String? DC_TYPE,
+    String? dcType,
+    String? DC_WIN_OPEN,
+    String? dcWinOpen,
+    String? DC_WIN_CLOSE,
+    String? dcWinClose,
+    int? DC_MIN_CYCLES,
+    int? dcMinCycles,
+    int? DC_MAX_CYCLES,
+    int? dcMaxCycles,
+    bool? HAS_DC_MIN_CYCLES,
+    bool? hasDcMinCycles,
+    bool? HAS_DC_MAX_CYCLES,
+    bool? hasDcMaxCycles,
+    String? DC_EXEC_START,
+    String? dcExecStart,
+    String? DC_EXEC_STOP,
+    String? dcExecStop,
+    String? DC_REF_TIME,
+    String? dcRefTime,
+    double? DC_TIME_PULSE_DURATION,
+    double? dcTimePulseDuration,
+    double? DC_TIME_PULSE_PERIOD,
+    double? dcTimePulsePeriod,
+    List<double>? DC_REF_DIR,
+    List<double>? dcRefDir,
+    String? DC_BODY_FRAME,
+    String? dcBodyFrame,
+    List<double>? DC_BODY_TRIGGER,
+    List<double>? dcBodyTrigger,
+    double? DC_PA_START_ANGLE,
+    double? dcPaStartAngle,
+    double? DC_PA_STOP_ANGLE,
+    double? dcPaStopAngle,
   })
       : _MAN_ID = manId ?? MAN_ID,
         _MAN_BASIS = manBasis ?? MAN_BASIS,
@@ -1991,7 +2234,31 @@ class ManeuverObjectBuilder extends fb.ObjectBuilder {
         _MAN_DURATION = manDuration ?? MAN_DURATION,
         _MAN_UNITS = manUnits ?? MAN_UNITS,
         _DATA = DATA,
-        _MAN_COMMENT = manComment ?? MAN_COMMENT;
+        _MAN_COMMENT = manComment ?? MAN_COMMENT,
+        _MAN_COMPOSITION = manComposition ?? MAN_COMPOSITION,
+        _MAN_NEXT_ID = manNextId ?? MAN_NEXT_ID,
+        _MAN_BASIS_ID = manBasisId ?? MAN_BASIS_ID,
+        _MAN_PREV_EPOCH = manPrevEpoch ?? MAN_PREV_EPOCH,
+        _MAN_NEXT_EPOCH = manNextEpoch ?? MAN_NEXT_EPOCH,
+        _MAN_PRED_SOURCE = manPredSource ?? MAN_PRED_SOURCE,
+        _GRAV_ASSIST_NAME = gravAssistName ?? GRAV_ASSIST_NAME,
+        _DC_TYPE = dcType ?? DC_TYPE,
+        _DC_WIN_OPEN = dcWinOpen ?? DC_WIN_OPEN,
+        _DC_WIN_CLOSE = dcWinClose ?? DC_WIN_CLOSE,
+        _DC_MIN_CYCLES = dcMinCycles ?? DC_MIN_CYCLES,
+        _DC_MAX_CYCLES = dcMaxCycles ?? DC_MAX_CYCLES,
+        _HAS_DC_MIN_CYCLES = hasDcMinCycles ?? HAS_DC_MIN_CYCLES,
+        _HAS_DC_MAX_CYCLES = hasDcMaxCycles ?? HAS_DC_MAX_CYCLES,
+        _DC_EXEC_START = dcExecStart ?? DC_EXEC_START,
+        _DC_EXEC_STOP = dcExecStop ?? DC_EXEC_STOP,
+        _DC_REF_TIME = dcRefTime ?? DC_REF_TIME,
+        _DC_TIME_PULSE_DURATION = dcTimePulseDuration ?? DC_TIME_PULSE_DURATION,
+        _DC_TIME_PULSE_PERIOD = dcTimePulsePeriod ?? DC_TIME_PULSE_PERIOD,
+        _DC_REF_DIR = dcRefDir ?? DC_REF_DIR,
+        _DC_BODY_FRAME = dcBodyFrame ?? DC_BODY_FRAME,
+        _DC_BODY_TRIGGER = dcBodyTrigger ?? DC_BODY_TRIGGER,
+        _DC_PA_START_ANGLE = dcPaStartAngle ?? DC_PA_START_ANGLE,
+        _DC_PA_STOP_ANGLE = dcPaStopAngle ?? DC_PA_STOP_ANGLE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2020,7 +2287,39 @@ class ManeuverObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_DATA!.map(fbBuilder.writeString).toList());
     final int? MAN_COMMENTOffset = _MAN_COMMENT == null ? null
         : fbBuilder.writeList(_MAN_COMMENT!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(13);
+    final int? MAN_COMPOSITIONOffset = _MAN_COMPOSITION == null ? null
+        : fbBuilder.writeList(_MAN_COMPOSITION!.map(fbBuilder.writeString).toList());
+    final int? MAN_NEXT_IDOffset = _MAN_NEXT_ID == null ? null
+        : fbBuilder.writeString(_MAN_NEXT_ID!);
+    final int? MAN_BASIS_IDOffset = _MAN_BASIS_ID == null ? null
+        : fbBuilder.writeString(_MAN_BASIS_ID!);
+    final int? MAN_PREV_EPOCHOffset = _MAN_PREV_EPOCH == null ? null
+        : fbBuilder.writeString(_MAN_PREV_EPOCH!);
+    final int? MAN_NEXT_EPOCHOffset = _MAN_NEXT_EPOCH == null ? null
+        : fbBuilder.writeString(_MAN_NEXT_EPOCH!);
+    final int? MAN_PRED_SOURCEOffset = _MAN_PRED_SOURCE == null ? null
+        : fbBuilder.writeString(_MAN_PRED_SOURCE!);
+    final int? GRAV_ASSIST_NAMEOffset = _GRAV_ASSIST_NAME == null ? null
+        : fbBuilder.writeString(_GRAV_ASSIST_NAME!);
+    final int? DC_TYPEOffset = _DC_TYPE == null ? null
+        : fbBuilder.writeString(_DC_TYPE!);
+    final int? DC_WIN_OPENOffset = _DC_WIN_OPEN == null ? null
+        : fbBuilder.writeString(_DC_WIN_OPEN!);
+    final int? DC_WIN_CLOSEOffset = _DC_WIN_CLOSE == null ? null
+        : fbBuilder.writeString(_DC_WIN_CLOSE!);
+    final int? DC_EXEC_STARTOffset = _DC_EXEC_START == null ? null
+        : fbBuilder.writeString(_DC_EXEC_START!);
+    final int? DC_EXEC_STOPOffset = _DC_EXEC_STOP == null ? null
+        : fbBuilder.writeString(_DC_EXEC_STOP!);
+    final int? DC_REF_TIMEOffset = _DC_REF_TIME == null ? null
+        : fbBuilder.writeString(_DC_REF_TIME!);
+    final int? DC_REF_DIROffset = _DC_REF_DIR == null ? null
+        : fbBuilder.writeListFloat64(_DC_REF_DIR!);
+    final int? DC_BODY_FRAMEOffset = _DC_BODY_FRAME == null ? null
+        : fbBuilder.writeString(_DC_BODY_FRAME!);
+    final int? DC_BODY_TRIGGEROffset = _DC_BODY_TRIGGER == null ? null
+        : fbBuilder.writeListFloat64(_DC_BODY_TRIGGER!);
+    fbBuilder.startTable(37);
     fbBuilder.addOffset(0, MAN_IDOffset);
     fbBuilder.addOffset(1, MAN_BASISOffset);
     fbBuilder.addOffset(2, MAN_DEVICE_IDOffset);
@@ -2034,6 +2333,30 @@ class ManeuverObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(10, MAN_UNITSOffset);
     fbBuilder.addOffset(11, DATAOffset);
     fbBuilder.addOffset(12, MAN_COMMENTOffset);
+    fbBuilder.addOffset(13, MAN_COMPOSITIONOffset);
+    fbBuilder.addOffset(14, MAN_NEXT_IDOffset);
+    fbBuilder.addOffset(15, MAN_BASIS_IDOffset);
+    fbBuilder.addOffset(16, MAN_PREV_EPOCHOffset);
+    fbBuilder.addOffset(17, MAN_NEXT_EPOCHOffset);
+    fbBuilder.addOffset(18, MAN_PRED_SOURCEOffset);
+    fbBuilder.addOffset(19, GRAV_ASSIST_NAMEOffset);
+    fbBuilder.addOffset(20, DC_TYPEOffset);
+    fbBuilder.addOffset(21, DC_WIN_OPENOffset);
+    fbBuilder.addOffset(22, DC_WIN_CLOSEOffset);
+    fbBuilder.addUint32(23, _DC_MIN_CYCLES);
+    fbBuilder.addUint32(24, _DC_MAX_CYCLES);
+    fbBuilder.addBool(25, _HAS_DC_MIN_CYCLES);
+    fbBuilder.addBool(26, _HAS_DC_MAX_CYCLES);
+    fbBuilder.addOffset(27, DC_EXEC_STARTOffset);
+    fbBuilder.addOffset(28, DC_EXEC_STOPOffset);
+    fbBuilder.addOffset(29, DC_REF_TIMEOffset);
+    fbBuilder.addFloat64(30, _DC_TIME_PULSE_DURATION);
+    fbBuilder.addFloat64(31, _DC_TIME_PULSE_PERIOD);
+    fbBuilder.addOffset(32, DC_REF_DIROffset);
+    fbBuilder.addOffset(33, DC_BODY_FRAMEOffset);
+    fbBuilder.addOffset(34, DC_BODY_TRIGGEROffset);
+    fbBuilder.addFloat64(35, _DC_PA_START_ANGLE);
+    fbBuilder.addFloat64(36, _DC_PA_STOP_ANGLE);
     return fbBuilder.endTable();
   }
 
@@ -2562,7 +2885,7 @@ class OCM {
   ///  (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
   String? get TRAJ_TYPE_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   String? get trajTypeDescription => TRAJ_TYPE_DESCRIPTION;
-  ///  Time interval between state vectors in seconds (required for time-series data).
+  ///  Time interval between state vectors in seconds; required without STATE_EPOCHS.
   double get STATE_STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   double get stateStepSize => STATE_STEP_SIZE;
   ///  Number of components per state vector.
@@ -2573,7 +2896,7 @@ class OCM {
   int get stateVectorSize => STATE_VECTOR_SIZE;
   ///  State data as row-major array of doubles.
   ///  Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
-  ///  Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+  ///  Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
   ///  Length must be divisible by STATE_VECTOR_SIZE.
   ///  Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
   List<double>? get STATE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
@@ -2636,10 +2959,16 @@ class OCM {
   ///  Identifier of that calibration evidence (a report or record).
   String? get COV_CALIBRATION_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
   String? get covCalibrationReference => COV_CALIBRATION_REFERENCE;
+  ///  Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+  ///  section 6.2.4). When nonempty, length equals STATE_DATA.length /
+  ///  STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+  ///  Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+  List<String>? get STATE_EPOCHS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 50);
+  List<String>? get stateEpochs => STATE_EPOCHS;
 
   @override
   String toString() {
-    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, covRefFrame: ${covRefFrame}, orbRevnum: ${orbRevnum}, orbAveraging: ${orbAveraging}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}}';
+    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, covRefFrame: ${covRefFrame}, orbRevnum: ${orbRevnum}, orbAveraging: ${orbAveraging}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}, stateEpochs: ${stateEpochs}}';
   }
 }
 
@@ -2657,7 +2986,7 @@ class OCMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(23);
+    fbBuilder.startTable(24);
   }
 
   int addHeaderOffset(int? offset) {
@@ -2752,6 +3081,10 @@ class OCMBuilder {
     fbBuilder.addOffset(22, offset);
     return fbBuilder.offset;
   }
+  int addStateEpochsOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2782,6 +3115,7 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
   final String? _ORB_AVERAGING;
   final covarianceCalibration? _COV_CALIBRATION;
   final String? _COV_CALIBRATION_REFERENCE;
+  final List<String>? _STATE_EPOCHS;
 
   OCMObjectBuilder({
     HeaderObjectBuilder? HEADER,
@@ -2827,6 +3161,8 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     covarianceCalibration? covCalibration,
     String? COV_CALIBRATION_REFERENCE,
     String? covCalibrationReference,
+    List<String>? STATE_EPOCHS,
+    List<String>? stateEpochs,
   })
       : _HEADER = HEADER,
         _METADATA = METADATA,
@@ -2850,7 +3186,8 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
         _ORB_REVNUM = orbRevnum ?? ORB_REVNUM,
         _ORB_AVERAGING = orbAveraging ?? ORB_AVERAGING,
         _COV_CALIBRATION = covCalibration ?? COV_CALIBRATION,
-        _COV_CALIBRATION_REFERENCE = covCalibrationReference ?? COV_CALIBRATION_REFERENCE;
+        _COV_CALIBRATION_REFERENCE = covCalibrationReference ?? COV_CALIBRATION_REFERENCE,
+        _STATE_EPOCHS = stateEpochs ?? STATE_EPOCHS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2884,7 +3221,9 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ORB_AVERAGING!);
     final int? COV_CALIBRATION_REFERENCEOffset = _COV_CALIBRATION_REFERENCE == null ? null
         : fbBuilder.writeString(_COV_CALIBRATION_REFERENCE!);
-    fbBuilder.startTable(23);
+    final int? STATE_EPOCHSOffset = _STATE_EPOCHS == null ? null
+        : fbBuilder.writeList(_STATE_EPOCHS!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(24);
     fbBuilder.addOffset(0, HEADEROffset);
     fbBuilder.addOffset(1, METADATAOffset);
     fbBuilder.addInt8(2, _TRAJ_TYPE?.value);
@@ -2908,6 +3247,7 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(20, ORB_AVERAGINGOffset);
     fbBuilder.addInt8(21, _COV_CALIBRATION?.value);
     fbBuilder.addOffset(22, COV_CALIBRATION_REFERENCEOffset);
+    fbBuilder.addOffset(23, STATE_EPOCHSOffset);
     return fbBuilder.endTable();
   }
 

@@ -3958,6 +3958,30 @@ impl<'a> Maneuver<'a> {
     pub const VT_MAN_UNITS: ::flatbuffers::VOffsetT = 24;
     pub const VT_DATA: ::flatbuffers::VOffsetT = 26;
     pub const VT_MAN_COMMENT: ::flatbuffers::VOffsetT = 28;
+    pub const VT_MAN_COMPOSITION: ::flatbuffers::VOffsetT = 30;
+    pub const VT_MAN_NEXT_ID: ::flatbuffers::VOffsetT = 32;
+    pub const VT_MAN_BASIS_ID: ::flatbuffers::VOffsetT = 34;
+    pub const VT_MAN_PREV_EPOCH: ::flatbuffers::VOffsetT = 36;
+    pub const VT_MAN_NEXT_EPOCH: ::flatbuffers::VOffsetT = 38;
+    pub const VT_MAN_PRED_SOURCE: ::flatbuffers::VOffsetT = 40;
+    pub const VT_GRAV_ASSIST_NAME: ::flatbuffers::VOffsetT = 42;
+    pub const VT_DC_TYPE: ::flatbuffers::VOffsetT = 44;
+    pub const VT_DC_WIN_OPEN: ::flatbuffers::VOffsetT = 46;
+    pub const VT_DC_WIN_CLOSE: ::flatbuffers::VOffsetT = 48;
+    pub const VT_DC_MIN_CYCLES: ::flatbuffers::VOffsetT = 50;
+    pub const VT_DC_MAX_CYCLES: ::flatbuffers::VOffsetT = 52;
+    pub const VT_HAS_DC_MIN_CYCLES: ::flatbuffers::VOffsetT = 54;
+    pub const VT_HAS_DC_MAX_CYCLES: ::flatbuffers::VOffsetT = 56;
+    pub const VT_DC_EXEC_START: ::flatbuffers::VOffsetT = 58;
+    pub const VT_DC_EXEC_STOP: ::flatbuffers::VOffsetT = 60;
+    pub const VT_DC_REF_TIME: ::flatbuffers::VOffsetT = 62;
+    pub const VT_DC_TIME_PULSE_DURATION: ::flatbuffers::VOffsetT = 64;
+    pub const VT_DC_TIME_PULSE_PERIOD: ::flatbuffers::VOffsetT = 66;
+    pub const VT_DC_REF_DIR: ::flatbuffers::VOffsetT = 68;
+    pub const VT_DC_BODY_FRAME: ::flatbuffers::VOffsetT = 70;
+    pub const VT_DC_BODY_TRIGGER: ::flatbuffers::VOffsetT = 72;
+    pub const VT_DC_PA_START_ANGLE: ::flatbuffers::VOffsetT = 74;
+    pub const VT_DC_PA_STOP_ANGLE: ::flatbuffers::VOffsetT = 76;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3970,7 +3994,29 @@ impl<'a> Maneuver<'a> {
         args: &'args ManeuverArgs<'args>
     ) -> ::flatbuffers::WIPOffset<Maneuver<'bldr>> {
         let mut builder = ManeuverBuilder::new(_fbb);
+        builder.add_DC_PA_STOP_ANGLE(args.DC_PA_STOP_ANGLE);
+        builder.add_DC_PA_START_ANGLE(args.DC_PA_START_ANGLE);
+        builder.add_DC_TIME_PULSE_PERIOD(args.DC_TIME_PULSE_PERIOD);
+        builder.add_DC_TIME_PULSE_DURATION(args.DC_TIME_PULSE_DURATION);
         builder.add_MAN_DURATION(args.MAN_DURATION);
+        if let Some(x) = args.DC_BODY_TRIGGER { builder.add_DC_BODY_TRIGGER(x); }
+        if let Some(x) = args.DC_BODY_FRAME { builder.add_DC_BODY_FRAME(x); }
+        if let Some(x) = args.DC_REF_DIR { builder.add_DC_REF_DIR(x); }
+        if let Some(x) = args.DC_REF_TIME { builder.add_DC_REF_TIME(x); }
+        if let Some(x) = args.DC_EXEC_STOP { builder.add_DC_EXEC_STOP(x); }
+        if let Some(x) = args.DC_EXEC_START { builder.add_DC_EXEC_START(x); }
+        builder.add_DC_MAX_CYCLES(args.DC_MAX_CYCLES);
+        builder.add_DC_MIN_CYCLES(args.DC_MIN_CYCLES);
+        if let Some(x) = args.DC_WIN_CLOSE { builder.add_DC_WIN_CLOSE(x); }
+        if let Some(x) = args.DC_WIN_OPEN { builder.add_DC_WIN_OPEN(x); }
+        if let Some(x) = args.DC_TYPE { builder.add_DC_TYPE(x); }
+        if let Some(x) = args.GRAV_ASSIST_NAME { builder.add_GRAV_ASSIST_NAME(x); }
+        if let Some(x) = args.MAN_PRED_SOURCE { builder.add_MAN_PRED_SOURCE(x); }
+        if let Some(x) = args.MAN_NEXT_EPOCH { builder.add_MAN_NEXT_EPOCH(x); }
+        if let Some(x) = args.MAN_PREV_EPOCH { builder.add_MAN_PREV_EPOCH(x); }
+        if let Some(x) = args.MAN_BASIS_ID { builder.add_MAN_BASIS_ID(x); }
+        if let Some(x) = args.MAN_NEXT_ID { builder.add_MAN_NEXT_ID(x); }
+        if let Some(x) = args.MAN_COMPOSITION { builder.add_MAN_COMPOSITION(x); }
         if let Some(x) = args.MAN_COMMENT { builder.add_MAN_COMMENT(x); }
         if let Some(x) = args.DATA { builder.add_DATA(x); }
         if let Some(x) = args.MAN_UNITS { builder.add_MAN_UNITS(x); }
@@ -3983,6 +4029,8 @@ impl<'a> Maneuver<'a> {
         if let Some(x) = args.MAN_DEVICE_ID { builder.add_MAN_DEVICE_ID(x); }
         if let Some(x) = args.MAN_BASIS { builder.add_MAN_BASIS(x); }
         if let Some(x) = args.MAN_ID { builder.add_MAN_ID(x); }
+        builder.add_HAS_DC_MAX_CYCLES(args.HAS_DC_MAX_CYCLES);
+        builder.add_HAS_DC_MIN_CYCLES(args.HAS_DC_MIN_CYCLES);
         builder.finish()
     }
 
@@ -4024,6 +4072,62 @@ impl<'a> Maneuver<'a> {
         let MAN_COMMENT = self.MAN_COMMENT().map(|x| {
             x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
         });
+        let MAN_COMPOSITION = self.MAN_COMPOSITION().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
+        let MAN_NEXT_ID = self.MAN_NEXT_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MAN_BASIS_ID = self.MAN_BASIS_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MAN_PREV_EPOCH = self.MAN_PREV_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MAN_NEXT_EPOCH = self.MAN_NEXT_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MAN_PRED_SOURCE = self.MAN_PRED_SOURCE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let GRAV_ASSIST_NAME = self.GRAV_ASSIST_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DC_TYPE = self.DC_TYPE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DC_WIN_OPEN = self.DC_WIN_OPEN().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DC_WIN_CLOSE = self.DC_WIN_CLOSE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DC_MIN_CYCLES = self.DC_MIN_CYCLES();
+        let DC_MAX_CYCLES = self.DC_MAX_CYCLES();
+        let HAS_DC_MIN_CYCLES = self.HAS_DC_MIN_CYCLES();
+        let HAS_DC_MAX_CYCLES = self.HAS_DC_MAX_CYCLES();
+        let DC_EXEC_START = self.DC_EXEC_START().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DC_EXEC_STOP = self.DC_EXEC_STOP().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DC_REF_TIME = self.DC_REF_TIME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DC_TIME_PULSE_DURATION = self.DC_TIME_PULSE_DURATION();
+        let DC_TIME_PULSE_PERIOD = self.DC_TIME_PULSE_PERIOD();
+        let DC_REF_DIR = self.DC_REF_DIR().map(|x| {
+            x.into_iter().collect()
+        });
+        let DC_BODY_FRAME = self.DC_BODY_FRAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DC_BODY_TRIGGER = self.DC_BODY_TRIGGER().map(|x| {
+            x.into_iter().collect()
+        });
+        let DC_PA_START_ANGLE = self.DC_PA_START_ANGLE();
+        let DC_PA_STOP_ANGLE = self.DC_PA_STOP_ANGLE();
         ManeuverT {
             MAN_ID,
             MAN_BASIS,
@@ -4038,6 +4142,30 @@ impl<'a> Maneuver<'a> {
             MAN_UNITS,
             DATA,
             MAN_COMMENT,
+            MAN_COMPOSITION,
+            MAN_NEXT_ID,
+            MAN_BASIS_ID,
+            MAN_PREV_EPOCH,
+            MAN_NEXT_EPOCH,
+            MAN_PRED_SOURCE,
+            GRAV_ASSIST_NAME,
+            DC_TYPE,
+            DC_WIN_OPEN,
+            DC_WIN_CLOSE,
+            DC_MIN_CYCLES,
+            DC_MAX_CYCLES,
+            HAS_DC_MIN_CYCLES,
+            HAS_DC_MAX_CYCLES,
+            DC_EXEC_START,
+            DC_EXEC_STOP,
+            DC_REF_TIME,
+            DC_TIME_PULSE_DURATION,
+            DC_TIME_PULSE_PERIOD,
+            DC_REF_DIR,
+            DC_BODY_FRAME,
+            DC_BODY_TRIGGER,
+            DC_PA_START_ANGLE,
+            DC_PA_STOP_ANGLE,
         }
     }
 
@@ -4157,6 +4285,225 @@ impl<'a> Maneuver<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(Maneuver::VT_MAN_COMMENT, None)}
     }
+
+    /// Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+    /// CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+    /// DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+    /// Relative time tags are seconds from METADATA.EPOCH_TZERO.
+    #[inline]
+    pub fn MAN_COMPOSITION(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(Maneuver::VT_MAN_COMPOSITION, None)}
+    }
+
+    /// Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+    #[inline]
+    pub fn MAN_NEXT_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_NEXT_ID, None)}
+    }
+
+    /// OD, navigation solution or simulation identifier (Table 6-7).
+    #[inline]
+    pub fn MAN_BASIS_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_BASIS_ID, None)}
+    }
+
+    /// Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+    /// CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+    #[inline]
+    pub fn MAN_PREV_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_PREV_EPOCH, None)}
+    }
+
+    /// Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+    #[inline]
+    pub fn MAN_NEXT_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_NEXT_EPOCH, None)}
+    }
+
+    /// Source of predicted orbit or attitude states (Table 6-7).
+    #[inline]
+    pub fn MAN_PRED_SOURCE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_MAN_PRED_SOURCE, None)}
+    }
+
+    /// Gravitational assist body name (Table 6-7).
+    #[inline]
+    pub fn GRAV_ASSIST_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_GRAV_ASSIST_NAME, None)}
+    }
+
+    /// CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+    #[inline]
+    pub fn DC_TYPE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_DC_TYPE, None)}
+    }
+
+    /// Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+    #[inline]
+    pub fn DC_WIN_OPEN(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_DC_WIN_OPEN, None)}
+    }
+
+    /// Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+    #[inline]
+    pub fn DC_WIN_CLOSE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_DC_WIN_CLOSE, None)}
+    }
+
+    /// Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+    #[inline]
+    pub fn DC_MIN_CYCLES(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(Maneuver::VT_DC_MIN_CYCLES, Some(0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn DC_MAX_CYCLES(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(Maneuver::VT_DC_MAX_CYCLES, Some(0)).unwrap()}
+    }
+
+    /// Presence of the corresponding cycle bound; zero remains representable.
+    #[inline]
+    pub fn HAS_DC_MIN_CYCLES(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(Maneuver::VT_HAS_DC_MIN_CYCLES, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_DC_MAX_CYCLES(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(Maneuver::VT_HAS_DC_MAX_CYCLES, Some(false)).unwrap()}
+    }
+
+    /// First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+    /// Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+    #[inline]
+    pub fn DC_EXEC_START(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_DC_EXEC_START, None)}
+    }
+
+    #[inline]
+    pub fn DC_EXEC_STOP(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_DC_EXEC_STOP, None)}
+    }
+
+    /// Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+    #[inline]
+    pub fn DC_REF_TIME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_DC_REF_TIME, None)}
+    }
+
+    /// Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+    /// Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+    #[inline]
+    pub fn DC_TIME_PULSE_DURATION(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Maneuver::VT_DC_TIME_PULSE_DURATION, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn DC_TIME_PULSE_PERIOD(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Maneuver::VT_DC_TIME_PULSE_PERIOD, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+    /// Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+    #[inline]
+    pub fn DC_REF_DIR(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(Maneuver::VT_DC_REF_DIR, None)}
+    }
+
+    /// Body frame of DC_BODY_TRIGGER (Table 6-7).
+    #[inline]
+    pub fn DC_BODY_FRAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Maneuver::VT_DC_BODY_FRAME, None)}
+    }
+
+    /// Three-component body-frame trigger unit direction (Table 6-7).
+    #[inline]
+    pub fn DC_BODY_TRIGGER(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(Maneuver::VT_DC_BODY_TRIGGER, None)}
+    }
+
+    /// Pulse start and stop phase angles, degrees; NaN means unspecified.
+    /// CCSDS 502.0-B-3 Table 6-7.
+    #[inline]
+    pub fn DC_PA_START_ANGLE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Maneuver::VT_DC_PA_START_ANGLE, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn DC_PA_STOP_ANGLE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Maneuver::VT_DC_PA_STOP_ANGLE, Some(f64::NAN)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for Maneuver<'_> {
@@ -4178,6 +4525,30 @@ impl ::flatbuffers::Verifiable for Maneuver<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("MAN_UNITS", Self::VT_MAN_UNITS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("DATA", Self::VT_DATA, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("MAN_COMMENT", Self::VT_MAN_COMMENT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("MAN_COMPOSITION", Self::VT_MAN_COMPOSITION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_NEXT_ID", Self::VT_MAN_NEXT_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_BASIS_ID", Self::VT_MAN_BASIS_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_PREV_EPOCH", Self::VT_MAN_PREV_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_NEXT_EPOCH", Self::VT_MAN_NEXT_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_PRED_SOURCE", Self::VT_MAN_PRED_SOURCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GRAV_ASSIST_NAME", Self::VT_GRAV_ASSIST_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DC_TYPE", Self::VT_DC_TYPE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DC_WIN_OPEN", Self::VT_DC_WIN_OPEN, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DC_WIN_CLOSE", Self::VT_DC_WIN_CLOSE, false)?
+            .visit_field::<u32>("DC_MIN_CYCLES", Self::VT_DC_MIN_CYCLES, false)?
+            .visit_field::<u32>("DC_MAX_CYCLES", Self::VT_DC_MAX_CYCLES, false)?
+            .visit_field::<bool>("HAS_DC_MIN_CYCLES", Self::VT_HAS_DC_MIN_CYCLES, false)?
+            .visit_field::<bool>("HAS_DC_MAX_CYCLES", Self::VT_HAS_DC_MAX_CYCLES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DC_EXEC_START", Self::VT_DC_EXEC_START, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DC_EXEC_STOP", Self::VT_DC_EXEC_STOP, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DC_REF_TIME", Self::VT_DC_REF_TIME, false)?
+            .visit_field::<f64>("DC_TIME_PULSE_DURATION", Self::VT_DC_TIME_PULSE_DURATION, false)?
+            .visit_field::<f64>("DC_TIME_PULSE_PERIOD", Self::VT_DC_TIME_PULSE_PERIOD, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DC_REF_DIR", Self::VT_DC_REF_DIR, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DC_BODY_FRAME", Self::VT_DC_BODY_FRAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DC_BODY_TRIGGER", Self::VT_DC_BODY_TRIGGER, false)?
+            .visit_field::<f64>("DC_PA_START_ANGLE", Self::VT_DC_PA_START_ANGLE, false)?
+            .visit_field::<f64>("DC_PA_STOP_ANGLE", Self::VT_DC_PA_STOP_ANGLE, false)?
             .finish();
         Ok(())
     }
@@ -4197,6 +4568,30 @@ pub struct ManeuverArgs<'a> {
     pub MAN_UNITS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub DATA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub MAN_COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub MAN_COMPOSITION: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub MAN_NEXT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_BASIS_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_PREV_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_NEXT_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_PRED_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GRAV_ASSIST_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DC_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DC_WIN_OPEN: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DC_WIN_CLOSE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DC_MIN_CYCLES: u32,
+    pub DC_MAX_CYCLES: u32,
+    pub HAS_DC_MIN_CYCLES: bool,
+    pub HAS_DC_MAX_CYCLES: bool,
+    pub DC_EXEC_START: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DC_EXEC_STOP: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DC_REF_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DC_TIME_PULSE_DURATION: f64,
+    pub DC_TIME_PULSE_PERIOD: f64,
+    pub DC_REF_DIR: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub DC_BODY_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DC_BODY_TRIGGER: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub DC_PA_START_ANGLE: f64,
+    pub DC_PA_STOP_ANGLE: f64,
 }
 
 impl<'a> Default for ManeuverArgs<'a> {
@@ -4216,6 +4611,30 @@ impl<'a> Default for ManeuverArgs<'a> {
             MAN_UNITS: None,
             DATA: None,
             MAN_COMMENT: None,
+            MAN_COMPOSITION: None,
+            MAN_NEXT_ID: None,
+            MAN_BASIS_ID: None,
+            MAN_PREV_EPOCH: None,
+            MAN_NEXT_EPOCH: None,
+            MAN_PRED_SOURCE: None,
+            GRAV_ASSIST_NAME: None,
+            DC_TYPE: None,
+            DC_WIN_OPEN: None,
+            DC_WIN_CLOSE: None,
+            DC_MIN_CYCLES: 0,
+            DC_MAX_CYCLES: 0,
+            HAS_DC_MIN_CYCLES: false,
+            HAS_DC_MAX_CYCLES: false,
+            DC_EXEC_START: None,
+            DC_EXEC_STOP: None,
+            DC_REF_TIME: None,
+            DC_TIME_PULSE_DURATION: f64::NAN,
+            DC_TIME_PULSE_PERIOD: f64::NAN,
+            DC_REF_DIR: None,
+            DC_BODY_FRAME: None,
+            DC_BODY_TRIGGER: None,
+            DC_PA_START_ANGLE: f64::NAN,
+            DC_PA_STOP_ANGLE: f64::NAN,
         }
     }
 }
@@ -4292,6 +4711,126 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ManeuverBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_MAN_COMPOSITION(&mut self, MAN_COMPOSITION: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_COMPOSITION, MAN_COMPOSITION);
+    }
+
+    #[inline]
+    pub fn add_MAN_NEXT_ID(&mut self, MAN_NEXT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_NEXT_ID, MAN_NEXT_ID);
+    }
+
+    #[inline]
+    pub fn add_MAN_BASIS_ID(&mut self, MAN_BASIS_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_BASIS_ID, MAN_BASIS_ID);
+    }
+
+    #[inline]
+    pub fn add_MAN_PREV_EPOCH(&mut self, MAN_PREV_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_PREV_EPOCH, MAN_PREV_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_MAN_NEXT_EPOCH(&mut self, MAN_NEXT_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_NEXT_EPOCH, MAN_NEXT_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_MAN_PRED_SOURCE(&mut self, MAN_PRED_SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_MAN_PRED_SOURCE, MAN_PRED_SOURCE);
+    }
+
+    #[inline]
+    pub fn add_GRAV_ASSIST_NAME(&mut self, GRAV_ASSIST_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_GRAV_ASSIST_NAME, GRAV_ASSIST_NAME);
+    }
+
+    #[inline]
+    pub fn add_DC_TYPE(&mut self, DC_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_DC_TYPE, DC_TYPE);
+    }
+
+    #[inline]
+    pub fn add_DC_WIN_OPEN(&mut self, DC_WIN_OPEN: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_DC_WIN_OPEN, DC_WIN_OPEN);
+    }
+
+    #[inline]
+    pub fn add_DC_WIN_CLOSE(&mut self, DC_WIN_CLOSE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_DC_WIN_CLOSE, DC_WIN_CLOSE);
+    }
+
+    #[inline]
+    pub fn add_DC_MIN_CYCLES(&mut self, DC_MIN_CYCLES: u32) {
+        self.fbb_.push_slot::<u32>(Maneuver::VT_DC_MIN_CYCLES, DC_MIN_CYCLES, 0);
+    }
+
+    #[inline]
+    pub fn add_DC_MAX_CYCLES(&mut self, DC_MAX_CYCLES: u32) {
+        self.fbb_.push_slot::<u32>(Maneuver::VT_DC_MAX_CYCLES, DC_MAX_CYCLES, 0);
+    }
+
+    #[inline]
+    pub fn add_HAS_DC_MIN_CYCLES(&mut self, HAS_DC_MIN_CYCLES: bool) {
+        self.fbb_.push_slot::<bool>(Maneuver::VT_HAS_DC_MIN_CYCLES, HAS_DC_MIN_CYCLES, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_DC_MAX_CYCLES(&mut self, HAS_DC_MAX_CYCLES: bool) {
+        self.fbb_.push_slot::<bool>(Maneuver::VT_HAS_DC_MAX_CYCLES, HAS_DC_MAX_CYCLES, false);
+    }
+
+    #[inline]
+    pub fn add_DC_EXEC_START(&mut self, DC_EXEC_START: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_DC_EXEC_START, DC_EXEC_START);
+    }
+
+    #[inline]
+    pub fn add_DC_EXEC_STOP(&mut self, DC_EXEC_STOP: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_DC_EXEC_STOP, DC_EXEC_STOP);
+    }
+
+    #[inline]
+    pub fn add_DC_REF_TIME(&mut self, DC_REF_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_DC_REF_TIME, DC_REF_TIME);
+    }
+
+    #[inline]
+    pub fn add_DC_TIME_PULSE_DURATION(&mut self, DC_TIME_PULSE_DURATION: f64) {
+        self.fbb_.push_slot::<f64>(Maneuver::VT_DC_TIME_PULSE_DURATION, DC_TIME_PULSE_DURATION, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_DC_TIME_PULSE_PERIOD(&mut self, DC_TIME_PULSE_PERIOD: f64) {
+        self.fbb_.push_slot::<f64>(Maneuver::VT_DC_TIME_PULSE_PERIOD, DC_TIME_PULSE_PERIOD, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_DC_REF_DIR(&mut self, DC_REF_DIR: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_DC_REF_DIR, DC_REF_DIR);
+    }
+
+    #[inline]
+    pub fn add_DC_BODY_FRAME(&mut self, DC_BODY_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_DC_BODY_FRAME, DC_BODY_FRAME);
+    }
+
+    #[inline]
+    pub fn add_DC_BODY_TRIGGER(&mut self, DC_BODY_TRIGGER: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Maneuver::VT_DC_BODY_TRIGGER, DC_BODY_TRIGGER);
+    }
+
+    #[inline]
+    pub fn add_DC_PA_START_ANGLE(&mut self, DC_PA_START_ANGLE: f64) {
+        self.fbb_.push_slot::<f64>(Maneuver::VT_DC_PA_START_ANGLE, DC_PA_START_ANGLE, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_DC_PA_STOP_ANGLE(&mut self, DC_PA_STOP_ANGLE: f64) {
+        self.fbb_.push_slot::<f64>(Maneuver::VT_DC_PA_STOP_ANGLE, DC_PA_STOP_ANGLE, f64::NAN);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ManeuverBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ManeuverBuilder {
@@ -4323,6 +4862,30 @@ impl ::core::fmt::Debug for Maneuver<'_> {
         ds.field("MAN_UNITS", &self.MAN_UNITS());
         ds.field("DATA", &self.DATA());
         ds.field("MAN_COMMENT", &self.MAN_COMMENT());
+        ds.field("MAN_COMPOSITION", &self.MAN_COMPOSITION());
+        ds.field("MAN_NEXT_ID", &self.MAN_NEXT_ID());
+        ds.field("MAN_BASIS_ID", &self.MAN_BASIS_ID());
+        ds.field("MAN_PREV_EPOCH", &self.MAN_PREV_EPOCH());
+        ds.field("MAN_NEXT_EPOCH", &self.MAN_NEXT_EPOCH());
+        ds.field("MAN_PRED_SOURCE", &self.MAN_PRED_SOURCE());
+        ds.field("GRAV_ASSIST_NAME", &self.GRAV_ASSIST_NAME());
+        ds.field("DC_TYPE", &self.DC_TYPE());
+        ds.field("DC_WIN_OPEN", &self.DC_WIN_OPEN());
+        ds.field("DC_WIN_CLOSE", &self.DC_WIN_CLOSE());
+        ds.field("DC_MIN_CYCLES", &self.DC_MIN_CYCLES());
+        ds.field("DC_MAX_CYCLES", &self.DC_MAX_CYCLES());
+        ds.field("HAS_DC_MIN_CYCLES", &self.HAS_DC_MIN_CYCLES());
+        ds.field("HAS_DC_MAX_CYCLES", &self.HAS_DC_MAX_CYCLES());
+        ds.field("DC_EXEC_START", &self.DC_EXEC_START());
+        ds.field("DC_EXEC_STOP", &self.DC_EXEC_STOP());
+        ds.field("DC_REF_TIME", &self.DC_REF_TIME());
+        ds.field("DC_TIME_PULSE_DURATION", &self.DC_TIME_PULSE_DURATION());
+        ds.field("DC_TIME_PULSE_PERIOD", &self.DC_TIME_PULSE_PERIOD());
+        ds.field("DC_REF_DIR", &self.DC_REF_DIR());
+        ds.field("DC_BODY_FRAME", &self.DC_BODY_FRAME());
+        ds.field("DC_BODY_TRIGGER", &self.DC_BODY_TRIGGER());
+        ds.field("DC_PA_START_ANGLE", &self.DC_PA_START_ANGLE());
+        ds.field("DC_PA_STOP_ANGLE", &self.DC_PA_STOP_ANGLE());
         ds.finish()
     }
 }
@@ -4343,6 +4906,30 @@ pub struct ManeuverT {
     pub MAN_UNITS: Option<alloc::vec::Vec<alloc::string::String>>,
     pub DATA: Option<alloc::vec::Vec<alloc::string::String>>,
     pub MAN_COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub MAN_COMPOSITION: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub MAN_NEXT_ID: Option<alloc::string::String>,
+    pub MAN_BASIS_ID: Option<alloc::string::String>,
+    pub MAN_PREV_EPOCH: Option<alloc::string::String>,
+    pub MAN_NEXT_EPOCH: Option<alloc::string::String>,
+    pub MAN_PRED_SOURCE: Option<alloc::string::String>,
+    pub GRAV_ASSIST_NAME: Option<alloc::string::String>,
+    pub DC_TYPE: Option<alloc::string::String>,
+    pub DC_WIN_OPEN: Option<alloc::string::String>,
+    pub DC_WIN_CLOSE: Option<alloc::string::String>,
+    pub DC_MIN_CYCLES: u32,
+    pub DC_MAX_CYCLES: u32,
+    pub HAS_DC_MIN_CYCLES: bool,
+    pub HAS_DC_MAX_CYCLES: bool,
+    pub DC_EXEC_START: Option<alloc::string::String>,
+    pub DC_EXEC_STOP: Option<alloc::string::String>,
+    pub DC_REF_TIME: Option<alloc::string::String>,
+    pub DC_TIME_PULSE_DURATION: f64,
+    pub DC_TIME_PULSE_PERIOD: f64,
+    pub DC_REF_DIR: Option<alloc::vec::Vec<f64>>,
+    pub DC_BODY_FRAME: Option<alloc::string::String>,
+    pub DC_BODY_TRIGGER: Option<alloc::vec::Vec<f64>>,
+    pub DC_PA_START_ANGLE: f64,
+    pub DC_PA_STOP_ANGLE: f64,
 }
 
 impl Default for ManeuverT {
@@ -4361,6 +4948,30 @@ impl Default for ManeuverT {
             MAN_UNITS: None,
             DATA: None,
             MAN_COMMENT: None,
+            MAN_COMPOSITION: None,
+            MAN_NEXT_ID: None,
+            MAN_BASIS_ID: None,
+            MAN_PREV_EPOCH: None,
+            MAN_NEXT_EPOCH: None,
+            MAN_PRED_SOURCE: None,
+            GRAV_ASSIST_NAME: None,
+            DC_TYPE: None,
+            DC_WIN_OPEN: None,
+            DC_WIN_CLOSE: None,
+            DC_MIN_CYCLES: 0,
+            DC_MAX_CYCLES: 0,
+            HAS_DC_MIN_CYCLES: false,
+            HAS_DC_MAX_CYCLES: false,
+            DC_EXEC_START: None,
+            DC_EXEC_STOP: None,
+            DC_REF_TIME: None,
+            DC_TIME_PULSE_DURATION: f64::NAN,
+            DC_TIME_PULSE_PERIOD: f64::NAN,
+            DC_REF_DIR: None,
+            DC_BODY_FRAME: None,
+            DC_BODY_TRIGGER: None,
+            DC_PA_START_ANGLE: f64::NAN,
+            DC_PA_STOP_ANGLE: f64::NAN,
         }
     }
 }
@@ -4407,6 +5018,62 @@ impl ManeuverT {
         let MAN_COMMENT = self.MAN_COMMENT.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
         });
+        let MAN_COMPOSITION = self.MAN_COMPOSITION.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
+        let MAN_NEXT_ID = self.MAN_NEXT_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MAN_BASIS_ID = self.MAN_BASIS_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MAN_PREV_EPOCH = self.MAN_PREV_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MAN_NEXT_EPOCH = self.MAN_NEXT_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MAN_PRED_SOURCE = self.MAN_PRED_SOURCE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let GRAV_ASSIST_NAME = self.GRAV_ASSIST_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DC_TYPE = self.DC_TYPE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DC_WIN_OPEN = self.DC_WIN_OPEN.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DC_WIN_CLOSE = self.DC_WIN_CLOSE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DC_MIN_CYCLES = self.DC_MIN_CYCLES;
+        let DC_MAX_CYCLES = self.DC_MAX_CYCLES;
+        let HAS_DC_MIN_CYCLES = self.HAS_DC_MIN_CYCLES;
+        let HAS_DC_MAX_CYCLES = self.HAS_DC_MAX_CYCLES;
+        let DC_EXEC_START = self.DC_EXEC_START.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DC_EXEC_STOP = self.DC_EXEC_STOP.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DC_REF_TIME = self.DC_REF_TIME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DC_TIME_PULSE_DURATION = self.DC_TIME_PULSE_DURATION;
+        let DC_TIME_PULSE_PERIOD = self.DC_TIME_PULSE_PERIOD;
+        let DC_REF_DIR = self.DC_REF_DIR.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let DC_BODY_FRAME = self.DC_BODY_FRAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DC_BODY_TRIGGER = self.DC_BODY_TRIGGER.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let DC_PA_START_ANGLE = self.DC_PA_START_ANGLE;
+        let DC_PA_STOP_ANGLE = self.DC_PA_STOP_ANGLE;
         Maneuver::create(_fbb, &ManeuverArgs{
             MAN_ID,
             MAN_BASIS,
@@ -4421,6 +5088,30 @@ impl ManeuverT {
             MAN_UNITS,
             DATA,
             MAN_COMMENT,
+            MAN_COMPOSITION,
+            MAN_NEXT_ID,
+            MAN_BASIS_ID,
+            MAN_PREV_EPOCH,
+            MAN_NEXT_EPOCH,
+            MAN_PRED_SOURCE,
+            GRAV_ASSIST_NAME,
+            DC_TYPE,
+            DC_WIN_OPEN,
+            DC_WIN_CLOSE,
+            DC_MIN_CYCLES,
+            DC_MAX_CYCLES,
+            HAS_DC_MIN_CYCLES,
+            HAS_DC_MAX_CYCLES,
+            DC_EXEC_START,
+            DC_EXEC_STOP,
+            DC_REF_TIME,
+            DC_TIME_PULSE_DURATION,
+            DC_TIME_PULSE_PERIOD,
+            DC_REF_DIR,
+            DC_BODY_FRAME,
+            DC_BODY_TRIGGER,
+            DC_PA_START_ANGLE,
+            DC_PA_STOP_ANGLE,
         })
     }
 }
@@ -5474,6 +6165,7 @@ impl<'a> OCM<'a> {
     pub const VT_ORB_AVERAGING: ::flatbuffers::VOffsetT = 44;
     pub const VT_COV_CALIBRATION: ::flatbuffers::VOffsetT = 46;
     pub const VT_COV_CALIBRATION_REFERENCE: ::flatbuffers::VOffsetT = 48;
+    pub const VT_STATE_EPOCHS: ::flatbuffers::VOffsetT = 50;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5487,6 +6179,7 @@ impl<'a> OCM<'a> {
     ) -> ::flatbuffers::WIPOffset<OCM<'bldr>> {
         let mut builder = OCMBuilder::new(_fbb);
         builder.add_STATE_STEP_SIZE(args.STATE_STEP_SIZE);
+        if let Some(x) = args.STATE_EPOCHS { builder.add_STATE_EPOCHS(x); }
         if let Some(x) = args.COV_CALIBRATION_REFERENCE { builder.add_COV_CALIBRATION_REFERENCE(x); }
         if let Some(x) = args.ORB_AVERAGING { builder.add_ORB_AVERAGING(x); }
         builder.add_ORB_REVNUM(args.ORB_REVNUM);
@@ -5572,6 +6265,9 @@ impl<'a> OCM<'a> {
         let COV_CALIBRATION_REFERENCE = self.COV_CALIBRATION_REFERENCE().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let STATE_EPOCHS = self.STATE_EPOCHS().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
         OCMT {
             HEADER,
             METADATA,
@@ -5596,6 +6292,7 @@ impl<'a> OCM<'a> {
             ORB_AVERAGING,
             COV_CALIBRATION,
             COV_CALIBRATION_REFERENCE,
+            STATE_EPOCHS,
         }
     }
 
@@ -5639,7 +6336,7 @@ impl<'a> OCM<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCM::VT_TRAJ_TYPE_DESCRIPTION, None)}
     }
 
-    /// Time interval between state vectors in seconds (required for time-series data).
+    /// Time interval between state vectors in seconds; required without STATE_EPOCHS.
     #[inline]
     pub fn STATE_STEP_SIZE(&self) -> f64 {
         // Safety:
@@ -5662,7 +6359,7 @@ impl<'a> OCM<'a> {
 
     /// State data as row-major array of doubles.
     /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
-    /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+    /// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
     /// Length must be divisible by STATE_VECTOR_SIZE.
     /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
     #[inline]
@@ -5827,6 +6524,18 @@ impl<'a> OCM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCM::VT_COV_CALIBRATION_REFERENCE, None)}
     }
+
+    /// Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+    /// section 6.2.4). When nonempty, length equals STATE_DATA.length /
+    /// STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+    /// Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+    #[inline]
+    pub fn STATE_EPOCHS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OCM::VT_STATE_EPOCHS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OCM<'_> {
@@ -5858,6 +6567,7 @@ impl ::flatbuffers::Verifiable for OCM<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORB_AVERAGING", Self::VT_ORB_AVERAGING, false)?
             .visit_field::<covarianceCalibration>("COV_CALIBRATION", Self::VT_COV_CALIBRATION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_CALIBRATION_REFERENCE", Self::VT_COV_CALIBRATION_REFERENCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("STATE_EPOCHS", Self::VT_STATE_EPOCHS, false)?
             .finish();
         Ok(())
     }
@@ -5887,6 +6597,7 @@ pub struct OCMArgs<'a> {
     pub ORB_AVERAGING: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub COV_CALIBRATION: covarianceCalibration,
     pub COV_CALIBRATION_REFERENCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub STATE_EPOCHS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 
 impl<'a> Default for OCMArgs<'a> {
@@ -5916,6 +6627,7 @@ impl<'a> Default for OCMArgs<'a> {
             ORB_AVERAGING: None,
             COV_CALIBRATION: covarianceCalibration::Unspecified,
             COV_CALIBRATION_REFERENCE: None,
+            STATE_EPOCHS: None,
         }
     }
 }
@@ -6042,6 +6754,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_STATE_EPOCHS(&mut self, STATE_EPOCHS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_STATE_EPOCHS, STATE_EPOCHS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OCMBuilder {
@@ -6083,6 +6800,7 @@ impl ::core::fmt::Debug for OCM<'_> {
         ds.field("ORB_AVERAGING", &self.ORB_AVERAGING());
         ds.field("COV_CALIBRATION", &self.COV_CALIBRATION());
         ds.field("COV_CALIBRATION_REFERENCE", &self.COV_CALIBRATION_REFERENCE());
+        ds.field("STATE_EPOCHS", &self.STATE_EPOCHS());
         ds.finish()
     }
 }
@@ -6113,6 +6831,7 @@ pub struct OCMT {
     pub ORB_AVERAGING: Option<alloc::string::String>,
     pub COV_CALIBRATION: covarianceCalibration,
     pub COV_CALIBRATION_REFERENCE: Option<alloc::string::String>,
+    pub STATE_EPOCHS: Option<alloc::vec::Vec<alloc::string::String>>,
 }
 
 impl Default for OCMT {
@@ -6141,6 +6860,7 @@ impl Default for OCMT {
             ORB_AVERAGING: None,
             COV_CALIBRATION: covarianceCalibration::Unspecified,
             COV_CALIBRATION_REFERENCE: None,
+            STATE_EPOCHS: None,
         }
     }
 }
@@ -6209,6 +6929,9 @@ impl OCMT {
         let COV_CALIBRATION_REFERENCE = self.COV_CALIBRATION_REFERENCE.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let STATE_EPOCHS = self.STATE_EPOCHS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
         OCM::create(_fbb, &OCMArgs{
             HEADER,
             METADATA,
@@ -6233,6 +6956,7 @@ impl OCMT {
             ORB_AVERAGING,
             COV_CALIBRATION,
             COV_CALIBRATION_REFERENCE,
+            STATE_EPOCHS,
         })
     }
 }

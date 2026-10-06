@@ -489,6 +489,77 @@ inline const char *EnumNamecqrDataOrigin(cqrDataOrigin e) {
   return EnumNamescqrDataOrigin()[index];
 }
 
+/// On-orbit screening geometry; dimensions are metres.
+enum cqrVolumeGeometry : uint8_t {
+  cqrVolumeGeometry_SPHERICAL = 0,
+  cqrVolumeGeometry_ELLIPSOIDAL = 1,
+  cqrVolumeGeometry_BOX = 2,
+  cqrVolumeGeometry_MIN = cqrVolumeGeometry_SPHERICAL,
+  cqrVolumeGeometry_MAX = cqrVolumeGeometry_BOX
+};
+
+inline const cqrVolumeGeometry (&EnumValuescqrVolumeGeometry())[3] {
+  static const cqrVolumeGeometry values[] = {
+    cqrVolumeGeometry_SPHERICAL,
+    cqrVolumeGeometry_ELLIPSOIDAL,
+    cqrVolumeGeometry_BOX
+  };
+  return values;
+}
+
+inline const char * const *EnumNamescqrVolumeGeometry() {
+  static const char * const names[4] = {
+    "SPHERICAL",
+    "ELLIPSOIDAL",
+    "BOX",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamecqrVolumeGeometry(cqrVolumeGeometry e) {
+  if (::flatbuffers::IsOutRange(e, cqrVolumeGeometry_SPHERICAL, cqrVolumeGeometry_BOX)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamescqrVolumeGeometry()[index];
+}
+
+/// Object defining the centre and instantaneous RTN axes of a volume.
+enum cqrVolumeAnchor : uint8_t {
+  cqrVolumeAnchor_UNSPECIFIED = 0,
+  cqrVolumeAnchor_PRIMARY = 1,
+  cqrVolumeAnchor_SECONDARY = 2,
+  cqrVolumeAnchor_BOTH = 3,
+  cqrVolumeAnchor_MIN = cqrVolumeAnchor_UNSPECIFIED,
+  cqrVolumeAnchor_MAX = cqrVolumeAnchor_BOTH
+};
+
+inline const cqrVolumeAnchor (&EnumValuescqrVolumeAnchor())[4] {
+  static const cqrVolumeAnchor values[] = {
+    cqrVolumeAnchor_UNSPECIFIED,
+    cqrVolumeAnchor_PRIMARY,
+    cqrVolumeAnchor_SECONDARY,
+    cqrVolumeAnchor_BOTH
+  };
+  return values;
+}
+
+inline const char * const *EnumNamescqrVolumeAnchor() {
+  static const char * const names[5] = {
+    "UNSPECIFIED",
+    "PRIMARY",
+    "SECONDARY",
+    "BOTH",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamecqrVolumeAnchor(cqrVolumeAnchor e) {
+  if (::flatbuffers::IsOutRange(e, cqrVolumeAnchor_UNSPECIFIED, cqrVolumeAnchor_BOTH)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamescqrVolumeAnchor()[index];
+}
+
 /// Launch and reentry screening (normative). A launch window is screened by
 /// sweeping liftoff times; each launched object (stage, payload or jettisoned
 /// component) is one segment whose trajectory is fixed relative to liftoff.
@@ -1084,7 +1155,12 @@ struct CQRScreeningControls FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
     VT_USE_PERIGEE_FILTER = 22,
     VT_PROGRESS_INTERVAL_SECONDS = 24,
     VT_HAS_PROGRESS_INTERVAL_SECONDS = 26,
-    VT_ALGORITHM = 28
+    VT_ALGORITHM = 28,
+    VT_SCREENING = 30,
+    VT_RADIAL_M = 32,
+    VT_IN_TRACK_M = 34,
+    VT_CROSS_TRACK_M = 36,
+    VT_VOLUME_CENTER = 38
   };
   const TIMInstant *START_EPOCH() const {
     return GetPointer<const TIMInstant *>(VT_START_EPOCH);
@@ -1127,6 +1203,28 @@ struct CQRScreeningControls FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
   cqrProbabilityAlgorithm ALGORITHM() const {
     return static_cast<cqrProbabilityAlgorithm>(GetField<uint8_t>(VT_ALGORITHM, 3));
   }
+  /// SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+  /// Admit local minima of relative distance inside or on the selected volume.
+  cqrVolumeGeometry SCREENING() const {
+    return static_cast<cqrVolumeGeometry>(GetField<uint8_t>(VT_SCREENING, 0));
+  }
+  /// RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+  double RADIAL_M() const {
+    return GetField<double>(VT_RADIAL_M, 0.0);
+  }
+  double IN_TRACK_M() const {
+    return GetField<double>(VT_IN_TRACK_M, 0.0);
+  }
+  double CROSS_TRACK_M() const {
+    return GetField<double>(VT_CROSS_TRACK_M, 0.0);
+  }
+  /// PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+  /// R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+  /// BOTH tests each object's volume independently and admits their union.
+  /// UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+  cqrVolumeAnchor VOLUME_CENTER() const {
+    return static_cast<cqrVolumeAnchor>(GetField<uint8_t>(VT_VOLUME_CENTER, 1));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1144,6 +1242,11 @@ struct CQRScreeningControls FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
            VerifyField<double>(verifier, VT_PROGRESS_INTERVAL_SECONDS, 8) &&
            VerifyField<uint8_t>(verifier, VT_HAS_PROGRESS_INTERVAL_SECONDS, 1) &&
            VerifyField<uint8_t>(verifier, VT_ALGORITHM, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SCREENING, 1) &&
+           VerifyField<double>(verifier, VT_RADIAL_M, 8) &&
+           VerifyField<double>(verifier, VT_IN_TRACK_M, 8) &&
+           VerifyField<double>(verifier, VT_CROSS_TRACK_M, 8) &&
+           VerifyField<uint8_t>(verifier, VT_VOLUME_CENTER, 1) &&
            verifier.EndTable();
   }
 };
@@ -1191,6 +1294,21 @@ struct CQRScreeningControlsBuilder {
   void add_ALGORITHM(cqrProbabilityAlgorithm ALGORITHM) {
     fbb_.AddElement<uint8_t>(CQRScreeningControls::VT_ALGORITHM, static_cast<uint8_t>(ALGORITHM), 3);
   }
+  void add_SCREENING(cqrVolumeGeometry SCREENING) {
+    fbb_.AddElement<uint8_t>(CQRScreeningControls::VT_SCREENING, static_cast<uint8_t>(SCREENING), 0);
+  }
+  void add_RADIAL_M(double RADIAL_M) {
+    fbb_.AddElement<double>(CQRScreeningControls::VT_RADIAL_M, RADIAL_M, 0.0);
+  }
+  void add_IN_TRACK_M(double IN_TRACK_M) {
+    fbb_.AddElement<double>(CQRScreeningControls::VT_IN_TRACK_M, IN_TRACK_M, 0.0);
+  }
+  void add_CROSS_TRACK_M(double CROSS_TRACK_M) {
+    fbb_.AddElement<double>(CQRScreeningControls::VT_CROSS_TRACK_M, CROSS_TRACK_M, 0.0);
+  }
+  void add_VOLUME_CENTER(cqrVolumeAnchor VOLUME_CENTER) {
+    fbb_.AddElement<uint8_t>(CQRScreeningControls::VT_VOLUME_CENTER, static_cast<uint8_t>(VOLUME_CENTER), 1);
+  }
   explicit CQRScreeningControlsBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1217,8 +1335,16 @@ inline ::flatbuffers::Offset<CQRScreeningControls> CreateCQRScreeningControls(
     bool USE_PERIGEE_FILTER = true,
     double PROGRESS_INTERVAL_SECONDS = 0.0,
     bool HAS_PROGRESS_INTERVAL_SECONDS = false,
-    cqrProbabilityAlgorithm ALGORITHM = cqrProbabilityAlgorithm_ALFANO_MAXIMUM) {
+    cqrProbabilityAlgorithm ALGORITHM = cqrProbabilityAlgorithm_ALFANO_MAXIMUM,
+    cqrVolumeGeometry SCREENING = cqrVolumeGeometry_SPHERICAL,
+    double RADIAL_M = 0.0,
+    double IN_TRACK_M = 0.0,
+    double CROSS_TRACK_M = 0.0,
+    cqrVolumeAnchor VOLUME_CENTER = cqrVolumeAnchor_PRIMARY) {
   CQRScreeningControlsBuilder builder_(_fbb);
+  builder_.add_CROSS_TRACK_M(CROSS_TRACK_M);
+  builder_.add_IN_TRACK_M(IN_TRACK_M);
+  builder_.add_RADIAL_M(RADIAL_M);
   builder_.add_PROGRESS_INTERVAL_SECONDS(PROGRESS_INTERVAL_SECONDS);
   builder_.add_COMBINED_RADIUS_M(COMBINED_RADIUS_M);
   builder_.add_REFINEMENT_TOLERANCE_SECONDS(REFINEMENT_TOLERANCE_SECONDS);
@@ -1227,6 +1353,8 @@ inline ::flatbuffers::Offset<CQRScreeningControls> CreateCQRScreeningControls(
   builder_.add_DURATION_SECONDS(DURATION_SECONDS);
   builder_.add_REQUESTED_WORKERS(REQUESTED_WORKERS);
   builder_.add_START_EPOCH(START_EPOCH);
+  builder_.add_VOLUME_CENTER(VOLUME_CENTER);
+  builder_.add_SCREENING(SCREENING);
   builder_.add_ALGORITHM(ALGORITHM);
   builder_.add_HAS_PROGRESS_INTERVAL_SECONDS(HAS_PROGRESS_INTERVAL_SECONDS);
   builder_.add_USE_PERIGEE_FILTER(USE_PERIGEE_FILTER);
@@ -2135,7 +2263,9 @@ struct CQREvent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PRIMARY_RADIUS_BASIS = 66,
     VT_SECONDARY_RADIUS_BASIS = 68,
     VT_PRIMARY_COVARIANCE_BASIS = 70,
-    VT_SECONDARY_COVARIANCE_BASIS = 72
+    VT_SECONDARY_COVARIANCE_BASIS = 72,
+    VT_SCREENING = 74,
+    VT_ADMITTED_BY = 76
   };
   const ::flatbuffers::String *PRIMARY_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PRIMARY_ID);
@@ -2256,6 +2386,15 @@ struct CQREvent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS() const {
     return static_cast<cqrCovarianceBasis>(GetField<uint8_t>(VT_SECONDARY_COVARIANCE_BASIS, 0));
   }
+  /// Geometry used by the screening request that admitted this event.
+  cqrVolumeGeometry SCREENING() const {
+    return static_cast<cqrVolumeGeometry>(GetField<uint8_t>(VT_SCREENING, 0));
+  }
+  /// Volume(s) containing the other object at TCA; BOTH means both tests passed.
+  /// UNSPECIFIED means admission provenance was not reported.
+  cqrVolumeAnchor ADMITTED_BY() const {
+    return static_cast<cqrVolumeAnchor>(GetField<uint8_t>(VT_ADMITTED_BY, 0));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2307,6 +2446,8 @@ struct CQREvent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_SECONDARY_RADIUS_BASIS, 1) &&
            VerifyField<uint8_t>(verifier, VT_PRIMARY_COVARIANCE_BASIS, 1) &&
            VerifyField<uint8_t>(verifier, VT_SECONDARY_COVARIANCE_BASIS, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SCREENING, 1) &&
+           VerifyField<uint8_t>(verifier, VT_ADMITTED_BY, 1) &&
            verifier.EndTable();
   }
 };
@@ -2420,6 +2561,12 @@ struct CQREventBuilder {
   void add_SECONDARY_COVARIANCE_BASIS(cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS) {
     fbb_.AddElement<uint8_t>(CQREvent::VT_SECONDARY_COVARIANCE_BASIS, static_cast<uint8_t>(SECONDARY_COVARIANCE_BASIS), 0);
   }
+  void add_SCREENING(cqrVolumeGeometry SCREENING) {
+    fbb_.AddElement<uint8_t>(CQREvent::VT_SCREENING, static_cast<uint8_t>(SCREENING), 0);
+  }
+  void add_ADMITTED_BY(cqrVolumeAnchor ADMITTED_BY) {
+    fbb_.AddElement<uint8_t>(CQREvent::VT_ADMITTED_BY, static_cast<uint8_t>(ADMITTED_BY), 0);
+  }
   explicit CQREventBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2470,7 +2617,9 @@ inline ::flatbuffers::Offset<CQREvent> CreateCQREvent(
     cqrHardBodyRadiusBasis PRIMARY_RADIUS_BASIS = cqrHardBodyRadiusBasis_UNSPECIFIED,
     cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS = cqrHardBodyRadiusBasis_UNSPECIFIED,
     cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS = cqrCovarianceBasis_UNSPECIFIED,
-    cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis_UNSPECIFIED) {
+    cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis_UNSPECIFIED,
+    cqrVolumeGeometry SCREENING = cqrVolumeGeometry_SPHERICAL,
+    cqrVolumeAnchor ADMITTED_BY = cqrVolumeAnchor_UNSPECIFIED) {
   CQREventBuilder builder_(_fbb);
   builder_.add_SECONDARY_HARD_BODY_RADIUS_M(SECONDARY_HARD_BODY_RADIUS_M);
   builder_.add_PRIMARY_HARD_BODY_RADIUS_M(PRIMARY_HARD_BODY_RADIUS_M);
@@ -2496,6 +2645,8 @@ inline ::flatbuffers::Offset<CQREvent> CreateCQREvent(
   builder_.add_PRIMARY_NAME(PRIMARY_NAME);
   builder_.add_SECONDARY_ID(SECONDARY_ID);
   builder_.add_PRIMARY_ID(PRIMARY_ID);
+  builder_.add_ADMITTED_BY(ADMITTED_BY);
+  builder_.add_SCREENING(SCREENING);
   builder_.add_SECONDARY_COVARIANCE_BASIS(SECONDARY_COVARIANCE_BASIS);
   builder_.add_PRIMARY_COVARIANCE_BASIS(PRIMARY_COVARIANCE_BASIS);
   builder_.add_SECONDARY_RADIUS_BASIS(SECONDARY_RADIUS_BASIS);
@@ -2546,7 +2697,9 @@ inline ::flatbuffers::Offset<CQREvent> CreateCQREventDirect(
     cqrHardBodyRadiusBasis PRIMARY_RADIUS_BASIS = cqrHardBodyRadiusBasis_UNSPECIFIED,
     cqrHardBodyRadiusBasis SECONDARY_RADIUS_BASIS = cqrHardBodyRadiusBasis_UNSPECIFIED,
     cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS = cqrCovarianceBasis_UNSPECIFIED,
-    cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis_UNSPECIFIED) {
+    cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis_UNSPECIFIED,
+    cqrVolumeGeometry SCREENING = cqrVolumeGeometry_SPHERICAL,
+    cqrVolumeAnchor ADMITTED_BY = cqrVolumeAnchor_UNSPECIFIED) {
   auto PRIMARY_ID__ = PRIMARY_ID ? _fbb.CreateString(PRIMARY_ID) : 0;
   auto SECONDARY_ID__ = SECONDARY_ID ? _fbb.CreateString(SECONDARY_ID) : 0;
   auto PRIMARY_NAME__ = PRIMARY_NAME ? _fbb.CreateString(PRIMARY_NAME) : 0;
@@ -2587,7 +2740,9 @@ inline ::flatbuffers::Offset<CQREvent> CreateCQREventDirect(
       PRIMARY_RADIUS_BASIS,
       SECONDARY_RADIUS_BASIS,
       PRIMARY_COVARIANCE_BASIS,
-      SECONDARY_COVARIANCE_BASIS);
+      SECONDARY_COVARIANCE_BASIS,
+      SCREENING,
+      ADMITTED_BY);
 }
 
 struct CQRScreeningStatistics FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

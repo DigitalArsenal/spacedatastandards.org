@@ -117,6 +117,15 @@ public final class CQREvent extends com.google.flatbuffers.Table {
    */
   public int PRIMARY_COVARIANCE_BASIS() { int o = __offset(70); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   public int SECONDARY_COVARIANCE_BASIS() { int o = __offset(72); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Geometry used by the screening request that admitted this event.
+   */
+  public int SCREENING() { int o = __offset(74); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Volume(s) containing the other object at TCA; BOTH means both tests passed.
+   * UNSPECIFIED means admission provenance was not reported.
+   */
+  public int ADMITTED_BY() { int o = __offset(76); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 
   public static int createCQREvent(FlatBufferBuilder builder,
       int PRIMARY_IDOffset,
@@ -153,8 +162,10 @@ public final class CQREvent extends com.google.flatbuffers.Table {
       int PRIMARY_RADIUS_BASIS,
       int SECONDARY_RADIUS_BASIS,
       int PRIMARY_COVARIANCE_BASIS,
-      int SECONDARY_COVARIANCE_BASIS) {
-    builder.startTable(35);
+      int SECONDARY_COVARIANCE_BASIS,
+      int SCREENING,
+      int ADMITTED_BY) {
+    builder.startTable(37);
     CQREvent.addSecondaryHardBodyRadiusM(builder, SECONDARY_HARD_BODY_RADIUS_M);
     CQREvent.addPrimaryHardBodyRadiusM(builder, PRIMARY_HARD_BODY_RADIUS_M);
     CQREvent.addCombinedRadiusM(builder, COMBINED_RADIUS_M);
@@ -179,6 +190,8 @@ public final class CQREvent extends com.google.flatbuffers.Table {
     CQREvent.addPrimaryName(builder, PRIMARY_NAMEOffset);
     CQREvent.addSecondaryId(builder, SECONDARY_IDOffset);
     CQREvent.addPrimaryId(builder, PRIMARY_IDOffset);
+    CQREvent.addAdmittedBy(builder, ADMITTED_BY);
+    CQREvent.addScreening(builder, SCREENING);
     CQREvent.addSecondaryCovarianceBasis(builder, SECONDARY_COVARIANCE_BASIS);
     CQREvent.addPrimaryCovarianceBasis(builder, PRIMARY_COVARIANCE_BASIS);
     CQREvent.addSecondaryRadiusBasis(builder, SECONDARY_RADIUS_BASIS);
@@ -193,7 +206,7 @@ public final class CQREvent extends com.google.flatbuffers.Table {
     return CQREvent.endCQREvent(builder);
   }
 
-  public static void startCQREvent(FlatBufferBuilder builder) { builder.startTable(35); }
+  public static void startCQREvent(FlatBufferBuilder builder) { builder.startTable(37); }
   public static void addPrimaryId(FlatBufferBuilder builder, int PRIMARY_IDOffset) { builder.addOffset(0, PRIMARY_IDOffset, 0); }
   public static void addSecondaryId(FlatBufferBuilder builder, int SECONDARY_IDOffset) { builder.addOffset(1, SECONDARY_IDOffset, 0); }
   public static void addPrimaryName(FlatBufferBuilder builder, int PRIMARY_NAMEOffset) { builder.addOffset(2, PRIMARY_NAMEOffset, 0); }
@@ -229,6 +242,8 @@ public final class CQREvent extends com.google.flatbuffers.Table {
   public static void addSecondaryRadiusBasis(FlatBufferBuilder builder, int SECONDARY_RADIUS_BASIS) { builder.addByte(32, (byte) SECONDARY_RADIUS_BASIS, (byte) 0); }
   public static void addPrimaryCovarianceBasis(FlatBufferBuilder builder, int PRIMARY_COVARIANCE_BASIS) { builder.addByte(33, (byte) PRIMARY_COVARIANCE_BASIS, (byte) 0); }
   public static void addSecondaryCovarianceBasis(FlatBufferBuilder builder, int SECONDARY_COVARIANCE_BASIS) { builder.addByte(34, (byte) SECONDARY_COVARIANCE_BASIS, (byte) 0); }
+  public static void addScreening(FlatBufferBuilder builder, int SCREENING) { builder.addByte(35, (byte) SCREENING, (byte) 0); }
+  public static void addAdmittedBy(FlatBufferBuilder builder, int ADMITTED_BY) { builder.addByte(36, (byte) ADMITTED_BY, (byte) 0); }
   public static int endCQREvent(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // PRIMARY_ID

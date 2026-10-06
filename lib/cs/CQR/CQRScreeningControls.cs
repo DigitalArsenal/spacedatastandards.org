@@ -32,6 +32,18 @@ public struct CQRScreeningControls : IFlatbufferObject
   /// True when PROGRESS_INTERVAL_SECONDS carries a value; false means absent.
   public bool HAS_PROGRESS_INTERVAL_SECONDS { get { int o = __p.__offset(26); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public cqrProbabilityAlgorithm ALGORITHM { get { int o = __p.__offset(28); return o != 0 ? (cqrProbabilityAlgorithm)__p.bb.Get(o + __p.bb_pos) : cqrProbabilityAlgorithm.ALFANO_MAXIMUM; } }
+  /// SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+  /// Admit local minima of relative distance inside or on the selected volume.
+  public cqrVolumeGeometry SCREENING { get { int o = __p.__offset(30); return o != 0 ? (cqrVolumeGeometry)__p.bb.Get(o + __p.bb_pos) : cqrVolumeGeometry.SPHERICAL; } }
+  /// RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+  public double RADIAL_M { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double IN_TRACK_M { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double CROSS_TRACK_M { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+  /// R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+  /// BOTH tests each object's volume independently and admits their union.
+  /// UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+  public cqrVolumeAnchor VOLUME_CENTER { get { int o = __p.__offset(38); return o != 0 ? (cqrVolumeAnchor)__p.bb.Get(o + __p.bb_pos) : cqrVolumeAnchor.PRIMARY; } }
 
   public static Offset<CQRScreeningControls> CreateCQRScreeningControls(FlatBufferBuilder builder,
       Offset<TIMInstant> START_EPOCHOffset = default(Offset<TIMInstant>),
@@ -46,8 +58,16 @@ public struct CQRScreeningControls : IFlatbufferObject
       bool USE_PERIGEE_FILTER = true,
       double PROGRESS_INTERVAL_SECONDS = 0.0,
       bool HAS_PROGRESS_INTERVAL_SECONDS = false,
-      cqrProbabilityAlgorithm ALGORITHM = cqrProbabilityAlgorithm.ALFANO_MAXIMUM) {
-    builder.StartTable(13);
+      cqrProbabilityAlgorithm ALGORITHM = cqrProbabilityAlgorithm.ALFANO_MAXIMUM,
+      cqrVolumeGeometry SCREENING = cqrVolumeGeometry.SPHERICAL,
+      double RADIAL_M = 0.0,
+      double IN_TRACK_M = 0.0,
+      double CROSS_TRACK_M = 0.0,
+      cqrVolumeAnchor VOLUME_CENTER = cqrVolumeAnchor.PRIMARY) {
+    builder.StartTable(18);
+    CQRScreeningControls.AddCROSS_TRACK_M(builder, CROSS_TRACK_M);
+    CQRScreeningControls.AddIN_TRACK_M(builder, IN_TRACK_M);
+    CQRScreeningControls.AddRADIAL_M(builder, RADIAL_M);
     CQRScreeningControls.AddPROGRESS_INTERVAL_SECONDS(builder, PROGRESS_INTERVAL_SECONDS);
     CQRScreeningControls.AddCOMBINED_RADIUS_M(builder, COMBINED_RADIUS_M);
     CQRScreeningControls.AddREFINEMENT_TOLERANCE_SECONDS(builder, REFINEMENT_TOLERANCE_SECONDS);
@@ -56,6 +76,8 @@ public struct CQRScreeningControls : IFlatbufferObject
     CQRScreeningControls.AddDURATION_SECONDS(builder, DURATION_SECONDS);
     CQRScreeningControls.AddREQUESTED_WORKERS(builder, REQUESTED_WORKERS);
     CQRScreeningControls.AddSTART_EPOCH(builder, START_EPOCHOffset);
+    CQRScreeningControls.AddVOLUME_CENTER(builder, VOLUME_CENTER);
+    CQRScreeningControls.AddSCREENING(builder, SCREENING);
     CQRScreeningControls.AddALGORITHM(builder, ALGORITHM);
     CQRScreeningControls.AddHAS_PROGRESS_INTERVAL_SECONDS(builder, HAS_PROGRESS_INTERVAL_SECONDS);
     CQRScreeningControls.AddUSE_PERIGEE_FILTER(builder, USE_PERIGEE_FILTER);
@@ -64,7 +86,7 @@ public struct CQRScreeningControls : IFlatbufferObject
     return CQRScreeningControls.EndCQRScreeningControls(builder);
   }
 
-  public static void StartCQRScreeningControls(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartCQRScreeningControls(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddSTART_EPOCH(FlatBufferBuilder builder, Offset<TIMInstant> START_EPOCHOffset) { builder.AddOffset(0, START_EPOCHOffset.Value, 0); }
   public static void AddDURATION_SECONDS(FlatBufferBuilder builder, double DURATION_SECONDS) { builder.AddDouble(1, DURATION_SECONDS, 604800.0); }
   public static void AddTHRESHOLD_M(FlatBufferBuilder builder, double THRESHOLD_M) { builder.AddDouble(2, THRESHOLD_M, 5000.0); }
@@ -78,6 +100,11 @@ public struct CQRScreeningControls : IFlatbufferObject
   public static void AddPROGRESS_INTERVAL_SECONDS(FlatBufferBuilder builder, double PROGRESS_INTERVAL_SECONDS) { builder.AddDouble(10, PROGRESS_INTERVAL_SECONDS, 0.0); }
   public static void AddHAS_PROGRESS_INTERVAL_SECONDS(FlatBufferBuilder builder, bool HAS_PROGRESS_INTERVAL_SECONDS) { builder.AddBool(11, HAS_PROGRESS_INTERVAL_SECONDS, false); }
   public static void AddALGORITHM(FlatBufferBuilder builder, cqrProbabilityAlgorithm ALGORITHM) { builder.AddByte(12, (byte)ALGORITHM, 3); }
+  public static void AddSCREENING(FlatBufferBuilder builder, cqrVolumeGeometry SCREENING) { builder.AddByte(13, (byte)SCREENING, 0); }
+  public static void AddRADIAL_M(FlatBufferBuilder builder, double RADIAL_M) { builder.AddDouble(14, RADIAL_M, 0.0); }
+  public static void AddIN_TRACK_M(FlatBufferBuilder builder, double IN_TRACK_M) { builder.AddDouble(15, IN_TRACK_M, 0.0); }
+  public static void AddCROSS_TRACK_M(FlatBufferBuilder builder, double CROSS_TRACK_M) { builder.AddDouble(16, CROSS_TRACK_M, 0.0); }
+  public static void AddVOLUME_CENTER(FlatBufferBuilder builder, cqrVolumeAnchor VOLUME_CENTER) { builder.AddByte(17, (byte)VOLUME_CENTER, 1); }
   public static Offset<CQRScreeningControls> EndCQRScreeningControls(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // START_EPOCH
@@ -102,6 +129,11 @@ public struct CQRScreeningControls : IFlatbufferObject
     _o.PROGRESS_INTERVAL_SECONDS = this.PROGRESS_INTERVAL_SECONDS;
     _o.HAS_PROGRESS_INTERVAL_SECONDS = this.HAS_PROGRESS_INTERVAL_SECONDS;
     _o.ALGORITHM = this.ALGORITHM;
+    _o.SCREENING = this.SCREENING;
+    _o.RADIAL_M = this.RADIAL_M;
+    _o.IN_TRACK_M = this.IN_TRACK_M;
+    _o.CROSS_TRACK_M = this.CROSS_TRACK_M;
+    _o.VOLUME_CENTER = this.VOLUME_CENTER;
   }
   public static Offset<CQRScreeningControls> Pack(FlatBufferBuilder builder, CQRScreeningControlsT _o) {
     if (_o == null) return default(Offset<CQRScreeningControls>);
@@ -120,7 +152,12 @@ public struct CQRScreeningControls : IFlatbufferObject
       _o.USE_PERIGEE_FILTER,
       _o.PROGRESS_INTERVAL_SECONDS,
       _o.HAS_PROGRESS_INTERVAL_SECONDS,
-      _o.ALGORITHM);
+      _o.ALGORITHM,
+      _o.SCREENING,
+      _o.RADIAL_M,
+      _o.IN_TRACK_M,
+      _o.CROSS_TRACK_M,
+      _o.VOLUME_CENTER);
   }
 }
 
@@ -139,6 +176,11 @@ public class CQRScreeningControlsT
   public double PROGRESS_INTERVAL_SECONDS { get; set; }
   public bool HAS_PROGRESS_INTERVAL_SECONDS { get; set; }
   public cqrProbabilityAlgorithm ALGORITHM { get; set; }
+  public cqrVolumeGeometry SCREENING { get; set; }
+  public double RADIAL_M { get; set; }
+  public double IN_TRACK_M { get; set; }
+  public double CROSS_TRACK_M { get; set; }
+  public cqrVolumeAnchor VOLUME_CENTER { get; set; }
 
   public CQRScreeningControlsT() {
     this.START_EPOCH = null;
@@ -154,6 +196,11 @@ public class CQRScreeningControlsT
     this.PROGRESS_INTERVAL_SECONDS = 0.0;
     this.HAS_PROGRESS_INTERVAL_SECONDS = false;
     this.ALGORITHM = cqrProbabilityAlgorithm.ALFANO_MAXIMUM;
+    this.SCREENING = cqrVolumeGeometry.SPHERICAL;
+    this.RADIAL_M = 0.0;
+    this.IN_TRACK_M = 0.0;
+    this.CROSS_TRACK_M = 0.0;
+    this.VOLUME_CENTER = cqrVolumeAnchor.PRIMARY;
   }
 }
 
@@ -176,6 +223,11 @@ static public class CQRScreeningControlsVerify
       && verifier.VerifyField(tablePos, 24 /*PROGRESS_INTERVAL_SECONDS*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 26 /*HAS_PROGRESS_INTERVAL_SECONDS*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 28 /*ALGORITHM*/, 1 /*cqrProbabilityAlgorithm*/, 1, false)
+      && verifier.VerifyField(tablePos, 30 /*SCREENING*/, 1 /*cqrVolumeGeometry*/, 1, false)
+      && verifier.VerifyField(tablePos, 32 /*RADIAL_M*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*IN_TRACK_M*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*CROSS_TRACK_M*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*VOLUME_CENTER*/, 1 /*cqrVolumeAnchor*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

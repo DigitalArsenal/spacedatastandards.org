@@ -37,7 +37,7 @@ public struct OCM : IFlatbufferObject
   public ArraySegment<byte>? GetTRAJ_TYPE_DESCRIPTIONBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetTRAJ_TYPE_DESCRIPTIONArray() { return __p.__vector_as_array<byte>(10); }
-  /// Time interval between state vectors in seconds (required for time-series data).
+  /// Time interval between state vectors in seconds; required without STATE_EPOCHS.
   public double STATE_STEP_SIZE { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Number of components per state vector.
   /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
@@ -46,7 +46,7 @@ public struct OCM : IFlatbufferObject
   public byte STATE_VECTOR_SIZE { get { int o = __p.__offset(14); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)6; } }
   /// State data as row-major array of doubles.
   /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
-  /// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+  /// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
   /// Length must be divisible by STATE_VECTOR_SIZE.
   /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
   public double STATE_DATA(int j) { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
@@ -135,6 +135,12 @@ public struct OCM : IFlatbufferObject
   public ArraySegment<byte>? GetCOV_CALIBRATION_REFERENCEBytes() { return __p.__vector_as_arraysegment(48); }
 #endif
   public byte[] GetCOV_CALIBRATION_REFERENCEArray() { return __p.__vector_as_array<byte>(48); }
+  /// Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+  /// section 6.2.4). When nonempty, length equals STATE_DATA.length /
+  /// STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+  /// Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+  public string STATE_EPOCHS(int j) { int o = __p.__offset(50); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int STATE_EPOCHSLength { get { int o = __p.__offset(50); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<OCM> CreateOCM(FlatBufferBuilder builder,
       Offset<Header> HEADEROffset = default(Offset<Header>),
@@ -159,9 +165,11 @@ public struct OCM : IFlatbufferObject
       uint ORB_REVNUM = 0,
       StringOffset ORB_AVERAGINGOffset = default(StringOffset),
       covarianceCalibration COV_CALIBRATION = covarianceCalibration.Unspecified,
-      StringOffset COV_CALIBRATION_REFERENCEOffset = default(StringOffset)) {
-    builder.StartTable(23);
+      StringOffset COV_CALIBRATION_REFERENCEOffset = default(StringOffset),
+      VectorOffset STATE_EPOCHSOffset = default(VectorOffset)) {
+    builder.StartTable(24);
     OCM.AddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE);
+    OCM.AddSTATE_EPOCHS(builder, STATE_EPOCHSOffset);
     OCM.AddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCEOffset);
     OCM.AddORB_AVERAGING(builder, ORB_AVERAGINGOffset);
     OCM.AddORB_REVNUM(builder, ORB_REVNUM);
@@ -187,7 +195,7 @@ public struct OCM : IFlatbufferObject
     return OCM.EndOCM(builder);
   }
 
-  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(23); }
+  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(24); }
   public static void AddHEADER(FlatBufferBuilder builder, Offset<Header> HEADEROffset) { builder.AddOffset(0, HEADEROffset.Value, 0); }
   public static void AddMETADATA(FlatBufferBuilder builder, Offset<Metadata> METADATAOffset) { builder.AddOffset(1, METADATAOffset.Value, 0); }
   public static void AddTRAJ_TYPE(FlatBufferBuilder builder, trajectoryType TRAJ_TYPE) { builder.AddSbyte(2, (sbyte)TRAJ_TYPE, 0); }
@@ -241,6 +249,12 @@ public struct OCM : IFlatbufferObject
   public static void AddORB_AVERAGING(FlatBufferBuilder builder, StringOffset ORB_AVERAGINGOffset) { builder.AddOffset(20, ORB_AVERAGINGOffset.Value, 0); }
   public static void AddCOV_CALIBRATION(FlatBufferBuilder builder, covarianceCalibration COV_CALIBRATION) { builder.AddSbyte(21, (sbyte)COV_CALIBRATION, 0); }
   public static void AddCOV_CALIBRATION_REFERENCE(FlatBufferBuilder builder, StringOffset COV_CALIBRATION_REFERENCEOffset) { builder.AddOffset(22, COV_CALIBRATION_REFERENCEOffset.Value, 0); }
+  public static void AddSTATE_EPOCHS(FlatBufferBuilder builder, VectorOffset STATE_EPOCHSOffset) { builder.AddOffset(23, STATE_EPOCHSOffset.Value, 0); }
+  public static VectorOffset CreateSTATE_EPOCHSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSTATE_EPOCHSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTATE_EPOCHSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTATE_EPOCHSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSTATE_EPOCHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<OCM> EndOCM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OCM>(o);
@@ -282,6 +296,8 @@ public struct OCM : IFlatbufferObject
     _o.ORB_AVERAGING = this.ORB_AVERAGING;
     _o.COV_CALIBRATION = this.COV_CALIBRATION;
     _o.COV_CALIBRATION_REFERENCE = this.COV_CALIBRATION_REFERENCE;
+    _o.STATE_EPOCHS = new List<string>();
+    for (var _j = 0; _j < this.STATE_EPOCHSLength; ++_j) {_o.STATE_EPOCHS.Add(this.STATE_EPOCHS(_j));}
   }
   public static Offset<OCM> Pack(FlatBufferBuilder builder, OCMT _o) {
     if (_o == null) return default(Offset<OCM>);
@@ -331,6 +347,12 @@ public struct OCM : IFlatbufferObject
     var _COV_REF_FRAME = _o.COV_REF_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.COV_REF_FRAME);
     var _ORB_AVERAGING = _o.ORB_AVERAGING == null ? default(StringOffset) : builder.CreateString(_o.ORB_AVERAGING);
     var _COV_CALIBRATION_REFERENCE = _o.COV_CALIBRATION_REFERENCE == null ? default(StringOffset) : builder.CreateString(_o.COV_CALIBRATION_REFERENCE);
+    var _STATE_EPOCHS = default(VectorOffset);
+    if (_o.STATE_EPOCHS != null) {
+      var __STATE_EPOCHS = new StringOffset[_o.STATE_EPOCHS.Count];
+      for (var _j = 0; _j < __STATE_EPOCHS.Length; ++_j) { __STATE_EPOCHS[_j] = builder.CreateString(_o.STATE_EPOCHS[_j]); }
+      _STATE_EPOCHS = CreateSTATE_EPOCHSVector(builder, __STATE_EPOCHS);
+    }
     return CreateOCM(
       builder,
       _HEADER,
@@ -355,7 +377,8 @@ public struct OCM : IFlatbufferObject
       _o.ORB_REVNUM,
       _ORB_AVERAGING,
       _o.COV_CALIBRATION,
-      _COV_CALIBRATION_REFERENCE);
+      _COV_CALIBRATION_REFERENCE,
+      _STATE_EPOCHS);
   }
 }
 
@@ -384,6 +407,7 @@ public class OCMT
   public string ORB_AVERAGING { get; set; }
   public covarianceCalibration COV_CALIBRATION { get; set; }
   public string COV_CALIBRATION_REFERENCE { get; set; }
+  public List<string> STATE_EPOCHS { get; set; }
 
   public OCMT() {
     this.HEADER = null;
@@ -409,6 +433,7 @@ public class OCMT
     this.ORB_AVERAGING = null;
     this.COV_CALIBRATION = covarianceCalibration.Unspecified;
     this.COV_CALIBRATION_REFERENCE = null;
+    this.STATE_EPOCHS = null;
   }
   public static OCMT DeserializeFromBinary(byte[] fbBuffer) {
     return OCM.GetRootAsOCM(new ByteBuffer(fbBuffer)).UnPack();
@@ -449,6 +474,7 @@ static public class OCMVerify
       && verifier.VerifyString(tablePos, 44 /*ORB_AVERAGING*/, false)
       && verifier.VerifyField(tablePos, 46 /*COV_CALIBRATION*/, 1 /*covarianceCalibration*/, 1, false)
       && verifier.VerifyString(tablePos, 48 /*COV_CALIBRATION_REFERENCE*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 50 /*STATE_EPOCHS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

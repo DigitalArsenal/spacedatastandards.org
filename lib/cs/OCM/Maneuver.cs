@@ -99,6 +99,150 @@ public struct Maneuver : IFlatbufferObject
   /// Comments related to the maneuver.
   public string MAN_COMMENT(int j) { int o = __p.__offset(28); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int MAN_COMMENTLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+  /// CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+  /// DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+  /// Relative time tags are seconds from METADATA.EPOCH_TZERO.
+  public string MAN_COMPOSITION(int j) { int o = __p.__offset(30); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int MAN_COMPOSITIONLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+  public string MAN_NEXT_ID { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMAN_NEXT_IDBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetMAN_NEXT_IDBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetMAN_NEXT_IDArray() { return __p.__vector_as_array<byte>(32); }
+  /// OD, navigation solution or simulation identifier (Table 6-7).
+  public string MAN_BASIS_ID { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMAN_BASIS_IDBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetMAN_BASIS_IDBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetMAN_BASIS_IDArray() { return __p.__vector_as_array<byte>(34); }
+  /// Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+  /// CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+  public string MAN_PREV_EPOCH { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMAN_PREV_EPOCHBytes() { return __p.__vector_as_span<byte>(36, 1); }
+#else
+  public ArraySegment<byte>? GetMAN_PREV_EPOCHBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public byte[] GetMAN_PREV_EPOCHArray() { return __p.__vector_as_array<byte>(36); }
+  /// Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+  public string MAN_NEXT_EPOCH { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMAN_NEXT_EPOCHBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetMAN_NEXT_EPOCHBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetMAN_NEXT_EPOCHArray() { return __p.__vector_as_array<byte>(38); }
+  /// Source of predicted orbit or attitude states (Table 6-7).
+  public string MAN_PRED_SOURCE { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMAN_PRED_SOURCEBytes() { return __p.__vector_as_span<byte>(40, 1); }
+#else
+  public ArraySegment<byte>? GetMAN_PRED_SOURCEBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public byte[] GetMAN_PRED_SOURCEArray() { return __p.__vector_as_array<byte>(40); }
+  /// Gravitational assist body name (Table 6-7).
+  public string GRAV_ASSIST_NAME { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetGRAV_ASSIST_NAMEBytes() { return __p.__vector_as_span<byte>(42, 1); }
+#else
+  public ArraySegment<byte>? GetGRAV_ASSIST_NAMEBytes() { return __p.__vector_as_arraysegment(42); }
+#endif
+  public byte[] GetGRAV_ASSIST_NAMEArray() { return __p.__vector_as_array<byte>(42); }
+  /// CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+  public string DC_TYPE { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDC_TYPEBytes() { return __p.__vector_as_span<byte>(44, 1); }
+#else
+  public ArraySegment<byte>? GetDC_TYPEBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public byte[] GetDC_TYPEArray() { return __p.__vector_as_array<byte>(44); }
+  /// Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+  public string DC_WIN_OPEN { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDC_WIN_OPENBytes() { return __p.__vector_as_span<byte>(46, 1); }
+#else
+  public ArraySegment<byte>? GetDC_WIN_OPENBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public byte[] GetDC_WIN_OPENArray() { return __p.__vector_as_array<byte>(46); }
+  /// Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+  public string DC_WIN_CLOSE { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDC_WIN_CLOSEBytes() { return __p.__vector_as_span<byte>(48, 1); }
+#else
+  public ArraySegment<byte>? GetDC_WIN_CLOSEBytes() { return __p.__vector_as_arraysegment(48); }
+#endif
+  public byte[] GetDC_WIN_CLOSEArray() { return __p.__vector_as_array<byte>(48); }
+  /// Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+  public uint DC_MIN_CYCLES { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public uint DC_MAX_CYCLES { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Presence of the corresponding cycle bound; zero remains representable.
+  public bool HAS_DC_MIN_CYCLES { get { int o = __p.__offset(54); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_DC_MAX_CYCLES { get { int o = __p.__offset(56); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+  /// Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+  public string DC_EXEC_START { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDC_EXEC_STARTBytes() { return __p.__vector_as_span<byte>(58, 1); }
+#else
+  public ArraySegment<byte>? GetDC_EXEC_STARTBytes() { return __p.__vector_as_arraysegment(58); }
+#endif
+  public byte[] GetDC_EXEC_STARTArray() { return __p.__vector_as_array<byte>(58); }
+  public string DC_EXEC_STOP { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDC_EXEC_STOPBytes() { return __p.__vector_as_span<byte>(60, 1); }
+#else
+  public ArraySegment<byte>? GetDC_EXEC_STOPBytes() { return __p.__vector_as_arraysegment(60); }
+#endif
+  public byte[] GetDC_EXEC_STOPArray() { return __p.__vector_as_array<byte>(60); }
+  /// Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+  public string DC_REF_TIME { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDC_REF_TIMEBytes() { return __p.__vector_as_span<byte>(62, 1); }
+#else
+  public ArraySegment<byte>? GetDC_REF_TIMEBytes() { return __p.__vector_as_arraysegment(62); }
+#endif
+  public byte[] GetDC_REF_TIMEArray() { return __p.__vector_as_array<byte>(62); }
+  /// Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+  /// Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+  public double DC_TIME_PULSE_DURATION { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  public double DC_TIME_PULSE_PERIOD { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+  /// Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+  public double DC_REF_DIR(int j) { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int DC_REF_DIRLength { get { int o = __p.__offset(68); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetDC_REF_DIRBytes() { return __p.__vector_as_span<double>(68, 8); }
+#else
+  public ArraySegment<byte>? GetDC_REF_DIRBytes() { return __p.__vector_as_arraysegment(68); }
+#endif
+  public double[] GetDC_REF_DIRArray() { return __p.__vector_as_array<double>(68); }
+  /// Body frame of DC_BODY_TRIGGER (Table 6-7).
+  public string DC_BODY_FRAME { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDC_BODY_FRAMEBytes() { return __p.__vector_as_span<byte>(70, 1); }
+#else
+  public ArraySegment<byte>? GetDC_BODY_FRAMEBytes() { return __p.__vector_as_arraysegment(70); }
+#endif
+  public byte[] GetDC_BODY_FRAMEArray() { return __p.__vector_as_array<byte>(70); }
+  /// Three-component body-frame trigger unit direction (Table 6-7).
+  public double DC_BODY_TRIGGER(int j) { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int DC_BODY_TRIGGERLength { get { int o = __p.__offset(72); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetDC_BODY_TRIGGERBytes() { return __p.__vector_as_span<double>(72, 8); }
+#else
+  public ArraySegment<byte>? GetDC_BODY_TRIGGERBytes() { return __p.__vector_as_arraysegment(72); }
+#endif
+  public double[] GetDC_BODY_TRIGGERArray() { return __p.__vector_as_array<double>(72); }
+  /// Pulse start and stop phase angles, degrees; NaN means unspecified.
+  /// CCSDS 502.0-B-3 Table 6-7.
+  public double DC_PA_START_ANGLE { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  public double DC_PA_STOP_ANGLE { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
 
   public static Offset<Maneuver> CreateManeuver(FlatBufferBuilder builder,
       StringOffset MAN_IDOffset = default(StringOffset),
@@ -113,9 +257,55 @@ public struct Maneuver : IFlatbufferObject
       double MAN_DURATION = 0.0,
       VectorOffset MAN_UNITSOffset = default(VectorOffset),
       VectorOffset DATAOffset = default(VectorOffset),
-      VectorOffset MAN_COMMENTOffset = default(VectorOffset)) {
-    builder.StartTable(13);
+      VectorOffset MAN_COMMENTOffset = default(VectorOffset),
+      VectorOffset MAN_COMPOSITIONOffset = default(VectorOffset),
+      StringOffset MAN_NEXT_IDOffset = default(StringOffset),
+      StringOffset MAN_BASIS_IDOffset = default(StringOffset),
+      StringOffset MAN_PREV_EPOCHOffset = default(StringOffset),
+      StringOffset MAN_NEXT_EPOCHOffset = default(StringOffset),
+      StringOffset MAN_PRED_SOURCEOffset = default(StringOffset),
+      StringOffset GRAV_ASSIST_NAMEOffset = default(StringOffset),
+      StringOffset DC_TYPEOffset = default(StringOffset),
+      StringOffset DC_WIN_OPENOffset = default(StringOffset),
+      StringOffset DC_WIN_CLOSEOffset = default(StringOffset),
+      uint DC_MIN_CYCLES = 0,
+      uint DC_MAX_CYCLES = 0,
+      bool HAS_DC_MIN_CYCLES = false,
+      bool HAS_DC_MAX_CYCLES = false,
+      StringOffset DC_EXEC_STARTOffset = default(StringOffset),
+      StringOffset DC_EXEC_STOPOffset = default(StringOffset),
+      StringOffset DC_REF_TIMEOffset = default(StringOffset),
+      double DC_TIME_PULSE_DURATION = Double.NaN,
+      double DC_TIME_PULSE_PERIOD = Double.NaN,
+      VectorOffset DC_REF_DIROffset = default(VectorOffset),
+      StringOffset DC_BODY_FRAMEOffset = default(StringOffset),
+      VectorOffset DC_BODY_TRIGGEROffset = default(VectorOffset),
+      double DC_PA_START_ANGLE = Double.NaN,
+      double DC_PA_STOP_ANGLE = Double.NaN) {
+    builder.StartTable(37);
+    Maneuver.AddDC_PA_STOP_ANGLE(builder, DC_PA_STOP_ANGLE);
+    Maneuver.AddDC_PA_START_ANGLE(builder, DC_PA_START_ANGLE);
+    Maneuver.AddDC_TIME_PULSE_PERIOD(builder, DC_TIME_PULSE_PERIOD);
+    Maneuver.AddDC_TIME_PULSE_DURATION(builder, DC_TIME_PULSE_DURATION);
     Maneuver.AddMAN_DURATION(builder, MAN_DURATION);
+    Maneuver.AddDC_BODY_TRIGGER(builder, DC_BODY_TRIGGEROffset);
+    Maneuver.AddDC_BODY_FRAME(builder, DC_BODY_FRAMEOffset);
+    Maneuver.AddDC_REF_DIR(builder, DC_REF_DIROffset);
+    Maneuver.AddDC_REF_TIME(builder, DC_REF_TIMEOffset);
+    Maneuver.AddDC_EXEC_STOP(builder, DC_EXEC_STOPOffset);
+    Maneuver.AddDC_EXEC_START(builder, DC_EXEC_STARTOffset);
+    Maneuver.AddDC_MAX_CYCLES(builder, DC_MAX_CYCLES);
+    Maneuver.AddDC_MIN_CYCLES(builder, DC_MIN_CYCLES);
+    Maneuver.AddDC_WIN_CLOSE(builder, DC_WIN_CLOSEOffset);
+    Maneuver.AddDC_WIN_OPEN(builder, DC_WIN_OPENOffset);
+    Maneuver.AddDC_TYPE(builder, DC_TYPEOffset);
+    Maneuver.AddGRAV_ASSIST_NAME(builder, GRAV_ASSIST_NAMEOffset);
+    Maneuver.AddMAN_PRED_SOURCE(builder, MAN_PRED_SOURCEOffset);
+    Maneuver.AddMAN_NEXT_EPOCH(builder, MAN_NEXT_EPOCHOffset);
+    Maneuver.AddMAN_PREV_EPOCH(builder, MAN_PREV_EPOCHOffset);
+    Maneuver.AddMAN_BASIS_ID(builder, MAN_BASIS_IDOffset);
+    Maneuver.AddMAN_NEXT_ID(builder, MAN_NEXT_IDOffset);
+    Maneuver.AddMAN_COMPOSITION(builder, MAN_COMPOSITIONOffset);
     Maneuver.AddMAN_COMMENT(builder, MAN_COMMENTOffset);
     Maneuver.AddDATA(builder, DATAOffset);
     Maneuver.AddMAN_UNITS(builder, MAN_UNITSOffset);
@@ -128,10 +318,12 @@ public struct Maneuver : IFlatbufferObject
     Maneuver.AddMAN_DEVICE_ID(builder, MAN_DEVICE_IDOffset);
     Maneuver.AddMAN_BASIS(builder, MAN_BASISOffset);
     Maneuver.AddMAN_ID(builder, MAN_IDOffset);
+    Maneuver.AddHAS_DC_MAX_CYCLES(builder, HAS_DC_MAX_CYCLES);
+    Maneuver.AddHAS_DC_MIN_CYCLES(builder, HAS_DC_MIN_CYCLES);
     return Maneuver.EndManeuver(builder);
   }
 
-  public static void StartManeuver(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartManeuver(FlatBufferBuilder builder) { builder.StartTable(37); }
   public static void AddMAN_ID(FlatBufferBuilder builder, StringOffset MAN_IDOffset) { builder.AddOffset(0, MAN_IDOffset.Value, 0); }
   public static void AddMAN_BASIS(FlatBufferBuilder builder, StringOffset MAN_BASISOffset) { builder.AddOffset(1, MAN_BASISOffset.Value, 0); }
   public static void AddMAN_DEVICE_ID(FlatBufferBuilder builder, StringOffset MAN_DEVICE_IDOffset) { builder.AddOffset(2, MAN_DEVICE_IDOffset.Value, 0); }
@@ -160,6 +352,45 @@ public struct Maneuver : IFlatbufferObject
   public static VectorOffset CreateMAN_COMMENTVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMAN_COMMENTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMAN_COMMENTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMAN_COMPOSITION(FlatBufferBuilder builder, VectorOffset MAN_COMPOSITIONOffset) { builder.AddOffset(13, MAN_COMPOSITIONOffset.Value, 0); }
+  public static VectorOffset CreateMAN_COMPOSITIONVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateMAN_COMPOSITIONVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMAN_COMPOSITIONVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMAN_COMPOSITIONVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartMAN_COMPOSITIONVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMAN_NEXT_ID(FlatBufferBuilder builder, StringOffset MAN_NEXT_IDOffset) { builder.AddOffset(14, MAN_NEXT_IDOffset.Value, 0); }
+  public static void AddMAN_BASIS_ID(FlatBufferBuilder builder, StringOffset MAN_BASIS_IDOffset) { builder.AddOffset(15, MAN_BASIS_IDOffset.Value, 0); }
+  public static void AddMAN_PREV_EPOCH(FlatBufferBuilder builder, StringOffset MAN_PREV_EPOCHOffset) { builder.AddOffset(16, MAN_PREV_EPOCHOffset.Value, 0); }
+  public static void AddMAN_NEXT_EPOCH(FlatBufferBuilder builder, StringOffset MAN_NEXT_EPOCHOffset) { builder.AddOffset(17, MAN_NEXT_EPOCHOffset.Value, 0); }
+  public static void AddMAN_PRED_SOURCE(FlatBufferBuilder builder, StringOffset MAN_PRED_SOURCEOffset) { builder.AddOffset(18, MAN_PRED_SOURCEOffset.Value, 0); }
+  public static void AddGRAV_ASSIST_NAME(FlatBufferBuilder builder, StringOffset GRAV_ASSIST_NAMEOffset) { builder.AddOffset(19, GRAV_ASSIST_NAMEOffset.Value, 0); }
+  public static void AddDC_TYPE(FlatBufferBuilder builder, StringOffset DC_TYPEOffset) { builder.AddOffset(20, DC_TYPEOffset.Value, 0); }
+  public static void AddDC_WIN_OPEN(FlatBufferBuilder builder, StringOffset DC_WIN_OPENOffset) { builder.AddOffset(21, DC_WIN_OPENOffset.Value, 0); }
+  public static void AddDC_WIN_CLOSE(FlatBufferBuilder builder, StringOffset DC_WIN_CLOSEOffset) { builder.AddOffset(22, DC_WIN_CLOSEOffset.Value, 0); }
+  public static void AddDC_MIN_CYCLES(FlatBufferBuilder builder, uint DC_MIN_CYCLES) { builder.AddUint(23, DC_MIN_CYCLES, 0); }
+  public static void AddDC_MAX_CYCLES(FlatBufferBuilder builder, uint DC_MAX_CYCLES) { builder.AddUint(24, DC_MAX_CYCLES, 0); }
+  public static void AddHAS_DC_MIN_CYCLES(FlatBufferBuilder builder, bool HAS_DC_MIN_CYCLES) { builder.AddBool(25, HAS_DC_MIN_CYCLES, false); }
+  public static void AddHAS_DC_MAX_CYCLES(FlatBufferBuilder builder, bool HAS_DC_MAX_CYCLES) { builder.AddBool(26, HAS_DC_MAX_CYCLES, false); }
+  public static void AddDC_EXEC_START(FlatBufferBuilder builder, StringOffset DC_EXEC_STARTOffset) { builder.AddOffset(27, DC_EXEC_STARTOffset.Value, 0); }
+  public static void AddDC_EXEC_STOP(FlatBufferBuilder builder, StringOffset DC_EXEC_STOPOffset) { builder.AddOffset(28, DC_EXEC_STOPOffset.Value, 0); }
+  public static void AddDC_REF_TIME(FlatBufferBuilder builder, StringOffset DC_REF_TIMEOffset) { builder.AddOffset(29, DC_REF_TIMEOffset.Value, 0); }
+  public static void AddDC_TIME_PULSE_DURATION(FlatBufferBuilder builder, double DC_TIME_PULSE_DURATION) { builder.AddDouble(30, DC_TIME_PULSE_DURATION, Double.NaN); }
+  public static void AddDC_TIME_PULSE_PERIOD(FlatBufferBuilder builder, double DC_TIME_PULSE_PERIOD) { builder.AddDouble(31, DC_TIME_PULSE_PERIOD, Double.NaN); }
+  public static void AddDC_REF_DIR(FlatBufferBuilder builder, VectorOffset DC_REF_DIROffset) { builder.AddOffset(32, DC_REF_DIROffset.Value, 0); }
+  public static VectorOffset CreateDC_REF_DIRVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDC_REF_DIRVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDC_REF_DIRVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDC_REF_DIRVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDC_REF_DIRVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddDC_BODY_FRAME(FlatBufferBuilder builder, StringOffset DC_BODY_FRAMEOffset) { builder.AddOffset(33, DC_BODY_FRAMEOffset.Value, 0); }
+  public static void AddDC_BODY_TRIGGER(FlatBufferBuilder builder, VectorOffset DC_BODY_TRIGGEROffset) { builder.AddOffset(34, DC_BODY_TRIGGEROffset.Value, 0); }
+  public static VectorOffset CreateDC_BODY_TRIGGERVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDC_BODY_TRIGGERVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDC_BODY_TRIGGERVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDC_BODY_TRIGGERVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDC_BODY_TRIGGERVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddDC_PA_START_ANGLE(FlatBufferBuilder builder, double DC_PA_START_ANGLE) { builder.AddDouble(35, DC_PA_START_ANGLE, Double.NaN); }
+  public static void AddDC_PA_STOP_ANGLE(FlatBufferBuilder builder, double DC_PA_STOP_ANGLE) { builder.AddDouble(36, DC_PA_STOP_ANGLE, Double.NaN); }
   public static Offset<Maneuver> EndManeuver(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<Maneuver>(o);
@@ -186,6 +417,33 @@ public struct Maneuver : IFlatbufferObject
     for (var _j = 0; _j < this.DATALength; ++_j) {_o.DATA.Add(this.DATA(_j));}
     _o.MAN_COMMENT = new List<string>();
     for (var _j = 0; _j < this.MAN_COMMENTLength; ++_j) {_o.MAN_COMMENT.Add(this.MAN_COMMENT(_j));}
+    _o.MAN_COMPOSITION = new List<string>();
+    for (var _j = 0; _j < this.MAN_COMPOSITIONLength; ++_j) {_o.MAN_COMPOSITION.Add(this.MAN_COMPOSITION(_j));}
+    _o.MAN_NEXT_ID = this.MAN_NEXT_ID;
+    _o.MAN_BASIS_ID = this.MAN_BASIS_ID;
+    _o.MAN_PREV_EPOCH = this.MAN_PREV_EPOCH;
+    _o.MAN_NEXT_EPOCH = this.MAN_NEXT_EPOCH;
+    _o.MAN_PRED_SOURCE = this.MAN_PRED_SOURCE;
+    _o.GRAV_ASSIST_NAME = this.GRAV_ASSIST_NAME;
+    _o.DC_TYPE = this.DC_TYPE;
+    _o.DC_WIN_OPEN = this.DC_WIN_OPEN;
+    _o.DC_WIN_CLOSE = this.DC_WIN_CLOSE;
+    _o.DC_MIN_CYCLES = this.DC_MIN_CYCLES;
+    _o.DC_MAX_CYCLES = this.DC_MAX_CYCLES;
+    _o.HAS_DC_MIN_CYCLES = this.HAS_DC_MIN_CYCLES;
+    _o.HAS_DC_MAX_CYCLES = this.HAS_DC_MAX_CYCLES;
+    _o.DC_EXEC_START = this.DC_EXEC_START;
+    _o.DC_EXEC_STOP = this.DC_EXEC_STOP;
+    _o.DC_REF_TIME = this.DC_REF_TIME;
+    _o.DC_TIME_PULSE_DURATION = this.DC_TIME_PULSE_DURATION;
+    _o.DC_TIME_PULSE_PERIOD = this.DC_TIME_PULSE_PERIOD;
+    _o.DC_REF_DIR = new List<double>();
+    for (var _j = 0; _j < this.DC_REF_DIRLength; ++_j) {_o.DC_REF_DIR.Add(this.DC_REF_DIR(_j));}
+    _o.DC_BODY_FRAME = this.DC_BODY_FRAME;
+    _o.DC_BODY_TRIGGER = new List<double>();
+    for (var _j = 0; _j < this.DC_BODY_TRIGGERLength; ++_j) {_o.DC_BODY_TRIGGER.Add(this.DC_BODY_TRIGGER(_j));}
+    _o.DC_PA_START_ANGLE = this.DC_PA_START_ANGLE;
+    _o.DC_PA_STOP_ANGLE = this.DC_PA_STOP_ANGLE;
   }
   public static Offset<Maneuver> Pack(FlatBufferBuilder builder, ManeuverT _o) {
     if (_o == null) return default(Offset<Maneuver>);
@@ -216,6 +474,35 @@ public struct Maneuver : IFlatbufferObject
       for (var _j = 0; _j < __MAN_COMMENT.Length; ++_j) { __MAN_COMMENT[_j] = builder.CreateString(_o.MAN_COMMENT[_j]); }
       _MAN_COMMENT = CreateMAN_COMMENTVector(builder, __MAN_COMMENT);
     }
+    var _MAN_COMPOSITION = default(VectorOffset);
+    if (_o.MAN_COMPOSITION != null) {
+      var __MAN_COMPOSITION = new StringOffset[_o.MAN_COMPOSITION.Count];
+      for (var _j = 0; _j < __MAN_COMPOSITION.Length; ++_j) { __MAN_COMPOSITION[_j] = builder.CreateString(_o.MAN_COMPOSITION[_j]); }
+      _MAN_COMPOSITION = CreateMAN_COMPOSITIONVector(builder, __MAN_COMPOSITION);
+    }
+    var _MAN_NEXT_ID = _o.MAN_NEXT_ID == null ? default(StringOffset) : builder.CreateString(_o.MAN_NEXT_ID);
+    var _MAN_BASIS_ID = _o.MAN_BASIS_ID == null ? default(StringOffset) : builder.CreateString(_o.MAN_BASIS_ID);
+    var _MAN_PREV_EPOCH = _o.MAN_PREV_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.MAN_PREV_EPOCH);
+    var _MAN_NEXT_EPOCH = _o.MAN_NEXT_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.MAN_NEXT_EPOCH);
+    var _MAN_PRED_SOURCE = _o.MAN_PRED_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.MAN_PRED_SOURCE);
+    var _GRAV_ASSIST_NAME = _o.GRAV_ASSIST_NAME == null ? default(StringOffset) : builder.CreateString(_o.GRAV_ASSIST_NAME);
+    var _DC_TYPE = _o.DC_TYPE == null ? default(StringOffset) : builder.CreateString(_o.DC_TYPE);
+    var _DC_WIN_OPEN = _o.DC_WIN_OPEN == null ? default(StringOffset) : builder.CreateString(_o.DC_WIN_OPEN);
+    var _DC_WIN_CLOSE = _o.DC_WIN_CLOSE == null ? default(StringOffset) : builder.CreateString(_o.DC_WIN_CLOSE);
+    var _DC_EXEC_START = _o.DC_EXEC_START == null ? default(StringOffset) : builder.CreateString(_o.DC_EXEC_START);
+    var _DC_EXEC_STOP = _o.DC_EXEC_STOP == null ? default(StringOffset) : builder.CreateString(_o.DC_EXEC_STOP);
+    var _DC_REF_TIME = _o.DC_REF_TIME == null ? default(StringOffset) : builder.CreateString(_o.DC_REF_TIME);
+    var _DC_REF_DIR = default(VectorOffset);
+    if (_o.DC_REF_DIR != null) {
+      var __DC_REF_DIR = _o.DC_REF_DIR.ToArray();
+      _DC_REF_DIR = CreateDC_REF_DIRVector(builder, __DC_REF_DIR);
+    }
+    var _DC_BODY_FRAME = _o.DC_BODY_FRAME == null ? default(StringOffset) : builder.CreateString(_o.DC_BODY_FRAME);
+    var _DC_BODY_TRIGGER = default(VectorOffset);
+    if (_o.DC_BODY_TRIGGER != null) {
+      var __DC_BODY_TRIGGER = _o.DC_BODY_TRIGGER.ToArray();
+      _DC_BODY_TRIGGER = CreateDC_BODY_TRIGGERVector(builder, __DC_BODY_TRIGGER);
+    }
     return CreateManeuver(
       builder,
       _MAN_ID,
@@ -230,7 +517,31 @@ public struct Maneuver : IFlatbufferObject
       _o.MAN_DURATION,
       _MAN_UNITS,
       _DATA,
-      _MAN_COMMENT);
+      _MAN_COMMENT,
+      _MAN_COMPOSITION,
+      _MAN_NEXT_ID,
+      _MAN_BASIS_ID,
+      _MAN_PREV_EPOCH,
+      _MAN_NEXT_EPOCH,
+      _MAN_PRED_SOURCE,
+      _GRAV_ASSIST_NAME,
+      _DC_TYPE,
+      _DC_WIN_OPEN,
+      _DC_WIN_CLOSE,
+      _o.DC_MIN_CYCLES,
+      _o.DC_MAX_CYCLES,
+      _o.HAS_DC_MIN_CYCLES,
+      _o.HAS_DC_MAX_CYCLES,
+      _DC_EXEC_START,
+      _DC_EXEC_STOP,
+      _DC_REF_TIME,
+      _o.DC_TIME_PULSE_DURATION,
+      _o.DC_TIME_PULSE_PERIOD,
+      _DC_REF_DIR,
+      _DC_BODY_FRAME,
+      _DC_BODY_TRIGGER,
+      _o.DC_PA_START_ANGLE,
+      _o.DC_PA_STOP_ANGLE);
   }
 }
 
@@ -249,6 +560,30 @@ public class ManeuverT
   public List<string> MAN_UNITS { get; set; }
   public List<string> DATA { get; set; }
   public List<string> MAN_COMMENT { get; set; }
+  public List<string> MAN_COMPOSITION { get; set; }
+  public string MAN_NEXT_ID { get; set; }
+  public string MAN_BASIS_ID { get; set; }
+  public string MAN_PREV_EPOCH { get; set; }
+  public string MAN_NEXT_EPOCH { get; set; }
+  public string MAN_PRED_SOURCE { get; set; }
+  public string GRAV_ASSIST_NAME { get; set; }
+  public string DC_TYPE { get; set; }
+  public string DC_WIN_OPEN { get; set; }
+  public string DC_WIN_CLOSE { get; set; }
+  public uint DC_MIN_CYCLES { get; set; }
+  public uint DC_MAX_CYCLES { get; set; }
+  public bool HAS_DC_MIN_CYCLES { get; set; }
+  public bool HAS_DC_MAX_CYCLES { get; set; }
+  public string DC_EXEC_START { get; set; }
+  public string DC_EXEC_STOP { get; set; }
+  public string DC_REF_TIME { get; set; }
+  public double DC_TIME_PULSE_DURATION { get; set; }
+  public double DC_TIME_PULSE_PERIOD { get; set; }
+  public List<double> DC_REF_DIR { get; set; }
+  public string DC_BODY_FRAME { get; set; }
+  public List<double> DC_BODY_TRIGGER { get; set; }
+  public double DC_PA_START_ANGLE { get; set; }
+  public double DC_PA_STOP_ANGLE { get; set; }
 
   public ManeuverT() {
     this.MAN_ID = null;
@@ -264,6 +599,30 @@ public class ManeuverT
     this.MAN_UNITS = null;
     this.DATA = null;
     this.MAN_COMMENT = null;
+    this.MAN_COMPOSITION = null;
+    this.MAN_NEXT_ID = null;
+    this.MAN_BASIS_ID = null;
+    this.MAN_PREV_EPOCH = null;
+    this.MAN_NEXT_EPOCH = null;
+    this.MAN_PRED_SOURCE = null;
+    this.GRAV_ASSIST_NAME = null;
+    this.DC_TYPE = null;
+    this.DC_WIN_OPEN = null;
+    this.DC_WIN_CLOSE = null;
+    this.DC_MIN_CYCLES = 0;
+    this.DC_MAX_CYCLES = 0;
+    this.HAS_DC_MIN_CYCLES = false;
+    this.HAS_DC_MAX_CYCLES = false;
+    this.DC_EXEC_START = null;
+    this.DC_EXEC_STOP = null;
+    this.DC_REF_TIME = null;
+    this.DC_TIME_PULSE_DURATION = Double.NaN;
+    this.DC_TIME_PULSE_PERIOD = Double.NaN;
+    this.DC_REF_DIR = null;
+    this.DC_BODY_FRAME = null;
+    this.DC_BODY_TRIGGER = null;
+    this.DC_PA_START_ANGLE = Double.NaN;
+    this.DC_PA_STOP_ANGLE = Double.NaN;
   }
 }
 
@@ -286,6 +645,30 @@ static public class ManeuverVerify
       && verifier.VerifyVectorOfStrings(tablePos, 24 /*MAN_UNITS*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 26 /*DATA*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 28 /*MAN_COMMENT*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 30 /*MAN_COMPOSITION*/, false)
+      && verifier.VerifyString(tablePos, 32 /*MAN_NEXT_ID*/, false)
+      && verifier.VerifyString(tablePos, 34 /*MAN_BASIS_ID*/, false)
+      && verifier.VerifyString(tablePos, 36 /*MAN_PREV_EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 38 /*MAN_NEXT_EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 40 /*MAN_PRED_SOURCE*/, false)
+      && verifier.VerifyString(tablePos, 42 /*GRAV_ASSIST_NAME*/, false)
+      && verifier.VerifyString(tablePos, 44 /*DC_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 46 /*DC_WIN_OPEN*/, false)
+      && verifier.VerifyString(tablePos, 48 /*DC_WIN_CLOSE*/, false)
+      && verifier.VerifyField(tablePos, 50 /*DC_MIN_CYCLES*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 52 /*DC_MAX_CYCLES*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 54 /*HAS_DC_MIN_CYCLES*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 56 /*HAS_DC_MAX_CYCLES*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 58 /*DC_EXEC_START*/, false)
+      && verifier.VerifyString(tablePos, 60 /*DC_EXEC_STOP*/, false)
+      && verifier.VerifyString(tablePos, 62 /*DC_REF_TIME*/, false)
+      && verifier.VerifyField(tablePos, 64 /*DC_TIME_PULSE_DURATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 66 /*DC_TIME_PULSE_PERIOD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 68 /*DC_REF_DIR*/, 8 /*double*/, false)
+      && verifier.VerifyString(tablePos, 70 /*DC_BODY_FRAME*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 72 /*DC_BODY_TRIGGER*/, 8 /*double*/, false)
+      && verifier.VerifyField(tablePos, 74 /*DC_PA_START_ANGLE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 76 /*DC_PA_STOP_ANGLE*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

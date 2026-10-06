@@ -126,8 +126,50 @@ class CQRScreeningControls(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 3
 
+    # SPHERICAL uses THRESHOLD_M; other geometries use positive finite axes below.
+    # Admit local minima of relative distance inside or on the selected volume.
+    # CQRScreeningControls
+    def SCREENING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # RTN ellipsoid semi-axes or box half-widths, metres; ignored for SPHERICAL.
+    # CQRScreeningControls
+    def RADIAL_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # CQRScreeningControls
+    def IN_TRACK_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # CQRScreeningControls
+    def CROSS_TRACK_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:
+    # R = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.
+    # BOTH tests each object's volume independently and admits their union.
+    # UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
+    # CQRScreeningControls
+    def VOLUME_CENTER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 1
+
 def CQRScreeningControlsStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(18)
 
 def Start(builder):
     CQRScreeningControlsStart(builder)
@@ -210,6 +252,36 @@ def CQRScreeningControlsAddALGORITHM(builder, ALGORITHM):
 def AddALGORITHM(builder, ALGORITHM):
     CQRScreeningControlsAddALGORITHM(builder, ALGORITHM)
 
+def CQRScreeningControlsAddSCREENING(builder, SCREENING):
+    builder.PrependUint8Slot(13, SCREENING, 0)
+
+def AddSCREENING(builder, SCREENING):
+    CQRScreeningControlsAddSCREENING(builder, SCREENING)
+
+def CQRScreeningControlsAddRADIAL_M(builder, RADIAL_M):
+    builder.PrependFloat64Slot(14, RADIAL_M, 0.0)
+
+def AddRADIAL_M(builder, RADIAL_M):
+    CQRScreeningControlsAddRADIAL_M(builder, RADIAL_M)
+
+def CQRScreeningControlsAddIN_TRACK_M(builder, IN_TRACK_M):
+    builder.PrependFloat64Slot(15, IN_TRACK_M, 0.0)
+
+def AddIN_TRACK_M(builder, IN_TRACK_M):
+    CQRScreeningControlsAddIN_TRACK_M(builder, IN_TRACK_M)
+
+def CQRScreeningControlsAddCROSS_TRACK_M(builder, CROSS_TRACK_M):
+    builder.PrependFloat64Slot(16, CROSS_TRACK_M, 0.0)
+
+def AddCROSS_TRACK_M(builder, CROSS_TRACK_M):
+    CQRScreeningControlsAddCROSS_TRACK_M(builder, CROSS_TRACK_M)
+
+def CQRScreeningControlsAddVOLUME_CENTER(builder, VOLUME_CENTER):
+    builder.PrependUint8Slot(17, VOLUME_CENTER, 1)
+
+def AddVOLUME_CENTER(builder, VOLUME_CENTER):
+    CQRScreeningControlsAddVOLUME_CENTER(builder, VOLUME_CENTER)
+
 def CQRScreeningControlsEnd(builder):
     return builder.EndObject()
 
@@ -240,6 +312,11 @@ class CQRScreeningControlsT(object):
         PROGRESS_INTERVAL_SECONDS = 0.0,
         HAS_PROGRESS_INTERVAL_SECONDS = False,
         ALGORITHM = 3,
+        SCREENING = 0,
+        RADIAL_M = 0.0,
+        IN_TRACK_M = 0.0,
+        CROSS_TRACK_M = 0.0,
+        VOLUME_CENTER = 1,
     ):
         self.START_EPOCH = START_EPOCH  # type: Optional[TIMInstant.TIMInstantT]
         self.DURATION_SECONDS = DURATION_SECONDS  # type: float
@@ -254,6 +331,11 @@ class CQRScreeningControlsT(object):
         self.PROGRESS_INTERVAL_SECONDS = PROGRESS_INTERVAL_SECONDS  # type: float
         self.HAS_PROGRESS_INTERVAL_SECONDS = HAS_PROGRESS_INTERVAL_SECONDS  # type: bool
         self.ALGORITHM = ALGORITHM  # type: int
+        self.SCREENING = SCREENING  # type: int
+        self.RADIAL_M = RADIAL_M  # type: float
+        self.IN_TRACK_M = IN_TRACK_M  # type: float
+        self.CROSS_TRACK_M = CROSS_TRACK_M  # type: float
+        self.VOLUME_CENTER = VOLUME_CENTER  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -290,6 +372,11 @@ class CQRScreeningControlsT(object):
         self.PROGRESS_INTERVAL_SECONDS = CQRScreeningControls.PROGRESS_INTERVAL_SECONDS()
         self.HAS_PROGRESS_INTERVAL_SECONDS = CQRScreeningControls.HAS_PROGRESS_INTERVAL_SECONDS()
         self.ALGORITHM = CQRScreeningControls.ALGORITHM()
+        self.SCREENING = CQRScreeningControls.SCREENING()
+        self.RADIAL_M = CQRScreeningControls.RADIAL_M()
+        self.IN_TRACK_M = CQRScreeningControls.IN_TRACK_M()
+        self.CROSS_TRACK_M = CQRScreeningControls.CROSS_TRACK_M()
+        self.VOLUME_CENTER = CQRScreeningControls.VOLUME_CENTER()
 
     # CQRScreeningControlsT
     def Pack(self, builder):
@@ -310,5 +397,10 @@ class CQRScreeningControlsT(object):
         CQRScreeningControlsAddPROGRESS_INTERVAL_SECONDS(builder, self.PROGRESS_INTERVAL_SECONDS)
         CQRScreeningControlsAddHAS_PROGRESS_INTERVAL_SECONDS(builder, self.HAS_PROGRESS_INTERVAL_SECONDS)
         CQRScreeningControlsAddALGORITHM(builder, self.ALGORITHM)
+        CQRScreeningControlsAddSCREENING(builder, self.SCREENING)
+        CQRScreeningControlsAddRADIAL_M(builder, self.RADIAL_M)
+        CQRScreeningControlsAddIN_TRACK_M(builder, self.IN_TRACK_M)
+        CQRScreeningControlsAddCROSS_TRACK_M(builder, self.CROSS_TRACK_M)
+        CQRScreeningControlsAddVOLUME_CENTER(builder, self.VOLUME_CENTER)
         CQRScreeningControls = CQRScreeningControlsEnd(builder)
         return CQRScreeningControls

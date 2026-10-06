@@ -136,7 +136,7 @@ func (rcv *OCM) TrajTypeDescription() []byte {
 
 /// Legacy trajectory type string for backward compatibility and extended types
 /// (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
-/// Time interval between state vectors in seconds (required for time-series data).
+/// Time interval between state vectors in seconds; required without STATE_EPOCHS.
 func (rcv *OCM) STATE_STEP_SIZE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -149,7 +149,7 @@ func (rcv *OCM) StateStepSize() float64 {
 	return rcv.STATE_STEP_SIZE()
 }
 
-/// Time interval between state vectors in seconds (required for time-series data).
+/// Time interval between state vectors in seconds; required without STATE_EPOCHS.
 func (rcv *OCM) MutateSTATE_STEP_SIZE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
 }
@@ -188,7 +188,7 @@ func (rcv *OCM) MutateStateVectorSize(n byte) bool {
 
 /// State data as row-major array of doubles.
 /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
-/// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+/// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
 /// Length must be divisible by STATE_VECTOR_SIZE.
 /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
 func (rcv *OCM) STATE_DATA(j int) float64 {
@@ -218,7 +218,7 @@ func (rcv *OCM) StateDataLength() int {
 
 /// State data as row-major array of doubles.
 /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
-/// Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+/// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
 /// Length must be divisible by STATE_VECTOR_SIZE.
 /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
 func (rcv *OCM) MutateSTATE_DATA(j int, n float64) bool {
@@ -623,8 +623,41 @@ func (rcv *OCM) CovCalibrationReference() []byte {
 }
 
 /// Identifier of that calibration evidence (a report or record).
+/// Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+/// section 6.2.4). When nonempty, length equals STATE_DATA.length /
+/// STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+/// Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+func (rcv *OCM) STATE_EPOCHS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *OCM) StateEpochs(j int) []byte {
+	return rcv.STATE_EPOCHS(j)
+}
+
+func (rcv *OCM) STATE_EPOCHSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OCM) StateEpochsLength() int {
+	return rcv.STATE_EPOCHSLength()
+}
+
+/// Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+/// section 6.2.4). When nonempty, length equals STATE_DATA.length /
+/// STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+/// Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
 func OCMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(23)
+	builder.StartObject(24)
 }
 func OCMAddHEADER(builder *flatbuffers.Builder, HEADER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(HEADER), 0)
@@ -799,6 +832,18 @@ func OCMAddCOV_CALIBRATION_REFERENCE(builder *flatbuffers.Builder, COV_CALIBRATI
 }
 func OCMAddCovCalibrationReference(builder *flatbuffers.Builder, COV_CALIBRATION_REFERENCE flatbuffers.UOffsetT) {
 	OCMAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
+}
+func OCMAddSTATE_EPOCHS(builder *flatbuffers.Builder, STATE_EPOCHS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(STATE_EPOCHS), 0)
+}
+func OCMAddStateEpochs(builder *flatbuffers.Builder, STATE_EPOCHS flatbuffers.UOffsetT) {
+	OCMAddSTATE_EPOCHS(builder, STATE_EPOCHS)
+}
+func OCMStartSTATE_EPOCHSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OCMStartStateEpochsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OCMStartSTATE_EPOCHSVector(builder, numElems)
 }
 func OCMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -53,7 +53,7 @@ public final class OCM extends com.google.flatbuffers.Table {
   public ByteBuffer TRAJ_TYPE_DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer TRAJ_TYPE_DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
   /**
-   * Time interval between state vectors in seconds (required for time-series data).
+   * Time interval between state vectors in seconds; required without STATE_EPOCHS.
    */
   public double STATE_STEP_SIZE() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -66,7 +66,7 @@ public final class OCM extends com.google.flatbuffers.Table {
   /**
    * State data as row-major array of doubles.
    * Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
-   * Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+   * Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
    * Length must be divisible by STATE_VECTOR_SIZE.
    * Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
    */
@@ -185,6 +185,16 @@ public final class OCM extends com.google.flatbuffers.Table {
   public String COV_CALIBRATION_REFERENCE() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COV_CALIBRATION_REFERENCEAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
   public ByteBuffer COV_CALIBRATION_REFERENCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
+   * Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+   * section 6.2.4). When nonempty, length equals STATE_DATA.length /
+   * STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+   * Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+   */
+  public String STATE_EPOCHS(int j) { int o = __offset(50); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int STATE_EPOCHSLength() { int o = __offset(50); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector stateEpochsVector() { return stateEpochsVector(new StringVector()); }
+  public StringVector stateEpochsVector(StringVector obj) { int o = __offset(50); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createOCM(FlatBufferBuilder builder,
       int HEADEROffset,
@@ -209,9 +219,11 @@ public final class OCM extends com.google.flatbuffers.Table {
       long ORB_REVNUM,
       int ORB_AVERAGINGOffset,
       byte COV_CALIBRATION,
-      int COV_CALIBRATION_REFERENCEOffset) {
-    builder.startTable(23);
+      int COV_CALIBRATION_REFERENCEOffset,
+      int STATE_EPOCHSOffset) {
+    builder.startTable(24);
     OCM.addStateStepSize(builder, STATE_STEP_SIZE);
+    OCM.addStateEpochs(builder, STATE_EPOCHSOffset);
     OCM.addCovCalibrationReference(builder, COV_CALIBRATION_REFERENCEOffset);
     OCM.addOrbAveraging(builder, ORB_AVERAGINGOffset);
     OCM.addOrbRevnum(builder, ORB_REVNUM);
@@ -237,7 +249,7 @@ public final class OCM extends com.google.flatbuffers.Table {
     return OCM.endOCM(builder);
   }
 
-  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(23); }
+  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(24); }
   public static void addHeader(FlatBufferBuilder builder, int HEADEROffset) { builder.addOffset(0, HEADEROffset, 0); }
   public static void addMetadata(FlatBufferBuilder builder, int METADATAOffset) { builder.addOffset(1, METADATAOffset, 0); }
   public static void addTrajType(FlatBufferBuilder builder, byte TRAJ_TYPE) { builder.addByte(2, TRAJ_TYPE, 0); }
@@ -273,6 +285,9 @@ public final class OCM extends com.google.flatbuffers.Table {
   public static void addOrbAveraging(FlatBufferBuilder builder, int ORB_AVERAGINGOffset) { builder.addOffset(20, ORB_AVERAGINGOffset, 0); }
   public static void addCovCalibration(FlatBufferBuilder builder, byte COV_CALIBRATION) { builder.addByte(21, COV_CALIBRATION, 0); }
   public static void addCovCalibrationReference(FlatBufferBuilder builder, int COV_CALIBRATION_REFERENCEOffset) { builder.addOffset(22, COV_CALIBRATION_REFERENCEOffset, 0); }
+  public static void addStateEpochs(FlatBufferBuilder builder, int STATE_EPOCHSOffset) { builder.addOffset(23, STATE_EPOCHSOffset, 0); }
+  public static int createStateEpochsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startStateEpochsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endOCM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

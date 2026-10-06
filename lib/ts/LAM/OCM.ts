@@ -82,7 +82,7 @@ TRAJ_TYPE_DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Time interval between state vectors in seconds (required for time-series data).
+ * Time interval between state vectors in seconds; required without STATE_EPOCHS.
  */
 STATE_STEP_SIZE():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
@@ -103,7 +103,7 @@ STATE_VECTOR_SIZE():number {
 /**
  * State data as row-major array of doubles.
  * Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
- * Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+ * Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
  * Length must be divisible by STATE_VECTOR_SIZE.
  * Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
  */
@@ -299,8 +299,26 @@ COV_CALIBRATION_REFERENCE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+ * section 6.2.4). When nonempty, length equals STATE_DATA.length /
+ * STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+ * Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+ */
+STATE_EPOCHS(index: number):string
+STATE_EPOCHS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+STATE_EPOCHS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+stateEpochsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startOCM(builder:flatbuffers.Builder) {
-  builder.startObject(23);
+  builder.startObject(24);
 }
 
 static addHeader(builder:flatbuffers.Builder, HEADEROffset:flatbuffers.Offset) {
@@ -477,6 +495,22 @@ static addCovCalibrationReference(builder:flatbuffers.Builder, COV_CALIBRATION_R
   builder.addFieldOffset(22, COV_CALIBRATION_REFERENCEOffset, 0);
 }
 
+static addStateEpochs(builder:flatbuffers.Builder, STATE_EPOCHSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(23, STATE_EPOCHSOffset, 0);
+}
+
+static createStateEpochsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startStateEpochsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endOCM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -515,7 +549,8 @@ unpack(): OCMT {
     this.ORB_REVNUM(),
     this.ORB_AVERAGING(),
     this.COV_CALIBRATION(),
-    this.COV_CALIBRATION_REFERENCE()
+    this.COV_CALIBRATION_REFERENCE(),
+    this.bb!.createScalarList<string>(this.STATE_EPOCHS.bind(this), this.stateEpochsLength())
   );
 }
 
@@ -544,6 +579,7 @@ unpackTo(_o: OCMT): void {
   _o.ORB_AVERAGING = this.ORB_AVERAGING();
   _o.COV_CALIBRATION = this.COV_CALIBRATION();
   _o.COV_CALIBRATION_REFERENCE = this.COV_CALIBRATION_REFERENCE();
+  _o.STATE_EPOCHS = this.bb!.createScalarList<string>(this.STATE_EPOCHS.bind(this), this.stateEpochsLength());
 }
 }
 
@@ -571,7 +607,8 @@ constructor(
   public ORB_REVNUM: number = 0,
   public ORB_AVERAGING: string|Uint8Array|null = null,
   public COV_CALIBRATION: covarianceCalibration = covarianceCalibration.Unspecified,
-  public COV_CALIBRATION_REFERENCE: string|Uint8Array|null = null
+  public COV_CALIBRATION_REFERENCE: string|Uint8Array|null = null,
+  public STATE_EPOCHS: (string)[] = []
 ){}
 
 
@@ -594,6 +631,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COV_REF_FRAME = (this.COV_REF_FRAME !== null ? this.COV_REF_FRAME!.pack(builder) : 0);
   const ORB_AVERAGING = (this.ORB_AVERAGING !== null ? builder.createString(this.ORB_AVERAGING!) : 0);
   const COV_CALIBRATION_REFERENCE = (this.COV_CALIBRATION_REFERENCE !== null ? builder.createString(this.COV_CALIBRATION_REFERENCE!) : 0);
+  const STATE_EPOCHS = OCM.createStateEpochsVector(builder, builder.createObjectOffsetList(this.STATE_EPOCHS));
 
   OCM.startOCM(builder);
   OCM.addHeader(builder, HEADER);
@@ -619,6 +657,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OCM.addOrbAveraging(builder, ORB_AVERAGING);
   OCM.addCovCalibration(builder, this.COV_CALIBRATION);
   OCM.addCovCalibrationReference(builder, COV_CALIBRATION_REFERENCE);
+  OCM.addStateEpochs(builder, STATE_EPOCHS);
 
   return OCM.endOCM(builder);
 }
