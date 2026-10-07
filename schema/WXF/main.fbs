@@ -142,7 +142,32 @@ enum wxfVariable : byte {
   /// Geopotential height, geopotential metres (gpm): the height a producer
   /// such as GFS publishes on pressure levels and at the tropopause. Distinct
   /// from Geopotential (m^2/s^2); a consumer never relabels one as the other.
-  GeopotentialHeight
+  GeopotentialHeight,
+  /// Brightness temperature a radiometer channel measured, kelvin: the
+  /// temperature of a black body emitting the observed radiance at
+  /// CHANNEL_WAVELENGTH_UM. At LEVEL_KIND TopOfAtmosphere.
+  BrightnessTemperature,
+  /// Top-of-atmosphere bidirectional reflectance factor of a solar channel
+  /// at CHANNEL_WAVELENGTH_UM, dimensionless (1 = a white Lambertian
+  /// surface under the same illumination), not corrected for the solar
+  /// zenith angle unless VARIABLE_NAME says so. Missing at night.
+  Reflectance,
+  /// Categorical cloud mask of a satellite retrieval: 0 clear, 1 probably
+  /// clear, 2 probably cloudy, 3 cloudy. Units "1". A cell resampled from
+  /// several source pixels carries their mean, so fractional values are
+  /// the average category, not a new class.
+  CloudMask,
+  /// Categorical thermodynamic phase at the cloud top: 0 clear, 1 liquid
+  /// water, 2 supercooled liquid water, 3 mixed, 4 ice, 5 unknown. Units
+  /// "1". Resampled cells carry the category of the source pixel nearest the
+  /// cell centre.
+  CloudPhase,
+  /// Cloud optical depth at CHANNEL_WAVELENGTH_UM, dimensionless.
+  CloudOpticalDepth,
+  /// Cloud-top effective particle radius, micrometres (units "um").
+  CloudEffectiveRadius,
+  /// Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
+  CloudEmissivity
 }
 
 /// Vertical coordinate of the field. Append new values only; never reorder or
@@ -166,7 +191,12 @@ enum wxfLevelKind : byte {
   /// Geometric height above the reference ellipsoid; LEVEL_VALUE in metres.
   /// For fields defined at altitude rather than on pressure levels (for
   /// example the upper atmosphere).
-  HeightAboveEllipsoid
+  HeightAboveEllipsoid,
+  /// The top of the cloud a satellite retrieval saw in each cell; the level
+  /// varies from cell to cell and LEVEL_VALUE is unused. The height itself
+  /// is a GeopotentialHeight field at this level (a Temperature field gives
+  /// the cloud-top temperature), never implied by the level.
+  CloudTop
 }
 
 /// Temporal character of the value in each cell. Append new values only;
@@ -198,7 +228,22 @@ enum wxfValuesEncoding : byte {
   InlineFloat32,
   /// Samples are a content-addressed chunk named by CHUNK_CID; CHUNK_DTYPE /
   /// CHUNK_CODECS describe its layout. Used above 1,048,576 cells.
-  ContentAddressedChunk
+  ContentAddressedChunk,
+  /// Samples are inline in QUANTIZED_U16 as unsigned 16-bit codes: value =
+  /// ADD_OFFSET + SCALE_FACTOR * code; code 65535 marks a missing cell.
+  /// Same cell limit and order as InlineFloat32. VALUE_MIN / VALUE_MAX are
+  /// decoded values.
+  InlineQuantizedUint16,
+  /// Samples are inline in QUANTIZED_U8 as unsigned 8-bit codes: value =
+  /// ADD_OFFSET + SCALE_FACTOR * code; code 255 marks a missing cell. Same
+  /// cell limit and order as InlineFloat32.
+  InlineQuantizedUint8,
+  /// Samples are quantized codes as InlineQuantizedUint16 / InlineQuantizedUint8
+  /// (CHUNK_DTYPE "uint16" or "uint8"; value = ADD_OFFSET + SCALE_FACTOR *
+  /// code; the all-ones code marks a missing cell), inline in QUANTIZED_U8 as
+  /// a chunk encoded by CHUNK_CODECS. Same cell limit and order as
+  /// InlineFloat32; CHUNK_BYTE_LENGTH is the chunk's length.
+  InlineEncodedChunk
 }
 
 /// Licence class of the data at RETRIEVED_AT, following the split a producer
@@ -323,10 +368,19 @@ table WXF {
   /// Content identifier of the sample chunk when VALUES_ENCODING is
   /// ContentAddressedChunk.
   CHUNK_CID: string;
-  /// Element type of the chunk (e.g. "float32", "float16").
+  /// Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+  /// for InlineEncodedChunk).
   CHUNK_DTYPE: string;
   /// Codec chain applied to the chunk, outermost last (e.g. "bytes",
-  /// "zstd").
+  /// "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+  /// order of VALUES (little-endian elements):
+  ///   "delta"   each element less the one before it, the first kept,
+  ///             wrapping in the element type;
+  ///   "zigzag"  each element read as signed in its type and mapped to
+  ///             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+  ///   "shuffle" the elements' bytes grouped by significance, every
+  ///             element's least significant byte first.
+  /// Decoding applies the inverses from the last back.
   CHUNK_CODECS: [string];
   /// Encoded chunk length in bytes.
   CHUNK_BYTE_LENGTH: uint64;
@@ -358,6 +412,36 @@ table WXF {
   /// Times published by the source; governs whether initialization, lead
   /// and horizon are meaningful. The default preserves existing records.
   TIME_BASIS: wxfTimeBasis = Initialization;
+  /// Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+  /// GRID.NLAT * GRID.NLON in the order of VALUES.
+  QUANTIZED_U16: [ushort];
+  /// Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+  /// encoded chunk when it is InlineEncodedChunk.
+  QUANTIZED_U8: [ubyte];
+  /// Scale applied to a quantized code, in UNITS per code step.
+  SCALE_FACTOR: double = 1;
+  /// Offset added after scaling a quantized code, in UNITS.
+  ADD_OFFSET: double;
+  /// Instrument that observed the field: the platform and instrument
+  /// designation its operator publishes. Absent for model output.
+  SENSOR_ID: string;
+  /// Central wavelength of the channel the field was measured or retrieved
+  /// at, micrometres; 0 when not a single channel.
+  CHANNEL_WAVELENGTH_UM: float;
+  /// Geodetic longitude of the observing platform, degrees east (the
+  /// sub-satellite point of a geostationary imager), for viewing-geometry
+  /// and parallax corrections. NaN when unstated.
+  PLATFORM_LONGITUDE_DEG: double = nan;
+  /// Geodetic latitude of the observing platform, degrees north. NaN when
+  /// unstated.
+  PLATFORM_LATITUDE_DEG: double = nan;
+  /// Height of the observing platform above the WGS84 ellipsoid, metres.
+  /// NaN when unstated.
+  PLATFORM_HEIGHT_M: double = nan;
+  /// End of the observation's scan, Unix milliseconds UTC, when the samples
+  /// were taken over an interval; VALID_TIME_MS is then the scan start.
+  /// 0 when unstated.
+  SCAN_END_TIME_MS: uint64;
 }
 
 root_type WXF;
