@@ -12,16 +12,20 @@ type stfRetentionPolicy int8
 const (
 	stfRetentionPolicyReplaceCurrent stfRetentionPolicy = 0
 	stfRetentionPolicyArchiveAll     stfRetentionPolicy = 1
+	/// Every publication stays in the store; nothing is superseded or pinned.
+	stfRetentionPolicyKeepAll        stfRetentionPolicy = 2
 )
 
 var EnumNamesstfRetentionPolicy = map[stfRetentionPolicy]string{
 	stfRetentionPolicyReplaceCurrent: "ReplaceCurrent",
 	stfRetentionPolicyArchiveAll:     "ArchiveAll",
+	stfRetentionPolicyKeepAll:        "KeepAll",
 }
 
 var EnumValuesstfRetentionPolicy = map[string]stfRetentionPolicy{
 	"ReplaceCurrent": stfRetentionPolicyReplaceCurrent,
 	"ArchiveAll":     stfRetentionPolicyArchiveAll,
+	"KeepAll":        stfRetentionPolicyKeepAll,
 }
 
 func (v stfRetentionPolicy) String() string {

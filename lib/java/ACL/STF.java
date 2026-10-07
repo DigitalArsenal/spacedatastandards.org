@@ -207,7 +207,8 @@ public final class STF extends com.google.flatbuffers.Table {
   /**
    * Retention rule the publisher recommends to subscribers of a dataset
    * listing: ReplaceCurrent when each publication is a complete current set,
-   * ArchiveAll when publications accumulate history.
+   * KeepAll when publications accumulate history the store should keep,
+   * ArchiveAll when that history should also stay pinned.
    */
   public byte RECOMMENDED_RETENTION() { int o = __offset(62); return o != 0 ? bb.get(o + bb_pos) : 0; }
 

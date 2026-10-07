@@ -16,8 +16,13 @@ public final class dssRetention {
    * Every publication is kept and pinned; history stays retrievable.
    */
   public static final byte ArchiveAll = 1;
+  /**
+   * Every publication stays in the store; nothing is superseded and nothing
+   * is pinned, so history stays queryable from the store.
+   */
+  public static final byte KeepAll = 2;
 
-  public static final String[] names = { "ReplaceCurrent", "ArchiveAll", };
+  public static final String[] names = { "ReplaceCurrent", "ArchiveAll", "KeepAll", };
 
   public static String name(int e) { return names[e]; }
 }

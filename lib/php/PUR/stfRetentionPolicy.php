@@ -8,10 +8,13 @@ class stfRetentionPolicy
 {
     const ReplaceCurrent = 0;
     const ArchiveAll = 1;
+    /// Every publication stays in the store; nothing is superseded or pinned.
+    const KeepAll = 2;
 
     private static $names = array(
         stfRetentionPolicy::ReplaceCurrent=>"ReplaceCurrent",
         stfRetentionPolicy::ArchiveAll=>"ArchiveAll",
+        stfRetentionPolicy::KeepAll=>"KeepAll",
     );
 
     public static function Name($e)

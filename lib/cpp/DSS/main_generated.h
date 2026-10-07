@@ -113,11 +113,16 @@ enum dssAction : int8_t {
   dssAction_Unpin = 5,
   /// Rebuild the local materialisation from pinned publications.
   dssAction_Hydrate = 6,
+  /// Set RETENTION and leave the subscription alone: the lane's rule, or,
+  /// when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for
+  /// every lane of SCHEMA_NAME. A frame without RETENTION clears the choice,
+  /// so the default applies again.
+  dssAction_SetRetention = 7,
   dssAction_MIN = dssAction_None,
-  dssAction_MAX = dssAction_Hydrate
+  dssAction_MAX = dssAction_SetRetention
 };
 
-inline const dssAction (&EnumValuesdssAction())[7] {
+inline const dssAction (&EnumValuesdssAction())[8] {
   static const dssAction values[] = {
     dssAction_None,
     dssAction_Sync,
@@ -125,13 +130,14 @@ inline const dssAction (&EnumValuesdssAction())[7] {
     dssAction_Unsubscribe,
     dssAction_Pin,
     dssAction_Unpin,
-    dssAction_Hydrate
+    dssAction_Hydrate,
+    dssAction_SetRetention
   };
   return values;
 }
 
 inline const char * const *EnumNamesdssAction() {
-  static const char * const names[8] = {
+  static const char * const names[9] = {
     "None",
     "Sync",
     "Subscribe",
@@ -139,13 +145,14 @@ inline const char * const *EnumNamesdssAction() {
     "Pin",
     "Unpin",
     "Hydrate",
+    "SetRetention",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamedssAction(dssAction e) {
-  if (::flatbuffers::IsOutRange(e, dssAction_None, dssAction_Hydrate)) return "";
+  if (::flatbuffers::IsOutRange(e, dssAction_None, dssAction_SetRetention)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesdssAction()[index];
 }
@@ -158,29 +165,34 @@ enum dssRetention : int8_t {
   dssRetention_ReplaceCurrent = 0,
   /// Every publication is kept and pinned; history stays retrievable.
   dssRetention_ArchiveAll = 1,
+  /// Every publication stays in the store; nothing is superseded and nothing
+  /// is pinned, so history stays queryable from the store.
+  dssRetention_KeepAll = 2,
   dssRetention_MIN = dssRetention_ReplaceCurrent,
-  dssRetention_MAX = dssRetention_ArchiveAll
+  dssRetention_MAX = dssRetention_KeepAll
 };
 
-inline const dssRetention (&EnumValuesdssRetention())[2] {
+inline const dssRetention (&EnumValuesdssRetention())[3] {
   static const dssRetention values[] = {
     dssRetention_ReplaceCurrent,
-    dssRetention_ArchiveAll
+    dssRetention_ArchiveAll,
+    dssRetention_KeepAll
   };
   return values;
 }
 
 inline const char * const *EnumNamesdssRetention() {
-  static const char * const names[3] = {
+  static const char * const names[4] = {
     "ReplaceCurrent",
     "ArchiveAll",
+    "KeepAll",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamedssRetention(dssRetention e) {
-  if (::flatbuffers::IsOutRange(e, dssRetention_ReplaceCurrent, dssRetention_ArchiveAll)) return "";
+  if (::flatbuffers::IsOutRange(e, dssRetention_ReplaceCurrent, dssRetention_KeepAll)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesdssRetention()[index];
 }
@@ -420,8 +432,11 @@ struct DSS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
   /// previous batch of the lane with each new publication so the lane holds
-  /// one current set; ArchiveAll keeps and pins every publication so history
-  /// stays retrievable by content identifier.
+  /// one current set; KeepAll keeps every publication in the store and pins
+  /// none; ArchiveAll keeps and pins every publication so history stays
+  /// retrievable by content identifier. A lane without a rule of its own
+  /// follows its standard's default. A Subscribe without RETENTION keeps the
+  /// lane's rule; SetRetention changes it.
   dssRetention RETENTION() const {
     return static_cast<dssRetention>(GetField<int8_t>(VT_RETENTION, 0));
   }

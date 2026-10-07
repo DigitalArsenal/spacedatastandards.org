@@ -226,11 +226,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for dssPinPolicy {}
 pub const ENUM_MIN_DSS_ACTION: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_DSS_ACTION: i8 = 6;
+pub const ENUM_MAX_DSS_ACTION: i8 = 7;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_DSS_ACTION: [dssAction; 7] = [
+pub const ENUM_VALUES_DSS_ACTION: [dssAction; 8] = [
     dssAction::None,
     dssAction::Sync,
     dssAction::Subscribe,
@@ -238,6 +238,7 @@ pub const ENUM_VALUES_DSS_ACTION: [dssAction; 7] = [
     dssAction::Pin,
     dssAction::Unpin,
     dssAction::Hydrate,
+    dssAction::SetRetention,
 ];
 
 /// Action a client requests on a lane. Append new values only; never reorder
@@ -257,9 +258,14 @@ impl dssAction {
     pub const Unpin: Self = Self(5);
     /// Rebuild the local materialisation from pinned publications.
     pub const Hydrate: Self = Self(6);
+    /// Set RETENTION and leave the subscription alone: the lane's rule, or,
+    /// when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for
+    /// every lane of SCHEMA_NAME. A frame without RETENTION clears the choice,
+    /// so the default applies again.
+    pub const SetRetention: Self = Self(7);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 6;
+    pub const ENUM_MAX: i8 = 7;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::None,
         Self::Sync,
@@ -268,6 +274,7 @@ impl dssAction {
         Self::Pin,
         Self::Unpin,
         Self::Hydrate,
+        Self::SetRetention,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -280,6 +287,7 @@ impl dssAction {
             Self::Pin => Some("Pin"),
             Self::Unpin => Some("Unpin"),
             Self::Hydrate => Some("Hydrate"),
+            Self::SetRetention => Some("SetRetention"),
             _ => None,
         }
     }
@@ -345,13 +353,14 @@ impl ::flatbuffers::SimpleToVerifyInSlice for dssAction {}
 pub const ENUM_MIN_DSS_RETENTION: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_DSS_RETENTION: i8 = 1;
+pub const ENUM_MAX_DSS_RETENTION: i8 = 2;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_DSS_RETENTION: [dssRetention; 2] = [
+pub const ENUM_VALUES_DSS_RETENTION: [dssRetention; 3] = [
     dssRetention::ReplaceCurrent,
     dssRetention::ArchiveAll,
+    dssRetention::KeepAll,
 ];
 
 /// Retention rule for a lane's publications on the subscribing node. Append
@@ -367,12 +376,16 @@ impl dssRetention {
     pub const ReplaceCurrent: Self = Self(0);
     /// Every publication is kept and pinned; history stays retrievable.
     pub const ArchiveAll: Self = Self(1);
+    /// Every publication stays in the store; nothing is superseded and nothing
+    /// is pinned, so history stays queryable from the store.
+    pub const KeepAll: Self = Self(2);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 1;
+    pub const ENUM_MAX: i8 = 2;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::ReplaceCurrent,
         Self::ArchiveAll,
+        Self::KeepAll,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -380,6 +393,7 @@ impl dssRetention {
         match self {
             Self::ReplaceCurrent => Some("ReplaceCurrent"),
             Self::ArchiveAll => Some("ArchiveAll"),
+            Self::KeepAll => Some("KeepAll"),
             _ => None,
         }
     }
@@ -1192,8 +1206,11 @@ impl<'a> DSS<'a> {
 
     /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
     /// previous batch of the lane with each new publication so the lane holds
-    /// one current set; ArchiveAll keeps and pins every publication so history
-    /// stays retrievable by content identifier.
+    /// one current set; KeepAll keeps every publication in the store and pins
+    /// none; ArchiveAll keeps and pins every publication so history stays
+    /// retrievable by content identifier. A lane without a rule of its own
+    /// follows its standard's default. A Subscribe without RETENTION keeps the
+    /// lane's rule; SetRetention changes it.
     #[inline]
     pub fn RETENTION(&self) -> dssRetention {
         // Safety:

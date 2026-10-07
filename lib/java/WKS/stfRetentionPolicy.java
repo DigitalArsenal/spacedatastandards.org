@@ -10,8 +10,12 @@ public final class stfRetentionPolicy {
   private stfRetentionPolicy() { }
   public static final byte ReplaceCurrent = 0;
   public static final byte ArchiveAll = 1;
+  /**
+   * Every publication stays in the store; nothing is superseded or pinned.
+   */
+  public static final byte KeepAll = 2;
 
-  public static final String[] names = { "ReplaceCurrent", "ArchiveAll", };
+  public static final String[] names = { "ReplaceCurrent", "ArchiveAll", "KeepAll", };
 
   public static String name(int e) { return names[e]; }
 }

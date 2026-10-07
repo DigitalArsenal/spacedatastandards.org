@@ -100,7 +100,8 @@ enum dssAction {
   Unsubscribe(3),
   Pin(4),
   Unpin(5),
-  Hydrate(6);
+  Hydrate(6),
+  SetRetention(7);
 
   final int value;
   const dssAction(this.value);
@@ -114,6 +115,7 @@ enum dssAction {
       case 4: return dssAction.Pin;
       case 5: return dssAction.Unpin;
       case 6: return dssAction.Hydrate;
+      case 7: return dssAction.SetRetention;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -122,7 +124,7 @@ enum dssAction {
       value == null ? null : dssAction.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 6;
+  static const int maxValue = 7;
   static const fb.Reader<dssAction> reader = _dssActionReader();
 }
 
@@ -141,7 +143,8 @@ class _dssActionReader extends fb.Reader<dssAction> {
 ///  new values only; never reorder or reuse existing values.
 enum dssRetention {
   ReplaceCurrent(0),
-  ArchiveAll(1);
+  ArchiveAll(1),
+  KeepAll(2);
 
   final int value;
   const dssRetention(this.value);
@@ -150,6 +153,7 @@ enum dssRetention {
     switch (value) {
       case 0: return dssRetention.ReplaceCurrent;
       case 1: return dssRetention.ArchiveAll;
+      case 2: return dssRetention.KeepAll;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -158,7 +162,7 @@ enum dssRetention {
       value == null ? null : dssRetention.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 1;
+  static const int maxValue = 2;
   static const fb.Reader<dssRetention> reader = _dssRetentionReader();
 }
 
@@ -302,8 +306,11 @@ class DSS {
   String? get originId => ORIGIN_ID;
   ///  How this node keeps a lane's publications. ReplaceCurrent supersedes the
   ///  previous batch of the lane with each new publication so the lane holds
-  ///  one current set; ArchiveAll keeps and pins every publication so history
-  ///  stays retrievable by content identifier.
+  ///  one current set; KeepAll keeps every publication in the store and pins
+  ///  none; ArchiveAll keeps and pins every publication so history stays
+  ///  retrievable by content identifier. A lane without a rule of its own
+  ///  follows its standard's default. A Subscribe without RETENTION keeps the
+  ///  lane's rule; SetRetention changes it.
   dssRetention get RETENTION => dssRetention.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 110, 0));
 
   @override

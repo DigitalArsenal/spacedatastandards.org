@@ -10,5 +10,9 @@ class stfRetentionPolicy private constructor() {
     companion object {
         const val ReplaceCurrent: Byte = 0
         const val ArchiveAll: Byte = 1
+        /**
+         * Every publication stays in the store; nothing is superseded or pinned.
+         */
+        const val KeepAll: Byte = 2
     }
 }

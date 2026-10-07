@@ -62,8 +62,13 @@ public enum dssAction: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   case unpin = 5
   ///  Rebuild the local materialisation from pinned publications.
   case hydrate = 6
+  ///  Set RETENTION and leave the subscription alone: the lane's rule, or,
+  ///  when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for
+  ///  every lane of SCHEMA_NAME. A frame without RETENTION clears the choice,
+  ///  so the default applies again.
+  case setretention = 7
 
-  public static var max: dssAction { return .hydrate }
+  public static var max: dssAction { return .setretention }
   public static var min: dssAction { return .none_ }
 }
 
@@ -79,8 +84,11 @@ public enum dssRetention: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
   case replacecurrent = 0
   ///  Every publication is kept and pinned; history stays retrievable.
   case archiveall = 1
+  ///  Every publication stays in the store; nothing is superseded and nothing
+  ///  is pinned, so history stays queryable from the store.
+  case keepall = 2
 
-  public static var max: dssRetention { return .archiveall }
+  public static var max: dssRetention { return .keepall }
   public static var min: dssRetention { return .replacecurrent }
 }
 
@@ -251,8 +259,11 @@ public struct DSS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var ORIGIN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGIN_ID) }
   ///  How this node keeps a lane's publications. ReplaceCurrent supersedes the
   ///  previous batch of the lane with each new publication so the lane holds
-  ///  one current set; ArchiveAll keeps and pins every publication so history
-  ///  stays retrievable by content identifier.
+  ///  one current set; KeepAll keeps every publication in the store and pins
+  ///  none; ArchiveAll keeps and pins every publication so history stays
+  ///  retrievable by content identifier. A lane without a rule of its own
+  ///  follows its standard's default. A Subscribe without RETENTION keeps the
+  ///  lane's rule; SetRetention changes it.
   public var RETENTION: dssRetention { let o = _accessor.offset(VT.RETENTION); return o == 0 ? .replacecurrent : dssRetention(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .replacecurrent }
   public static func startDSS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 54) }
   public static func add(STATUS: dssSyncState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }

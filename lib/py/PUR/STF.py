@@ -405,7 +405,8 @@ class STF(object):
 
     # Retention rule the publisher recommends to subscribers of a dataset
     # listing: ReplaceCurrent when each publication is a complete current set,
-    # ArchiveAll when publications accumulate history.
+    # KeepAll when publications accumulate history the store should keep,
+    # ArchiveAll when that history should also stay pinned.
     # STF
     def RECOMMENDED_RETENTION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))

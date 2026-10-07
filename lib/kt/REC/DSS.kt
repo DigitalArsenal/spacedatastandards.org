@@ -511,8 +511,11 @@ class DSS : Table() {
     /**
      * How this node keeps a lane's publications. ReplaceCurrent supersedes the
      * previous batch of the lane with each new publication so the lane holds
-     * one current set; ArchiveAll keeps and pins every publication so history
-     * stays retrievable by content identifier.
+     * one current set; KeepAll keeps every publication in the store and pins
+     * none; ArchiveAll keeps and pins every publication so history stays
+     * retrievable by content identifier. A lane without a rule of its own
+     * follows its standard's default. A Subscribe without RETENTION keeps the
+     * lane's rule; SetRetention changes it.
      */
     val retention : Byte
         get() {

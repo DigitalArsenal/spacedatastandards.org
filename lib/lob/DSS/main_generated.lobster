@@ -36,6 +36,11 @@ enum dssAction:
     dssAction_Unpin = 5
     /// Rebuild the local materialisation from pinned publications.
     dssAction_Hydrate = 6
+    /// Set RETENTION and leave the subscription alone: the lane's rule, or,
+    /// when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for
+    /// every lane of SCHEMA_NAME. A frame without RETENTION clears the choice,
+    /// so the default applies again.
+    dssAction_SetRetention = 7
 
 /// Retention rule for a lane's publications on the subscribing node. Append
 /// new values only; never reorder or reuse existing values.
@@ -45,6 +50,9 @@ enum dssRetention:
     dssRetention_ReplaceCurrent = 0
     /// Every publication is kept and pinned; history stays retrievable.
     dssRetention_ArchiveAll = 1
+    /// Every publication stays in the store; nothing is superseded and nothing
+    /// is pinned, so history stays queryable from the store.
+    dssRetention_KeepAll = 2
 
 class DSS
 
@@ -175,8 +183,11 @@ class DSS : flatbuffers.handle
         return flatbuffers.field_string(buf_, pos_, 108)
     /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
     /// previous batch of the lane with each new publication so the lane holds
-    /// one current set; ArchiveAll keeps and pins every publication so history
-    /// stays retrievable by content identifier.
+    /// one current set; KeepAll keeps every publication in the store and pins
+    /// none; ArchiveAll keeps and pins every publication so history stays
+    /// retrievable by content identifier. A lane without a rule of its own
+    /// follows its standard's default. A Subscribe without RETENTION keeps the
+    /// lane's rule; SetRetention changes it.
     def RETENTION() -> dssRetention:
         return dssRetention(flatbuffers.field_int8(buf_, pos_, 110, 0))
 

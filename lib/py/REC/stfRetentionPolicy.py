@@ -8,3 +8,5 @@
 class stfRetentionPolicy(object):
     ReplaceCurrent = 0
     ArchiveAll = 1
+    # Every publication stays in the store; nothing is superseded or pinned.
+    KeepAll = 2

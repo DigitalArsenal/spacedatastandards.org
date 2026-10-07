@@ -11,6 +11,11 @@ export declare enum dssRetention {
     /**
      * Every publication is kept and pinned; history stays retrievable.
      */
-    ArchiveAll = 1
+    ArchiveAll = 1,
+    /**
+     * Every publication stays in the store; nothing is superseded and nothing
+     * is pinned, so history stays queryable from the store.
+     */
+    KeepAll = 2
 }
 //# sourceMappingURL=dssRetention.d.ts.map

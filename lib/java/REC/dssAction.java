@@ -20,8 +20,15 @@ public final class dssAction {
    * Rebuild the local materialisation from pinned publications.
    */
   public static final byte Hydrate = 6;
+  /**
+   * Set RETENTION and leave the subscription alone: the lane's rule, or,
+   * when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for
+   * every lane of SCHEMA_NAME. A frame without RETENTION clears the choice,
+   * so the default applies again.
+   */
+  public static final byte SetRetention = 7;
 
-  public static final String[] names = { "None", "Sync", "Subscribe", "Unsubscribe", "Pin", "Unpin", "Hydrate", };
+  public static final String[] names = { "None", "Sync", "Subscribe", "Unsubscribe", "Pin", "Unpin", "Hydrate", "SetRetention", };
 
   public static String name(int e) { return names[e]; }
 }

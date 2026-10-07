@@ -10,10 +10,14 @@ class dssRetention
     const ReplaceCurrent = 0;
     /// Every publication is kept and pinned; history stays retrievable.
     const ArchiveAll = 1;
+    /// Every publication stays in the store; nothing is superseded and nothing
+    /// is pinned, so history stays queryable from the store.
+    const KeepAll = 2;
 
     private static $names = array(
         dssRetention::ReplaceCurrent=>"ReplaceCurrent",
         dssRetention::ArchiveAll=>"ArchiveAll",
+        dssRetention::KeepAll=>"KeepAll",
     );
 
     public static function Name($e)

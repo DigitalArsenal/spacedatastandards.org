@@ -16,5 +16,10 @@ class dssRetention private constructor() {
          * Every publication is kept and pinned; history stays retrievable.
          */
         const val ArchiveAll: Byte = 1
+        /**
+         * Every publication stays in the store; nothing is superseded and nothing
+         * is pinned, so history stays queryable from the store.
+         */
+        const val KeepAll: Byte = 2
     }
 }

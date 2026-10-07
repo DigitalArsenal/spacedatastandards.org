@@ -36289,7 +36289,8 @@
                     "type": "string",
                     "enum": [
                         "ReplaceCurrent",
-                        "ArchiveAll"
+                        "ArchiveAll",
+                        "KeepAll"
                     ]
                 },
                 "purchaseLifecycleStatus": {
@@ -36862,7 +36863,7 @@
                         },
                         "RECOMMENDED_RETENTION": {
                             "$ref": "#/definitions/stfRetentionPolicy",
-                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
+                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nKeepAll when publications accumulate history the store should keep,\nArchiveAll when that history should also stay pinned."
                         }
                     },
                     "required": [
@@ -49125,14 +49126,16 @@
                         "Unsubscribe",
                         "Pin",
                         "Unpin",
-                        "Hydrate"
+                        "Hydrate",
+                        "SetRetention"
                     ]
                 },
                 "dssRetention": {
                     "type": "string",
                     "enum": [
                         "ReplaceCurrent",
-                        "ArchiveAll"
+                        "ArchiveAll",
+                        "KeepAll"
                     ]
                 },
                 "DSS": {
@@ -49350,7 +49353,7 @@
                         },
                         "RETENTION": {
                             "$ref": "#/definitions/dssRetention",
-                            "description": "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; ArchiveAll keeps and pins every publication so history\nstays retrievable by content identifier."
+                            "description": "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; KeepAll keeps every publication in the store and pins\nnone; ArchiveAll keeps and pins every publication so history stays\nretrievable by content identifier. A lane without a rule of its own\nfollows its standard's default. A Subscribe without RETENTION keeps the\nlane's rule; SetRetention changes it."
                         }
                     },
                     "additionalProperties": false
@@ -63313,7 +63316,8 @@
                     "type": "string",
                     "enum": [
                         "ReplaceCurrent",
-                        "ArchiveAll"
+                        "ArchiveAll",
+                        "KeepAll"
                     ]
                 },
                 "grantLifecycleStatus": {
@@ -66212,14 +66216,16 @@
                         "Unsubscribe",
                         "Pin",
                         "Unpin",
-                        "Hydrate"
+                        "Hydrate",
+                        "SetRetention"
                     ]
                 },
                 "dssRetention": {
                     "type": "string",
                     "enum": [
                         "ReplaceCurrent",
-                        "ArchiveAll"
+                        "ArchiveAll",
+                        "KeepAll"
                     ]
                 },
                 "dttTilingScheme": {
@@ -73339,7 +73345,7 @@
                         },
                         "RECOMMENDED_RETENTION": {
                             "$ref": "#/definitions/stfRetentionPolicy",
-                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
+                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nKeepAll when publications accumulate history the store should keep,\nArchiveAll when that history should also stay pinned."
                         }
                     },
                     "required": [
@@ -90854,7 +90860,7 @@
                         },
                         "RETENTION": {
                             "$ref": "#/definitions/dssRetention",
-                            "description": "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; ArchiveAll keeps and pins every publication so history\nstays retrievable by content identifier."
+                            "description": "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; KeepAll keeps every publication in the store and pins\nnone; ArchiveAll keeps and pins every publication so history stays\nretrievable by content identifier. A lane without a rule of its own\nfollows its standard's default. A Subscribe without RETENTION keeps the\nlane's rule; SetRetention changes it."
                         }
                     },
                     "additionalProperties": false
@@ -154642,7 +154648,8 @@
                     "type": "string",
                     "enum": [
                         "ReplaceCurrent",
-                        "ArchiveAll"
+                        "ArchiveAll",
+                        "KeepAll"
                     ]
                 },
                 "grantLifecycleStatus": {
@@ -157122,7 +157129,7 @@
                         },
                         "RECOMMENDED_RETENTION": {
                             "$ref": "#/definitions/stfRetentionPolicy",
-                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
+                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nKeepAll when publications accumulate history the store should keep,\nArchiveAll when that history should also stay pinned."
                         }
                     },
                     "required": [
@@ -195218,7 +195225,8 @@
                     "type": "string",
                     "enum": [
                         "ReplaceCurrent",
-                        "ArchiveAll"
+                        "ArchiveAll",
+                        "KeepAll"
                     ]
                 },
                 "grantLifecycleStatus": {
@@ -195787,7 +195795,7 @@
                         },
                         "RECOMMENDED_RETENTION": {
                             "$ref": "#/definitions/stfRetentionPolicy",
-                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
+                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nKeepAll when publications accumulate history the store should keep,\nArchiveAll when that history should also stay pinned."
                         }
                     },
                     "required": [
@@ -197849,7 +197857,8 @@
                     "type": "string",
                     "enum": [
                         "ReplaceCurrent",
-                        "ArchiveAll"
+                        "ArchiveAll",
+                        "KeepAll"
                     ]
                 },
                 "CCTCategory": {
@@ -198408,7 +198417,7 @@
                         },
                         "RECOMMENDED_RETENTION": {
                             "$ref": "#/definitions/stfRetentionPolicy",
-                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
+                            "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nKeepAll when publications accumulate history the store should keep,\nArchiveAll when that history should also stay pinned."
                         }
                     },
                     "required": [

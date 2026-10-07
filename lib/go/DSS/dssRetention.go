@@ -14,16 +14,21 @@ const (
 	dssRetentionReplaceCurrent dssRetention = 0
 	/// Every publication is kept and pinned; history stays retrievable.
 	dssRetentionArchiveAll     dssRetention = 1
+	/// Every publication stays in the store; nothing is superseded and nothing
+	/// is pinned, so history stays queryable from the store.
+	dssRetentionKeepAll        dssRetention = 2
 )
 
 var EnumNamesdssRetention = map[dssRetention]string{
 	dssRetentionReplaceCurrent: "ReplaceCurrent",
 	dssRetentionArchiveAll:     "ArchiveAll",
+	dssRetentionKeepAll:        "KeepAll",
 }
 
 var EnumValuesdssRetention = map[string]dssRetention{
 	"ReplaceCurrent": dssRetentionReplaceCurrent,
 	"ArchiveAll":     dssRetentionArchiveAll,
+	"KeepAll":        dssRetentionKeepAll,
 }
 
 func (v dssRetention) String() string {

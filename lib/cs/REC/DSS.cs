@@ -252,8 +252,11 @@ public struct DSS : IFlatbufferObject
   public byte[] GetORIGIN_IDArray() { return __p.__vector_as_array<byte>(108); }
   /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
   /// previous batch of the lane with each new publication so the lane holds
-  /// one current set; ArchiveAll keeps and pins every publication so history
-  /// stays retrievable by content identifier.
+  /// one current set; KeepAll keeps every publication in the store and pins
+  /// none; ArchiveAll keeps and pins every publication so history stays
+  /// retrievable by content identifier. A lane without a rule of its own
+  /// follows its standard's default. A Subscribe without RETENTION keeps the
+  /// lane's rule; SetRetention changes it.
   public dssRetention RETENTION { get { int o = __p.__offset(110); return o != 0 ? (dssRetention)__p.bb.GetSbyte(o + __p.bb_pos) : dssRetention.ReplaceCurrent; } }
 
   public static Offset<DSS> CreateDSS(FlatBufferBuilder builder,

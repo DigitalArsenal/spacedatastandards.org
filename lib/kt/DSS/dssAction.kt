@@ -20,5 +20,12 @@ class dssAction private constructor() {
          * Rebuild the local materialisation from pinned publications.
          */
         const val Hydrate: Byte = 6
+        /**
+         * Set RETENTION and leave the subscription alone: the lane's rule, or,
+         * when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for
+         * every lane of SCHEMA_NAME. A frame without RETENTION clears the choice,
+         * so the default applies again.
+         */
+        const val SetRetention: Byte = 7
     }
 }

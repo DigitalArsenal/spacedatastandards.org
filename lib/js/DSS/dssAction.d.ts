@@ -15,6 +15,13 @@ export declare enum dssAction {
     /**
      * Rebuild the local materialisation from pinned publications.
      */
-    Hydrate = 6
+    Hydrate = 6,
+    /**
+     * Set RETENTION and leave the subscription alone: the lane's rule, or,
+     * when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for
+     * every lane of SCHEMA_NAME. A frame without RETENTION clears the choice,
+     * so the default applies again.
+     */
+    SetRetention = 7
 }
 //# sourceMappingURL=dssAction.d.ts.map

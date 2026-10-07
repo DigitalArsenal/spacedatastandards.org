@@ -360,7 +360,8 @@ categoriesArray():Uint8Array|null {
 /**
  * Retention rule the publisher recommends to subscribers of a dataset
  * listing: ReplaceCurrent when each publication is a complete current set,
- * ArchiveAll when publications accumulate history.
+ * KeepAll when publications accumulate history the store should keep,
+ * ArchiveAll when that history should also stay pinned.
  */
 RECOMMENDED_RETENTION():stfRetentionPolicy {
   const offset = this.bb!.__offset(this.bb_pos, 62);

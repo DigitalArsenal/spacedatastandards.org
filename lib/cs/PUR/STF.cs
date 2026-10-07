@@ -171,7 +171,8 @@ public struct STF : IFlatbufferObject
   public capabilityClass[] GetCATEGORIESArray() { int o = __p.__offset(60); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); capabilityClass[] a = new capabilityClass[l]; for (int i = 0; i < l; i++) { a[i] = (capabilityClass)__p.bb.Get(p + i * 1); } return a; }
   /// Retention rule the publisher recommends to subscribers of a dataset
   /// listing: ReplaceCurrent when each publication is a complete current set,
-  /// ArchiveAll when publications accumulate history.
+  /// KeepAll when publications accumulate history the store should keep,
+  /// ArchiveAll when that history should also stay pinned.
   public stfRetentionPolicy RECOMMENDED_RETENTION { get { int o = __p.__offset(62); return o != 0 ? (stfRetentionPolicy)__p.bb.GetSbyte(o + __p.bb_pos) : stfRetentionPolicy.ReplaceCurrent; } }
 
   public static Offset<STF> CreateSTF(FlatBufferBuilder builder,

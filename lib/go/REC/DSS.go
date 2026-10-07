@@ -936,8 +936,11 @@ func (rcv *DSS) OriginId() []byte {
 /// Upstream publisher of the lane's records.
 /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
 /// previous batch of the lane with each new publication so the lane holds
-/// one current set; ArchiveAll keeps and pins every publication so history
-/// stays retrievable by content identifier.
+/// one current set; KeepAll keeps every publication in the store and pins
+/// none; ArchiveAll keeps and pins every publication so history stays
+/// retrievable by content identifier. A lane without a rule of its own
+/// follows its standard's default. A Subscribe without RETENTION keeps the
+/// lane's rule; SetRetention changes it.
 func (rcv *DSS) RETENTION() dssRetention {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
 	if o != 0 {
@@ -952,8 +955,11 @@ func (rcv *DSS) Retention() dssRetention {
 
 /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
 /// previous batch of the lane with each new publication so the lane holds
-/// one current set; ArchiveAll keeps and pins every publication so history
-/// stays retrievable by content identifier.
+/// one current set; KeepAll keeps every publication in the store and pins
+/// none; ArchiveAll keeps and pins every publication so history stays
+/// retrievable by content identifier. A lane without a rule of its own
+/// follows its standard's default. A Subscribe without RETENTION keeps the
+/// lane's rule; SetRetention changes it.
 func (rcv *DSS) MutateRETENTION(n dssRetention) bool {
 	return rcv._tab.MutateInt8Slot(110, int8(n))
 }

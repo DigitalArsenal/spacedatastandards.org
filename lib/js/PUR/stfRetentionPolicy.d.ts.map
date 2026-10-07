@@ -1,1 +1,1 @@
-{"version":3,"file":"stfRetentionPolicy.d.ts","sourceRoot":"","sources":["../../../ts/PUR/stfRetentionPolicy.ts"],"names":[],"mappings":"AAIA;;;;GAIG;AACH,oBAAY,kBAAkB;IAC5B,cAAc,IAAI;IAClB,UAAU,IAAI;CACf"}
+{"version":3,"file":"stfRetentionPolicy.d.ts","sourceRoot":"","sources":["../../../ts/PUR/stfRetentionPolicy.ts"],"names":[],"mappings":"AAIA;;;;GAIG;AACH,oBAAY,kBAAkB;IAC5B,cAAc,IAAI;IAClB,UAAU,IAAI;IAEd;;OAEG;IACH,OAAO,IAAI;CACZ"}

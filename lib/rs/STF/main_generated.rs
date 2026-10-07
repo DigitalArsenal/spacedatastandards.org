@@ -350,13 +350,14 @@ impl ::flatbuffers::SimpleToVerifyInSlice for listingCategory {}
 pub const ENUM_MIN_STF_RETENTION_POLICY: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_STF_RETENTION_POLICY: i8 = 1;
+pub const ENUM_MAX_STF_RETENTION_POLICY: i8 = 2;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_STF_RETENTION_POLICY: [stfRetentionPolicy; 2] = [
+pub const ENUM_VALUES_STF_RETENTION_POLICY: [stfRetentionPolicy; 3] = [
     stfRetentionPolicy::ReplaceCurrent,
     stfRetentionPolicy::ArchiveAll,
+    stfRetentionPolicy::KeepAll,
 ];
 
 /// Storefront Listing - Data marketplace listing
@@ -370,12 +371,15 @@ pub struct stfRetentionPolicy(pub i8);
 impl stfRetentionPolicy {
     pub const ReplaceCurrent: Self = Self(0);
     pub const ArchiveAll: Self = Self(1);
+    /// Every publication stays in the store; nothing is superseded or pinned.
+    pub const KeepAll: Self = Self(2);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 1;
+    pub const ENUM_MAX: i8 = 2;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::ReplaceCurrent,
         Self::ArchiveAll,
+        Self::KeepAll,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -383,6 +387,7 @@ impl stfRetentionPolicy {
         match self {
             Self::ReplaceCurrent => Some("ReplaceCurrent"),
             Self::ArchiveAll => Some("ArchiveAll"),
+            Self::KeepAll => Some("KeepAll"),
             _ => None,
         }
     }
@@ -3052,7 +3057,8 @@ impl<'a> STF<'a> {
 
     /// Retention rule the publisher recommends to subscribers of a dataset
     /// listing: ReplaceCurrent when each publication is a complete current set,
-    /// ArchiveAll when publications accumulate history.
+    /// KeepAll when publications accumulate history the store should keep,
+    /// ArchiveAll when that history should also stay pinned.
     #[inline]
     pub fn RECOMMENDED_RETENTION(&self) -> stfRetentionPolicy {
         // Safety:

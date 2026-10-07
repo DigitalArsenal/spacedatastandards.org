@@ -19,7 +19,7 @@
     },
     "stfRetentionPolicy" : {
       "type" : "string",
-      "enum": ["ReplaceCurrent", "ArchiveAll"]
+      "enum": ["ReplaceCurrent", "ArchiveAll", "KeepAll"]
     },
     "purchaseLifecycleStatus" : {
       "type" : "string",
@@ -464,7 +464,7 @@
               },
         "RECOMMENDED_RETENTION" : {
                 "$ref" : "#/definitions/stfRetentionPolicy",
-                "description" : "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nArchiveAll when publications accumulate history."
+                "description" : "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nKeepAll when publications accumulate history the store should keep,\nArchiveAll when that history should also stay pinned."
               }
       },
       "required" : ["LISTING_ID", "PROVIDER_PEER_ID", "TITLE"],

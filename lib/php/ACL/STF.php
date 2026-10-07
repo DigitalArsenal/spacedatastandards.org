@@ -399,7 +399,8 @@ class STF extends Table
 
     /// Retention rule the publisher recommends to subscribers of a dataset
     /// listing: ReplaceCurrent when each publication is a complete current set,
-    /// ArchiveAll when publications accumulate history.
+    /// KeepAll when publications accumulate history the store should keep,
+    /// ArchiveAll when that history should also stay pinned.
     /**
      * @return sbyte
      */

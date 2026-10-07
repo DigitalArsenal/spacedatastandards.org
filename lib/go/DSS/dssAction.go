@@ -9,35 +9,42 @@ import "strconv"
 type dssAction int8
 
 const (
-	dssActionNone        dssAction = 0
+	dssActionNone         dssAction = 0
 	/// Run one bounded catch-up pass now.
-	dssActionSync        dssAction = 1
-	dssActionSubscribe   dssAction = 2
-	dssActionUnsubscribe dssAction = 3
-	dssActionPin         dssAction = 4
-	dssActionUnpin       dssAction = 5
+	dssActionSync         dssAction = 1
+	dssActionSubscribe    dssAction = 2
+	dssActionUnsubscribe  dssAction = 3
+	dssActionPin          dssAction = 4
+	dssActionUnpin        dssAction = 5
 	/// Rebuild the local materialisation from pinned publications.
-	dssActionHydrate     dssAction = 6
+	dssActionHydrate      dssAction = 6
+	/// Set RETENTION and leave the subscription alone: the lane's rule, or,
+	/// when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for
+	/// every lane of SCHEMA_NAME. A frame without RETENTION clears the choice,
+	/// so the default applies again.
+	dssActionSetRetention dssAction = 7
 )
 
 var EnumNamesdssAction = map[dssAction]string{
-	dssActionNone:        "None",
-	dssActionSync:        "Sync",
-	dssActionSubscribe:   "Subscribe",
-	dssActionUnsubscribe: "Unsubscribe",
-	dssActionPin:         "Pin",
-	dssActionUnpin:       "Unpin",
-	dssActionHydrate:     "Hydrate",
+	dssActionNone:         "None",
+	dssActionSync:         "Sync",
+	dssActionSubscribe:    "Subscribe",
+	dssActionUnsubscribe:  "Unsubscribe",
+	dssActionPin:          "Pin",
+	dssActionUnpin:        "Unpin",
+	dssActionHydrate:      "Hydrate",
+	dssActionSetRetention: "SetRetention",
 }
 
 var EnumValuesdssAction = map[string]dssAction{
-	"None":        dssActionNone,
-	"Sync":        dssActionSync,
-	"Subscribe":   dssActionSubscribe,
-	"Unsubscribe": dssActionUnsubscribe,
-	"Pin":         dssActionPin,
-	"Unpin":       dssActionUnpin,
-	"Hydrate":     dssActionHydrate,
+	"None":         dssActionNone,
+	"Sync":         dssActionSync,
+	"Subscribe":    dssActionSubscribe,
+	"Unsubscribe":  dssActionUnsubscribe,
+	"Pin":          dssActionPin,
+	"Unpin":        dssActionUnpin,
+	"Hydrate":      dssActionHydrate,
+	"SetRetention": dssActionSetRetention,
 }
 
 func (v dssAction) String() string {

@@ -744,7 +744,8 @@ func (rcv *STF) MutateCategories(j int, n capabilityClass) bool {
 
 /// Retention rule the publisher recommends to subscribers of a dataset
 /// listing: ReplaceCurrent when each publication is a complete current set,
-/// ArchiveAll when publications accumulate history.
+/// KeepAll when publications accumulate history the store should keep,
+/// ArchiveAll when that history should also stay pinned.
 func (rcv *STF) RECOMMENDED_RETENTION() stfRetentionPolicy {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
@@ -759,7 +760,8 @@ func (rcv *STF) RecommendedRetention() stfRetentionPolicy {
 
 /// Retention rule the publisher recommends to subscribers of a dataset
 /// listing: ReplaceCurrent when each publication is a complete current set,
-/// ArchiveAll when publications accumulate history.
+/// KeepAll when publications accumulate history the store should keep,
+/// ArchiveAll when that history should also stay pinned.
 func (rcv *STF) MutateRECOMMENDED_RETENTION(n stfRetentionPolicy) bool {
 	return rcv._tab.MutateInt8Slot(62, int8(n))
 }

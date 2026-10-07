@@ -14,6 +14,11 @@ class dssAction
     const Unpin = 5;
     /// Rebuild the local materialisation from pinned publications.
     const Hydrate = 6;
+    /// Set RETENTION and leave the subscription alone: the lane's rule, or,
+    /// when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for
+    /// every lane of SCHEMA_NAME. A frame without RETENTION clears the choice,
+    /// so the default applies again.
+    const SetRetention = 7;
 
     private static $names = array(
         dssAction::None=>"None",
@@ -23,6 +28,7 @@ class dssAction
         dssAction::Pin=>"Pin",
         dssAction::Unpin=>"Unpin",
         dssAction::Hydrate=>"Hydrate",
+        dssAction::SetRetention=>"SetRetention",
     );
 
     public static function Name($e)

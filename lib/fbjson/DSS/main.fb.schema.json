@@ -67,7 +67,8 @@
         "Unsubscribe",
         "Pin",
         "Unpin",
-        "Hydrate"
+        "Hydrate",
+        "SetRetention"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -94,6 +95,10 @@
         "Hydrate": {
           "value": 6,
           "description": "Rebuild the local materialisation from pinned publications."
+        },
+        "SetRetention": {
+          "value": 7,
+          "description": "Set RETENTION and leave the subscription alone: the lane's rule, or, when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for every lane of SCHEMA_NAME. A frame without RETENTION clears the choice, so the default applies again."
         }
       }
     },
@@ -101,7 +106,8 @@
       "type": "string",
       "enum": [
         "ReplaceCurrent",
-        "ArchiveAll"
+        "ArchiveAll",
+        "KeepAll"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -113,6 +119,10 @@
         "ArchiveAll": {
           "value": 1,
           "description": "Every publication is kept and pinned; history stays retrievable."
+        },
+        "KeepAll": {
+          "value": 2,
+          "description": "Every publication stays in the store; nothing is superseded and nothing is pinned, so history stays queryable from the store."
         }
       }
     },
@@ -438,6 +448,10 @@
             "Hydrate": {
               "value": 6,
               "description": "Rebuild the local materialisation from pinned publications."
+            },
+            "SetRetention": {
+              "value": 7,
+              "description": "Set RETENTION and leave the subscription alone: the lane's rule, or, when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for every lane of SCHEMA_NAME. A frame without RETENTION clears the choice, so the default applies again."
             }
           },
           "x-flatbuffer-default": "None"
@@ -449,7 +463,7 @@
         },
         "RETENTION": {
           "$ref": "#/definitions/dssRetention",
-          "description": "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; ArchiveAll keeps and pins every publication so history\nstays retrievable by content identifier.",
+          "description": "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; KeepAll keeps every publication in the store and pins\nnone; ArchiveAll keeps and pins every publication so history stays\nretrievable by content identifier. A lane without a rule of its own\nfollows its standard's default. A Subscribe without RETENTION keeps the\nlane's rule; SetRetention changes it.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -460,6 +474,10 @@
             "ArchiveAll": {
               "value": 1,
               "description": "Every publication is kept and pinned; history stays retrievable."
+            },
+            "KeepAll": {
+              "value": 2,
+              "description": "Every publication stays in the store; nothing is superseded and nothing is pinned, so history stays queryable from the store."
             }
           },
           "x-flatbuffer-default": "ReplaceCurrent"

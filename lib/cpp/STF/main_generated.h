@@ -184,29 +184,33 @@ inline const char *EnumNamelistingCategory(listingCategory e) {
 enum stfRetentionPolicy : int8_t {
   stfRetentionPolicy_ReplaceCurrent = 0,
   stfRetentionPolicy_ArchiveAll = 1,
+  /// Every publication stays in the store; nothing is superseded or pinned.
+  stfRetentionPolicy_KeepAll = 2,
   stfRetentionPolicy_MIN = stfRetentionPolicy_ReplaceCurrent,
-  stfRetentionPolicy_MAX = stfRetentionPolicy_ArchiveAll
+  stfRetentionPolicy_MAX = stfRetentionPolicy_KeepAll
 };
 
-inline const stfRetentionPolicy (&EnumValuesstfRetentionPolicy())[2] {
+inline const stfRetentionPolicy (&EnumValuesstfRetentionPolicy())[3] {
   static const stfRetentionPolicy values[] = {
     stfRetentionPolicy_ReplaceCurrent,
-    stfRetentionPolicy_ArchiveAll
+    stfRetentionPolicy_ArchiveAll,
+    stfRetentionPolicy_KeepAll
   };
   return values;
 }
 
 inline const char * const *EnumNamesstfRetentionPolicy() {
-  static const char * const names[3] = {
+  static const char * const names[4] = {
     "ReplaceCurrent",
     "ArchiveAll",
+    "KeepAll",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamestfRetentionPolicy(stfRetentionPolicy e) {
-  if (::flatbuffers::IsOutRange(e, stfRetentionPolicy_ReplaceCurrent, stfRetentionPolicy_ArchiveAll)) return "";
+  if (::flatbuffers::IsOutRange(e, stfRetentionPolicy_ReplaceCurrent, stfRetentionPolicy_KeepAll)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesstfRetentionPolicy()[index];
 }
@@ -1285,7 +1289,8 @@ struct STF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   /// Retention rule the publisher recommends to subscribers of a dataset
   /// listing: ReplaceCurrent when each publication is a complete current set,
-  /// ArchiveAll when publications accumulate history.
+  /// KeepAll when publications accumulate history the store should keep,
+  /// ArchiveAll when that history should also stay pinned.
   stfRetentionPolicy RECOMMENDED_RETENTION() const {
     return static_cast<stfRetentionPolicy>(GetField<int8_t>(VT_RECOMMENDED_RETENTION, 0));
   }

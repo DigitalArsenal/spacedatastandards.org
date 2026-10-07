@@ -11,11 +11,11 @@
     },
     "dssAction" : {
       "type" : "string",
-      "enum": ["None", "Sync", "Subscribe", "Unsubscribe", "Pin", "Unpin", "Hydrate"]
+      "enum": ["None", "Sync", "Subscribe", "Unsubscribe", "Pin", "Unpin", "Hydrate", "SetRetention"]
     },
     "dssRetention" : {
       "type" : "string",
-      "enum": ["ReplaceCurrent", "ArchiveAll"]
+      "enum": ["ReplaceCurrent", "ArchiveAll", "KeepAll"]
     },
     "DSS" : {
       "type" : "object",
@@ -197,7 +197,7 @@
               },
         "RETENTION" : {
                 "$ref" : "#/definitions/dssRetention",
-                "description" : "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; ArchiveAll keeps and pins every publication so history\nstays retrievable by content identifier."
+                "description" : "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; KeepAll keeps every publication in the store and pins\nnone; ArchiveAll keeps and pins every publication so history stays\nretrievable by content identifier. A lane without a rule of its own\nfollows its standard's default. A Subscribe without RETENTION keeps the\nlane's rule; SetRetention changes it."
               }
       },
       "additionalProperties" : false
