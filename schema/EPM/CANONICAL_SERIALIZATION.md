@@ -35,6 +35,11 @@ byte-for-byte reconstruction is achievable only over the JCS projection.
    `"Encryption"`). All fields of `CryptoKey` (including 1.174.0's
    `KEY_PATH`, `ALGORITHM`, `ENCODING`) and of `ChainProof` participate
    under rule 2.
+7. **`PHOTO` (1.239.0) participates under rule 2** as its full string value:
+   the data URI, verbatim after trim. The photo is how a person recognizes
+   the entity, so a relay must not be able to swap it under a valid
+   signature. A record without a photo projects exactly as before, so every
+   signature made before this field verifies unchanged.
 
 ## 3. Vector order — the total order, and who it binds
 

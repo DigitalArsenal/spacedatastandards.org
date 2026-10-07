@@ -188,6 +188,13 @@ table EPM {
   /// DNS domain binding proofs linking domains to the same HD wallet —
   /// symmetric with CHAIN_PROOFS
   DOMAIN_PROOFS: [DomainProof];
+  /// Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+  /// data URI carrying a JPEG or PNG image, e.g.
+  /// "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+  /// fetches the record, so a producer keeps the image small (a few tens of
+  /// kilobytes at most). Signed like every other content field: it
+  /// participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+  PHOTO: string;
 }
 
 root_type EPM;
