@@ -1,5 +1,5 @@
-// Hash: 9b515bc170b2268b793fb0a9a17f076c2e0f01ff0c13facee52972e5f5bb6140
-// Version: 1.0.6
+// Hash: 3bedd20a58a8d02cc7f4fea3b89dd88b0382e522ba054d33ca372709688781c5
+// Version: 1.0.7
 // -----------------------------------END_HEADER
 include "../CCT/main.fbs";
 
@@ -151,7 +151,9 @@ table PricingTier {
 /// values only; never reorder or reuse existing values.
 enum stfRetentionPolicy : byte {
   ReplaceCurrent,
-  ArchiveAll
+  ArchiveAll,
+  /// Every publication stays in the store; nothing is superseded or pinned.
+  KeepAll
 }
 
 table STF {
@@ -236,7 +238,8 @@ table STF {
 
   /// Retention rule the publisher recommends to subscribers of a dataset
   /// listing: ReplaceCurrent when each publication is a complete current set,
-  /// ArchiveAll when publications accumulate history.
+  /// KeepAll when publications accumulate history the store should keep,
+  /// ArchiveAll when that history should also stay pinned.
   RECOMMENDED_RETENTION: stfRetentionPolicy = ReplaceCurrent;
 }
 

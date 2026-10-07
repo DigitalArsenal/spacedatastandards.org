@@ -1,5 +1,5 @@
-// Hash: a48759e83811bb6c232f30ac197b483e2d6e92031f0814499473f29af4edbb75
-// Version: 1.99.2
+// Hash: 3d6e0bcb8da2f8d7f8be6de1ebccdd44b510cf1f603d1cfa0f4098474ece7d42
+// Version: 1.99.3
 // -----------------------------------END_HEADER
 /// Data Sync Status
 ///
@@ -37,7 +37,12 @@ enum dssAction : byte {
   Pin,
   Unpin,
   /// Rebuild the local materialisation from pinned publications.
-  Hydrate
+  Hydrate,
+  /// Set RETENTION and leave the subscription alone: the lane's rule, or,
+  /// when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for
+  /// every lane of SCHEMA_NAME. A frame without RETENTION clears the choice,
+  /// so the default applies again.
+  SetRetention
 }
 
 /// Retention rule for a lane's publications on the subscribing node. Append
@@ -47,7 +52,10 @@ enum dssRetention : byte {
   /// current set.
   ReplaceCurrent,
   /// Every publication is kept and pinned; history stays retrievable.
-  ArchiveAll
+  ArchiveAll,
+  /// Every publication stays in the store; nothing is superseded and nothing
+  /// is pinned, so history stays queryable from the store.
+  KeepAll
 }
 
 table DSS {
@@ -124,8 +132,11 @@ table DSS {
 
   /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
   /// previous batch of the lane with each new publication so the lane holds
-  /// one current set; ArchiveAll keeps and pins every publication so history
-  /// stays retrievable by content identifier.
+  /// one current set; KeepAll keeps every publication in the store and pins
+  /// none; ArchiveAll keeps and pins every publication so history stays
+  /// retrievable by content identifier. A lane without a rule of its own
+  /// follows its standard's default. A Subscribe without RETENTION keeps the
+  /// lane's rule; SetRetention changes it.
   RETENTION: dssRetention = ReplaceCurrent;
 }
 
