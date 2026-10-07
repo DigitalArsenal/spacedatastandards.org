@@ -47,7 +47,8 @@ class _trpPredicateKindReader extends fb.Reader<trpPredicateKind> {
 }
 
 ///  Boolean combinator applied to a predicate group. Append new values only;
-///  never reorder or reuse existing values.
+///  never reorder or reuse existing values. A policy's rules are a flat list
+///  that must all pass, so evaluators accept only All.
 enum trpCombinator {
   All(0),
   Any(1);
@@ -199,7 +200,8 @@ class TRPAssetObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  One independently measurable predicate in a trust rule policy.
+///  One named rule in a trust rule policy: a predicate and the values it
+///  needs. A subject meets the policy only when every rule passes.
 class TRPPredicate {
   TRPPredicate._(this._bc, this._bcOffset);
   factory TRPPredicate(List<int> bytes) {
@@ -237,10 +239,13 @@ class TRPPredicate {
   ///  Minimum accepted `$TRE.WEIGHT` for a matching trust edge.
   double get MIN_EDGE_WEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
   double get minEdgeWeight => MIN_EDGE_WEIGHT;
+  ///  The rule's name as its author wrote it, shown wherever the rule and its
+  ///  results are listed.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
 
   @override
   String toString() {
-    return 'TRPPredicate{predicateId: ${predicateId}, KIND: ${KIND}, minValue: ${minValue}, valueCurrency: ${valueCurrency}, minHeldSeconds: ${minHeldSeconds}, ASSETS: ${ASSETS}, requiredCount: ${requiredCount}, trusterIds: ${trusterIds}, minEdgeWeight: ${minEdgeWeight}}';
+    return 'TRPPredicate{predicateId: ${predicateId}, KIND: ${KIND}, minValue: ${minValue}, valueCurrency: ${valueCurrency}, minHeldSeconds: ${minHeldSeconds}, ASSETS: ${ASSETS}, requiredCount: ${requiredCount}, trusterIds: ${trusterIds}, minEdgeWeight: ${minEdgeWeight}, NAME: ${NAME}}';
   }
 }
 
@@ -258,7 +263,7 @@ class TRPPredicateBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(10);
   }
 
   int addPredicateIdOffset(int? offset) {
@@ -297,6 +302,10 @@ class TRPPredicateBuilder {
     fbBuilder.addFloat64(8, MIN_EDGE_WEIGHT);
     return fbBuilder.offset;
   }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -313,6 +322,7 @@ class TRPPredicateObjectBuilder extends fb.ObjectBuilder {
   final int? _REQUIRED_COUNT;
   final List<String>? _TRUSTER_IDS;
   final double? _MIN_EDGE_WEIGHT;
+  final String? _NAME;
 
   TRPPredicateObjectBuilder({
     String? PREDICATE_ID,
@@ -331,6 +341,7 @@ class TRPPredicateObjectBuilder extends fb.ObjectBuilder {
     List<String>? trusterIds,
     double? MIN_EDGE_WEIGHT,
     double? minEdgeWeight,
+    String? NAME,
   })
       : _PREDICATE_ID = predicateId ?? PREDICATE_ID,
         _KIND = KIND,
@@ -340,7 +351,8 @@ class TRPPredicateObjectBuilder extends fb.ObjectBuilder {
         _ASSETS = ASSETS,
         _REQUIRED_COUNT = requiredCount ?? REQUIRED_COUNT,
         _TRUSTER_IDS = trusterIds ?? TRUSTER_IDS,
-        _MIN_EDGE_WEIGHT = minEdgeWeight ?? MIN_EDGE_WEIGHT;
+        _MIN_EDGE_WEIGHT = minEdgeWeight ?? MIN_EDGE_WEIGHT,
+        _NAME = NAME;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -353,7 +365,9 @@ class TRPPredicateObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_ASSETS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? TRUSTER_IDSOffset = _TRUSTER_IDS == null ? null
         : fbBuilder.writeList(_TRUSTER_IDS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(9);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    fbBuilder.startTable(10);
     fbBuilder.addOffset(0, PREDICATE_IDOffset);
     fbBuilder.addInt8(1, _KIND?.value);
     fbBuilder.addUint64(2, _MIN_VALUE);
@@ -363,6 +377,7 @@ class TRPPredicateObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint32(6, _REQUIRED_COUNT);
     fbBuilder.addOffset(7, TRUSTER_IDSOffset);
     fbBuilder.addFloat64(8, _MIN_EDGE_WEIGHT);
+    fbBuilder.addOffset(9, NAMEOffset);
     return fbBuilder.endTable();
   }
 
@@ -374,7 +389,7 @@ class TRPPredicateObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Recursive boolean group for a compound trust rule set.
+///  The rules of a trust rule policy.
 class TRPGroup {
   TRPGroup._(this._bc, this._bcOffset);
   factory TRPGroup(List<int> bytes) {
@@ -390,11 +405,11 @@ class TRPGroup {
   ///  Stable identifier unique within the policy.
   String? get GROUP_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   String? get groupId => GROUP_ID;
-  ///  Boolean operation applied across direct predicates and child groups.
+  ///  Always All: every rule must pass.
   trpCombinator get COMBINATOR => trpCombinator.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  ///  Predicates evaluated directly within this group.
+  ///  The policy's rules, all of which must pass.
   List<TRPPredicate>? get PREDICATES => const fb.ListReader<TRPPredicate>(TRPPredicate.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Nested groups used to express compound rule sets.
+  ///  Retired: rules do not nest. Evaluators refuse a policy with child groups.
   List<TRPGroup>? get GROUPS => const fb.ListReader<TRPGroup>(TRPGroup.reader).vTableGetNullable(_bc, _bcOffset, 10);
 
   @override
@@ -485,7 +500,9 @@ class TRPGroupObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Trust Rule Policy - Signed compound criteria for evaluating one subject.
+///  Trust Rule Policy - a signed list of named rules for evaluating a subject.
+///  The subject meets the policy when every rule passes; there is no
+///  alternative and no nesting.
 class TRP {
   TRP._(this._bc, this._bcOffset);
   factory TRP(List<int> bytes) {
@@ -505,7 +522,7 @@ class TRP {
   String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Human-readable policy description.
   String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Root of the compound rule tree.
+  ///  The policy's rules.
   TRPGroup? get ROOT => TRPGroup.reader.vTableGetNullable(_bc, _bcOffset, 10);
   ///  Periodic evaluation cadence in milliseconds. The 10000 default is the
   ///  0.1 Hz baseline and is configurable by the policy author.

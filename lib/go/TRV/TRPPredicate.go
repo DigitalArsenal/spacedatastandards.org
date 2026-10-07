@@ -6,7 +6,8 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// One independently measurable predicate in a trust rule policy.
+/// One named rule in a trust rule policy: a predicate and the values it
+/// needs. A subject meets the policy only when every rule passes.
 type TRPPredicate struct {
 	_tab flatbuffers.Table
 }
@@ -240,8 +241,24 @@ func (rcv *TRPPredicate) MutateMinEdgeWeight(n float64) bool {
 	return rcv.MutateMIN_EDGE_WEIGHT(n)
 }
 
+/// The rule's name as its author wrote it, shown wherever the rule and its
+/// results are listed.
+func (rcv *TRPPredicate) NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *TRPPredicate) Name() []byte {
+	return rcv.NAME()
+}
+
+/// The rule's name as its author wrote it, shown wherever the rule and its
+/// results are listed.
 func TRPPredicateStart(builder *flatbuffers.Builder) {
-	builder.StartObject(9)
+	builder.StartObject(10)
 }
 func TRPPredicateAddPREDICATE_ID(builder *flatbuffers.Builder, PREDICATE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PREDICATE_ID), 0)
@@ -308,6 +325,12 @@ func TRPPredicateAddMIN_EDGE_WEIGHT(builder *flatbuffers.Builder, MIN_EDGE_WEIGH
 }
 func TRPPredicateAddMinEdgeWeight(builder *flatbuffers.Builder, MIN_EDGE_WEIGHT float64) {
 	TRPPredicateAddMIN_EDGE_WEIGHT(builder, MIN_EDGE_WEIGHT)
+}
+func TRPPredicateAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(NAME), 0)
+}
+func TRPPredicateAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	TRPPredicateAddNAME(builder, NAME)
 }
 func TRPPredicateEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

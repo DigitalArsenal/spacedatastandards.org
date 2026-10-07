@@ -17,7 +17,9 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Trust Rule Policy - Signed compound criteria for evaluating one subject.
+ * Trust Rule Policy - a signed list of named rules for evaluating a subject.
+ * The subject meets the policy when every rule passes; there is no
+ * alternative and no nesting.
  */
 @Suppress("unused")
 class TRP : Table() {
@@ -72,7 +74,7 @@ class TRP : Table() {
     val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
     fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * Root of the compound rule tree.
+     * The policy's rules.
      */
     val root : TRPGroup? get() = root(TRPGroup())
     fun root(obj: TRPGroup) : TRPGroup? {

@@ -6,7 +6,9 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Trust Rule Policy - Signed compound criteria for evaluating one subject.
+/// Trust Rule Policy - a signed list of named rules for evaluating a subject.
+/// The subject meets the policy when every rule passes; there is no
+/// alternative and no nesting.
 type TRP struct {
 	_tab flatbuffers.Table
 }
@@ -96,7 +98,7 @@ func (rcv *TRP) Description() []byte {
 }
 
 /// Human-readable policy description.
-/// Root of the compound rule tree.
+/// The policy's rules.
 func (rcv *TRP) ROOT(obj *TRPGroup) *TRPGroup {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -114,7 +116,7 @@ func (rcv *TRP) Root(obj *TRPGroup) *TRPGroup {
 	return rcv.ROOT(obj)
 }
 
-/// Root of the compound rule tree.
+/// The policy's rules.
 /// Periodic evaluation cadence in milliseconds. The 10000 default is the
 /// 0.1 Hz baseline and is configurable by the policy author.
 func (rcv *TRP) EVALUATION_INTERVAL_MS() uint32 {

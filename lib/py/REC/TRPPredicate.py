@@ -6,7 +6,8 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# One independently measurable predicate in a trust rule policy.
+# One named rule in a trust rule policy: a predicate and the values it
+# needs. A subject meets the policy only when every rule passes.
 class TRPPredicate(object):
     __slots__ = ['_tab']
 
@@ -132,8 +133,17 @@ class TRPPredicate(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # The rule's name as its author wrote it, shown wherever the rule and its
+    # results are listed.
+    # TRPPredicate
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def TRPPredicateStart(builder):
-    builder.StartObject(9)
+    builder.StartObject(10)
 
 def Start(builder):
     TRPPredicateStart(builder)
@@ -216,6 +226,12 @@ def TRPPredicateAddMIN_EDGE_WEIGHT(builder, MIN_EDGE_WEIGHT):
 def AddMIN_EDGE_WEIGHT(builder, MIN_EDGE_WEIGHT):
     TRPPredicateAddMIN_EDGE_WEIGHT(builder, MIN_EDGE_WEIGHT)
 
+def TRPPredicateAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    TRPPredicateAddNAME(builder, NAME)
+
 def TRPPredicateEnd(builder):
     return builder.EndObject()
 
@@ -242,6 +258,7 @@ class TRPPredicateT(object):
         REQUIRED_COUNT = 0,
         TRUSTER_IDS = None,
         MIN_EDGE_WEIGHT = 0.0,
+        NAME = None,
     ):
         self.PREDICATE_ID = PREDICATE_ID  # type: Optional[str]
         self.KIND = KIND  # type: int
@@ -252,6 +269,7 @@ class TRPPredicateT(object):
         self.REQUIRED_COUNT = REQUIRED_COUNT  # type: int
         self.TRUSTER_IDS = TRUSTER_IDS  # type: Optional[List[Optional[str]]]
         self.MIN_EDGE_WEIGHT = MIN_EDGE_WEIGHT  # type: float
+        self.NAME = NAME  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -293,6 +311,7 @@ class TRPPredicateT(object):
             for i in range(TRPPredicate.TRUSTER_IDSLength()):
                 self.TRUSTER_IDS.append(TRPPredicate.TRUSTER_IDS(i))
         self.MIN_EDGE_WEIGHT = TRPPredicate.MIN_EDGE_WEIGHT()
+        self.NAME = TRPPredicate.NAME()
 
     # TRPPredicateT
     def Pack(self, builder):
@@ -316,6 +335,8 @@ class TRPPredicateT(object):
             for i in reversed(range(len(self.TRUSTER_IDS))):
                 builder.PrependUOffsetTRelative(TRUSTER_IDSlist[i])
             TRUSTER_IDS = builder.EndVector()
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
         TRPPredicateStart(builder)
         if self.PREDICATE_ID is not None:
             TRPPredicateAddPREDICATE_ID(builder, PREDICATE_ID)
@@ -330,5 +351,7 @@ class TRPPredicateT(object):
         if self.TRUSTER_IDS is not None:
             TRPPredicateAddTRUSTER_IDS(builder, TRUSTER_IDS)
         TRPPredicateAddMIN_EDGE_WEIGHT(builder, self.MIN_EDGE_WEIGHT)
+        if self.NAME is not None:
+            TRPPredicateAddNAME(builder, NAME)
         TRPPredicate = TRPPredicateEnd(builder)
         return TRPPredicate

@@ -125,16 +125,18 @@ pub const ENUM_VALUES_TRP_COMBINATOR: [trpCombinator; 2] = [
 ];
 
 /// Boolean combinator applied to a predicate group. Append new values only;
-/// never reorder or reuse existing values.
+/// never reorder or reuse existing values. A policy's rules are a flat list
+/// that must all pass, so evaluators accept only All.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct trpCombinator(pub i8);
 
 #[allow(non_upper_case_globals)]
 impl trpCombinator {
-    /// Every direct predicate and child group must pass.
+    /// Every rule must pass.
     pub const All: Self = Self(0);
-    /// At least one direct predicate or child group must pass.
+    /// Retired: rules are never alternatives. Evaluators refuse a policy that
+    /// uses it.
     pub const Any: Self = Self(1);
 
     pub const ENUM_MIN: i8 = 0;
@@ -442,7 +444,8 @@ impl TRPAssetT {
 
 pub enum TRPPredicateOffset {}
 
-/// One independently measurable predicate in a trust rule policy.
+/// One named rule in a trust rule policy: a predicate and the values it
+/// needs. A subject meets the policy only when every rule passes.
 #[derive(Copy, Clone, PartialEq)]
 pub struct TRPPredicate<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -467,6 +470,7 @@ impl<'a> TRPPredicate<'a> {
     pub const VT_REQUIRED_COUNT: ::flatbuffers::VOffsetT = 16;
     pub const VT_TRUSTER_IDS: ::flatbuffers::VOffsetT = 18;
     pub const VT_MIN_EDGE_WEIGHT: ::flatbuffers::VOffsetT = 20;
+    pub const VT_NAME: ::flatbuffers::VOffsetT = 22;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -482,6 +486,7 @@ impl<'a> TRPPredicate<'a> {
         builder.add_MIN_EDGE_WEIGHT(args.MIN_EDGE_WEIGHT);
         builder.add_MIN_HELD_SECONDS(args.MIN_HELD_SECONDS);
         builder.add_MIN_VALUE(args.MIN_VALUE);
+        if let Some(x) = args.NAME { builder.add_NAME(x); }
         if let Some(x) = args.TRUSTER_IDS { builder.add_TRUSTER_IDS(x); }
         builder.add_REQUIRED_COUNT(args.REQUIRED_COUNT);
         if let Some(x) = args.ASSETS { builder.add_ASSETS(x); }
@@ -509,6 +514,9 @@ impl<'a> TRPPredicate<'a> {
             x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
         });
         let MIN_EDGE_WEIGHT = self.MIN_EDGE_WEIGHT();
+        let NAME = self.NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         TRPPredicateT {
             PREDICATE_ID,
             KIND,
@@ -519,6 +527,7 @@ impl<'a> TRPPredicate<'a> {
             REQUIRED_COUNT,
             TRUSTER_IDS,
             MIN_EDGE_WEIGHT,
+            NAME,
         }
     }
 
@@ -602,6 +611,16 @@ impl<'a> TRPPredicate<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(TRPPredicate::VT_MIN_EDGE_WEIGHT, Some(0.0)).unwrap()}
     }
+
+    /// The rule's name as its author wrote it, shown wherever the rule and its
+    /// results are listed.
+    #[inline]
+    pub fn NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TRPPredicate::VT_NAME, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for TRPPredicate<'_> {
@@ -619,6 +638,7 @@ impl ::flatbuffers::Verifiable for TRPPredicate<'_> {
             .visit_field::<u32>("REQUIRED_COUNT", Self::VT_REQUIRED_COUNT, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("TRUSTER_IDS", Self::VT_TRUSTER_IDS, false)?
             .visit_field::<f64>("MIN_EDGE_WEIGHT", Self::VT_MIN_EDGE_WEIGHT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
             .finish();
         Ok(())
     }
@@ -634,6 +654,7 @@ pub struct TRPPredicateArgs<'a> {
     pub REQUIRED_COUNT: u32,
     pub TRUSTER_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub MIN_EDGE_WEIGHT: f64,
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for TRPPredicateArgs<'a> {
@@ -649,6 +670,7 @@ impl<'a> Default for TRPPredicateArgs<'a> {
             REQUIRED_COUNT: 0,
             TRUSTER_IDS: None,
             MIN_EDGE_WEIGHT: 0.0,
+            NAME: None,
         }
     }
 }
@@ -705,6 +727,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TRPPredicateBuilder<'a, 'b, A
     }
 
     #[inline]
+    pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TRPPredicate::VT_NAME, NAME);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TRPPredicateBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         TRPPredicateBuilder {
@@ -732,6 +759,7 @@ impl ::core::fmt::Debug for TRPPredicate<'_> {
         ds.field("REQUIRED_COUNT", &self.REQUIRED_COUNT());
         ds.field("TRUSTER_IDS", &self.TRUSTER_IDS());
         ds.field("MIN_EDGE_WEIGHT", &self.MIN_EDGE_WEIGHT());
+        ds.field("NAME", &self.NAME());
         ds.finish()
     }
 }
@@ -748,6 +776,7 @@ pub struct TRPPredicateT {
     pub REQUIRED_COUNT: u32,
     pub TRUSTER_IDS: Option<alloc::vec::Vec<alloc::string::String>>,
     pub MIN_EDGE_WEIGHT: f64,
+    pub NAME: Option<alloc::string::String>,
 }
 
 impl Default for TRPPredicateT {
@@ -762,6 +791,7 @@ impl Default for TRPPredicateT {
             REQUIRED_COUNT: 0,
             TRUSTER_IDS: None,
             MIN_EDGE_WEIGHT: 0.0,
+            NAME: None,
         }
     }
 }
@@ -788,6 +818,9 @@ impl TRPPredicateT {
             let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
         });
         let MIN_EDGE_WEIGHT = self.MIN_EDGE_WEIGHT;
+        let NAME = self.NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         TRPPredicate::create(_fbb, &TRPPredicateArgs{
             PREDICATE_ID,
             KIND,
@@ -798,13 +831,14 @@ impl TRPPredicateT {
             REQUIRED_COUNT,
             TRUSTER_IDS,
             MIN_EDGE_WEIGHT,
+            NAME,
         })
     }
 }
 
 pub enum TRPGroupOffset {}
 
-/// Recursive boolean group for a compound trust rule set.
+/// The rules of a trust rule policy.
 #[derive(Copy, Clone, PartialEq)]
 pub struct TRPGroup<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -871,7 +905,7 @@ impl<'a> TRPGroup<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TRPGroup::VT_GROUP_ID, None)}
     }
 
-    /// Boolean operation applied across direct predicates and child groups.
+    /// Always All: every rule must pass.
     #[inline]
     pub fn COMBINATOR(&self) -> trpCombinator {
         // Safety:
@@ -880,7 +914,7 @@ impl<'a> TRPGroup<'a> {
         unsafe { self._tab.get::<trpCombinator>(TRPGroup::VT_COMBINATOR, Some(trpCombinator::All)).unwrap()}
     }
 
-    /// Predicates evaluated directly within this group.
+    /// The policy's rules, all of which must pass.
     #[inline]
     pub fn PREDICATES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TRPPredicate<'a>>>> {
         // Safety:
@@ -889,7 +923,7 @@ impl<'a> TRPGroup<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TRPPredicate>>>>(TRPGroup::VT_PREDICATES, None)}
     }
 
-    /// Nested groups used to express compound rule sets.
+    /// Retired: rules do not nest. Evaluators refuse a policy with child groups.
     #[inline]
     pub fn GROUPS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TRPGroup<'a>>>> {
         // Safety:
@@ -1032,7 +1066,9 @@ impl TRPGroupT {
 
 pub enum TRPOffset {}
 
-/// Trust Rule Policy - Signed compound criteria for evaluating one subject.
+/// Trust Rule Policy - a signed list of named rules for evaluating a subject.
+/// The subject meets the policy when every rule passes; there is no
+/// alternative and no nesting.
 #[derive(Copy, Clone, PartialEq)]
 pub struct TRP<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -1154,7 +1190,7 @@ impl<'a> TRP<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TRP::VT_DESCRIPTION, None)}
     }
 
-    /// Root of the compound rule tree.
+    /// The policy's rules.
     #[inline]
     pub fn ROOT(&self) -> Option<TRPGroup<'a>> {
         // Safety:

@@ -17,7 +17,8 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * One independently measurable predicate in a trust rule policy.
+ * One named rule in a trust rule policy: a predicate and the values it
+ * needs. A subject meets the policy only when every rule passes.
  */
 @Suppress("unused")
 class TRPPredicate : Table() {
@@ -128,6 +129,21 @@ class TRPPredicate : Table() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * The rule's name as its author wrote it, shown wherever the rule and its
+     * results are listed.
+     */
+    val name : String?
+        get() {
+            val o = __offset(22)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTRPPredicate(_bb: ByteBuffer): TRPPredicate = getRootAsTRPPredicate(_bb, TRPPredicate())
@@ -135,11 +151,12 @@ class TRPPredicate : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createTRPPredicate(builder: FlatBufferBuilder, predicateIdOffset: Int, kind: Byte, minValue: ULong, valueCurrencyOffset: Int, minHeldSeconds: ULong, assetsOffset: Int, requiredCount: UInt, trusterIdsOffset: Int, minEdgeWeight: Double) : Int {
-            builder.startTable(9)
+        fun createTRPPredicate(builder: FlatBufferBuilder, predicateIdOffset: Int, kind: Byte, minValue: ULong, valueCurrencyOffset: Int, minHeldSeconds: ULong, assetsOffset: Int, requiredCount: UInt, trusterIdsOffset: Int, minEdgeWeight: Double, nameOffset: Int) : Int {
+            builder.startTable(10)
             addMINEDGEWEIGHT(builder, minEdgeWeight)
             addMINHELDSECONDS(builder, minHeldSeconds)
             addMINVALUE(builder, minValue)
+            addNAME(builder, nameOffset)
             addTRUSTERIDS(builder, trusterIdsOffset)
             addREQUIREDCOUNT(builder, requiredCount)
             addASSETS(builder, assetsOffset)
@@ -148,7 +165,7 @@ class TRPPredicate : Table() {
             addKIND(builder, kind)
             return endTRPPredicate(builder)
         }
-        fun startTRPPredicate(builder: FlatBufferBuilder) = builder.startTable(9)
+        fun startTRPPredicate(builder: FlatBufferBuilder) = builder.startTable(10)
         fun addPREDICATEID(builder: FlatBufferBuilder, predicateId: Int) = builder.addOffset(0, predicateId, 0)
         fun addKIND(builder: FlatBufferBuilder, kind: Byte) = builder.addByte(1, kind, 0)
         fun addMINVALUE(builder: FlatBufferBuilder, minValue: ULong) = builder.addLong(2, minValue.toLong(), 0)
@@ -174,6 +191,7 @@ class TRPPredicate : Table() {
         }
         fun startTrusterIdsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addMINEDGEWEIGHT(builder: FlatBufferBuilder, minEdgeWeight: Double) = builder.addDouble(8, minEdgeWeight, 0.0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(9, name, 0)
         fun endTRPPredicate(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

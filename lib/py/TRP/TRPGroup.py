@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Recursive boolean group for a compound trust rule set.
+# The rules of a trust rule policy.
 class TRPGroup(object):
     __slots__ = ['_tab']
 
@@ -37,7 +37,7 @@ class TRPGroup(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Boolean operation applied across direct predicates and child groups.
+    # Always All: every rule must pass.
     # TRPGroup
     def COMBINATOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -45,7 +45,7 @@ class TRPGroup(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-    # Predicates evaluated directly within this group.
+    # The policy's rules, all of which must pass.
     # TRPGroup
     def PREDICATES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -71,7 +71,7 @@ class TRPGroup(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         return o == 0
 
-    # Nested groups used to express compound rule sets.
+    # Retired: rules do not nest. Evaluators refuse a policy with child groups.
     # TRPGroup
     def GROUPS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))

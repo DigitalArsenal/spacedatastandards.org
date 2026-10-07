@@ -6,7 +6,8 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// One independently measurable predicate in a trust rule policy.
+/// One named rule in a trust rule policy: a predicate and the values it
+/// needs. A subject meets the policy only when every rule passes.
 public struct TRPPredicate : IFlatbufferObject
 {
   private Table __p;
@@ -49,6 +50,15 @@ public struct TRPPredicate : IFlatbufferObject
   public int TRUSTER_IDSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Minimum accepted `$TRE.WEIGHT` for a matching trust edge.
   public double MIN_EDGE_WEIGHT { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// The rule's name as its author wrote it, shown wherever the rule and its
+  /// results are listed.
+  public string NAME { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(22, 1); }
+#else
+  public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(22); }
+#endif
+  public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(22); }
 
   public static Offset<TRPPredicate> CreateTRPPredicate(FlatBufferBuilder builder,
       StringOffset PREDICATE_IDOffset = default(StringOffset),
@@ -59,11 +69,13 @@ public struct TRPPredicate : IFlatbufferObject
       VectorOffset ASSETSOffset = default(VectorOffset),
       uint REQUIRED_COUNT = 0,
       VectorOffset TRUSTER_IDSOffset = default(VectorOffset),
-      double MIN_EDGE_WEIGHT = 0.0) {
-    builder.StartTable(9);
+      double MIN_EDGE_WEIGHT = 0.0,
+      StringOffset NAMEOffset = default(StringOffset)) {
+    builder.StartTable(10);
     TRPPredicate.AddMIN_EDGE_WEIGHT(builder, MIN_EDGE_WEIGHT);
     TRPPredicate.AddMIN_HELD_SECONDS(builder, MIN_HELD_SECONDS);
     TRPPredicate.AddMIN_VALUE(builder, MIN_VALUE);
+    TRPPredicate.AddNAME(builder, NAMEOffset);
     TRPPredicate.AddTRUSTER_IDS(builder, TRUSTER_IDSOffset);
     TRPPredicate.AddREQUIRED_COUNT(builder, REQUIRED_COUNT);
     TRPPredicate.AddASSETS(builder, ASSETSOffset);
@@ -73,7 +85,7 @@ public struct TRPPredicate : IFlatbufferObject
     return TRPPredicate.EndTRPPredicate(builder);
   }
 
-  public static void StartTRPPredicate(FlatBufferBuilder builder) { builder.StartTable(9); }
+  public static void StartTRPPredicate(FlatBufferBuilder builder) { builder.StartTable(10); }
   public static void AddPREDICATE_ID(FlatBufferBuilder builder, StringOffset PREDICATE_IDOffset) { builder.AddOffset(0, PREDICATE_IDOffset.Value, 0); }
   public static void AddKIND(FlatBufferBuilder builder, trpPredicateKind KIND) { builder.AddSbyte(1, (sbyte)KIND, 0); }
   public static void AddMIN_VALUE(FlatBufferBuilder builder, ulong MIN_VALUE) { builder.AddUlong(2, MIN_VALUE, 0); }
@@ -93,6 +105,7 @@ public struct TRPPredicate : IFlatbufferObject
   public static VectorOffset CreateTRUSTER_IDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTRUSTER_IDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddMIN_EDGE_WEIGHT(FlatBufferBuilder builder, double MIN_EDGE_WEIGHT) { builder.AddDouble(8, MIN_EDGE_WEIGHT, 0.0); }
+  public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(9, NAMEOffset.Value, 0); }
   public static Offset<TRPPredicate> EndTRPPredicate(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<TRPPredicate>(o);
@@ -114,6 +127,7 @@ public struct TRPPredicate : IFlatbufferObject
     _o.TRUSTER_IDS = new List<string>();
     for (var _j = 0; _j < this.TRUSTER_IDSLength; ++_j) {_o.TRUSTER_IDS.Add(this.TRUSTER_IDS(_j));}
     _o.MIN_EDGE_WEIGHT = this.MIN_EDGE_WEIGHT;
+    _o.NAME = this.NAME;
   }
   public static Offset<TRPPredicate> Pack(FlatBufferBuilder builder, TRPPredicateT _o) {
     if (_o == null) return default(Offset<TRPPredicate>);
@@ -131,6 +145,7 @@ public struct TRPPredicate : IFlatbufferObject
       for (var _j = 0; _j < __TRUSTER_IDS.Length; ++_j) { __TRUSTER_IDS[_j] = builder.CreateString(_o.TRUSTER_IDS[_j]); }
       _TRUSTER_IDS = CreateTRUSTER_IDSVector(builder, __TRUSTER_IDS);
     }
+    var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
     return CreateTRPPredicate(
       builder,
       _PREDICATE_ID,
@@ -141,7 +156,8 @@ public struct TRPPredicate : IFlatbufferObject
       _ASSETS,
       _o.REQUIRED_COUNT,
       _TRUSTER_IDS,
-      _o.MIN_EDGE_WEIGHT);
+      _o.MIN_EDGE_WEIGHT,
+      _NAME);
   }
 }
 
@@ -156,6 +172,7 @@ public class TRPPredicateT
   public uint REQUIRED_COUNT { get; set; }
   public List<string> TRUSTER_IDS { get; set; }
   public double MIN_EDGE_WEIGHT { get; set; }
+  public string NAME { get; set; }
 
   public TRPPredicateT() {
     this.PREDICATE_ID = null;
@@ -167,6 +184,7 @@ public class TRPPredicateT
     this.REQUIRED_COUNT = 0;
     this.TRUSTER_IDS = null;
     this.MIN_EDGE_WEIGHT = 0.0;
+    this.NAME = null;
   }
 }
 
@@ -185,6 +203,7 @@ static public class TRPPredicateVerify
       && verifier.VerifyField(tablePos, 16 /*REQUIRED_COUNT*/, 4 /*uint*/, 4, false)
       && verifier.VerifyVectorOfStrings(tablePos, 18 /*TRUSTER_IDS*/, false)
       && verifier.VerifyField(tablePos, 20 /*MIN_EDGE_WEIGHT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 22 /*NAME*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

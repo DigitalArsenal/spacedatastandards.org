@@ -23846,11 +23846,11 @@
       "x-flatbuffer-enum-values": {
         "All": {
           "value": 0,
-          "description": "Every direct predicate and child group must pass."
+          "description": "Every rule must pass."
         },
         "Any": {
           "value": 1,
-          "description": "At least one direct predicate or child group must pass."
+          "description": "Retired: rules are never alternatives. Evaluators refuse a policy that uses it."
         }
       }
     },
@@ -112278,7 +112278,7 @@
     },
     "TRPPredicate": {
       "type": "object",
-      "description": "One independently measurable predicate in a trust rule policy.",
+      "description": "One named rule in a trust rule policy: a predicate and the values it\nneeds. A subject meets the policy only when every rule passes.",
       "properties": {
         "PREDICATE_ID": {
           "type": "string",
@@ -112355,13 +112355,18 @@
           "type": "number",
           "description": "Minimum accepted `$TRE.WEIGHT` for a matching trust edge.",
           "x-flatbuffer-type": "double"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "The rule's name as its author wrote it, shown wherever the rule and its\nresults are listed.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false
     },
     "TRPGroup": {
       "type": "object",
-      "description": "Recursive boolean group for a compound trust rule set.",
+      "description": "The rules of a trust rule policy.",
       "properties": {
         "GROUP_ID": {
           "type": "string",
@@ -112370,17 +112375,17 @@
         },
         "COMBINATOR": {
           "$ref": "#/definitions/trpCombinator",
-          "description": "Boolean operation applied across direct predicates and child groups.",
+          "description": "Always All: every rule must pass.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "All": {
               "value": 0,
-              "description": "Every direct predicate and child group must pass."
+              "description": "Every rule must pass."
             },
             "Any": {
               "value": 1,
-              "description": "At least one direct predicate or child group must pass."
+              "description": "Retired: rules are never alternatives. Evaluators refuse a policy that uses it."
             }
           }
         },
@@ -112389,7 +112394,7 @@
           "items": {
             "$ref": "#/definitions/TRPPredicate"
           },
-          "description": "Predicates evaluated directly within this group.",
+          "description": "The policy's rules, all of which must pass.",
           "x-flatbuffer-type": "[TRPPredicate]"
         },
         "GROUPS": {
@@ -112397,7 +112402,7 @@
           "items": {
             "$ref": "#/definitions/TRPGroup"
           },
-          "description": "Nested groups used to express compound rule sets.",
+          "description": "Retired: rules do not nest. Evaluators refuse a policy with child groups.",
           "x-flatbuffer-type": "[TRPGroup]"
         }
       },
@@ -112405,7 +112410,7 @@
     },
     "TRP": {
       "type": "object",
-      "description": "Trust Rule Policy - Signed compound criteria for evaluating one subject.",
+      "description": "Trust Rule Policy - a signed list of named rules for evaluating a subject.\nThe subject meets the policy when every rule passes; there is no\nalternative and no nesting.",
       "properties": {
         "POLICY_ID": {
           "type": "string",
@@ -112425,7 +112430,7 @@
         },
         "ROOT": {
           "$ref": "#/definitions/TRPGroup",
-          "description": "Root of the compound rule tree.",
+          "description": "The policy's rules.",
           "x-flatbuffer-type": "TRPGroup"
         },
         "EVALUATION_INTERVAL_MS": {

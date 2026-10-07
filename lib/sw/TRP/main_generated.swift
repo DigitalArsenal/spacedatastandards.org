@@ -29,14 +29,16 @@ public enum trpPredicateKind: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  Boolean combinator applied to a predicate group. Append new values only;
-///  never reorder or reuse existing values.
+///  never reorder or reuse existing values. A policy's rules are a flat list
+///  that must all pass, so evaluators accept only All.
 public enum trpCombinator: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Every direct predicate and child group must pass.
+  ///  Every rule must pass.
   case all = 0
-  ///  At least one direct predicate or child group must pass.
+  ///  Retired: rules are never alternatives. Evaluators refuse a policy that
+  ///  uses it.
   case any = 1
 
   public static var max: trpCombinator { return .any }
@@ -107,7 +109,8 @@ public struct TRPAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   }
 }
 
-///  One independently measurable predicate in a trust rule policy.
+///  One named rule in a trust rule policy: a predicate and the values it
+///  needs. A subject meets the policy only when every rule passes.
 public struct TRPPredicate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -129,6 +132,7 @@ public struct TRPPredicate: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     static let REQUIRED_COUNT: VOffset = 16
     static let TRUSTER_IDS: VOffset = 18
     static let MIN_EDGE_WEIGHT: VOffset = 20
+    static let NAME: VOffset = 22
   }
 
   ///  Stable identifier unique within the policy.
@@ -151,7 +155,11 @@ public struct TRPPredicate: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
   public var TRUSTER_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TRUSTER_IDS, byteSize: 4) }
   ///  Minimum accepted `$TRE.WEIGHT` for a matching trust edge.
   public var MIN_EDGE_WEIGHT: Double { let o = _accessor.offset(VT.MIN_EDGE_WEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startTRPPredicate(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  ///  The rule's name as its author wrote it, shown wherever the rule and its
+  ///  results are listed.
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  public static func startTRPPredicate(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
   public static func add(PREDICATE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREDICATE_ID, at: VT.PREDICATE_ID) }
   public static func add(KIND: trpPredicateKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
   public static func add(MIN_VALUE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_VALUE, def: 0, at: VT.MIN_VALUE) }
@@ -161,6 +169,7 @@ public struct TRPPredicate: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
   public static func add(REQUIRED_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED_COUNT, def: 0, at: VT.REQUIRED_COUNT) }
   public static func addVectorOf(TRUSTER_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRUSTER_IDS, at: VT.TRUSTER_IDS) }
   public static func add(MIN_EDGE_WEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_EDGE_WEIGHT, def: 0.0, at: VT.MIN_EDGE_WEIGHT) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func endTRPPredicate(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTRPPredicate(
     _ fbb: inout FlatBufferBuilder,
@@ -172,7 +181,8 @@ public struct TRPPredicate: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     ASSETSVectorOffset ASSETS: Offset = Offset(),
     REQUIRED_COUNT: UInt32 = 0,
     TRUSTER_IDSVectorOffset TRUSTER_IDS: Offset = Offset(),
-    MIN_EDGE_WEIGHT: Double = 0.0
+    MIN_EDGE_WEIGHT: Double = 0.0,
+    NAMEOffset NAME: Offset = Offset()
   ) -> Offset {
     let __start = TRPPredicate.startTRPPredicate(&fbb)
     TRPPredicate.add(PREDICATE_ID: PREDICATE_ID, &fbb)
@@ -184,6 +194,7 @@ public struct TRPPredicate: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     TRPPredicate.add(REQUIRED_COUNT: REQUIRED_COUNT, &fbb)
     TRPPredicate.addVectorOf(TRUSTER_IDS: TRUSTER_IDS, &fbb)
     TRPPredicate.add(MIN_EDGE_WEIGHT: MIN_EDGE_WEIGHT, &fbb)
+    TRPPredicate.add(NAME: NAME, &fbb)
     return TRPPredicate.endTRPPredicate(&fbb, start: __start)
   }
 
@@ -198,11 +209,12 @@ public struct TRPPredicate: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     try _v.visit(field: VT.REQUIRED_COUNT, fieldName: "REQUIRED_COUNT", required: false, type: UInt32.self)
     try _v.visit(field: VT.TRUSTER_IDS, fieldName: "TRUSTER_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.MIN_EDGE_WEIGHT, fieldName: "MIN_EDGE_WEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
 
-///  Recursive boolean group for a compound trust rule set.
+///  The rules of a trust rule policy.
 public struct TRPGroup: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -224,11 +236,11 @@ public struct TRPGroup: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   ///  Stable identifier unique within the policy.
   public var GROUP_ID: String? { let o = _accessor.offset(VT.GROUP_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var GROUP_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GROUP_ID) }
-  ///  Boolean operation applied across direct predicates and child groups.
+  ///  Always All: every rule must pass.
   public var COMBINATOR: trpCombinator { let o = _accessor.offset(VT.COMBINATOR); return o == 0 ? .all : trpCombinator(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .all }
-  ///  Predicates evaluated directly within this group.
+  ///  The policy's rules, all of which must pass.
   public var PREDICATES: FlatbufferVector<TRPPredicate> { return _accessor.vector(at: VT.PREDICATES, byteSize: 4) }
-  ///  Nested groups used to express compound rule sets.
+  ///  Retired: rules do not nest. Evaluators refuse a policy with child groups.
   public var GROUPS: FlatbufferVector<TRPGroup> { return _accessor.vector(at: VT.GROUPS, byteSize: 4) }
   public static func startTRPGroup(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(GROUP_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUP_ID, at: VT.GROUP_ID) }
@@ -261,7 +273,9 @@ public struct TRPGroup: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   }
 }
 
-///  Trust Rule Policy - Signed compound criteria for evaluating one subject.
+///  Trust Rule Policy - a signed list of named rules for evaluating a subject.
+///  The subject meets the policy when every rule passes; there is no
+///  alternative and no nesting.
 public struct TRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -296,7 +310,7 @@ public struct TRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Human-readable policy description.
   public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
-  ///  Root of the compound rule tree.
+  ///  The policy's rules.
   public var ROOT: TRPGroup? { let o = _accessor.offset(VT.ROOT); return o == 0 ? nil : TRPGroup(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Periodic evaluation cadence in milliseconds. The 10000 default is the
   ///  0.1 Hz baseline and is configurable by the policy author.

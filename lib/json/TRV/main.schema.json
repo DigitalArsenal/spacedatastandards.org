@@ -34,7 +34,7 @@
     },
     "TRPPredicate" : {
       "type" : "object",
-      "description" : "One independently measurable predicate in a trust rule policy.",
+      "description" : "One named rule in a trust rule policy: a predicate and the values it\nneeds. A subject meets the policy only when every rule passes.",
       "properties" : {
         "PREDICATE_ID" : {
                 "type" : "string",
@@ -71,13 +71,17 @@
         "MIN_EDGE_WEIGHT" : {
                 "type" : "number",
                 "description" : "Minimum accepted `$TRE.WEIGHT` for a matching trust edge."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "The rule's name as its author wrote it, shown wherever the rule and its\nresults are listed."
               }
       },
       "additionalProperties" : false
     },
     "TRPGroup" : {
       "type" : "object",
-      "description" : "Recursive boolean group for a compound trust rule set.",
+      "description" : "The rules of a trust rule policy.",
       "properties" : {
         "GROUP_ID" : {
                 "type" : "string",
@@ -85,22 +89,22 @@
               },
         "COMBINATOR" : {
                 "$ref" : "#/definitions/trpCombinator",
-                "description" : "Boolean operation applied across direct predicates and child groups."
+                "description" : "Always All: every rule must pass."
               },
         "PREDICATES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/TRPPredicate"},
-                "description" : "Predicates evaluated directly within this group."
+                "description" : "The policy's rules, all of which must pass."
               },
         "GROUPS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/TRPGroup"},
-                "description" : "Nested groups used to express compound rule sets."
+                "description" : "Retired: rules do not nest. Evaluators refuse a policy with child groups."
               }
       },
       "additionalProperties" : false
     },
     "TRP" : {
       "type" : "object",
-      "description" : "Trust Rule Policy - Signed compound criteria for evaluating one subject.",
+      "description" : "Trust Rule Policy - a signed list of named rules for evaluating a subject.\nThe subject meets the policy when every rule passes; there is no\nalternative and no nesting.",
       "properties" : {
         "POLICY_ID" : {
                 "type" : "string",
@@ -116,7 +120,7 @@
               },
         "ROOT" : {
                 "$ref" : "#/definitions/TRPGroup",
-                "description" : "Root of the compound rule tree."
+                "description" : "The policy's rules."
               },
         "EVALUATION_INTERVAL_MS" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,

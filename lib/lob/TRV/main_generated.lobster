@@ -14,11 +14,13 @@ enum trpPredicateKind:
     trpPredicateKind_TrustedConnections = 3
 
 /// Boolean combinator applied to a predicate group. Append new values only;
-/// never reorder or reuse existing values.
+/// never reorder or reuse existing values. A policy's rules are a flat list
+/// that must all pass, so evaluators accept only All.
 enum trpCombinator:
-    /// Every direct predicate and child group must pass.
+    /// Every rule must pass.
     trpCombinator_All = 0
-    /// At least one direct predicate or child group must pass.
+    /// Retired: rules are never alternatives. Evaluators refuse a policy that
+    /// uses it.
     trpCombinator_Any = 1
 
 class TRPAsset
@@ -68,7 +70,8 @@ struct TRPAssetBuilder:
     def end():
         return b_.EndObject()
 
-/// One independently measurable predicate in a trust rule policy.
+/// One named rule in a trust rule policy: a predicate and the values it
+/// needs. A subject meets the policy only when every rule passes.
 class TRPPredicate : flatbuffers.handle
     /// Stable identifier unique within the policy.
     def PREDICATE_ID() -> string:
@@ -101,13 +104,17 @@ class TRPPredicate : flatbuffers.handle
     /// Minimum accepted `$TRE.WEIGHT` for a matching trust edge.
     def MIN_EDGE_WEIGHT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// The rule's name as its author wrote it, shown wherever the rule and its
+    /// results are listed.
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
 
 def GetRootAsTRPPredicate(buf:string): return TRPPredicate { buf, flatbuffers.indirect(buf, 0) }
 
 struct TRPPredicateBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(9)
+        b_.StartObject(10)
         return this
     def add_PREDICATE_ID(PREDICATE_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, PREDICATE_ID)
@@ -136,6 +143,9 @@ struct TRPPredicateBuilder:
     def add_MIN_EDGE_WEIGHT(MIN_EDGE_WEIGHT:float):
         b_.PrependFloat64Slot(8, MIN_EDGE_WEIGHT, 0.0)
         return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, NAME)
+        return this
     def end():
         return b_.EndObject()
 
@@ -153,20 +163,20 @@ def TRPPredicateCreateTRUSTERIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.o
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-/// Recursive boolean group for a compound trust rule set.
+/// The rules of a trust rule policy.
 class TRPGroup : flatbuffers.handle
     /// Stable identifier unique within the policy.
     def GROUP_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
-    /// Boolean operation applied across direct predicates and child groups.
+    /// Always All: every rule must pass.
     def COMBINATOR() -> trpCombinator:
         return trpCombinator(flatbuffers.field_int8(buf_, pos_, 6, 0))
-    /// Predicates evaluated directly within this group.
+    /// The policy's rules, all of which must pass.
     def PREDICATES(i:int) -> TRPPredicate:
         return TRPPredicate { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
     def PREDICATES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 8)
-    /// Nested groups used to express compound rule sets.
+    /// Retired: rules do not nest. Evaluators refuse a policy with child groups.
     def GROUPS(i:int) -> TRPGroup:
         return TRPGroup { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 10) + i * 4) }
     def GROUPS_length() -> int:
@@ -208,7 +218,9 @@ def TRPGroupCreateGROUPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-/// Trust Rule Policy - Signed compound criteria for evaluating one subject.
+/// Trust Rule Policy - a signed list of named rules for evaluating a subject.
+/// The subject meets the policy when every rule passes; there is no
+/// alternative and no nesting.
 class TRP : flatbuffers.handle
     /// Stable policy identifier.
     def POLICY_ID() -> string:
@@ -219,7 +231,7 @@ class TRP : flatbuffers.handle
     /// Human-readable policy description.
     def DESCRIPTION() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
-    /// Root of the compound rule tree.
+    /// The policy's rules.
     def ROOT() -> TRPGroup?:
         let o = flatbuffers.field_table(buf_, pos_, 10)
         return if o: TRPGroup { buf_, o } else: nil

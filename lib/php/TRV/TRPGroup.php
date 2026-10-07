@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Recursive boolean group for a compound trust rule set.
+/// The rules of a trust rule policy.
 class TRPGroup extends Table
 {
     /**
@@ -48,7 +48,7 @@ class TRPGroup extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Boolean operation applied across direct predicates and child groups.
+    /// Always All: every rule must pass.
     /**
      * @return sbyte
      */
@@ -58,7 +58,7 @@ class TRPGroup extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \trpCombinator::All;
     }
 
-    /// Predicates evaluated directly within this group.
+    /// The policy's rules, all of which must pass.
     /**
      * @returnVectorOffset
      */
@@ -78,7 +78,7 @@ class TRPGroup extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Nested groups used to express compound rule sets.
+    /// Retired: rules do not nest. Evaluators refuse a policy with child groups.
     /**
      * @returnVectorOffset
      */

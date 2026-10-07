@@ -4,16 +4,18 @@
 
 /**
  * Boolean combinator applied to a predicate group. Append new values only;
- * never reorder or reuse existing values.
+ * never reorder or reuse existing values. A policy's rules are a flat list
+ * that must all pass, so evaluators accept only All.
  */
 export enum trpCombinator {
   /**
-   * Every direct predicate and child group must pass.
+   * Every rule must pass.
    */
   All = 0,
 
   /**
-   * At least one direct predicate or child group must pass.
+   * Retired: rules are never alternatives. Evaluators refuse a policy that
+   * uses it.
    */
   Any = 1
 }

@@ -9,7 +9,7 @@ import { trpCombinator } from './trpCombinator.js';
 
 
 /**
- * Recursive boolean group for a compound trust rule set.
+ * The rules of a trust rule policy.
  */
 export class TRPGroup implements flatbuffers.IUnpackableObject<TRPGroupT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -40,7 +40,7 @@ GROUP_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Boolean operation applied across direct predicates and child groups.
+ * Always All: every rule must pass.
  */
 COMBINATOR():trpCombinator {
   const offset = this.bb!.__offset(this.bb_pos, 6);
@@ -48,7 +48,7 @@ COMBINATOR():trpCombinator {
 }
 
 /**
- * Predicates evaluated directly within this group.
+ * The policy's rules, all of which must pass.
  */
 PREDICATES(index: number, obj?:TRPPredicate):TRPPredicate|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
@@ -61,7 +61,7 @@ predicatesLength():number {
 }
 
 /**
- * Nested groups used to express compound rule sets.
+ * Retired: rules do not nest. Evaluators refuse a policy with child groups.
  */
 GROUPS(index: number, obj?:TRPGroup):TRPGroup|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);

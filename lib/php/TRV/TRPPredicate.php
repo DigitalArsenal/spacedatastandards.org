@@ -6,7 +6,8 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// One independently measurable predicate in a trust rule policy.
+/// One named rule in a trust rule policy: a predicate and the values it
+/// needs. A subject meets the policy only when every rule passes.
 class TRPPredicate extends Table
 {
     /**
@@ -145,22 +146,30 @@ class TRPPredicate extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// The rule's name as its author wrote it, shown wherever the rule and its
+    /// results are listed.
+    public function getNAME()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startTRPPredicate(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(9);
+        $builder->StartObject(10);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return TRPPredicate
      */
-    public static function createTRPPredicate(FlatBufferBuilder $builder, $PREDICATE_ID, $KIND, $MIN_VALUE, $VALUE_CURRENCY, $MIN_HELD_SECONDS, $ASSETS, $REQUIRED_COUNT, $TRUSTER_IDS, $MIN_EDGE_WEIGHT)
+    public static function createTRPPredicate(FlatBufferBuilder $builder, $PREDICATE_ID, $KIND, $MIN_VALUE, $VALUE_CURRENCY, $MIN_HELD_SECONDS, $ASSETS, $REQUIRED_COUNT, $TRUSTER_IDS, $MIN_EDGE_WEIGHT, $NAME)
     {
-        $builder->startObject(9);
+        $builder->startObject(10);
         self::addPREDICATE_ID($builder, $PREDICATE_ID);
         self::addKIND($builder, $KIND);
         self::addMIN_VALUE($builder, $MIN_VALUE);
@@ -170,6 +179,7 @@ class TRPPredicate extends Table
         self::addREQUIRED_COUNT($builder, $REQUIRED_COUNT);
         self::addTRUSTER_IDS($builder, $TRUSTER_IDS);
         self::addMIN_EDGE_WEIGHT($builder, $MIN_EDGE_WEIGHT);
+        self::addNAME($builder, $NAME);
         $o = $builder->endObject();
         return $o;
     }
@@ -310,6 +320,16 @@ class TRPPredicate extends Table
     public static function addMIN_EDGE_WEIGHT(FlatBufferBuilder $builder, $MIN_EDGE_WEIGHT)
     {
         $builder->addDoubleX(8, $MIN_EDGE_WEIGHT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNAME(FlatBufferBuilder $builder, $NAME)
+    {
+        $builder->addOffsetX(9, $NAME, 0);
     }
 
     /**

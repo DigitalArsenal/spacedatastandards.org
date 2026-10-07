@@ -2,7 +2,8 @@ import * as flatbuffers from 'flatbuffers';
 import { TRPAsset, TRPAssetT } from './TRPAsset.js';
 import { trpPredicateKind } from './trpPredicateKind.js';
 /**
- * One independently measurable predicate in a trust rule policy.
+ * One named rule in a trust rule policy: a predicate and the values it
+ * needs. A subject meets the policy only when every rule passes.
  */
 export declare class TRPPredicate implements flatbuffers.IUnpackableObject<TRPPredicateT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -51,6 +52,12 @@ export declare class TRPPredicate implements flatbuffers.IUnpackableObject<TRPPr
      * Minimum accepted `$TRE.WEIGHT` for a matching trust edge.
      */
     MIN_EDGE_WEIGHT(): number;
+    /**
+     * The rule's name as its author wrote it, shown wherever the rule and its
+     * results are listed.
+     */
+    NAME(): string | null;
+    NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startTRPPredicate(builder: flatbuffers.Builder): void;
     static addPredicateId(builder: flatbuffers.Builder, PREDICATE_IDOffset: flatbuffers.Offset): void;
     static addKind(builder: flatbuffers.Builder, KIND: trpPredicateKind): void;
@@ -65,8 +72,9 @@ export declare class TRPPredicate implements flatbuffers.IUnpackableObject<TRPPr
     static createTrusterIdsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startTrusterIdsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addMinEdgeWeight(builder: flatbuffers.Builder, MIN_EDGE_WEIGHT: number): void;
+    static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
     static endTRPPredicate(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createTRPPredicate(builder: flatbuffers.Builder, PREDICATE_IDOffset: flatbuffers.Offset, KIND: trpPredicateKind, MIN_VALUE: bigint, VALUE_CURRENCYOffset: flatbuffers.Offset, MIN_HELD_SECONDS: bigint, ASSETSOffset: flatbuffers.Offset, REQUIRED_COUNT: number, TRUSTER_IDSOffset: flatbuffers.Offset, MIN_EDGE_WEIGHT: number): flatbuffers.Offset;
+    static createTRPPredicate(builder: flatbuffers.Builder, PREDICATE_IDOffset: flatbuffers.Offset, KIND: trpPredicateKind, MIN_VALUE: bigint, VALUE_CURRENCYOffset: flatbuffers.Offset, MIN_HELD_SECONDS: bigint, ASSETSOffset: flatbuffers.Offset, REQUIRED_COUNT: number, TRUSTER_IDSOffset: flatbuffers.Offset, MIN_EDGE_WEIGHT: number, NAMEOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): TRPPredicateT;
     unpackTo(_o: TRPPredicateT): void;
 }
@@ -80,7 +88,8 @@ export declare class TRPPredicateT implements flatbuffers.IGeneratedObject {
     REQUIRED_COUNT: number;
     TRUSTER_IDS: (string)[];
     MIN_EDGE_WEIGHT: number;
-    constructor(PREDICATE_ID?: string | Uint8Array | null, KIND?: trpPredicateKind, MIN_VALUE?: bigint, VALUE_CURRENCY?: string | Uint8Array | null, MIN_HELD_SECONDS?: bigint, ASSETS?: (TRPAssetT)[], REQUIRED_COUNT?: number, TRUSTER_IDS?: (string)[], MIN_EDGE_WEIGHT?: number);
+    NAME: string | Uint8Array | null;
+    constructor(PREDICATE_ID?: string | Uint8Array | null, KIND?: trpPredicateKind, MIN_VALUE?: bigint, VALUE_CURRENCY?: string | Uint8Array | null, MIN_HELD_SECONDS?: bigint, ASSETS?: (TRPAssetT)[], REQUIRED_COUNT?: number, TRUSTER_IDS?: (string)[], MIN_EDGE_WEIGHT?: number, NAME?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=TRPPredicate.d.ts.map

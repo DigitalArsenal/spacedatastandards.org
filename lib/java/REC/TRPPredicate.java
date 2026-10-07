@@ -17,7 +17,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * One independently measurable predicate in a trust rule policy.
+ * One named rule in a trust rule policy: a predicate and the values it
+ * needs. A subject meets the policy only when every rule passes.
  */
 @SuppressWarnings("unused")
 public final class TRPPredicate extends com.google.flatbuffers.Table {
@@ -74,6 +75,13 @@ public final class TRPPredicate extends com.google.flatbuffers.Table {
    * Minimum accepted `$TRE.WEIGHT` for a matching trust edge.
    */
   public double MIN_EDGE_WEIGHT() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * The rule's name as its author wrote it, shown wherever the rule and its
+   * results are listed.
+   */
+  public String NAME() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
 
   public static int createTRPPredicate(FlatBufferBuilder builder,
       int PREDICATE_IDOffset,
@@ -84,11 +92,13 @@ public final class TRPPredicate extends com.google.flatbuffers.Table {
       int ASSETSOffset,
       long REQUIRED_COUNT,
       int TRUSTER_IDSOffset,
-      double MIN_EDGE_WEIGHT) {
-    builder.startTable(9);
+      double MIN_EDGE_WEIGHT,
+      int NAMEOffset) {
+    builder.startTable(10);
     TRPPredicate.addMinEdgeWeight(builder, MIN_EDGE_WEIGHT);
     TRPPredicate.addMinHeldSeconds(builder, MIN_HELD_SECONDS);
     TRPPredicate.addMinValue(builder, MIN_VALUE);
+    TRPPredicate.addName(builder, NAMEOffset);
     TRPPredicate.addTrusterIds(builder, TRUSTER_IDSOffset);
     TRPPredicate.addRequiredCount(builder, REQUIRED_COUNT);
     TRPPredicate.addAssets(builder, ASSETSOffset);
@@ -98,7 +108,7 @@ public final class TRPPredicate extends com.google.flatbuffers.Table {
     return TRPPredicate.endTRPPredicate(builder);
   }
 
-  public static void startTRPPredicate(FlatBufferBuilder builder) { builder.startTable(9); }
+  public static void startTRPPredicate(FlatBufferBuilder builder) { builder.startTable(10); }
   public static void addPredicateId(FlatBufferBuilder builder, int PREDICATE_IDOffset) { builder.addOffset(0, PREDICATE_IDOffset, 0); }
   public static void addKind(FlatBufferBuilder builder, byte KIND) { builder.addByte(1, KIND, 0); }
   public static void addMinValue(FlatBufferBuilder builder, long MIN_VALUE) { builder.addLong(2, MIN_VALUE, 0L); }
@@ -112,6 +122,7 @@ public final class TRPPredicate extends com.google.flatbuffers.Table {
   public static int createTrusterIdsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTrusterIdsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addMinEdgeWeight(FlatBufferBuilder builder, double MIN_EDGE_WEIGHT) { builder.addDouble(8, MIN_EDGE_WEIGHT, 0.0); }
+  public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(9, NAMEOffset, 0); }
   public static int endTRPPredicate(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

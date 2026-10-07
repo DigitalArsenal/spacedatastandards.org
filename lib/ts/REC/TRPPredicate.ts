@@ -9,7 +9,8 @@ import { trpPredicateKind } from './trpPredicateKind.js';
 
 
 /**
- * One independently measurable predicate in a trust rule policy.
+ * One named rule in a trust rule policy: a predicate and the values it
+ * needs. A subject meets the policy only when every rule passes.
  */
 export class TRPPredicate implements flatbuffers.IUnpackableObject<TRPPredicateT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -117,8 +118,19 @@ MIN_EDGE_WEIGHT():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * The rule's name as its author wrote it, shown wherever the rule and its
+ * results are listed.
+ */
+NAME():string|null
+NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startTRPPredicate(builder:flatbuffers.Builder) {
-  builder.startObject(9);
+  builder.startObject(10);
 }
 
 static addPredicateId(builder:flatbuffers.Builder, PREDICATE_IDOffset:flatbuffers.Offset) {
@@ -181,12 +193,16 @@ static addMinEdgeWeight(builder:flatbuffers.Builder, MIN_EDGE_WEIGHT:number) {
   builder.addFieldFloat64(8, MIN_EDGE_WEIGHT, 0.0);
 }
 
+static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, NAMEOffset, 0);
+}
+
 static endTRPPredicate(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createTRPPredicate(builder:flatbuffers.Builder, PREDICATE_IDOffset:flatbuffers.Offset, KIND:trpPredicateKind, MIN_VALUE:bigint, VALUE_CURRENCYOffset:flatbuffers.Offset, MIN_HELD_SECONDS:bigint, ASSETSOffset:flatbuffers.Offset, REQUIRED_COUNT:number, TRUSTER_IDSOffset:flatbuffers.Offset, MIN_EDGE_WEIGHT:number):flatbuffers.Offset {
+static createTRPPredicate(builder:flatbuffers.Builder, PREDICATE_IDOffset:flatbuffers.Offset, KIND:trpPredicateKind, MIN_VALUE:bigint, VALUE_CURRENCYOffset:flatbuffers.Offset, MIN_HELD_SECONDS:bigint, ASSETSOffset:flatbuffers.Offset, REQUIRED_COUNT:number, TRUSTER_IDSOffset:flatbuffers.Offset, MIN_EDGE_WEIGHT:number, NAMEOffset:flatbuffers.Offset):flatbuffers.Offset {
   TRPPredicate.startTRPPredicate(builder);
   TRPPredicate.addPredicateId(builder, PREDICATE_IDOffset);
   TRPPredicate.addKind(builder, KIND);
@@ -197,6 +213,7 @@ static createTRPPredicate(builder:flatbuffers.Builder, PREDICATE_IDOffset:flatbu
   TRPPredicate.addRequiredCount(builder, REQUIRED_COUNT);
   TRPPredicate.addTrusterIds(builder, TRUSTER_IDSOffset);
   TRPPredicate.addMinEdgeWeight(builder, MIN_EDGE_WEIGHT);
+  TRPPredicate.addName(builder, NAMEOffset);
   return TRPPredicate.endTRPPredicate(builder);
 }
 
@@ -210,7 +227,8 @@ unpack(): TRPPredicateT {
     this.bb!.createObjList<TRPAsset, TRPAssetT>(this.ASSETS.bind(this), this.assetsLength()),
     this.REQUIRED_COUNT(),
     this.bb!.createScalarList<string>(this.TRUSTER_IDS.bind(this), this.trusterIdsLength()),
-    this.MIN_EDGE_WEIGHT()
+    this.MIN_EDGE_WEIGHT(),
+    this.NAME()
   );
 }
 
@@ -225,6 +243,7 @@ unpackTo(_o: TRPPredicateT): void {
   _o.REQUIRED_COUNT = this.REQUIRED_COUNT();
   _o.TRUSTER_IDS = this.bb!.createScalarList<string>(this.TRUSTER_IDS.bind(this), this.trusterIdsLength());
   _o.MIN_EDGE_WEIGHT = this.MIN_EDGE_WEIGHT();
+  _o.NAME = this.NAME();
 }
 }
 
@@ -238,7 +257,8 @@ constructor(
   public ASSETS: (TRPAssetT)[] = [],
   public REQUIRED_COUNT: number = 0,
   public TRUSTER_IDS: (string)[] = [],
-  public MIN_EDGE_WEIGHT: number = 0.0
+  public MIN_EDGE_WEIGHT: number = 0.0,
+  public NAME: string|Uint8Array|null = null
 ){}
 
 
@@ -247,6 +267,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const VALUE_CURRENCY = (this.VALUE_CURRENCY !== null ? builder.createString(this.VALUE_CURRENCY!) : 0);
   const ASSETS = TRPPredicate.createAssetsVector(builder, builder.createObjectOffsetList(this.ASSETS));
   const TRUSTER_IDS = TRPPredicate.createTrusterIdsVector(builder, builder.createObjectOffsetList(this.TRUSTER_IDS));
+  const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
 
   return TRPPredicate.createTRPPredicate(builder,
     PREDICATE_ID,
@@ -257,7 +278,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     ASSETS,
     this.REQUIRED_COUNT,
     TRUSTER_IDS,
-    this.MIN_EDGE_WEIGHT
+    this.MIN_EDGE_WEIGHT,
+    NAME
   );
 }
 }

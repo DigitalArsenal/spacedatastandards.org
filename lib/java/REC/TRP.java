@@ -17,7 +17,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Trust Rule Policy - Signed compound criteria for evaluating one subject.
+ * Trust Rule Policy - a signed list of named rules for evaluating a subject.
+ * The subject meets the policy when every rule passes; there is no
+ * alternative and no nesting.
  */
 @SuppressWarnings("unused")
 public final class TRP extends com.google.flatbuffers.Table {
@@ -47,7 +49,7 @@ public final class TRP extends com.google.flatbuffers.Table {
   public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
-   * Root of the compound rule tree.
+   * The policy's rules.
    */
   public TRPGroup ROOT() { return ROOT(new TRPGroup()); }
   public TRPGroup ROOT(TRPGroup obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }

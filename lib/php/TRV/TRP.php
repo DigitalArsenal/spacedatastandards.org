@@ -6,7 +6,9 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Trust Rule Policy - Signed compound criteria for evaluating one subject.
+/// Trust Rule Policy - a signed list of named rules for evaluating a subject.
+/// The subject meets the policy when every rule passes; there is no
+/// alternative and no nesting.
 class TRP extends Table
 {
     /**
@@ -62,7 +64,7 @@ class TRP extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Root of the compound rule tree.
+    /// The policy's rules.
     public function getROOT()
     {
         $obj = new TRPGroup();

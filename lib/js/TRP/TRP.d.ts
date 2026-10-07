@@ -1,7 +1,9 @@
 import * as flatbuffers from 'flatbuffers';
 import { TRPGroup, TRPGroupT } from './TRPGroup.js';
 /**
- * Trust Rule Policy - Signed compound criteria for evaluating one subject.
+ * Trust Rule Policy - a signed list of named rules for evaluating a subject.
+ * The subject meets the policy when every rule passes; there is no
+ * alternative and no nesting.
  */
 export declare class TRP implements flatbuffers.IUnpackableObject<TRPT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -26,7 +28,7 @@ export declare class TRP implements flatbuffers.IUnpackableObject<TRPT> {
     DESCRIPTION(): string | null;
     DESCRIPTION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Root of the compound rule tree.
+     * The policy's rules.
      */
     ROOT(obj?: TRPGroup): TRPGroup | null;
     /**

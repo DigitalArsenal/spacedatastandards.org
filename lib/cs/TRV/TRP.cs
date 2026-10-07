@@ -6,7 +6,9 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Trust Rule Policy - Signed compound criteria for evaluating one subject.
+/// Trust Rule Policy - a signed list of named rules for evaluating a subject.
+/// The subject meets the policy when every rule passes; there is no
+/// alternative and no nesting.
 public struct TRP : IFlatbufferObject
 {
   private Table __p;
@@ -43,7 +45,7 @@ public struct TRP : IFlatbufferObject
   public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(8); }
-  /// Root of the compound rule tree.
+  /// The policy's rules.
   public TRPGroup? ROOT { get { int o = __p.__offset(10); return o != 0 ? (TRPGroup?)(new TRPGroup()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Periodic evaluation cadence in milliseconds. The 10000 default is the
   /// 0.1 Hz baseline and is configurable by the policy author.

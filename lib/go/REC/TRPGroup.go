@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Recursive boolean group for a compound trust rule set.
+/// The rules of a trust rule policy.
 type TRPGroup struct {
 	_tab flatbuffers.Table
 }
@@ -56,7 +56,7 @@ func (rcv *TRPGroup) GroupId() []byte {
 }
 
 /// Stable identifier unique within the policy.
-/// Boolean operation applied across direct predicates and child groups.
+/// Always All: every rule must pass.
 func (rcv *TRPGroup) COMBINATOR() trpCombinator {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -69,7 +69,7 @@ func (rcv *TRPGroup) Combinator() trpCombinator {
 	return rcv.COMBINATOR()
 }
 
-/// Boolean operation applied across direct predicates and child groups.
+/// Always All: every rule must pass.
 func (rcv *TRPGroup) MutateCOMBINATOR(n trpCombinator) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
 }
@@ -78,7 +78,7 @@ func (rcv *TRPGroup) MutateCombinator(n trpCombinator) bool {
 	return rcv.MutateCOMBINATOR(n)
 }
 
-/// Predicates evaluated directly within this group.
+/// The policy's rules, all of which must pass.
 func (rcv *TRPGroup) PREDICATES(obj *TRPPredicate, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -110,8 +110,8 @@ func (rcv *TRPGroup) PredicatesLength() int {
 	return rcv.PREDICATESLength()
 }
 
-/// Predicates evaluated directly within this group.
-/// Nested groups used to express compound rule sets.
+/// The policy's rules, all of which must pass.
+/// Retired: rules do not nest. Evaluators refuse a policy with child groups.
 func (rcv *TRPGroup) GROUPS(obj *TRPGroup, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -143,7 +143,7 @@ func (rcv *TRPGroup) GroupsLength() int {
 	return rcv.GROUPSLength()
 }
 
-/// Nested groups used to express compound rule sets.
+/// Retired: rules do not nest. Evaluators refuse a policy with child groups.
 func TRPGroupStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
 }

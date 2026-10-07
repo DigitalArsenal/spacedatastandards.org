@@ -68,11 +68,13 @@ inline const char *EnumNametrpPredicateKind(trpPredicateKind e) {
 }
 
 /// Boolean combinator applied to a predicate group. Append new values only;
-/// never reorder or reuse existing values.
+/// never reorder or reuse existing values. A policy's rules are a flat list
+/// that must all pass, so evaluators accept only All.
 enum trpCombinator : int8_t {
-  /// Every direct predicate and child group must pass.
+  /// Every rule must pass.
   trpCombinator_All = 0,
-  /// At least one direct predicate or child group must pass.
+  /// Retired: rules are never alternatives. Evaluators refuse a policy that
+  /// uses it.
   trpCombinator_Any = 1,
   trpCombinator_MIN = trpCombinator_All,
   trpCombinator_MAX = trpCombinator_Any
@@ -200,7 +202,8 @@ inline ::flatbuffers::Offset<TRPAsset> CreateTRPAssetDirect(
       DECIMALS);
 }
 
-/// One independently measurable predicate in a trust rule policy.
+/// One named rule in a trust rule policy: a predicate and the values it
+/// needs. A subject meets the policy only when every rule passes.
 struct TRPPredicate FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef TRPPredicateBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -212,7 +215,8 @@ struct TRPPredicate FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ASSETS = 14,
     VT_REQUIRED_COUNT = 16,
     VT_TRUSTER_IDS = 18,
-    VT_MIN_EDGE_WEIGHT = 20
+    VT_MIN_EDGE_WEIGHT = 20,
+    VT_NAME = 22
   };
   /// Stable identifier unique within the policy.
   const ::flatbuffers::String *PREDICATE_ID() const {
@@ -250,6 +254,11 @@ struct TRPPredicate FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double MIN_EDGE_WEIGHT() const {
     return GetField<double>(VT_MIN_EDGE_WEIGHT, 0.0);
   }
+  /// The rule's name as its author wrote it, shown wherever the rule and its
+  /// results are listed.
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -268,6 +277,8 @@ struct TRPPredicate FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVector(TRUSTER_IDS()) &&
            verifier.VerifyVectorOfStrings(TRUSTER_IDS()) &&
            VerifyField<double>(verifier, VT_MIN_EDGE_WEIGHT, 8) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
            verifier.EndTable();
   }
 };
@@ -303,6 +314,9 @@ struct TRPPredicateBuilder {
   void add_MIN_EDGE_WEIGHT(double MIN_EDGE_WEIGHT) {
     fbb_.AddElement<double>(TRPPredicate::VT_MIN_EDGE_WEIGHT, MIN_EDGE_WEIGHT, 0.0);
   }
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(TRPPredicate::VT_NAME, NAME);
+  }
   explicit TRPPredicateBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -324,11 +338,13 @@ inline ::flatbuffers::Offset<TRPPredicate> CreateTRPPredicate(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TRPAsset>>> ASSETS = 0,
     uint32_t REQUIRED_COUNT = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TRUSTER_IDS = 0,
-    double MIN_EDGE_WEIGHT = 0.0) {
+    double MIN_EDGE_WEIGHT = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0) {
   TRPPredicateBuilder builder_(_fbb);
   builder_.add_MIN_EDGE_WEIGHT(MIN_EDGE_WEIGHT);
   builder_.add_MIN_HELD_SECONDS(MIN_HELD_SECONDS);
   builder_.add_MIN_VALUE(MIN_VALUE);
+  builder_.add_NAME(NAME);
   builder_.add_TRUSTER_IDS(TRUSTER_IDS);
   builder_.add_REQUIRED_COUNT(REQUIRED_COUNT);
   builder_.add_ASSETS(ASSETS);
@@ -348,11 +364,13 @@ inline ::flatbuffers::Offset<TRPPredicate> CreateTRPPredicateDirect(
     const std::vector<::flatbuffers::Offset<TRPAsset>> *ASSETS = nullptr,
     uint32_t REQUIRED_COUNT = 0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TRUSTER_IDS = nullptr,
-    double MIN_EDGE_WEIGHT = 0.0) {
+    double MIN_EDGE_WEIGHT = 0.0,
+    const char *NAME = nullptr) {
   auto PREDICATE_ID__ = PREDICATE_ID ? _fbb.CreateString(PREDICATE_ID) : 0;
   auto VALUE_CURRENCY__ = VALUE_CURRENCY ? _fbb.CreateString(VALUE_CURRENCY) : 0;
   auto ASSETS__ = ASSETS ? _fbb.CreateVector<::flatbuffers::Offset<TRPAsset>>(*ASSETS) : 0;
   auto TRUSTER_IDS__ = TRUSTER_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TRUSTER_IDS) : 0;
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   return CreateTRPPredicate(
       _fbb,
       PREDICATE_ID__,
@@ -363,10 +381,11 @@ inline ::flatbuffers::Offset<TRPPredicate> CreateTRPPredicateDirect(
       ASSETS__,
       REQUIRED_COUNT,
       TRUSTER_IDS__,
-      MIN_EDGE_WEIGHT);
+      MIN_EDGE_WEIGHT,
+      NAME__);
 }
 
-/// Recursive boolean group for a compound trust rule set.
+/// The rules of a trust rule policy.
 struct TRPGroup FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef TRPGroupBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -379,15 +398,15 @@ struct TRPGroup FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *GROUP_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_GROUP_ID);
   }
-  /// Boolean operation applied across direct predicates and child groups.
+  /// Always All: every rule must pass.
   trpCombinator COMBINATOR() const {
     return static_cast<trpCombinator>(GetField<int8_t>(VT_COMBINATOR, 0));
   }
-  /// Predicates evaluated directly within this group.
+  /// The policy's rules, all of which must pass.
   const ::flatbuffers::Vector<::flatbuffers::Offset<TRPPredicate>> *PREDICATES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<TRPPredicate>> *>(VT_PREDICATES);
   }
-  /// Nested groups used to express compound rule sets.
+  /// Retired: rules do not nest. Evaluators refuse a policy with child groups.
   const ::flatbuffers::Vector<::flatbuffers::Offset<TRPGroup>> *GROUPS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<TRPGroup>> *>(VT_GROUPS);
   }
@@ -465,7 +484,9 @@ inline ::flatbuffers::Offset<TRPGroup> CreateTRPGroupDirect(
       GROUPS__);
 }
 
-/// Trust Rule Policy - Signed compound criteria for evaluating one subject.
+/// Trust Rule Policy - a signed list of named rules for evaluating a subject.
+/// The subject meets the policy when every rule passes; there is no
+/// alternative and no nesting.
 struct TRP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef TRPBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -493,7 +514,7 @@ struct TRP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *DESCRIPTION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
   }
-  /// Root of the compound rule tree.
+  /// The policy's rules.
   const TRPGroup *ROOT() const {
     return GetPointer<const TRPGroup *>(VT_ROOT);
   }

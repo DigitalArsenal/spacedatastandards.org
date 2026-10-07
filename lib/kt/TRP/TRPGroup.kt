@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Recursive boolean group for a compound trust rule set.
+ * The rules of a trust rule policy.
  */
 @Suppress("unused")
 class TRPGroup : Table() {
@@ -44,7 +44,7 @@ class TRPGroup : Table() {
     val groupIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun groupIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     * Boolean operation applied across direct predicates and child groups.
+     * Always All: every rule must pass.
      */
     val combinator : Byte
         get() {
@@ -52,7 +52,7 @@ class TRPGroup : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     /**
-     * Predicates evaluated directly within this group.
+     * The policy's rules, all of which must pass.
      */
     fun predicates(j: Int) : TRPPredicate? = predicates(TRPPredicate(), j)
     fun predicates(obj: TRPPredicate, j: Int) : TRPPredicate? {
@@ -68,7 +68,7 @@ class TRPGroup : Table() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     /**
-     * Nested groups used to express compound rule sets.
+     * Retired: rules do not nest. Evaluators refuse a policy with child groups.
      */
     fun groups(j: Int) : TRPGroup? = groups(TRPGroup(), j)
     fun groups(obj: TRPGroup, j: Int) : TRPGroup? {

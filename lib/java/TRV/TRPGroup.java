@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Recursive boolean group for a compound trust rule set.
+ * The rules of a trust rule policy.
  */
 @SuppressWarnings("unused")
 public final class TRPGroup extends com.google.flatbuffers.Table {
@@ -34,11 +34,11 @@ public final class TRPGroup extends com.google.flatbuffers.Table {
   public ByteBuffer GROUP_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer GROUP_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   * Boolean operation applied across direct predicates and child groups.
+   * Always All: every rule must pass.
    */
   public byte COMBINATOR() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * Predicates evaluated directly within this group.
+   * The policy's rules, all of which must pass.
    */
   public TRPPredicate PREDICATES(int j) { return PREDICATES(new TRPPredicate(), j); }
   public TRPPredicate PREDICATES(TRPPredicate obj, int j) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
@@ -46,7 +46,7 @@ public final class TRPGroup extends com.google.flatbuffers.Table {
   public TRPPredicate.Vector predicatesVector() { return predicatesVector(new TRPPredicate.Vector()); }
   public TRPPredicate.Vector predicatesVector(TRPPredicate.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
-   * Nested groups used to express compound rule sets.
+   * Retired: rules do not nest. Evaluators refuse a policy with child groups.
    */
   public TRPGroup GROUPS(int j) { return GROUPS(new TRPGroup(), j); }
   public TRPGroup GROUPS(TRPGroup obj, int j) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }

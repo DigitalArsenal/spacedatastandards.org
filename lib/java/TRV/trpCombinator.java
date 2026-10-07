@@ -2,17 +2,19 @@
 
 /**
  * Boolean combinator applied to a predicate group. Append new values only;
- * never reorder or reuse existing values.
+ * never reorder or reuse existing values. A policy's rules are a flat list
+ * that must all pass, so evaluators accept only All.
  */
 @SuppressWarnings("unused")
 public final class trpCombinator {
   private trpCombinator() { }
   /**
-   * Every direct predicate and child group must pass.
+   * Every rule must pass.
    */
   public static final byte All = 0;
   /**
-   * At least one direct predicate or child group must pass.
+   * Retired: rules are never alternatives. Evaluators refuse a policy that
+   * uses it.
    */
   public static final byte Any = 1;
 

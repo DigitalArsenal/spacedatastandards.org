@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Recursive boolean group for a compound trust rule set.
+/// The rules of a trust rule policy.
 public struct TRPGroup : IFlatbufferObject
 {
   private Table __p;
@@ -25,12 +25,12 @@ public struct TRPGroup : IFlatbufferObject
   public ArraySegment<byte>? GetGROUP_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetGROUP_IDArray() { return __p.__vector_as_array<byte>(4); }
-  /// Boolean operation applied across direct predicates and child groups.
+  /// Always All: every rule must pass.
   public trpCombinator COMBINATOR { get { int o = __p.__offset(6); return o != 0 ? (trpCombinator)__p.bb.GetSbyte(o + __p.bb_pos) : trpCombinator.All; } }
-  /// Predicates evaluated directly within this group.
+  /// The policy's rules, all of which must pass.
   public TRPPredicate? PREDICATES(int j) { int o = __p.__offset(8); return o != 0 ? (TRPPredicate?)(new TRPPredicate()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int PREDICATESLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Nested groups used to express compound rule sets.
+  /// Retired: rules do not nest. Evaluators refuse a policy with child groups.
   public TRPGroup? GROUPS(int j) { int o = __p.__offset(10); return o != 0 ? (TRPGroup?)(new TRPGroup()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int GROUPSLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
 

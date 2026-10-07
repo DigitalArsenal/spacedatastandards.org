@@ -6,7 +6,9 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Trust Rule Policy - Signed compound criteria for evaluating one subject.
+# Trust Rule Policy - a signed list of named rules for evaluating a subject.
+# The subject meets the policy when every rule passes; there is no
+# alternative and no nesting.
 class TRP(object):
     __slots__ = ['_tab']
 
@@ -53,7 +55,7 @@ class TRP(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Root of the compound rule tree.
+    # The policy's rules.
     # TRP
     def ROOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
