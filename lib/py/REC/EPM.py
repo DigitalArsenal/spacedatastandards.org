@@ -289,8 +289,21 @@ class EPM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         return o == 0
 
+    # Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+    # data URI carrying a JPEG or PNG image, e.g.
+    # "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+    # fetches the record, so a producer keeps the image small (a few tens of
+    # kilobytes at most). Signed like every other content field: it
+    # participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+    # EPM
+    def PHOTO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def EPMStart(builder):
-    builder.StartObject(21)
+    builder.StartObject(22)
 
 def Start(builder):
     EPMStart(builder)
@@ -481,6 +494,12 @@ def EPMCreateDOMAIN_PROOFSVector(builder, data):
 def CreateDOMAIN_PROOFSVector(builder, data):
     return EPMCreateDOMAIN_PROOFSVector(builder, data)
 
+def EPMAddPHOTO(builder, PHOTO):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(PHOTO), 0)
+
+def AddPHOTO(builder, PHOTO):
+    EPMAddPHOTO(builder, PHOTO)
+
 def EPMEnd(builder):
     return builder.EndObject()
 
@@ -522,6 +541,7 @@ class EPMT(object):
         ENTITY_TYPE = 0,
         SIGNATURE_ALGORITHM = None,
         DOMAIN_PROOFS = None,
+        PHOTO = None,
     ):
         self.DN = DN  # type: Optional[str]
         self.LEGAL_NAME = LEGAL_NAME  # type: Optional[str]
@@ -544,6 +564,7 @@ class EPMT(object):
         self.ENTITY_TYPE = ENTITY_TYPE  # type: int
         self.SIGNATURE_ALGORITHM = SIGNATURE_ALGORITHM  # type: Optional[str]
         self.DOMAIN_PROOFS = DOMAIN_PROOFS  # type: Optional[List[DomainProof.DomainProofT]]
+        self.PHOTO = PHOTO  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -615,6 +636,7 @@ class EPMT(object):
                 else:
                     domainProof_ = DomainProof.DomainProofT.InitFromObj(EPM.DOMAIN_PROOFS(i))
                     self.DOMAIN_PROOFS.append(domainProof_)
+        self.PHOTO = EPM.PHOTO()
 
     # EPMT
     def Pack(self, builder):
@@ -686,6 +708,8 @@ class EPMT(object):
             for i in reversed(range(len(self.DOMAIN_PROOFS))):
                 builder.PrependUOffsetTRelative(DOMAIN_PROOFSlist[i])
             DOMAIN_PROOFS = builder.EndVector()
+        if self.PHOTO is not None:
+            PHOTO = builder.CreateString(self.PHOTO)
         EPMStart(builder)
         if self.DN is not None:
             EPMAddDN(builder, DN)
@@ -727,5 +751,7 @@ class EPMT(object):
             EPMAddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHM)
         if self.DOMAIN_PROOFS is not None:
             EPMAddDOMAIN_PROOFS(builder, DOMAIN_PROOFS)
+        if self.PHOTO is not None:
+            EPMAddPHOTO(builder, PHOTO)
         EPM = EPMEnd(builder)
         return EPM

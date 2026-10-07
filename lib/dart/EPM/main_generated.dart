@@ -848,10 +848,17 @@ class EPM {
   ///  symmetric with CHAIN_PROOFS
   List<DomainProof>? get DOMAIN_PROOFS => const fb.ListReader<DomainProof>(DomainProof.reader).vTableGetNullable(_bc, _bcOffset, 44);
   List<DomainProof>? get domainProofs => DOMAIN_PROOFS;
+  ///  Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+  ///  data URI carrying a JPEG or PNG image, e.g.
+  ///  "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+  ///  fetches the record, so a producer keeps the image small (a few tens of
+  ///  kilobytes at most). Signed like every other content field: it
+  ///  participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+  String? get PHOTO => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
 
   @override
   String toString() {
-    return 'EPM{DN: ${DN}, legalName: ${legalName}, familyName: ${familyName}, givenName: ${givenName}, additionalName: ${additionalName}, honorificPrefix: ${honorificPrefix}, honorificSuffix: ${honorificSuffix}, jobTitle: ${jobTitle}, OCCUPATION: ${OCCUPATION}, ADDRESS: ${ADDRESS}, alternateNames: ${alternateNames}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, multiformatAddress: ${multiformatAddress}, SIGNATURE: ${SIGNATURE}, signatureTimestamp: ${signatureTimestamp}, chainProofs: ${chainProofs}, entityType: ${entityType}, signatureAlgorithm: ${signatureAlgorithm}, domainProofs: ${domainProofs}}';
+    return 'EPM{DN: ${DN}, legalName: ${legalName}, familyName: ${familyName}, givenName: ${givenName}, additionalName: ${additionalName}, honorificPrefix: ${honorificPrefix}, honorificSuffix: ${honorificSuffix}, jobTitle: ${jobTitle}, OCCUPATION: ${OCCUPATION}, ADDRESS: ${ADDRESS}, alternateNames: ${alternateNames}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, multiformatAddress: ${multiformatAddress}, SIGNATURE: ${SIGNATURE}, signatureTimestamp: ${signatureTimestamp}, chainProofs: ${chainProofs}, entityType: ${entityType}, signatureAlgorithm: ${signatureAlgorithm}, domainProofs: ${domainProofs}, PHOTO: ${PHOTO}}';
   }
 }
 
@@ -869,7 +876,7 @@ class EPMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(21);
+    fbBuilder.startTable(22);
   }
 
   int addDnOffset(int? offset) {
@@ -956,6 +963,10 @@ class EPMBuilder {
     fbBuilder.addOffset(20, offset);
     return fbBuilder.offset;
   }
+  int addPhotoOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -984,6 +995,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
   final EntityType? _ENTITY_TYPE;
   final String? _SIGNATURE_ALGORITHM;
   final List<DomainProofObjectBuilder>? _DOMAIN_PROOFS;
+  final String? _PHOTO;
 
   EPMObjectBuilder({
     String? DN,
@@ -1021,6 +1033,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
     String? signatureAlgorithm,
     List<DomainProofObjectBuilder>? DOMAIN_PROOFS,
     List<DomainProofObjectBuilder>? domainProofs,
+    String? PHOTO,
   })
       : _DN = DN,
         _LEGAL_NAME = legalName ?? LEGAL_NAME,
@@ -1042,7 +1055,8 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
         _CHAIN_PROOFS = chainProofs ?? CHAIN_PROOFS,
         _ENTITY_TYPE = entityType ?? ENTITY_TYPE,
         _SIGNATURE_ALGORITHM = signatureAlgorithm ?? SIGNATURE_ALGORITHM,
-        _DOMAIN_PROOFS = domainProofs ?? DOMAIN_PROOFS;
+        _DOMAIN_PROOFS = domainProofs ?? DOMAIN_PROOFS,
+        _PHOTO = PHOTO;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1084,7 +1098,9 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SIGNATURE_ALGORITHM!);
     final int? DOMAIN_PROOFSOffset = _DOMAIN_PROOFS == null ? null
         : fbBuilder.writeList(_DOMAIN_PROOFS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(21);
+    final int? PHOTOOffset = _PHOTO == null ? null
+        : fbBuilder.writeString(_PHOTO!);
+    fbBuilder.startTable(22);
     fbBuilder.addOffset(0, DNOffset);
     fbBuilder.addOffset(1, LEGAL_NAMEOffset);
     fbBuilder.addOffset(2, FAMILY_NAMEOffset);
@@ -1106,6 +1122,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addInt8(18, _ENTITY_TYPE?.value);
     fbBuilder.addOffset(19, SIGNATURE_ALGORITHMOffset);
     fbBuilder.addOffset(20, DOMAIN_PROOFSOffset);
+    fbBuilder.addOffset(21, PHOTOOffset);
     return fbBuilder.endTable();
   }
 

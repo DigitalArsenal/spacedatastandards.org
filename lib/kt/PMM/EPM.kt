@@ -325,6 +325,25 @@ class EPM : Table() {
         get() {
             val o = __offset(44); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+     * data URI carrying a JPEG or PNG image, e.g.
+     * "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+     * fetches the record, so a producer keeps the image small (a few tens of
+     * kilobytes at most). Signed like every other content field: it
+     * participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+     */
+    val photo : String?
+        get() {
+            val o = __offset(46)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val photoAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
+    fun photoInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEPM(_bb: ByteBuffer): EPM = getRootAsEPM(_bb, EPM())
@@ -333,9 +352,10 @@ class EPM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EPMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EPM")
-        fun createEPM(builder: FlatBufferBuilder, dnOffset: Int, legalNameOffset: Int, familyNameOffset: Int, givenNameOffset: Int, additionalNameOffset: Int, honorificPrefixOffset: Int, honorificSuffixOffset: Int, jobTitleOffset: Int, occupationOffset: Int, addressOffset: Int, alternateNamesOffset: Int, emailOffset: Int, telephoneOffset: Int, keysOffset: Int, multiformatAddressOffset: Int, signatureOffset: Int, signatureTimestamp: Long, chainProofsOffset: Int, entityType: Byte, signatureAlgorithmOffset: Int, domainProofsOffset: Int) : Int {
-            builder.startTable(21)
+        fun createEPM(builder: FlatBufferBuilder, dnOffset: Int, legalNameOffset: Int, familyNameOffset: Int, givenNameOffset: Int, additionalNameOffset: Int, honorificPrefixOffset: Int, honorificSuffixOffset: Int, jobTitleOffset: Int, occupationOffset: Int, addressOffset: Int, alternateNamesOffset: Int, emailOffset: Int, telephoneOffset: Int, keysOffset: Int, multiformatAddressOffset: Int, signatureOffset: Int, signatureTimestamp: Long, chainProofsOffset: Int, entityType: Byte, signatureAlgorithmOffset: Int, domainProofsOffset: Int, photoOffset: Int) : Int {
+            builder.startTable(22)
             addSIGNATURETIMESTAMP(builder, signatureTimestamp)
+            addPHOTO(builder, photoOffset)
             addDOMAINPROOFS(builder, domainProofsOffset)
             addSIGNATUREALGORITHM(builder, signatureAlgorithmOffset)
             addCHAINPROOFS(builder, chainProofsOffset)
@@ -358,7 +378,7 @@ class EPM : Table() {
             addENTITYTYPE(builder, entityType)
             return endEPM(builder)
         }
-        fun startEPM(builder: FlatBufferBuilder) = builder.startTable(21)
+        fun startEPM(builder: FlatBufferBuilder) = builder.startTable(22)
         fun addDN(builder: FlatBufferBuilder, dn: Int) = builder.addOffset(0, dn, 0)
         fun addLEGALNAME(builder: FlatBufferBuilder, legalName: Int) = builder.addOffset(1, legalName, 0)
         fun addFAMILYNAME(builder: FlatBufferBuilder, familyName: Int) = builder.addOffset(2, familyName, 0)
@@ -420,6 +440,7 @@ class EPM : Table() {
             return builder.endVector()
         }
         fun startDomainProofsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPHOTO(builder: FlatBufferBuilder, photo: Int) = builder.addOffset(21, photo, 0)
         fun endEPM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

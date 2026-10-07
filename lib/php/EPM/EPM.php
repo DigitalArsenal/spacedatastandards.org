@@ -268,22 +268,34 @@ class EPM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+    /// data URI carrying a JPEG or PNG image, e.g.
+    /// "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+    /// fetches the record, so a producer keeps the image small (a few tens of
+    /// kilobytes at most). Signed like every other content field: it
+    /// participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+    public function getPHOTO()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startEPM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(21);
+        $builder->StartObject(22);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EPM
      */
-    public static function createEPM(FlatBufferBuilder $builder, $DN, $LEGAL_NAME, $FAMILY_NAME, $GIVEN_NAME, $ADDITIONAL_NAME, $HONORIFIC_PREFIX, $HONORIFIC_SUFFIX, $JOB_TITLE, $OCCUPATION, $ADDRESS, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS, $SIGNATURE, $SIGNATURE_TIMESTAMP, $CHAIN_PROOFS, $ENTITY_TYPE, $SIGNATURE_ALGORITHM, $DOMAIN_PROOFS)
+    public static function createEPM(FlatBufferBuilder $builder, $DN, $LEGAL_NAME, $FAMILY_NAME, $GIVEN_NAME, $ADDITIONAL_NAME, $HONORIFIC_PREFIX, $HONORIFIC_SUFFIX, $JOB_TITLE, $OCCUPATION, $ADDRESS, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS, $SIGNATURE, $SIGNATURE_TIMESTAMP, $CHAIN_PROOFS, $ENTITY_TYPE, $SIGNATURE_ALGORITHM, $DOMAIN_PROOFS, $PHOTO)
     {
-        $builder->startObject(21);
+        $builder->startObject(22);
         self::addDN($builder, $DN);
         self::addLEGAL_NAME($builder, $LEGAL_NAME);
         self::addFAMILY_NAME($builder, $FAMILY_NAME);
@@ -305,6 +317,7 @@ class EPM extends Table
         self::addENTITY_TYPE($builder, $ENTITY_TYPE);
         self::addSIGNATURE_ALGORITHM($builder, $SIGNATURE_ALGORITHM);
         self::addDOMAIN_PROOFS($builder, $DOMAIN_PROOFS);
+        self::addPHOTO($builder, $PHOTO);
         $o = $builder->endObject();
         return $o;
     }
@@ -637,6 +650,16 @@ class EPM extends Table
     public static function startDOMAIN_PROOFSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPHOTO(FlatBufferBuilder $builder, $PHOTO)
+    {
+        $builder->addOffsetX(21, $PHOTO, 0);
     }
 
     /**

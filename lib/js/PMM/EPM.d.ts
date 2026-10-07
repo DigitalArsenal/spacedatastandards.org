@@ -126,6 +126,16 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
      */
     DOMAIN_PROOFS(index: number, obj?: DomainProof): DomainProof | null;
     domainProofsLength(): number;
+    /**
+     * Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+     * data URI carrying a JPEG or PNG image, e.g.
+     * "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+     * fetches the record, so a producer keeps the image small (a few tens of
+     * kilobytes at most). Signed like every other content field: it
+     * participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+     */
+    PHOTO(): string | null;
+    PHOTO(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startEPM(builder: flatbuffers.Builder): void;
     static addDn(builder: flatbuffers.Builder, DNOffset: flatbuffers.Offset): void;
     static addLegalName(builder: flatbuffers.Builder, LEGAL_NAMEOffset: flatbuffers.Offset): void;
@@ -158,6 +168,7 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     static addDomainProofs(builder: flatbuffers.Builder, DOMAIN_PROOFSOffset: flatbuffers.Offset): void;
     static createDomainProofsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startDomainProofsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addPhoto(builder: flatbuffers.Builder, PHOTOOffset: flatbuffers.Offset): void;
     static endEPM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -186,7 +197,8 @@ export declare class EPMT implements flatbuffers.IGeneratedObject {
     ENTITY_TYPE: EntityType;
     SIGNATURE_ALGORITHM: string | Uint8Array | null;
     DOMAIN_PROOFS: (DomainProofT)[];
-    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ADDRESS?: AddressT | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[], SIGNATURE?: string | Uint8Array | null, SIGNATURE_TIMESTAMP?: bigint, CHAIN_PROOFS?: (ChainProofT)[], ENTITY_TYPE?: EntityType, SIGNATURE_ALGORITHM?: string | Uint8Array | null, DOMAIN_PROOFS?: (DomainProofT)[]);
+    PHOTO: string | Uint8Array | null;
+    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ADDRESS?: AddressT | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[], SIGNATURE?: string | Uint8Array | null, SIGNATURE_TIMESTAMP?: bigint, CHAIN_PROOFS?: (ChainProofT)[], ENTITY_TYPE?: EntityType, SIGNATURE_ALGORITHM?: string | Uint8Array | null, DOMAIN_PROOFS?: (DomainProofT)[], PHOTO?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EPM.d.ts.map

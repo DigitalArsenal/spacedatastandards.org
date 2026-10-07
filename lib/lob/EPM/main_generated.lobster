@@ -388,13 +388,21 @@ class EPM : flatbuffers.handle
         return DomainProof { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 44) + i * 4) }
     def DOMAIN_PROOFS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 44)
+    /// Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+    /// data URI carrying a JPEG or PNG image, e.g.
+    /// "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+    /// fetches the record, so a producer keeps the image small (a few tens of
+    /// kilobytes at most). Signed like every other content field: it
+    /// participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+    def PHOTO() -> string:
+        return flatbuffers.field_string(buf_, pos_, 46)
 
 def GetRootAsEPM(buf:string): return EPM { buf, flatbuffers.indirect(buf, 0) }
 
 struct EPMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(21)
+        b_.StartObject(22)
         return this
     def add_DN(DN:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, DN)
@@ -458,6 +466,9 @@ struct EPMBuilder:
         return this
     def add_DOMAIN_PROOFS(DOMAIN_PROOFS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(20, DOMAIN_PROOFS)
+        return this
+    def add_PHOTO(PHOTO:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, PHOTO)
         return this
     def end():
         return b_.EndObject()

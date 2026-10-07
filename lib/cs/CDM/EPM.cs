@@ -152,6 +152,19 @@ public struct EPM : IFlatbufferObject
   /// symmetric with CHAIN_PROOFS
   public DomainProof? DOMAIN_PROOFS(int j) { int o = __p.__offset(44); return o != 0 ? (DomainProof?)(new DomainProof()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int DOMAIN_PROOFSLength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+  /// data URI carrying a JPEG or PNG image, e.g.
+  /// "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+  /// fetches the record, so a producer keeps the image small (a few tens of
+  /// kilobytes at most). Signed like every other content field: it
+  /// participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+  public string PHOTO { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPHOTOBytes() { return __p.__vector_as_span<byte>(46, 1); }
+#else
+  public ArraySegment<byte>? GetPHOTOBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public byte[] GetPHOTOArray() { return __p.__vector_as_array<byte>(46); }
 
   public static Offset<EPM> CreateEPM(FlatBufferBuilder builder,
       StringOffset DNOffset = default(StringOffset),
@@ -174,9 +187,11 @@ public struct EPM : IFlatbufferObject
       VectorOffset CHAIN_PROOFSOffset = default(VectorOffset),
       EntityType ENTITY_TYPE = EntityType.User,
       StringOffset SIGNATURE_ALGORITHMOffset = default(StringOffset),
-      VectorOffset DOMAIN_PROOFSOffset = default(VectorOffset)) {
-    builder.StartTable(21);
+      VectorOffset DOMAIN_PROOFSOffset = default(VectorOffset),
+      StringOffset PHOTOOffset = default(StringOffset)) {
+    builder.StartTable(22);
     EPM.AddSIGNATURE_TIMESTAMP(builder, SIGNATURE_TIMESTAMP);
+    EPM.AddPHOTO(builder, PHOTOOffset);
     EPM.AddDOMAIN_PROOFS(builder, DOMAIN_PROOFSOffset);
     EPM.AddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHMOffset);
     EPM.AddCHAIN_PROOFS(builder, CHAIN_PROOFSOffset);
@@ -200,7 +215,7 @@ public struct EPM : IFlatbufferObject
     return EPM.EndEPM(builder);
   }
 
-  public static void StartEPM(FlatBufferBuilder builder) { builder.StartTable(21); }
+  public static void StartEPM(FlatBufferBuilder builder) { builder.StartTable(22); }
   public static void AddDN(FlatBufferBuilder builder, StringOffset DNOffset) { builder.AddOffset(0, DNOffset.Value, 0); }
   public static void AddLEGAL_NAME(FlatBufferBuilder builder, StringOffset LEGAL_NAMEOffset) { builder.AddOffset(1, LEGAL_NAMEOffset.Value, 0); }
   public static void AddFAMILY_NAME(FlatBufferBuilder builder, StringOffset FAMILY_NAMEOffset) { builder.AddOffset(2, FAMILY_NAMEOffset.Value, 0); }
@@ -247,6 +262,7 @@ public struct EPM : IFlatbufferObject
   public static VectorOffset CreateDOMAIN_PROOFSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<DomainProof>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateDOMAIN_PROOFSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<DomainProof>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartDOMAIN_PROOFSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPHOTO(FlatBufferBuilder builder, StringOffset PHOTOOffset) { builder.AddOffset(21, PHOTOOffset.Value, 0); }
   public static Offset<EPM> EndEPM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EPM>(o);
@@ -285,6 +301,7 @@ public struct EPM : IFlatbufferObject
     _o.SIGNATURE_ALGORITHM = this.SIGNATURE_ALGORITHM;
     _o.DOMAIN_PROOFS = new List<DomainProofT>();
     for (var _j = 0; _j < this.DOMAIN_PROOFSLength; ++_j) {_o.DOMAIN_PROOFS.Add(this.DOMAIN_PROOFS(_j).HasValue ? this.DOMAIN_PROOFS(_j).Value.UnPack() : null);}
+    _o.PHOTO = this.PHOTO;
   }
   public static Offset<EPM> Pack(FlatBufferBuilder builder, EPMT _o) {
     if (_o == null) return default(Offset<EPM>);
@@ -332,6 +349,7 @@ public struct EPM : IFlatbufferObject
       for (var _j = 0; _j < __DOMAIN_PROOFS.Length; ++_j) { __DOMAIN_PROOFS[_j] = DomainProof.Pack(builder, _o.DOMAIN_PROOFS[_j]); }
       _DOMAIN_PROOFS = CreateDOMAIN_PROOFSVector(builder, __DOMAIN_PROOFS);
     }
+    var _PHOTO = _o.PHOTO == null ? default(StringOffset) : builder.CreateString(_o.PHOTO);
     return CreateEPM(
       builder,
       _DN,
@@ -354,7 +372,8 @@ public struct EPM : IFlatbufferObject
       _CHAIN_PROOFS,
       _o.ENTITY_TYPE,
       _SIGNATURE_ALGORITHM,
-      _DOMAIN_PROOFS);
+      _DOMAIN_PROOFS,
+      _PHOTO);
   }
 }
 
@@ -381,6 +400,7 @@ public class EPMT
   public EntityType ENTITY_TYPE { get; set; }
   public string SIGNATURE_ALGORITHM { get; set; }
   public List<DomainProofT> DOMAIN_PROOFS { get; set; }
+  public string PHOTO { get; set; }
 
   public EPMT() {
     this.DN = null;
@@ -404,6 +424,7 @@ public class EPMT
     this.ENTITY_TYPE = EntityType.User;
     this.SIGNATURE_ALGORITHM = null;
     this.DOMAIN_PROOFS = null;
+    this.PHOTO = null;
   }
   public static EPMT DeserializeFromBinary(byte[] fbBuffer) {
     return EPM.GetRootAsEPM(new ByteBuffer(fbBuffer)).UnPack();
@@ -442,6 +463,7 @@ static public class EPMVerify
       && verifier.VerifyField(tablePos, 40 /*ENTITY_TYPE*/, 1 /*EntityType*/, 1, false)
       && verifier.VerifyString(tablePos, 42 /*SIGNATURE_ALGORITHM*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 44 /*DOMAIN_PROOFS*/, DomainProofVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 46 /*PHOTO*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

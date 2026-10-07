@@ -267,8 +267,23 @@ domainProofsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+ * data URI carrying a JPEG or PNG image, e.g.
+ * "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+ * fetches the record, so a producer keeps the image small (a few tens of
+ * kilobytes at most). Signed like every other content field: it
+ * participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+ */
+PHOTO():string|null
+PHOTO(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PHOTO(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startEPM(builder:flatbuffers.Builder) {
-  builder.startObject(21);
+  builder.startObject(22);
 }
 
 static addDn(builder:flatbuffers.Builder, DNOffset:flatbuffers.Offset) {
@@ -415,6 +430,10 @@ static startDomainProofsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addPhoto(builder:flatbuffers.Builder, PHOTOOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, PHOTOOffset, 0);
+}
+
 static endEPM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -451,7 +470,8 @@ unpack(): EPMT {
     this.bb!.createObjList<ChainProof, ChainProofT>(this.CHAIN_PROOFS.bind(this), this.chainProofsLength()),
     this.ENTITY_TYPE(),
     this.SIGNATURE_ALGORITHM(),
-    this.bb!.createObjList<DomainProof, DomainProofT>(this.DOMAIN_PROOFS.bind(this), this.domainProofsLength())
+    this.bb!.createObjList<DomainProof, DomainProofT>(this.DOMAIN_PROOFS.bind(this), this.domainProofsLength()),
+    this.PHOTO()
   );
 }
 
@@ -478,6 +498,7 @@ unpackTo(_o: EPMT): void {
   _o.ENTITY_TYPE = this.ENTITY_TYPE();
   _o.SIGNATURE_ALGORITHM = this.SIGNATURE_ALGORITHM();
   _o.DOMAIN_PROOFS = this.bb!.createObjList<DomainProof, DomainProofT>(this.DOMAIN_PROOFS.bind(this), this.domainProofsLength());
+  _o.PHOTO = this.PHOTO();
 }
 }
 
@@ -503,7 +524,8 @@ constructor(
   public CHAIN_PROOFS: (ChainProofT)[] = [],
   public ENTITY_TYPE: EntityType = EntityType.User,
   public SIGNATURE_ALGORITHM: string|Uint8Array|null = null,
-  public DOMAIN_PROOFS: (DomainProofT)[] = []
+  public DOMAIN_PROOFS: (DomainProofT)[] = [],
+  public PHOTO: string|Uint8Array|null = null
 ){}
 
 
@@ -527,6 +549,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CHAIN_PROOFS = EPM.createChainProofsVector(builder, builder.createObjectOffsetList(this.CHAIN_PROOFS));
   const SIGNATURE_ALGORITHM = (this.SIGNATURE_ALGORITHM !== null ? builder.createString(this.SIGNATURE_ALGORITHM!) : 0);
   const DOMAIN_PROOFS = EPM.createDomainProofsVector(builder, builder.createObjectOffsetList(this.DOMAIN_PROOFS));
+  const PHOTO = (this.PHOTO !== null ? builder.createString(this.PHOTO!) : 0);
 
   EPM.startEPM(builder);
   EPM.addDn(builder, DN);
@@ -550,6 +573,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   EPM.addEntityType(builder, this.ENTITY_TYPE);
   EPM.addSignatureAlgorithm(builder, SIGNATURE_ALGORITHM);
   EPM.addDomainProofs(builder, DOMAIN_PROOFS);
+  EPM.addPhoto(builder, PHOTO);
 
   return EPM.endEPM(builder);
 }

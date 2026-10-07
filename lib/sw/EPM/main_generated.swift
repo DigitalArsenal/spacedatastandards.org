@@ -480,6 +480,7 @@ public struct EPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let ENTITY_TYPE: VOffset = 40
     static let SIGNATURE_ALGORITHM: VOffset = 42
     static let DOMAIN_PROOFS: VOffset = 44
+    static let PHOTO: VOffset = 46
   }
 
   ///  Distinguished Name of the entity
@@ -545,7 +546,15 @@ public struct EPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  DNS domain binding proofs linking domains to the same HD wallet —
   ///  symmetric with CHAIN_PROOFS
   public var DOMAIN_PROOFS: FlatbufferVector<DomainProof> { return _accessor.vector(at: VT.DOMAIN_PROOFS, byteSize: 4) }
-  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
+  ///  Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+  ///  data URI carrying a JPEG or PNG image, e.g.
+  ///  "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+  ///  fetches the record, so a producer keeps the image small (a few tens of
+  ///  kilobytes at most). Signed like every other content field: it
+  ///  participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+  public var PHOTO: String? { let o = _accessor.offset(VT.PHOTO); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PHOTOSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PHOTO) }
+  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
   public static func add(DN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DN, at: VT.DN) }
   public static func add(LEGAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEGAL_NAME, at: VT.LEGAL_NAME) }
   public static func add(FAMILY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY_NAME, at: VT.FAMILY_NAME) }
@@ -567,6 +576,7 @@ public struct EPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(ENTITY_TYPE: EntityType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_TYPE.rawValue, def: 0, at: VT.ENTITY_TYPE) }
   public static func add(SIGNATURE_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_ALGORITHM, at: VT.SIGNATURE_ALGORITHM) }
   public static func addVectorOf(DOMAIN_PROOFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOMAIN_PROOFS, at: VT.DOMAIN_PROOFS) }
+  public static func add(PHOTO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHOTO, at: VT.PHOTO) }
   public static func endEPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEPM(
     _ fbb: inout FlatBufferBuilder,
@@ -590,7 +600,8 @@ public struct EPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     CHAIN_PROOFSVectorOffset CHAIN_PROOFS: Offset = Offset(),
     ENTITY_TYPE: EntityType = .user,
     SIGNATURE_ALGORITHMOffset SIGNATURE_ALGORITHM: Offset = Offset(),
-    DOMAIN_PROOFSVectorOffset DOMAIN_PROOFS: Offset = Offset()
+    DOMAIN_PROOFSVectorOffset DOMAIN_PROOFS: Offset = Offset(),
+    PHOTOOffset PHOTO: Offset = Offset()
   ) -> Offset {
     let __start = EPM.startEPM(&fbb)
     EPM.add(DN: DN, &fbb)
@@ -614,6 +625,7 @@ public struct EPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     EPM.add(ENTITY_TYPE: ENTITY_TYPE, &fbb)
     EPM.add(SIGNATURE_ALGORITHM: SIGNATURE_ALGORITHM, &fbb)
     EPM.addVectorOf(DOMAIN_PROOFS: DOMAIN_PROOFS, &fbb)
+    EPM.add(PHOTO: PHOTO, &fbb)
     return EPM.endEPM(&fbb, start: __start)
   }
 
@@ -640,6 +652,7 @@ public struct EPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.ENTITY_TYPE, fieldName: "ENTITY_TYPE", required: false, type: EntityType.self)
     try _v.visit(field: VT.SIGNATURE_ALGORITHM, fieldName: "SIGNATURE_ALGORITHM", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.DOMAIN_PROOFS, fieldName: "DOMAIN_PROOFS", required: false, type: ForwardOffset<Vector<ForwardOffset<DomainProof>, DomainProof>>.self)
+    try _v.visit(field: VT.PHOTO, fieldName: "PHOTO", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

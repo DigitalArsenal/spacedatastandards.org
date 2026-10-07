@@ -468,8 +468,32 @@ func (rcv *EPM) DomainProofsLength() int {
 
 /// DNS domain binding proofs linking domains to the same HD wallet —
 /// symmetric with CHAIN_PROOFS
+/// Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+/// data URI carrying a JPEG or PNG image, e.g.
+/// "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+/// fetches the record, so a producer keeps the image small (a few tens of
+/// kilobytes at most). Signed like every other content field: it
+/// participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+func (rcv *EPM) PHOTO() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *EPM) Photo() []byte {
+	return rcv.PHOTO()
+}
+
+/// Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+/// data URI carrying a JPEG or PNG image, e.g.
+/// "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+/// fetches the record, so a producer keeps the image small (a few tens of
+/// kilobytes at most). Signed like every other content field: it
+/// participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
 func EPMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(21)
+	builder.StartObject(22)
 }
 func EPMAddDN(builder *flatbuffers.Builder, DN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DN), 0)
@@ -626,6 +650,12 @@ func EPMStartDOMAIN_PROOFSVector(builder *flatbuffers.Builder, numElems int) fla
 }
 func EPMStartDomainProofsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return EPMStartDOMAIN_PROOFSVector(builder, numElems)
+}
+func EPMAddPHOTO(builder *flatbuffers.Builder, PHOTO flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(PHOTO), 0)
+}
+func EPMAddPhoto(builder *flatbuffers.Builder, PHOTO flatbuffers.UOffsetT) {
+	EPMAddPHOTO(builder, PHOTO)
 }
 func EPMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -165,6 +165,17 @@ public final class EPM extends com.google.flatbuffers.Table {
   public int DOMAIN_PROOFSLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
   public DomainProof.Vector domainProofsVector() { return domainProofsVector(new DomainProof.Vector()); }
   public DomainProof.Vector domainProofsVector(DomainProof.Vector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+   * data URI carrying a JPEG or PNG image, e.g.
+   * "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+   * fetches the record, so a producer keeps the image small (a few tens of
+   * kilobytes at most). Signed like every other content field: it
+   * participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+   */
+  public String PHOTO() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PHOTOAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer PHOTOInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
 
   public static int createEPM(FlatBufferBuilder builder,
       int DNOffset,
@@ -187,9 +198,11 @@ public final class EPM extends com.google.flatbuffers.Table {
       int CHAIN_PROOFSOffset,
       byte ENTITY_TYPE,
       int SIGNATURE_ALGORITHMOffset,
-      int DOMAIN_PROOFSOffset) {
-    builder.startTable(21);
+      int DOMAIN_PROOFSOffset,
+      int PHOTOOffset) {
+    builder.startTable(22);
     EPM.addSignatureTimestamp(builder, SIGNATURE_TIMESTAMP);
+    EPM.addPhoto(builder, PHOTOOffset);
     EPM.addDomainProofs(builder, DOMAIN_PROOFSOffset);
     EPM.addSignatureAlgorithm(builder, SIGNATURE_ALGORITHMOffset);
     EPM.addChainProofs(builder, CHAIN_PROOFSOffset);
@@ -213,7 +226,7 @@ public final class EPM extends com.google.flatbuffers.Table {
     return EPM.endEPM(builder);
   }
 
-  public static void startEPM(FlatBufferBuilder builder) { builder.startTable(21); }
+  public static void startEPM(FlatBufferBuilder builder) { builder.startTable(22); }
   public static void addDn(FlatBufferBuilder builder, int DNOffset) { builder.addOffset(0, DNOffset, 0); }
   public static void addLegalName(FlatBufferBuilder builder, int LEGAL_NAMEOffset) { builder.addOffset(1, LEGAL_NAMEOffset, 0); }
   public static void addFamilyName(FlatBufferBuilder builder, int FAMILY_NAMEOffset) { builder.addOffset(2, FAMILY_NAMEOffset, 0); }
@@ -245,6 +258,7 @@ public final class EPM extends com.google.flatbuffers.Table {
   public static void addDomainProofs(FlatBufferBuilder builder, int DOMAIN_PROOFSOffset) { builder.addOffset(20, DOMAIN_PROOFSOffset, 0); }
   public static int createDomainProofsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startDomainProofsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addPhoto(FlatBufferBuilder builder, int PHOTOOffset) { builder.addOffset(21, PHOTOOffset, 0); }
   public static int endEPM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

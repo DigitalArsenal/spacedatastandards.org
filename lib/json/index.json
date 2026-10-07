@@ -7807,6 +7807,10 @@
                                 "$ref": "#/definitions/DomainProof"
                             },
                             "description": "DNS domain binding proofs linking domains to the same HD wallet \u2014\nsymmetric with CHAIN_PROOFS"
+                        },
+                        "PHOTO": {
+                            "type": "string",
+                            "description": "Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397\ndata URI carrying a JPEG or PNG image, e.g.\n\"data:image/jpeg;base64,/9j/4AAQ\u2026\". Every peer that resolves the entity\nfetches the record, so a producer keeps the image small (a few tens of\nkilobytes at most). Signed like every other content field: it\nparticipates in the canonical preimage (CANONICAL_SERIALIZATION.md)"
                         }
                     },
                     "additionalProperties": false
@@ -14785,6 +14789,10 @@
                                 "$ref": "#/definitions/DomainProof"
                             },
                             "description": "DNS domain binding proofs linking domains to the same HD wallet \u2014\nsymmetric with CHAIN_PROOFS"
+                        },
+                        "PHOTO": {
+                            "type": "string",
+                            "description": "Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397\ndata URI carrying a JPEG or PNG image, e.g.\n\"data:image/jpeg;base64,/9j/4AAQ\u2026\". Every peer that resolves the entity\nfetches the record, so a producer keeps the image small (a few tens of\nkilobytes at most). Signed like every other content field: it\nparticipates in the canonical preimage (CANONICAL_SERIALIZATION.md)"
                         }
                     },
                     "additionalProperties": false
@@ -33939,6 +33947,10 @@
                                 "$ref": "#/definitions/DomainProof"
                             },
                             "description": "DNS domain binding proofs linking domains to the same HD wallet \u2014\nsymmetric with CHAIN_PROOFS"
+                        },
+                        "PHOTO": {
+                            "type": "string",
+                            "description": "Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397\ndata URI carrying a JPEG or PNG image, e.g.\n\"data:image/jpeg;base64,/9j/4AAQ\u2026\". Every peer that resolves the entity\nfetches the record, so a producer keeps the image small (a few tens of\nkilobytes at most). Signed like every other content field: it\nparticipates in the canonical preimage (CANONICAL_SERIALIZATION.md)"
                         }
                     },
                     "additionalProperties": false
@@ -79547,6 +79559,10 @@
                                 "$ref": "#/definitions/DomainProof"
                             },
                             "description": "DNS domain binding proofs linking domains to the same HD wallet \u2014\nsymmetric with CHAIN_PROOFS"
+                        },
+                        "PHOTO": {
+                            "type": "string",
+                            "description": "Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397\ndata URI carrying a JPEG or PNG image, e.g.\n\"data:image/jpeg;base64,/9j/4AAQ\u2026\". Every peer that resolves the entity\nfetches the record, so a producer keeps the image small (a few tens of\nkilobytes at most). Signed like every other content field: it\nparticipates in the canonical preimage (CANONICAL_SERIALIZATION.md)"
                         }
                     },
                     "additionalProperties": false
@@ -165978,6 +165994,10 @@
                                 "$ref": "#/definitions/DomainProof"
                             },
                             "description": "DNS domain binding proofs linking domains to the same HD wallet \u2014\nsymmetric with CHAIN_PROOFS"
+                        },
+                        "PHOTO": {
+                            "type": "string",
+                            "description": "Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397\ndata URI carrying a JPEG or PNG image, e.g.\n\"data:image/jpeg;base64,/9j/4AAQ\u2026\". Every peer that resolves the entity\nfetches the record, so a producer keeps the image small (a few tens of\nkilobytes at most). Signed like every other content field: it\nparticipates in the canonical preimage (CANONICAL_SERIALIZATION.md)"
                         }
                     },
                     "additionalProperties": false
@@ -173132,6 +173152,10 @@
                                 "$ref": "#/definitions/DomainProof"
                             },
                             "description": "DNS domain binding proofs linking domains to the same HD wallet \u2014\nsymmetric with CHAIN_PROOFS"
+                        },
+                        "PHOTO": {
+                            "type": "string",
+                            "description": "Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397\ndata URI carrying a JPEG or PNG image, e.g.\n\"data:image/jpeg;base64,/9j/4AAQ\u2026\". Every peer that resolves the entity\nfetches the record, so a producer keeps the image small (a few tens of\nkilobytes at most). Signed like every other content field: it\nparticipates in the canonical preimage (CANONICAL_SERIALIZATION.md)"
                         }
                     },
                     "additionalProperties": false
@@ -184934,6 +184958,10 @@
                                 "$ref": "#/definitions/DomainProof"
                             },
                             "description": "DNS domain binding proofs linking domains to the same HD wallet \u2014\nsymmetric with CHAIN_PROOFS"
+                        },
+                        "PHOTO": {
+                            "type": "string",
+                            "description": "Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397\ndata URI carrying a JPEG or PNG image, e.g.\n\"data:image/jpeg;base64,/9j/4AAQ\u2026\". Every peer that resolves the entity\nfetches the record, so a producer keeps the image small (a few tens of\nkilobytes at most). Signed like every other content field: it\nparticipates in the canonical preimage (CANONICAL_SERIALIZATION.md)"
                         }
                     },
                     "additionalProperties": false

@@ -1652,6 +1652,7 @@ impl<'a> EPM<'a> {
     pub const VT_ENTITY_TYPE: ::flatbuffers::VOffsetT = 40;
     pub const VT_SIGNATURE_ALGORITHM: ::flatbuffers::VOffsetT = 42;
     pub const VT_DOMAIN_PROOFS: ::flatbuffers::VOffsetT = 44;
+    pub const VT_PHOTO: ::flatbuffers::VOffsetT = 46;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1665,6 +1666,7 @@ impl<'a> EPM<'a> {
     ) -> ::flatbuffers::WIPOffset<EPM<'bldr>> {
         let mut builder = EPMBuilder::new(_fbb);
         builder.add_SIGNATURE_TIMESTAMP(args.SIGNATURE_TIMESTAMP);
+        if let Some(x) = args.PHOTO { builder.add_PHOTO(x); }
         if let Some(x) = args.DOMAIN_PROOFS { builder.add_DOMAIN_PROOFS(x); }
         if let Some(x) = args.SIGNATURE_ALGORITHM { builder.add_SIGNATURE_ALGORITHM(x); }
         if let Some(x) = args.CHAIN_PROOFS { builder.add_CHAIN_PROOFS(x); }
@@ -1748,6 +1750,9 @@ impl<'a> EPM<'a> {
         let DOMAIN_PROOFS = self.DOMAIN_PROOFS().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let PHOTO = self.PHOTO().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         EPMT {
             DN,
             LEGAL_NAME,
@@ -1770,6 +1775,7 @@ impl<'a> EPM<'a> {
             ENTITY_TYPE,
             SIGNATURE_ALGORITHM,
             DOMAIN_PROOFS,
+            PHOTO,
         }
     }
 
@@ -1969,6 +1975,20 @@ impl<'a> EPM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<DomainProof>>>>(EPM::VT_DOMAIN_PROOFS, None)}
     }
+
+    /// Photo or logo of the entity (the vCard PHOTO property), as an RFC 2397
+    /// data URI carrying a JPEG or PNG image, e.g.
+    /// "data:image/jpeg;base64,/9j/4AAQ…". Every peer that resolves the entity
+    /// fetches the record, so a producer keeps the image small (a few tens of
+    /// kilobytes at most). Signed like every other content field: it
+    /// participates in the canonical preimage (CANONICAL_SERIALIZATION.md)
+    #[inline]
+    pub fn PHOTO(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EPM::VT_PHOTO, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for EPM<'_> {
@@ -1998,6 +2018,7 @@ impl ::flatbuffers::Verifiable for EPM<'_> {
             .visit_field::<EntityType>("ENTITY_TYPE", Self::VT_ENTITY_TYPE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNATURE_ALGORITHM", Self::VT_SIGNATURE_ALGORITHM, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<DomainProof>>>>("DOMAIN_PROOFS", Self::VT_DOMAIN_PROOFS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PHOTO", Self::VT_PHOTO, false)?
             .finish();
         Ok(())
     }
@@ -2025,6 +2046,7 @@ pub struct EPMArgs<'a> {
     pub ENTITY_TYPE: EntityType,
     pub SIGNATURE_ALGORITHM: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub DOMAIN_PROOFS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<DomainProof<'a>>>>>,
+    pub PHOTO: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for EPMArgs<'a> {
@@ -2052,6 +2074,7 @@ impl<'a> Default for EPMArgs<'a> {
             ENTITY_TYPE: EntityType::User,
             SIGNATURE_ALGORITHM: None,
             DOMAIN_PROOFS: None,
+            PHOTO: None,
         }
     }
 }
@@ -2168,6 +2191,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EPMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_PHOTO(&mut self, PHOTO: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EPM::VT_PHOTO, PHOTO);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EPMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         EPMBuilder {
@@ -2207,6 +2235,7 @@ impl ::core::fmt::Debug for EPM<'_> {
         ds.field("ENTITY_TYPE", &self.ENTITY_TYPE());
         ds.field("SIGNATURE_ALGORITHM", &self.SIGNATURE_ALGORITHM());
         ds.field("DOMAIN_PROOFS", &self.DOMAIN_PROOFS());
+        ds.field("PHOTO", &self.PHOTO());
         ds.finish()
     }
 }
@@ -2235,6 +2264,7 @@ pub struct EPMT {
     pub ENTITY_TYPE: EntityType,
     pub SIGNATURE_ALGORITHM: Option<alloc::string::String>,
     pub DOMAIN_PROOFS: Option<alloc::vec::Vec<DomainProofT>>,
+    pub PHOTO: Option<alloc::string::String>,
 }
 
 impl Default for EPMT {
@@ -2261,6 +2291,7 @@ impl Default for EPMT {
             ENTITY_TYPE: EntityType::User,
             SIGNATURE_ALGORITHM: None,
             DOMAIN_PROOFS: None,
+            PHOTO: None,
         }
     }
 }
@@ -2329,6 +2360,9 @@ impl EPMT {
         let DOMAIN_PROOFS = self.DOMAIN_PROOFS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let PHOTO = self.PHOTO.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         EPM::create(_fbb, &EPMArgs{
             DN,
             LEGAL_NAME,
@@ -2351,6 +2385,7 @@ impl EPMT {
             ENTITY_TYPE,
             SIGNATURE_ALGORITHM,
             DOMAIN_PROOFS,
+            PHOTO,
         })
     }
 }
