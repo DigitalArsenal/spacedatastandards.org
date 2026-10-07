@@ -24,6 +24,11 @@ class wxfLevelKind
     /// For fields defined at altitude rather than on pressure levels (for
     /// example the upper atmosphere).
     const HeightAboveEllipsoid = 7;
+    /// The top of the cloud a satellite retrieval saw in each cell; the level
+    /// varies from cell to cell and LEVEL_VALUE is unused. The height itself
+    /// is a GeopotentialHeight field at this level (a Temperature field gives
+    /// the cloud-top temperature), never implied by the level.
+    const CloudTop = 8;
 
     private static $names = array(
         wxfLevelKind::Surface=>"Surface",
@@ -34,6 +39,7 @@ class wxfLevelKind
         wxfLevelKind::TopOfAtmosphere=>"TopOfAtmosphere",
         wxfLevelKind::Tropopause=>"Tropopause",
         wxfLevelKind::HeightAboveEllipsoid=>"HeightAboveEllipsoid",
+        wxfLevelKind::CloudTop=>"CloudTop",
     );
 
     public static function Name($e)

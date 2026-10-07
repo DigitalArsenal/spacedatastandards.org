@@ -159,7 +159,14 @@ enum wxfVariable {
   RelativeHumidity(27),
   TotalColumnWaterVapour(28),
   SurfacePressure(29),
-  GeopotentialHeight(30);
+  GeopotentialHeight(30),
+  BrightnessTemperature(31),
+  Reflectance(32),
+  CloudMask(33),
+  CloudPhase(34),
+  CloudOpticalDepth(35),
+  CloudEffectiveRadius(36),
+  CloudEmissivity(37);
 
   final int value;
   const wxfVariable(this.value);
@@ -197,6 +204,13 @@ enum wxfVariable {
       case 28: return wxfVariable.TotalColumnWaterVapour;
       case 29: return wxfVariable.SurfacePressure;
       case 30: return wxfVariable.GeopotentialHeight;
+      case 31: return wxfVariable.BrightnessTemperature;
+      case 32: return wxfVariable.Reflectance;
+      case 33: return wxfVariable.CloudMask;
+      case 34: return wxfVariable.CloudPhase;
+      case 35: return wxfVariable.CloudOpticalDepth;
+      case 36: return wxfVariable.CloudEffectiveRadius;
+      case 37: return wxfVariable.CloudEmissivity;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -205,7 +219,7 @@ enum wxfVariable {
       value == null ? null : wxfVariable.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 30;
+  static const int maxValue = 37;
   static const fb.Reader<wxfVariable> reader = _wxfVariableReader();
 }
 
@@ -230,7 +244,8 @@ enum wxfLevelKind {
   EntireAtmosphere(4),
   TopOfAtmosphere(5),
   Tropopause(6),
-  HeightAboveEllipsoid(7);
+  HeightAboveEllipsoid(7),
+  CloudTop(8);
 
   final int value;
   const wxfLevelKind(this.value);
@@ -245,6 +260,7 @@ enum wxfLevelKind {
       case 5: return wxfLevelKind.TopOfAtmosphere;
       case 6: return wxfLevelKind.Tropopause;
       case 7: return wxfLevelKind.HeightAboveEllipsoid;
+      case 8: return wxfLevelKind.CloudTop;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -253,7 +269,7 @@ enum wxfLevelKind {
       value == null ? null : wxfLevelKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 7;
+  static const int maxValue = 8;
   static const fb.Reader<wxfLevelKind> reader = _wxfLevelKindReader();
 }
 
@@ -348,7 +364,10 @@ class _wxfGridKindReader extends fb.Reader<wxfGridKind> {
 ///  reuse existing values.
 enum wxfValuesEncoding {
   InlineFloat32(0),
-  ContentAddressedChunk(1);
+  ContentAddressedChunk(1),
+  InlineQuantizedUint16(2),
+  InlineQuantizedUint8(3),
+  InlineEncodedChunk(4);
 
   final int value;
   const wxfValuesEncoding(this.value);
@@ -357,6 +376,9 @@ enum wxfValuesEncoding {
     switch (value) {
       case 0: return wxfValuesEncoding.InlineFloat32;
       case 1: return wxfValuesEncoding.ContentAddressedChunk;
+      case 2: return wxfValuesEncoding.InlineQuantizedUint16;
+      case 3: return wxfValuesEncoding.InlineQuantizedUint8;
+      case 4: return wxfValuesEncoding.InlineEncodedChunk;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -365,7 +387,7 @@ enum wxfValuesEncoding {
       value == null ? null : wxfValuesEncoding.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 1;
+  static const int maxValue = 4;
   static const fb.Reader<wxfValuesEncoding> reader = _wxfValuesEncodingReader();
 }
 
@@ -703,11 +725,20 @@ class WXF {
   ///  ContentAddressedChunk.
   String? get CHUNK_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
   String? get chunkCid => CHUNK_CID;
-  ///  Element type of the chunk (e.g. "float32", "float16").
+  ///  Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+  ///  for InlineEncodedChunk).
   String? get CHUNK_DTYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
   String? get chunkDtype => CHUNK_DTYPE;
   ///  Codec chain applied to the chunk, outermost last (e.g. "bytes",
-  ///  "zstd").
+  ///  "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+  ///  order of VALUES (little-endian elements):
+  ///    "delta"   each element less the one before it, the first kept,
+  ///              wrapping in the element type;
+  ///    "zigzag"  each element read as signed in its type and mapped to
+  ///              unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+  ///    "shuffle" the elements' bytes grouped by significance, every
+  ///              element's least significant byte first.
+  ///  Decoding applies the inverses from the last back.
   List<String>? get CHUNK_CODECS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 58);
   List<String>? get chunkCodecs => CHUNK_CODECS;
   ///  Encoded chunk length in bytes.
@@ -752,10 +783,50 @@ class WXF {
   ///  and horizon are meaningful. The default preserves existing records.
   wxfTimeBasis get TIME_BASIS => wxfTimeBasis.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 84, 0));
   wxfTimeBasis get timeBasis => TIME_BASIS;
+  ///  Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+  ///  GRID.NLAT * GRID.NLON in the order of VALUES.
+  List<int>? get QUANTIZED_U16 => const fb.ListReader<int>(fb.Uint16Reader()).vTableGetNullable(_bc, _bcOffset, 86);
+  List<int>? get quantizedU16 => QUANTIZED_U16;
+  ///  Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+  ///  encoded chunk when it is InlineEncodedChunk.
+  List<int>? get QUANTIZED_U8 => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 88);
+  List<int>? get quantizedU8 => QUANTIZED_U8;
+  ///  Scale applied to a quantized code, in UNITS per code step.
+  double get SCALE_FACTOR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 1.0);
+  double get scaleFactor => SCALE_FACTOR;
+  ///  Offset added after scaling a quantized code, in UNITS.
+  double get ADD_OFFSET => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
+  double get addOffset => ADD_OFFSET;
+  ///  Instrument that observed the field: the platform and instrument
+  ///  designation its operator publishes. Absent for model output.
+  String? get SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
+  String? get sensorId => SENSOR_ID;
+  ///  Central wavelength of the channel the field was measured or retrieved
+  ///  at, micrometres; 0 when not a single channel.
+  double get CHANNEL_WAVELENGTH_UM => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
+  double get channelWavelengthUm => CHANNEL_WAVELENGTH_UM;
+  ///  Geodetic longitude of the observing platform, degrees east (the
+  ///  sub-satellite point of a geostationary imager), for viewing-geometry
+  ///  and parallax corrections. NaN when unstated.
+  double get PLATFORM_LONGITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, double.nan);
+  double get platformLongitudeDeg => PLATFORM_LONGITUDE_DEG;
+  ///  Geodetic latitude of the observing platform, degrees north. NaN when
+  ///  unstated.
+  double get PLATFORM_LATITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 100, double.nan);
+  double get platformLatitudeDeg => PLATFORM_LATITUDE_DEG;
+  ///  Height of the observing platform above the WGS84 ellipsoid, metres.
+  ///  NaN when unstated.
+  double get PLATFORM_HEIGHT_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, double.nan);
+  double get platformHeightM => PLATFORM_HEIGHT_M;
+  ///  End of the observation's scan, Unix milliseconds UTC, when the samples
+  ///  were taken over an interval; VALID_TIME_MS is then the scan start.
+  ///  0 when unstated.
+  int get SCAN_END_TIME_MS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 104, 0);
+  int get scanEndTimeMs => SCAN_END_TIME_MS;
 
   @override
   String toString() {
-    return 'WXF{fieldId: ${fieldId}, modelClass: ${modelClass}, modelId: ${modelId}, modelVersion: ${modelVersion}, initTimeMs: ${initTimeMs}, leadHours: ${leadHours}, validTimeMs: ${validTimeMs}, horizonHours: ${horizonHours}, memberKind: ${memberKind}, memberIndex: ${memberIndex}, ensembleSize: ${ensembleSize}, PERCENTILE: ${PERCENTILE}, thresholdValue: ${thresholdValue}, VARIABLE: ${VARIABLE}, variableName: ${variableName}, UNITS: ${UNITS}, levelKind: ${levelKind}, levelValue: ${levelValue}, temporalKind: ${temporalKind}, accumulationHours: ${accumulationHours}, GRID: ${GRID}, tileIndex: ${tileIndex}, tileCount: ${tileCount}, valuesEncoding: ${valuesEncoding}, VALUES: ${VALUES}, chunkCid: ${chunkCid}, chunkDtype: ${chunkDtype}, chunkCodecs: ${chunkCodecs}, chunkByteLength: ${chunkByteLength}, valueMin: ${valueMin}, valueMax: ${valueMax}, missingCount: ${missingCount}, originId: ${originId}, datasetId: ${datasetId}, sourceUrl: ${sourceUrl}, retrievedAt: ${retrievedAt}, licenseClass: ${licenseClass}, licenseUrl: ${licenseUrl}, CITATION: ${CITATION}, producerPeerId: ${producerPeerId}, timeBasis: ${timeBasis}}';
+    return 'WXF{fieldId: ${fieldId}, modelClass: ${modelClass}, modelId: ${modelId}, modelVersion: ${modelVersion}, initTimeMs: ${initTimeMs}, leadHours: ${leadHours}, validTimeMs: ${validTimeMs}, horizonHours: ${horizonHours}, memberKind: ${memberKind}, memberIndex: ${memberIndex}, ensembleSize: ${ensembleSize}, PERCENTILE: ${PERCENTILE}, thresholdValue: ${thresholdValue}, VARIABLE: ${VARIABLE}, variableName: ${variableName}, UNITS: ${UNITS}, levelKind: ${levelKind}, levelValue: ${levelValue}, temporalKind: ${temporalKind}, accumulationHours: ${accumulationHours}, GRID: ${GRID}, tileIndex: ${tileIndex}, tileCount: ${tileCount}, valuesEncoding: ${valuesEncoding}, VALUES: ${VALUES}, chunkCid: ${chunkCid}, chunkDtype: ${chunkDtype}, chunkCodecs: ${chunkCodecs}, chunkByteLength: ${chunkByteLength}, valueMin: ${valueMin}, valueMax: ${valueMax}, missingCount: ${missingCount}, originId: ${originId}, datasetId: ${datasetId}, sourceUrl: ${sourceUrl}, retrievedAt: ${retrievedAt}, licenseClass: ${licenseClass}, licenseUrl: ${licenseUrl}, CITATION: ${CITATION}, producerPeerId: ${producerPeerId}, timeBasis: ${timeBasis}, quantizedU16: ${quantizedU16}, quantizedU8: ${quantizedU8}, scaleFactor: ${scaleFactor}, addOffset: ${addOffset}, sensorId: ${sensorId}, channelWavelengthUm: ${channelWavelengthUm}, platformLongitudeDeg: ${platformLongitudeDeg}, platformLatitudeDeg: ${platformLatitudeDeg}, platformHeightM: ${platformHeightM}, scanEndTimeMs: ${scanEndTimeMs}}';
   }
 }
 
@@ -773,7 +844,7 @@ class WXFBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(41);
+    fbBuilder.startTable(51);
   }
 
   int addFieldIdOffset(int? offset) {
@@ -940,6 +1011,46 @@ class WXFBuilder {
     fbBuilder.addInt8(40, TIME_BASIS?.value);
     return fbBuilder.offset;
   }
+  int addQuantizedU16Offset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addQuantizedU8Offset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addScaleFactor(double? SCALE_FACTOR) {
+    fbBuilder.addFloat64(43, SCALE_FACTOR);
+    return fbBuilder.offset;
+  }
+  int addAddOffset(double? ADD_OFFSET) {
+    fbBuilder.addFloat64(44, ADD_OFFSET);
+    return fbBuilder.offset;
+  }
+  int addSensorIdOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addChannelWavelengthUm(double? CHANNEL_WAVELENGTH_UM) {
+    fbBuilder.addFloat32(46, CHANNEL_WAVELENGTH_UM);
+    return fbBuilder.offset;
+  }
+  int addPlatformLongitudeDeg(double? PLATFORM_LONGITUDE_DEG) {
+    fbBuilder.addFloat64(47, PLATFORM_LONGITUDE_DEG);
+    return fbBuilder.offset;
+  }
+  int addPlatformLatitudeDeg(double? PLATFORM_LATITUDE_DEG) {
+    fbBuilder.addFloat64(48, PLATFORM_LATITUDE_DEG);
+    return fbBuilder.offset;
+  }
+  int addPlatformHeightM(double? PLATFORM_HEIGHT_M) {
+    fbBuilder.addFloat64(49, PLATFORM_HEIGHT_M);
+    return fbBuilder.offset;
+  }
+  int addScanEndTimeMs(int? SCAN_END_TIME_MS) {
+    fbBuilder.addUint64(50, SCAN_END_TIME_MS);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -988,6 +1099,16 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
   final String? _CITATION;
   final String? _PRODUCER_PEER_ID;
   final wxfTimeBasis? _TIME_BASIS;
+  final List<int>? _QUANTIZED_U16;
+  final List<int>? _QUANTIZED_U8;
+  final double? _SCALE_FACTOR;
+  final double? _ADD_OFFSET;
+  final String? _SENSOR_ID;
+  final double? _CHANNEL_WAVELENGTH_UM;
+  final double? _PLATFORM_LONGITUDE_DEG;
+  final double? _PLATFORM_LATITUDE_DEG;
+  final double? _PLATFORM_HEIGHT_M;
+  final int? _SCAN_END_TIME_MS;
 
   WXFObjectBuilder({
     String? FIELD_ID,
@@ -1066,6 +1187,26 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
     String? producerPeerId,
     wxfTimeBasis? TIME_BASIS,
     wxfTimeBasis? timeBasis,
+    List<int>? QUANTIZED_U16,
+    List<int>? quantizedU16,
+    List<int>? QUANTIZED_U8,
+    List<int>? quantizedU8,
+    double? SCALE_FACTOR,
+    double? scaleFactor,
+    double? ADD_OFFSET,
+    double? addOffset,
+    String? SENSOR_ID,
+    String? sensorId,
+    double? CHANNEL_WAVELENGTH_UM,
+    double? channelWavelengthUm,
+    double? PLATFORM_LONGITUDE_DEG,
+    double? platformLongitudeDeg,
+    double? PLATFORM_LATITUDE_DEG,
+    double? platformLatitudeDeg,
+    double? PLATFORM_HEIGHT_M,
+    double? platformHeightM,
+    int? SCAN_END_TIME_MS,
+    int? scanEndTimeMs,
   })
       : _FIELD_ID = fieldId ?? FIELD_ID,
         _MODEL_CLASS = modelClass ?? MODEL_CLASS,
@@ -1107,7 +1248,17 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
         _LICENSE_URL = licenseUrl ?? LICENSE_URL,
         _CITATION = CITATION,
         _PRODUCER_PEER_ID = producerPeerId ?? PRODUCER_PEER_ID,
-        _TIME_BASIS = timeBasis ?? TIME_BASIS;
+        _TIME_BASIS = timeBasis ?? TIME_BASIS,
+        _QUANTIZED_U16 = quantizedU16 ?? QUANTIZED_U16,
+        _QUANTIZED_U8 = quantizedU8 ?? QUANTIZED_U8,
+        _SCALE_FACTOR = scaleFactor ?? SCALE_FACTOR,
+        _ADD_OFFSET = addOffset ?? ADD_OFFSET,
+        _SENSOR_ID = sensorId ?? SENSOR_ID,
+        _CHANNEL_WAVELENGTH_UM = channelWavelengthUm ?? CHANNEL_WAVELENGTH_UM,
+        _PLATFORM_LONGITUDE_DEG = platformLongitudeDeg ?? PLATFORM_LONGITUDE_DEG,
+        _PLATFORM_LATITUDE_DEG = platformLatitudeDeg ?? PLATFORM_LATITUDE_DEG,
+        _PLATFORM_HEIGHT_M = platformHeightM ?? PLATFORM_HEIGHT_M,
+        _SCAN_END_TIME_MS = scanEndTimeMs ?? SCAN_END_TIME_MS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1143,7 +1294,13 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_CITATION!);
     final int? PRODUCER_PEER_IDOffset = _PRODUCER_PEER_ID == null ? null
         : fbBuilder.writeString(_PRODUCER_PEER_ID!);
-    fbBuilder.startTable(41);
+    final int? QUANTIZED_U16Offset = _QUANTIZED_U16 == null ? null
+        : fbBuilder.writeListUint16(_QUANTIZED_U16!);
+    final int? QUANTIZED_U8Offset = _QUANTIZED_U8 == null ? null
+        : fbBuilder.writeListUint8(_QUANTIZED_U8!);
+    final int? SENSOR_IDOffset = _SENSOR_ID == null ? null
+        : fbBuilder.writeString(_SENSOR_ID!);
+    fbBuilder.startTable(51);
     fbBuilder.addOffset(0, FIELD_IDOffset);
     fbBuilder.addInt8(1, _MODEL_CLASS?.value);
     fbBuilder.addOffset(2, MODEL_IDOffset);
@@ -1185,6 +1342,16 @@ class WXFObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(38, CITATIONOffset);
     fbBuilder.addOffset(39, PRODUCER_PEER_IDOffset);
     fbBuilder.addInt8(40, _TIME_BASIS?.value);
+    fbBuilder.addOffset(41, QUANTIZED_U16Offset);
+    fbBuilder.addOffset(42, QUANTIZED_U8Offset);
+    fbBuilder.addFloat64(43, _SCALE_FACTOR);
+    fbBuilder.addFloat64(44, _ADD_OFFSET);
+    fbBuilder.addOffset(45, SENSOR_IDOffset);
+    fbBuilder.addFloat32(46, _CHANNEL_WAVELENGTH_UM);
+    fbBuilder.addFloat64(47, _PLATFORM_LONGITUDE_DEG);
+    fbBuilder.addFloat64(48, _PLATFORM_LATITUDE_DEG);
+    fbBuilder.addFloat64(49, _PLATFORM_HEIGHT_M);
+    fbBuilder.addUint64(50, _SCAN_END_TIME_MS);
     return fbBuilder.endTable();
   }
 

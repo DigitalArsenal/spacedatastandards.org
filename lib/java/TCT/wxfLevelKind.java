@@ -42,8 +42,15 @@ public final class wxfLevelKind {
    * example the upper atmosphere).
    */
   public static final byte HeightAboveEllipsoid = 7;
+  /**
+   * The top of the cloud a satellite retrieval saw in each cell; the level
+   * varies from cell to cell and LEVEL_VALUE is unused. The height itself
+   * is a GeopotentialHeight field at this level (a Temperature field gives
+   * the cloud-top temperature), never implied by the level.
+   */
+  public static final byte CloudTop = 8;
 
-  public static final String[] names = { "Surface", "HeightAboveGround", "PressureLevel", "MeanSeaLevel", "EntireAtmosphere", "TopOfAtmosphere", "Tropopause", "HeightAboveEllipsoid", };
+  public static final String[] names = { "Surface", "HeightAboveGround", "PressureLevel", "MeanSeaLevel", "EntireAtmosphere", "TopOfAtmosphere", "Tropopause", "HeightAboveEllipsoid", "CloudTop", };
 
   public static String name(int e) { return names[e]; }
 }

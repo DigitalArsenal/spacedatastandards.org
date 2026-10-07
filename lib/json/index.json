@@ -8432,7 +8432,14 @@
                         "RelativeHumidity",
                         "TotalColumnWaterVapour",
                         "SurfacePressure",
-                        "GeopotentialHeight"
+                        "GeopotentialHeight",
+                        "BrightnessTemperature",
+                        "Reflectance",
+                        "CloudMask",
+                        "CloudPhase",
+                        "CloudOpticalDepth",
+                        "CloudEffectiveRadius",
+                        "CloudEmissivity"
                     ]
                 },
                 "wxfLevelKind": {
@@ -8445,7 +8452,8 @@
                         "EntireAtmosphere",
                         "TopOfAtmosphere",
                         "Tropopause",
-                        "HeightAboveEllipsoid"
+                        "HeightAboveEllipsoid",
+                        "CloudTop"
                     ]
                 },
                 "wxfTemporalKind": {
@@ -8468,7 +8476,10 @@
                     "type": "string",
                     "enum": [
                         "InlineFloat32",
-                        "ContentAddressedChunk"
+                        "ContentAddressedChunk",
+                        "InlineQuantizedUint16",
+                        "InlineQuantizedUint8",
+                        "InlineEncodedChunk"
                     ]
                 },
                 "wxfLicenseClass": {
@@ -8700,14 +8711,14 @@
                         },
                         "CHUNK_DTYPE": {
                             "type": "string",
-                            "description": "Element type of the chunk (e.g. \"float32\", \"float16\")."
+                            "description": "Element type of the chunk (e.g. \"float32\", \"float16\"; \"uint16\" or \"uint8\"\nfor InlineEncodedChunk)."
                         },
                         "CHUNK_CODECS": {
                             "type": "array",
                             "items": {
                                 "type": "string"
                             },
-                            "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\")."
+                            "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\"). For InlineEncodedChunk, applied in order to the codes in the\norder of VALUES (little-endian elements):\n\"delta\"   each element less the one before it, the first kept,\nwrapping in the element type;\n\"zigzag\"  each element read as signed in its type and mapped to\nunsigned, n >= 0 to 2n and n < 0 to -2n - 1;\n\"shuffle\" the elements' bytes grouped by significance, every\nelement's least significant byte first.\nDecoding applies the inverses from the last back."
                         },
                         "CHUNK_BYTE_LENGTH": {
                             "type": "integer",
@@ -8766,6 +8777,58 @@
                         "TIME_BASIS": {
                             "$ref": "#/definitions/wxfTimeBasis",
                             "description": "Times published by the source; governs whether initialization, lead\nand horizon are meaningful. The default preserves existing records."
+                        },
+                        "QUANTIZED_U16": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 65535
+                            },
+                            "description": "Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,\nGRID.NLAT * GRID.NLON in the order of VALUES."
+                        },
+                        "QUANTIZED_U8": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the\nencoded chunk when it is InlineEncodedChunk."
+                        },
+                        "SCALE_FACTOR": {
+                            "type": "number",
+                            "description": "Scale applied to a quantized code, in UNITS per code step."
+                        },
+                        "ADD_OFFSET": {
+                            "type": "number",
+                            "description": "Offset added after scaling a quantized code, in UNITS."
+                        },
+                        "SENSOR_ID": {
+                            "type": "string",
+                            "description": "Instrument that observed the field: the platform and instrument\ndesignation its operator publishes. Absent for model output."
+                        },
+                        "CHANNEL_WAVELENGTH_UM": {
+                            "type": "number",
+                            "description": "Central wavelength of the channel the field was measured or retrieved\nat, micrometres; 0 when not a single channel."
+                        },
+                        "PLATFORM_LONGITUDE_DEG": {
+                            "type": "number",
+                            "description": "Geodetic longitude of the observing platform, degrees east (the\nsub-satellite point of a geostationary imager), for viewing-geometry\nand parallax corrections. NaN when unstated."
+                        },
+                        "PLATFORM_LATITUDE_DEG": {
+                            "type": "number",
+                            "description": "Geodetic latitude of the observing platform, degrees north. NaN when\nunstated."
+                        },
+                        "PLATFORM_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Height of the observing platform above the WGS84 ellipsoid, metres.\nNaN when unstated."
+                        },
+                        "SCAN_END_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "End of the observation's scan, Unix milliseconds UTC, when the samples\nwere taken over an interval; VALID_TIME_MS is then the scan start.\n0 when unstated."
                         }
                     },
                     "required": [
@@ -50261,7 +50324,14 @@
                         "RelativeHumidity",
                         "TotalColumnWaterVapour",
                         "SurfacePressure",
-                        "GeopotentialHeight"
+                        "GeopotentialHeight",
+                        "BrightnessTemperature",
+                        "Reflectance",
+                        "CloudMask",
+                        "CloudPhase",
+                        "CloudOpticalDepth",
+                        "CloudEffectiveRadius",
+                        "CloudEmissivity"
                     ]
                 },
                 "wxfLevelKind": {
@@ -50274,7 +50344,8 @@
                         "EntireAtmosphere",
                         "TopOfAtmosphere",
                         "Tropopause",
-                        "HeightAboveEllipsoid"
+                        "HeightAboveEllipsoid",
+                        "CloudTop"
                     ]
                 },
                 "wxfTemporalKind": {
@@ -50297,7 +50368,10 @@
                     "type": "string",
                     "enum": [
                         "InlineFloat32",
-                        "ContentAddressedChunk"
+                        "ContentAddressedChunk",
+                        "InlineQuantizedUint16",
+                        "InlineQuantizedUint8",
+                        "InlineEncodedChunk"
                     ]
                 },
                 "wxfLicenseClass": {
@@ -50485,14 +50559,14 @@
                         },
                         "CHUNK_DTYPE": {
                             "type": "string",
-                            "description": "Element type of the chunk (e.g. \"float32\", \"float16\")."
+                            "description": "Element type of the chunk (e.g. \"float32\", \"float16\"; \"uint16\" or \"uint8\"\nfor InlineEncodedChunk)."
                         },
                         "CHUNK_CODECS": {
                             "type": "array",
                             "items": {
                                 "type": "string"
                             },
-                            "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\")."
+                            "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\"). For InlineEncodedChunk, applied in order to the codes in the\norder of VALUES (little-endian elements):\n\"delta\"   each element less the one before it, the first kept,\nwrapping in the element type;\n\"zigzag\"  each element read as signed in its type and mapped to\nunsigned, n >= 0 to 2n and n < 0 to -2n - 1;\n\"shuffle\" the elements' bytes grouped by significance, every\nelement's least significant byte first.\nDecoding applies the inverses from the last back."
                         },
                         "CHUNK_BYTE_LENGTH": {
                             "type": "integer",
@@ -50551,6 +50625,58 @@
                         "TIME_BASIS": {
                             "$ref": "#/definitions/wxfTimeBasis",
                             "description": "Times published by the source; governs whether initialization, lead\nand horizon are meaningful. The default preserves existing records."
+                        },
+                        "QUANTIZED_U16": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 65535
+                            },
+                            "description": "Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,\nGRID.NLAT * GRID.NLON in the order of VALUES."
+                        },
+                        "QUANTIZED_U8": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the\nencoded chunk when it is InlineEncodedChunk."
+                        },
+                        "SCALE_FACTOR": {
+                            "type": "number",
+                            "description": "Scale applied to a quantized code, in UNITS per code step."
+                        },
+                        "ADD_OFFSET": {
+                            "type": "number",
+                            "description": "Offset added after scaling a quantized code, in UNITS."
+                        },
+                        "SENSOR_ID": {
+                            "type": "string",
+                            "description": "Instrument that observed the field: the platform and instrument\ndesignation its operator publishes. Absent for model output."
+                        },
+                        "CHANNEL_WAVELENGTH_UM": {
+                            "type": "number",
+                            "description": "Central wavelength of the channel the field was measured or retrieved\nat, micrometres; 0 when not a single channel."
+                        },
+                        "PLATFORM_LONGITUDE_DEG": {
+                            "type": "number",
+                            "description": "Geodetic longitude of the observing platform, degrees east (the\nsub-satellite point of a geostationary imager), for viewing-geometry\nand parallax corrections. NaN when unstated."
+                        },
+                        "PLATFORM_LATITUDE_DEG": {
+                            "type": "number",
+                            "description": "Geodetic latitude of the observing platform, degrees north. NaN when\nunstated."
+                        },
+                        "PLATFORM_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Height of the observing platform above the WGS84 ellipsoid, metres.\nNaN when unstated."
+                        },
+                        "SCAN_END_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "End of the observation's scan, Unix milliseconds UTC, when the samples\nwere taken over an interval; VALID_TIME_MS is then the scan start.\n0 when unstated."
                         }
                     },
                     "required": [
@@ -66942,7 +67068,14 @@
                         "RelativeHumidity",
                         "TotalColumnWaterVapour",
                         "SurfacePressure",
-                        "GeopotentialHeight"
+                        "GeopotentialHeight",
+                        "BrightnessTemperature",
+                        "Reflectance",
+                        "CloudMask",
+                        "CloudPhase",
+                        "CloudOpticalDepth",
+                        "CloudEffectiveRadius",
+                        "CloudEmissivity"
                     ]
                 },
                 "wxfLevelKind": {
@@ -66955,7 +67088,8 @@
                         "EntireAtmosphere",
                         "TopOfAtmosphere",
                         "Tropopause",
-                        "HeightAboveEllipsoid"
+                        "HeightAboveEllipsoid",
+                        "CloudTop"
                     ]
                 },
                 "wxfTemporalKind": {
@@ -66978,7 +67112,10 @@
                     "type": "string",
                     "enum": [
                         "InlineFloat32",
-                        "ContentAddressedChunk"
+                        "ContentAddressedChunk",
+                        "InlineQuantizedUint16",
+                        "InlineQuantizedUint8",
+                        "InlineEncodedChunk"
                     ]
                 },
                 "wxfLicenseClass": {
@@ -95045,14 +95182,14 @@
                         },
                         "CHUNK_DTYPE": {
                             "type": "string",
-                            "description": "Element type of the chunk (e.g. \"float32\", \"float16\")."
+                            "description": "Element type of the chunk (e.g. \"float32\", \"float16\"; \"uint16\" or \"uint8\"\nfor InlineEncodedChunk)."
                         },
                         "CHUNK_CODECS": {
                             "type": "array",
                             "items": {
                                 "type": "string"
                             },
-                            "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\")."
+                            "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\"). For InlineEncodedChunk, applied in order to the codes in the\norder of VALUES (little-endian elements):\n\"delta\"   each element less the one before it, the first kept,\nwrapping in the element type;\n\"zigzag\"  each element read as signed in its type and mapped to\nunsigned, n >= 0 to 2n and n < 0 to -2n - 1;\n\"shuffle\" the elements' bytes grouped by significance, every\nelement's least significant byte first.\nDecoding applies the inverses from the last back."
                         },
                         "CHUNK_BYTE_LENGTH": {
                             "type": "integer",
@@ -95111,6 +95248,58 @@
                         "TIME_BASIS": {
                             "$ref": "#/definitions/wxfTimeBasis",
                             "description": "Times published by the source; governs whether initialization, lead\nand horizon are meaningful. The default preserves existing records."
+                        },
+                        "QUANTIZED_U16": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 65535
+                            },
+                            "description": "Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,\nGRID.NLAT * GRID.NLON in the order of VALUES."
+                        },
+                        "QUANTIZED_U8": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the\nencoded chunk when it is InlineEncodedChunk."
+                        },
+                        "SCALE_FACTOR": {
+                            "type": "number",
+                            "description": "Scale applied to a quantized code, in UNITS per code step."
+                        },
+                        "ADD_OFFSET": {
+                            "type": "number",
+                            "description": "Offset added after scaling a quantized code, in UNITS."
+                        },
+                        "SENSOR_ID": {
+                            "type": "string",
+                            "description": "Instrument that observed the field: the platform and instrument\ndesignation its operator publishes. Absent for model output."
+                        },
+                        "CHANNEL_WAVELENGTH_UM": {
+                            "type": "number",
+                            "description": "Central wavelength of the channel the field was measured or retrieved\nat, micrometres; 0 when not a single channel."
+                        },
+                        "PLATFORM_LONGITUDE_DEG": {
+                            "type": "number",
+                            "description": "Geodetic longitude of the observing platform, degrees east (the\nsub-satellite point of a geostationary imager), for viewing-geometry\nand parallax corrections. NaN when unstated."
+                        },
+                        "PLATFORM_LATITUDE_DEG": {
+                            "type": "number",
+                            "description": "Geodetic latitude of the observing platform, degrees north. NaN when\nunstated."
+                        },
+                        "PLATFORM_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Height of the observing platform above the WGS84 ellipsoid, metres.\nNaN when unstated."
+                        },
+                        "SCAN_END_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "End of the observation's scan, Unix milliseconds UTC, when the samples\nwere taken over an interval; VALID_TIME_MS is then the scan start.\n0 when unstated."
                         }
                     },
                     "required": [
@@ -199735,7 +199924,14 @@
                         "RelativeHumidity",
                         "TotalColumnWaterVapour",
                         "SurfacePressure",
-                        "GeopotentialHeight"
+                        "GeopotentialHeight",
+                        "BrightnessTemperature",
+                        "Reflectance",
+                        "CloudMask",
+                        "CloudPhase",
+                        "CloudOpticalDepth",
+                        "CloudEffectiveRadius",
+                        "CloudEmissivity"
                     ]
                 },
                 "wxfLevelKind": {
@@ -199748,7 +199944,8 @@
                         "EntireAtmosphere",
                         "TopOfAtmosphere",
                         "Tropopause",
-                        "HeightAboveEllipsoid"
+                        "HeightAboveEllipsoid",
+                        "CloudTop"
                     ]
                 },
                 "wxfTemporalKind": {
@@ -199771,7 +199968,10 @@
                     "type": "string",
                     "enum": [
                         "InlineFloat32",
-                        "ContentAddressedChunk"
+                        "ContentAddressedChunk",
+                        "InlineQuantizedUint16",
+                        "InlineQuantizedUint8",
+                        "InlineEncodedChunk"
                     ]
                 },
                 "wxfLicenseClass": {
@@ -200024,14 +200224,14 @@
                         },
                         "CHUNK_DTYPE": {
                             "type": "string",
-                            "description": "Element type of the chunk (e.g. \"float32\", \"float16\")."
+                            "description": "Element type of the chunk (e.g. \"float32\", \"float16\"; \"uint16\" or \"uint8\"\nfor InlineEncodedChunk)."
                         },
                         "CHUNK_CODECS": {
                             "type": "array",
                             "items": {
                                 "type": "string"
                             },
-                            "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\")."
+                            "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\"). For InlineEncodedChunk, applied in order to the codes in the\norder of VALUES (little-endian elements):\n\"delta\"   each element less the one before it, the first kept,\nwrapping in the element type;\n\"zigzag\"  each element read as signed in its type and mapped to\nunsigned, n >= 0 to 2n and n < 0 to -2n - 1;\n\"shuffle\" the elements' bytes grouped by significance, every\nelement's least significant byte first.\nDecoding applies the inverses from the last back."
                         },
                         "CHUNK_BYTE_LENGTH": {
                             "type": "integer",
@@ -200090,6 +200290,58 @@
                         "TIME_BASIS": {
                             "$ref": "#/definitions/wxfTimeBasis",
                             "description": "Times published by the source; governs whether initialization, lead\nand horizon are meaningful. The default preserves existing records."
+                        },
+                        "QUANTIZED_U16": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 65535
+                            },
+                            "description": "Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,\nGRID.NLAT * GRID.NLON in the order of VALUES."
+                        },
+                        "QUANTIZED_U8": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the\nencoded chunk when it is InlineEncodedChunk."
+                        },
+                        "SCALE_FACTOR": {
+                            "type": "number",
+                            "description": "Scale applied to a quantized code, in UNITS per code step."
+                        },
+                        "ADD_OFFSET": {
+                            "type": "number",
+                            "description": "Offset added after scaling a quantized code, in UNITS."
+                        },
+                        "SENSOR_ID": {
+                            "type": "string",
+                            "description": "Instrument that observed the field: the platform and instrument\ndesignation its operator publishes. Absent for model output."
+                        },
+                        "CHANNEL_WAVELENGTH_UM": {
+                            "type": "number",
+                            "description": "Central wavelength of the channel the field was measured or retrieved\nat, micrometres; 0 when not a single channel."
+                        },
+                        "PLATFORM_LONGITUDE_DEG": {
+                            "type": "number",
+                            "description": "Geodetic longitude of the observing platform, degrees east (the\nsub-satellite point of a geostationary imager), for viewing-geometry\nand parallax corrections. NaN when unstated."
+                        },
+                        "PLATFORM_LATITUDE_DEG": {
+                            "type": "number",
+                            "description": "Geodetic latitude of the observing platform, degrees north. NaN when\nunstated."
+                        },
+                        "PLATFORM_HEIGHT_M": {
+                            "type": "number",
+                            "description": "Height of the observing platform above the WGS84 ellipsoid, metres.\nNaN when unstated."
+                        },
+                        "SCAN_END_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "End of the observation's scan, Unix milliseconds UTC, when the samples\nwere taken over an interval; VALID_TIME_MS is then the scan start.\n0 when unstated."
                         }
                     },
                     "required": [

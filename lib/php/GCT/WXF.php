@@ -303,7 +303,8 @@ class WXF extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Element type of the chunk (e.g. "float32", "float16").
+    /// Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+    /// for InlineEncodedChunk).
     public function getCHUNK_DTYPE()
     {
         $o = $this->__offset(56);
@@ -311,7 +312,15 @@ class WXF extends Table
     }
 
     /// Codec chain applied to the chunk, outermost last (e.g. "bytes",
-    /// "zstd").
+    /// "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+    /// order of VALUES (little-endian elements):
+    ///   "delta"   each element less the one before it, the first kept,
+    ///             wrapping in the element type;
+    ///   "zigzag"  each element read as signed in its type and mapped to
+    ///             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+    ///   "shuffle" the elements' bytes grouped by significance, every
+    ///             element's least significant byte first.
+    /// Decoding applies the inverses from the last back.
     /**
      * @param int offset
      * @return string
@@ -447,22 +456,157 @@ class WXF extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \wxfTimeBasis::Initialization;
     }
 
+    /// Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+    /// GRID.NLAT * GRID.NLON in the order of VALUES.
+    /**
+     * @param int offset
+     * @return ushort
+     */
+    public function getQUANTIZED_U16($j)
+    {
+        $o = $this->__offset(86);
+        return $o != 0 ? $this->bb->getUshort($this->__vector($o) + $j * 2) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQUANTIZED_U16Length()
+    {
+        $o = $this->__offset(86);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+    /// encoded chunk when it is InlineEncodedChunk.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getQUANTIZED_U8($j)
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQUANTIZED_U8Length()
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getQUANTIZED_U8Bytes()
+    {
+        return $this->__vector_as_bytes(88);
+    }
+
+    /// Scale applied to a quantized code, in UNITS per code step.
+    /**
+     * @return double
+     */
+    public function getSCALE_FACTOR()
+    {
+        $o = $this->__offset(90);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 1.0;
+    }
+
+    /// Offset added after scaling a quantized code, in UNITS.
+    /**
+     * @return double
+     */
+    public function getADD_OFFSET()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Instrument that observed the field: the platform and instrument
+    /// designation its operator publishes. Absent for model output.
+    public function getSENSOR_ID()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Central wavelength of the channel the field was measured or retrieved
+    /// at, micrometres; 0 when not a single channel.
+    /**
+     * @return float
+     */
+    public function getCHANNEL_WAVELENGTH_UM()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Geodetic longitude of the observing platform, degrees east (the
+    /// sub-satellite point of a geostationary imager), for viewing-geometry
+    /// and parallax corrections. NaN when unstated.
+    /**
+     * @return double
+     */
+    public function getPLATFORM_LONGITUDE_DEG()
+    {
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Geodetic latitude of the observing platform, degrees north. NaN when
+    /// unstated.
+    /**
+     * @return double
+     */
+    public function getPLATFORM_LATITUDE_DEG()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Height of the observing platform above the WGS84 ellipsoid, metres.
+    /// NaN when unstated.
+    /**
+     * @return double
+     */
+    public function getPLATFORM_HEIGHT_M()
+    {
+        $o = $this->__offset(102);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// End of the observation's scan, Unix milliseconds UTC, when the samples
+    /// were taken over an interval; VALID_TIME_MS is then the scan start.
+    /// 0 when unstated.
+    /**
+     * @return ulong
+     */
+    public function getSCAN_END_TIME_MS()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startWXF(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(41);
+        $builder->StartObject(51);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return WXF
      */
-    public static function createWXF(FlatBufferBuilder $builder, $FIELD_ID, $MODEL_CLASS, $MODEL_ID, $MODEL_VERSION, $INIT_TIME_MS, $LEAD_HOURS, $VALID_TIME_MS, $HORIZON_HOURS, $MEMBER_KIND, $MEMBER_INDEX, $ENSEMBLE_SIZE, $PERCENTILE, $THRESHOLD_VALUE, $VARIABLE, $VARIABLE_NAME, $UNITS, $LEVEL_KIND, $LEVEL_VALUE, $TEMPORAL_KIND, $ACCUMULATION_HOURS, $GRID, $TILE_INDEX, $TILE_COUNT, $VALUES_ENCODING, $VALUES, $CHUNK_CID, $CHUNK_DTYPE, $CHUNK_CODECS, $CHUNK_BYTE_LENGTH, $VALUE_MIN, $VALUE_MAX, $MISSING_COUNT, $ORIGIN_ID, $DATASET_ID, $SOURCE_URL, $RETRIEVED_AT, $LICENSE_CLASS, $LICENSE_URL, $CITATION, $PRODUCER_PEER_ID, $TIME_BASIS)
+    public static function createWXF(FlatBufferBuilder $builder, $FIELD_ID, $MODEL_CLASS, $MODEL_ID, $MODEL_VERSION, $INIT_TIME_MS, $LEAD_HOURS, $VALID_TIME_MS, $HORIZON_HOURS, $MEMBER_KIND, $MEMBER_INDEX, $ENSEMBLE_SIZE, $PERCENTILE, $THRESHOLD_VALUE, $VARIABLE, $VARIABLE_NAME, $UNITS, $LEVEL_KIND, $LEVEL_VALUE, $TEMPORAL_KIND, $ACCUMULATION_HOURS, $GRID, $TILE_INDEX, $TILE_COUNT, $VALUES_ENCODING, $VALUES, $CHUNK_CID, $CHUNK_DTYPE, $CHUNK_CODECS, $CHUNK_BYTE_LENGTH, $VALUE_MIN, $VALUE_MAX, $MISSING_COUNT, $ORIGIN_ID, $DATASET_ID, $SOURCE_URL, $RETRIEVED_AT, $LICENSE_CLASS, $LICENSE_URL, $CITATION, $PRODUCER_PEER_ID, $TIME_BASIS, $QUANTIZED_U16, $QUANTIZED_U8, $SCALE_FACTOR, $ADD_OFFSET, $SENSOR_ID, $CHANNEL_WAVELENGTH_UM, $PLATFORM_LONGITUDE_DEG, $PLATFORM_LATITUDE_DEG, $PLATFORM_HEIGHT_M, $SCAN_END_TIME_MS)
     {
-        $builder->startObject(41);
+        $builder->startObject(51);
         self::addFIELD_ID($builder, $FIELD_ID);
         self::addMODEL_CLASS($builder, $MODEL_CLASS);
         self::addMODEL_ID($builder, $MODEL_ID);
@@ -504,6 +648,16 @@ class WXF extends Table
         self::addCITATION($builder, $CITATION);
         self::addPRODUCER_PEER_ID($builder, $PRODUCER_PEER_ID);
         self::addTIME_BASIS($builder, $TIME_BASIS);
+        self::addQUANTIZED_U16($builder, $QUANTIZED_U16);
+        self::addQUANTIZED_U8($builder, $QUANTIZED_U8);
+        self::addSCALE_FACTOR($builder, $SCALE_FACTOR);
+        self::addADD_OFFSET($builder, $ADD_OFFSET);
+        self::addSENSOR_ID($builder, $SENSOR_ID);
+        self::addCHANNEL_WAVELENGTH_UM($builder, $CHANNEL_WAVELENGTH_UM);
+        self::addPLATFORM_LONGITUDE_DEG($builder, $PLATFORM_LONGITUDE_DEG);
+        self::addPLATFORM_LATITUDE_DEG($builder, $PLATFORM_LATITUDE_DEG);
+        self::addPLATFORM_HEIGHT_M($builder, $PLATFORM_HEIGHT_M);
+        self::addSCAN_END_TIME_MS($builder, $SCAN_END_TIME_MS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // FIELD_ID
         $builder->required($o, 44);  // GRID
@@ -966,6 +1120,154 @@ class WXF extends Table
     public static function addTIME_BASIS(FlatBufferBuilder $builder, $TIME_BASIS)
     {
         $builder->addSbyteX(40, $TIME_BASIS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addQUANTIZED_U16(FlatBufferBuilder $builder, $QUANTIZED_U16)
+    {
+        $builder->addOffsetX(41, $QUANTIZED_U16, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createQUANTIZED_U16Vector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(2, count($data), 2);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putUshort($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startQUANTIZED_U16Vector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(2, $numElems, 2);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addQUANTIZED_U8(FlatBufferBuilder $builder, $QUANTIZED_U8)
+    {
+        $builder->addOffsetX(42, $QUANTIZED_U8, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createQUANTIZED_U8Vector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startQUANTIZED_U8Vector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSCALE_FACTOR(FlatBufferBuilder $builder, $SCALE_FACTOR)
+    {
+        $builder->addDoubleX(43, $SCALE_FACTOR, 1.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addADD_OFFSET(FlatBufferBuilder $builder, $ADD_OFFSET)
+    {
+        $builder->addDoubleX(44, $ADD_OFFSET, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSENSOR_ID(FlatBufferBuilder $builder, $SENSOR_ID)
+    {
+        $builder->addOffsetX(45, $SENSOR_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addCHANNEL_WAVELENGTH_UM(FlatBufferBuilder $builder, $CHANNEL_WAVELENGTH_UM)
+    {
+        $builder->addFloatX(46, $CHANNEL_WAVELENGTH_UM, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPLATFORM_LONGITUDE_DEG(FlatBufferBuilder $builder, $PLATFORM_LONGITUDE_DEG)
+    {
+        $builder->addDoubleX(47, $PLATFORM_LONGITUDE_DEG, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPLATFORM_LATITUDE_DEG(FlatBufferBuilder $builder, $PLATFORM_LATITUDE_DEG)
+    {
+        $builder->addDoubleX(48, $PLATFORM_LATITUDE_DEG, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPLATFORM_HEIGHT_M(FlatBufferBuilder $builder, $PLATFORM_HEIGHT_M)
+    {
+        $builder->addDoubleX(49, $PLATFORM_HEIGHT_M, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addSCAN_END_TIME_MS(FlatBufferBuilder $builder, $SCAN_END_TIME_MS)
+    {
+        $builder->addUlongX(50, $SCAN_END_TIME_MS, 0);
     }
 
     /**

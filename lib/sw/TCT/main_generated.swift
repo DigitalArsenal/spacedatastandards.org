@@ -166,8 +166,33 @@ public enum wxfVariable: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
   ///  such as GFS publishes on pressure levels and at the tropopause. Distinct
   ///  from Geopotential (m^2/s^2); a consumer never relabels one as the other.
   case geopotentialheight = 30
+  ///  Brightness temperature a radiometer channel measured, kelvin: the
+  ///  temperature of a black body emitting the observed radiance at
+  ///  CHANNEL_WAVELENGTH_UM. At LEVEL_KIND TopOfAtmosphere.
+  case brightnesstemperature = 31
+  ///  Top-of-atmosphere bidirectional reflectance factor of a solar channel
+  ///  at CHANNEL_WAVELENGTH_UM, dimensionless (1 = a white Lambertian
+  ///  surface under the same illumination), not corrected for the solar
+  ///  zenith angle unless VARIABLE_NAME says so. Missing at night.
+  case reflectance = 32
+  ///  Categorical cloud mask of a satellite retrieval: 0 clear, 1 probably
+  ///  clear, 2 probably cloudy, 3 cloudy. Units "1". A cell resampled from
+  ///  several source pixels carries their mean, so fractional values are
+  ///  the average category, not a new class.
+  case cloudmask = 33
+  ///  Categorical thermodynamic phase at the cloud top: 0 clear, 1 liquid
+  ///  water, 2 supercooled liquid water, 3 mixed, 4 ice, 5 unknown. Units
+  ///  "1". Resampled cells carry the category of the source pixel nearest the
+  ///  cell centre.
+  case cloudphase = 34
+  ///  Cloud optical depth at CHANNEL_WAVELENGTH_UM, dimensionless.
+  case cloudopticaldepth = 35
+  ///  Cloud-top effective particle radius, micrometres (units "um").
+  case cloudeffectiveradius = 36
+  ///  Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
+  case cloudemissivity = 37
 
-  public static var max: wxfVariable { return .geopotentialheight }
+  public static var max: wxfVariable { return .cloudemissivity }
   public static var min: wxfVariable { return .unspecified }
 }
 
@@ -197,8 +222,13 @@ public enum wxfLevelKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
   ///  For fields defined at altitude rather than on pressure levels (for
   ///  example the upper atmosphere).
   case heightaboveellipsoid = 7
+  ///  The top of the cloud a satellite retrieval saw in each cell; the level
+  ///  varies from cell to cell and LEVEL_VALUE is unused. The height itself
+  ///  is a GeopotentialHeight field at this level (a Temperature field gives
+  ///  the cloud-top temperature), never implied by the level.
+  case cloudtop = 8
 
-  public static var max: wxfLevelKind { return .heightaboveellipsoid }
+  public static var max: wxfLevelKind { return .cloudtop }
   public static var min: wxfLevelKind { return .surface }
 }
 
@@ -250,8 +280,23 @@ public enum wxfValuesEncoding: Int8, FlatbuffersVectorInitializable, Enum, Verif
   ///  Samples are a content-addressed chunk named by CHUNK_CID; CHUNK_DTYPE /
   ///  CHUNK_CODECS describe its layout. Used above 1,048,576 cells.
   case contentaddressedchunk = 1
+  ///  Samples are inline in QUANTIZED_U16 as unsigned 16-bit codes: value =
+  ///  ADD_OFFSET + SCALE_FACTOR * code; code 65535 marks a missing cell.
+  ///  Same cell limit and order as InlineFloat32. VALUE_MIN / VALUE_MAX are
+  ///  decoded values.
+  case inlinequantizeduint16 = 2
+  ///  Samples are inline in QUANTIZED_U8 as unsigned 8-bit codes: value =
+  ///  ADD_OFFSET + SCALE_FACTOR * code; code 255 marks a missing cell. Same
+  ///  cell limit and order as InlineFloat32.
+  case inlinequantizeduint8 = 3
+  ///  Samples are quantized codes as InlineQuantizedUint16 / InlineQuantizedUint8
+  ///  (CHUNK_DTYPE "uint16" or "uint8"; value = ADD_OFFSET + SCALE_FACTOR *
+  ///  code; the all-ones code marks a missing cell), inline in QUANTIZED_U8 as
+  ///  a chunk encoded by CHUNK_CODECS. Same cell limit and order as
+  ///  InlineFloat32; CHUNK_BYTE_LENGTH is the chunk's length.
+  case inlineencodedchunk = 4
 
-  public static var max: wxfValuesEncoding { return .contentaddressedchunk }
+  public static var max: wxfValuesEncoding { return .inlineencodedchunk }
   public static var min: wxfValuesEncoding { return .inlinefloat32 }
 }
 
@@ -448,6 +493,16 @@ public struct WXF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let CITATION: VOffset = 80
     static let PRODUCER_PEER_ID: VOffset = 82
     static let TIME_BASIS: VOffset = 84
+    static let QUANTIZED_U16: VOffset = 86
+    static let QUANTIZED_U8: VOffset = 88
+    static let SCALE_FACTOR: VOffset = 90
+    static let ADD_OFFSET: VOffset = 92
+    static let SENSOR_ID: VOffset = 94
+    static let CHANNEL_WAVELENGTH_UM: VOffset = 96
+    static let PLATFORM_LONGITUDE_DEG: VOffset = 98
+    static let PLATFORM_LATITUDE_DEG: VOffset = 100
+    static let PLATFORM_HEIGHT_M: VOffset = 102
+    static let SCAN_END_TIME_MS: VOffset = 104
   }
 
   ///  Stable identifier of the whole field this record belongs to; equal
@@ -520,11 +575,20 @@ public struct WXF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  ContentAddressedChunk.
   public var CHUNK_CID: String? { let o = _accessor.offset(VT.CHUNK_CID); return o == 0 ? nil : _accessor.string(at: o) }
   public var CHUNK_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHUNK_CID) }
-  ///  Element type of the chunk (e.g. "float32", "float16").
+  ///  Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+  ///  for InlineEncodedChunk).
   public var CHUNK_DTYPE: String? { let o = _accessor.offset(VT.CHUNK_DTYPE); return o == 0 ? nil : _accessor.string(at: o) }
   public var CHUNK_DTYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHUNK_DTYPE) }
   ///  Codec chain applied to the chunk, outermost last (e.g. "bytes",
-  ///  "zstd").
+  ///  "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+  ///  order of VALUES (little-endian elements):
+  ///    "delta"   each element less the one before it, the first kept,
+  ///              wrapping in the element type;
+  ///    "zigzag"  each element read as signed in its type and mapped to
+  ///              unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+  ///    "shuffle" the elements' bytes grouped by significance, every
+  ///              element's least significant byte first.
+  ///  Decoding applies the inverses from the last back.
   public var CHUNK_CODECS: FlatbufferVector<String?> { return _accessor.vector(at: VT.CHUNK_CODECS, byteSize: 4) }
   ///  Encoded chunk length in bytes.
   public var CHUNK_BYTE_LENGTH: UInt64 { let o = _accessor.offset(VT.CHUNK_BYTE_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
@@ -562,7 +626,40 @@ public struct WXF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Times published by the source; governs whether initialization, lead
   ///  and horizon are meaningful. The default preserves existing records.
   public var TIME_BASIS: wxfTimeBasis { let o = _accessor.offset(VT.TIME_BASIS); return o == 0 ? .initialization : wxfTimeBasis(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .initialization }
-  public static func startWXF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 41) }
+  ///  Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+  ///  GRID.NLAT * GRID.NLON in the order of VALUES.
+  public var QUANTIZED_U16: FlatbufferVector<UInt16> { return _accessor.vector(at: VT.QUANTIZED_U16, byteSize: 2) }
+  public func withUnsafePointerToQuantizedU16<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.QUANTIZED_U16, body: body) }
+  ///  Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+  ///  encoded chunk when it is InlineEncodedChunk.
+  public var QUANTIZED_U8: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.QUANTIZED_U8, byteSize: 1) }
+  public func withUnsafePointerToQuantizedU8<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.QUANTIZED_U8, body: body) }
+  ///  Scale applied to a quantized code, in UNITS per code step.
+  public var SCALE_FACTOR: Double { let o = _accessor.offset(VT.SCALE_FACTOR); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Offset added after scaling a quantized code, in UNITS.
+  public var ADD_OFFSET: Double { let o = _accessor.offset(VT.ADD_OFFSET); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Instrument that observed the field: the platform and instrument
+  ///  designation its operator publishes. Absent for model output.
+  public var SENSOR_ID: String? { let o = _accessor.offset(VT.SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SENSOR_ID) }
+  ///  Central wavelength of the channel the field was measured or retrieved
+  ///  at, micrometres; 0 when not a single channel.
+  public var CHANNEL_WAVELENGTH_UM: Float32 { let o = _accessor.offset(VT.CHANNEL_WAVELENGTH_UM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Geodetic longitude of the observing platform, degrees east (the
+  ///  sub-satellite point of a geostationary imager), for viewing-geometry
+  ///  and parallax corrections. NaN when unstated.
+  public var PLATFORM_LONGITUDE_DEG: Double { let o = _accessor.offset(VT.PLATFORM_LONGITUDE_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Geodetic latitude of the observing platform, degrees north. NaN when
+  ///  unstated.
+  public var PLATFORM_LATITUDE_DEG: Double { let o = _accessor.offset(VT.PLATFORM_LATITUDE_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Height of the observing platform above the WGS84 ellipsoid, metres.
+  ///  NaN when unstated.
+  public var PLATFORM_HEIGHT_M: Double { let o = _accessor.offset(VT.PLATFORM_HEIGHT_M); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  End of the observation's scan, Unix milliseconds UTC, when the samples
+  ///  were taken over an interval; VALID_TIME_MS is then the scan start.
+  ///  0 when unstated.
+  public var SCAN_END_TIME_MS: UInt64 { let o = _accessor.offset(VT.SCAN_END_TIME_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startWXF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 51) }
   public static func add(FIELD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIELD_ID, at: VT.FIELD_ID) }
   public static func add(MODEL_CLASS: wxfModelClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL_CLASS.rawValue, def: 0, at: VT.MODEL_CLASS) }
   public static func add(MODEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_ID, at: VT.MODEL_ID) }
@@ -604,6 +701,16 @@ public struct WXF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
   public static func add(PRODUCER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_PEER_ID, at: VT.PRODUCER_PEER_ID) }
   public static func add(TIME_BASIS: wxfTimeBasis, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_BASIS.rawValue, def: 0, at: VT.TIME_BASIS) }
+  public static func addVectorOf(QUANTIZED_U16: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUANTIZED_U16, at: VT.QUANTIZED_U16) }
+  public static func addVectorOf(QUANTIZED_U8: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUANTIZED_U8, at: VT.QUANTIZED_U8) }
+  public static func add(SCALE_FACTOR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_FACTOR, def: 1.0, at: VT.SCALE_FACTOR) }
+  public static func add(ADD_OFFSET: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ADD_OFFSET, def: 0.0, at: VT.ADD_OFFSET) }
+  public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VT.SENSOR_ID) }
+  public static func add(CHANNEL_WAVELENGTH_UM: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHANNEL_WAVELENGTH_UM, def: 0.0, at: VT.CHANNEL_WAVELENGTH_UM) }
+  public static func add(PLATFORM_LONGITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLATFORM_LONGITUDE_DEG, def: .nan, at: VT.PLATFORM_LONGITUDE_DEG) }
+  public static func add(PLATFORM_LATITUDE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLATFORM_LATITUDE_DEG, def: .nan, at: VT.PLATFORM_LATITUDE_DEG) }
+  public static func add(PLATFORM_HEIGHT_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLATFORM_HEIGHT_M, def: .nan, at: VT.PLATFORM_HEIGHT_M) }
+  public static func add(SCAN_END_TIME_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCAN_END_TIME_MS, def: 0, at: VT.SCAN_END_TIME_MS) }
   public static func endWXF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 44]); return end }
   public static func createWXF(
     _ fbb: inout FlatBufferBuilder,
@@ -647,7 +754,17 @@ public struct WXF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     LICENSE_URLOffset LICENSE_URL: Offset = Offset(),
     CITATIONOffset CITATION: Offset = Offset(),
     PRODUCER_PEER_IDOffset PRODUCER_PEER_ID: Offset = Offset(),
-    TIME_BASIS: wxfTimeBasis = .initialization
+    TIME_BASIS: wxfTimeBasis = .initialization,
+    QUANTIZED_U16VectorOffset QUANTIZED_U16: Offset = Offset(),
+    QUANTIZED_U8VectorOffset QUANTIZED_U8: Offset = Offset(),
+    SCALE_FACTOR: Double = 1.0,
+    ADD_OFFSET: Double = 0.0,
+    SENSOR_IDOffset SENSOR_ID: Offset = Offset(),
+    CHANNEL_WAVELENGTH_UM: Float32 = 0.0,
+    PLATFORM_LONGITUDE_DEG: Double = .nan,
+    PLATFORM_LATITUDE_DEG: Double = .nan,
+    PLATFORM_HEIGHT_M: Double = .nan,
+    SCAN_END_TIME_MS: UInt64 = 0
   ) -> Offset {
     let __start = WXF.startWXF(&fbb)
     WXF.add(FIELD_ID: FIELD_ID, &fbb)
@@ -691,6 +808,16 @@ public struct WXF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     WXF.add(CITATION: CITATION, &fbb)
     WXF.add(PRODUCER_PEER_ID: PRODUCER_PEER_ID, &fbb)
     WXF.add(TIME_BASIS: TIME_BASIS, &fbb)
+    WXF.addVectorOf(QUANTIZED_U16: QUANTIZED_U16, &fbb)
+    WXF.addVectorOf(QUANTIZED_U8: QUANTIZED_U8, &fbb)
+    WXF.add(SCALE_FACTOR: SCALE_FACTOR, &fbb)
+    WXF.add(ADD_OFFSET: ADD_OFFSET, &fbb)
+    WXF.add(SENSOR_ID: SENSOR_ID, &fbb)
+    WXF.add(CHANNEL_WAVELENGTH_UM: CHANNEL_WAVELENGTH_UM, &fbb)
+    WXF.add(PLATFORM_LONGITUDE_DEG: PLATFORM_LONGITUDE_DEG, &fbb)
+    WXF.add(PLATFORM_LATITUDE_DEG: PLATFORM_LATITUDE_DEG, &fbb)
+    WXF.add(PLATFORM_HEIGHT_M: PLATFORM_HEIGHT_M, &fbb)
+    WXF.add(SCAN_END_TIME_MS: SCAN_END_TIME_MS, &fbb)
     return WXF.endWXF(&fbb, start: __start)
   }
 
@@ -737,6 +864,16 @@ public struct WXF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.PRODUCER_PEER_ID, fieldName: "PRODUCER_PEER_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.TIME_BASIS, fieldName: "TIME_BASIS", required: false, type: wxfTimeBasis.self)
+    try _v.visit(field: VT.QUANTIZED_U16, fieldName: "QUANTIZED_U16", required: false, type: ForwardOffset<Vector<UInt16, UInt16>>.self)
+    try _v.visit(field: VT.QUANTIZED_U8, fieldName: "QUANTIZED_U8", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.SCALE_FACTOR, fieldName: "SCALE_FACTOR", required: false, type: Double.self)
+    try _v.visit(field: VT.ADD_OFFSET, fieldName: "ADD_OFFSET", required: false, type: Double.self)
+    try _v.visit(field: VT.SENSOR_ID, fieldName: "SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CHANNEL_WAVELENGTH_UM, fieldName: "CHANNEL_WAVELENGTH_UM", required: false, type: Float32.self)
+    try _v.visit(field: VT.PLATFORM_LONGITUDE_DEG, fieldName: "PLATFORM_LONGITUDE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.PLATFORM_LATITUDE_DEG, fieldName: "PLATFORM_LATITUDE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.PLATFORM_HEIGHT_M, fieldName: "PLATFORM_HEIGHT_M", required: false, type: Double.self)
+    try _v.visit(field: VT.SCAN_END_TIME_MS, fieldName: "SCAN_END_TIME_MS", required: false, type: UInt64.self)
     _v.finish()
   }
 }

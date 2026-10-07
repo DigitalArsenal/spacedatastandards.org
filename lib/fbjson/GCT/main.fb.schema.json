@@ -156,7 +156,14 @@
         "RelativeHumidity",
         "TotalColumnWaterVapour",
         "SurfacePressure",
-        "GeopotentialHeight"
+        "GeopotentialHeight",
+        "BrightnessTemperature",
+        "Reflectance",
+        "CloudMask",
+        "CloudPhase",
+        "CloudOpticalDepth",
+        "CloudEffectiveRadius",
+        "CloudEmissivity"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -284,6 +291,34 @@
         "GeopotentialHeight": {
           "value": 30,
           "description": "Geopotential height, geopotential metres (gpm): the height a producer such as GFS publishes on pressure levels and at the tropopause. Distinct from Geopotential (m^2/s^2); a consumer never relabels one as the other."
+        },
+        "BrightnessTemperature": {
+          "value": 31,
+          "description": "Brightness temperature a radiometer channel measured, kelvin: the temperature of a black body emitting the observed radiance at CHANNEL_WAVELENGTH_UM. At LEVEL_KIND TopOfAtmosphere."
+        },
+        "Reflectance": {
+          "value": 32,
+          "description": "Top-of-atmosphere bidirectional reflectance factor of a solar channel at CHANNEL_WAVELENGTH_UM, dimensionless (1 = a white Lambertian surface under the same illumination), not corrected for the solar zenith angle unless VARIABLE_NAME says so. Missing at night."
+        },
+        "CloudMask": {
+          "value": 33,
+          "description": "Categorical cloud mask of a satellite retrieval: 0 clear, 1 probably clear, 2 probably cloudy, 3 cloudy. Units \"1\". A cell resampled from several source pixels carries their mean, so fractional values are the average category, not a new class."
+        },
+        "CloudPhase": {
+          "value": 34,
+          "description": "Categorical thermodynamic phase at the cloud top: 0 clear, 1 liquid water, 2 supercooled liquid water, 3 mixed, 4 ice, 5 unknown. Units \"1\". Resampled cells carry the category of the source pixel nearest the cell centre."
+        },
+        "CloudOpticalDepth": {
+          "value": 35,
+          "description": "Cloud optical depth at CHANNEL_WAVELENGTH_UM, dimensionless."
+        },
+        "CloudEffectiveRadius": {
+          "value": 36,
+          "description": "Cloud-top effective particle radius, micrometres (units \"um\")."
+        },
+        "CloudEmissivity": {
+          "value": 37,
+          "description": "Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1]."
         }
       }
     },
@@ -297,7 +332,8 @@
         "EntireAtmosphere",
         "TopOfAtmosphere",
         "Tropopause",
-        "HeightAboveEllipsoid"
+        "HeightAboveEllipsoid",
+        "CloudTop"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -333,6 +369,10 @@
         "HeightAboveEllipsoid": {
           "value": 7,
           "description": "Geometric height above the reference ellipsoid; LEVEL_VALUE in metres. For fields defined at altitude rather than on pressure levels (for example the upper atmosphere)."
+        },
+        "CloudTop": {
+          "value": 8,
+          "description": "The top of the cloud a satellite retrieval saw in each cell; the level varies from cell to cell and LEVEL_VALUE is unused. The height itself is a GeopotentialHeight field at this level (a Temperature field gives the cloud-top temperature), never implied by the level."
         }
       }
     },
@@ -388,7 +428,10 @@
       "type": "string",
       "enum": [
         "InlineFloat32",
-        "ContentAddressedChunk"
+        "ContentAddressedChunk",
+        "InlineQuantizedUint16",
+        "InlineQuantizedUint8",
+        "InlineEncodedChunk"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -400,6 +443,18 @@
         "ContentAddressedChunk": {
           "value": 1,
           "description": "Samples are a content-addressed chunk named by CHUNK_CID; CHUNK_DTYPE / CHUNK_CODECS describe its layout. Used above 1,048,576 cells."
+        },
+        "InlineQuantizedUint16": {
+          "value": 2,
+          "description": "Samples are inline in QUANTIZED_U16 as unsigned 16-bit codes: value = ADD_OFFSET + SCALE_FACTOR * code; code 65535 marks a missing cell. Same cell limit and order as InlineFloat32. VALUE_MIN / VALUE_MAX are decoded values."
+        },
+        "InlineQuantizedUint8": {
+          "value": 3,
+          "description": "Samples are inline in QUANTIZED_U8 as unsigned 8-bit codes: value = ADD_OFFSET + SCALE_FACTOR * code; code 255 marks a missing cell. Same cell limit and order as InlineFloat32."
+        },
+        "InlineEncodedChunk": {
+          "value": 4,
+          "description": "Samples are quantized codes as InlineQuantizedUint16 / InlineQuantizedUint8 (CHUNK_DTYPE \"uint16\" or \"uint8\"; value = ADD_OFFSET + SCALE_FACTOR * code; the all-ones code marks a missing cell), inline in QUANTIZED_U8 as a chunk encoded by CHUNK_CODECS. Same cell limit and order as InlineFloat32; CHUNK_BYTE_LENGTH is the chunk's length."
         }
       }
     },
@@ -1018,6 +1073,34 @@
             "GeopotentialHeight": {
               "value": 30,
               "description": "Geopotential height, geopotential metres (gpm): the height a producer such as GFS publishes on pressure levels and at the tropopause. Distinct from Geopotential (m^2/s^2); a consumer never relabels one as the other."
+            },
+            "BrightnessTemperature": {
+              "value": 31,
+              "description": "Brightness temperature a radiometer channel measured, kelvin: the temperature of a black body emitting the observed radiance at CHANNEL_WAVELENGTH_UM. At LEVEL_KIND TopOfAtmosphere."
+            },
+            "Reflectance": {
+              "value": 32,
+              "description": "Top-of-atmosphere bidirectional reflectance factor of a solar channel at CHANNEL_WAVELENGTH_UM, dimensionless (1 = a white Lambertian surface under the same illumination), not corrected for the solar zenith angle unless VARIABLE_NAME says so. Missing at night."
+            },
+            "CloudMask": {
+              "value": 33,
+              "description": "Categorical cloud mask of a satellite retrieval: 0 clear, 1 probably clear, 2 probably cloudy, 3 cloudy. Units \"1\". A cell resampled from several source pixels carries their mean, so fractional values are the average category, not a new class."
+            },
+            "CloudPhase": {
+              "value": 34,
+              "description": "Categorical thermodynamic phase at the cloud top: 0 clear, 1 liquid water, 2 supercooled liquid water, 3 mixed, 4 ice, 5 unknown. Units \"1\". Resampled cells carry the category of the source pixel nearest the cell centre."
+            },
+            "CloudOpticalDepth": {
+              "value": 35,
+              "description": "Cloud optical depth at CHANNEL_WAVELENGTH_UM, dimensionless."
+            },
+            "CloudEffectiveRadius": {
+              "value": 36,
+              "description": "Cloud-top effective particle radius, micrometres (units \"um\")."
+            },
+            "CloudEmissivity": {
+              "value": 37,
+              "description": "Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1]."
             }
           },
           "x-flatbuffer-default": "Unspecified"
@@ -1069,6 +1152,10 @@
             "HeightAboveEllipsoid": {
               "value": 7,
               "description": "Geometric height above the reference ellipsoid; LEVEL_VALUE in metres. For fields defined at altitude rather than on pressure levels (for example the upper atmosphere)."
+            },
+            "CloudTop": {
+              "value": 8,
+              "description": "The top of the cloud a satellite retrieval saw in each cell; the level varies from cell to cell and LEVEL_VALUE is unused. The height itself is a GeopotentialHeight field at this level (a Temperature field gives the cloud-top temperature), never implied by the level."
             }
           },
           "x-flatbuffer-default": "Surface"
@@ -1146,6 +1233,18 @@
             "ContentAddressedChunk": {
               "value": 1,
               "description": "Samples are a content-addressed chunk named by CHUNK_CID; CHUNK_DTYPE / CHUNK_CODECS describe its layout. Used above 1,048,576 cells."
+            },
+            "InlineQuantizedUint16": {
+              "value": 2,
+              "description": "Samples are inline in QUANTIZED_U16 as unsigned 16-bit codes: value = ADD_OFFSET + SCALE_FACTOR * code; code 65535 marks a missing cell. Same cell limit and order as InlineFloat32. VALUE_MIN / VALUE_MAX are decoded values."
+            },
+            "InlineQuantizedUint8": {
+              "value": 3,
+              "description": "Samples are inline in QUANTIZED_U8 as unsigned 8-bit codes: value = ADD_OFFSET + SCALE_FACTOR * code; code 255 marks a missing cell. Same cell limit and order as InlineFloat32."
+            },
+            "InlineEncodedChunk": {
+              "value": 4,
+              "description": "Samples are quantized codes as InlineQuantizedUint16 / InlineQuantizedUint8 (CHUNK_DTYPE \"uint16\" or \"uint8\"; value = ADD_OFFSET + SCALE_FACTOR * code; the all-ones code marks a missing cell), inline in QUANTIZED_U8 as a chunk encoded by CHUNK_CODECS. Same cell limit and order as InlineFloat32; CHUNK_BYTE_LENGTH is the chunk's length."
             }
           },
           "x-flatbuffer-default": "InlineFloat32"
@@ -1165,7 +1264,7 @@
         },
         "CHUNK_DTYPE": {
           "type": "string",
-          "description": "Element type of the chunk (e.g. \"float32\", \"float16\").",
+          "description": "Element type of the chunk (e.g. \"float32\", \"float16\"; \"uint16\" or \"uint8\"\nfor InlineEncodedChunk).",
           "x-flatbuffer-type": "string"
         },
         "CHUNK_CODECS": {
@@ -1173,7 +1272,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\").",
+          "description": "Codec chain applied to the chunk, outermost last (e.g. \"bytes\",\n\"zstd\"). For InlineEncodedChunk, applied in order to the codes in the\norder of VALUES (little-endian elements):\n\"delta\"   each element less the one before it, the first kept,\nwrapping in the element type;\n\"zigzag\"  each element read as signed in its type and mapped to\nunsigned, n >= 0 to 2n and n < 0 to -2n - 1;\n\"shuffle\" the elements' bytes grouped by significance, every\nelement's least significant byte first.\nDecoding applies the inverses from the last back.",
           "x-flatbuffer-type": "[string]"
         },
         "CHUNK_BYTE_LENGTH": {
@@ -1274,6 +1373,72 @@
             }
           },
           "x-flatbuffer-default": "Initialization"
+        },
+        "QUANTIZED_U16": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65535
+          },
+          "description": "Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,\nGRID.NLAT * GRID.NLON in the order of VALUES.",
+          "x-flatbuffer-type": "[ushort]"
+        },
+        "QUANTIZED_U8": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the\nencoded chunk when it is InlineEncodedChunk.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "SCALE_FACTOR": {
+          "type": "number",
+          "description": "Scale applied to a quantized code, in UNITS per code step.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1"
+        },
+        "ADD_OFFSET": {
+          "type": "number",
+          "description": "Offset added after scaling a quantized code, in UNITS.",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_ID": {
+          "type": "string",
+          "description": "Instrument that observed the field: the platform and instrument\ndesignation its operator publishes. Absent for model output.",
+          "x-flatbuffer-type": "string"
+        },
+        "CHANNEL_WAVELENGTH_UM": {
+          "type": "number",
+          "description": "Central wavelength of the channel the field was measured or retrieved\nat, micrometres; 0 when not a single channel.",
+          "x-flatbuffer-type": "float"
+        },
+        "PLATFORM_LONGITUDE_DEG": {
+          "type": "number",
+          "description": "Geodetic longitude of the observing platform, degrees east (the\nsub-satellite point of a geostationary imager), for viewing-geometry\nand parallax corrections. NaN when unstated.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PLATFORM_LATITUDE_DEG": {
+          "type": "number",
+          "description": "Geodetic latitude of the observing platform, degrees north. NaN when\nunstated.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PLATFORM_HEIGHT_M": {
+          "type": "number",
+          "description": "Height of the observing platform above the WGS84 ellipsoid, metres.\nNaN when unstated.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SCAN_END_TIME_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "End of the observation's scan, Unix milliseconds UTC, when the samples\nwere taken over an interval; VALID_TIME_MS is then the scan start.\n0 when unstated.",
+          "x-flatbuffer-type": "uint64"
         }
       },
       "required": [

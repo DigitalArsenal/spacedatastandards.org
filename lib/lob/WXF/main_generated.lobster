@@ -140,6 +140,31 @@ enum wxfVariable:
     /// such as GFS publishes on pressure levels and at the tropopause. Distinct
     /// from Geopotential (m^2/s^2); a consumer never relabels one as the other.
     wxfVariable_GeopotentialHeight = 30
+    /// Brightness temperature a radiometer channel measured, kelvin: the
+    /// temperature of a black body emitting the observed radiance at
+    /// CHANNEL_WAVELENGTH_UM. At LEVEL_KIND TopOfAtmosphere.
+    wxfVariable_BrightnessTemperature = 31
+    /// Top-of-atmosphere bidirectional reflectance factor of a solar channel
+    /// at CHANNEL_WAVELENGTH_UM, dimensionless (1 = a white Lambertian
+    /// surface under the same illumination), not corrected for the solar
+    /// zenith angle unless VARIABLE_NAME says so. Missing at night.
+    wxfVariable_Reflectance = 32
+    /// Categorical cloud mask of a satellite retrieval: 0 clear, 1 probably
+    /// clear, 2 probably cloudy, 3 cloudy. Units "1". A cell resampled from
+    /// several source pixels carries their mean, so fractional values are
+    /// the average category, not a new class.
+    wxfVariable_CloudMask = 33
+    /// Categorical thermodynamic phase at the cloud top: 0 clear, 1 liquid
+    /// water, 2 supercooled liquid water, 3 mixed, 4 ice, 5 unknown. Units
+    /// "1". Resampled cells carry the category of the source pixel nearest the
+    /// cell centre.
+    wxfVariable_CloudPhase = 34
+    /// Cloud optical depth at CHANNEL_WAVELENGTH_UM, dimensionless.
+    wxfVariable_CloudOpticalDepth = 35
+    /// Cloud-top effective particle radius, micrometres (units "um").
+    wxfVariable_CloudEffectiveRadius = 36
+    /// Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
+    wxfVariable_CloudEmissivity = 37
 
 /// Vertical coordinate of the field. Append new values only; never reorder or
 /// reuse existing values.
@@ -163,6 +188,11 @@ enum wxfLevelKind:
     /// For fields defined at altitude rather than on pressure levels (for
     /// example the upper atmosphere).
     wxfLevelKind_HeightAboveEllipsoid = 7
+    /// The top of the cloud a satellite retrieval saw in each cell; the level
+    /// varies from cell to cell and LEVEL_VALUE is unused. The height itself
+    /// is a GeopotentialHeight field at this level (a Temperature field gives
+    /// the cloud-top temperature), never implied by the level.
+    wxfLevelKind_CloudTop = 8
 
 /// Temporal character of the value in each cell. Append new values only;
 /// never reorder or reuse existing values.
@@ -192,6 +222,21 @@ enum wxfValuesEncoding:
     /// Samples are a content-addressed chunk named by CHUNK_CID; CHUNK_DTYPE /
     /// CHUNK_CODECS describe its layout. Used above 1,048,576 cells.
     wxfValuesEncoding_ContentAddressedChunk = 1
+    /// Samples are inline in QUANTIZED_U16 as unsigned 16-bit codes: value =
+    /// ADD_OFFSET + SCALE_FACTOR * code; code 65535 marks a missing cell.
+    /// Same cell limit and order as InlineFloat32. VALUE_MIN / VALUE_MAX are
+    /// decoded values.
+    wxfValuesEncoding_InlineQuantizedUint16 = 2
+    /// Samples are inline in QUANTIZED_U8 as unsigned 8-bit codes: value =
+    /// ADD_OFFSET + SCALE_FACTOR * code; code 255 marks a missing cell. Same
+    /// cell limit and order as InlineFloat32.
+    wxfValuesEncoding_InlineQuantizedUint8 = 3
+    /// Samples are quantized codes as InlineQuantizedUint16 / InlineQuantizedUint8
+    /// (CHUNK_DTYPE "uint16" or "uint8"; value = ADD_OFFSET + SCALE_FACTOR *
+    /// code; the all-ones code marks a missing cell), inline in QUANTIZED_U8 as
+    /// a chunk encoded by CHUNK_CODECS. Same cell limit and order as
+    /// InlineFloat32; CHUNK_BYTE_LENGTH is the chunk's length.
+    wxfValuesEncoding_InlineEncodedChunk = 4
 
 /// Licence class of the data at RETRIEVED_AT, following the split a producer
 /// applies between real-time and historical output. Append new values only;
@@ -387,11 +432,20 @@ class WXF : flatbuffers.handle
     /// ContentAddressedChunk.
     def CHUNK_CID() -> string:
         return flatbuffers.field_string(buf_, pos_, 54)
-    /// Element type of the chunk (e.g. "float32", "float16").
+    /// Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+    /// for InlineEncodedChunk).
     def CHUNK_DTYPE() -> string:
         return flatbuffers.field_string(buf_, pos_, 56)
     /// Codec chain applied to the chunk, outermost last (e.g. "bytes",
-    /// "zstd").
+    /// "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+    /// order of VALUES (little-endian elements):
+    ///   "delta"   each element less the one before it, the first kept,
+    ///             wrapping in the element type;
+    ///   "zigzag"  each element read as signed in its type and mapped to
+    ///             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+    ///   "shuffle" the elements' bytes grouped by significance, every
+    ///             element's least significant byte first.
+    /// Decoding applies the inverses from the last back.
     def CHUNK_CODECS(i:int) -> string:
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 58) + i * 4)
     def CHUNK_CODECS_length() -> int:
@@ -439,13 +493,57 @@ class WXF : flatbuffers.handle
     /// and horizon are meaningful. The default preserves existing records.
     def TIME_BASIS() -> wxfTimeBasis:
         return wxfTimeBasis(flatbuffers.field_int8(buf_, pos_, 84, 0))
+    /// Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+    /// GRID.NLAT * GRID.NLON in the order of VALUES.
+    def QUANTIZED_U16(i:int) -> int:
+        return read_uint16_le(buf_, buf_.flatbuffers.field_vector(pos_, 86) + i * 2)
+    def QUANTIZED_U16_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 86)
+    /// Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+    /// encoded chunk when it is InlineEncodedChunk.
+    def QUANTIZED_U8(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 88) + i * 1)
+    def QUANTIZED_U8_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 88)
+    /// Scale applied to a quantized code, in UNITS per code step.
+    def SCALE_FACTOR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 90, 1.0)
+    /// Offset added after scaling a quantized code, in UNITS.
+    def ADD_OFFSET() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 92, 0.0)
+    /// Instrument that observed the field: the platform and instrument
+    /// designation its operator publishes. Absent for model output.
+    def SENSOR_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 94)
+    /// Central wavelength of the channel the field was measured or retrieved
+    /// at, micrometres; 0 when not a single channel.
+    def CHANNEL_WAVELENGTH_UM() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 96, 0.0)
+    /// Geodetic longitude of the observing platform, degrees east (the
+    /// sub-satellite point of a geostationary imager), for viewing-geometry
+    /// and parallax corrections. NaN when unstated.
+    def PLATFORM_LONGITUDE_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 98, nan)
+    /// Geodetic latitude of the observing platform, degrees north. NaN when
+    /// unstated.
+    def PLATFORM_LATITUDE_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 100, nan)
+    /// Height of the observing platform above the WGS84 ellipsoid, metres.
+    /// NaN when unstated.
+    def PLATFORM_HEIGHT_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 102, nan)
+    /// End of the observation's scan, Unix milliseconds UTC, when the samples
+    /// were taken over an interval; VALID_TIME_MS is then the scan start.
+    /// 0 when unstated.
+    def SCAN_END_TIME_MS() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 104, 0)
 
 def GetRootAsWXF(buf:string): return WXF { buf, flatbuffers.indirect(buf, 0) }
 
 struct WXFBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(41)
+        b_.StartObject(51)
         return this
     def add_FIELD_ID(FIELD_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, FIELD_ID)
@@ -570,6 +668,36 @@ struct WXFBuilder:
     def add_TIME_BASIS(TIME_BASIS:wxfTimeBasis):
         b_.PrependInt8Slot(40, TIME_BASIS, 0)
         return this
+    def add_QUANTIZED_U16(QUANTIZED_U16:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(41, QUANTIZED_U16)
+        return this
+    def add_QUANTIZED_U8(QUANTIZED_U8:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(42, QUANTIZED_U8)
+        return this
+    def add_SCALE_FACTOR(SCALE_FACTOR:float):
+        b_.PrependFloat64Slot(43, SCALE_FACTOR, 1.0)
+        return this
+    def add_ADD_OFFSET(ADD_OFFSET:float):
+        b_.PrependFloat64Slot(44, ADD_OFFSET, 0.0)
+        return this
+    def add_SENSOR_ID(SENSOR_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(45, SENSOR_ID)
+        return this
+    def add_CHANNEL_WAVELENGTH_UM(CHANNEL_WAVELENGTH_UM:float):
+        b_.PrependFloat32Slot(46, CHANNEL_WAVELENGTH_UM, 0.0)
+        return this
+    def add_PLATFORM_LONGITUDE_DEG(PLATFORM_LONGITUDE_DEG:float):
+        b_.PrependFloat64Slot(47, PLATFORM_LONGITUDE_DEG, nan)
+        return this
+    def add_PLATFORM_LATITUDE_DEG(PLATFORM_LATITUDE_DEG:float):
+        b_.PrependFloat64Slot(48, PLATFORM_LATITUDE_DEG, nan)
+        return this
+    def add_PLATFORM_HEIGHT_M(PLATFORM_HEIGHT_M:float):
+        b_.PrependFloat64Slot(49, PLATFORM_HEIGHT_M, nan)
+        return this
+    def add_SCAN_END_TIME_MS(SCAN_END_TIME_MS:int):
+        b_.PrependUint64Slot(50, SCAN_END_TIME_MS, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -585,4 +713,18 @@ def WXFStartCHUNKCODECSVector(b_:flatbuffers.builder, n_:int):
 def WXFCreateCHUNKCODECSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def WXFStartQUANTIZEDU16Vector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(2, n_, 2)
+def WXFCreateQUANTIZEDU16Vector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(2, v_.length, 2)
+    reverse(v_) e_: b_.PrependUint16(e_)
+    return b_.EndVector(v_.length)
+
+def WXFStartQUANTIZEDU8Vector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def WXFCreateQUANTIZEDU8Vector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)

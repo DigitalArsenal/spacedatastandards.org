@@ -10,10 +10,28 @@ class wxfValuesEncoding
     /// Samples are a content-addressed chunk named by CHUNK_CID; CHUNK_DTYPE /
     /// CHUNK_CODECS describe its layout. Used above 1,048,576 cells.
     const ContentAddressedChunk = 1;
+    /// Samples are inline in QUANTIZED_U16 as unsigned 16-bit codes: value =
+    /// ADD_OFFSET + SCALE_FACTOR * code; code 65535 marks a missing cell.
+    /// Same cell limit and order as InlineFloat32. VALUE_MIN / VALUE_MAX are
+    /// decoded values.
+    const InlineQuantizedUint16 = 2;
+    /// Samples are inline in QUANTIZED_U8 as unsigned 8-bit codes: value =
+    /// ADD_OFFSET + SCALE_FACTOR * code; code 255 marks a missing cell. Same
+    /// cell limit and order as InlineFloat32.
+    const InlineQuantizedUint8 = 3;
+    /// Samples are quantized codes as InlineQuantizedUint16 / InlineQuantizedUint8
+    /// (CHUNK_DTYPE "uint16" or "uint8"; value = ADD_OFFSET + SCALE_FACTOR *
+    /// code; the all-ones code marks a missing cell), inline in QUANTIZED_U8 as
+    /// a chunk encoded by CHUNK_CODECS. Same cell limit and order as
+    /// InlineFloat32; CHUNK_BYTE_LENGTH is the chunk's length.
+    const InlineEncodedChunk = 4;
 
     private static $names = array(
         wxfValuesEncoding::InlineFloat32=>"InlineFloat32",
         wxfValuesEncoding::ContentAddressedChunk=>"ContentAddressedChunk",
+        wxfValuesEncoding::InlineQuantizedUint16=>"InlineQuantizedUint16",
+        wxfValuesEncoding::InlineQuantizedUint8=>"InlineQuantizedUint8",
+        wxfValuesEncoding::InlineEncodedChunk=>"InlineEncodedChunk",
     );
 
     public static function Name($e)

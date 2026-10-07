@@ -4,6 +4,7 @@ package REC
 
 import (
 	flatbuffers "github.com/google/flatbuffers/go"
+	"math"
 )
 
 /// Weather Forecast Field - One variable, level, member and valid time on a
@@ -616,7 +617,8 @@ func (rcv *WXF) ChunkCid() []byte {
 
 /// Content identifier of the sample chunk when VALUES_ENCODING is
 /// ContentAddressedChunk.
-/// Element type of the chunk (e.g. "float32", "float16").
+/// Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+/// for InlineEncodedChunk).
 func (rcv *WXF) CHUNK_DTYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
@@ -629,9 +631,18 @@ func (rcv *WXF) ChunkDtype() []byte {
 	return rcv.CHUNK_DTYPE()
 }
 
-/// Element type of the chunk (e.g. "float32", "float16").
+/// Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+/// for InlineEncodedChunk).
 /// Codec chain applied to the chunk, outermost last (e.g. "bytes",
-/// "zstd").
+/// "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+/// order of VALUES (little-endian elements):
+///   "delta"   each element less the one before it, the first kept,
+///             wrapping in the element type;
+///   "zigzag"  each element read as signed in its type and mapped to
+///             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+///   "shuffle" the elements' bytes grouped by significance, every
+///             element's least significant byte first.
+/// Decoding applies the inverses from the last back.
 func (rcv *WXF) CHUNK_CODECS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
@@ -658,7 +669,15 @@ func (rcv *WXF) ChunkCodecsLength() int {
 }
 
 /// Codec chain applied to the chunk, outermost last (e.g. "bytes",
-/// "zstd").
+/// "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+/// order of VALUES (little-endian elements):
+///   "delta"   each element less the one before it, the first kept,
+///             wrapping in the element type;
+///   "zigzag"  each element read as signed in its type and mapped to
+///             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+///   "shuffle" the elements' bytes grouped by significance, every
+///             element's least significant byte first.
+/// Decoding applies the inverses from the last back.
 /// Encoded chunk length in bytes.
 func (rcv *WXF) CHUNK_BYTE_LENGTH() uint64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
@@ -905,8 +924,288 @@ func (rcv *WXF) MutateTimeBasis(n wxfTimeBasis) bool {
 	return rcv.MutateTIME_BASIS(n)
 }
 
+/// Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+/// GRID.NLAT * GRID.NLON in the order of VALUES.
+func (rcv *WXF) QUANTIZED_U16(j int) uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetUint16(a + flatbuffers.UOffsetT(j*2))
+	}
+	return 0
+}
+
+func (rcv *WXF) QuantizedU16(j int) uint16 {
+	return rcv.QUANTIZED_U16(j)
+}
+
+func (rcv *WXF) QUANTIZED_U16Length() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *WXF) QuantizedU16Length() int {
+	return rcv.QUANTIZED_U16Length()
+}
+
+/// Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+/// GRID.NLAT * GRID.NLON in the order of VALUES.
+func (rcv *WXF) MutateQUANTIZED_U16(j int, n uint16) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateUint16(a+flatbuffers.UOffsetT(j*2), n)
+	}
+	return false
+}
+
+func (rcv *WXF) MutateQuantizedU16(j int, n uint16) bool {
+	return rcv.MutateQUANTIZED_U16(j, n)
+}
+
+/// Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+/// encoded chunk when it is InlineEncodedChunk.
+func (rcv *WXF) QUANTIZED_U8(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *WXF) QuantizedU8(j int) byte {
+	return rcv.QUANTIZED_U8(j)
+}
+
+func (rcv *WXF) QUANTIZED_U8Length() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *WXF) QuantizedU8Length() int {
+	return rcv.QUANTIZED_U8Length()
+}
+
+func (rcv *WXF) QUANTIZED_U8Bytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *WXF) QuantizedU8Bytes() []byte {
+	return rcv.QUANTIZED_U8Bytes()
+}
+
+/// Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+/// encoded chunk when it is InlineEncodedChunk.
+func (rcv *WXF) MutateQUANTIZED_U8(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *WXF) MutateQuantizedU8(j int, n byte) bool {
+	return rcv.MutateQUANTIZED_U8(j, n)
+}
+
+/// Scale applied to a quantized code, in UNITS per code step.
+func (rcv *WXF) SCALE_FACTOR() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 1.0
+}
+
+func (rcv *WXF) ScaleFactor() float64 {
+	return rcv.SCALE_FACTOR()
+}
+
+/// Scale applied to a quantized code, in UNITS per code step.
+func (rcv *WXF) MutateSCALE_FACTOR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(90, n)
+}
+
+func (rcv *WXF) MutateScaleFactor(n float64) bool {
+	return rcv.MutateSCALE_FACTOR(n)
+}
+
+/// Offset added after scaling a quantized code, in UNITS.
+func (rcv *WXF) ADD_OFFSET() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *WXF) AddOffset() float64 {
+	return rcv.ADD_OFFSET()
+}
+
+/// Offset added after scaling a quantized code, in UNITS.
+func (rcv *WXF) MutateADD_OFFSET(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(92, n)
+}
+
+func (rcv *WXF) MutateAddOffset(n float64) bool {
+	return rcv.MutateADD_OFFSET(n)
+}
+
+/// Instrument that observed the field: the platform and instrument
+/// designation its operator publishes. Absent for model output.
+func (rcv *WXF) SENSOR_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *WXF) SensorId() []byte {
+	return rcv.SENSOR_ID()
+}
+
+/// Instrument that observed the field: the platform and instrument
+/// designation its operator publishes. Absent for model output.
+/// Central wavelength of the channel the field was measured or retrieved
+/// at, micrometres; 0 when not a single channel.
+func (rcv *WXF) CHANNEL_WAVELENGTH_UM() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *WXF) ChannelWavelengthUm() float32 {
+	return rcv.CHANNEL_WAVELENGTH_UM()
+}
+
+/// Central wavelength of the channel the field was measured or retrieved
+/// at, micrometres; 0 when not a single channel.
+func (rcv *WXF) MutateCHANNEL_WAVELENGTH_UM(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(96, n)
+}
+
+func (rcv *WXF) MutateChannelWavelengthUm(n float32) bool {
+	return rcv.MutateCHANNEL_WAVELENGTH_UM(n)
+}
+
+/// Geodetic longitude of the observing platform, degrees east (the
+/// sub-satellite point of a geostationary imager), for viewing-geometry
+/// and parallax corrections. NaN when unstated.
+func (rcv *WXF) PLATFORM_LONGITUDE_DEG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *WXF) PlatformLongitudeDeg() float64 {
+	return rcv.PLATFORM_LONGITUDE_DEG()
+}
+
+/// Geodetic longitude of the observing platform, degrees east (the
+/// sub-satellite point of a geostationary imager), for viewing-geometry
+/// and parallax corrections. NaN when unstated.
+func (rcv *WXF) MutatePLATFORM_LONGITUDE_DEG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(98, n)
+}
+
+func (rcv *WXF) MutatePlatformLongitudeDeg(n float64) bool {
+	return rcv.MutatePLATFORM_LONGITUDE_DEG(n)
+}
+
+/// Geodetic latitude of the observing platform, degrees north. NaN when
+/// unstated.
+func (rcv *WXF) PLATFORM_LATITUDE_DEG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *WXF) PlatformLatitudeDeg() float64 {
+	return rcv.PLATFORM_LATITUDE_DEG()
+}
+
+/// Geodetic latitude of the observing platform, degrees north. NaN when
+/// unstated.
+func (rcv *WXF) MutatePLATFORM_LATITUDE_DEG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(100, n)
+}
+
+func (rcv *WXF) MutatePlatformLatitudeDeg(n float64) bool {
+	return rcv.MutatePLATFORM_LATITUDE_DEG(n)
+}
+
+/// Height of the observing platform above the WGS84 ellipsoid, metres.
+/// NaN when unstated.
+func (rcv *WXF) PLATFORM_HEIGHT_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *WXF) PlatformHeightM() float64 {
+	return rcv.PLATFORM_HEIGHT_M()
+}
+
+/// Height of the observing platform above the WGS84 ellipsoid, metres.
+/// NaN when unstated.
+func (rcv *WXF) MutatePLATFORM_HEIGHT_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(102, n)
+}
+
+func (rcv *WXF) MutatePlatformHeightM(n float64) bool {
+	return rcv.MutatePLATFORM_HEIGHT_M(n)
+}
+
+/// End of the observation's scan, Unix milliseconds UTC, when the samples
+/// were taken over an interval; VALID_TIME_MS is then the scan start.
+/// 0 when unstated.
+func (rcv *WXF) SCAN_END_TIME_MS() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *WXF) ScanEndTimeMs() uint64 {
+	return rcv.SCAN_END_TIME_MS()
+}
+
+/// End of the observation's scan, Unix milliseconds UTC, when the samples
+/// were taken over an interval; VALID_TIME_MS is then the scan start.
+/// 0 when unstated.
+func (rcv *WXF) MutateSCAN_END_TIME_MS(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(104, n)
+}
+
+func (rcv *WXF) MutateScanEndTimeMs(n uint64) bool {
+	return rcv.MutateSCAN_END_TIME_MS(n)
+}
+
 func WXFStart(builder *flatbuffers.Builder) {
-	builder.StartObject(41)
+	builder.StartObject(51)
 }
 func WXFAddFIELD_ID(builder *flatbuffers.Builder, FIELD_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(FIELD_ID), 0)
@@ -1165,6 +1464,78 @@ func WXFAddTIME_BASIS(builder *flatbuffers.Builder, TIME_BASIS wxfTimeBasis) {
 }
 func WXFAddTimeBasis(builder *flatbuffers.Builder, TIME_BASIS wxfTimeBasis) {
 	WXFAddTIME_BASIS(builder, TIME_BASIS)
+}
+func WXFAddQUANTIZED_U16(builder *flatbuffers.Builder, QUANTIZED_U16 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(QUANTIZED_U16), 0)
+}
+func WXFAddQuantizedU16(builder *flatbuffers.Builder, QUANTIZED_U16 flatbuffers.UOffsetT) {
+	WXFAddQUANTIZED_U16(builder, QUANTIZED_U16)
+}
+func WXFStartQUANTIZED_U16Vector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(2, numElems, 2)
+}
+func WXFStartQuantizedU16Vector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return WXFStartQUANTIZED_U16Vector(builder, numElems)
+}
+func WXFAddQUANTIZED_U8(builder *flatbuffers.Builder, QUANTIZED_U8 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(QUANTIZED_U8), 0)
+}
+func WXFAddQuantizedU8(builder *flatbuffers.Builder, QUANTIZED_U8 flatbuffers.UOffsetT) {
+	WXFAddQUANTIZED_U8(builder, QUANTIZED_U8)
+}
+func WXFStartQUANTIZED_U8Vector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func WXFStartQuantizedU8Vector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return WXFStartQUANTIZED_U8Vector(builder, numElems)
+}
+func WXFAddSCALE_FACTOR(builder *flatbuffers.Builder, SCALE_FACTOR float64) {
+	builder.PrependFloat64Slot(43, SCALE_FACTOR, 1.0)
+}
+func WXFAddScaleFactor(builder *flatbuffers.Builder, SCALE_FACTOR float64) {
+	WXFAddSCALE_FACTOR(builder, SCALE_FACTOR)
+}
+func WXFAddADD_OFFSET(builder *flatbuffers.Builder, ADD_OFFSET float64) {
+	builder.PrependFloat64Slot(44, ADD_OFFSET, 0.0)
+}
+func WXFAddAddOffset(builder *flatbuffers.Builder, ADD_OFFSET float64) {
+	WXFAddADD_OFFSET(builder, ADD_OFFSET)
+}
+func WXFAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(SENSOR_ID), 0)
+}
+func WXFAddSensorId(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
+	WXFAddSENSOR_ID(builder, SENSOR_ID)
+}
+func WXFAddCHANNEL_WAVELENGTH_UM(builder *flatbuffers.Builder, CHANNEL_WAVELENGTH_UM float32) {
+	builder.PrependFloat32Slot(46, CHANNEL_WAVELENGTH_UM, 0.0)
+}
+func WXFAddChannelWavelengthUm(builder *flatbuffers.Builder, CHANNEL_WAVELENGTH_UM float32) {
+	WXFAddCHANNEL_WAVELENGTH_UM(builder, CHANNEL_WAVELENGTH_UM)
+}
+func WXFAddPLATFORM_LONGITUDE_DEG(builder *flatbuffers.Builder, PLATFORM_LONGITUDE_DEG float64) {
+	builder.PrependFloat64Slot(47, PLATFORM_LONGITUDE_DEG, float64(math.NaN()))
+}
+func WXFAddPlatformLongitudeDeg(builder *flatbuffers.Builder, PLATFORM_LONGITUDE_DEG float64) {
+	WXFAddPLATFORM_LONGITUDE_DEG(builder, PLATFORM_LONGITUDE_DEG)
+}
+func WXFAddPLATFORM_LATITUDE_DEG(builder *flatbuffers.Builder, PLATFORM_LATITUDE_DEG float64) {
+	builder.PrependFloat64Slot(48, PLATFORM_LATITUDE_DEG, float64(math.NaN()))
+}
+func WXFAddPlatformLatitudeDeg(builder *flatbuffers.Builder, PLATFORM_LATITUDE_DEG float64) {
+	WXFAddPLATFORM_LATITUDE_DEG(builder, PLATFORM_LATITUDE_DEG)
+}
+func WXFAddPLATFORM_HEIGHT_M(builder *flatbuffers.Builder, PLATFORM_HEIGHT_M float64) {
+	builder.PrependFloat64Slot(49, PLATFORM_HEIGHT_M, float64(math.NaN()))
+}
+func WXFAddPlatformHeightM(builder *flatbuffers.Builder, PLATFORM_HEIGHT_M float64) {
+	WXFAddPLATFORM_HEIGHT_M(builder, PLATFORM_HEIGHT_M)
+}
+func WXFAddSCAN_END_TIME_MS(builder *flatbuffers.Builder, SCAN_END_TIME_MS uint64) {
+	builder.PrependUint64Slot(50, SCAN_END_TIME_MS, 0)
+}
+func WXFAddScanEndTimeMs(builder *flatbuffers.Builder, SCAN_END_TIME_MS uint64) {
+	WXFAddSCAN_END_TIME_MS(builder, SCAN_END_TIME_MS)
 }
 func WXFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

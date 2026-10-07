@@ -28,6 +28,11 @@ const (
 	/// For fields defined at altitude rather than on pressure levels (for
 	/// example the upper atmosphere).
 	wxfLevelKindHeightAboveEllipsoid wxfLevelKind = 7
+	/// The top of the cloud a satellite retrieval saw in each cell; the level
+	/// varies from cell to cell and LEVEL_VALUE is unused. The height itself
+	/// is a GeopotentialHeight field at this level (a Temperature field gives
+	/// the cloud-top temperature), never implied by the level.
+	wxfLevelKindCloudTop             wxfLevelKind = 8
 )
 
 var EnumNameswxfLevelKind = map[wxfLevelKind]string{
@@ -39,6 +44,7 @@ var EnumNameswxfLevelKind = map[wxfLevelKind]string{
 	wxfLevelKindTopOfAtmosphere:      "TopOfAtmosphere",
 	wxfLevelKindTropopause:           "Tropopause",
 	wxfLevelKindHeightAboveEllipsoid: "HeightAboveEllipsoid",
+	wxfLevelKindCloudTop:             "CloudTop",
 }
 
 var EnumValueswxfLevelKind = map[string]wxfLevelKind{
@@ -50,6 +56,7 @@ var EnumValueswxfLevelKind = map[string]wxfLevelKind{
 	"TopOfAtmosphere":      wxfLevelKindTopOfAtmosphere,
 	"Tropopause":           wxfLevelKindTropopause,
 	"HeightAboveEllipsoid": wxfLevelKindHeightAboveEllipsoid,
+	"CloudTop":             wxfLevelKindCloudTop,
 }
 
 func (v wxfLevelKind) String() string {

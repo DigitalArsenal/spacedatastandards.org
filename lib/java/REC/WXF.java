@@ -163,14 +163,23 @@ public final class WXF extends com.google.flatbuffers.Table {
   public ByteBuffer CHUNK_CIDAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
   public ByteBuffer CHUNK_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
   /**
-   * Element type of the chunk (e.g. "float32", "float16").
+   * Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+   * for InlineEncodedChunk).
    */
   public String CHUNK_DTYPE() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CHUNK_DTYPEAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
   public ByteBuffer CHUNK_DTYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
   /**
    * Codec chain applied to the chunk, outermost last (e.g. "bytes",
-   * "zstd").
+   * "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+   * order of VALUES (little-endian elements):
+   *   "delta"   each element less the one before it, the first kept,
+   *             wrapping in the element type;
+   *   "zigzag"  each element read as signed in its type and mapped to
+   *             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+   *   "shuffle" the elements' bytes grouped by significance, every
+   *             element's least significant byte first.
+   * Decoding applies the inverses from the last back.
    */
   public String CHUNK_CODECS(int j) { int o = __offset(58); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int CHUNK_CODECSLength() { int o = __offset(58); return o != 0 ? __vector_len(o) : 0; }
@@ -244,6 +253,68 @@ public final class WXF extends com.google.flatbuffers.Table {
    * and horizon are meaningful. The default preserves existing records.
    */
   public byte TIME_BASIS() { int o = __offset(84); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+   * GRID.NLAT * GRID.NLON in the order of VALUES.
+   */
+  public int QUANTIZED_U16(int j) { int o = __offset(86); return o != 0 ? bb.getShort(__vector(o) + j * 2) & 0xFFFF : 0; }
+  public int QUANTIZED_U16Length() { int o = __offset(86); return o != 0 ? __vector_len(o) : 0; }
+  public ShortVector quantizedU16Vector() { return quantizedU16Vector(new ShortVector()); }
+  public ShortVector quantizedU16Vector(ShortVector obj) { int o = __offset(86); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer QUANTIZED_U16AsByteBuffer() { return __vector_as_bytebuffer(86, 2); }
+  public ByteBuffer QUANTIZED_U16InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 86, 2); }
+  /**
+   * Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+   * encoded chunk when it is InlineEncodedChunk.
+   */
+  public int QUANTIZED_U8(int j) { int o = __offset(88); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int QUANTIZED_U8Length() { int o = __offset(88); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector quantizedU8Vector() { return quantizedU8Vector(new ByteVector()); }
+  public ByteVector quantizedU8Vector(ByteVector obj) { int o = __offset(88); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer QUANTIZED_U8AsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
+  public ByteBuffer QUANTIZED_U8InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
+  /**
+   * Scale applied to a quantized code, in UNITS per code step.
+   */
+  public double SCALE_FACTOR() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : 1.0; }
+  /**
+   * Offset added after scaling a quantized code, in UNITS.
+   */
+  public double ADD_OFFSET() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Instrument that observed the field: the platform and instrument
+   * designation its operator publishes. Absent for model output.
+   */
+  public String SENSOR_ID() { int o = __offset(94); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(94, 1); }
+  public ByteBuffer SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 94, 1); }
+  /**
+   * Central wavelength of the channel the field was measured or retrieved
+   * at, micrometres; 0 when not a single channel.
+   */
+  public float CHANNEL_WAVELENGTH_UM() { int o = __offset(96); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Geodetic longitude of the observing platform, degrees east (the
+   * sub-satellite point of a geostationary imager), for viewing-geometry
+   * and parallax corrections. NaN when unstated.
+   */
+  public double PLATFORM_LONGITUDE_DEG() { int o = __offset(98); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Geodetic latitude of the observing platform, degrees north. NaN when
+   * unstated.
+   */
+  public double PLATFORM_LATITUDE_DEG() { int o = __offset(100); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Height of the observing platform above the WGS84 ellipsoid, metres.
+   * NaN when unstated.
+   */
+  public double PLATFORM_HEIGHT_M() { int o = __offset(102); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * End of the observation's scan, Unix milliseconds UTC, when the samples
+   * were taken over an interval; VALID_TIME_MS is then the scan start.
+   * 0 when unstated.
+   */
+  public long SCAN_END_TIME_MS() { int o = __offset(104); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
 
   public static int createWXF(FlatBufferBuilder builder,
       int FIELD_IDOffset,
@@ -286,12 +357,32 @@ public final class WXF extends com.google.flatbuffers.Table {
       int LICENSE_URLOffset,
       int CITATIONOffset,
       int PRODUCER_PEER_IDOffset,
-      byte TIME_BASIS) {
-    builder.startTable(41);
+      byte TIME_BASIS,
+      int QUANTIZED_U16Offset,
+      int QUANTIZED_U8Offset,
+      double SCALE_FACTOR,
+      double ADD_OFFSET,
+      int SENSOR_IDOffset,
+      float CHANNEL_WAVELENGTH_UM,
+      double PLATFORM_LONGITUDE_DEG,
+      double PLATFORM_LATITUDE_DEG,
+      double PLATFORM_HEIGHT_M,
+      long SCAN_END_TIME_MS) {
+    builder.startTable(51);
+    WXF.addScanEndTimeMs(builder, SCAN_END_TIME_MS);
+    WXF.addPlatformHeightM(builder, PLATFORM_HEIGHT_M);
+    WXF.addPlatformLatitudeDeg(builder, PLATFORM_LATITUDE_DEG);
+    WXF.addPlatformLongitudeDeg(builder, PLATFORM_LONGITUDE_DEG);
+    WXF.addAddOffset(builder, ADD_OFFSET);
+    WXF.addScaleFactor(builder, SCALE_FACTOR);
     WXF.addRetrievedAt(builder, RETRIEVED_AT);
     WXF.addChunkByteLength(builder, CHUNK_BYTE_LENGTH);
     WXF.addValidTimeMs(builder, VALID_TIME_MS);
     WXF.addInitTimeMs(builder, INIT_TIME_MS);
+    WXF.addChannelWavelengthUm(builder, CHANNEL_WAVELENGTH_UM);
+    WXF.addSensorId(builder, SENSOR_IDOffset);
+    WXF.addQuantizedU8(builder, QUANTIZED_U8Offset);
+    WXF.addQuantizedU16(builder, QUANTIZED_U16Offset);
     WXF.addProducerPeerId(builder, PRODUCER_PEER_IDOffset);
     WXF.addCitation(builder, CITATIONOffset);
     WXF.addLicenseUrl(builder, LICENSE_URLOffset);
@@ -332,7 +423,7 @@ public final class WXF extends com.google.flatbuffers.Table {
     return WXF.endWXF(builder);
   }
 
-  public static void startWXF(FlatBufferBuilder builder) { builder.startTable(41); }
+  public static void startWXF(FlatBufferBuilder builder) { builder.startTable(51); }
   public static void addFieldId(FlatBufferBuilder builder, int FIELD_IDOffset) { builder.addOffset(0, FIELD_IDOffset, 0); }
   public static void addModelClass(FlatBufferBuilder builder, byte MODEL_CLASS) { builder.addByte(1, MODEL_CLASS, 0); }
   public static void addModelId(FlatBufferBuilder builder, int MODEL_IDOffset) { builder.addOffset(2, MODEL_IDOffset, 0); }
@@ -378,6 +469,21 @@ public final class WXF extends com.google.flatbuffers.Table {
   public static void addCitation(FlatBufferBuilder builder, int CITATIONOffset) { builder.addOffset(38, CITATIONOffset, 0); }
   public static void addProducerPeerId(FlatBufferBuilder builder, int PRODUCER_PEER_IDOffset) { builder.addOffset(39, PRODUCER_PEER_IDOffset, 0); }
   public static void addTimeBasis(FlatBufferBuilder builder, byte TIME_BASIS) { builder.addByte(40, TIME_BASIS, 0); }
+  public static void addQuantizedU16(FlatBufferBuilder builder, int QUANTIZED_U16Offset) { builder.addOffset(41, QUANTIZED_U16Offset, 0); }
+  public static int createQuantizedU16Vector(FlatBufferBuilder builder, int[] data) { builder.startVector(2, data.length, 2); for (int i = data.length - 1; i >= 0; i--) builder.addShort((short) data[i]); return builder.endVector(); }
+  public static void startQuantizedU16Vector(FlatBufferBuilder builder, int numElems) { builder.startVector(2, numElems, 2); }
+  public static void addQuantizedU8(FlatBufferBuilder builder, int QUANTIZED_U8Offset) { builder.addOffset(42, QUANTIZED_U8Offset, 0); }
+  public static int createQuantizedU8Vector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createQuantizedU8Vector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startQuantizedU8Vector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addScaleFactor(FlatBufferBuilder builder, double SCALE_FACTOR) { builder.addDouble(43, SCALE_FACTOR, 1.0); }
+  public static void addAddOffset(FlatBufferBuilder builder, double ADD_OFFSET) { builder.addDouble(44, ADD_OFFSET, 0.0); }
+  public static void addSensorId(FlatBufferBuilder builder, int SENSOR_IDOffset) { builder.addOffset(45, SENSOR_IDOffset, 0); }
+  public static void addChannelWavelengthUm(FlatBufferBuilder builder, float CHANNEL_WAVELENGTH_UM) { builder.addFloat(46, CHANNEL_WAVELENGTH_UM, 0.0f); }
+  public static void addPlatformLongitudeDeg(FlatBufferBuilder builder, double PLATFORM_LONGITUDE_DEG) { builder.addDouble(47, PLATFORM_LONGITUDE_DEG, Double.NaN); }
+  public static void addPlatformLatitudeDeg(FlatBufferBuilder builder, double PLATFORM_LATITUDE_DEG) { builder.addDouble(48, PLATFORM_LATITUDE_DEG, Double.NaN); }
+  public static void addPlatformHeightM(FlatBufferBuilder builder, double PLATFORM_HEIGHT_M) { builder.addDouble(49, PLATFORM_HEIGHT_M, Double.NaN); }
+  public static void addScanEndTimeMs(FlatBufferBuilder builder, long SCAN_END_TIME_MS) { builder.addLong(50, SCAN_END_TIME_MS, 0L); }
   public static int endWXF(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // FIELD_ID

@@ -42,5 +42,12 @@ class wxfLevelKind private constructor() {
          * example the upper atmosphere).
          */
         const val HeightAboveEllipsoid: Byte = 7
+        /**
+         * The top of the cloud a satellite retrieval saw in each cell; the level
+         * varies from cell to cell and LEVEL_VALUE is unused. The height itself
+         * is a GeopotentialHeight field at this level (a Temperature field gives
+         * the cloud-top temperature), never implied by the level.
+         */
+        const val CloudTop: Byte = 8
     }
 }

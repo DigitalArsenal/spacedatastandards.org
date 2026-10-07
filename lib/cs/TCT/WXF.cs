@@ -126,7 +126,8 @@ public struct WXF : IFlatbufferObject
   public ArraySegment<byte>? GetCHUNK_CIDBytes() { return __p.__vector_as_arraysegment(54); }
 #endif
   public byte[] GetCHUNK_CIDArray() { return __p.__vector_as_array<byte>(54); }
-  /// Element type of the chunk (e.g. "float32", "float16").
+  /// Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+  /// for InlineEncodedChunk).
   public string CHUNK_DTYPE { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCHUNK_DTYPEBytes() { return __p.__vector_as_span<byte>(56, 1); }
@@ -135,7 +136,15 @@ public struct WXF : IFlatbufferObject
 #endif
   public byte[] GetCHUNK_DTYPEArray() { return __p.__vector_as_array<byte>(56); }
   /// Codec chain applied to the chunk, outermost last (e.g. "bytes",
-  /// "zstd").
+  /// "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+  /// order of VALUES (little-endian elements):
+  ///   "delta"   each element less the one before it, the first kept,
+  ///             wrapping in the element type;
+  ///   "zigzag"  each element read as signed in its type and mapped to
+  ///             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+  ///   "shuffle" the elements' bytes grouped by significance, every
+  ///             element's least significant byte first.
+  /// Decoding applies the inverses from the last back.
   public string CHUNK_CODECS(int j) { int o = __p.__offset(58); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int CHUNK_CODECSLength { get { int o = __p.__offset(58); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Encoded chunk length in bytes.
@@ -204,6 +213,56 @@ public struct WXF : IFlatbufferObject
   /// Times published by the source; governs whether initialization, lead
   /// and horizon are meaningful. The default preserves existing records.
   public wxfTimeBasis TIME_BASIS { get { int o = __p.__offset(84); return o != 0 ? (wxfTimeBasis)__p.bb.GetSbyte(o + __p.bb_pos) : wxfTimeBasis.Initialization; } }
+  /// Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+  /// GRID.NLAT * GRID.NLON in the order of VALUES.
+  public ushort QUANTIZED_U16(int j) { int o = __p.__offset(86); return o != 0 ? __p.bb.GetUshort(__p.__vector(o) + j * 2) : (ushort)0; }
+  public int QUANTIZED_U16Length { get { int o = __p.__offset(86); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<ushort> GetQUANTIZED_U16Bytes() { return __p.__vector_as_span<ushort>(86, 2); }
+#else
+  public ArraySegment<byte>? GetQUANTIZED_U16Bytes() { return __p.__vector_as_arraysegment(86); }
+#endif
+  public ushort[] GetQUANTIZED_U16Array() { return __p.__vector_as_array<ushort>(86); }
+  /// Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+  /// encoded chunk when it is InlineEncodedChunk.
+  public byte QUANTIZED_U8(int j) { int o = __p.__offset(88); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int QUANTIZED_U8Length { get { int o = __p.__offset(88); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetQUANTIZED_U8Bytes() { return __p.__vector_as_span<byte>(88, 1); }
+#else
+  public ArraySegment<byte>? GetQUANTIZED_U8Bytes() { return __p.__vector_as_arraysegment(88); }
+#endif
+  public byte[] GetQUANTIZED_U8Array() { return __p.__vector_as_array<byte>(88); }
+  /// Scale applied to a quantized code, in UNITS per code step.
+  public double SCALE_FACTOR { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)1.0; } }
+  /// Offset added after scaling a quantized code, in UNITS.
+  public double ADD_OFFSET { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Instrument that observed the field: the platform and instrument
+  /// designation its operator publishes. Absent for model output.
+  public string SENSOR_ID { get { int o = __p.__offset(94); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSENSOR_IDBytes() { return __p.__vector_as_span<byte>(94, 1); }
+#else
+  public ArraySegment<byte>? GetSENSOR_IDBytes() { return __p.__vector_as_arraysegment(94); }
+#endif
+  public byte[] GetSENSOR_IDArray() { return __p.__vector_as_array<byte>(94); }
+  /// Central wavelength of the channel the field was measured or retrieved
+  /// at, micrometres; 0 when not a single channel.
+  public float CHANNEL_WAVELENGTH_UM { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Geodetic longitude of the observing platform, degrees east (the
+  /// sub-satellite point of a geostationary imager), for viewing-geometry
+  /// and parallax corrections. NaN when unstated.
+  public double PLATFORM_LONGITUDE_DEG { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Geodetic latitude of the observing platform, degrees north. NaN when
+  /// unstated.
+  public double PLATFORM_LATITUDE_DEG { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Height of the observing platform above the WGS84 ellipsoid, metres.
+  /// NaN when unstated.
+  public double PLATFORM_HEIGHT_M { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// End of the observation's scan, Unix milliseconds UTC, when the samples
+  /// were taken over an interval; VALID_TIME_MS is then the scan start.
+  /// 0 when unstated.
+  public ulong SCAN_END_TIME_MS { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
 
   public static Offset<WXF> CreateWXF(FlatBufferBuilder builder,
       StringOffset FIELD_IDOffset = default(StringOffset),
@@ -246,12 +305,32 @@ public struct WXF : IFlatbufferObject
       StringOffset LICENSE_URLOffset = default(StringOffset),
       StringOffset CITATIONOffset = default(StringOffset),
       StringOffset PRODUCER_PEER_IDOffset = default(StringOffset),
-      wxfTimeBasis TIME_BASIS = wxfTimeBasis.Initialization) {
-    builder.StartTable(41);
+      wxfTimeBasis TIME_BASIS = wxfTimeBasis.Initialization,
+      VectorOffset QUANTIZED_U16Offset = default(VectorOffset),
+      VectorOffset QUANTIZED_U8Offset = default(VectorOffset),
+      double SCALE_FACTOR = 1.0,
+      double ADD_OFFSET = 0.0,
+      StringOffset SENSOR_IDOffset = default(StringOffset),
+      float CHANNEL_WAVELENGTH_UM = 0.0f,
+      double PLATFORM_LONGITUDE_DEG = Double.NaN,
+      double PLATFORM_LATITUDE_DEG = Double.NaN,
+      double PLATFORM_HEIGHT_M = Double.NaN,
+      ulong SCAN_END_TIME_MS = 0) {
+    builder.StartTable(51);
+    WXF.AddSCAN_END_TIME_MS(builder, SCAN_END_TIME_MS);
+    WXF.AddPLATFORM_HEIGHT_M(builder, PLATFORM_HEIGHT_M);
+    WXF.AddPLATFORM_LATITUDE_DEG(builder, PLATFORM_LATITUDE_DEG);
+    WXF.AddPLATFORM_LONGITUDE_DEG(builder, PLATFORM_LONGITUDE_DEG);
+    WXF.AddADD_OFFSET(builder, ADD_OFFSET);
+    WXF.AddSCALE_FACTOR(builder, SCALE_FACTOR);
     WXF.AddRETRIEVED_AT(builder, RETRIEVED_AT);
     WXF.AddCHUNK_BYTE_LENGTH(builder, CHUNK_BYTE_LENGTH);
     WXF.AddVALID_TIME_MS(builder, VALID_TIME_MS);
     WXF.AddINIT_TIME_MS(builder, INIT_TIME_MS);
+    WXF.AddCHANNEL_WAVELENGTH_UM(builder, CHANNEL_WAVELENGTH_UM);
+    WXF.AddSENSOR_ID(builder, SENSOR_IDOffset);
+    WXF.AddQUANTIZED_U8(builder, QUANTIZED_U8Offset);
+    WXF.AddQUANTIZED_U16(builder, QUANTIZED_U16Offset);
     WXF.AddPRODUCER_PEER_ID(builder, PRODUCER_PEER_IDOffset);
     WXF.AddCITATION(builder, CITATIONOffset);
     WXF.AddLICENSE_URL(builder, LICENSE_URLOffset);
@@ -292,7 +371,7 @@ public struct WXF : IFlatbufferObject
     return WXF.EndWXF(builder);
   }
 
-  public static void StartWXF(FlatBufferBuilder builder) { builder.StartTable(41); }
+  public static void StartWXF(FlatBufferBuilder builder) { builder.StartTable(51); }
   public static void AddFIELD_ID(FlatBufferBuilder builder, StringOffset FIELD_IDOffset) { builder.AddOffset(0, FIELD_IDOffset.Value, 0); }
   public static void AddMODEL_CLASS(FlatBufferBuilder builder, wxfModelClass MODEL_CLASS) { builder.AddSbyte(1, (sbyte)MODEL_CLASS, 0); }
   public static void AddMODEL_ID(FlatBufferBuilder builder, StringOffset MODEL_IDOffset) { builder.AddOffset(2, MODEL_IDOffset.Value, 0); }
@@ -344,6 +423,26 @@ public struct WXF : IFlatbufferObject
   public static void AddCITATION(FlatBufferBuilder builder, StringOffset CITATIONOffset) { builder.AddOffset(38, CITATIONOffset.Value, 0); }
   public static void AddPRODUCER_PEER_ID(FlatBufferBuilder builder, StringOffset PRODUCER_PEER_IDOffset) { builder.AddOffset(39, PRODUCER_PEER_IDOffset.Value, 0); }
   public static void AddTIME_BASIS(FlatBufferBuilder builder, wxfTimeBasis TIME_BASIS) { builder.AddSbyte(40, (sbyte)TIME_BASIS, 0); }
+  public static void AddQUANTIZED_U16(FlatBufferBuilder builder, VectorOffset QUANTIZED_U16Offset) { builder.AddOffset(41, QUANTIZED_U16Offset.Value, 0); }
+  public static VectorOffset CreateQUANTIZED_U16Vector(FlatBufferBuilder builder, ushort[] data) { builder.StartVector(2, data.Length, 2); for (int i = data.Length - 1; i >= 0; i--) builder.AddUshort(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateQUANTIZED_U16VectorBlock(FlatBufferBuilder builder, ushort[] data) { builder.StartVector(2, data.Length, 2); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateQUANTIZED_U16VectorBlock(FlatBufferBuilder builder, ArraySegment<ushort> data) { builder.StartVector(2, data.Count, 2); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateQUANTIZED_U16VectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<ushort>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartQUANTIZED_U16Vector(FlatBufferBuilder builder, int numElems) { builder.StartVector(2, numElems, 2); }
+  public static void AddQUANTIZED_U8(FlatBufferBuilder builder, VectorOffset QUANTIZED_U8Offset) { builder.AddOffset(42, QUANTIZED_U8Offset.Value, 0); }
+  public static VectorOffset CreateQUANTIZED_U8Vector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateQUANTIZED_U8VectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateQUANTIZED_U8VectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateQUANTIZED_U8VectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartQUANTIZED_U8Vector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddSCALE_FACTOR(FlatBufferBuilder builder, double SCALE_FACTOR) { builder.AddDouble(43, SCALE_FACTOR, 1.0); }
+  public static void AddADD_OFFSET(FlatBufferBuilder builder, double ADD_OFFSET) { builder.AddDouble(44, ADD_OFFSET, 0.0); }
+  public static void AddSENSOR_ID(FlatBufferBuilder builder, StringOffset SENSOR_IDOffset) { builder.AddOffset(45, SENSOR_IDOffset.Value, 0); }
+  public static void AddCHANNEL_WAVELENGTH_UM(FlatBufferBuilder builder, float CHANNEL_WAVELENGTH_UM) { builder.AddFloat(46, CHANNEL_WAVELENGTH_UM, 0.0f); }
+  public static void AddPLATFORM_LONGITUDE_DEG(FlatBufferBuilder builder, double PLATFORM_LONGITUDE_DEG) { builder.AddDouble(47, PLATFORM_LONGITUDE_DEG, Double.NaN); }
+  public static void AddPLATFORM_LATITUDE_DEG(FlatBufferBuilder builder, double PLATFORM_LATITUDE_DEG) { builder.AddDouble(48, PLATFORM_LATITUDE_DEG, Double.NaN); }
+  public static void AddPLATFORM_HEIGHT_M(FlatBufferBuilder builder, double PLATFORM_HEIGHT_M) { builder.AddDouble(49, PLATFORM_HEIGHT_M, Double.NaN); }
+  public static void AddSCAN_END_TIME_MS(FlatBufferBuilder builder, ulong SCAN_END_TIME_MS) { builder.AddUlong(50, SCAN_END_TIME_MS, 0); }
   public static Offset<WXF> EndWXF(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // FIELD_ID
@@ -401,6 +500,18 @@ public struct WXF : IFlatbufferObject
     _o.CITATION = this.CITATION;
     _o.PRODUCER_PEER_ID = this.PRODUCER_PEER_ID;
     _o.TIME_BASIS = this.TIME_BASIS;
+    _o.QUANTIZED_U16 = new List<ushort>();
+    for (var _j = 0; _j < this.QUANTIZED_U16Length; ++_j) {_o.QUANTIZED_U16.Add(this.QUANTIZED_U16(_j));}
+    _o.QUANTIZED_U8 = new List<byte>();
+    for (var _j = 0; _j < this.QUANTIZED_U8Length; ++_j) {_o.QUANTIZED_U8.Add(this.QUANTIZED_U8(_j));}
+    _o.SCALE_FACTOR = this.SCALE_FACTOR;
+    _o.ADD_OFFSET = this.ADD_OFFSET;
+    _o.SENSOR_ID = this.SENSOR_ID;
+    _o.CHANNEL_WAVELENGTH_UM = this.CHANNEL_WAVELENGTH_UM;
+    _o.PLATFORM_LONGITUDE_DEG = this.PLATFORM_LONGITUDE_DEG;
+    _o.PLATFORM_LATITUDE_DEG = this.PLATFORM_LATITUDE_DEG;
+    _o.PLATFORM_HEIGHT_M = this.PLATFORM_HEIGHT_M;
+    _o.SCAN_END_TIME_MS = this.SCAN_END_TIME_MS;
   }
   public static Offset<WXF> Pack(FlatBufferBuilder builder, WXFT _o) {
     if (_o == null) return default(Offset<WXF>);
@@ -429,6 +540,17 @@ public struct WXF : IFlatbufferObject
     var _LICENSE_URL = _o.LICENSE_URL == null ? default(StringOffset) : builder.CreateString(_o.LICENSE_URL);
     var _CITATION = _o.CITATION == null ? default(StringOffset) : builder.CreateString(_o.CITATION);
     var _PRODUCER_PEER_ID = _o.PRODUCER_PEER_ID == null ? default(StringOffset) : builder.CreateString(_o.PRODUCER_PEER_ID);
+    var _QUANTIZED_U16 = default(VectorOffset);
+    if (_o.QUANTIZED_U16 != null) {
+      var __QUANTIZED_U16 = _o.QUANTIZED_U16.ToArray();
+      _QUANTIZED_U16 = CreateQUANTIZED_U16Vector(builder, __QUANTIZED_U16);
+    }
+    var _QUANTIZED_U8 = default(VectorOffset);
+    if (_o.QUANTIZED_U8 != null) {
+      var __QUANTIZED_U8 = _o.QUANTIZED_U8.ToArray();
+      _QUANTIZED_U8 = CreateQUANTIZED_U8Vector(builder, __QUANTIZED_U8);
+    }
+    var _SENSOR_ID = _o.SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.SENSOR_ID);
     return CreateWXF(
       builder,
       _FIELD_ID,
@@ -471,7 +593,17 @@ public struct WXF : IFlatbufferObject
       _LICENSE_URL,
       _CITATION,
       _PRODUCER_PEER_ID,
-      _o.TIME_BASIS);
+      _o.TIME_BASIS,
+      _QUANTIZED_U16,
+      _QUANTIZED_U8,
+      _o.SCALE_FACTOR,
+      _o.ADD_OFFSET,
+      _SENSOR_ID,
+      _o.CHANNEL_WAVELENGTH_UM,
+      _o.PLATFORM_LONGITUDE_DEG,
+      _o.PLATFORM_LATITUDE_DEG,
+      _o.PLATFORM_HEIGHT_M,
+      _o.SCAN_END_TIME_MS);
   }
 }
 
@@ -518,6 +650,16 @@ public class WXFT
   public string CITATION { get; set; }
   public string PRODUCER_PEER_ID { get; set; }
   public wxfTimeBasis TIME_BASIS { get; set; }
+  public List<ushort> QUANTIZED_U16 { get; set; }
+  public List<byte> QUANTIZED_U8 { get; set; }
+  public double SCALE_FACTOR { get; set; }
+  public double ADD_OFFSET { get; set; }
+  public string SENSOR_ID { get; set; }
+  public float CHANNEL_WAVELENGTH_UM { get; set; }
+  public double PLATFORM_LONGITUDE_DEG { get; set; }
+  public double PLATFORM_LATITUDE_DEG { get; set; }
+  public double PLATFORM_HEIGHT_M { get; set; }
+  public ulong SCAN_END_TIME_MS { get; set; }
 
   public WXFT() {
     this.FIELD_ID = null;
@@ -561,6 +703,16 @@ public class WXFT
     this.CITATION = null;
     this.PRODUCER_PEER_ID = null;
     this.TIME_BASIS = wxfTimeBasis.Initialization;
+    this.QUANTIZED_U16 = null;
+    this.QUANTIZED_U8 = null;
+    this.SCALE_FACTOR = 1.0;
+    this.ADD_OFFSET = 0.0;
+    this.SENSOR_ID = null;
+    this.CHANNEL_WAVELENGTH_UM = 0.0f;
+    this.PLATFORM_LONGITUDE_DEG = Double.NaN;
+    this.PLATFORM_LATITUDE_DEG = Double.NaN;
+    this.PLATFORM_HEIGHT_M = Double.NaN;
+    this.SCAN_END_TIME_MS = 0;
   }
   public static WXFT DeserializeFromBinary(byte[] fbBuffer) {
     return WXF.GetRootAsWXF(new ByteBuffer(fbBuffer)).UnPack();
@@ -619,6 +771,16 @@ static public class WXFVerify
       && verifier.VerifyString(tablePos, 80 /*CITATION*/, false)
       && verifier.VerifyString(tablePos, 82 /*PRODUCER_PEER_ID*/, false)
       && verifier.VerifyField(tablePos, 84 /*TIME_BASIS*/, 1 /*wxfTimeBasis*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 86 /*QUANTIZED_U16*/, 2 /*ushort*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 88 /*QUANTIZED_U8*/, 1 /*byte*/, false)
+      && verifier.VerifyField(tablePos, 90 /*SCALE_FACTOR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 92 /*ADD_OFFSET*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 94 /*SENSOR_ID*/, false)
+      && verifier.VerifyField(tablePos, 96 /*CHANNEL_WAVELENGTH_UM*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 98 /*PLATFORM_LONGITUDE_DEG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 100 /*PLATFORM_LATITUDE_DEG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 102 /*PLATFORM_HEIGHT_M*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 104 /*SCAN_END_TIME_MS*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

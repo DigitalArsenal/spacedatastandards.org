@@ -273,7 +273,8 @@ class WXF(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Element type of the chunk (e.g. "float32", "float16").
+    # Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+    # for InlineEncodedChunk).
     # WXF
     def CHUNK_DTYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
@@ -282,7 +283,15 @@ class WXF(object):
         return None
 
     # Codec chain applied to the chunk, outermost last (e.g. "bytes",
-    # "zstd").
+    # "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+    # order of VALUES (little-endian elements):
+    #   "delta"   each element less the one before it, the first kept,
+    #             wrapping in the element type;
+    #   "zigzag"  each element read as signed in its type and mapped to
+    #             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+    #   "shuffle" the elements' bytes grouped by significance, every
+    #             element's least significant byte first.
+    # Decoding applies the inverses from the last back.
     # WXF
     def CHUNK_CODECS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
@@ -411,8 +420,138 @@ class WXF(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+    # GRID.NLAT * GRID.NLON in the order of VALUES.
+    # WXF
+    def QUANTIZED_U16(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 2))
+        return 0
+
+    # WXF
+    def QUANTIZED_U16AsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint16Flags, o)
+        return 0
+
+    # WXF
+    def QUANTIZED_U16Length(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WXF
+    def QUANTIZED_U16IsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        return o == 0
+
+    # Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+    # encoded chunk when it is InlineEncodedChunk.
+    # WXF
+    def QUANTIZED_U8(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # WXF
+    def QUANTIZED_U8AsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # WXF
+    def QUANTIZED_U8Length(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WXF
+    def QUANTIZED_U8IsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        return o == 0
+
+    # Scale applied to a quantized code, in UNITS per code step.
+    # WXF
+    def SCALE_FACTOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 1.0
+
+    # Offset added after scaling a quantized code, in UNITS.
+    # WXF
+    def ADD_OFFSET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Instrument that observed the field: the platform and instrument
+    # designation its operator publishes. Absent for model output.
+    # WXF
+    def SENSOR_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Central wavelength of the channel the field was measured or retrieved
+    # at, micrometres; 0 when not a single channel.
+    # WXF
+    def CHANNEL_WAVELENGTH_UM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Geodetic longitude of the observing platform, degrees east (the
+    # sub-satellite point of a geostationary imager), for viewing-geometry
+    # and parallax corrections. NaN when unstated.
+    # WXF
+    def PLATFORM_LONGITUDE_DEG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Geodetic latitude of the observing platform, degrees north. NaN when
+    # unstated.
+    # WXF
+    def PLATFORM_LATITUDE_DEG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Height of the observing platform above the WGS84 ellipsoid, metres.
+    # NaN when unstated.
+    # WXF
+    def PLATFORM_HEIGHT_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # End of the observation's scan, Unix milliseconds UTC, when the samples
+    # were taken over an interval; VALID_TIME_MS is then the scan start.
+    # 0 when unstated.
+    # WXF
+    def SCAN_END_TIME_MS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
 def WXFStart(builder):
-    builder.StartObject(41)
+    builder.StartObject(51)
 
 def Start(builder):
     WXFStart(builder)
@@ -691,6 +830,98 @@ def WXFAddTIME_BASIS(builder, TIME_BASIS):
 def AddTIME_BASIS(builder, TIME_BASIS):
     WXFAddTIME_BASIS(builder, TIME_BASIS)
 
+def WXFAddQUANTIZED_U16(builder, QUANTIZED_U16):
+    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(QUANTIZED_U16), 0)
+
+def AddQUANTIZED_U16(builder, QUANTIZED_U16):
+    WXFAddQUANTIZED_U16(builder, QUANTIZED_U16)
+
+def WXFStartQUANTIZED_U16Vector(builder, numElems):
+    return builder.StartVector(2, numElems, 2)
+
+def StartQUANTIZED_U16Vector(builder, numElems):
+    return WXFStartQUANTIZED_U16Vector(builder, numElems)
+
+def WXFCreateQUANTIZED_U16Vector(builder, data):
+    data = list(data)
+    builder.StartVector(2, len(data), 2)
+    for item in reversed(data):
+        builder.PrependUint16(item)
+    return builder.EndVector()
+
+def CreateQUANTIZED_U16Vector(builder, data):
+    return WXFCreateQUANTIZED_U16Vector(builder, data)
+
+def WXFAddQUANTIZED_U8(builder, QUANTIZED_U8):
+    builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(QUANTIZED_U8), 0)
+
+def AddQUANTIZED_U8(builder, QUANTIZED_U8):
+    WXFAddQUANTIZED_U8(builder, QUANTIZED_U8)
+
+def WXFStartQUANTIZED_U8Vector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartQUANTIZED_U8Vector(builder, numElems):
+    return WXFStartQUANTIZED_U8Vector(builder, numElems)
+
+def WXFCreateQUANTIZED_U8Vector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateQUANTIZED_U8Vector(builder, data):
+    return WXFCreateQUANTIZED_U8Vector(builder, data)
+
+def WXFAddSCALE_FACTOR(builder, SCALE_FACTOR):
+    builder.PrependFloat64Slot(43, SCALE_FACTOR, 1.0)
+
+def AddSCALE_FACTOR(builder, SCALE_FACTOR):
+    WXFAddSCALE_FACTOR(builder, SCALE_FACTOR)
+
+def WXFAddADD_OFFSET(builder, ADD_OFFSET):
+    builder.PrependFloat64Slot(44, ADD_OFFSET, 0.0)
+
+def AddADD_OFFSET(builder, ADD_OFFSET):
+    WXFAddADD_OFFSET(builder, ADD_OFFSET)
+
+def WXFAddSENSOR_ID(builder, SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_ID), 0)
+
+def AddSENSOR_ID(builder, SENSOR_ID):
+    WXFAddSENSOR_ID(builder, SENSOR_ID)
+
+def WXFAddCHANNEL_WAVELENGTH_UM(builder, CHANNEL_WAVELENGTH_UM):
+    builder.PrependFloat32Slot(46, CHANNEL_WAVELENGTH_UM, 0.0)
+
+def AddCHANNEL_WAVELENGTH_UM(builder, CHANNEL_WAVELENGTH_UM):
+    WXFAddCHANNEL_WAVELENGTH_UM(builder, CHANNEL_WAVELENGTH_UM)
+
+def WXFAddPLATFORM_LONGITUDE_DEG(builder, PLATFORM_LONGITUDE_DEG):
+    builder.PrependFloat64Slot(47, PLATFORM_LONGITUDE_DEG, float('nan'))
+
+def AddPLATFORM_LONGITUDE_DEG(builder, PLATFORM_LONGITUDE_DEG):
+    WXFAddPLATFORM_LONGITUDE_DEG(builder, PLATFORM_LONGITUDE_DEG)
+
+def WXFAddPLATFORM_LATITUDE_DEG(builder, PLATFORM_LATITUDE_DEG):
+    builder.PrependFloat64Slot(48, PLATFORM_LATITUDE_DEG, float('nan'))
+
+def AddPLATFORM_LATITUDE_DEG(builder, PLATFORM_LATITUDE_DEG):
+    WXFAddPLATFORM_LATITUDE_DEG(builder, PLATFORM_LATITUDE_DEG)
+
+def WXFAddPLATFORM_HEIGHT_M(builder, PLATFORM_HEIGHT_M):
+    builder.PrependFloat64Slot(49, PLATFORM_HEIGHT_M, float('nan'))
+
+def AddPLATFORM_HEIGHT_M(builder, PLATFORM_HEIGHT_M):
+    WXFAddPLATFORM_HEIGHT_M(builder, PLATFORM_HEIGHT_M)
+
+def WXFAddSCAN_END_TIME_MS(builder, SCAN_END_TIME_MS):
+    builder.PrependUint64Slot(50, SCAN_END_TIME_MS, 0)
+
+def AddSCAN_END_TIME_MS(builder, SCAN_END_TIME_MS):
+    WXFAddSCAN_END_TIME_MS(builder, SCAN_END_TIME_MS)
+
 def WXFEnd(builder):
     return builder.EndObject()
 
@@ -749,6 +980,16 @@ class WXFT(object):
         CITATION = None,
         PRODUCER_PEER_ID = None,
         TIME_BASIS = 0,
+        QUANTIZED_U16 = None,
+        QUANTIZED_U8 = None,
+        SCALE_FACTOR = 1.0,
+        ADD_OFFSET = 0.0,
+        SENSOR_ID = None,
+        CHANNEL_WAVELENGTH_UM = 0.0,
+        PLATFORM_LONGITUDE_DEG = float('nan'),
+        PLATFORM_LATITUDE_DEG = float('nan'),
+        PLATFORM_HEIGHT_M = float('nan'),
+        SCAN_END_TIME_MS = 0,
     ):
         self.FIELD_ID = FIELD_ID  # type: Optional[str]
         self.MODEL_CLASS = MODEL_CLASS  # type: int
@@ -791,6 +1032,16 @@ class WXFT(object):
         self.CITATION = CITATION  # type: Optional[str]
         self.PRODUCER_PEER_ID = PRODUCER_PEER_ID  # type: Optional[str]
         self.TIME_BASIS = TIME_BASIS  # type: int
+        self.QUANTIZED_U16 = QUANTIZED_U16  # type: Optional[List[int]]
+        self.QUANTIZED_U8 = QUANTIZED_U8  # type: Optional[List[int]]
+        self.SCALE_FACTOR = SCALE_FACTOR  # type: float
+        self.ADD_OFFSET = ADD_OFFSET  # type: float
+        self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
+        self.CHANNEL_WAVELENGTH_UM = CHANNEL_WAVELENGTH_UM  # type: float
+        self.PLATFORM_LONGITUDE_DEG = PLATFORM_LONGITUDE_DEG  # type: float
+        self.PLATFORM_LATITUDE_DEG = PLATFORM_LATITUDE_DEG  # type: float
+        self.PLATFORM_HEIGHT_M = PLATFORM_HEIGHT_M  # type: float
+        self.SCAN_END_TIME_MS = SCAN_END_TIME_MS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -864,6 +1115,28 @@ class WXFT(object):
         self.CITATION = WXF.CITATION()
         self.PRODUCER_PEER_ID = WXF.PRODUCER_PEER_ID()
         self.TIME_BASIS = WXF.TIME_BASIS()
+        if not WXF.QUANTIZED_U16IsNone():
+            if np is None:
+                self.QUANTIZED_U16 = []
+                for i in range(WXF.QUANTIZED_U16Length()):
+                    self.QUANTIZED_U16.append(WXF.QUANTIZED_U16(i))
+            else:
+                self.QUANTIZED_U16 = WXF.QUANTIZED_U16AsNumpy()
+        if not WXF.QUANTIZED_U8IsNone():
+            if np is None:
+                self.QUANTIZED_U8 = []
+                for i in range(WXF.QUANTIZED_U8Length()):
+                    self.QUANTIZED_U8.append(WXF.QUANTIZED_U8(i))
+            else:
+                self.QUANTIZED_U8 = WXF.QUANTIZED_U8AsNumpy()
+        self.SCALE_FACTOR = WXF.SCALE_FACTOR()
+        self.ADD_OFFSET = WXF.ADD_OFFSET()
+        self.SENSOR_ID = WXF.SENSOR_ID()
+        self.CHANNEL_WAVELENGTH_UM = WXF.CHANNEL_WAVELENGTH_UM()
+        self.PLATFORM_LONGITUDE_DEG = WXF.PLATFORM_LONGITUDE_DEG()
+        self.PLATFORM_LATITUDE_DEG = WXF.PLATFORM_LATITUDE_DEG()
+        self.PLATFORM_HEIGHT_M = WXF.PLATFORM_HEIGHT_M()
+        self.SCAN_END_TIME_MS = WXF.SCAN_END_TIME_MS()
 
     # WXFT
     def Pack(self, builder):
@@ -911,6 +1184,24 @@ class WXFT(object):
             CITATION = builder.CreateString(self.CITATION)
         if self.PRODUCER_PEER_ID is not None:
             PRODUCER_PEER_ID = builder.CreateString(self.PRODUCER_PEER_ID)
+        if self.QUANTIZED_U16 is not None:
+            if np is not None and type(self.QUANTIZED_U16) is np.ndarray:
+                QUANTIZED_U16 = builder.CreateNumpyVector(self.QUANTIZED_U16)
+            else:
+                WXFStartQUANTIZED_U16Vector(builder, len(self.QUANTIZED_U16))
+                for i in reversed(range(len(self.QUANTIZED_U16))):
+                    builder.PrependUint16(self.QUANTIZED_U16[i])
+                QUANTIZED_U16 = builder.EndVector()
+        if self.QUANTIZED_U8 is not None:
+            if np is not None and type(self.QUANTIZED_U8) is np.ndarray:
+                QUANTIZED_U8 = builder.CreateNumpyVector(self.QUANTIZED_U8)
+            else:
+                WXFStartQUANTIZED_U8Vector(builder, len(self.QUANTIZED_U8))
+                for i in reversed(range(len(self.QUANTIZED_U8))):
+                    builder.PrependUint8(self.QUANTIZED_U8[i])
+                QUANTIZED_U8 = builder.EndVector()
+        if self.SENSOR_ID is not None:
+            SENSOR_ID = builder.CreateString(self.SENSOR_ID)
         WXFStart(builder)
         if self.FIELD_ID is not None:
             WXFAddFIELD_ID(builder, FIELD_ID)
@@ -969,5 +1260,18 @@ class WXFT(object):
         if self.PRODUCER_PEER_ID is not None:
             WXFAddPRODUCER_PEER_ID(builder, PRODUCER_PEER_ID)
         WXFAddTIME_BASIS(builder, self.TIME_BASIS)
+        if self.QUANTIZED_U16 is not None:
+            WXFAddQUANTIZED_U16(builder, QUANTIZED_U16)
+        if self.QUANTIZED_U8 is not None:
+            WXFAddQUANTIZED_U8(builder, QUANTIZED_U8)
+        WXFAddSCALE_FACTOR(builder, self.SCALE_FACTOR)
+        WXFAddADD_OFFSET(builder, self.ADD_OFFSET)
+        if self.SENSOR_ID is not None:
+            WXFAddSENSOR_ID(builder, SENSOR_ID)
+        WXFAddCHANNEL_WAVELENGTH_UM(builder, self.CHANNEL_WAVELENGTH_UM)
+        WXFAddPLATFORM_LONGITUDE_DEG(builder, self.PLATFORM_LONGITUDE_DEG)
+        WXFAddPLATFORM_LATITUDE_DEG(builder, self.PLATFORM_LATITUDE_DEG)
+        WXFAddPLATFORM_HEIGHT_M(builder, self.PLATFORM_HEIGHT_M)
+        WXFAddSCAN_END_TIME_MS(builder, self.SCAN_END_TIME_MS)
         WXF = WXFEnd(builder)
         return WXF

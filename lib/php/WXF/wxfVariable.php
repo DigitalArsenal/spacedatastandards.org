@@ -76,6 +76,31 @@ class wxfVariable
     /// such as GFS publishes on pressure levels and at the tropopause. Distinct
     /// from Geopotential (m^2/s^2); a consumer never relabels one as the other.
     const GeopotentialHeight = 30;
+    /// Brightness temperature a radiometer channel measured, kelvin: the
+    /// temperature of a black body emitting the observed radiance at
+    /// CHANNEL_WAVELENGTH_UM. At LEVEL_KIND TopOfAtmosphere.
+    const BrightnessTemperature = 31;
+    /// Top-of-atmosphere bidirectional reflectance factor of a solar channel
+    /// at CHANNEL_WAVELENGTH_UM, dimensionless (1 = a white Lambertian
+    /// surface under the same illumination), not corrected for the solar
+    /// zenith angle unless VARIABLE_NAME says so. Missing at night.
+    const Reflectance = 32;
+    /// Categorical cloud mask of a satellite retrieval: 0 clear, 1 probably
+    /// clear, 2 probably cloudy, 3 cloudy. Units "1". A cell resampled from
+    /// several source pixels carries their mean, so fractional values are
+    /// the average category, not a new class.
+    const CloudMask = 33;
+    /// Categorical thermodynamic phase at the cloud top: 0 clear, 1 liquid
+    /// water, 2 supercooled liquid water, 3 mixed, 4 ice, 5 unknown. Units
+    /// "1". Resampled cells carry the category of the source pixel nearest the
+    /// cell centre.
+    const CloudPhase = 34;
+    /// Cloud optical depth at CHANNEL_WAVELENGTH_UM, dimensionless.
+    const CloudOpticalDepth = 35;
+    /// Cloud-top effective particle radius, micrometres (units "um").
+    const CloudEffectiveRadius = 36;
+    /// Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
+    const CloudEmissivity = 37;
 
     private static $names = array(
         wxfVariable::Unspecified=>"Unspecified",
@@ -109,6 +134,13 @@ class wxfVariable
         wxfVariable::TotalColumnWaterVapour=>"TotalColumnWaterVapour",
         wxfVariable::SurfacePressure=>"SurfacePressure",
         wxfVariable::GeopotentialHeight=>"GeopotentialHeight",
+        wxfVariable::BrightnessTemperature=>"BrightnessTemperature",
+        wxfVariable::Reflectance=>"Reflectance",
+        wxfVariable::CloudMask=>"CloudMask",
+        wxfVariable::CloudPhase=>"CloudPhase",
+        wxfVariable::CloudOpticalDepth=>"CloudOpticalDepth",
+        wxfVariable::CloudEffectiveRadius=>"CloudEffectiveRadius",
+        wxfVariable::CloudEmissivity=>"CloudEmissivity",
     );
 
     public static function Name($e)

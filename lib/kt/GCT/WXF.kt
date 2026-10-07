@@ -299,7 +299,8 @@ class WXF : Table() {
     val chunkCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(54, 1)
     fun chunkCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 54, 1)
     /**
-     * Element type of the chunk (e.g. "float32", "float16").
+     * Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+     * for InlineEncodedChunk).
      */
     val chunkDtype : String?
         get() {
@@ -314,7 +315,15 @@ class WXF : Table() {
     fun chunkDtypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
     /**
      * Codec chain applied to the chunk, outermost last (e.g. "bytes",
-     * "zstd").
+     * "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+     * order of VALUES (little-endian elements):
+     *   "delta"   each element less the one before it, the first kept,
+     *             wrapping in the element type;
+     *   "zigzag"  each element read as signed in its type and mapped to
+     *             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+     *   "shuffle" the elements' bytes grouped by significance, every
+     *             element's least significant byte first.
+     * Decoding applies the inverses from the last back.
      */
     fun chunkCodecs(j: Int) : String? {
         val o = __offset(58)
@@ -472,6 +481,120 @@ class WXF : Table() {
             val o = __offset(84)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+     * GRID.NLAT * GRID.NLON in the order of VALUES.
+     */
+    fun quantizedU16(j: Int) : UShort {
+        val o = __offset(86)
+        return if (o != 0) {
+            bb.getShort(__vector(o) + j * 2).toUShort()
+        } else {
+            0u
+        }
+    }
+    val quantizedU16Length : Int
+        get() {
+            val o = __offset(86); return if (o != 0) __vector_len(o) else 0
+        }
+    val quantizedU16AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(86, 2)
+    fun quantizedU16InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 86, 2)
+    /**
+     * Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+     * encoded chunk when it is InlineEncodedChunk.
+     */
+    fun quantizedU8(j: Int) : UByte {
+        val o = __offset(88)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val quantizedU8Length : Int
+        get() {
+            val o = __offset(88); return if (o != 0) __vector_len(o) else 0
+        }
+    val quantizedU8AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(88, 1)
+    fun quantizedU8InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 88, 1)
+    /**
+     * Scale applied to a quantized code, in UNITS per code step.
+     */
+    val scaleFactor : Double
+        get() {
+            val o = __offset(90)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 1.0
+        }
+    /**
+     * Offset added after scaling a quantized code, in UNITS.
+     */
+    val addOffset : Double
+        get() {
+            val o = __offset(92)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Instrument that observed the field: the platform and instrument
+     * designation its operator publishes. Absent for model output.
+     */
+    val sensorId : String?
+        get() {
+            val o = __offset(94)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val sensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(94, 1)
+    fun sensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 94, 1)
+    /**
+     * Central wavelength of the channel the field was measured or retrieved
+     * at, micrometres; 0 when not a single channel.
+     */
+    val channelWavelengthUm : Float
+        get() {
+            val o = __offset(96)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * Geodetic longitude of the observing platform, degrees east (the
+     * sub-satellite point of a geostationary imager), for viewing-geometry
+     * and parallax corrections. NaN when unstated.
+     */
+    val platformLongitudeDeg : Double
+        get() {
+            val o = __offset(98)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Geodetic latitude of the observing platform, degrees north. NaN when
+     * unstated.
+     */
+    val platformLatitudeDeg : Double
+        get() {
+            val o = __offset(100)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Height of the observing platform above the WGS84 ellipsoid, metres.
+     * NaN when unstated.
+     */
+    val platformHeightM : Double
+        get() {
+            val o = __offset(102)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * End of the observation's scan, Unix milliseconds UTC, when the samples
+     * were taken over an interval; VALID_TIME_MS is then the scan start.
+     * 0 when unstated.
+     */
+    val scanEndTimeMs : ULong
+        get() {
+            val o = __offset(104)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsWXF(_bb: ByteBuffer): WXF = getRootAsWXF(_bb, WXF())
@@ -480,12 +603,22 @@ class WXF : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun WXFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$WXF")
-        fun createWXF(builder: FlatBufferBuilder, fieldIdOffset: Int, modelClass: Byte, modelIdOffset: Int, modelVersionOffset: Int, initTimeMs: ULong, leadHours: Float, validTimeMs: ULong, horizonHours: UShort, memberKind: Byte, memberIndex: UShort, ensembleSize: UShort, percentile: Float, thresholdValue: Float, variable: Byte, variableNameOffset: Int, unitsOffset: Int, levelKind: Byte, levelValue: Float, temporalKind: Byte, accumulationHours: Float, gridOffset: Int, tileIndex: UInt, tileCount: UInt, valuesEncoding: Byte, valuesOffset: Int, chunkCidOffset: Int, chunkDtypeOffset: Int, chunkCodecsOffset: Int, chunkByteLength: ULong, valueMin: Float, valueMax: Float, missingCount: UInt, originIdOffset: Int, datasetIdOffset: Int, sourceUrlOffset: Int, retrievedAt: ULong, licenseClass: Byte, licenseUrlOffset: Int, citationOffset: Int, producerPeerIdOffset: Int, timeBasis: Byte) : Int {
-            builder.startTable(41)
+        fun createWXF(builder: FlatBufferBuilder, fieldIdOffset: Int, modelClass: Byte, modelIdOffset: Int, modelVersionOffset: Int, initTimeMs: ULong, leadHours: Float, validTimeMs: ULong, horizonHours: UShort, memberKind: Byte, memberIndex: UShort, ensembleSize: UShort, percentile: Float, thresholdValue: Float, variable: Byte, variableNameOffset: Int, unitsOffset: Int, levelKind: Byte, levelValue: Float, temporalKind: Byte, accumulationHours: Float, gridOffset: Int, tileIndex: UInt, tileCount: UInt, valuesEncoding: Byte, valuesOffset: Int, chunkCidOffset: Int, chunkDtypeOffset: Int, chunkCodecsOffset: Int, chunkByteLength: ULong, valueMin: Float, valueMax: Float, missingCount: UInt, originIdOffset: Int, datasetIdOffset: Int, sourceUrlOffset: Int, retrievedAt: ULong, licenseClass: Byte, licenseUrlOffset: Int, citationOffset: Int, producerPeerIdOffset: Int, timeBasis: Byte, quantizedU16Offset: Int, quantizedU8Offset: Int, scaleFactor: Double, addOffset: Double, sensorIdOffset: Int, channelWavelengthUm: Float, platformLongitudeDeg: Double, platformLatitudeDeg: Double, platformHeightM: Double, scanEndTimeMs: ULong) : Int {
+            builder.startTable(51)
+            addSCANENDTIMEMS(builder, scanEndTimeMs)
+            addPLATFORMHEIGHTM(builder, platformHeightM)
+            addPLATFORMLATITUDEDEG(builder, platformLatitudeDeg)
+            addPLATFORMLONGITUDEDEG(builder, platformLongitudeDeg)
+            addADDOFFSET(builder, addOffset)
+            addSCALEFACTOR(builder, scaleFactor)
             addRETRIEVEDAT(builder, retrievedAt)
             addCHUNKBYTELENGTH(builder, chunkByteLength)
             addVALIDTIMEMS(builder, validTimeMs)
             addINITTIMEMS(builder, initTimeMs)
+            addCHANNELWAVELENGTHUM(builder, channelWavelengthUm)
+            addSENSORID(builder, sensorIdOffset)
+            addQUANTIZEDU8(builder, quantizedU8Offset)
+            addQUANTIZEDU16(builder, quantizedU16Offset)
             addPRODUCERPEERID(builder, producerPeerIdOffset)
             addCITATION(builder, citationOffset)
             addLICENSEURL(builder, licenseUrlOffset)
@@ -525,7 +658,7 @@ class WXF : Table() {
             addMODELCLASS(builder, modelClass)
             return endWXF(builder)
         }
-        fun startWXF(builder: FlatBufferBuilder) = builder.startTable(41)
+        fun startWXF(builder: FlatBufferBuilder) = builder.startTable(51)
         fun addFIELDID(builder: FlatBufferBuilder, fieldId: Int) = builder.addOffset(0, fieldId, 0)
         fun addMODELCLASS(builder: FlatBufferBuilder, modelClass: Byte) = builder.addByte(1, modelClass, 0)
         fun addMODELID(builder: FlatBufferBuilder, modelId: Int) = builder.addOffset(2, modelId, 0)
@@ -583,6 +716,34 @@ class WXF : Table() {
         fun addCITATION(builder: FlatBufferBuilder, citation: Int) = builder.addOffset(38, citation, 0)
         fun addPRODUCERPEERID(builder: FlatBufferBuilder, producerPeerId: Int) = builder.addOffset(39, producerPeerId, 0)
         fun addTIMEBASIS(builder: FlatBufferBuilder, timeBasis: Byte) = builder.addByte(40, timeBasis, 0)
+        fun addQUANTIZEDU16(builder: FlatBufferBuilder, quantizedU16: Int) = builder.addOffset(41, quantizedU16, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createQuantizedU16Vector(builder: FlatBufferBuilder, data: UShortArray) : Int {
+            builder.startVector(2, data.size, 2)
+            for (i in data.size - 1 downTo 0) {
+                builder.addShort(data[i].toShort())
+            }
+            return builder.endVector()
+        }
+        fun startQuantizedU16Vector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(2, numElems, 2)
+        fun addQUANTIZEDU8(builder: FlatBufferBuilder, quantizedU8: Int) = builder.addOffset(42, quantizedU8, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createQuantizedU8Vector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startQuantizedU8Vector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addSCALEFACTOR(builder: FlatBufferBuilder, scaleFactor: Double) = builder.addDouble(43, scaleFactor, 1.0)
+        fun addADDOFFSET(builder: FlatBufferBuilder, addOffset: Double) = builder.addDouble(44, addOffset, 0.0)
+        fun addSENSORID(builder: FlatBufferBuilder, sensorId: Int) = builder.addOffset(45, sensorId, 0)
+        fun addCHANNELWAVELENGTHUM(builder: FlatBufferBuilder, channelWavelengthUm: Float) = builder.addFloat(46, channelWavelengthUm, 0.0)
+        fun addPLATFORMLONGITUDEDEG(builder: FlatBufferBuilder, platformLongitudeDeg: Double) = builder.addDouble(47, platformLongitudeDeg, Double.NaN)
+        fun addPLATFORMLATITUDEDEG(builder: FlatBufferBuilder, platformLatitudeDeg: Double) = builder.addDouble(48, platformLatitudeDeg, Double.NaN)
+        fun addPLATFORMHEIGHTM(builder: FlatBufferBuilder, platformHeightM: Double) = builder.addDouble(49, platformHeightM, Double.NaN)
+        fun addSCANENDTIMEMS(builder: FlatBufferBuilder, scanEndTimeMs: ULong) = builder.addLong(50, scanEndTimeMs.toLong(), 0)
         fun endWXF(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

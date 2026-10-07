@@ -16,8 +16,29 @@ public final class wxfValuesEncoding {
    * CHUNK_CODECS describe its layout. Used above 1,048,576 cells.
    */
   public static final byte ContentAddressedChunk = 1;
+  /**
+   * Samples are inline in QUANTIZED_U16 as unsigned 16-bit codes: value =
+   * ADD_OFFSET + SCALE_FACTOR * code; code 65535 marks a missing cell.
+   * Same cell limit and order as InlineFloat32. VALUE_MIN / VALUE_MAX are
+   * decoded values.
+   */
+  public static final byte InlineQuantizedUint16 = 2;
+  /**
+   * Samples are inline in QUANTIZED_U8 as unsigned 8-bit codes: value =
+   * ADD_OFFSET + SCALE_FACTOR * code; code 255 marks a missing cell. Same
+   * cell limit and order as InlineFloat32.
+   */
+  public static final byte InlineQuantizedUint8 = 3;
+  /**
+   * Samples are quantized codes as InlineQuantizedUint16 / InlineQuantizedUint8
+   * (CHUNK_DTYPE "uint16" or "uint8"; value = ADD_OFFSET + SCALE_FACTOR *
+   * code; the all-ones code marks a missing cell), inline in QUANTIZED_U8 as
+   * a chunk encoded by CHUNK_CODECS. Same cell limit and order as
+   * InlineFloat32; CHUNK_BYTE_LENGTH is the chunk's length.
+   */
+  public static final byte InlineEncodedChunk = 4;
 
-  public static final String[] names = { "InlineFloat32", "ContentAddressedChunk", };
+  public static final String[] names = { "InlineFloat32", "ContentAddressedChunk", "InlineQuantizedUint16", "InlineQuantizedUint8", "InlineEncodedChunk", };
 
   public static String name(int e) { return names[e]; }
 }

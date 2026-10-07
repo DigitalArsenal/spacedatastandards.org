@@ -304,11 +304,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for wxfMemberKind {}
 pub const ENUM_MIN_WXF_VARIABLE: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_WXF_VARIABLE: i8 = 30;
+pub const ENUM_MAX_WXF_VARIABLE: i8 = 37;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_WXF_VARIABLE: [wxfVariable; 31] = [
+pub const ENUM_VALUES_WXF_VARIABLE: [wxfVariable; 38] = [
     wxfVariable::Unspecified,
     wxfVariable::Temperature2m,
     wxfVariable::DewpointTemperature2m,
@@ -340,6 +340,13 @@ pub const ENUM_VALUES_WXF_VARIABLE: [wxfVariable; 31] = [
     wxfVariable::TotalColumnWaterVapour,
     wxfVariable::SurfacePressure,
     wxfVariable::GeopotentialHeight,
+    wxfVariable::BrightnessTemperature,
+    wxfVariable::Reflectance,
+    wxfVariable::CloudMask,
+    wxfVariable::CloudPhase,
+    wxfVariable::CloudOpticalDepth,
+    wxfVariable::CloudEffectiveRadius,
+    wxfVariable::CloudEmissivity,
 ];
 
 /// Meteorological variable carried by the field. Append new values only;
@@ -421,9 +428,34 @@ impl wxfVariable {
     /// such as GFS publishes on pressure levels and at the tropopause. Distinct
     /// from Geopotential (m^2/s^2); a consumer never relabels one as the other.
     pub const GeopotentialHeight: Self = Self(30);
+    /// Brightness temperature a radiometer channel measured, kelvin: the
+    /// temperature of a black body emitting the observed radiance at
+    /// CHANNEL_WAVELENGTH_UM. At LEVEL_KIND TopOfAtmosphere.
+    pub const BrightnessTemperature: Self = Self(31);
+    /// Top-of-atmosphere bidirectional reflectance factor of a solar channel
+    /// at CHANNEL_WAVELENGTH_UM, dimensionless (1 = a white Lambertian
+    /// surface under the same illumination), not corrected for the solar
+    /// zenith angle unless VARIABLE_NAME says so. Missing at night.
+    pub const Reflectance: Self = Self(32);
+    /// Categorical cloud mask of a satellite retrieval: 0 clear, 1 probably
+    /// clear, 2 probably cloudy, 3 cloudy. Units "1". A cell resampled from
+    /// several source pixels carries their mean, so fractional values are
+    /// the average category, not a new class.
+    pub const CloudMask: Self = Self(33);
+    /// Categorical thermodynamic phase at the cloud top: 0 clear, 1 liquid
+    /// water, 2 supercooled liquid water, 3 mixed, 4 ice, 5 unknown. Units
+    /// "1". Resampled cells carry the category of the source pixel nearest the
+    /// cell centre.
+    pub const CloudPhase: Self = Self(34);
+    /// Cloud optical depth at CHANNEL_WAVELENGTH_UM, dimensionless.
+    pub const CloudOpticalDepth: Self = Self(35);
+    /// Cloud-top effective particle radius, micrometres (units "um").
+    pub const CloudEffectiveRadius: Self = Self(36);
+    /// Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
+    pub const CloudEmissivity: Self = Self(37);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 30;
+    pub const ENUM_MAX: i8 = 37;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::Unspecified,
         Self::Temperature2m,
@@ -456,6 +488,13 @@ impl wxfVariable {
         Self::TotalColumnWaterVapour,
         Self::SurfacePressure,
         Self::GeopotentialHeight,
+        Self::BrightnessTemperature,
+        Self::Reflectance,
+        Self::CloudMask,
+        Self::CloudPhase,
+        Self::CloudOpticalDepth,
+        Self::CloudEffectiveRadius,
+        Self::CloudEmissivity,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -492,6 +531,13 @@ impl wxfVariable {
             Self::TotalColumnWaterVapour => Some("TotalColumnWaterVapour"),
             Self::SurfacePressure => Some("SurfacePressure"),
             Self::GeopotentialHeight => Some("GeopotentialHeight"),
+            Self::BrightnessTemperature => Some("BrightnessTemperature"),
+            Self::Reflectance => Some("Reflectance"),
+            Self::CloudMask => Some("CloudMask"),
+            Self::CloudPhase => Some("CloudPhase"),
+            Self::CloudOpticalDepth => Some("CloudOpticalDepth"),
+            Self::CloudEffectiveRadius => Some("CloudEffectiveRadius"),
+            Self::CloudEmissivity => Some("CloudEmissivity"),
             _ => None,
         }
     }
@@ -557,11 +603,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for wxfVariable {}
 pub const ENUM_MIN_WXF_LEVEL_KIND: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_WXF_LEVEL_KIND: i8 = 7;
+pub const ENUM_MAX_WXF_LEVEL_KIND: i8 = 8;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_WXF_LEVEL_KIND: [wxfLevelKind; 8] = [
+pub const ENUM_VALUES_WXF_LEVEL_KIND: [wxfLevelKind; 9] = [
     wxfLevelKind::Surface,
     wxfLevelKind::HeightAboveGround,
     wxfLevelKind::PressureLevel,
@@ -570,6 +616,7 @@ pub const ENUM_VALUES_WXF_LEVEL_KIND: [wxfLevelKind; 8] = [
     wxfLevelKind::TopOfAtmosphere,
     wxfLevelKind::Tropopause,
     wxfLevelKind::HeightAboveEllipsoid,
+    wxfLevelKind::CloudTop,
 ];
 
 /// Vertical coordinate of the field. Append new values only; never reorder or
@@ -599,9 +646,14 @@ impl wxfLevelKind {
     /// For fields defined at altitude rather than on pressure levels (for
     /// example the upper atmosphere).
     pub const HeightAboveEllipsoid: Self = Self(7);
+    /// The top of the cloud a satellite retrieval saw in each cell; the level
+    /// varies from cell to cell and LEVEL_VALUE is unused. The height itself
+    /// is a GeopotentialHeight field at this level (a Temperature field gives
+    /// the cloud-top temperature), never implied by the level.
+    pub const CloudTop: Self = Self(8);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 7;
+    pub const ENUM_MAX: i8 = 8;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::Surface,
         Self::HeightAboveGround,
@@ -611,6 +663,7 @@ impl wxfLevelKind {
         Self::TopOfAtmosphere,
         Self::Tropopause,
         Self::HeightAboveEllipsoid,
+        Self::CloudTop,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -624,6 +677,7 @@ impl wxfLevelKind {
             Self::TopOfAtmosphere => Some("TopOfAtmosphere"),
             Self::Tropopause => Some("Tropopause"),
             Self::HeightAboveEllipsoid => Some("HeightAboveEllipsoid"),
+            Self::CloudTop => Some("CloudTop"),
             _ => None,
         }
     }
@@ -897,13 +951,16 @@ impl ::flatbuffers::SimpleToVerifyInSlice for wxfGridKind {}
 pub const ENUM_MIN_WXF_VALUES_ENCODING: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_WXF_VALUES_ENCODING: i8 = 1;
+pub const ENUM_MAX_WXF_VALUES_ENCODING: i8 = 4;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_WXF_VALUES_ENCODING: [wxfValuesEncoding; 2] = [
+pub const ENUM_VALUES_WXF_VALUES_ENCODING: [wxfValuesEncoding; 5] = [
     wxfValuesEncoding::InlineFloat32,
     wxfValuesEncoding::ContentAddressedChunk,
+    wxfValuesEncoding::InlineQuantizedUint16,
+    wxfValuesEncoding::InlineQuantizedUint8,
+    wxfValuesEncoding::InlineEncodedChunk,
 ];
 
 /// Where the cell samples live. Append new values only; never reorder or
@@ -919,12 +976,30 @@ impl wxfValuesEncoding {
     /// Samples are a content-addressed chunk named by CHUNK_CID; CHUNK_DTYPE /
     /// CHUNK_CODECS describe its layout. Used above 1,048,576 cells.
     pub const ContentAddressedChunk: Self = Self(1);
+    /// Samples are inline in QUANTIZED_U16 as unsigned 16-bit codes: value =
+    /// ADD_OFFSET + SCALE_FACTOR * code; code 65535 marks a missing cell.
+    /// Same cell limit and order as InlineFloat32. VALUE_MIN / VALUE_MAX are
+    /// decoded values.
+    pub const InlineQuantizedUint16: Self = Self(2);
+    /// Samples are inline in QUANTIZED_U8 as unsigned 8-bit codes: value =
+    /// ADD_OFFSET + SCALE_FACTOR * code; code 255 marks a missing cell. Same
+    /// cell limit and order as InlineFloat32.
+    pub const InlineQuantizedUint8: Self = Self(3);
+    /// Samples are quantized codes as InlineQuantizedUint16 / InlineQuantizedUint8
+    /// (CHUNK_DTYPE "uint16" or "uint8"; value = ADD_OFFSET + SCALE_FACTOR *
+    /// code; the all-ones code marks a missing cell), inline in QUANTIZED_U8 as
+    /// a chunk encoded by CHUNK_CODECS. Same cell limit and order as
+    /// InlineFloat32; CHUNK_BYTE_LENGTH is the chunk's length.
+    pub const InlineEncodedChunk: Self = Self(4);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 1;
+    pub const ENUM_MAX: i8 = 4;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::InlineFloat32,
         Self::ContentAddressedChunk,
+        Self::InlineQuantizedUint16,
+        Self::InlineQuantizedUint8,
+        Self::InlineEncodedChunk,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -932,6 +1007,9 @@ impl wxfValuesEncoding {
         match self {
             Self::InlineFloat32 => Some("InlineFloat32"),
             Self::ContentAddressedChunk => Some("ContentAddressedChunk"),
+            Self::InlineQuantizedUint16 => Some("InlineQuantizedUint16"),
+            Self::InlineQuantizedUint8 => Some("InlineQuantizedUint8"),
+            Self::InlineEncodedChunk => Some("InlineEncodedChunk"),
             _ => None,
         }
     }
@@ -1592,6 +1670,16 @@ impl<'a> WXF<'a> {
     pub const VT_CITATION: ::flatbuffers::VOffsetT = 80;
     pub const VT_PRODUCER_PEER_ID: ::flatbuffers::VOffsetT = 82;
     pub const VT_TIME_BASIS: ::flatbuffers::VOffsetT = 84;
+    pub const VT_QUANTIZED_U16: ::flatbuffers::VOffsetT = 86;
+    pub const VT_QUANTIZED_U8: ::flatbuffers::VOffsetT = 88;
+    pub const VT_SCALE_FACTOR: ::flatbuffers::VOffsetT = 90;
+    pub const VT_ADD_OFFSET: ::flatbuffers::VOffsetT = 92;
+    pub const VT_SENSOR_ID: ::flatbuffers::VOffsetT = 94;
+    pub const VT_CHANNEL_WAVELENGTH_UM: ::flatbuffers::VOffsetT = 96;
+    pub const VT_PLATFORM_LONGITUDE_DEG: ::flatbuffers::VOffsetT = 98;
+    pub const VT_PLATFORM_LATITUDE_DEG: ::flatbuffers::VOffsetT = 100;
+    pub const VT_PLATFORM_HEIGHT_M: ::flatbuffers::VOffsetT = 102;
+    pub const VT_SCAN_END_TIME_MS: ::flatbuffers::VOffsetT = 104;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1604,10 +1692,20 @@ impl<'a> WXF<'a> {
         args: &'args WXFArgs<'args>
     ) -> ::flatbuffers::WIPOffset<WXF<'bldr>> {
         let mut builder = WXFBuilder::new(_fbb);
+        builder.add_SCAN_END_TIME_MS(args.SCAN_END_TIME_MS);
+        builder.add_PLATFORM_HEIGHT_M(args.PLATFORM_HEIGHT_M);
+        builder.add_PLATFORM_LATITUDE_DEG(args.PLATFORM_LATITUDE_DEG);
+        builder.add_PLATFORM_LONGITUDE_DEG(args.PLATFORM_LONGITUDE_DEG);
+        builder.add_ADD_OFFSET(args.ADD_OFFSET);
+        builder.add_SCALE_FACTOR(args.SCALE_FACTOR);
         builder.add_RETRIEVED_AT(args.RETRIEVED_AT);
         builder.add_CHUNK_BYTE_LENGTH(args.CHUNK_BYTE_LENGTH);
         builder.add_VALID_TIME_MS(args.VALID_TIME_MS);
         builder.add_INIT_TIME_MS(args.INIT_TIME_MS);
+        builder.add_CHANNEL_WAVELENGTH_UM(args.CHANNEL_WAVELENGTH_UM);
+        if let Some(x) = args.SENSOR_ID { builder.add_SENSOR_ID(x); }
+        if let Some(x) = args.QUANTIZED_U8 { builder.add_QUANTIZED_U8(x); }
+        if let Some(x) = args.QUANTIZED_U16 { builder.add_QUANTIZED_U16(x); }
         if let Some(x) = args.PRODUCER_PEER_ID { builder.add_PRODUCER_PEER_ID(x); }
         if let Some(x) = args.CITATION { builder.add_CITATION(x); }
         if let Some(x) = args.LICENSE_URL { builder.add_LICENSE_URL(x); }
@@ -1724,6 +1822,22 @@ impl<'a> WXF<'a> {
             alloc::string::ToString::to_string(x)
         });
         let TIME_BASIS = self.TIME_BASIS();
+        let QUANTIZED_U16 = self.QUANTIZED_U16().map(|x| {
+            x.into_iter().collect()
+        });
+        let QUANTIZED_U8 = self.QUANTIZED_U8().map(|x| {
+            x.into_iter().collect()
+        });
+        let SCALE_FACTOR = self.SCALE_FACTOR();
+        let ADD_OFFSET = self.ADD_OFFSET();
+        let SENSOR_ID = self.SENSOR_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let CHANNEL_WAVELENGTH_UM = self.CHANNEL_WAVELENGTH_UM();
+        let PLATFORM_LONGITUDE_DEG = self.PLATFORM_LONGITUDE_DEG();
+        let PLATFORM_LATITUDE_DEG = self.PLATFORM_LATITUDE_DEG();
+        let PLATFORM_HEIGHT_M = self.PLATFORM_HEIGHT_M();
+        let SCAN_END_TIME_MS = self.SCAN_END_TIME_MS();
         WXFT {
             FIELD_ID,
             MODEL_CLASS,
@@ -1766,6 +1880,16 @@ impl<'a> WXF<'a> {
             CITATION,
             PRODUCER_PEER_ID,
             TIME_BASIS,
+            QUANTIZED_U16,
+            QUANTIZED_U8,
+            SCALE_FACTOR,
+            ADD_OFFSET,
+            SENSOR_ID,
+            CHANNEL_WAVELENGTH_UM,
+            PLATFORM_LONGITUDE_DEG,
+            PLATFORM_LATITUDE_DEG,
+            PLATFORM_HEIGHT_M,
+            SCAN_END_TIME_MS,
         }
     }
 
@@ -2014,7 +2138,8 @@ impl<'a> WXF<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(WXF::VT_CHUNK_CID, None)}
     }
 
-    /// Element type of the chunk (e.g. "float32", "float16").
+    /// Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+    /// for InlineEncodedChunk).
     #[inline]
     pub fn CHUNK_DTYPE(&self) -> Option<&'a str> {
         // Safety:
@@ -2024,7 +2149,15 @@ impl<'a> WXF<'a> {
     }
 
     /// Codec chain applied to the chunk, outermost last (e.g. "bytes",
-    /// "zstd").
+    /// "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+    /// order of VALUES (little-endian elements):
+    ///   "delta"   each element less the one before it, the first kept,
+    ///             wrapping in the element type;
+    ///   "zigzag"  each element read as signed in its type and mapped to
+    ///             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+    ///   "shuffle" the elements' bytes grouped by significance, every
+    ///             element's least significant byte first.
+    /// Decoding applies the inverses from the last back.
     #[inline]
     pub fn CHUNK_CODECS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
         // Safety:
@@ -2153,6 +2286,106 @@ impl<'a> WXF<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<wxfTimeBasis>(WXF::VT_TIME_BASIS, Some(wxfTimeBasis::Initialization)).unwrap()}
     }
+
+    /// Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+    /// GRID.NLAT * GRID.NLON in the order of VALUES.
+    #[inline]
+    pub fn QUANTIZED_U16(&self) -> Option<::flatbuffers::Vector<'a, u16>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u16>>>(WXF::VT_QUANTIZED_U16, None)}
+    }
+
+    /// Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+    /// encoded chunk when it is InlineEncodedChunk.
+    #[inline]
+    pub fn QUANTIZED_U8(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(WXF::VT_QUANTIZED_U8, None)}
+    }
+
+    /// Scale applied to a quantized code, in UNITS per code step.
+    #[inline]
+    pub fn SCALE_FACTOR(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(WXF::VT_SCALE_FACTOR, Some(1.0)).unwrap()}
+    }
+
+    /// Offset added after scaling a quantized code, in UNITS.
+    #[inline]
+    pub fn ADD_OFFSET(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(WXF::VT_ADD_OFFSET, Some(0.0)).unwrap()}
+    }
+
+    /// Instrument that observed the field: the platform and instrument
+    /// designation its operator publishes. Absent for model output.
+    #[inline]
+    pub fn SENSOR_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(WXF::VT_SENSOR_ID, None)}
+    }
+
+    /// Central wavelength of the channel the field was measured or retrieved
+    /// at, micrometres; 0 when not a single channel.
+    #[inline]
+    pub fn CHANNEL_WAVELENGTH_UM(&self) -> f32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f32>(WXF::VT_CHANNEL_WAVELENGTH_UM, Some(0.0)).unwrap()}
+    }
+
+    /// Geodetic longitude of the observing platform, degrees east (the
+    /// sub-satellite point of a geostationary imager), for viewing-geometry
+    /// and parallax corrections. NaN when unstated.
+    #[inline]
+    pub fn PLATFORM_LONGITUDE_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(WXF::VT_PLATFORM_LONGITUDE_DEG, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Geodetic latitude of the observing platform, degrees north. NaN when
+    /// unstated.
+    #[inline]
+    pub fn PLATFORM_LATITUDE_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(WXF::VT_PLATFORM_LATITUDE_DEG, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Height of the observing platform above the WGS84 ellipsoid, metres.
+    /// NaN when unstated.
+    #[inline]
+    pub fn PLATFORM_HEIGHT_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(WXF::VT_PLATFORM_HEIGHT_M, Some(f64::NAN)).unwrap()}
+    }
+
+    /// End of the observation's scan, Unix milliseconds UTC, when the samples
+    /// were taken over an interval; VALID_TIME_MS is then the scan start.
+    /// 0 when unstated.
+    #[inline]
+    pub fn SCAN_END_TIME_MS(&self) -> u64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u64>(WXF::VT_SCAN_END_TIME_MS, Some(0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for WXF<'_> {
@@ -2202,6 +2435,16 @@ impl ::flatbuffers::Verifiable for WXF<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CITATION", Self::VT_CITATION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCER_PEER_ID", Self::VT_PRODUCER_PEER_ID, false)?
             .visit_field::<wxfTimeBasis>("TIME_BASIS", Self::VT_TIME_BASIS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u16>>>("QUANTIZED_U16", Self::VT_QUANTIZED_U16, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("QUANTIZED_U8", Self::VT_QUANTIZED_U8, false)?
+            .visit_field::<f64>("SCALE_FACTOR", Self::VT_SCALE_FACTOR, false)?
+            .visit_field::<f64>("ADD_OFFSET", Self::VT_ADD_OFFSET, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SENSOR_ID", Self::VT_SENSOR_ID, false)?
+            .visit_field::<f32>("CHANNEL_WAVELENGTH_UM", Self::VT_CHANNEL_WAVELENGTH_UM, false)?
+            .visit_field::<f64>("PLATFORM_LONGITUDE_DEG", Self::VT_PLATFORM_LONGITUDE_DEG, false)?
+            .visit_field::<f64>("PLATFORM_LATITUDE_DEG", Self::VT_PLATFORM_LATITUDE_DEG, false)?
+            .visit_field::<f64>("PLATFORM_HEIGHT_M", Self::VT_PLATFORM_HEIGHT_M, false)?
+            .visit_field::<u64>("SCAN_END_TIME_MS", Self::VT_SCAN_END_TIME_MS, false)?
             .finish();
         Ok(())
     }
@@ -2249,6 +2492,16 @@ pub struct WXFArgs<'a> {
     pub CITATION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PRODUCER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub TIME_BASIS: wxfTimeBasis,
+    pub QUANTIZED_U16: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u16>>>,
+    pub QUANTIZED_U8: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub SCALE_FACTOR: f64,
+    pub ADD_OFFSET: f64,
+    pub SENSOR_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CHANNEL_WAVELENGTH_UM: f32,
+    pub PLATFORM_LONGITUDE_DEG: f64,
+    pub PLATFORM_LATITUDE_DEG: f64,
+    pub PLATFORM_HEIGHT_M: f64,
+    pub SCAN_END_TIME_MS: u64,
 }
 
 impl<'a> Default for WXFArgs<'a> {
@@ -2296,6 +2549,16 @@ impl<'a> Default for WXFArgs<'a> {
             CITATION: None,
             PRODUCER_PEER_ID: None,
             TIME_BASIS: wxfTimeBasis::Initialization,
+            QUANTIZED_U16: None,
+            QUANTIZED_U8: None,
+            SCALE_FACTOR: 1.0,
+            ADD_OFFSET: 0.0,
+            SENSOR_ID: None,
+            CHANNEL_WAVELENGTH_UM: 0.0,
+            PLATFORM_LONGITUDE_DEG: f64::NAN,
+            PLATFORM_LATITUDE_DEG: f64::NAN,
+            PLATFORM_HEIGHT_M: f64::NAN,
+            SCAN_END_TIME_MS: 0,
         }
     }
 }
@@ -2512,6 +2775,56 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> WXFBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_QUANTIZED_U16(&mut self, QUANTIZED_U16: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u16>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(WXF::VT_QUANTIZED_U16, QUANTIZED_U16);
+    }
+
+    #[inline]
+    pub fn add_QUANTIZED_U8(&mut self, QUANTIZED_U8: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(WXF::VT_QUANTIZED_U8, QUANTIZED_U8);
+    }
+
+    #[inline]
+    pub fn add_SCALE_FACTOR(&mut self, SCALE_FACTOR: f64) {
+        self.fbb_.push_slot::<f64>(WXF::VT_SCALE_FACTOR, SCALE_FACTOR, 1.0);
+    }
+
+    #[inline]
+    pub fn add_ADD_OFFSET(&mut self, ADD_OFFSET: f64) {
+        self.fbb_.push_slot::<f64>(WXF::VT_ADD_OFFSET, ADD_OFFSET, 0.0);
+    }
+
+    #[inline]
+    pub fn add_SENSOR_ID(&mut self, SENSOR_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(WXF::VT_SENSOR_ID, SENSOR_ID);
+    }
+
+    #[inline]
+    pub fn add_CHANNEL_WAVELENGTH_UM(&mut self, CHANNEL_WAVELENGTH_UM: f32) {
+        self.fbb_.push_slot::<f32>(WXF::VT_CHANNEL_WAVELENGTH_UM, CHANNEL_WAVELENGTH_UM, 0.0);
+    }
+
+    #[inline]
+    pub fn add_PLATFORM_LONGITUDE_DEG(&mut self, PLATFORM_LONGITUDE_DEG: f64) {
+        self.fbb_.push_slot::<f64>(WXF::VT_PLATFORM_LONGITUDE_DEG, PLATFORM_LONGITUDE_DEG, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_PLATFORM_LATITUDE_DEG(&mut self, PLATFORM_LATITUDE_DEG: f64) {
+        self.fbb_.push_slot::<f64>(WXF::VT_PLATFORM_LATITUDE_DEG, PLATFORM_LATITUDE_DEG, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_PLATFORM_HEIGHT_M(&mut self, PLATFORM_HEIGHT_M: f64) {
+        self.fbb_.push_slot::<f64>(WXF::VT_PLATFORM_HEIGHT_M, PLATFORM_HEIGHT_M, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_SCAN_END_TIME_MS(&mut self, SCAN_END_TIME_MS: u64) {
+        self.fbb_.push_slot::<u64>(WXF::VT_SCAN_END_TIME_MS, SCAN_END_TIME_MS, 0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> WXFBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         WXFBuilder {
@@ -2573,6 +2886,16 @@ impl ::core::fmt::Debug for WXF<'_> {
         ds.field("CITATION", &self.CITATION());
         ds.field("PRODUCER_PEER_ID", &self.PRODUCER_PEER_ID());
         ds.field("TIME_BASIS", &self.TIME_BASIS());
+        ds.field("QUANTIZED_U16", &self.QUANTIZED_U16());
+        ds.field("QUANTIZED_U8", &self.QUANTIZED_U8());
+        ds.field("SCALE_FACTOR", &self.SCALE_FACTOR());
+        ds.field("ADD_OFFSET", &self.ADD_OFFSET());
+        ds.field("SENSOR_ID", &self.SENSOR_ID());
+        ds.field("CHANNEL_WAVELENGTH_UM", &self.CHANNEL_WAVELENGTH_UM());
+        ds.field("PLATFORM_LONGITUDE_DEG", &self.PLATFORM_LONGITUDE_DEG());
+        ds.field("PLATFORM_LATITUDE_DEG", &self.PLATFORM_LATITUDE_DEG());
+        ds.field("PLATFORM_HEIGHT_M", &self.PLATFORM_HEIGHT_M());
+        ds.field("SCAN_END_TIME_MS", &self.SCAN_END_TIME_MS());
         ds.finish()
     }
 }
@@ -2621,6 +2944,16 @@ pub struct WXFT {
     pub CITATION: Option<alloc::string::String>,
     pub PRODUCER_PEER_ID: Option<alloc::string::String>,
     pub TIME_BASIS: wxfTimeBasis,
+    pub QUANTIZED_U16: Option<alloc::vec::Vec<u16>>,
+    pub QUANTIZED_U8: Option<alloc::vec::Vec<u8>>,
+    pub SCALE_FACTOR: f64,
+    pub ADD_OFFSET: f64,
+    pub SENSOR_ID: Option<alloc::string::String>,
+    pub CHANNEL_WAVELENGTH_UM: f32,
+    pub PLATFORM_LONGITUDE_DEG: f64,
+    pub PLATFORM_LATITUDE_DEG: f64,
+    pub PLATFORM_HEIGHT_M: f64,
+    pub SCAN_END_TIME_MS: u64,
 }
 
 impl Default for WXFT {
@@ -2667,6 +3000,16 @@ impl Default for WXFT {
             CITATION: None,
             PRODUCER_PEER_ID: None,
             TIME_BASIS: wxfTimeBasis::Initialization,
+            QUANTIZED_U16: None,
+            QUANTIZED_U8: None,
+            SCALE_FACTOR: 1.0,
+            ADD_OFFSET: 0.0,
+            SENSOR_ID: None,
+            CHANNEL_WAVELENGTH_UM: 0.0,
+            PLATFORM_LONGITUDE_DEG: f64::NAN,
+            PLATFORM_LATITUDE_DEG: f64::NAN,
+            PLATFORM_HEIGHT_M: f64::NAN,
+            SCAN_END_TIME_MS: 0,
         }
     }
 }
@@ -2751,6 +3094,22 @@ impl WXFT {
             _fbb.create_string(x)
         });
         let TIME_BASIS = self.TIME_BASIS;
+        let QUANTIZED_U16 = self.QUANTIZED_U16.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let QUANTIZED_U8 = self.QUANTIZED_U8.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let SCALE_FACTOR = self.SCALE_FACTOR;
+        let ADD_OFFSET = self.ADD_OFFSET;
+        let SENSOR_ID = self.SENSOR_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let CHANNEL_WAVELENGTH_UM = self.CHANNEL_WAVELENGTH_UM;
+        let PLATFORM_LONGITUDE_DEG = self.PLATFORM_LONGITUDE_DEG;
+        let PLATFORM_LATITUDE_DEG = self.PLATFORM_LATITUDE_DEG;
+        let PLATFORM_HEIGHT_M = self.PLATFORM_HEIGHT_M;
+        let SCAN_END_TIME_MS = self.SCAN_END_TIME_MS;
         WXF::create(_fbb, &WXFArgs{
             FIELD_ID,
             MODEL_CLASS,
@@ -2793,6 +3152,16 @@ impl WXFT {
             CITATION,
             PRODUCER_PEER_ID,
             TIME_BASIS,
+            QUANTIZED_U16,
+            QUANTIZED_U8,
+            SCALE_FACTOR,
+            ADD_OFFSET,
+            SENSOR_ID,
+            CHANNEL_WAVELENGTH_UM,
+            PLATFORM_LONGITUDE_DEG,
+            PLATFORM_LATITUDE_DEG,
+            PLATFORM_HEIGHT_M,
+            SCAN_END_TIME_MS,
         })
     }
 }

@@ -244,11 +244,36 @@ enum wxfVariable : int8_t {
   /// such as GFS publishes on pressure levels and at the tropopause. Distinct
   /// from Geopotential (m^2/s^2); a consumer never relabels one as the other.
   wxfVariable_GeopotentialHeight = 30,
+  /// Brightness temperature a radiometer channel measured, kelvin: the
+  /// temperature of a black body emitting the observed radiance at
+  /// CHANNEL_WAVELENGTH_UM. At LEVEL_KIND TopOfAtmosphere.
+  wxfVariable_BrightnessTemperature = 31,
+  /// Top-of-atmosphere bidirectional reflectance factor of a solar channel
+  /// at CHANNEL_WAVELENGTH_UM, dimensionless (1 = a white Lambertian
+  /// surface under the same illumination), not corrected for the solar
+  /// zenith angle unless VARIABLE_NAME says so. Missing at night.
+  wxfVariable_Reflectance = 32,
+  /// Categorical cloud mask of a satellite retrieval: 0 clear, 1 probably
+  /// clear, 2 probably cloudy, 3 cloudy. Units "1". A cell resampled from
+  /// several source pixels carries their mean, so fractional values are
+  /// the average category, not a new class.
+  wxfVariable_CloudMask = 33,
+  /// Categorical thermodynamic phase at the cloud top: 0 clear, 1 liquid
+  /// water, 2 supercooled liquid water, 3 mixed, 4 ice, 5 unknown. Units
+  /// "1". Resampled cells carry the category of the source pixel nearest the
+  /// cell centre.
+  wxfVariable_CloudPhase = 34,
+  /// Cloud optical depth at CHANNEL_WAVELENGTH_UM, dimensionless.
+  wxfVariable_CloudOpticalDepth = 35,
+  /// Cloud-top effective particle radius, micrometres (units "um").
+  wxfVariable_CloudEffectiveRadius = 36,
+  /// Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
+  wxfVariable_CloudEmissivity = 37,
   wxfVariable_MIN = wxfVariable_Unspecified,
-  wxfVariable_MAX = wxfVariable_GeopotentialHeight
+  wxfVariable_MAX = wxfVariable_CloudEmissivity
 };
 
-inline const wxfVariable (&EnumValueswxfVariable())[31] {
+inline const wxfVariable (&EnumValueswxfVariable())[38] {
   static const wxfVariable values[] = {
     wxfVariable_Unspecified,
     wxfVariable_Temperature2m,
@@ -280,13 +305,20 @@ inline const wxfVariable (&EnumValueswxfVariable())[31] {
     wxfVariable_RelativeHumidity,
     wxfVariable_TotalColumnWaterVapour,
     wxfVariable_SurfacePressure,
-    wxfVariable_GeopotentialHeight
+    wxfVariable_GeopotentialHeight,
+    wxfVariable_BrightnessTemperature,
+    wxfVariable_Reflectance,
+    wxfVariable_CloudMask,
+    wxfVariable_CloudPhase,
+    wxfVariable_CloudOpticalDepth,
+    wxfVariable_CloudEffectiveRadius,
+    wxfVariable_CloudEmissivity
   };
   return values;
 }
 
 inline const char * const *EnumNameswxfVariable() {
-  static const char * const names[32] = {
+  static const char * const names[39] = {
     "Unspecified",
     "Temperature2m",
     "DewpointTemperature2m",
@@ -318,13 +350,20 @@ inline const char * const *EnumNameswxfVariable() {
     "TotalColumnWaterVapour",
     "SurfacePressure",
     "GeopotentialHeight",
+    "BrightnessTemperature",
+    "Reflectance",
+    "CloudMask",
+    "CloudPhase",
+    "CloudOpticalDepth",
+    "CloudEffectiveRadius",
+    "CloudEmissivity",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamewxfVariable(wxfVariable e) {
-  if (::flatbuffers::IsOutRange(e, wxfVariable_Unspecified, wxfVariable_GeopotentialHeight)) return "";
+  if (::flatbuffers::IsOutRange(e, wxfVariable_Unspecified, wxfVariable_CloudEmissivity)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameswxfVariable()[index];
 }
@@ -351,11 +390,16 @@ enum wxfLevelKind : int8_t {
   /// For fields defined at altitude rather than on pressure levels (for
   /// example the upper atmosphere).
   wxfLevelKind_HeightAboveEllipsoid = 7,
+  /// The top of the cloud a satellite retrieval saw in each cell; the level
+  /// varies from cell to cell and LEVEL_VALUE is unused. The height itself
+  /// is a GeopotentialHeight field at this level (a Temperature field gives
+  /// the cloud-top temperature), never implied by the level.
+  wxfLevelKind_CloudTop = 8,
   wxfLevelKind_MIN = wxfLevelKind_Surface,
-  wxfLevelKind_MAX = wxfLevelKind_HeightAboveEllipsoid
+  wxfLevelKind_MAX = wxfLevelKind_CloudTop
 };
 
-inline const wxfLevelKind (&EnumValueswxfLevelKind())[8] {
+inline const wxfLevelKind (&EnumValueswxfLevelKind())[9] {
   static const wxfLevelKind values[] = {
     wxfLevelKind_Surface,
     wxfLevelKind_HeightAboveGround,
@@ -364,13 +408,14 @@ inline const wxfLevelKind (&EnumValueswxfLevelKind())[8] {
     wxfLevelKind_EntireAtmosphere,
     wxfLevelKind_TopOfAtmosphere,
     wxfLevelKind_Tropopause,
-    wxfLevelKind_HeightAboveEllipsoid
+    wxfLevelKind_HeightAboveEllipsoid,
+    wxfLevelKind_CloudTop
   };
   return values;
 }
 
 inline const char * const *EnumNameswxfLevelKind() {
-  static const char * const names[9] = {
+  static const char * const names[10] = {
     "Surface",
     "HeightAboveGround",
     "PressureLevel",
@@ -379,13 +424,14 @@ inline const char * const *EnumNameswxfLevelKind() {
     "TopOfAtmosphere",
     "Tropopause",
     "HeightAboveEllipsoid",
+    "CloudTop",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamewxfLevelKind(wxfLevelKind e) {
-  if (::flatbuffers::IsOutRange(e, wxfLevelKind_Surface, wxfLevelKind_HeightAboveEllipsoid)) return "";
+  if (::flatbuffers::IsOutRange(e, wxfLevelKind_Surface, wxfLevelKind_CloudTop)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameswxfLevelKind()[index];
 }
@@ -474,29 +520,50 @@ enum wxfValuesEncoding : int8_t {
   /// Samples are a content-addressed chunk named by CHUNK_CID; CHUNK_DTYPE /
   /// CHUNK_CODECS describe its layout. Used above 1,048,576 cells.
   wxfValuesEncoding_ContentAddressedChunk = 1,
+  /// Samples are inline in QUANTIZED_U16 as unsigned 16-bit codes: value =
+  /// ADD_OFFSET + SCALE_FACTOR * code; code 65535 marks a missing cell.
+  /// Same cell limit and order as InlineFloat32. VALUE_MIN / VALUE_MAX are
+  /// decoded values.
+  wxfValuesEncoding_InlineQuantizedUint16 = 2,
+  /// Samples are inline in QUANTIZED_U8 as unsigned 8-bit codes: value =
+  /// ADD_OFFSET + SCALE_FACTOR * code; code 255 marks a missing cell. Same
+  /// cell limit and order as InlineFloat32.
+  wxfValuesEncoding_InlineQuantizedUint8 = 3,
+  /// Samples are quantized codes as InlineQuantizedUint16 / InlineQuantizedUint8
+  /// (CHUNK_DTYPE "uint16" or "uint8"; value = ADD_OFFSET + SCALE_FACTOR *
+  /// code; the all-ones code marks a missing cell), inline in QUANTIZED_U8 as
+  /// a chunk encoded by CHUNK_CODECS. Same cell limit and order as
+  /// InlineFloat32; CHUNK_BYTE_LENGTH is the chunk's length.
+  wxfValuesEncoding_InlineEncodedChunk = 4,
   wxfValuesEncoding_MIN = wxfValuesEncoding_InlineFloat32,
-  wxfValuesEncoding_MAX = wxfValuesEncoding_ContentAddressedChunk
+  wxfValuesEncoding_MAX = wxfValuesEncoding_InlineEncodedChunk
 };
 
-inline const wxfValuesEncoding (&EnumValueswxfValuesEncoding())[2] {
+inline const wxfValuesEncoding (&EnumValueswxfValuesEncoding())[5] {
   static const wxfValuesEncoding values[] = {
     wxfValuesEncoding_InlineFloat32,
-    wxfValuesEncoding_ContentAddressedChunk
+    wxfValuesEncoding_ContentAddressedChunk,
+    wxfValuesEncoding_InlineQuantizedUint16,
+    wxfValuesEncoding_InlineQuantizedUint8,
+    wxfValuesEncoding_InlineEncodedChunk
   };
   return values;
 }
 
 inline const char * const *EnumNameswxfValuesEncoding() {
-  static const char * const names[3] = {
+  static const char * const names[6] = {
     "InlineFloat32",
     "ContentAddressedChunk",
+    "InlineQuantizedUint16",
+    "InlineQuantizedUint8",
+    "InlineEncodedChunk",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamewxfValuesEncoding(wxfValuesEncoding e) {
-  if (::flatbuffers::IsOutRange(e, wxfValuesEncoding_InlineFloat32, wxfValuesEncoding_ContentAddressedChunk)) return "";
+  if (::flatbuffers::IsOutRange(e, wxfValuesEncoding_InlineFloat32, wxfValuesEncoding_InlineEncodedChunk)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameswxfValuesEncoding()[index];
 }
@@ -755,7 +822,17 @@ struct WXF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_LICENSE_URL = 78,
     VT_CITATION = 80,
     VT_PRODUCER_PEER_ID = 82,
-    VT_TIME_BASIS = 84
+    VT_TIME_BASIS = 84,
+    VT_QUANTIZED_U16 = 86,
+    VT_QUANTIZED_U8 = 88,
+    VT_SCALE_FACTOR = 90,
+    VT_ADD_OFFSET = 92,
+    VT_SENSOR_ID = 94,
+    VT_CHANNEL_WAVELENGTH_UM = 96,
+    VT_PLATFORM_LONGITUDE_DEG = 98,
+    VT_PLATFORM_LATITUDE_DEG = 100,
+    VT_PLATFORM_HEIGHT_M = 102,
+    VT_SCAN_END_TIME_MS = 104
   };
   /// Stable identifier of the whole field this record belongs to; equal
   /// across all tiles of one (producer, init, member, variable, level, lead).
@@ -872,12 +949,21 @@ struct WXF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *CHUNK_CID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CHUNK_CID);
   }
-  /// Element type of the chunk (e.g. "float32", "float16").
+  /// Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+  /// for InlineEncodedChunk).
   const ::flatbuffers::String *CHUNK_DTYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CHUNK_DTYPE);
   }
   /// Codec chain applied to the chunk, outermost last (e.g. "bytes",
-  /// "zstd").
+  /// "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+  /// order of VALUES (little-endian elements):
+  ///   "delta"   each element less the one before it, the first kept,
+  ///             wrapping in the element type;
+  ///   "zigzag"  each element read as signed in its type and mapped to
+  ///             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+  ///   "shuffle" the elements' bytes grouped by significance, every
+  ///             element's least significant byte first.
+  /// Decoding applies the inverses from the last back.
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *CHUNK_CODECS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_CHUNK_CODECS);
   }
@@ -936,6 +1022,56 @@ struct WXF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// and horizon are meaningful. The default preserves existing records.
   wxfTimeBasis TIME_BASIS() const {
     return static_cast<wxfTimeBasis>(GetField<int8_t>(VT_TIME_BASIS, 0));
+  }
+  /// Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+  /// GRID.NLAT * GRID.NLON in the order of VALUES.
+  const ::flatbuffers::Vector<uint16_t> *QUANTIZED_U16() const {
+    return GetPointer<const ::flatbuffers::Vector<uint16_t> *>(VT_QUANTIZED_U16);
+  }
+  /// Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+  /// encoded chunk when it is InlineEncodedChunk.
+  const ::flatbuffers::Vector<uint8_t> *QUANTIZED_U8() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_QUANTIZED_U8);
+  }
+  /// Scale applied to a quantized code, in UNITS per code step.
+  double SCALE_FACTOR() const {
+    return GetField<double>(VT_SCALE_FACTOR, 1.0);
+  }
+  /// Offset added after scaling a quantized code, in UNITS.
+  double ADD_OFFSET() const {
+    return GetField<double>(VT_ADD_OFFSET, 0.0);
+  }
+  /// Instrument that observed the field: the platform and instrument
+  /// designation its operator publishes. Absent for model output.
+  const ::flatbuffers::String *SENSOR_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
+  }
+  /// Central wavelength of the channel the field was measured or retrieved
+  /// at, micrometres; 0 when not a single channel.
+  float CHANNEL_WAVELENGTH_UM() const {
+    return GetField<float>(VT_CHANNEL_WAVELENGTH_UM, 0.0f);
+  }
+  /// Geodetic longitude of the observing platform, degrees east (the
+  /// sub-satellite point of a geostationary imager), for viewing-geometry
+  /// and parallax corrections. NaN when unstated.
+  double PLATFORM_LONGITUDE_DEG() const {
+    return GetField<double>(VT_PLATFORM_LONGITUDE_DEG, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Geodetic latitude of the observing platform, degrees north. NaN when
+  /// unstated.
+  double PLATFORM_LATITUDE_DEG() const {
+    return GetField<double>(VT_PLATFORM_LATITUDE_DEG, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Height of the observing platform above the WGS84 ellipsoid, metres.
+  /// NaN when unstated.
+  double PLATFORM_HEIGHT_M() const {
+    return GetField<double>(VT_PLATFORM_HEIGHT_M, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// End of the observation's scan, Unix milliseconds UTC, when the samples
+  /// were taken over an interval; VALID_TIME_MS is then the scan start.
+  /// 0 when unstated.
+  uint64_t SCAN_END_TIME_MS() const {
+    return GetField<uint64_t>(VT_SCAN_END_TIME_MS, 0);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -998,6 +1134,19 @@ struct WXF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_PRODUCER_PEER_ID) &&
            verifier.VerifyString(PRODUCER_PEER_ID()) &&
            VerifyField<int8_t>(verifier, VT_TIME_BASIS, 1) &&
+           VerifyOffset(verifier, VT_QUANTIZED_U16) &&
+           verifier.VerifyVector(QUANTIZED_U16()) &&
+           VerifyOffset(verifier, VT_QUANTIZED_U8) &&
+           verifier.VerifyVector(QUANTIZED_U8()) &&
+           VerifyField<double>(verifier, VT_SCALE_FACTOR, 8) &&
+           VerifyField<double>(verifier, VT_ADD_OFFSET, 8) &&
+           VerifyOffset(verifier, VT_SENSOR_ID) &&
+           verifier.VerifyString(SENSOR_ID()) &&
+           VerifyField<float>(verifier, VT_CHANNEL_WAVELENGTH_UM, 4) &&
+           VerifyField<double>(verifier, VT_PLATFORM_LONGITUDE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_PLATFORM_LATITUDE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_PLATFORM_HEIGHT_M, 8) &&
+           VerifyField<uint64_t>(verifier, VT_SCAN_END_TIME_MS, 8) &&
            verifier.EndTable();
   }
 };
@@ -1129,6 +1278,36 @@ struct WXFBuilder {
   void add_TIME_BASIS(wxfTimeBasis TIME_BASIS) {
     fbb_.AddElement<int8_t>(WXF::VT_TIME_BASIS, static_cast<int8_t>(TIME_BASIS), 0);
   }
+  void add_QUANTIZED_U16(::flatbuffers::Offset<::flatbuffers::Vector<uint16_t>> QUANTIZED_U16) {
+    fbb_.AddOffset(WXF::VT_QUANTIZED_U16, QUANTIZED_U16);
+  }
+  void add_QUANTIZED_U8(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> QUANTIZED_U8) {
+    fbb_.AddOffset(WXF::VT_QUANTIZED_U8, QUANTIZED_U8);
+  }
+  void add_SCALE_FACTOR(double SCALE_FACTOR) {
+    fbb_.AddElement<double>(WXF::VT_SCALE_FACTOR, SCALE_FACTOR, 1.0);
+  }
+  void add_ADD_OFFSET(double ADD_OFFSET) {
+    fbb_.AddElement<double>(WXF::VT_ADD_OFFSET, ADD_OFFSET, 0.0);
+  }
+  void add_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID) {
+    fbb_.AddOffset(WXF::VT_SENSOR_ID, SENSOR_ID);
+  }
+  void add_CHANNEL_WAVELENGTH_UM(float CHANNEL_WAVELENGTH_UM) {
+    fbb_.AddElement<float>(WXF::VT_CHANNEL_WAVELENGTH_UM, CHANNEL_WAVELENGTH_UM, 0.0f);
+  }
+  void add_PLATFORM_LONGITUDE_DEG(double PLATFORM_LONGITUDE_DEG) {
+    fbb_.AddElement<double>(WXF::VT_PLATFORM_LONGITUDE_DEG, PLATFORM_LONGITUDE_DEG, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_PLATFORM_LATITUDE_DEG(double PLATFORM_LATITUDE_DEG) {
+    fbb_.AddElement<double>(WXF::VT_PLATFORM_LATITUDE_DEG, PLATFORM_LATITUDE_DEG, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_PLATFORM_HEIGHT_M(double PLATFORM_HEIGHT_M) {
+    fbb_.AddElement<double>(WXF::VT_PLATFORM_HEIGHT_M, PLATFORM_HEIGHT_M, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SCAN_END_TIME_MS(uint64_t SCAN_END_TIME_MS) {
+    fbb_.AddElement<uint64_t>(WXF::VT_SCAN_END_TIME_MS, SCAN_END_TIME_MS, 0);
+  }
   explicit WXFBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1184,12 +1363,32 @@ inline ::flatbuffers::Offset<WXF> CreateWXF(
     ::flatbuffers::Offset<::flatbuffers::String> LICENSE_URL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CITATION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PRODUCER_PEER_ID = 0,
-    wxfTimeBasis TIME_BASIS = wxfTimeBasis_Initialization) {
+    wxfTimeBasis TIME_BASIS = wxfTimeBasis_Initialization,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint16_t>> QUANTIZED_U16 = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> QUANTIZED_U8 = 0,
+    double SCALE_FACTOR = 1.0,
+    double ADD_OFFSET = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID = 0,
+    float CHANNEL_WAVELENGTH_UM = 0.0f,
+    double PLATFORM_LONGITUDE_DEG = std::numeric_limits<double>::quiet_NaN(),
+    double PLATFORM_LATITUDE_DEG = std::numeric_limits<double>::quiet_NaN(),
+    double PLATFORM_HEIGHT_M = std::numeric_limits<double>::quiet_NaN(),
+    uint64_t SCAN_END_TIME_MS = 0) {
   WXFBuilder builder_(_fbb);
+  builder_.add_SCAN_END_TIME_MS(SCAN_END_TIME_MS);
+  builder_.add_PLATFORM_HEIGHT_M(PLATFORM_HEIGHT_M);
+  builder_.add_PLATFORM_LATITUDE_DEG(PLATFORM_LATITUDE_DEG);
+  builder_.add_PLATFORM_LONGITUDE_DEG(PLATFORM_LONGITUDE_DEG);
+  builder_.add_ADD_OFFSET(ADD_OFFSET);
+  builder_.add_SCALE_FACTOR(SCALE_FACTOR);
   builder_.add_RETRIEVED_AT(RETRIEVED_AT);
   builder_.add_CHUNK_BYTE_LENGTH(CHUNK_BYTE_LENGTH);
   builder_.add_VALID_TIME_MS(VALID_TIME_MS);
   builder_.add_INIT_TIME_MS(INIT_TIME_MS);
+  builder_.add_CHANNEL_WAVELENGTH_UM(CHANNEL_WAVELENGTH_UM);
+  builder_.add_SENSOR_ID(SENSOR_ID);
+  builder_.add_QUANTIZED_U8(QUANTIZED_U8);
+  builder_.add_QUANTIZED_U16(QUANTIZED_U16);
   builder_.add_PRODUCER_PEER_ID(PRODUCER_PEER_ID);
   builder_.add_CITATION(CITATION);
   builder_.add_LICENSE_URL(LICENSE_URL);
@@ -1272,7 +1471,17 @@ inline ::flatbuffers::Offset<WXF> CreateWXFDirect(
     const char *LICENSE_URL = nullptr,
     const char *CITATION = nullptr,
     const char *PRODUCER_PEER_ID = nullptr,
-    wxfTimeBasis TIME_BASIS = wxfTimeBasis_Initialization) {
+    wxfTimeBasis TIME_BASIS = wxfTimeBasis_Initialization,
+    const std::vector<uint16_t> *QUANTIZED_U16 = nullptr,
+    const std::vector<uint8_t> *QUANTIZED_U8 = nullptr,
+    double SCALE_FACTOR = 1.0,
+    double ADD_OFFSET = 0.0,
+    const char *SENSOR_ID = nullptr,
+    float CHANNEL_WAVELENGTH_UM = 0.0f,
+    double PLATFORM_LONGITUDE_DEG = std::numeric_limits<double>::quiet_NaN(),
+    double PLATFORM_LATITUDE_DEG = std::numeric_limits<double>::quiet_NaN(),
+    double PLATFORM_HEIGHT_M = std::numeric_limits<double>::quiet_NaN(),
+    uint64_t SCAN_END_TIME_MS = 0) {
   auto FIELD_ID__ = FIELD_ID ? _fbb.CreateString(FIELD_ID) : 0;
   auto MODEL_ID__ = MODEL_ID ? _fbb.CreateString(MODEL_ID) : 0;
   auto MODEL_VERSION__ = MODEL_VERSION ? _fbb.CreateString(MODEL_VERSION) : 0;
@@ -1288,6 +1497,9 @@ inline ::flatbuffers::Offset<WXF> CreateWXFDirect(
   auto LICENSE_URL__ = LICENSE_URL ? _fbb.CreateString(LICENSE_URL) : 0;
   auto CITATION__ = CITATION ? _fbb.CreateString(CITATION) : 0;
   auto PRODUCER_PEER_ID__ = PRODUCER_PEER_ID ? _fbb.CreateString(PRODUCER_PEER_ID) : 0;
+  auto QUANTIZED_U16__ = QUANTIZED_U16 ? _fbb.CreateVector<uint16_t>(*QUANTIZED_U16) : 0;
+  auto QUANTIZED_U8__ = QUANTIZED_U8 ? _fbb.CreateVector<uint8_t>(*QUANTIZED_U8) : 0;
+  auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
   return CreateWXF(
       _fbb,
       FIELD_ID__,
@@ -1330,7 +1542,17 @@ inline ::flatbuffers::Offset<WXF> CreateWXFDirect(
       LICENSE_URL__,
       CITATION__,
       PRODUCER_PEER_ID__,
-      TIME_BASIS);
+      TIME_BASIS,
+      QUANTIZED_U16__,
+      QUANTIZED_U8__,
+      SCALE_FACTOR,
+      ADD_OFFSET,
+      SENSOR_ID__,
+      CHANNEL_WAVELENGTH_UM,
+      PLATFORM_LONGITUDE_DEG,
+      PLATFORM_LATITUDE_DEG,
+      PLATFORM_HEIGHT_M,
+      SCAN_END_TIME_MS);
 }
 
 inline const WXF *GetWXF(const void *buf) {

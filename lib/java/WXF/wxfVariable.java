@@ -140,8 +140,47 @@ public final class wxfVariable {
    * from Geopotential (m^2/s^2); a consumer never relabels one as the other.
    */
   public static final byte GeopotentialHeight = 30;
+  /**
+   * Brightness temperature a radiometer channel measured, kelvin: the
+   * temperature of a black body emitting the observed radiance at
+   * CHANNEL_WAVELENGTH_UM. At LEVEL_KIND TopOfAtmosphere.
+   */
+  public static final byte BrightnessTemperature = 31;
+  /**
+   * Top-of-atmosphere bidirectional reflectance factor of a solar channel
+   * at CHANNEL_WAVELENGTH_UM, dimensionless (1 = a white Lambertian
+   * surface under the same illumination), not corrected for the solar
+   * zenith angle unless VARIABLE_NAME says so. Missing at night.
+   */
+  public static final byte Reflectance = 32;
+  /**
+   * Categorical cloud mask of a satellite retrieval: 0 clear, 1 probably
+   * clear, 2 probably cloudy, 3 cloudy. Units "1". A cell resampled from
+   * several source pixels carries their mean, so fractional values are
+   * the average category, not a new class.
+   */
+  public static final byte CloudMask = 33;
+  /**
+   * Categorical thermodynamic phase at the cloud top: 0 clear, 1 liquid
+   * water, 2 supercooled liquid water, 3 mixed, 4 ice, 5 unknown. Units
+   * "1". Resampled cells carry the category of the source pixel nearest the
+   * cell centre.
+   */
+  public static final byte CloudPhase = 34;
+  /**
+   * Cloud optical depth at CHANNEL_WAVELENGTH_UM, dimensionless.
+   */
+  public static final byte CloudOpticalDepth = 35;
+  /**
+   * Cloud-top effective particle radius, micrometres (units "um").
+   */
+  public static final byte CloudEffectiveRadius = 36;
+  /**
+   * Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
+   */
+  public static final byte CloudEmissivity = 37;
 
-  public static final String[] names = { "Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure", "GeopotentialHeight", };
+  public static final String[] names = { "Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure", "GeopotentialHeight", "BrightnessTemperature", "Reflectance", "CloudMask", "CloudPhase", "CloudOpticalDepth", "CloudEffectiveRadius", "CloudEmissivity", };
 
   public static String name(int e) { return names[e]; }
 }

@@ -283,7 +283,8 @@ CHUNK_CID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Element type of the chunk (e.g. "float32", "float16").
+ * Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+ * for InlineEncodedChunk).
  */
 CHUNK_DTYPE():string|null
 CHUNK_DTYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -294,7 +295,15 @@ CHUNK_DTYPE(optionalEncoding?:any):string|Uint8Array|null {
 
 /**
  * Codec chain applied to the chunk, outermost last (e.g. "bytes",
- * "zstd").
+ * "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+ * order of VALUES (little-endian elements):
+ *   "delta"   each element less the one before it, the first kept,
+ *             wrapping in the element type;
+ *   "zigzag"  each element read as signed in its type and mapped to
+ *             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+ *   "shuffle" the elements' bytes grouped by significance, every
+ *             element's least significant byte first.
+ * Decoding applies the inverses from the last back.
  */
 CHUNK_CODECS(index: number):string
 CHUNK_CODECS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
@@ -428,8 +437,120 @@ TIME_BASIS():wxfTimeBasis {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : wxfTimeBasis.Initialization;
 }
 
+/**
+ * Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+ * GRID.NLAT * GRID.NLON in the order of VALUES.
+ */
+QUANTIZED_U16(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.readUint16(this.bb!.__vector(this.bb_pos + offset) + index * 2) : 0;
+}
+
+quantizedU16Length():number {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+quantizedU16Array():Uint16Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? new Uint16Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+ * encoded chunk when it is InlineEncodedChunk.
+ */
+QUANTIZED_U8(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+quantizedU8Length():number {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+quantizedU8Array():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Scale applied to a quantized code, in UNITS per code step.
+ */
+SCALE_FACTOR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 1.0;
+}
+
+/**
+ * Offset added after scaling a quantized code, in UNITS.
+ */
+ADD_OFFSET():number {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Instrument that observed the field: the platform and instrument
+ * designation its operator publishes. Absent for model output.
+ */
+SENSOR_ID():string|null
+SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Central wavelength of the channel the field was measured or retrieved
+ * at, micrometres; 0 when not a single channel.
+ */
+CHANNEL_WAVELENGTH_UM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Geodetic longitude of the observing platform, degrees east (the
+ * sub-satellite point of a geostationary imager), for viewing-geometry
+ * and parallax corrections. NaN when unstated.
+ */
+PLATFORM_LONGITUDE_DEG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Geodetic latitude of the observing platform, degrees north. NaN when
+ * unstated.
+ */
+PLATFORM_LATITUDE_DEG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Height of the observing platform above the WGS84 ellipsoid, metres.
+ * NaN when unstated.
+ */
+PLATFORM_HEIGHT_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 102);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * End of the observation's scan, Unix milliseconds UTC, when the samples
+ * were taken over an interval; VALID_TIME_MS is then the scan start.
+ * 0 when unstated.
+ */
+SCAN_END_TIME_MS():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
 static startWXF(builder:flatbuffers.Builder) {
-  builder.startObject(41);
+  builder.startObject(51);
 }
 
 static addFieldId(builder:flatbuffers.Builder, FIELD_IDOffset:flatbuffers.Offset) {
@@ -625,6 +746,75 @@ static addTimeBasis(builder:flatbuffers.Builder, TIME_BASIS:wxfTimeBasis) {
   builder.addFieldInt8(40, TIME_BASIS, wxfTimeBasis.Initialization);
 }
 
+static addQuantizedU16(builder:flatbuffers.Builder, QUANTIZED_U16Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(41, QUANTIZED_U16Offset, 0);
+}
+
+static createQuantizedU16Vector(builder:flatbuffers.Builder, data:number[]|Uint16Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createQuantizedU16Vector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createQuantizedU16Vector(builder:flatbuffers.Builder, data:number[]|Uint16Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(2, data.length, 2);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt16(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startQuantizedU16Vector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(2, numElems, 2);
+}
+
+static addQuantizedU8(builder:flatbuffers.Builder, QUANTIZED_U8Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(42, QUANTIZED_U8Offset, 0);
+}
+
+static createQuantizedU8Vector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startQuantizedU8Vector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
+static addScaleFactor(builder:flatbuffers.Builder, SCALE_FACTOR:number) {
+  builder.addFieldFloat64(43, SCALE_FACTOR, 1.0);
+}
+
+static addAddOffset(builder:flatbuffers.Builder, ADD_OFFSET:number) {
+  builder.addFieldFloat64(44, ADD_OFFSET, 0.0);
+}
+
+static addSensorId(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(45, SENSOR_IDOffset, 0);
+}
+
+static addChannelWavelengthUm(builder:flatbuffers.Builder, CHANNEL_WAVELENGTH_UM:number) {
+  builder.addFieldFloat32(46, CHANNEL_WAVELENGTH_UM, 0.0);
+}
+
+static addPlatformLongitudeDeg(builder:flatbuffers.Builder, PLATFORM_LONGITUDE_DEG:number) {
+  builder.addFieldFloat64(47, PLATFORM_LONGITUDE_DEG, NaN);
+}
+
+static addPlatformLatitudeDeg(builder:flatbuffers.Builder, PLATFORM_LATITUDE_DEG:number) {
+  builder.addFieldFloat64(48, PLATFORM_LATITUDE_DEG, NaN);
+}
+
+static addPlatformHeightM(builder:flatbuffers.Builder, PLATFORM_HEIGHT_M:number) {
+  builder.addFieldFloat64(49, PLATFORM_HEIGHT_M, NaN);
+}
+
+static addScanEndTimeMs(builder:flatbuffers.Builder, SCAN_END_TIME_MS:bigint) {
+  builder.addFieldInt64(50, SCAN_END_TIME_MS, BigInt('0'));
+}
+
 static endWXF(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // FIELD_ID
@@ -683,7 +873,17 @@ unpack(): WXFT {
     this.LICENSE_URL(),
     this.CITATION(),
     this.PRODUCER_PEER_ID(),
-    this.TIME_BASIS()
+    this.TIME_BASIS(),
+    this.bb!.createScalarList<number>(this.QUANTIZED_U16.bind(this), this.quantizedU16Length()),
+    this.bb!.createScalarList<number>(this.QUANTIZED_U8.bind(this), this.quantizedU8Length()),
+    this.SCALE_FACTOR(),
+    this.ADD_OFFSET(),
+    this.SENSOR_ID(),
+    this.CHANNEL_WAVELENGTH_UM(),
+    this.PLATFORM_LONGITUDE_DEG(),
+    this.PLATFORM_LATITUDE_DEG(),
+    this.PLATFORM_HEIGHT_M(),
+    this.SCAN_END_TIME_MS()
   );
 }
 
@@ -730,6 +930,16 @@ unpackTo(_o: WXFT): void {
   _o.CITATION = this.CITATION();
   _o.PRODUCER_PEER_ID = this.PRODUCER_PEER_ID();
   _o.TIME_BASIS = this.TIME_BASIS();
+  _o.QUANTIZED_U16 = this.bb!.createScalarList<number>(this.QUANTIZED_U16.bind(this), this.quantizedU16Length());
+  _o.QUANTIZED_U8 = this.bb!.createScalarList<number>(this.QUANTIZED_U8.bind(this), this.quantizedU8Length());
+  _o.SCALE_FACTOR = this.SCALE_FACTOR();
+  _o.ADD_OFFSET = this.ADD_OFFSET();
+  _o.SENSOR_ID = this.SENSOR_ID();
+  _o.CHANNEL_WAVELENGTH_UM = this.CHANNEL_WAVELENGTH_UM();
+  _o.PLATFORM_LONGITUDE_DEG = this.PLATFORM_LONGITUDE_DEG();
+  _o.PLATFORM_LATITUDE_DEG = this.PLATFORM_LATITUDE_DEG();
+  _o.PLATFORM_HEIGHT_M = this.PLATFORM_HEIGHT_M();
+  _o.SCAN_END_TIME_MS = this.SCAN_END_TIME_MS();
 }
 }
 
@@ -775,7 +985,17 @@ constructor(
   public LICENSE_URL: string|Uint8Array|null = null,
   public CITATION: string|Uint8Array|null = null,
   public PRODUCER_PEER_ID: string|Uint8Array|null = null,
-  public TIME_BASIS: wxfTimeBasis = wxfTimeBasis.Initialization
+  public TIME_BASIS: wxfTimeBasis = wxfTimeBasis.Initialization,
+  public QUANTIZED_U16: (number)[] = [],
+  public QUANTIZED_U8: (number)[] = [],
+  public SCALE_FACTOR: number = 1.0,
+  public ADD_OFFSET: number = 0.0,
+  public SENSOR_ID: string|Uint8Array|null = null,
+  public CHANNEL_WAVELENGTH_UM: number = 0.0,
+  public PLATFORM_LONGITUDE_DEG: number = NaN,
+  public PLATFORM_LATITUDE_DEG: number = NaN,
+  public PLATFORM_HEIGHT_M: number = NaN,
+  public SCAN_END_TIME_MS: bigint = BigInt('0')
 ){}
 
 
@@ -796,6 +1016,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const LICENSE_URL = (this.LICENSE_URL !== null ? builder.createString(this.LICENSE_URL!) : 0);
   const CITATION = (this.CITATION !== null ? builder.createString(this.CITATION!) : 0);
   const PRODUCER_PEER_ID = (this.PRODUCER_PEER_ID !== null ? builder.createString(this.PRODUCER_PEER_ID!) : 0);
+  const QUANTIZED_U16 = WXF.createQuantizedU16Vector(builder, this.QUANTIZED_U16);
+  const QUANTIZED_U8 = WXF.createQuantizedU8Vector(builder, this.QUANTIZED_U8);
+  const SENSOR_ID = (this.SENSOR_ID !== null ? builder.createString(this.SENSOR_ID!) : 0);
 
   WXF.startWXF(builder);
   WXF.addFieldId(builder, FIELD_ID);
@@ -839,6 +1062,16 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   WXF.addCitation(builder, CITATION);
   WXF.addProducerPeerId(builder, PRODUCER_PEER_ID);
   WXF.addTimeBasis(builder, this.TIME_BASIS);
+  WXF.addQuantizedU16(builder, QUANTIZED_U16);
+  WXF.addQuantizedU8(builder, QUANTIZED_U8);
+  WXF.addScaleFactor(builder, this.SCALE_FACTOR);
+  WXF.addAddOffset(builder, this.ADD_OFFSET);
+  WXF.addSensorId(builder, SENSOR_ID);
+  WXF.addChannelWavelengthUm(builder, this.CHANNEL_WAVELENGTH_UM);
+  WXF.addPlatformLongitudeDeg(builder, this.PLATFORM_LONGITUDE_DEG);
+  WXF.addPlatformLatitudeDeg(builder, this.PLATFORM_LATITUDE_DEG);
+  WXF.addPlatformHeightM(builder, this.PLATFORM_HEIGHT_M);
+  WXF.addScanEndTimeMs(builder, this.SCAN_END_TIME_MS);
 
   return WXF.endWXF(builder);
 }

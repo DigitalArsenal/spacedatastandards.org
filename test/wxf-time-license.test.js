@@ -34,10 +34,14 @@ describe('WXF source time and licence contract', () => {
     assert.equal(record.LICENSE_CLASS,wxfLicenseClass.OpenAttribution);
     assert.equal(record.VALID_TIME_MS,1788829200000n);
   });
-  it('appends TIME_BASIS after every existing WXF field', () => {
+  it('appends TIME_BASIS after every WXF field that existed before it', () => {
     const schema=fs.readFileSync(new URL('../schema/WXF/main.fbs',import.meta.url),'utf8');
-    const fields=[...schema.split('table WXF {')[1].split('}')[0].matchAll(/^  ([A-Z_]+):/gm)].map(m=>m[1]);
-    assert.deepEqual(fields.slice(-2),['PRODUCER_PEER_ID','TIME_BASIS']);
+    const fields=[...schema.split('table WXF {')[1].split('}')[0].matchAll(/^  ([A-Z0-9_]+):/gm)].map(m=>m[1]);
+    const at=fields.indexOf('TIME_BASIS');
+    assert.deepEqual(fields.slice(at-1,at+1),['PRODUCER_PEER_ID','TIME_BASIS']);
+    // only fields appended later follow it (append-only): the imager observation fields
+    assert.deepEqual(fields.slice(at+1),['QUANTIZED_U16','QUANTIZED_U8','SCALE_FACTOR','ADD_OFFSET','SENSOR_ID',
+      'CHANNEL_WAVELENGTH_UM','PLATFORM_LONGITUDE_DEG','PLATFORM_LATITUDE_DEG','PLATFORM_HEIGHT_M','SCAN_END_TIME_MS']);
     assert.match(schema,/RETRIEVED_AT is not a substitute for initialization/);
   });
 });

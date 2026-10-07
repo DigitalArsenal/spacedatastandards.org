@@ -143,13 +143,22 @@ export declare class WXF implements flatbuffers.IUnpackableObject<WXFT> {
     CHUNK_CID(): string | null;
     CHUNK_CID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Element type of the chunk (e.g. "float32", "float16").
+     * Element type of the chunk (e.g. "float32", "float16"; "uint16" or "uint8"
+     * for InlineEncodedChunk).
      */
     CHUNK_DTYPE(): string | null;
     CHUNK_DTYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Codec chain applied to the chunk, outermost last (e.g. "bytes",
-     * "zstd").
+     * "zstd"). For InlineEncodedChunk, applied in order to the codes in the
+     * order of VALUES (little-endian elements):
+     *   "delta"   each element less the one before it, the first kept,
+     *             wrapping in the element type;
+     *   "zigzag"  each element read as signed in its type and mapped to
+     *             unsigned, n >= 0 to 2n and n < 0 to -2n - 1;
+     *   "shuffle" the elements' bytes grouped by significance, every
+     *             element's least significant byte first.
+     * Decoding applies the inverses from the last back.
      */
     CHUNK_CODECS(index: number): string;
     CHUNK_CODECS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
@@ -216,6 +225,61 @@ export declare class WXF implements flatbuffers.IUnpackableObject<WXFT> {
      * and horizon are meaningful. The default preserves existing records.
      */
     TIME_BASIS(): wxfTimeBasis;
+    /**
+     * Inline 16-bit codes when VALUES_ENCODING is InlineQuantizedUint16,
+     * GRID.NLAT * GRID.NLON in the order of VALUES.
+     */
+    QUANTIZED_U16(index: number): number | null;
+    quantizedU16Length(): number;
+    quantizedU16Array(): Uint16Array | null;
+    /**
+     * Inline 8-bit codes when VALUES_ENCODING is InlineQuantizedUint8; the
+     * encoded chunk when it is InlineEncodedChunk.
+     */
+    QUANTIZED_U8(index: number): number | null;
+    quantizedU8Length(): number;
+    quantizedU8Array(): Uint8Array | null;
+    /**
+     * Scale applied to a quantized code, in UNITS per code step.
+     */
+    SCALE_FACTOR(): number;
+    /**
+     * Offset added after scaling a quantized code, in UNITS.
+     */
+    ADD_OFFSET(): number;
+    /**
+     * Instrument that observed the field: the platform and instrument
+     * designation its operator publishes. Absent for model output.
+     */
+    SENSOR_ID(): string | null;
+    SENSOR_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Central wavelength of the channel the field was measured or retrieved
+     * at, micrometres; 0 when not a single channel.
+     */
+    CHANNEL_WAVELENGTH_UM(): number;
+    /**
+     * Geodetic longitude of the observing platform, degrees east (the
+     * sub-satellite point of a geostationary imager), for viewing-geometry
+     * and parallax corrections. NaN when unstated.
+     */
+    PLATFORM_LONGITUDE_DEG(): number;
+    /**
+     * Geodetic latitude of the observing platform, degrees north. NaN when
+     * unstated.
+     */
+    PLATFORM_LATITUDE_DEG(): number;
+    /**
+     * Height of the observing platform above the WGS84 ellipsoid, metres.
+     * NaN when unstated.
+     */
+    PLATFORM_HEIGHT_M(): number;
+    /**
+     * End of the observation's scan, Unix milliseconds UTC, when the samples
+     * were taken over an interval; VALID_TIME_MS is then the scan start.
+     * 0 when unstated.
+     */
+    SCAN_END_TIME_MS(): bigint;
     static startWXF(builder: flatbuffers.Builder): void;
     static addFieldId(builder: flatbuffers.Builder, FIELD_IDOffset: flatbuffers.Offset): void;
     static addModelClass(builder: flatbuffers.Builder, MODEL_CLASS: wxfModelClass): void;
@@ -266,6 +330,24 @@ export declare class WXF implements flatbuffers.IUnpackableObject<WXFT> {
     static addCitation(builder: flatbuffers.Builder, CITATIONOffset: flatbuffers.Offset): void;
     static addProducerPeerId(builder: flatbuffers.Builder, PRODUCER_PEER_IDOffset: flatbuffers.Offset): void;
     static addTimeBasis(builder: flatbuffers.Builder, TIME_BASIS: wxfTimeBasis): void;
+    static addQuantizedU16(builder: flatbuffers.Builder, QUANTIZED_U16Offset: flatbuffers.Offset): void;
+    static createQuantizedU16Vector(builder: flatbuffers.Builder, data: number[] | Uint16Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createQuantizedU16Vector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startQuantizedU16Vector(builder: flatbuffers.Builder, numElems: number): void;
+    static addQuantizedU8(builder: flatbuffers.Builder, QUANTIZED_U8Offset: flatbuffers.Offset): void;
+    static createQuantizedU8Vector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startQuantizedU8Vector(builder: flatbuffers.Builder, numElems: number): void;
+    static addScaleFactor(builder: flatbuffers.Builder, SCALE_FACTOR: number): void;
+    static addAddOffset(builder: flatbuffers.Builder, ADD_OFFSET: number): void;
+    static addSensorId(builder: flatbuffers.Builder, SENSOR_IDOffset: flatbuffers.Offset): void;
+    static addChannelWavelengthUm(builder: flatbuffers.Builder, CHANNEL_WAVELENGTH_UM: number): void;
+    static addPlatformLongitudeDeg(builder: flatbuffers.Builder, PLATFORM_LONGITUDE_DEG: number): void;
+    static addPlatformLatitudeDeg(builder: flatbuffers.Builder, PLATFORM_LATITUDE_DEG: number): void;
+    static addPlatformHeightM(builder: flatbuffers.Builder, PLATFORM_HEIGHT_M: number): void;
+    static addScanEndTimeMs(builder: flatbuffers.Builder, SCAN_END_TIME_MS: bigint): void;
     static endWXF(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishWXFBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedWXFBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -314,7 +396,17 @@ export declare class WXFT implements flatbuffers.IGeneratedObject {
     CITATION: string | Uint8Array | null;
     PRODUCER_PEER_ID: string | Uint8Array | null;
     TIME_BASIS: wxfTimeBasis;
-    constructor(FIELD_ID?: string | Uint8Array | null, MODEL_CLASS?: wxfModelClass, MODEL_ID?: string | Uint8Array | null, MODEL_VERSION?: string | Uint8Array | null, INIT_TIME_MS?: bigint, LEAD_HOURS?: number, VALID_TIME_MS?: bigint, HORIZON_HOURS?: number, MEMBER_KIND?: wxfMemberKind, MEMBER_INDEX?: number, ENSEMBLE_SIZE?: number, PERCENTILE?: number, THRESHOLD_VALUE?: number, VARIABLE?: wxfVariable, VARIABLE_NAME?: string | Uint8Array | null, UNITS?: string | Uint8Array | null, LEVEL_KIND?: wxfLevelKind, LEVEL_VALUE?: number, TEMPORAL_KIND?: wxfTemporalKind, ACCUMULATION_HOURS?: number, GRID?: WXFGridT | null, TILE_INDEX?: number, TILE_COUNT?: number, VALUES_ENCODING?: wxfValuesEncoding, VALUES?: (number)[], CHUNK_CID?: string | Uint8Array | null, CHUNK_DTYPE?: string | Uint8Array | null, CHUNK_CODECS?: (string)[], CHUNK_BYTE_LENGTH?: bigint, VALUE_MIN?: number, VALUE_MAX?: number, MISSING_COUNT?: number, ORIGIN_ID?: string | Uint8Array | null, DATASET_ID?: string | Uint8Array | null, SOURCE_URL?: string | Uint8Array | null, RETRIEVED_AT?: bigint, LICENSE_CLASS?: wxfLicenseClass, LICENSE_URL?: string | Uint8Array | null, CITATION?: string | Uint8Array | null, PRODUCER_PEER_ID?: string | Uint8Array | null, TIME_BASIS?: wxfTimeBasis);
+    QUANTIZED_U16: (number)[];
+    QUANTIZED_U8: (number)[];
+    SCALE_FACTOR: number;
+    ADD_OFFSET: number;
+    SENSOR_ID: string | Uint8Array | null;
+    CHANNEL_WAVELENGTH_UM: number;
+    PLATFORM_LONGITUDE_DEG: number;
+    PLATFORM_LATITUDE_DEG: number;
+    PLATFORM_HEIGHT_M: number;
+    SCAN_END_TIME_MS: bigint;
+    constructor(FIELD_ID?: string | Uint8Array | null, MODEL_CLASS?: wxfModelClass, MODEL_ID?: string | Uint8Array | null, MODEL_VERSION?: string | Uint8Array | null, INIT_TIME_MS?: bigint, LEAD_HOURS?: number, VALID_TIME_MS?: bigint, HORIZON_HOURS?: number, MEMBER_KIND?: wxfMemberKind, MEMBER_INDEX?: number, ENSEMBLE_SIZE?: number, PERCENTILE?: number, THRESHOLD_VALUE?: number, VARIABLE?: wxfVariable, VARIABLE_NAME?: string | Uint8Array | null, UNITS?: string | Uint8Array | null, LEVEL_KIND?: wxfLevelKind, LEVEL_VALUE?: number, TEMPORAL_KIND?: wxfTemporalKind, ACCUMULATION_HOURS?: number, GRID?: WXFGridT | null, TILE_INDEX?: number, TILE_COUNT?: number, VALUES_ENCODING?: wxfValuesEncoding, VALUES?: (number)[], CHUNK_CID?: string | Uint8Array | null, CHUNK_DTYPE?: string | Uint8Array | null, CHUNK_CODECS?: (string)[], CHUNK_BYTE_LENGTH?: bigint, VALUE_MIN?: number, VALUE_MAX?: number, MISSING_COUNT?: number, ORIGIN_ID?: string | Uint8Array | null, DATASET_ID?: string | Uint8Array | null, SOURCE_URL?: string | Uint8Array | null, RETRIEVED_AT?: bigint, LICENSE_CLASS?: wxfLicenseClass, LICENSE_URL?: string | Uint8Array | null, CITATION?: string | Uint8Array | null, PRODUCER_PEER_ID?: string | Uint8Array | null, TIME_BASIS?: wxfTimeBasis, QUANTIZED_U16?: (number)[], QUANTIZED_U8?: (number)[], SCALE_FACTOR?: number, ADD_OFFSET?: number, SENSOR_ID?: string | Uint8Array | null, CHANNEL_WAVELENGTH_UM?: number, PLATFORM_LONGITUDE_DEG?: number, PLATFORM_LATITUDE_DEG?: number, PLATFORM_HEIGHT_M?: number, SCAN_END_TIME_MS?: bigint);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=WXF.d.ts.map
