@@ -31,9 +31,11 @@ jobs:
   release-integrity:
     runs-on: ubuntu-latest
     steps:
+      # Shallow (default depth-1) checkout: --all reads the tracked files at
+      # HEAD and never needs history. A fetch-depth:0 clone of this repo
+      # (8.7 GB) hung here for 30+ min on v1.239.0, as it did for the PHP job
+      # on v1.177.0 (sds-publish-php-checkout-hang).
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -885,9 +887,10 @@ jobs:
       contains(inputs.packages, 'go') ||
       inputs.packages == 'all'
     steps:
+      # Shallow checkout: the job compares lib/go at HEAD and tags HEAD, a
+      # commit the remote already has; it never needs history (see
+      # release-integrity).
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Go
         uses: actions/setup-go@v5
