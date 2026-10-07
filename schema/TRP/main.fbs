@@ -15,11 +15,13 @@ enum trpPredicateKind : byte {
 }
 
 /// Boolean combinator applied to a predicate group. Append new values only;
-/// never reorder or reuse existing values.
+/// never reorder or reuse existing values. A policy's rules are a flat list
+/// that must all pass, so evaluators accept only All.
 enum trpCombinator : byte {
-  /// Every direct predicate and child group must pass.
+  /// Every rule must pass.
   All,
-  /// At least one direct predicate or child group must pass.
+  /// Retired: rules are never alternatives. Evaluators refuse a policy that
+  /// uses it.
   Any
 }
 
@@ -37,7 +39,8 @@ table TRPAsset {
   DECIMALS: ubyte;
 }
 
-/// One independently measurable predicate in a trust rule policy.
+/// One named rule in a trust rule policy: a predicate and the values it
+/// needs. A subject meets the policy only when every rule passes.
 table TRPPredicate {
   /// Stable identifier unique within the policy.
   PREDICATE_ID: string;
@@ -57,21 +60,26 @@ table TRPPredicate {
   TRUSTER_IDS: [string];
   /// Minimum accepted `$TRE.WEIGHT` for a matching trust edge.
   MIN_EDGE_WEIGHT: double;
+  /// The rule's name as its author wrote it, shown wherever the rule and its
+  /// results are listed.
+  NAME: string;
 }
 
-/// Recursive boolean group for a compound trust rule set.
+/// The rules of a trust rule policy.
 table TRPGroup {
   /// Stable identifier unique within the policy.
   GROUP_ID: string;
-  /// Boolean operation applied across direct predicates and child groups.
+  /// Always All: every rule must pass.
   COMBINATOR: trpCombinator;
-  /// Predicates evaluated directly within this group.
+  /// The policy's rules, all of which must pass.
   PREDICATES: [TRPPredicate];
-  /// Nested groups used to express compound rule sets.
+  /// Retired: rules do not nest. Evaluators refuse a policy with child groups.
   GROUPS: [TRPGroup];
 }
 
-/// Trust Rule Policy - Signed compound criteria for evaluating one subject.
+/// Trust Rule Policy - a signed list of named rules for evaluating a subject.
+/// The subject meets the policy when every rule passes; there is no
+/// alternative and no nesting.
 table TRP {
   /// Stable policy identifier.
   POLICY_ID: string (required);
@@ -79,7 +87,7 @@ table TRP {
   NAME: string;
   /// Human-readable policy description.
   DESCRIPTION: string;
-  /// Root of the compound rule tree.
+  /// The policy's rules.
   ROOT: TRPGroup;
   /// Periodic evaluation cadence in milliseconds. The 10000 default is the
   /// 0.1 Hz baseline and is configurable by the policy author.
