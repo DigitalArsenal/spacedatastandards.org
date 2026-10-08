@@ -186,8 +186,10 @@ enum prwGravitySelection : ubyte {
 enum prwAtmosphereFamily : ubyte {
   UNSPECIFIED = 0, NRLMSISE00 = 1, EXPONENTIAL = 2,
   USSA1976 = 3, HARRIS_PRIESTER = 4,
-  /// Jacchia (1970), SAO Special Report 313: F10.7 of the previous day, its
-  /// 81-day centred average and Kp (PRW.SPACE_WEATHER or WEATHER).
+  /// Jacchia (1970), SAO Special Report 313, as Roberts (1971) evaluates its
+  /// profile (the GTDS/GMAT "Jacchia-Roberts"): F10.7 of the previous day,
+  /// that day's 81-day centred average, and the three-hour Kp 6.7 h earlier
+  /// (PRW.SPACE_WEATHER, or WEATHER's values held constant).
   JACCHIA_70 = 5,
   /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
   /// Dst-derived temperature change from PRW.JB2008_INDICES.
@@ -595,9 +597,10 @@ table PRWSpaceWeatherTable {
 
 /// One UTC day of JB2008 drivers, as Space Environment Technologies publishes
 /// them (SOLFSMY.TXT and DTCFILE.TXT): solar indices in SFU with their
-/// 81-day centred averages, and the hourly Dst-derived exospheric temperature
-/// change. A provider applies the model's own lags (1 day for F10 and S10, 2
-/// for M10, 5 for Y10) by reading earlier rows.
+/// 81-day centred averages, reported at 12 UT of DATE, and the hourly
+/// Dst-derived exospheric temperature change. A provider applies the model's
+/// own lags (1 day for F10 and S10, 2 for M10, 5 for Y10) by reading earlier
+/// rows, and states how it interpolates between them.
 table PRWJB2008Indices {
   /// ISO 8601 calendar date (UTC) the row's values apply to.
   DATE:string (required);
