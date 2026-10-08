@@ -6,16 +6,18 @@ include "../TIM/main.fbs";
 include "../PCE/main.fbs";
 include "../PPE/main.fbs";
 include "../NCD/main.fbs";
+include "../EOP/main.fbs";
+include "../SPW/main.fbs";
 
 /// Propagator Runtime Wire — arena-addressed init / batch request / batch
 /// response envelopes for orbital propagators that produce state vectors
 /// into a shared memory arena.
 ///
 /// Data interchange for the underlying content (state vectors, covariance,
-/// maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris)
-/// lives in SDS `OCM` + `OMM` + `PPE` + `RFM` + `ATM`. PRW is the runtime
-/// wire that moves those across a JS ↔ WASM boundary, not a substitute for
-/// any of them.
+/// maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris,
+/// Earth orientation, space weather) lives in SDS `OCM` + `OMM` + `PPE` +
+/// `RFM` + `ATM` + `EOP` + `SPW`. PRW is the runtime wire that moves those
+/// across a JS ↔ WASM boundary, not a substitute for any of them.
 
 /// Runtime state-flag bitfield (sized to match a single uint).
 /// Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;
@@ -177,11 +179,19 @@ enum prwSolverAlgorithm : ubyte {
 }
 enum prwGravitySelection : ubyte {
   INFER_FLAGS = 0, POINT_MASS = 1, J2_ONLY = 2, J2_TO_J4 = 3,
-  SPHERICAL_HARMONICS = 4, EGM2008 = 5
+  SPHERICAL_HARMONICS = 4, EGM2008 = 5,
+  /// NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.
+  EGM96 = 6
 }
 enum prwAtmosphereFamily : ubyte {
   UNSPECIFIED = 0, NRLMSISE00 = 1, EXPONENTIAL = 2,
-  USSA1976 = 3, HARRIS_PRIESTER = 4
+  USSA1976 = 3, HARRIS_PRIESTER = 4,
+  /// Jacchia (1970), SAO Special Report 313: F10.7 of the previous day, its
+  /// 81-day centred average and Kp (PRW.SPACE_WEATHER or WEATHER).
+  JACCHIA_70 = 5,
+  /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
+  /// Dst-derived temperature change from PRW.JB2008_INDICES.
+  JB2008 = 6
 }
 enum prwDerivativeTechnique : ubyte {
   UNSPECIFIED = 0, ANALYTIC = 1, FINITE_DIFFERENCE = 2
@@ -215,6 +225,34 @@ enum prwDensitySpecies : ubyte {
   UNSPECIFIED = 0, HELIUM = 1, ATOMIC_OXYGEN = 2, MOLECULAR_NITROGEN = 3,
   MOLECULAR_OXYGEN = 4, ARGON = 5, HYDROGEN = 6, ATOMIC_NITROGEN = 7,
   ANOMALOUS_OXYGEN = 8
+}
+/// Solid Earth tide model for the central body's field. NONE leaves the
+/// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
+/// and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
+/// numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
+/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
+/// the permanent tide handled for the field's own tide system. Pole tide is
+/// not included.
+enum prwSolidTideModel : ubyte {
+  NONE = 0, IERS_2010 = 1
+}
+/// Post-Newtonian corrections to the central body's acceleration (IERS
+/// Conventions (2010) eq. 10.12). NONE leaves them out. SCHWARZSCHILD is the
+/// point-mass term only. IERS_2010 adds Lense-Thirring and de Sitter
+/// (geodesic) precession.
+enum prwRelativityTerms : ubyte {
+  NONE = 0, SCHWARZSCHILD = 1, IERS_2010 = 2
+}
+/// Dynamical model parameters a covariance and STM may carry after the state
+/// (a VCM's B, BDOT, AGOM and T). Values are the request's FORCES, in SI:
+/// DRAG_AREA_OVER_MASS Cd*A/m (m2/kg, DRAG_COEFFICIENT * AREA_M2 /
+/// INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,
+/// DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,
+/// REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);
+/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).
+enum prwDynamicParameter : ubyte {
+  UNSPECIFIED = 0, DRAG_AREA_OVER_MASS = 1, DRAG_AREA_OVER_MASS_RATE = 2,
+  SRP_AREA_OVER_MASS = 3, IN_TRACK_ACCELERATION = 4
 }
 
 /// Instance identity is host-provided, opaque, and not a physical quantity.
@@ -278,10 +316,32 @@ table PRWForceConfiguration {
   WEATHER:PRWSpaceWeather;
   /// Actual configured source name, e.g. an analytic series or a planetary SPK kernel.
   EPHEMERIS_SOURCE:string (required);
+  /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+  /// orientation (PRW.EARTH_ORIENTATION) to apply them.
+  SOLID_TIDES:prwSolidTideModel = NONE;
+  RELATIVITY:prwRelativityTerms = NONE;
+  /// Constant acceleration along the in-track axis, m/s2: T of RTN,
+  /// N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+  IN_TRACK_ACCELERATION_M_S2:double;
+  /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+  HAS_IN_TRACK_ACCELERATION_M_S2:bool = false;
+  /// Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+  /// BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+  DRAG_AREA_OVER_MASS_RATE_M2_KG_S:double;
+  /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+  HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:bool = false;
+  /// Highest degree of the tesseral and sectorial terms (order >= 1); the
+  /// zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+  /// MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+  MAXIMUM_TESSERAL_DEGREE:ushort;
+  /// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+  HAS_MAXIMUM_TESSERAL_DEGREE:bool = false;
 }
 
-/// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], SI state units.
-/// Covariance entries have row*column units; STM entries row/column units.
+/// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution
+/// request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).
+/// Covariance entries have row*column units; STM entries row/column units;
+/// an STM's parameter rows are the identity (parameters are constant).
 table PRWStateMatrix {
   DIMENSION:ubyte;
   VALUES:[double] (required);
@@ -322,6 +382,15 @@ table PRWResidentState {
   /// Process noise for COVARIANCE: on input, what propagation adds; on
   /// output, what the propagated COVARIANCE includes. Absent means none.
   PROCESS_NOISE:PRWProcessNoise;
+  /// Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch
+  /// (the BDOT of a VCM).
+  DRAG_AREA_OVER_MASS_RATE_M2_KG_S:double;
+  /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+  HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:bool = false;
+  /// Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+  IN_TRACK_ACCELERATION_M_S2:double;
+  /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+  HAS_IN_TRACK_ACCELERATION_M_S2:bool = false;
 }
 
 /// Impulsive change at TDB epoch; delta velocity is m/s in the named basis.
@@ -385,6 +454,11 @@ table PRWExecutionRequest {
   FINITE_BURNS:[PRWFiniteBurn];
   /// Process noise added to the propagated covariance. Absent means none.
   PROCESS_NOISE:PRWProcessNoise;
+  /// Model parameters appended, in this order and without repeats, to
+  /// INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+  /// covariance carries their uncertainty and correlation (a VCM's 7x7 to
+  /// 10x10). Each must be active in FORCES. Empty means the state alone.
+  DYNAMIC_PARAMETERS:[prwDynamicParameter];
 }
 
 /// Burn times absent until reached; zero means an actual edge at initial epoch.
@@ -428,6 +502,8 @@ table PRWExecutionResult {
   EPHEMERIS_SOURCE:string (required);
   STM_TECHNIQUE:prwDerivativeTechnique = UNSPECIFIED;
   DENSITY_TREATMENT:prwDensityTreatment = UNSPECIFIED;
+  /// The parameters the samples' STM and COVARIANCE carry after the state.
+  DYNAMIC_PARAMETERS:[prwDynamicParameter];
 }
 
 /// Portable batch request: no output pointer; state records returned via TAB.
@@ -499,6 +575,50 @@ table PRWNativeInput {
   DESCRIPTOR:NCD (required);
   /// Exactly DESCRIPTOR.SOURCE_BYTE_LENGTH bytes; verify declared hash.
   CONTENT:[ubyte] (required);
+}
+
+/// Earth orientation for a propagation: one instantaneous row, or daily rows
+/// of one series (same SERIES, IAU_CONVENTION and data-set provenance) with
+/// strictly increasing MJD that cover the arc. A provider interpolates as
+/// published by the series and does not extrapolate.
+table PRWEarthOrientation {
+  ROWS:[EOP] (required);
+}
+
+/// Daily space weather for a propagation, as published (`SPW`), with strictly
+/// increasing DATE covering the arc plus what the atmosphere model reads
+/// before it (NRLMSISE-00 reads the previous day's F10.7). A provider derives
+/// its model inputs from these rows and reports which ones it reads.
+table PRWSpaceWeatherTable {
+  ROWS:[SPW] (required);
+}
+
+/// One UTC day of JB2008 drivers, as Space Environment Technologies publishes
+/// them (SOLFSMY.TXT and DTCFILE.TXT): solar indices in SFU with their
+/// 81-day centred averages, and the hourly Dst-derived exospheric temperature
+/// change. A provider applies the model's own lags (1 day for F10 and S10, 2
+/// for M10, 5 for Y10) by reading earlier rows.
+table PRWJB2008Indices {
+  /// ISO 8601 calendar date (UTC) the row's values apply to.
+  DATE:string (required);
+  F10:double;
+  F10_CENTRED_81:double;
+  S10:double;
+  S10_CENTRED_81:double;
+  M10:double;
+  M10_CENTRED_81:double;
+  Y10:double;
+  Y10_CENTRED_81:double;
+  /// Exospheric temperature change from Dst (K), hours 00 through 23 UTC.
+  DTC_HOURLY_K:[double];
+  /// Source flags as published (SOLFSMY Ssrc), e.g. "4B".
+  SOURCE_FLAGS:string;
+}
+
+/// JB2008 drivers for a propagation: daily rows with strictly increasing
+/// DATE covering the arc plus the days the model's lags read before it.
+table PRWJB2008IndicesTable {
+  ROWS:[PRWJB2008Indices] (required);
 }
 
 /// Geometric SPK state query, TDB; NAIF IDs state origin and target explicitly.
@@ -582,6 +702,9 @@ table PRW {
   ATMOSPHERE_RESULT:PRWAtmosphereResult;
   VERSION_QUERY:bool = false;
   VERSION_RESULT:PRWVersionResult;
+  EARTH_ORIENTATION:PRWEarthOrientation;
+  SPACE_WEATHER:PRWSpaceWeatherTable;
+  JB2008_INDICES:PRWJB2008IndicesTable;
 }
 
 root_type PRW;
