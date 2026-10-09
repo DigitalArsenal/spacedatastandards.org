@@ -530,6 +530,63 @@ class RDO : Table() {
         get() {
             val o = __offset(106); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Association: squared Mahalanobis distance of the observation's
+     * innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+     */
+    val corrMahalanobisSq : Double
+        get() {
+            val o = __offset(108)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Association: degrees of freedom of d^2 (measurement dimension).
+     */
+    val corrDof : UByte
+        get() {
+            val o = __offset(110)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Association: the chi-square gate d^2 was tested against.
+     */
+    val corrGate : Double
+        get() {
+            val o = __offset(112)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Association: p-value of d^2, Q(dof/2, d^2/2).
+     */
+    val corrPValue : Double
+        get() {
+            val o = __offset(114)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Association: true when the assignment was ambiguous.
+     */
+    val corrAmbiguous : Boolean
+        get() {
+            val o = __offset(116)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Association: posterior probability of the association.
+     */
+    val corrQuality : Double
+        get() {
+            val o = __offset(118)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Carrier frequency the DOPPLER shift refers to, in Hz.
+     */
+    val dopplerFrequency : Double
+        get() {
+            val o = __offset(120)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRDO(_bb: ByteBuffer): RDO = getRootAsRDO(_bb, RDO())
@@ -538,8 +595,13 @@ class RDO : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RDOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RDO")
-        fun createRDO(builder: FlatBufferBuilder, idOffset: Int, obTimeOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, uct: Boolean, obsType: Byte, taskIdOffset: Int, transactionIdOffset: Int, trackIdOffset: Int, obPositionOffset: Int, senReferenceFrameOffset: Int, azimuth: Double, azimuthUnc: Double, azimuthBias: Double, azimuthRate: Double, elevation: Double, elevationUnc: Double, elevationBias: Double, elevationRate: Double, range: Double, rangeUnc: Double, rangeBias: Double, rangeRate: Double, rangeRateUnc: Double, rangeAccel: Double, rangeAccelUnc: Double, doppler: Double, dopplerUnc: Double, ra: Double, declination: Double, x: Double, y: Double, z: Double, xvel: Double, yvel: Double, zvel: Double, senx: Double, seny: Double, senz: Double, rcs: Double, rcsUnc: Double, orthogonalRcs: Double, orthogonalRcsUnc: Double, snr: Double, beam: Double, timingBias: Double, rawFileUriOffset: Int, descriptorOffset: Int, tagsOffset: Int) : Int {
-            builder.startTable(52)
+        fun createRDO(builder: FlatBufferBuilder, idOffset: Int, obTimeOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, uct: Boolean, obsType: Byte, taskIdOffset: Int, transactionIdOffset: Int, trackIdOffset: Int, obPositionOffset: Int, senReferenceFrameOffset: Int, azimuth: Double, azimuthUnc: Double, azimuthBias: Double, azimuthRate: Double, elevation: Double, elevationUnc: Double, elevationBias: Double, elevationRate: Double, range: Double, rangeUnc: Double, rangeBias: Double, rangeRate: Double, rangeRateUnc: Double, rangeAccel: Double, rangeAccelUnc: Double, doppler: Double, dopplerUnc: Double, ra: Double, declination: Double, x: Double, y: Double, z: Double, xvel: Double, yvel: Double, zvel: Double, senx: Double, seny: Double, senz: Double, rcs: Double, rcsUnc: Double, orthogonalRcs: Double, orthogonalRcsUnc: Double, snr: Double, beam: Double, timingBias: Double, rawFileUriOffset: Int, descriptorOffset: Int, tagsOffset: Int, corrMahalanobisSq: Double, corrDof: UByte, corrGate: Double, corrPValue: Double, corrAmbiguous: Boolean, corrQuality: Double, dopplerFrequency: Double) : Int {
+            builder.startTable(59)
+            addDOPPLERFREQUENCY(builder, dopplerFrequency)
+            addCORRQUALITY(builder, corrQuality)
+            addCORRPVALUE(builder, corrPValue)
+            addCORRGATE(builder, corrGate)
+            addCORRMAHALANOBISSQ(builder, corrMahalanobisSq)
             addTIMINGBIAS(builder, timingBias)
             addBEAM(builder, beam)
             addSNR(builder, snr)
@@ -590,11 +652,13 @@ class RDO : Table() {
             addIDSENSOR(builder, idSensorOffset)
             addOBTIME(builder, obTimeOffset)
             addID(builder, idOffset)
+            addCORRAMBIGUOUS(builder, corrAmbiguous)
+            addCORRDOF(builder, corrDof)
             addOBSTYPE(builder, obsType)
             addUCT(builder, uct)
             return endRDO(builder)
         }
-        fun startRDO(builder: FlatBufferBuilder) = builder.startTable(52)
+        fun startRDO(builder: FlatBufferBuilder) = builder.startTable(59)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addOBTIME(builder: FlatBufferBuilder, obTime: Int) = builder.addOffset(1, obTime, 0)
         fun addIDSENSOR(builder: FlatBufferBuilder, idSensor: Int) = builder.addOffset(2, idSensor, 0)
@@ -655,6 +719,13 @@ class RDO : Table() {
             return builder.endVector()
         }
         fun startTagsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addCORRMAHALANOBISSQ(builder: FlatBufferBuilder, corrMahalanobisSq: Double) = builder.addDouble(52, corrMahalanobisSq, 0.0)
+        fun addCORRDOF(builder: FlatBufferBuilder, corrDof: UByte) = builder.addByte(53, corrDof.toByte(), 0)
+        fun addCORRGATE(builder: FlatBufferBuilder, corrGate: Double) = builder.addDouble(54, corrGate, 0.0)
+        fun addCORRPVALUE(builder: FlatBufferBuilder, corrPValue: Double) = builder.addDouble(55, corrPValue, 0.0)
+        fun addCORRAMBIGUOUS(builder: FlatBufferBuilder, corrAmbiguous: Boolean) = builder.addBoolean(56, corrAmbiguous, false)
+        fun addCORRQUALITY(builder: FlatBufferBuilder, corrQuality: Double) = builder.addDouble(57, corrQuality, 0.0)
+        fun addDOPPLERFREQUENCY(builder: FlatBufferBuilder, dopplerFrequency: Double) = builder.addDouble(58, dopplerFrequency, 0.0)
         fun endRDO(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

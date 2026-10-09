@@ -335,22 +335,50 @@ class PRWForceConfiguration extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Solar radiation pressure model family (default: the cannonball).
+    /**
+     * @return byte
+     */
+    public function getRADIATION_PRESSURE_MODEL()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \prwRadiationPressureFamily::CANNONBALL;
+    }
+
+    /// Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+    /**
+     * @return byte
+     */
+    public function getGNSS_BLOCK()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \prwGnssSpacecraftBlock::UNSPECIFIED;
+    }
+
+    /// ECOM2 coefficients; absent means no ECOM2 term.
+    public function getECOM2()
+    {
+        $obj = new PRWEcom2();
+        $o = $this->__offset(68);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRWForceConfiguration(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(30);
+        $builder->StartObject(33);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRWForceConfiguration
      */
-    public static function createPRWForceConfiguration(FlatBufferBuilder $builder, $GRAVITY_CHOICE, $ENABLE_POINT_MASS, $GRAVITATIONAL_PARAMETER, $ENABLE_J2, $ENABLE_J3, $ENABLE_J4, $ENABLE_HIGHER_ZONALS, $MAXIMUM_DEGREE, $HAS_MAXIMUM_DEGREE, $MAXIMUM_ORDER, $HAS_MAXIMUM_ORDER, $ENABLE_THIRD_BODY, $THIRD_BODY_IDS, $ENABLE_SRP, $ENABLE_DRAG, $INITIAL_MASS_KG, $AREA_M2, $REFLECTIVITY_COEFFICIENT, $DRAG_COEFFICIENT, $ATMOSPHERE_MODEL, $WEATHER, $EPHEMERIS_SOURCE, $SOLID_TIDES, $RELATIVITY, $IN_TRACK_ACCELERATION_M_S2, $HAS_IN_TRACK_ACCELERATION_M_S2, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $MAXIMUM_TESSERAL_DEGREE, $HAS_MAXIMUM_TESSERAL_DEGREE)
+    public static function createPRWForceConfiguration(FlatBufferBuilder $builder, $GRAVITY_CHOICE, $ENABLE_POINT_MASS, $GRAVITATIONAL_PARAMETER, $ENABLE_J2, $ENABLE_J3, $ENABLE_J4, $ENABLE_HIGHER_ZONALS, $MAXIMUM_DEGREE, $HAS_MAXIMUM_DEGREE, $MAXIMUM_ORDER, $HAS_MAXIMUM_ORDER, $ENABLE_THIRD_BODY, $THIRD_BODY_IDS, $ENABLE_SRP, $ENABLE_DRAG, $INITIAL_MASS_KG, $AREA_M2, $REFLECTIVITY_COEFFICIENT, $DRAG_COEFFICIENT, $ATMOSPHERE_MODEL, $WEATHER, $EPHEMERIS_SOURCE, $SOLID_TIDES, $RELATIVITY, $IN_TRACK_ACCELERATION_M_S2, $HAS_IN_TRACK_ACCELERATION_M_S2, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $MAXIMUM_TESSERAL_DEGREE, $HAS_MAXIMUM_TESSERAL_DEGREE, $RADIATION_PRESSURE_MODEL, $GNSS_BLOCK, $ECOM2)
     {
-        $builder->startObject(30);
+        $builder->startObject(33);
         self::addGRAVITY_CHOICE($builder, $GRAVITY_CHOICE);
         self::addENABLE_POINT_MASS($builder, $ENABLE_POINT_MASS);
         self::addGRAVITATIONAL_PARAMETER($builder, $GRAVITATIONAL_PARAMETER);
@@ -381,6 +409,9 @@ class PRWForceConfiguration extends Table
         self::addHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S($builder, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
         self::addMAXIMUM_TESSERAL_DEGREE($builder, $MAXIMUM_TESSERAL_DEGREE);
         self::addHAS_MAXIMUM_TESSERAL_DEGREE($builder, $HAS_MAXIMUM_TESSERAL_DEGREE);
+        self::addRADIATION_PRESSURE_MODEL($builder, $RADIATION_PRESSURE_MODEL);
+        self::addGNSS_BLOCK($builder, $GNSS_BLOCK);
+        self::addECOM2($builder, $ECOM2);
         $o = $builder->endObject();
         $builder->required($o, 46);  // EPHEMERIS_SOURCE
         return $o;
@@ -708,6 +739,36 @@ class PRWForceConfiguration extends Table
     public static function addHAS_MAXIMUM_TESSERAL_DEGREE(FlatBufferBuilder $builder, $HAS_MAXIMUM_TESSERAL_DEGREE)
     {
         $builder->addBoolX(29, $HAS_MAXIMUM_TESSERAL_DEGREE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addRADIATION_PRESSURE_MODEL(FlatBufferBuilder $builder, $RADIATION_PRESSURE_MODEL)
+    {
+        $builder->addByteX(30, $RADIATION_PRESSURE_MODEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addGNSS_BLOCK(FlatBufferBuilder $builder, $GNSS_BLOCK)
+    {
+        $builder->addByteX(31, $GNSS_BLOCK, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addECOM2(FlatBufferBuilder $builder, $ECOM2)
+    {
+        $builder->addOffsetX(32, $ECOM2, 0);
     }
 
     /**

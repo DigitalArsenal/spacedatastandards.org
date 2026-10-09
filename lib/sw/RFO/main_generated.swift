@@ -126,6 +126,12 @@ public struct RFO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let DESCRIPTOR: VOffset = 146
     static let URL: VOffset = 148
     static let TAGS: VOffset = 150
+    static let CORR_MAHALANOBIS_SQ: VOffset = 152
+    static let CORR_DOF: VOffset = 154
+    static let CORR_GATE: VOffset = 156
+    static let CORR_P_VALUE: VOffset = 158
+    static let CORR_AMBIGUOUS: VOffset = 160
+    static let FREQUENCY_UNC: VOffset = 162
   }
 
   ///  Unique identifier
@@ -296,7 +302,20 @@ public struct RFO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.URL) }
   ///  Associated tags
   public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TAGS, byteSize: 4) }
-  public static func startRFO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 74) }
+  ///  Association: squared Mahalanobis distance of the observation's
+  ///  innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+  public var CORR_MAHALANOBIS_SQ: Double { let o = _accessor.offset(VT.CORR_MAHALANOBIS_SQ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Association: degrees of freedom of d^2 (measurement dimension).
+  public var CORR_DOF: UInt8 { let o = _accessor.offset(VT.CORR_DOF); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Association: the chi-square gate d^2 was tested against.
+  public var CORR_GATE: Double { let o = _accessor.offset(VT.CORR_GATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Association: p-value of d^2, Q(dof/2, d^2/2).
+  public var CORR_P_VALUE: Double { let o = _accessor.offset(VT.CORR_P_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Association: true when the assignment was ambiguous.
+  public var CORR_AMBIGUOUS: Bool { let o = _accessor.offset(VT.CORR_AMBIGUOUS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  One-sigma uncertainty of FREQUENCY, in the same units.
+  public var FREQUENCY_UNC: Double { let o = _accessor.offset(VT.FREQUENCY_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startRFO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 80) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VT.OB_TIME) }
   public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VT.ID_SENSOR) }
@@ -374,6 +393,13 @@ public struct RFO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTOR, at: VT.DESCRIPTOR) }
   public static func add(URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: URL, at: VT.URL) }
   public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VT.TAGS) }
+  public static func add(CORR_MAHALANOBIS_SQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_MAHALANOBIS_SQ, def: 0.0, at: VT.CORR_MAHALANOBIS_SQ) }
+  public static func add(CORR_DOF: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_DOF, def: 0, at: VT.CORR_DOF) }
+  public static func add(CORR_GATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_GATE, def: 0.0, at: VT.CORR_GATE) }
+  public static func add(CORR_P_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_P_VALUE, def: 0.0, at: VT.CORR_P_VALUE) }
+  public static func add(CORR_AMBIGUOUS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_AMBIGUOUS, def: false,
+   at: VT.CORR_AMBIGUOUS) }
+  public static func add(FREQUENCY_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY_UNC, def: 0.0, at: VT.FREQUENCY_UNC) }
   public static func endRFO(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRFO(
     _ fbb: inout FlatBufferBuilder,
@@ -450,7 +476,13 @@ public struct RFO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     RAW_FILE_URIOffset RAW_FILE_URI: Offset = Offset(),
     DESCRIPTOROffset DESCRIPTOR: Offset = Offset(),
     URLOffset URL: Offset = Offset(),
-    TAGSVectorOffset TAGS: Offset = Offset()
+    TAGSVectorOffset TAGS: Offset = Offset(),
+    CORR_MAHALANOBIS_SQ: Double = 0.0,
+    CORR_DOF: UInt8 = 0,
+    CORR_GATE: Double = 0.0,
+    CORR_P_VALUE: Double = 0.0,
+    CORR_AMBIGUOUS: Bool = false,
+    FREQUENCY_UNC: Double = 0.0
   ) -> Offset {
     let __start = RFO.startRFO(&fbb)
     RFO.add(ID: ID, &fbb)
@@ -527,6 +559,12 @@ public struct RFO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     RFO.add(DESCRIPTOR: DESCRIPTOR, &fbb)
     RFO.add(URL: URL, &fbb)
     RFO.addVectorOf(TAGS: TAGS, &fbb)
+    RFO.add(CORR_MAHALANOBIS_SQ: CORR_MAHALANOBIS_SQ, &fbb)
+    RFO.add(CORR_DOF: CORR_DOF, &fbb)
+    RFO.add(CORR_GATE: CORR_GATE, &fbb)
+    RFO.add(CORR_P_VALUE: CORR_P_VALUE, &fbb)
+    RFO.add(CORR_AMBIGUOUS: CORR_AMBIGUOUS, &fbb)
+    RFO.add(FREQUENCY_UNC: FREQUENCY_UNC, &fbb)
     return RFO.endRFO(&fbb, start: __start)
   }
 
@@ -606,6 +644,12 @@ public struct RFO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.DESCRIPTOR, fieldName: "DESCRIPTOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.URL, fieldName: "URL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.TAGS, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.CORR_MAHALANOBIS_SQ, fieldName: "CORR_MAHALANOBIS_SQ", required: false, type: Double.self)
+    try _v.visit(field: VT.CORR_DOF, fieldName: "CORR_DOF", required: false, type: UInt8.self)
+    try _v.visit(field: VT.CORR_GATE, fieldName: "CORR_GATE", required: false, type: Double.self)
+    try _v.visit(field: VT.CORR_P_VALUE, fieldName: "CORR_P_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.CORR_AMBIGUOUS, fieldName: "CORR_AMBIGUOUS", required: false, type: Bool.self)
+    try _v.visit(field: VT.FREQUENCY_UNC, fieldName: "FREQUENCY_UNC", required: false, type: Double.self)
     _v.finish()
   }
 }

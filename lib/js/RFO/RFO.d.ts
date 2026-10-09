@@ -329,6 +329,31 @@ export declare class RFO implements flatbuffers.IUnpackableObject<RFOT> {
     TAGS(index: number): string;
     TAGS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     tagsLength(): number;
+    /**
+     * Association: squared Mahalanobis distance of the observation's
+     * innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+     */
+    CORR_MAHALANOBIS_SQ(): number;
+    /**
+     * Association: degrees of freedom of d^2 (measurement dimension).
+     */
+    CORR_DOF(): number;
+    /**
+     * Association: the chi-square gate d^2 was tested against.
+     */
+    CORR_GATE(): number;
+    /**
+     * Association: p-value of d^2, Q(dof/2, d^2/2).
+     */
+    CORR_P_VALUE(): number;
+    /**
+     * Association: true when the assignment was ambiguous.
+     */
+    CORR_AMBIGUOUS(): boolean;
+    /**
+     * One-sigma uncertainty of FREQUENCY, in the same units.
+     */
+    FREQUENCY_UNC(): number;
     static startRFO(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addObTime(builder: flatbuffers.Builder, OB_TIMEOffset: flatbuffers.Offset): void;
@@ -406,10 +431,16 @@ export declare class RFO implements flatbuffers.IUnpackableObject<RFOT> {
     static addTags(builder: flatbuffers.Builder, TAGSOffset: flatbuffers.Offset): void;
     static createTagsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startTagsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCorrMahalanobisSq(builder: flatbuffers.Builder, CORR_MAHALANOBIS_SQ: number): void;
+    static addCorrDof(builder: flatbuffers.Builder, CORR_DOF: number): void;
+    static addCorrGate(builder: flatbuffers.Builder, CORR_GATE: number): void;
+    static addCorrPValue(builder: flatbuffers.Builder, CORR_P_VALUE: number): void;
+    static addCorrAmbiguous(builder: flatbuffers.Builder, CORR_AMBIGUOUS: boolean): void;
+    static addFrequencyUnc(builder: flatbuffers.Builder, FREQUENCY_UNC: number): void;
     static endRFO(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishRFOBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedRFOBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createRFO(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, OB_TIMEOffset: flatbuffers.Offset, ID_SENSOROffset: flatbuffers.Offset, ORIG_SENSOR_IDOffset: flatbuffers.Offset, OBS_TYPE: rfObsType, SAT_NO: number, ORIG_OBJECT_IDOffset: flatbuffers.Offset, ON_ORBITOffset: flatbuffers.Offset, UCT: boolean, TASK_IDOffset: flatbuffers.Offset, TRANSACTION_IDOffset: flatbuffers.Offset, TRACK_IDOffset: flatbuffers.Offset, TRANSPONDEROffset: flatbuffers.Offset, DETECTION_STATUS: rfDetectionStatus, AZIMUTH: number, AZIMUTH_UNC: number, AZIMUTH_RATE: number, ELEVATION: number, ELEVATION_UNC: number, ELEVATION_RATE: number, RANGE: number, RANGE_UNC: number, RANGE_RATE: number, RANGE_RATE_UNC: number, TRACK_RANGE: number, SENLAT: number, SENLON: number, SENALT: number, ELNOTOffset: flatbuffers.Offset, ANTENNA_NAMEOffset: flatbuffers.Offset, COLLECTION_MODEOffset: flatbuffers.Offset, FREQUENCY: number, NOMINAL_FREQUENCY: number, START_FREQUENCY: number, END_FREQUENCY: number, FREQUENCY_SHIFT: number, BANDWIDTH: number, NOMINAL_BANDWIDTH: number, RESOLUTION_BANDWIDTH: number, VIDEO_BANDWIDTH: number, RELATIVE_CARRIER_POWER: number, SPECTRUM_ANALYZER_POWER: number, RELATIVE_NOISE_FLOOR: number, REFERENCE_LEVEL: number, NOISE_PWR_DENSITY: number, PGRI: number, EIRP: number, NOMINAL_EIRP: number, MIN_PSD: number, MAX_PSD: number, SNR: number, NOMINAL_SNR: number, POWER_OVER_NOISE: number, NOMINAL_POWER_OVER_NOISE: number, POLARITY: number, POLARITY_TYPEOffset: flatbuffers.Offset, CHANNEL: number, BAUD_RATE: number, SYMBOL_TO_NOISE_RATIO: number, BIT_ERROR_RATE: number, PEAK: boolean, INCOMING: boolean, SWITCH_POINT: number, CONFIDENCE: number, CARRIER_STANDARDOffset: flatbuffers.Offset, MODULATIONOffset: flatbuffers.Offset, INNER_CODING_RATE: number, OUTER_CODING_RATE: number, TRANSMIT_FILTER_TYPEOffset: flatbuffers.Offset, TRANSMIT_FILTER_ROLL_OFF: number, RAW_FILE_URIOffset: flatbuffers.Offset, DESCRIPTOROffset: flatbuffers.Offset, URLOffset: flatbuffers.Offset, TAGSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createRFO(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, OB_TIMEOffset: flatbuffers.Offset, ID_SENSOROffset: flatbuffers.Offset, ORIG_SENSOR_IDOffset: flatbuffers.Offset, OBS_TYPE: rfObsType, SAT_NO: number, ORIG_OBJECT_IDOffset: flatbuffers.Offset, ON_ORBITOffset: flatbuffers.Offset, UCT: boolean, TASK_IDOffset: flatbuffers.Offset, TRANSACTION_IDOffset: flatbuffers.Offset, TRACK_IDOffset: flatbuffers.Offset, TRANSPONDEROffset: flatbuffers.Offset, DETECTION_STATUS: rfDetectionStatus, AZIMUTH: number, AZIMUTH_UNC: number, AZIMUTH_RATE: number, ELEVATION: number, ELEVATION_UNC: number, ELEVATION_RATE: number, RANGE: number, RANGE_UNC: number, RANGE_RATE: number, RANGE_RATE_UNC: number, TRACK_RANGE: number, SENLAT: number, SENLON: number, SENALT: number, ELNOTOffset: flatbuffers.Offset, ANTENNA_NAMEOffset: flatbuffers.Offset, COLLECTION_MODEOffset: flatbuffers.Offset, FREQUENCY: number, NOMINAL_FREQUENCY: number, START_FREQUENCY: number, END_FREQUENCY: number, FREQUENCY_SHIFT: number, BANDWIDTH: number, NOMINAL_BANDWIDTH: number, RESOLUTION_BANDWIDTH: number, VIDEO_BANDWIDTH: number, RELATIVE_CARRIER_POWER: number, SPECTRUM_ANALYZER_POWER: number, RELATIVE_NOISE_FLOOR: number, REFERENCE_LEVEL: number, NOISE_PWR_DENSITY: number, PGRI: number, EIRP: number, NOMINAL_EIRP: number, MIN_PSD: number, MAX_PSD: number, SNR: number, NOMINAL_SNR: number, POWER_OVER_NOISE: number, NOMINAL_POWER_OVER_NOISE: number, POLARITY: number, POLARITY_TYPEOffset: flatbuffers.Offset, CHANNEL: number, BAUD_RATE: number, SYMBOL_TO_NOISE_RATIO: number, BIT_ERROR_RATE: number, PEAK: boolean, INCOMING: boolean, SWITCH_POINT: number, CONFIDENCE: number, CARRIER_STANDARDOffset: flatbuffers.Offset, MODULATIONOffset: flatbuffers.Offset, INNER_CODING_RATE: number, OUTER_CODING_RATE: number, TRANSMIT_FILTER_TYPEOffset: flatbuffers.Offset, TRANSMIT_FILTER_ROLL_OFF: number, RAW_FILE_URIOffset: flatbuffers.Offset, DESCRIPTOROffset: flatbuffers.Offset, URLOffset: flatbuffers.Offset, TAGSOffset: flatbuffers.Offset, CORR_MAHALANOBIS_SQ: number, CORR_DOF: number, CORR_GATE: number, CORR_P_VALUE: number, CORR_AMBIGUOUS: boolean, FREQUENCY_UNC: number): flatbuffers.Offset;
     unpack(): RFOT;
     unpackTo(_o: RFOT): void;
 }
@@ -488,7 +519,13 @@ export declare class RFOT implements flatbuffers.IGeneratedObject {
     DESCRIPTOR: string | Uint8Array | null;
     URL: string | Uint8Array | null;
     TAGS: (string)[];
-    constructor(ID?: string | Uint8Array | null, OB_TIME?: string | Uint8Array | null, ID_SENSOR?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, OBS_TYPE?: rfObsType, SAT_NO?: number, ORIG_OBJECT_ID?: string | Uint8Array | null, ON_ORBIT?: string | Uint8Array | null, UCT?: boolean, TASK_ID?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, TRACK_ID?: string | Uint8Array | null, TRANSPONDER?: string | Uint8Array | null, DETECTION_STATUS?: rfDetectionStatus, AZIMUTH?: number, AZIMUTH_UNC?: number, AZIMUTH_RATE?: number, ELEVATION?: number, ELEVATION_UNC?: number, ELEVATION_RATE?: number, RANGE?: number, RANGE_UNC?: number, RANGE_RATE?: number, RANGE_RATE_UNC?: number, TRACK_RANGE?: number, SENLAT?: number, SENLON?: number, SENALT?: number, ELNOT?: string | Uint8Array | null, ANTENNA_NAME?: string | Uint8Array | null, COLLECTION_MODE?: string | Uint8Array | null, FREQUENCY?: number, NOMINAL_FREQUENCY?: number, START_FREQUENCY?: number, END_FREQUENCY?: number, FREQUENCY_SHIFT?: number, BANDWIDTH?: number, NOMINAL_BANDWIDTH?: number, RESOLUTION_BANDWIDTH?: number, VIDEO_BANDWIDTH?: number, RELATIVE_CARRIER_POWER?: number, SPECTRUM_ANALYZER_POWER?: number, RELATIVE_NOISE_FLOOR?: number, REFERENCE_LEVEL?: number, NOISE_PWR_DENSITY?: number, PGRI?: number, EIRP?: number, NOMINAL_EIRP?: number, MIN_PSD?: number, MAX_PSD?: number, SNR?: number, NOMINAL_SNR?: number, POWER_OVER_NOISE?: number, NOMINAL_POWER_OVER_NOISE?: number, POLARITY?: number, POLARITY_TYPE?: string | Uint8Array | null, CHANNEL?: number, BAUD_RATE?: number, SYMBOL_TO_NOISE_RATIO?: number, BIT_ERROR_RATE?: number, PEAK?: boolean, INCOMING?: boolean, SWITCH_POINT?: number, CONFIDENCE?: number, CARRIER_STANDARD?: string | Uint8Array | null, MODULATION?: string | Uint8Array | null, INNER_CODING_RATE?: number, OUTER_CODING_RATE?: number, TRANSMIT_FILTER_TYPE?: string | Uint8Array | null, TRANSMIT_FILTER_ROLL_OFF?: number, RAW_FILE_URI?: string | Uint8Array | null, DESCRIPTOR?: string | Uint8Array | null, URL?: string | Uint8Array | null, TAGS?: (string)[]);
+    CORR_MAHALANOBIS_SQ: number;
+    CORR_DOF: number;
+    CORR_GATE: number;
+    CORR_P_VALUE: number;
+    CORR_AMBIGUOUS: boolean;
+    FREQUENCY_UNC: number;
+    constructor(ID?: string | Uint8Array | null, OB_TIME?: string | Uint8Array | null, ID_SENSOR?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, OBS_TYPE?: rfObsType, SAT_NO?: number, ORIG_OBJECT_ID?: string | Uint8Array | null, ON_ORBIT?: string | Uint8Array | null, UCT?: boolean, TASK_ID?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, TRACK_ID?: string | Uint8Array | null, TRANSPONDER?: string | Uint8Array | null, DETECTION_STATUS?: rfDetectionStatus, AZIMUTH?: number, AZIMUTH_UNC?: number, AZIMUTH_RATE?: number, ELEVATION?: number, ELEVATION_UNC?: number, ELEVATION_RATE?: number, RANGE?: number, RANGE_UNC?: number, RANGE_RATE?: number, RANGE_RATE_UNC?: number, TRACK_RANGE?: number, SENLAT?: number, SENLON?: number, SENALT?: number, ELNOT?: string | Uint8Array | null, ANTENNA_NAME?: string | Uint8Array | null, COLLECTION_MODE?: string | Uint8Array | null, FREQUENCY?: number, NOMINAL_FREQUENCY?: number, START_FREQUENCY?: number, END_FREQUENCY?: number, FREQUENCY_SHIFT?: number, BANDWIDTH?: number, NOMINAL_BANDWIDTH?: number, RESOLUTION_BANDWIDTH?: number, VIDEO_BANDWIDTH?: number, RELATIVE_CARRIER_POWER?: number, SPECTRUM_ANALYZER_POWER?: number, RELATIVE_NOISE_FLOOR?: number, REFERENCE_LEVEL?: number, NOISE_PWR_DENSITY?: number, PGRI?: number, EIRP?: number, NOMINAL_EIRP?: number, MIN_PSD?: number, MAX_PSD?: number, SNR?: number, NOMINAL_SNR?: number, POWER_OVER_NOISE?: number, NOMINAL_POWER_OVER_NOISE?: number, POLARITY?: number, POLARITY_TYPE?: string | Uint8Array | null, CHANNEL?: number, BAUD_RATE?: number, SYMBOL_TO_NOISE_RATIO?: number, BIT_ERROR_RATE?: number, PEAK?: boolean, INCOMING?: boolean, SWITCH_POINT?: number, CONFIDENCE?: number, CARRIER_STANDARD?: string | Uint8Array | null, MODULATION?: string | Uint8Array | null, INNER_CODING_RATE?: number, OUTER_CODING_RATE?: number, TRANSMIT_FILTER_TYPE?: string | Uint8Array | null, TRANSMIT_FILTER_ROLL_OFF?: number, RAW_FILE_URI?: string | Uint8Array | null, DESCRIPTOR?: string | Uint8Array | null, URL?: string | Uint8Array | null, TAGS?: (string)[], CORR_MAHALANOBIS_SQ?: number, CORR_DOF?: number, CORR_GATE?: number, CORR_P_VALUE?: number, CORR_AMBIGUOUS?: boolean, FREQUENCY_UNC?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=RFO.d.ts.map

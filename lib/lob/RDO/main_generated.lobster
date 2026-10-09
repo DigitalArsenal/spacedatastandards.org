@@ -171,13 +171,35 @@ class RDO : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 106) + i * 4)
     def TAGS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 106)
+    /// Association: squared Mahalanobis distance of the observation's
+    /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+    def CORR_MAHALANOBIS_SQ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 108, 0.0)
+    /// Association: degrees of freedom of d^2 (measurement dimension).
+    def CORR_DOF() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 110, 0)
+    /// Association: the chi-square gate d^2 was tested against.
+    def CORR_GATE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 112, 0.0)
+    /// Association: p-value of d^2, Q(dof/2, d^2/2).
+    def CORR_P_VALUE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 114, 0.0)
+    /// Association: true when the assignment was ambiguous.
+    def CORR_AMBIGUOUS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 116, 0))
+    /// Association: posterior probability of the association.
+    def CORR_QUALITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 118, 0.0)
+    /// Carrier frequency the DOPPLER shift refers to, in Hz.
+    def DOPPLER_FREQUENCY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 120, 0.0)
 
 def GetRootAsRDO(buf:string): return RDO { buf, flatbuffers.indirect(buf, 0) }
 
 struct RDOBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(52)
+        b_.StartObject(59)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -334,6 +356,27 @@ struct RDOBuilder:
         return this
     def add_TAGS(TAGS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(51, TAGS)
+        return this
+    def add_CORR_MAHALANOBIS_SQ(CORR_MAHALANOBIS_SQ:float):
+        b_.PrependFloat64Slot(52, CORR_MAHALANOBIS_SQ, 0.0)
+        return this
+    def add_CORR_DOF(CORR_DOF:int):
+        b_.PrependUint8Slot(53, CORR_DOF, 0)
+        return this
+    def add_CORR_GATE(CORR_GATE:float):
+        b_.PrependFloat64Slot(54, CORR_GATE, 0.0)
+        return this
+    def add_CORR_P_VALUE(CORR_P_VALUE:float):
+        b_.PrependFloat64Slot(55, CORR_P_VALUE, 0.0)
+        return this
+    def add_CORR_AMBIGUOUS(CORR_AMBIGUOUS:bool):
+        b_.PrependBoolSlot(56, CORR_AMBIGUOUS, 0)
+        return this
+    def add_CORR_QUALITY(CORR_QUALITY:float):
+        b_.PrependFloat64Slot(57, CORR_QUALITY, 0.0)
+        return this
+    def add_DOPPLER_FREQUENCY(DOPPLER_FREQUENCY:float):
+        b_.PrependFloat64Slot(58, DOPPLER_FREQUENCY, 0.0)
         return this
     def end():
         return b_.EndObject()

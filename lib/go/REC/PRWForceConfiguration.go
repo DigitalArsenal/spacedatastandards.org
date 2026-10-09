@@ -686,8 +686,71 @@ func (rcv *PRWForceConfiguration) MutateHasMaximumTesseralDegree(n bool) bool {
 	return rcv.MutateHAS_MAXIMUM_TESSERAL_DEGREE(n)
 }
 
+/// Solar radiation pressure model family (default: the cannonball).
+func (rcv *PRWForceConfiguration) RADIATION_PRESSURE_MODEL() prwRadiationPressureFamily {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return prwRadiationPressureFamily(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PRWForceConfiguration) RadiationPressureModel() prwRadiationPressureFamily {
+	return rcv.RADIATION_PRESSURE_MODEL()
+}
+
+/// Solar radiation pressure model family (default: the cannonball).
+func (rcv *PRWForceConfiguration) MutateRADIATION_PRESSURE_MODEL(n prwRadiationPressureFamily) bool {
+	return rcv._tab.MutateByteSlot(64, byte(n))
+}
+
+func (rcv *PRWForceConfiguration) MutateRadiationPressureModel(n prwRadiationPressureFamily) bool {
+	return rcv.MutateRADIATION_PRESSURE_MODEL(n)
+}
+
+/// Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+func (rcv *PRWForceConfiguration) GNSS_BLOCK() prwGnssSpacecraftBlock {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return prwGnssSpacecraftBlock(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PRWForceConfiguration) GnssBlock() prwGnssSpacecraftBlock {
+	return rcv.GNSS_BLOCK()
+}
+
+/// Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+func (rcv *PRWForceConfiguration) MutateGNSS_BLOCK(n prwGnssSpacecraftBlock) bool {
+	return rcv._tab.MutateByteSlot(66, byte(n))
+}
+
+func (rcv *PRWForceConfiguration) MutateGnssBlock(n prwGnssSpacecraftBlock) bool {
+	return rcv.MutateGNSS_BLOCK(n)
+}
+
+/// ECOM2 coefficients; absent means no ECOM2 term.
+func (rcv *PRWForceConfiguration) ECOM2(obj *PRWEcom2) *PRWEcom2 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWEcom2)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRWForceConfiguration) Ecom2(obj *PRWEcom2) *PRWEcom2 {
+	return rcv.ECOM2(obj)
+}
+
+/// ECOM2 coefficients; absent means no ECOM2 term.
 func PRWForceConfigurationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(30)
+	builder.StartObject(33)
 }
 func PRWForceConfigurationAddGRAVITY_CHOICE(builder *flatbuffers.Builder, GRAVITY_CHOICE prwGravitySelection) {
 	builder.PrependByteSlot(0, byte(GRAVITY_CHOICE), 0)
@@ -874,6 +937,24 @@ func PRWForceConfigurationAddHAS_MAXIMUM_TESSERAL_DEGREE(builder *flatbuffers.Bu
 }
 func PRWForceConfigurationAddHasMaximumTesseralDegree(builder *flatbuffers.Builder, HAS_MAXIMUM_TESSERAL_DEGREE bool) {
 	PRWForceConfigurationAddHAS_MAXIMUM_TESSERAL_DEGREE(builder, HAS_MAXIMUM_TESSERAL_DEGREE)
+}
+func PRWForceConfigurationAddRADIATION_PRESSURE_MODEL(builder *flatbuffers.Builder, RADIATION_PRESSURE_MODEL prwRadiationPressureFamily) {
+	builder.PrependByteSlot(30, byte(RADIATION_PRESSURE_MODEL), 0)
+}
+func PRWForceConfigurationAddRadiationPressureModel(builder *flatbuffers.Builder, RADIATION_PRESSURE_MODEL prwRadiationPressureFamily) {
+	PRWForceConfigurationAddRADIATION_PRESSURE_MODEL(builder, RADIATION_PRESSURE_MODEL)
+}
+func PRWForceConfigurationAddGNSS_BLOCK(builder *flatbuffers.Builder, GNSS_BLOCK prwGnssSpacecraftBlock) {
+	builder.PrependByteSlot(31, byte(GNSS_BLOCK), 0)
+}
+func PRWForceConfigurationAddGnssBlock(builder *flatbuffers.Builder, GNSS_BLOCK prwGnssSpacecraftBlock) {
+	PRWForceConfigurationAddGNSS_BLOCK(builder, GNSS_BLOCK)
+}
+func PRWForceConfigurationAddECOM2(builder *flatbuffers.Builder, ECOM2 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(ECOM2), 0)
+}
+func PRWForceConfigurationAddEcom2(builder *flatbuffers.Builder, ECOM2 flatbuffers.UOffsetT) {
+	PRWForceConfigurationAddECOM2(builder, ECOM2)
 }
 func PRWForceConfigurationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

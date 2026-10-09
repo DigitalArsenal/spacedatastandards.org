@@ -458,8 +458,65 @@ class RDO(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
         return o == 0
 
+    # Association: squared Mahalanobis distance of the observation's
+    # innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+    # RDO
+    def CORR_MAHALANOBIS_SQ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Association: degrees of freedom of d^2 (measurement dimension).
+    # RDO
+    def CORR_DOF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Association: the chi-square gate d^2 was tested against.
+    # RDO
+    def CORR_GATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Association: p-value of d^2, Q(dof/2, d^2/2).
+    # RDO
+    def CORR_P_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Association: true when the assignment was ambiguous.
+    # RDO
+    def CORR_AMBIGUOUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Association: posterior probability of the association.
+    # RDO
+    def CORR_QUALITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Carrier frequency the DOPPLER shift refers to, in Hz.
+    # RDO
+    def DOPPLER_FREQUENCY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def RDOStart(builder):
-    builder.StartObject(52)
+    builder.StartObject(59)
 
 def Start(builder):
     RDOStart(builder)
@@ -788,6 +845,48 @@ def RDOCreateTAGSVector(builder, data):
 def CreateTAGSVector(builder, data):
     return RDOCreateTAGSVector(builder, data)
 
+def RDOAddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ):
+    builder.PrependFloat64Slot(52, CORR_MAHALANOBIS_SQ, 0.0)
+
+def AddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ):
+    RDOAddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ)
+
+def RDOAddCORR_DOF(builder, CORR_DOF):
+    builder.PrependUint8Slot(53, CORR_DOF, 0)
+
+def AddCORR_DOF(builder, CORR_DOF):
+    RDOAddCORR_DOF(builder, CORR_DOF)
+
+def RDOAddCORR_GATE(builder, CORR_GATE):
+    builder.PrependFloat64Slot(54, CORR_GATE, 0.0)
+
+def AddCORR_GATE(builder, CORR_GATE):
+    RDOAddCORR_GATE(builder, CORR_GATE)
+
+def RDOAddCORR_P_VALUE(builder, CORR_P_VALUE):
+    builder.PrependFloat64Slot(55, CORR_P_VALUE, 0.0)
+
+def AddCORR_P_VALUE(builder, CORR_P_VALUE):
+    RDOAddCORR_P_VALUE(builder, CORR_P_VALUE)
+
+def RDOAddCORR_AMBIGUOUS(builder, CORR_AMBIGUOUS):
+    builder.PrependBoolSlot(56, CORR_AMBIGUOUS, 0)
+
+def AddCORR_AMBIGUOUS(builder, CORR_AMBIGUOUS):
+    RDOAddCORR_AMBIGUOUS(builder, CORR_AMBIGUOUS)
+
+def RDOAddCORR_QUALITY(builder, CORR_QUALITY):
+    builder.PrependFloat64Slot(57, CORR_QUALITY, 0.0)
+
+def AddCORR_QUALITY(builder, CORR_QUALITY):
+    RDOAddCORR_QUALITY(builder, CORR_QUALITY)
+
+def RDOAddDOPPLER_FREQUENCY(builder, DOPPLER_FREQUENCY):
+    builder.PrependFloat64Slot(58, DOPPLER_FREQUENCY, 0.0)
+
+def AddDOPPLER_FREQUENCY(builder, DOPPLER_FREQUENCY):
+    RDOAddDOPPLER_FREQUENCY(builder, DOPPLER_FREQUENCY)
+
 def RDOEnd(builder):
     return builder.EndObject()
 
@@ -856,6 +955,13 @@ class RDOT(object):
         RAW_FILE_URI = None,
         DESCRIPTOR = None,
         TAGS = None,
+        CORR_MAHALANOBIS_SQ = 0.0,
+        CORR_DOF = 0,
+        CORR_GATE = 0.0,
+        CORR_P_VALUE = 0.0,
+        CORR_AMBIGUOUS = False,
+        CORR_QUALITY = 0.0,
+        DOPPLER_FREQUENCY = 0.0,
     ):
         self.ID = ID  # type: Optional[str]
         self.OB_TIME = OB_TIME  # type: Optional[str]
@@ -909,6 +1015,13 @@ class RDOT(object):
         self.RAW_FILE_URI = RAW_FILE_URI  # type: Optional[str]
         self.DESCRIPTOR = DESCRIPTOR  # type: Optional[str]
         self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
+        self.CORR_MAHALANOBIS_SQ = CORR_MAHALANOBIS_SQ  # type: float
+        self.CORR_DOF = CORR_DOF  # type: int
+        self.CORR_GATE = CORR_GATE  # type: float
+        self.CORR_P_VALUE = CORR_P_VALUE  # type: float
+        self.CORR_AMBIGUOUS = CORR_AMBIGUOUS  # type: bool
+        self.CORR_QUALITY = CORR_QUALITY  # type: float
+        self.DOPPLER_FREQUENCY = DOPPLER_FREQUENCY  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -986,6 +1099,13 @@ class RDOT(object):
             self.TAGS = []
             for i in range(RDO.TAGSLength()):
                 self.TAGS.append(RDO.TAGS(i))
+        self.CORR_MAHALANOBIS_SQ = RDO.CORR_MAHALANOBIS_SQ()
+        self.CORR_DOF = RDO.CORR_DOF()
+        self.CORR_GATE = RDO.CORR_GATE()
+        self.CORR_P_VALUE = RDO.CORR_P_VALUE()
+        self.CORR_AMBIGUOUS = RDO.CORR_AMBIGUOUS()
+        self.CORR_QUALITY = RDO.CORR_QUALITY()
+        self.DOPPLER_FREQUENCY = RDO.DOPPLER_FREQUENCY()
 
     # RDOT
     def Pack(self, builder):
@@ -1090,5 +1210,12 @@ class RDOT(object):
             RDOAddDESCRIPTOR(builder, DESCRIPTOR)
         if self.TAGS is not None:
             RDOAddTAGS(builder, TAGS)
+        RDOAddCORR_MAHALANOBIS_SQ(builder, self.CORR_MAHALANOBIS_SQ)
+        RDOAddCORR_DOF(builder, self.CORR_DOF)
+        RDOAddCORR_GATE(builder, self.CORR_GATE)
+        RDOAddCORR_P_VALUE(builder, self.CORR_P_VALUE)
+        RDOAddCORR_AMBIGUOUS(builder, self.CORR_AMBIGUOUS)
+        RDOAddCORR_QUALITY(builder, self.CORR_QUALITY)
+        RDOAddDOPPLER_FREQUENCY(builder, self.DOPPLER_FREQUENCY)
         RDO = RDOEnd(builder)
         return RDO

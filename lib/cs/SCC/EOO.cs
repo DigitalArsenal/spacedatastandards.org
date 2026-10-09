@@ -423,8 +423,19 @@ public struct EOO : IFlatbufferObject
   public float SNOW_ICE_COVER_PERCENT { get { int o = __p.__offset(268); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
   public float VALID_DATA_AREA_KM2 { get { int o = __p.__offset(270); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Association: squared Mahalanobis distance of the observation's
+  /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+  public double CORR_MAHALANOBIS_SQ { get { int o = __p.__offset(272); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Association: degrees of freedom of d^2 (measurement dimension).
+  public byte CORR_DOF { get { int o = __p.__offset(274); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Association: the chi-square gate d^2 was tested against.
+  public double CORR_GATE { get { int o = __p.__offset(276); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Association: p-value of d^2, Q(dof/2, d^2/2).
+  public double CORR_P_VALUE { get { int o = __p.__offset(278); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Association: true when the assignment was ambiguous.
+  public bool CORR_AMBIGUOUS { get { int o = __p.__offset(280); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
-  public static void StartEOO(FlatBufferBuilder builder) { builder.StartTable(134); }
+  public static void StartEOO(FlatBufferBuilder builder) { builder.StartTable(139); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddCLASSIFICATION(FlatBufferBuilder builder, StringOffset CLASSIFICATIONOffset) { builder.AddOffset(1, CLASSIFICATIONOffset.Value, 0); }
   public static void AddOB_TIME(FlatBufferBuilder builder, StringOffset OB_TIMEOffset) { builder.AddOffset(2, OB_TIMEOffset.Value, 0); }
@@ -559,6 +570,11 @@ public struct EOO : IFlatbufferObject
   public static void AddSUNGLINT_PERCENT(FlatBufferBuilder builder, float SUNGLINT_PERCENT) { builder.AddFloat(131, SUNGLINT_PERCENT, 0.0f); }
   public static void AddSNOW_ICE_COVER_PERCENT(FlatBufferBuilder builder, float SNOW_ICE_COVER_PERCENT) { builder.AddFloat(132, SNOW_ICE_COVER_PERCENT, 0.0f); }
   public static void AddVALID_DATA_AREA_KM2(FlatBufferBuilder builder, float VALID_DATA_AREA_KM2) { builder.AddFloat(133, VALID_DATA_AREA_KM2, 0.0f); }
+  public static void AddCORR_MAHALANOBIS_SQ(FlatBufferBuilder builder, double CORR_MAHALANOBIS_SQ) { builder.AddDouble(134, CORR_MAHALANOBIS_SQ, 0.0); }
+  public static void AddCORR_DOF(FlatBufferBuilder builder, byte CORR_DOF) { builder.AddByte(135, CORR_DOF, 0); }
+  public static void AddCORR_GATE(FlatBufferBuilder builder, double CORR_GATE) { builder.AddDouble(136, CORR_GATE, 0.0); }
+  public static void AddCORR_P_VALUE(FlatBufferBuilder builder, double CORR_P_VALUE) { builder.AddDouble(137, CORR_P_VALUE, 0.0); }
+  public static void AddCORR_AMBIGUOUS(FlatBufferBuilder builder, bool CORR_AMBIGUOUS) { builder.AddBool(138, CORR_AMBIGUOUS, false); }
   public static Offset<EOO> EndEOO(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EOO>(o);
@@ -705,6 +721,11 @@ public struct EOO : IFlatbufferObject
     _o.SUNGLINT_PERCENT = this.SUNGLINT_PERCENT;
     _o.SNOW_ICE_COVER_PERCENT = this.SNOW_ICE_COVER_PERCENT;
     _o.VALID_DATA_AREA_KM2 = this.VALID_DATA_AREA_KM2;
+    _o.CORR_MAHALANOBIS_SQ = this.CORR_MAHALANOBIS_SQ;
+    _o.CORR_DOF = this.CORR_DOF;
+    _o.CORR_GATE = this.CORR_GATE;
+    _o.CORR_P_VALUE = this.CORR_P_VALUE;
+    _o.CORR_AMBIGUOUS = this.CORR_AMBIGUOUS;
   }
   public static Offset<EOO> Pack(FlatBufferBuilder builder, EOOT _o) {
     if (_o == null) return default(Offset<EOO>);
@@ -865,6 +886,11 @@ public struct EOO : IFlatbufferObject
     AddSUNGLINT_PERCENT(builder, _o.SUNGLINT_PERCENT);
     AddSNOW_ICE_COVER_PERCENT(builder, _o.SNOW_ICE_COVER_PERCENT);
     AddVALID_DATA_AREA_KM2(builder, _o.VALID_DATA_AREA_KM2);
+    AddCORR_MAHALANOBIS_SQ(builder, _o.CORR_MAHALANOBIS_SQ);
+    AddCORR_DOF(builder, _o.CORR_DOF);
+    AddCORR_GATE(builder, _o.CORR_GATE);
+    AddCORR_P_VALUE(builder, _o.CORR_P_VALUE);
+    AddCORR_AMBIGUOUS(builder, _o.CORR_AMBIGUOUS);
     return EndEOO(builder);
   }
 }
@@ -1005,6 +1031,11 @@ public class EOOT
   public float SUNGLINT_PERCENT { get; set; }
   public float SNOW_ICE_COVER_PERCENT { get; set; }
   public float VALID_DATA_AREA_KM2 { get; set; }
+  public double CORR_MAHALANOBIS_SQ { get; set; }
+  public byte CORR_DOF { get; set; }
+  public double CORR_GATE { get; set; }
+  public double CORR_P_VALUE { get; set; }
+  public bool CORR_AMBIGUOUS { get; set; }
 
   public EOOT() {
     this.ID = null;
@@ -1141,6 +1172,11 @@ public class EOOT
     this.SUNGLINT_PERCENT = 0.0f;
     this.SNOW_ICE_COVER_PERCENT = 0.0f;
     this.VALID_DATA_AREA_KM2 = 0.0f;
+    this.CORR_MAHALANOBIS_SQ = 0.0;
+    this.CORR_DOF = 0;
+    this.CORR_GATE = 0.0;
+    this.CORR_P_VALUE = 0.0;
+    this.CORR_AMBIGUOUS = false;
   }
   public static EOOT DeserializeFromBinary(byte[] fbBuffer) {
     return EOO.GetRootAsEOO(new ByteBuffer(fbBuffer)).UnPack();
@@ -1292,6 +1328,11 @@ static public class EOOVerify
       && verifier.VerifyField(tablePos, 266 /*SUNGLINT_PERCENT*/, 4 /*float*/, 4, false)
       && verifier.VerifyField(tablePos, 268 /*SNOW_ICE_COVER_PERCENT*/, 4 /*float*/, 4, false)
       && verifier.VerifyField(tablePos, 270 /*VALID_DATA_AREA_KM2*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 272 /*CORR_MAHALANOBIS_SQ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 274 /*CORR_DOF*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 276 /*CORR_GATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 278 /*CORR_P_VALUE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 280 /*CORR_AMBIGUOUS*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

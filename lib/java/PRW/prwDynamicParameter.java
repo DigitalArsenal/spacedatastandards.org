@@ -17,8 +17,22 @@ public final class prwDynamicParameter {
   public static final int DRAG_AREA_OVER_MASS_RATE = 2;
   public static final int SRP_AREA_OVER_MASS = 3;
   public static final int IN_TRACK_ACCELERATION = 4;
+  /**
+   * ECOM2 coefficients (PRWEcom2), in their order there.
+   */
+  public static final int ECOM2_D0 = 5;
+  public static final int ECOM2_Y0 = 6;
+  public static final int ECOM2_B0 = 7;
+  public static final int ECOM2_D2_COS = 8;
+  public static final int ECOM2_D2_SIN = 9;
+  public static final int ECOM2_D4_COS = 10;
+  public static final int ECOM2_D4_SIN = 11;
+  public static final int ECOM2_B1_COS = 12;
+  public static final int ECOM2_B1_SIN = 13;
+  public static final int ECOM2_B3_COS = 14;
+  public static final int ECOM2_B3_SIN = 15;
 
-  public static final String[] names = { "UNSPECIFIED", "DRAG_AREA_OVER_MASS", "DRAG_AREA_OVER_MASS_RATE", "SRP_AREA_OVER_MASS", "IN_TRACK_ACCELERATION", };
+  public static final String[] names = { "UNSPECIFIED", "DRAG_AREA_OVER_MASS", "DRAG_AREA_OVER_MASS_RATE", "SRP_AREA_OVER_MASS", "IN_TRACK_ACCELERATION", "ECOM2_D0", "ECOM2_Y0", "ECOM2_B0", "ECOM2_D2_COS", "ECOM2_D2_SIN", "ECOM2_D4_COS", "ECOM2_D4_SIN", "ECOM2_B1_COS", "ECOM2_B1_SIN", "ECOM2_B3_COS", "ECOM2_B3_SIN", };
 
   public static String name(int e) { return names[e]; }
 }

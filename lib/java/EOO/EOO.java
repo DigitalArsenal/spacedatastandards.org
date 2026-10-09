@@ -622,8 +622,29 @@ public final class EOO extends com.google.flatbuffers.Table {
    * Total area covered by valid data (non-masked, usable imagery) in square kilometers.
    */
   public float VALID_DATA_AREA_KM2() { int o = __offset(270); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Association: squared Mahalanobis distance of the observation's
+   * innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+   */
+  public double CORR_MAHALANOBIS_SQ() { int o = __offset(272); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Association: degrees of freedom of d^2 (measurement dimension).
+   */
+  public int CORR_DOF() { int o = __offset(274); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Association: the chi-square gate d^2 was tested against.
+   */
+  public double CORR_GATE() { int o = __offset(276); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Association: p-value of d^2, Q(dof/2, d^2/2).
+   */
+  public double CORR_P_VALUE() { int o = __offset(278); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Association: true when the assignment was ambiguous.
+   */
+  public boolean CORR_AMBIGUOUS() { int o = __offset(280); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
-  public static void startEOO(FlatBufferBuilder builder) { builder.startTable(134); }
+  public static void startEOO(FlatBufferBuilder builder) { builder.startTable(139); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addClassification(FlatBufferBuilder builder, int CLASSIFICATIONOffset) { builder.addOffset(1, CLASSIFICATIONOffset, 0); }
   public static void addObTime(FlatBufferBuilder builder, int OB_TIMEOffset) { builder.addOffset(2, OB_TIMEOffset, 0); }
@@ -758,6 +779,11 @@ public final class EOO extends com.google.flatbuffers.Table {
   public static void addSunglintPercent(FlatBufferBuilder builder, float SUNGLINT_PERCENT) { builder.addFloat(131, SUNGLINT_PERCENT, 0.0f); }
   public static void addSnowIceCoverPercent(FlatBufferBuilder builder, float SNOW_ICE_COVER_PERCENT) { builder.addFloat(132, SNOW_ICE_COVER_PERCENT, 0.0f); }
   public static void addValidDataAreaKm2(FlatBufferBuilder builder, float VALID_DATA_AREA_KM2) { builder.addFloat(133, VALID_DATA_AREA_KM2, 0.0f); }
+  public static void addCorrMahalanobisSq(FlatBufferBuilder builder, double CORR_MAHALANOBIS_SQ) { builder.addDouble(134, CORR_MAHALANOBIS_SQ, 0.0); }
+  public static void addCorrDof(FlatBufferBuilder builder, int CORR_DOF) { builder.addByte(135, (byte) CORR_DOF, (byte) 0); }
+  public static void addCorrGate(FlatBufferBuilder builder, double CORR_GATE) { builder.addDouble(136, CORR_GATE, 0.0); }
+  public static void addCorrPValue(FlatBufferBuilder builder, double CORR_P_VALUE) { builder.addDouble(137, CORR_P_VALUE, 0.0); }
+  public static void addCorrAmbiguous(FlatBufferBuilder builder, boolean CORR_AMBIGUOUS) { builder.addBoolean(138, CORR_AMBIGUOUS, false); }
   public static int endEOO(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

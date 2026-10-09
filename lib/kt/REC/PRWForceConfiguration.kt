@@ -243,6 +243,34 @@ class PRWForceConfiguration : Table() {
             val o = __offset(62)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Solar radiation pressure model family (default: the cannonball).
+     */
+    val radiationPressureModel : UByte
+        get() {
+            val o = __offset(64)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+     */
+    val gnssBlock : UByte
+        get() {
+            val o = __offset(66)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * ECOM2 coefficients; absent means no ECOM2 term.
+     */
+    val ecom2 : PRWEcom2? get() = ecom2(PRWEcom2())
+    fun ecom2(obj: PRWEcom2) : PRWEcom2? {
+        val o = __offset(68)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPRWForceConfiguration(_bb: ByteBuffer): PRWForceConfiguration = getRootAsPRWForceConfiguration(_bb, PRWForceConfiguration())
@@ -250,8 +278,8 @@ class PRWForceConfiguration : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPRWForceConfiguration(builder: FlatBufferBuilder, gravityChoice: UByte, enablePointMass: Boolean, gravitationalParameter: Double, enableJ2: Boolean, enableJ3: Boolean, enableJ4: Boolean, enableHigherZonals: Boolean, maximumDegree: UShort, hasMaximumDegree: Boolean, maximumOrder: UShort, hasMaximumOrder: Boolean, enableThirdBody: Boolean, thirdBodyIdsOffset: Int, enableSrp: Boolean, enableDrag: Boolean, initialMassKg: Double, areaM2: Double, reflectivityCoefficient: Double, dragCoefficient: Double, atmosphereModel: UByte, weatherOffset: Int, ephemerisSourceOffset: Int, solidTides: UByte, relativity: UByte, inTrackAccelerationMS2: Double, hasInTrackAccelerationMS2: Boolean, dragAreaOverMassRateM2KgS: Double, hasDragAreaOverMassRateM2KgS: Boolean, maximumTesseralDegree: UShort, hasMaximumTesseralDegree: Boolean) : Int {
-            builder.startTable(30)
+        fun createPRWForceConfiguration(builder: FlatBufferBuilder, gravityChoice: UByte, enablePointMass: Boolean, gravitationalParameter: Double, enableJ2: Boolean, enableJ3: Boolean, enableJ4: Boolean, enableHigherZonals: Boolean, maximumDegree: UShort, hasMaximumDegree: Boolean, maximumOrder: UShort, hasMaximumOrder: Boolean, enableThirdBody: Boolean, thirdBodyIdsOffset: Int, enableSrp: Boolean, enableDrag: Boolean, initialMassKg: Double, areaM2: Double, reflectivityCoefficient: Double, dragCoefficient: Double, atmosphereModel: UByte, weatherOffset: Int, ephemerisSourceOffset: Int, solidTides: UByte, relativity: UByte, inTrackAccelerationMS2: Double, hasInTrackAccelerationMS2: Boolean, dragAreaOverMassRateM2KgS: Double, hasDragAreaOverMassRateM2KgS: Boolean, maximumTesseralDegree: UShort, hasMaximumTesseralDegree: Boolean, radiationPressureModel: UByte, gnssBlock: UByte, ecom2Offset: Int) : Int {
+            builder.startTable(33)
             addDRAGAREAOVERMASSRATEM2KGS(builder, dragAreaOverMassRateM2KgS)
             addINTRACKACCELERATIONMS2(builder, inTrackAccelerationMS2)
             addDRAGCOEFFICIENT(builder, dragCoefficient)
@@ -259,12 +287,15 @@ class PRWForceConfiguration : Table() {
             addAREAM2(builder, areaM2)
             addINITIALMASSKG(builder, initialMassKg)
             addGRAVITATIONALPARAMETER(builder, gravitationalParameter)
+            addECOM2(builder, ecom2Offset)
             addEPHEMERISSOURCE(builder, ephemerisSourceOffset)
             addWEATHER(builder, weatherOffset)
             addTHIRDBODYIDS(builder, thirdBodyIdsOffset)
             addMAXIMUMTESSERALDEGREE(builder, maximumTesseralDegree)
             addMAXIMUMORDER(builder, maximumOrder)
             addMAXIMUMDEGREE(builder, maximumDegree)
+            addGNSSBLOCK(builder, gnssBlock)
+            addRADIATIONPRESSUREMODEL(builder, radiationPressureModel)
             addHASMAXIMUMTESSERALDEGREE(builder, hasMaximumTesseralDegree)
             addHASDRAGAREAOVERMASSRATEM2KGS(builder, hasDragAreaOverMassRateM2KgS)
             addHASINTRACKACCELERATIONMS2(builder, hasInTrackAccelerationMS2)
@@ -284,7 +315,7 @@ class PRWForceConfiguration : Table() {
             addGRAVITYCHOICE(builder, gravityChoice)
             return endPRWForceConfiguration(builder)
         }
-        fun startPRWForceConfiguration(builder: FlatBufferBuilder) = builder.startTable(30)
+        fun startPRWForceConfiguration(builder: FlatBufferBuilder) = builder.startTable(33)
         fun addGRAVITYCHOICE(builder: FlatBufferBuilder, gravityChoice: UByte) = builder.addByte(0, gravityChoice.toByte(), 0)
         fun addENABLEPOINTMASS(builder: FlatBufferBuilder, enablePointMass: Boolean) = builder.addBoolean(1, enablePointMass, true)
         fun addGRAVITATIONALPARAMETER(builder: FlatBufferBuilder, gravitationalParameter: Double) = builder.addDouble(2, gravitationalParameter, 0.0)
@@ -323,6 +354,9 @@ class PRWForceConfiguration : Table() {
         fun addHASDRAGAREAOVERMASSRATEM2KGS(builder: FlatBufferBuilder, hasDragAreaOverMassRateM2KgS: Boolean) = builder.addBoolean(27, hasDragAreaOverMassRateM2KgS, false)
         fun addMAXIMUMTESSERALDEGREE(builder: FlatBufferBuilder, maximumTesseralDegree: UShort) = builder.addShort(28, maximumTesseralDegree.toShort(), 0)
         fun addHASMAXIMUMTESSERALDEGREE(builder: FlatBufferBuilder, hasMaximumTesseralDegree: Boolean) = builder.addBoolean(29, hasMaximumTesseralDegree, false)
+        fun addRADIATIONPRESSUREMODEL(builder: FlatBufferBuilder, radiationPressureModel: UByte) = builder.addByte(30, radiationPressureModel.toByte(), 0)
+        fun addGNSSBLOCK(builder: FlatBufferBuilder, gnssBlock: UByte) = builder.addByte(31, gnssBlock.toByte(), 0)
+        fun addECOM2(builder: FlatBufferBuilder, ecom2: Int) = builder.addOffset(32, ecom2, 0)
         fun endPRWForceConfiguration(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 46)

@@ -1,5 +1,5 @@
-// Hash: d9631a60d9f304f65002e8f75d8505c78ab0b17dfda5a3db99ae57aff827818e
-// Version: 1.219.2
+// Hash: 295cb82298e6f8e9e61e354f4784f494dafe9ca41b2d8ac1a2d729afb8e5f7a8
+// Version: 1.219.3
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -257,7 +257,39 @@ enum prwRelativityTerms : ubyte {
 /// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).
 enum prwDynamicParameter : ubyte {
   UNSPECIFIED = 0, DRAG_AREA_OVER_MASS = 1, DRAG_AREA_OVER_MASS_RATE = 2,
-  SRP_AREA_OVER_MASS = 3, IN_TRACK_ACCELERATION = 4
+  SRP_AREA_OVER_MASS = 3, IN_TRACK_ACCELERATION = 4,
+  /// ECOM2 coefficients (PRWEcom2), in their order there.
+  ECOM2_D0 = 5, ECOM2_Y0 = 6, ECOM2_B0 = 7, ECOM2_D2_COS = 8, ECOM2_D2_SIN = 9,
+  ECOM2_D4_COS = 10, ECOM2_D4_SIN = 11, ECOM2_B1_COS = 12, ECOM2_B1_SIN = 13,
+  ECOM2_B3_COS = 14, ECOM2_B3_SIN = 15
+}
+
+/// Solar radiation pressure model family. CANNONBALL uses the
+/// radiation-pressure coefficient and area-to-mass ratio of the force
+/// configuration; GNSS_BOX_WING is the a priori box-wing model of the
+/// spacecraft block in GNSS_BLOCK (Rodriguez-Solano, Hugentobler and
+/// Steigenberger 2012, Adv. Space Res. 49, doi:10.1016/j.asr.2012.01.016)
+/// under nominal yaw steering, with the mass INITIAL_MASS_KG.
+enum prwRadiationPressureFamily : ubyte { CANNONBALL = 0, GNSS_BOX_WING = 1, NONE = 2 }
+
+/// GNSS spacecraft block, selecting the box-wing surfaces.
+enum prwGnssSpacecraftBlock : ubyte { UNSPECIFIED = 0, GPS_IIR = 1, GPS_IIR_M = 2, GPS_IIF = 3 }
+
+/// ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,
+/// doi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,
+/// added to the a priori model and scaled by the visible Sun fraction.
+table PRWEcom2 {
+  D0_M_S2:double;
+  Y0_M_S2:double;
+  B0_M_S2:double;
+  D2_COS_M_S2:double;
+  D2_SIN_M_S2:double;
+  D4_COS_M_S2:double;
+  D4_SIN_M_S2:double;
+  B1_COS_M_S2:double;
+  B1_SIN_M_S2:double;
+  B3_COS_M_S2:double;
+  B3_SIN_M_S2:double;
 }
 
 /// Instance identity is host-provided, opaque, and not a physical quantity.
@@ -341,6 +373,12 @@ table PRWForceConfiguration {
   MAXIMUM_TESSERAL_DEGREE:ushort;
   /// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
   HAS_MAXIMUM_TESSERAL_DEGREE:bool = false;
+  /// Solar radiation pressure model family (default: the cannonball).
+  RADIATION_PRESSURE_MODEL:prwRadiationPressureFamily = CANNONBALL;
+  /// Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+  GNSS_BLOCK:prwGnssSpacecraftBlock = UNSPECIFIED;
+  /// ECOM2 coefficients; absent means no ECOM2 term.
+  ECOM2:PRWEcom2;
 }
 
 /// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution

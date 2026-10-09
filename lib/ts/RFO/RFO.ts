@@ -672,8 +672,57 @@ tagsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Association: squared Mahalanobis distance of the observation's
+ * innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+ */
+CORR_MAHALANOBIS_SQ():number {
+  const offset = this.bb!.__offset(this.bb_pos, 152);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Association: degrees of freedom of d^2 (measurement dimension).
+ */
+CORR_DOF():number {
+  const offset = this.bb!.__offset(this.bb_pos, 154);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Association: the chi-square gate d^2 was tested against.
+ */
+CORR_GATE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 156);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Association: p-value of d^2, Q(dof/2, d^2/2).
+ */
+CORR_P_VALUE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 158);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Association: true when the assignment was ambiguous.
+ */
+CORR_AMBIGUOUS():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 160);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * One-sigma uncertainty of FREQUENCY, in the same units.
+ */
+FREQUENCY_UNC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 162);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startRFO(builder:flatbuffers.Builder) {
-  builder.startObject(74);
+  builder.startObject(80);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -984,6 +1033,30 @@ static startTagsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addCorrMahalanobisSq(builder:flatbuffers.Builder, CORR_MAHALANOBIS_SQ:number) {
+  builder.addFieldFloat64(74, CORR_MAHALANOBIS_SQ, 0.0);
+}
+
+static addCorrDof(builder:flatbuffers.Builder, CORR_DOF:number) {
+  builder.addFieldInt8(75, CORR_DOF, 0);
+}
+
+static addCorrGate(builder:flatbuffers.Builder, CORR_GATE:number) {
+  builder.addFieldFloat64(76, CORR_GATE, 0.0);
+}
+
+static addCorrPValue(builder:flatbuffers.Builder, CORR_P_VALUE:number) {
+  builder.addFieldFloat64(77, CORR_P_VALUE, 0.0);
+}
+
+static addCorrAmbiguous(builder:flatbuffers.Builder, CORR_AMBIGUOUS:boolean) {
+  builder.addFieldInt8(78, +CORR_AMBIGUOUS, +false);
+}
+
+static addFrequencyUnc(builder:flatbuffers.Builder, FREQUENCY_UNC:number) {
+  builder.addFieldFloat64(79, FREQUENCY_UNC, 0.0);
+}
+
 static endRFO(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -997,7 +1070,7 @@ static finishSizePrefixedRFOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$RFO', true);
 }
 
-static createRFO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, OBS_TYPE:rfObsType, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, UCT:boolean, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, TRANSPONDEROffset:flatbuffers.Offset, DETECTION_STATUS:rfDetectionStatus, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_RATE:number, RANGE_RATE_UNC:number, TRACK_RANGE:number, SENLAT:number, SENLON:number, SENALT:number, ELNOTOffset:flatbuffers.Offset, ANTENNA_NAMEOffset:flatbuffers.Offset, COLLECTION_MODEOffset:flatbuffers.Offset, FREQUENCY:number, NOMINAL_FREQUENCY:number, START_FREQUENCY:number, END_FREQUENCY:number, FREQUENCY_SHIFT:number, BANDWIDTH:number, NOMINAL_BANDWIDTH:number, RESOLUTION_BANDWIDTH:number, VIDEO_BANDWIDTH:number, RELATIVE_CARRIER_POWER:number, SPECTRUM_ANALYZER_POWER:number, RELATIVE_NOISE_FLOOR:number, REFERENCE_LEVEL:number, NOISE_PWR_DENSITY:number, PGRI:number, EIRP:number, NOMINAL_EIRP:number, MIN_PSD:number, MAX_PSD:number, SNR:number, NOMINAL_SNR:number, POWER_OVER_NOISE:number, NOMINAL_POWER_OVER_NOISE:number, POLARITY:number, POLARITY_TYPEOffset:flatbuffers.Offset, CHANNEL:number, BAUD_RATE:number, SYMBOL_TO_NOISE_RATIO:number, BIT_ERROR_RATE:number, PEAK:boolean, INCOMING:boolean, SWITCH_POINT:number, CONFIDENCE:number, CARRIER_STANDARDOffset:flatbuffers.Offset, MODULATIONOffset:flatbuffers.Offset, INNER_CODING_RATE:number, OUTER_CODING_RATE:number, TRANSMIT_FILTER_TYPEOffset:flatbuffers.Offset, TRANSMIT_FILTER_ROLL_OFF:number, RAW_FILE_URIOffset:flatbuffers.Offset, DESCRIPTOROffset:flatbuffers.Offset, URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createRFO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, OBS_TYPE:rfObsType, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, UCT:boolean, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, TRANSPONDEROffset:flatbuffers.Offset, DETECTION_STATUS:rfDetectionStatus, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_RATE:number, RANGE_RATE_UNC:number, TRACK_RANGE:number, SENLAT:number, SENLON:number, SENALT:number, ELNOTOffset:flatbuffers.Offset, ANTENNA_NAMEOffset:flatbuffers.Offset, COLLECTION_MODEOffset:flatbuffers.Offset, FREQUENCY:number, NOMINAL_FREQUENCY:number, START_FREQUENCY:number, END_FREQUENCY:number, FREQUENCY_SHIFT:number, BANDWIDTH:number, NOMINAL_BANDWIDTH:number, RESOLUTION_BANDWIDTH:number, VIDEO_BANDWIDTH:number, RELATIVE_CARRIER_POWER:number, SPECTRUM_ANALYZER_POWER:number, RELATIVE_NOISE_FLOOR:number, REFERENCE_LEVEL:number, NOISE_PWR_DENSITY:number, PGRI:number, EIRP:number, NOMINAL_EIRP:number, MIN_PSD:number, MAX_PSD:number, SNR:number, NOMINAL_SNR:number, POWER_OVER_NOISE:number, NOMINAL_POWER_OVER_NOISE:number, POLARITY:number, POLARITY_TYPEOffset:flatbuffers.Offset, CHANNEL:number, BAUD_RATE:number, SYMBOL_TO_NOISE_RATIO:number, BIT_ERROR_RATE:number, PEAK:boolean, INCOMING:boolean, SWITCH_POINT:number, CONFIDENCE:number, CARRIER_STANDARDOffset:flatbuffers.Offset, MODULATIONOffset:flatbuffers.Offset, INNER_CODING_RATE:number, OUTER_CODING_RATE:number, TRANSMIT_FILTER_TYPEOffset:flatbuffers.Offset, TRANSMIT_FILTER_ROLL_OFF:number, RAW_FILE_URIOffset:flatbuffers.Offset, DESCRIPTOROffset:flatbuffers.Offset, URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, CORR_MAHALANOBIS_SQ:number, CORR_DOF:number, CORR_GATE:number, CORR_P_VALUE:number, CORR_AMBIGUOUS:boolean, FREQUENCY_UNC:number):flatbuffers.Offset {
   RFO.startRFO(builder);
   RFO.addId(builder, IDOffset);
   RFO.addObTime(builder, OB_TIMEOffset);
@@ -1073,6 +1146,12 @@ static createRFO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TI
   RFO.addDescriptor(builder, DESCRIPTOROffset);
   RFO.addUrl(builder, URLOffset);
   RFO.addTags(builder, TAGSOffset);
+  RFO.addCorrMahalanobisSq(builder, CORR_MAHALANOBIS_SQ);
+  RFO.addCorrDof(builder, CORR_DOF);
+  RFO.addCorrGate(builder, CORR_GATE);
+  RFO.addCorrPValue(builder, CORR_P_VALUE);
+  RFO.addCorrAmbiguous(builder, CORR_AMBIGUOUS);
+  RFO.addFrequencyUnc(builder, FREQUENCY_UNC);
   return RFO.endRFO(builder);
 }
 
@@ -1151,7 +1230,13 @@ unpack(): RFOT {
     this.RAW_FILE_URI(),
     this.DESCRIPTOR(),
     this.URL(),
-    this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength())
+    this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength()),
+    this.CORR_MAHALANOBIS_SQ(),
+    this.CORR_DOF(),
+    this.CORR_GATE(),
+    this.CORR_P_VALUE(),
+    this.CORR_AMBIGUOUS(),
+    this.FREQUENCY_UNC()
   );
 }
 
@@ -1231,6 +1316,12 @@ unpackTo(_o: RFOT): void {
   _o.DESCRIPTOR = this.DESCRIPTOR();
   _o.URL = this.URL();
   _o.TAGS = this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength());
+  _o.CORR_MAHALANOBIS_SQ = this.CORR_MAHALANOBIS_SQ();
+  _o.CORR_DOF = this.CORR_DOF();
+  _o.CORR_GATE = this.CORR_GATE();
+  _o.CORR_P_VALUE = this.CORR_P_VALUE();
+  _o.CORR_AMBIGUOUS = this.CORR_AMBIGUOUS();
+  _o.FREQUENCY_UNC = this.FREQUENCY_UNC();
 }
 }
 
@@ -1309,7 +1400,13 @@ constructor(
   public RAW_FILE_URI: string|Uint8Array|null = null,
   public DESCRIPTOR: string|Uint8Array|null = null,
   public URL: string|Uint8Array|null = null,
-  public TAGS: (string)[] = []
+  public TAGS: (string)[] = [],
+  public CORR_MAHALANOBIS_SQ: number = 0.0,
+  public CORR_DOF: number = 0,
+  public CORR_GATE: number = 0.0,
+  public CORR_P_VALUE: number = 0.0,
+  public CORR_AMBIGUOUS: boolean = false,
+  public FREQUENCY_UNC: number = 0.0
 ){}
 
 
@@ -1410,7 +1507,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     RAW_FILE_URI,
     DESCRIPTOR,
     URL,
-    TAGS
+    TAGS,
+    this.CORR_MAHALANOBIS_SQ,
+    this.CORR_DOF,
+    this.CORR_GATE,
+    this.CORR_P_VALUE,
+    this.CORR_AMBIGUOUS,
+    this.FREQUENCY_UNC
   );
 }
 }

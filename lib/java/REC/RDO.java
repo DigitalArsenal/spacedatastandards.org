@@ -265,6 +265,35 @@ public final class RDO extends com.google.flatbuffers.Table {
   public int TAGSLength() { int o = __offset(106); return o != 0 ? __vector_len(o) : 0; }
   public StringVector tagsVector() { return tagsVector(new StringVector()); }
   public StringVector tagsVector(StringVector obj) { int o = __offset(106); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Association: squared Mahalanobis distance of the observation's
+   * innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+   */
+  public double CORR_MAHALANOBIS_SQ() { int o = __offset(108); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Association: degrees of freedom of d^2 (measurement dimension).
+   */
+  public int CORR_DOF() { int o = __offset(110); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Association: the chi-square gate d^2 was tested against.
+   */
+  public double CORR_GATE() { int o = __offset(112); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Association: p-value of d^2, Q(dof/2, d^2/2).
+   */
+  public double CORR_P_VALUE() { int o = __offset(114); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Association: true when the assignment was ambiguous.
+   */
+  public boolean CORR_AMBIGUOUS() { int o = __offset(116); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Association: posterior probability of the association.
+   */
+  public double CORR_QUALITY() { int o = __offset(118); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Carrier frequency the DOPPLER shift refers to, in Hz.
+   */
+  public double DOPPLER_FREQUENCY() { int o = __offset(120); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createRDO(FlatBufferBuilder builder,
       int IDOffset,
@@ -318,8 +347,20 @@ public final class RDO extends com.google.flatbuffers.Table {
       double TIMING_BIAS,
       int RAW_FILE_URIOffset,
       int DESCRIPTOROffset,
-      int TAGSOffset) {
-    builder.startTable(52);
+      int TAGSOffset,
+      double CORR_MAHALANOBIS_SQ,
+      int CORR_DOF,
+      double CORR_GATE,
+      double CORR_P_VALUE,
+      boolean CORR_AMBIGUOUS,
+      double CORR_QUALITY,
+      double DOPPLER_FREQUENCY) {
+    builder.startTable(59);
+    RDO.addDopplerFrequency(builder, DOPPLER_FREQUENCY);
+    RDO.addCorrQuality(builder, CORR_QUALITY);
+    RDO.addCorrPValue(builder, CORR_P_VALUE);
+    RDO.addCorrGate(builder, CORR_GATE);
+    RDO.addCorrMahalanobisSq(builder, CORR_MAHALANOBIS_SQ);
     RDO.addTimingBias(builder, TIMING_BIAS);
     RDO.addBeam(builder, BEAM);
     RDO.addSnr(builder, SNR);
@@ -370,12 +411,14 @@ public final class RDO extends com.google.flatbuffers.Table {
     RDO.addIdSensor(builder, ID_SENSOROffset);
     RDO.addObTime(builder, OB_TIMEOffset);
     RDO.addId(builder, IDOffset);
+    RDO.addCorrAmbiguous(builder, CORR_AMBIGUOUS);
+    RDO.addCorrDof(builder, CORR_DOF);
     RDO.addObsType(builder, OBS_TYPE);
     RDO.addUct(builder, UCT);
     return RDO.endRDO(builder);
   }
 
-  public static void startRDO(FlatBufferBuilder builder) { builder.startTable(52); }
+  public static void startRDO(FlatBufferBuilder builder) { builder.startTable(59); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addObTime(FlatBufferBuilder builder, int OB_TIMEOffset) { builder.addOffset(1, OB_TIMEOffset, 0); }
   public static void addIdSensor(FlatBufferBuilder builder, int ID_SENSOROffset) { builder.addOffset(2, ID_SENSOROffset, 0); }
@@ -430,6 +473,13 @@ public final class RDO extends com.google.flatbuffers.Table {
   public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(51, TAGSOffset, 0); }
   public static int createTagsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTagsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addCorrMahalanobisSq(FlatBufferBuilder builder, double CORR_MAHALANOBIS_SQ) { builder.addDouble(52, CORR_MAHALANOBIS_SQ, 0.0); }
+  public static void addCorrDof(FlatBufferBuilder builder, int CORR_DOF) { builder.addByte(53, (byte) CORR_DOF, (byte) 0); }
+  public static void addCorrGate(FlatBufferBuilder builder, double CORR_GATE) { builder.addDouble(54, CORR_GATE, 0.0); }
+  public static void addCorrPValue(FlatBufferBuilder builder, double CORR_P_VALUE) { builder.addDouble(55, CORR_P_VALUE, 0.0); }
+  public static void addCorrAmbiguous(FlatBufferBuilder builder, boolean CORR_AMBIGUOUS) { builder.addBoolean(56, CORR_AMBIGUOUS, false); }
+  public static void addCorrQuality(FlatBufferBuilder builder, double CORR_QUALITY) { builder.addDouble(57, CORR_QUALITY, 0.0); }
+  public static void addDopplerFrequency(FlatBufferBuilder builder, double DOPPLER_FREQUENCY) { builder.addDouble(58, DOPPLER_FREQUENCY, 0.0); }
   public static int endRDO(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

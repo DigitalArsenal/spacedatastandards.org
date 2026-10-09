@@ -16,5 +16,20 @@ export enum prwDynamicParameter {
   DRAG_AREA_OVER_MASS = 1,
   DRAG_AREA_OVER_MASS_RATE = 2,
   SRP_AREA_OVER_MASS = 3,
-  IN_TRACK_ACCELERATION = 4
+  IN_TRACK_ACCELERATION = 4,
+
+  /**
+   * ECOM2 coefficients (PRWEcom2), in their order there.
+   */
+  ECOM2_D0 = 5,
+  ECOM2_Y0 = 6,
+  ECOM2_B0 = 7,
+  ECOM2_D2_COS = 8,
+  ECOM2_D2_SIN = 9,
+  ECOM2_D4_COS = 10,
+  ECOM2_D4_SIN = 11,
+  ECOM2_B1_COS = 12,
+  ECOM2_B1_SIN = 13,
+  ECOM2_B3_COS = 14,
+  ECOM2_B3_SIN = 15
 }

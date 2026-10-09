@@ -1,7 +1,10 @@
 import * as flatbuffers from 'flatbuffers';
+import { PRWEcom2, PRWEcom2T } from './PRWEcom2.js';
 import { PRWSpaceWeather, PRWSpaceWeatherT } from './PRWSpaceWeather.js';
 import { prwAtmosphereFamily } from './prwAtmosphereFamily.js';
+import { prwGnssSpacecraftBlock } from './prwGnssSpacecraftBlock.js';
 import { prwGravitySelection } from './prwGravitySelection.js';
+import { prwRadiationPressureFamily } from './prwRadiationPressureFamily.js';
 import { prwRelativityTerms } from './prwRelativityTerms.js';
 import { prwSolidTideModel } from './prwSolidTideModel.js';
 /**
@@ -91,6 +94,18 @@ export declare class PRWForceConfiguration implements flatbuffers.IUnpackableObj
      * True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
      */
     HAS_MAXIMUM_TESSERAL_DEGREE(): boolean;
+    /**
+     * Solar radiation pressure model family (default: the cannonball).
+     */
+    RADIATION_PRESSURE_MODEL(): prwRadiationPressureFamily;
+    /**
+     * Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+     */
+    GNSS_BLOCK(): prwGnssSpacecraftBlock;
+    /**
+     * ECOM2 coefficients; absent means no ECOM2 term.
+     */
+    ECOM2(obj?: PRWEcom2): PRWEcom2 | null;
     static startPRWForceConfiguration(builder: flatbuffers.Builder): void;
     static addGravityChoice(builder: flatbuffers.Builder, GRAVITY_CHOICE: prwGravitySelection): void;
     static addEnablePointMass(builder: flatbuffers.Builder, ENABLE_POINT_MASS: boolean): void;
@@ -128,6 +143,9 @@ export declare class PRWForceConfiguration implements flatbuffers.IUnpackableObj
     static addHasDragAreaOverMassRateM2KgS(builder: flatbuffers.Builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: boolean): void;
     static addMaximumTesseralDegree(builder: flatbuffers.Builder, MAXIMUM_TESSERAL_DEGREE: number): void;
     static addHasMaximumTesseralDegree(builder: flatbuffers.Builder, HAS_MAXIMUM_TESSERAL_DEGREE: boolean): void;
+    static addRadiationPressureModel(builder: flatbuffers.Builder, RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily): void;
+    static addGnssBlock(builder: flatbuffers.Builder, GNSS_BLOCK: prwGnssSpacecraftBlock): void;
+    static addEcom2(builder: flatbuffers.Builder, ECOM2Offset: flatbuffers.Offset): void;
     static endPRWForceConfiguration(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PRWForceConfigurationT;
     unpackTo(_o: PRWForceConfigurationT): void;
@@ -163,7 +181,10 @@ export declare class PRWForceConfigurationT implements flatbuffers.IGeneratedObj
     HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: boolean;
     MAXIMUM_TESSERAL_DEGREE: number;
     HAS_MAXIMUM_TESSERAL_DEGREE: boolean;
-    constructor(GRAVITY_CHOICE?: prwGravitySelection, ENABLE_POINT_MASS?: boolean, GRAVITATIONAL_PARAMETER?: number, ENABLE_J2?: boolean, ENABLE_J3?: boolean, ENABLE_J4?: boolean, ENABLE_HIGHER_ZONALS?: boolean, MAXIMUM_DEGREE?: number, HAS_MAXIMUM_DEGREE?: boolean, MAXIMUM_ORDER?: number, HAS_MAXIMUM_ORDER?: boolean, ENABLE_THIRD_BODY?: boolean, THIRD_BODY_IDS?: (number)[], ENABLE_SRP?: boolean, ENABLE_DRAG?: boolean, INITIAL_MASS_KG?: number, AREA_M2?: number, REFLECTIVITY_COEFFICIENT?: number, DRAG_COEFFICIENT?: number, ATMOSPHERE_MODEL?: prwAtmosphereFamily, WEATHER?: PRWSpaceWeatherT | null, EPHEMERIS_SOURCE?: string | Uint8Array | null, SOLID_TIDES?: prwSolidTideModel, RELATIVITY?: prwRelativityTerms, IN_TRACK_ACCELERATION_M_S2?: number, HAS_IN_TRACK_ACCELERATION_M_S2?: boolean, DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: number, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: boolean, MAXIMUM_TESSERAL_DEGREE?: number, HAS_MAXIMUM_TESSERAL_DEGREE?: boolean);
+    RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily;
+    GNSS_BLOCK: prwGnssSpacecraftBlock;
+    ECOM2: PRWEcom2T | null;
+    constructor(GRAVITY_CHOICE?: prwGravitySelection, ENABLE_POINT_MASS?: boolean, GRAVITATIONAL_PARAMETER?: number, ENABLE_J2?: boolean, ENABLE_J3?: boolean, ENABLE_J4?: boolean, ENABLE_HIGHER_ZONALS?: boolean, MAXIMUM_DEGREE?: number, HAS_MAXIMUM_DEGREE?: boolean, MAXIMUM_ORDER?: number, HAS_MAXIMUM_ORDER?: boolean, ENABLE_THIRD_BODY?: boolean, THIRD_BODY_IDS?: (number)[], ENABLE_SRP?: boolean, ENABLE_DRAG?: boolean, INITIAL_MASS_KG?: number, AREA_M2?: number, REFLECTIVITY_COEFFICIENT?: number, DRAG_COEFFICIENT?: number, ATMOSPHERE_MODEL?: prwAtmosphereFamily, WEATHER?: PRWSpaceWeatherT | null, EPHEMERIS_SOURCE?: string | Uint8Array | null, SOLID_TIDES?: prwSolidTideModel, RELATIVITY?: prwRelativityTerms, IN_TRACK_ACCELERATION_M_S2?: number, HAS_IN_TRACK_ACCELERATION_M_S2?: boolean, DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: number, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: boolean, MAXIMUM_TESSERAL_DEGREE?: number, HAS_MAXIMUM_TESSERAL_DEGREE?: boolean, RADIATION_PRESSURE_MODEL?: prwRadiationPressureFamily, GNSS_BLOCK?: prwGnssSpacecraftBlock, ECOM2?: PRWEcom2T | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PRWForceConfiguration.d.ts.map

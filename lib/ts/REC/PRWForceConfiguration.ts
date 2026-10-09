@@ -4,9 +4,12 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { PRWEcom2, PRWEcom2T } from './PRWEcom2.js';
 import { PRWSpaceWeather, PRWSpaceWeatherT } from './PRWSpaceWeather.js';
 import { prwAtmosphereFamily } from './prwAtmosphereFamily.js';
+import { prwGnssSpacecraftBlock } from './prwGnssSpacecraftBlock.js';
 import { prwGravitySelection } from './prwGravitySelection.js';
+import { prwRadiationPressureFamily } from './prwRadiationPressureFamily.js';
 import { prwRelativityTerms } from './prwRelativityTerms.js';
 import { prwSolidTideModel } from './prwSolidTideModel.js';
 
@@ -239,8 +242,32 @@ HAS_MAXIMUM_TESSERAL_DEGREE():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Solar radiation pressure model family (default: the cannonball).
+ */
+RADIATION_PRESSURE_MODEL():prwRadiationPressureFamily {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : prwRadiationPressureFamily.CANNONBALL;
+}
+
+/**
+ * Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+ */
+GNSS_BLOCK():prwGnssSpacecraftBlock {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : prwGnssSpacecraftBlock.UNSPECIFIED;
+}
+
+/**
+ * ECOM2 coefficients; absent means no ECOM2 term.
+ */
+ECOM2(obj?:PRWEcom2):PRWEcom2|null {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? (obj || new PRWEcom2()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startPRWForceConfiguration(builder:flatbuffers.Builder) {
-  builder.startObject(30);
+  builder.startObject(33);
 }
 
 static addGravityChoice(builder:flatbuffers.Builder, GRAVITY_CHOICE:prwGravitySelection) {
@@ -380,6 +407,18 @@ static addHasMaximumTesseralDegree(builder:flatbuffers.Builder, HAS_MAXIMUM_TESS
   builder.addFieldInt8(29, +HAS_MAXIMUM_TESSERAL_DEGREE, +false);
 }
 
+static addRadiationPressureModel(builder:flatbuffers.Builder, RADIATION_PRESSURE_MODEL:prwRadiationPressureFamily) {
+  builder.addFieldInt8(30, RADIATION_PRESSURE_MODEL, prwRadiationPressureFamily.CANNONBALL);
+}
+
+static addGnssBlock(builder:flatbuffers.Builder, GNSS_BLOCK:prwGnssSpacecraftBlock) {
+  builder.addFieldInt8(31, GNSS_BLOCK, prwGnssSpacecraftBlock.UNSPECIFIED);
+}
+
+static addEcom2(builder:flatbuffers.Builder, ECOM2Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(32, ECOM2Offset, 0);
+}
+
 static endPRWForceConfiguration(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 46) // EPHEMERIS_SOURCE
@@ -418,7 +457,10 @@ unpack(): PRWForceConfigurationT {
     this.DRAG_AREA_OVER_MASS_RATE_M2_KG_S(),
     this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(),
     this.MAXIMUM_TESSERAL_DEGREE(),
-    this.HAS_MAXIMUM_TESSERAL_DEGREE()
+    this.HAS_MAXIMUM_TESSERAL_DEGREE(),
+    this.RADIATION_PRESSURE_MODEL(),
+    this.GNSS_BLOCK(),
+    (this.ECOM2() !== null ? this.ECOM2()!.unpack() : null)
   );
 }
 
@@ -454,6 +496,9 @@ unpackTo(_o: PRWForceConfigurationT): void {
   _o.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S();
   _o.MAXIMUM_TESSERAL_DEGREE = this.MAXIMUM_TESSERAL_DEGREE();
   _o.HAS_MAXIMUM_TESSERAL_DEGREE = this.HAS_MAXIMUM_TESSERAL_DEGREE();
+  _o.RADIATION_PRESSURE_MODEL = this.RADIATION_PRESSURE_MODEL();
+  _o.GNSS_BLOCK = this.GNSS_BLOCK();
+  _o.ECOM2 = (this.ECOM2() !== null ? this.ECOM2()!.unpack() : null);
 }
 }
 
@@ -488,7 +533,10 @@ constructor(
   public DRAG_AREA_OVER_MASS_RATE_M2_KG_S: number = 0.0,
   public HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: boolean = false,
   public MAXIMUM_TESSERAL_DEGREE: number = 0,
-  public HAS_MAXIMUM_TESSERAL_DEGREE: boolean = false
+  public HAS_MAXIMUM_TESSERAL_DEGREE: boolean = false,
+  public RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily = prwRadiationPressureFamily.CANNONBALL,
+  public GNSS_BLOCK: prwGnssSpacecraftBlock = prwGnssSpacecraftBlock.UNSPECIFIED,
+  public ECOM2: PRWEcom2T|null = null
 ){}
 
 
@@ -496,6 +544,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const THIRD_BODY_IDS = PRWForceConfiguration.createThirdBodyIdsVector(builder, this.THIRD_BODY_IDS);
   const WEATHER = (this.WEATHER !== null ? this.WEATHER!.pack(builder) : 0);
   const EPHEMERIS_SOURCE = (this.EPHEMERIS_SOURCE !== null ? builder.createString(this.EPHEMERIS_SOURCE!) : 0);
+  const ECOM2 = (this.ECOM2 !== null ? this.ECOM2!.pack(builder) : 0);
 
   PRWForceConfiguration.startPRWForceConfiguration(builder);
   PRWForceConfiguration.addGravityChoice(builder, this.GRAVITY_CHOICE);
@@ -528,6 +577,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PRWForceConfiguration.addHasDragAreaOverMassRateM2KgS(builder, this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
   PRWForceConfiguration.addMaximumTesseralDegree(builder, this.MAXIMUM_TESSERAL_DEGREE);
   PRWForceConfiguration.addHasMaximumTesseralDegree(builder, this.HAS_MAXIMUM_TESSERAL_DEGREE);
+  PRWForceConfiguration.addRadiationPressureModel(builder, this.RADIATION_PRESSURE_MODEL);
+  PRWForceConfiguration.addGnssBlock(builder, this.GNSS_BLOCK);
+  PRWForceConfiguration.addEcom2(builder, ECOM2);
 
   return PRWForceConfiguration.endPRWForceConfiguration(builder);
 }

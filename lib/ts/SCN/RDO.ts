@@ -481,8 +481,65 @@ tagsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Association: squared Mahalanobis distance of the observation's
+ * innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+ */
+CORR_MAHALANOBIS_SQ():number {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Association: degrees of freedom of d^2 (measurement dimension).
+ */
+CORR_DOF():number {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Association: the chi-square gate d^2 was tested against.
+ */
+CORR_GATE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Association: p-value of d^2, Q(dof/2, d^2/2).
+ */
+CORR_P_VALUE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Association: true when the assignment was ambiguous.
+ */
+CORR_AMBIGUOUS():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Association: posterior probability of the association.
+ */
+CORR_QUALITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Carrier frequency the DOPPLER shift refers to, in Hz.
+ */
+DOPPLER_FREQUENCY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startRDO(builder:flatbuffers.Builder) {
-  builder.startObject(52);
+  builder.startObject(59);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -705,6 +762,34 @@ static startTagsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addCorrMahalanobisSq(builder:flatbuffers.Builder, CORR_MAHALANOBIS_SQ:number) {
+  builder.addFieldFloat64(52, CORR_MAHALANOBIS_SQ, 0.0);
+}
+
+static addCorrDof(builder:flatbuffers.Builder, CORR_DOF:number) {
+  builder.addFieldInt8(53, CORR_DOF, 0);
+}
+
+static addCorrGate(builder:flatbuffers.Builder, CORR_GATE:number) {
+  builder.addFieldFloat64(54, CORR_GATE, 0.0);
+}
+
+static addCorrPValue(builder:flatbuffers.Builder, CORR_P_VALUE:number) {
+  builder.addFieldFloat64(55, CORR_P_VALUE, 0.0);
+}
+
+static addCorrAmbiguous(builder:flatbuffers.Builder, CORR_AMBIGUOUS:boolean) {
+  builder.addFieldInt8(56, +CORR_AMBIGUOUS, +false);
+}
+
+static addCorrQuality(builder:flatbuffers.Builder, CORR_QUALITY:number) {
+  builder.addFieldFloat64(57, CORR_QUALITY, 0.0);
+}
+
+static addDopplerFrequency(builder:flatbuffers.Builder, DOPPLER_FREQUENCY:number) {
+  builder.addFieldFloat64(58, DOPPLER_FREQUENCY, 0.0);
+}
+
 static endRDO(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -718,7 +803,7 @@ static finishSizePrefixedRDOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$RDO', true);
 }
 
-static createRDO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, UCT:boolean, OBS_TYPE:radarObsType, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, OB_POSITIONOffset:flatbuffers.Offset, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RANGE_ACCEL:number, RANGE_ACCEL_UNC:number, DOPPLER:number, DOPPLER_UNC:number, RA:number, DECLINATION:number, X:number, Y:number, Z:number, XVEL:number, YVEL:number, ZVEL:number, SENX:number, SENY:number, SENZ:number, RCS:number, RCS_UNC:number, ORTHOGONAL_RCS:number, ORTHOGONAL_RCS_UNC:number, SNR:number, BEAM:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, DESCRIPTOROffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createRDO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, UCT:boolean, OBS_TYPE:radarObsType, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, OB_POSITIONOffset:flatbuffers.Offset, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RANGE_ACCEL:number, RANGE_ACCEL_UNC:number, DOPPLER:number, DOPPLER_UNC:number, RA:number, DECLINATION:number, X:number, Y:number, Z:number, XVEL:number, YVEL:number, ZVEL:number, SENX:number, SENY:number, SENZ:number, RCS:number, RCS_UNC:number, ORTHOGONAL_RCS:number, ORTHOGONAL_RCS_UNC:number, SNR:number, BEAM:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, DESCRIPTOROffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, CORR_MAHALANOBIS_SQ:number, CORR_DOF:number, CORR_GATE:number, CORR_P_VALUE:number, CORR_AMBIGUOUS:boolean, CORR_QUALITY:number, DOPPLER_FREQUENCY:number):flatbuffers.Offset {
   RDO.startRDO(builder);
   RDO.addId(builder, IDOffset);
   RDO.addObTime(builder, OB_TIMEOffset);
@@ -772,6 +857,13 @@ static createRDO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TI
   RDO.addRawFileUri(builder, RAW_FILE_URIOffset);
   RDO.addDescriptor(builder, DESCRIPTOROffset);
   RDO.addTags(builder, TAGSOffset);
+  RDO.addCorrMahalanobisSq(builder, CORR_MAHALANOBIS_SQ);
+  RDO.addCorrDof(builder, CORR_DOF);
+  RDO.addCorrGate(builder, CORR_GATE);
+  RDO.addCorrPValue(builder, CORR_P_VALUE);
+  RDO.addCorrAmbiguous(builder, CORR_AMBIGUOUS);
+  RDO.addCorrQuality(builder, CORR_QUALITY);
+  RDO.addDopplerFrequency(builder, DOPPLER_FREQUENCY);
   return RDO.endRDO(builder);
 }
 
@@ -828,7 +920,14 @@ unpack(): RDOT {
     this.TIMING_BIAS(),
     this.RAW_FILE_URI(),
     this.DESCRIPTOR(),
-    this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength())
+    this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength()),
+    this.CORR_MAHALANOBIS_SQ(),
+    this.CORR_DOF(),
+    this.CORR_GATE(),
+    this.CORR_P_VALUE(),
+    this.CORR_AMBIGUOUS(),
+    this.CORR_QUALITY(),
+    this.DOPPLER_FREQUENCY()
   );
 }
 
@@ -886,6 +985,13 @@ unpackTo(_o: RDOT): void {
   _o.RAW_FILE_URI = this.RAW_FILE_URI();
   _o.DESCRIPTOR = this.DESCRIPTOR();
   _o.TAGS = this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength());
+  _o.CORR_MAHALANOBIS_SQ = this.CORR_MAHALANOBIS_SQ();
+  _o.CORR_DOF = this.CORR_DOF();
+  _o.CORR_GATE = this.CORR_GATE();
+  _o.CORR_P_VALUE = this.CORR_P_VALUE();
+  _o.CORR_AMBIGUOUS = this.CORR_AMBIGUOUS();
+  _o.CORR_QUALITY = this.CORR_QUALITY();
+  _o.DOPPLER_FREQUENCY = this.DOPPLER_FREQUENCY();
 }
 }
 
@@ -942,7 +1048,14 @@ constructor(
   public TIMING_BIAS: number = 0.0,
   public RAW_FILE_URI: string|Uint8Array|null = null,
   public DESCRIPTOR: string|Uint8Array|null = null,
-  public TAGS: (string)[] = []
+  public TAGS: (string)[] = [],
+  public CORR_MAHALANOBIS_SQ: number = 0.0,
+  public CORR_DOF: number = 0,
+  public CORR_GATE: number = 0.0,
+  public CORR_P_VALUE: number = 0.0,
+  public CORR_AMBIGUOUS: boolean = false,
+  public CORR_QUALITY: number = 0.0,
+  public DOPPLER_FREQUENCY: number = 0.0
 ){}
 
 
@@ -1014,7 +1127,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.TIMING_BIAS,
     RAW_FILE_URI,
     DESCRIPTOR,
-    TAGS
+    TAGS,
+    this.CORR_MAHALANOBIS_SQ,
+    this.CORR_DOF,
+    this.CORR_GATE,
+    this.CORR_P_VALUE,
+    this.CORR_AMBIGUOUS,
+    this.CORR_QUALITY,
+    this.DOPPLER_FREQUENCY
   );
 }
 }

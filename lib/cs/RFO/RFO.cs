@@ -288,6 +288,19 @@ public struct RFO : IFlatbufferObject
   /// Associated tags
   public string TAGS(int j) { int o = __p.__offset(150); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int TAGSLength { get { int o = __p.__offset(150); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Association: squared Mahalanobis distance of the observation's
+  /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+  public double CORR_MAHALANOBIS_SQ { get { int o = __p.__offset(152); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Association: degrees of freedom of d^2 (measurement dimension).
+  public byte CORR_DOF { get { int o = __p.__offset(154); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Association: the chi-square gate d^2 was tested against.
+  public double CORR_GATE { get { int o = __p.__offset(156); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Association: p-value of d^2, Q(dof/2, d^2/2).
+  public double CORR_P_VALUE { get { int o = __p.__offset(158); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Association: true when the assignment was ambiguous.
+  public bool CORR_AMBIGUOUS { get { int o = __p.__offset(160); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// One-sigma uncertainty of FREQUENCY, in the same units.
+  public double FREQUENCY_UNC { get { int o = __p.__offset(162); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<RFO> CreateRFO(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -363,8 +376,18 @@ public struct RFO : IFlatbufferObject
       StringOffset RAW_FILE_URIOffset = default(StringOffset),
       StringOffset DESCRIPTOROffset = default(StringOffset),
       StringOffset URLOffset = default(StringOffset),
-      VectorOffset TAGSOffset = default(VectorOffset)) {
-    builder.StartTable(74);
+      VectorOffset TAGSOffset = default(VectorOffset),
+      double CORR_MAHALANOBIS_SQ = 0.0,
+      byte CORR_DOF = 0,
+      double CORR_GATE = 0.0,
+      double CORR_P_VALUE = 0.0,
+      bool CORR_AMBIGUOUS = false,
+      double FREQUENCY_UNC = 0.0) {
+    builder.StartTable(80);
+    RFO.AddFREQUENCY_UNC(builder, FREQUENCY_UNC);
+    RFO.AddCORR_P_VALUE(builder, CORR_P_VALUE);
+    RFO.AddCORR_GATE(builder, CORR_GATE);
+    RFO.AddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ);
     RFO.AddTRANSMIT_FILTER_ROLL_OFF(builder, TRANSMIT_FILTER_ROLL_OFF);
     RFO.AddCONFIDENCE(builder, CONFIDENCE);
     RFO.AddBIT_ERROR_RATE(builder, BIT_ERROR_RATE);
@@ -432,6 +455,8 @@ public struct RFO : IFlatbufferObject
     RFO.AddID(builder, IDOffset);
     RFO.AddSWITCH_POINT(builder, SWITCH_POINT);
     RFO.AddCHANNEL(builder, CHANNEL);
+    RFO.AddCORR_AMBIGUOUS(builder, CORR_AMBIGUOUS);
+    RFO.AddCORR_DOF(builder, CORR_DOF);
     RFO.AddOUTER_CODING_RATE(builder, OUTER_CODING_RATE);
     RFO.AddINNER_CODING_RATE(builder, INNER_CODING_RATE);
     RFO.AddINCOMING(builder, INCOMING);
@@ -442,7 +467,7 @@ public struct RFO : IFlatbufferObject
     return RFO.EndRFO(builder);
   }
 
-  public static void StartRFO(FlatBufferBuilder builder) { builder.StartTable(74); }
+  public static void StartRFO(FlatBufferBuilder builder) { builder.StartTable(80); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddOB_TIME(FlatBufferBuilder builder, StringOffset OB_TIMEOffset) { builder.AddOffset(1, OB_TIMEOffset.Value, 0); }
   public static void AddID_SENSOR(FlatBufferBuilder builder, StringOffset ID_SENSOROffset) { builder.AddOffset(2, ID_SENSOROffset.Value, 0); }
@@ -522,6 +547,12 @@ public struct RFO : IFlatbufferObject
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTAGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCORR_MAHALANOBIS_SQ(FlatBufferBuilder builder, double CORR_MAHALANOBIS_SQ) { builder.AddDouble(74, CORR_MAHALANOBIS_SQ, 0.0); }
+  public static void AddCORR_DOF(FlatBufferBuilder builder, byte CORR_DOF) { builder.AddByte(75, CORR_DOF, 0); }
+  public static void AddCORR_GATE(FlatBufferBuilder builder, double CORR_GATE) { builder.AddDouble(76, CORR_GATE, 0.0); }
+  public static void AddCORR_P_VALUE(FlatBufferBuilder builder, double CORR_P_VALUE) { builder.AddDouble(77, CORR_P_VALUE, 0.0); }
+  public static void AddCORR_AMBIGUOUS(FlatBufferBuilder builder, bool CORR_AMBIGUOUS) { builder.AddBool(78, CORR_AMBIGUOUS, false); }
+  public static void AddFREQUENCY_UNC(FlatBufferBuilder builder, double FREQUENCY_UNC) { builder.AddDouble(79, FREQUENCY_UNC, 0.0); }
   public static Offset<RFO> EndRFO(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RFO>(o);
@@ -609,6 +640,12 @@ public struct RFO : IFlatbufferObject
     _o.URL = this.URL;
     _o.TAGS = new List<string>();
     for (var _j = 0; _j < this.TAGSLength; ++_j) {_o.TAGS.Add(this.TAGS(_j));}
+    _o.CORR_MAHALANOBIS_SQ = this.CORR_MAHALANOBIS_SQ;
+    _o.CORR_DOF = this.CORR_DOF;
+    _o.CORR_GATE = this.CORR_GATE;
+    _o.CORR_P_VALUE = this.CORR_P_VALUE;
+    _o.CORR_AMBIGUOUS = this.CORR_AMBIGUOUS;
+    _o.FREQUENCY_UNC = this.FREQUENCY_UNC;
   }
   public static Offset<RFO> Pack(FlatBufferBuilder builder, RFOT _o) {
     if (_o == null) return default(Offset<RFO>);
@@ -713,7 +750,13 @@ public struct RFO : IFlatbufferObject
       _RAW_FILE_URI,
       _DESCRIPTOR,
       _URL,
-      _TAGS);
+      _TAGS,
+      _o.CORR_MAHALANOBIS_SQ,
+      _o.CORR_DOF,
+      _o.CORR_GATE,
+      _o.CORR_P_VALUE,
+      _o.CORR_AMBIGUOUS,
+      _o.FREQUENCY_UNC);
   }
 }
 
@@ -793,6 +836,12 @@ public class RFOT
   public string DESCRIPTOR { get; set; }
   public string URL { get; set; }
   public List<string> TAGS { get; set; }
+  public double CORR_MAHALANOBIS_SQ { get; set; }
+  public byte CORR_DOF { get; set; }
+  public double CORR_GATE { get; set; }
+  public double CORR_P_VALUE { get; set; }
+  public bool CORR_AMBIGUOUS { get; set; }
+  public double FREQUENCY_UNC { get; set; }
 
   public RFOT() {
     this.ID = null;
@@ -869,6 +918,12 @@ public class RFOT
     this.DESCRIPTOR = null;
     this.URL = null;
     this.TAGS = null;
+    this.CORR_MAHALANOBIS_SQ = 0.0;
+    this.CORR_DOF = 0;
+    this.CORR_GATE = 0.0;
+    this.CORR_P_VALUE = 0.0;
+    this.CORR_AMBIGUOUS = false;
+    this.FREQUENCY_UNC = 0.0;
   }
   public static RFOT DeserializeFromBinary(byte[] fbBuffer) {
     return RFO.GetRootAsRFO(new ByteBuffer(fbBuffer)).UnPack();
@@ -960,6 +1015,12 @@ static public class RFOVerify
       && verifier.VerifyString(tablePos, 146 /*DESCRIPTOR*/, false)
       && verifier.VerifyString(tablePos, 148 /*URL*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 150 /*TAGS*/, false)
+      && verifier.VerifyField(tablePos, 152 /*CORR_MAHALANOBIS_SQ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 154 /*CORR_DOF*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 156 /*CORR_GATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 158 /*CORR_P_VALUE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 160 /*CORR_AMBIGUOUS*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 162 /*FREQUENCY_UNC*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -634,8 +634,57 @@ class RFO(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
         return o == 0
 
+    # Association: squared Mahalanobis distance of the observation's
+    # innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+    # RFO
+    def CORR_MAHALANOBIS_SQ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(152))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Association: degrees of freedom of d^2 (measurement dimension).
+    # RFO
+    def CORR_DOF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(154))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Association: the chi-square gate d^2 was tested against.
+    # RFO
+    def CORR_GATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(156))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Association: p-value of d^2, Q(dof/2, d^2/2).
+    # RFO
+    def CORR_P_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(158))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Association: true when the assignment was ambiguous.
+    # RFO
+    def CORR_AMBIGUOUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(160))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # One-sigma uncertainty of FREQUENCY, in the same units.
+    # RFO
+    def FREQUENCY_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(162))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def RFOStart(builder):
-    builder.StartObject(74)
+    builder.StartObject(80)
 
 def Start(builder):
     RFOStart(builder)
@@ -1096,6 +1145,42 @@ def RFOCreateTAGSVector(builder, data):
 def CreateTAGSVector(builder, data):
     return RFOCreateTAGSVector(builder, data)
 
+def RFOAddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ):
+    builder.PrependFloat64Slot(74, CORR_MAHALANOBIS_SQ, 0.0)
+
+def AddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ):
+    RFOAddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ)
+
+def RFOAddCORR_DOF(builder, CORR_DOF):
+    builder.PrependUint8Slot(75, CORR_DOF, 0)
+
+def AddCORR_DOF(builder, CORR_DOF):
+    RFOAddCORR_DOF(builder, CORR_DOF)
+
+def RFOAddCORR_GATE(builder, CORR_GATE):
+    builder.PrependFloat64Slot(76, CORR_GATE, 0.0)
+
+def AddCORR_GATE(builder, CORR_GATE):
+    RFOAddCORR_GATE(builder, CORR_GATE)
+
+def RFOAddCORR_P_VALUE(builder, CORR_P_VALUE):
+    builder.PrependFloat64Slot(77, CORR_P_VALUE, 0.0)
+
+def AddCORR_P_VALUE(builder, CORR_P_VALUE):
+    RFOAddCORR_P_VALUE(builder, CORR_P_VALUE)
+
+def RFOAddCORR_AMBIGUOUS(builder, CORR_AMBIGUOUS):
+    builder.PrependBoolSlot(78, CORR_AMBIGUOUS, 0)
+
+def AddCORR_AMBIGUOUS(builder, CORR_AMBIGUOUS):
+    RFOAddCORR_AMBIGUOUS(builder, CORR_AMBIGUOUS)
+
+def RFOAddFREQUENCY_UNC(builder, FREQUENCY_UNC):
+    builder.PrependFloat64Slot(79, FREQUENCY_UNC, 0.0)
+
+def AddFREQUENCY_UNC(builder, FREQUENCY_UNC):
+    RFOAddFREQUENCY_UNC(builder, FREQUENCY_UNC)
+
 def RFOEnd(builder):
     return builder.EndObject()
 
@@ -1186,6 +1271,12 @@ class RFOT(object):
         DESCRIPTOR = None,
         URL = None,
         TAGS = None,
+        CORR_MAHALANOBIS_SQ = 0.0,
+        CORR_DOF = 0,
+        CORR_GATE = 0.0,
+        CORR_P_VALUE = 0.0,
+        CORR_AMBIGUOUS = False,
+        FREQUENCY_UNC = 0.0,
     ):
         self.ID = ID  # type: Optional[str]
         self.OB_TIME = OB_TIME  # type: Optional[str]
@@ -1261,6 +1352,12 @@ class RFOT(object):
         self.DESCRIPTOR = DESCRIPTOR  # type: Optional[str]
         self.URL = URL  # type: Optional[str]
         self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
+        self.CORR_MAHALANOBIS_SQ = CORR_MAHALANOBIS_SQ  # type: float
+        self.CORR_DOF = CORR_DOF  # type: int
+        self.CORR_GATE = CORR_GATE  # type: float
+        self.CORR_P_VALUE = CORR_P_VALUE  # type: float
+        self.CORR_AMBIGUOUS = CORR_AMBIGUOUS  # type: bool
+        self.FREQUENCY_UNC = FREQUENCY_UNC  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1360,6 +1457,12 @@ class RFOT(object):
             self.TAGS = []
             for i in range(RFO.TAGSLength()):
                 self.TAGS.append(RFO.TAGS(i))
+        self.CORR_MAHALANOBIS_SQ = RFO.CORR_MAHALANOBIS_SQ()
+        self.CORR_DOF = RFO.CORR_DOF()
+        self.CORR_GATE = RFO.CORR_GATE()
+        self.CORR_P_VALUE = RFO.CORR_P_VALUE()
+        self.CORR_AMBIGUOUS = RFO.CORR_AMBIGUOUS()
+        self.FREQUENCY_UNC = RFO.FREQUENCY_UNC()
 
     # RFOT
     def Pack(self, builder):
@@ -1507,5 +1610,11 @@ class RFOT(object):
             RFOAddURL(builder, URL)
         if self.TAGS is not None:
             RFOAddTAGS(builder, TAGS)
+        RFOAddCORR_MAHALANOBIS_SQ(builder, self.CORR_MAHALANOBIS_SQ)
+        RFOAddCORR_DOF(builder, self.CORR_DOF)
+        RFOAddCORR_GATE(builder, self.CORR_GATE)
+        RFOAddCORR_P_VALUE(builder, self.CORR_P_VALUE)
+        RFOAddCORR_AMBIGUOUS(builder, self.CORR_AMBIGUOUS)
+        RFOAddFREQUENCY_UNC(builder, self.FREQUENCY_UNC)
         RFO = RFOEnd(builder)
         return RFO

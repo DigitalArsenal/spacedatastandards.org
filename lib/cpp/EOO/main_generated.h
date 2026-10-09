@@ -232,7 +232,12 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SUNGLINT_PRESENT = 264,
     VT_SUNGLINT_PERCENT = 266,
     VT_SNOW_ICE_COVER_PERCENT = 268,
-    VT_VALID_DATA_AREA_KM2 = 270
+    VT_VALID_DATA_AREA_KM2 = 270,
+    VT_CORR_MAHALANOBIS_SQ = 272,
+    VT_CORR_DOF = 274,
+    VT_CORR_GATE = 276,
+    VT_CORR_P_VALUE = 278,
+    VT_CORR_AMBIGUOUS = 280
   };
   /// Unique identifier of the record.
   const ::flatbuffers::String *ID() const {
@@ -786,6 +791,27 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   float VALID_DATA_AREA_KM2() const {
     return GetField<float>(VT_VALID_DATA_AREA_KM2, 0.0f);
   }
+  /// Association: squared Mahalanobis distance of the observation's
+  /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+  double CORR_MAHALANOBIS_SQ() const {
+    return GetField<double>(VT_CORR_MAHALANOBIS_SQ, 0.0);
+  }
+  /// Association: degrees of freedom of d^2 (measurement dimension).
+  uint8_t CORR_DOF() const {
+    return GetField<uint8_t>(VT_CORR_DOF, 0);
+  }
+  /// Association: the chi-square gate d^2 was tested against.
+  double CORR_GATE() const {
+    return GetField<double>(VT_CORR_GATE, 0.0);
+  }
+  /// Association: p-value of d^2, Q(dof/2, d^2/2).
+  double CORR_P_VALUE() const {
+    return GetField<double>(VT_CORR_P_VALUE, 0.0);
+  }
+  /// Association: true when the assignment was ambiguous.
+  bool CORR_AMBIGUOUS() const {
+    return GetField<uint8_t>(VT_CORR_AMBIGUOUS, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -945,6 +971,11 @@ struct EOO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<float>(verifier, VT_SUNGLINT_PERCENT, 4) &&
            VerifyField<float>(verifier, VT_SNOW_ICE_COVER_PERCENT, 4) &&
            VerifyField<float>(verifier, VT_VALID_DATA_AREA_KM2, 4) &&
+           VerifyField<double>(verifier, VT_CORR_MAHALANOBIS_SQ, 8) &&
+           VerifyField<uint8_t>(verifier, VT_CORR_DOF, 1) &&
+           VerifyField<double>(verifier, VT_CORR_GATE, 8) &&
+           VerifyField<double>(verifier, VT_CORR_P_VALUE, 8) &&
+           VerifyField<uint8_t>(verifier, VT_CORR_AMBIGUOUS, 1) &&
            verifier.EndTable();
   }
 };
@@ -1355,6 +1386,21 @@ struct EOOBuilder {
   void add_VALID_DATA_AREA_KM2(float VALID_DATA_AREA_KM2) {
     fbb_.AddElement<float>(EOO::VT_VALID_DATA_AREA_KM2, VALID_DATA_AREA_KM2, 0.0f);
   }
+  void add_CORR_MAHALANOBIS_SQ(double CORR_MAHALANOBIS_SQ) {
+    fbb_.AddElement<double>(EOO::VT_CORR_MAHALANOBIS_SQ, CORR_MAHALANOBIS_SQ, 0.0);
+  }
+  void add_CORR_DOF(uint8_t CORR_DOF) {
+    fbb_.AddElement<uint8_t>(EOO::VT_CORR_DOF, CORR_DOF, 0);
+  }
+  void add_CORR_GATE(double CORR_GATE) {
+    fbb_.AddElement<double>(EOO::VT_CORR_GATE, CORR_GATE, 0.0);
+  }
+  void add_CORR_P_VALUE(double CORR_P_VALUE) {
+    fbb_.AddElement<double>(EOO::VT_CORR_P_VALUE, CORR_P_VALUE, 0.0);
+  }
+  void add_CORR_AMBIGUOUS(bool CORR_AMBIGUOUS) {
+    fbb_.AddElement<uint8_t>(EOO::VT_CORR_AMBIGUOUS, static_cast<uint8_t>(CORR_AMBIGUOUS), 0);
+  }
   explicit EOOBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1501,8 +1547,16 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
     bool SUNGLINT_PRESENT = false,
     float SUNGLINT_PERCENT = 0.0f,
     float SNOW_ICE_COVER_PERCENT = 0.0f,
-    float VALID_DATA_AREA_KM2 = 0.0f) {
+    float VALID_DATA_AREA_KM2 = 0.0f,
+    double CORR_MAHALANOBIS_SQ = 0.0,
+    uint8_t CORR_DOF = 0,
+    double CORR_GATE = 0.0,
+    double CORR_P_VALUE = 0.0,
+    bool CORR_AMBIGUOUS = false) {
   EOOBuilder builder_(_fbb);
+  builder_.add_CORR_P_VALUE(CORR_P_VALUE);
+  builder_.add_CORR_GATE(CORR_GATE);
+  builder_.add_CORR_MAHALANOBIS_SQ(CORR_MAHALANOBIS_SQ);
   builder_.add_VALID_DATA_AREA_KM2(VALID_DATA_AREA_KM2);
   builder_.add_SNOW_ICE_COVER_PERCENT(SNOW_ICE_COVER_PERCENT);
   builder_.add_SUNGLINT_PERCENT(SUNGLINT_PERCENT);
@@ -1620,6 +1674,8 @@ inline ::flatbuffers::Offset<EOO> CreateEOO(
   builder_.add_OB_TIME(OB_TIME);
   builder_.add_CLASSIFICATION(CLASSIFICATION);
   builder_.add_ID(ID);
+  builder_.add_CORR_AMBIGUOUS(CORR_AMBIGUOUS);
+  builder_.add_CORR_DOF(CORR_DOF);
   builder_.add_SUNGLINT_PRESENT(SUNGLINT_PRESENT);
   builder_.add_SYNTHETIC_TRACKING_USED(SYNTHETIC_TRACKING_USED);
   builder_.add_MULTI_FRAME_STACKED(MULTI_FRAME_STACKED);
@@ -1775,7 +1831,12 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
     bool SUNGLINT_PRESENT = false,
     float SUNGLINT_PERCENT = 0.0f,
     float SNOW_ICE_COVER_PERCENT = 0.0f,
-    float VALID_DATA_AREA_KM2 = 0.0f) {
+    float VALID_DATA_AREA_KM2 = 0.0f,
+    double CORR_MAHALANOBIS_SQ = 0.0,
+    uint8_t CORR_DOF = 0,
+    double CORR_GATE = 0.0,
+    double CORR_P_VALUE = 0.0,
+    bool CORR_AMBIGUOUS = false) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto CLASSIFICATION__ = CLASSIFICATION ? _fbb.CreateString(CLASSIFICATION) : 0;
   auto OB_TIME__ = OB_TIME ? _fbb.CreateString(OB_TIME) : 0;
@@ -1931,7 +1992,12 @@ inline ::flatbuffers::Offset<EOO> CreateEOODirect(
       SUNGLINT_PRESENT,
       SUNGLINT_PERCENT,
       SNOW_ICE_COVER_PERCENT,
-      VALID_DATA_AREA_KM2);
+      VALID_DATA_AREA_KM2,
+      CORR_MAHALANOBIS_SQ,
+      CORR_DOF,
+      CORR_GATE,
+      CORR_P_VALUE,
+      CORR_AMBIGUOUS);
 }
 
 inline const EOO *GetEOO(const void *buf) {

@@ -110,6 +110,19 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
    * True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
    */
   public boolean HAS_MAXIMUM_TESSERAL_DEGREE() { int o = __offset(62); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Solar radiation pressure model family (default: the cannonball).
+   */
+  public int RADIATION_PRESSURE_MODEL() { int o = __offset(64); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+   */
+  public int GNSS_BLOCK() { int o = __offset(66); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * ECOM2 coefficients; absent means no ECOM2 term.
+   */
+  public PRWEcom2 ECOM2() { return ECOM2(new PRWEcom2()); }
+  public PRWEcom2 ECOM2(PRWEcom2 obj) { int o = __offset(68); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createPRWForceConfiguration(FlatBufferBuilder builder,
       int GRAVITY_CHOICE,
@@ -141,8 +154,11 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
       double DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
       boolean HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
       int MAXIMUM_TESSERAL_DEGREE,
-      boolean HAS_MAXIMUM_TESSERAL_DEGREE) {
-    builder.startTable(30);
+      boolean HAS_MAXIMUM_TESSERAL_DEGREE,
+      int RADIATION_PRESSURE_MODEL,
+      int GNSS_BLOCK,
+      int ECOM2Offset) {
+    builder.startTable(33);
     PRWForceConfiguration.addDragAreaOverMassRateM2KgS(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
     PRWForceConfiguration.addInTrackAccelerationMS2(builder, IN_TRACK_ACCELERATION_M_S2);
     PRWForceConfiguration.addDragCoefficient(builder, DRAG_COEFFICIENT);
@@ -150,12 +166,15 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
     PRWForceConfiguration.addAreaM2(builder, AREA_M2);
     PRWForceConfiguration.addInitialMassKg(builder, INITIAL_MASS_KG);
     PRWForceConfiguration.addGravitationalParameter(builder, GRAVITATIONAL_PARAMETER);
+    PRWForceConfiguration.addEcom2(builder, ECOM2Offset);
     PRWForceConfiguration.addEphemerisSource(builder, EPHEMERIS_SOURCEOffset);
     PRWForceConfiguration.addWeather(builder, WEATHEROffset);
     PRWForceConfiguration.addThirdBodyIds(builder, THIRD_BODY_IDSOffset);
     PRWForceConfiguration.addMaximumTesseralDegree(builder, MAXIMUM_TESSERAL_DEGREE);
     PRWForceConfiguration.addMaximumOrder(builder, MAXIMUM_ORDER);
     PRWForceConfiguration.addMaximumDegree(builder, MAXIMUM_DEGREE);
+    PRWForceConfiguration.addGnssBlock(builder, GNSS_BLOCK);
+    PRWForceConfiguration.addRadiationPressureModel(builder, RADIATION_PRESSURE_MODEL);
     PRWForceConfiguration.addHasMaximumTesseralDegree(builder, HAS_MAXIMUM_TESSERAL_DEGREE);
     PRWForceConfiguration.addHasDragAreaOverMassRateM2KgS(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
     PRWForceConfiguration.addHasInTrackAccelerationMS2(builder, HAS_IN_TRACK_ACCELERATION_M_S2);
@@ -176,7 +195,7 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
     return PRWForceConfiguration.endPRWForceConfiguration(builder);
   }
 
-  public static void startPRWForceConfiguration(FlatBufferBuilder builder) { builder.startTable(30); }
+  public static void startPRWForceConfiguration(FlatBufferBuilder builder) { builder.startTable(33); }
   public static void addGravityChoice(FlatBufferBuilder builder, int GRAVITY_CHOICE) { builder.addByte(0, (byte) GRAVITY_CHOICE, (byte) 0); }
   public static void addEnablePointMass(FlatBufferBuilder builder, boolean ENABLE_POINT_MASS) { builder.addBoolean(1, ENABLE_POINT_MASS, true); }
   public static void addGravitationalParameter(FlatBufferBuilder builder, double GRAVITATIONAL_PARAMETER) { builder.addDouble(2, GRAVITATIONAL_PARAMETER, 0.0); }
@@ -209,6 +228,9 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
   public static void addHasDragAreaOverMassRateM2KgS(FlatBufferBuilder builder, boolean HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S) { builder.addBoolean(27, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false); }
   public static void addMaximumTesseralDegree(FlatBufferBuilder builder, int MAXIMUM_TESSERAL_DEGREE) { builder.addShort(28, (short) MAXIMUM_TESSERAL_DEGREE, (short) 0); }
   public static void addHasMaximumTesseralDegree(FlatBufferBuilder builder, boolean HAS_MAXIMUM_TESSERAL_DEGREE) { builder.addBoolean(29, HAS_MAXIMUM_TESSERAL_DEGREE, false); }
+  public static void addRadiationPressureModel(FlatBufferBuilder builder, int RADIATION_PRESSURE_MODEL) { builder.addByte(30, (byte) RADIATION_PRESSURE_MODEL, (byte) 0); }
+  public static void addGnssBlock(FlatBufferBuilder builder, int GNSS_BLOCK) { builder.addByte(31, (byte) GNSS_BLOCK, (byte) 0); }
+  public static void addEcom2(FlatBufferBuilder builder, int ECOM2Offset) { builder.addOffset(32, ECOM2Offset, 0); }
   public static int endPRWForceConfiguration(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 46);  // EPHEMERIS_SOURCE

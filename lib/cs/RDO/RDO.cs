@@ -202,6 +202,21 @@ public struct RDO : IFlatbufferObject
   /// Associated tags
   public string TAGS(int j) { int o = __p.__offset(106); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int TAGSLength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Association: squared Mahalanobis distance of the observation's
+  /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+  public double CORR_MAHALANOBIS_SQ { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Association: degrees of freedom of d^2 (measurement dimension).
+  public byte CORR_DOF { get { int o = __p.__offset(110); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Association: the chi-square gate d^2 was tested against.
+  public double CORR_GATE { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Association: p-value of d^2, Q(dof/2, d^2/2).
+  public double CORR_P_VALUE { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Association: true when the assignment was ambiguous.
+  public bool CORR_AMBIGUOUS { get { int o = __p.__offset(116); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Association: posterior probability of the association.
+  public double CORR_QUALITY { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Carrier frequency the DOPPLER shift refers to, in Hz.
+  public double DOPPLER_FREQUENCY { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<RDO> CreateRDO(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -255,8 +270,20 @@ public struct RDO : IFlatbufferObject
       double TIMING_BIAS = 0.0,
       StringOffset RAW_FILE_URIOffset = default(StringOffset),
       StringOffset DESCRIPTOROffset = default(StringOffset),
-      VectorOffset TAGSOffset = default(VectorOffset)) {
-    builder.StartTable(52);
+      VectorOffset TAGSOffset = default(VectorOffset),
+      double CORR_MAHALANOBIS_SQ = 0.0,
+      byte CORR_DOF = 0,
+      double CORR_GATE = 0.0,
+      double CORR_P_VALUE = 0.0,
+      bool CORR_AMBIGUOUS = false,
+      double CORR_QUALITY = 0.0,
+      double DOPPLER_FREQUENCY = 0.0) {
+    builder.StartTable(59);
+    RDO.AddDOPPLER_FREQUENCY(builder, DOPPLER_FREQUENCY);
+    RDO.AddCORR_QUALITY(builder, CORR_QUALITY);
+    RDO.AddCORR_P_VALUE(builder, CORR_P_VALUE);
+    RDO.AddCORR_GATE(builder, CORR_GATE);
+    RDO.AddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ);
     RDO.AddTIMING_BIAS(builder, TIMING_BIAS);
     RDO.AddBEAM(builder, BEAM);
     RDO.AddSNR(builder, SNR);
@@ -307,12 +334,14 @@ public struct RDO : IFlatbufferObject
     RDO.AddID_SENSOR(builder, ID_SENSOROffset);
     RDO.AddOB_TIME(builder, OB_TIMEOffset);
     RDO.AddID(builder, IDOffset);
+    RDO.AddCORR_AMBIGUOUS(builder, CORR_AMBIGUOUS);
+    RDO.AddCORR_DOF(builder, CORR_DOF);
     RDO.AddOBS_TYPE(builder, OBS_TYPE);
     RDO.AddUCT(builder, UCT);
     return RDO.EndRDO(builder);
   }
 
-  public static void StartRDO(FlatBufferBuilder builder) { builder.StartTable(52); }
+  public static void StartRDO(FlatBufferBuilder builder) { builder.StartTable(59); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddOB_TIME(FlatBufferBuilder builder, StringOffset OB_TIMEOffset) { builder.AddOffset(1, OB_TIMEOffset.Value, 0); }
   public static void AddID_SENSOR(FlatBufferBuilder builder, StringOffset ID_SENSOROffset) { builder.AddOffset(2, ID_SENSOROffset.Value, 0); }
@@ -370,6 +399,13 @@ public struct RDO : IFlatbufferObject
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTAGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCORR_MAHALANOBIS_SQ(FlatBufferBuilder builder, double CORR_MAHALANOBIS_SQ) { builder.AddDouble(52, CORR_MAHALANOBIS_SQ, 0.0); }
+  public static void AddCORR_DOF(FlatBufferBuilder builder, byte CORR_DOF) { builder.AddByte(53, CORR_DOF, 0); }
+  public static void AddCORR_GATE(FlatBufferBuilder builder, double CORR_GATE) { builder.AddDouble(54, CORR_GATE, 0.0); }
+  public static void AddCORR_P_VALUE(FlatBufferBuilder builder, double CORR_P_VALUE) { builder.AddDouble(55, CORR_P_VALUE, 0.0); }
+  public static void AddCORR_AMBIGUOUS(FlatBufferBuilder builder, bool CORR_AMBIGUOUS) { builder.AddBool(56, CORR_AMBIGUOUS, false); }
+  public static void AddCORR_QUALITY(FlatBufferBuilder builder, double CORR_QUALITY) { builder.AddDouble(57, CORR_QUALITY, 0.0); }
+  public static void AddDOPPLER_FREQUENCY(FlatBufferBuilder builder, double DOPPLER_FREQUENCY) { builder.AddDouble(58, DOPPLER_FREQUENCY, 0.0); }
   public static Offset<RDO> EndRDO(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RDO>(o);
@@ -435,6 +471,13 @@ public struct RDO : IFlatbufferObject
     _o.DESCRIPTOR = this.DESCRIPTOR;
     _o.TAGS = new List<string>();
     for (var _j = 0; _j < this.TAGSLength; ++_j) {_o.TAGS.Add(this.TAGS(_j));}
+    _o.CORR_MAHALANOBIS_SQ = this.CORR_MAHALANOBIS_SQ;
+    _o.CORR_DOF = this.CORR_DOF;
+    _o.CORR_GATE = this.CORR_GATE;
+    _o.CORR_P_VALUE = this.CORR_P_VALUE;
+    _o.CORR_AMBIGUOUS = this.CORR_AMBIGUOUS;
+    _o.CORR_QUALITY = this.CORR_QUALITY;
+    _o.DOPPLER_FREQUENCY = this.DOPPLER_FREQUENCY;
   }
   public static Offset<RDO> Pack(FlatBufferBuilder builder, RDOT _o) {
     if (_o == null) return default(Offset<RDO>);
@@ -510,7 +553,14 @@ public struct RDO : IFlatbufferObject
       _o.TIMING_BIAS,
       _RAW_FILE_URI,
       _DESCRIPTOR,
-      _TAGS);
+      _TAGS,
+      _o.CORR_MAHALANOBIS_SQ,
+      _o.CORR_DOF,
+      _o.CORR_GATE,
+      _o.CORR_P_VALUE,
+      _o.CORR_AMBIGUOUS,
+      _o.CORR_QUALITY,
+      _o.DOPPLER_FREQUENCY);
   }
 }
 
@@ -568,6 +618,13 @@ public class RDOT
   public string RAW_FILE_URI { get; set; }
   public string DESCRIPTOR { get; set; }
   public List<string> TAGS { get; set; }
+  public double CORR_MAHALANOBIS_SQ { get; set; }
+  public byte CORR_DOF { get; set; }
+  public double CORR_GATE { get; set; }
+  public double CORR_P_VALUE { get; set; }
+  public bool CORR_AMBIGUOUS { get; set; }
+  public double CORR_QUALITY { get; set; }
+  public double DOPPLER_FREQUENCY { get; set; }
 
   public RDOT() {
     this.ID = null;
@@ -622,6 +679,13 @@ public class RDOT
     this.RAW_FILE_URI = null;
     this.DESCRIPTOR = null;
     this.TAGS = null;
+    this.CORR_MAHALANOBIS_SQ = 0.0;
+    this.CORR_DOF = 0;
+    this.CORR_GATE = 0.0;
+    this.CORR_P_VALUE = 0.0;
+    this.CORR_AMBIGUOUS = false;
+    this.CORR_QUALITY = 0.0;
+    this.DOPPLER_FREQUENCY = 0.0;
   }
   public static RDOT DeserializeFromBinary(byte[] fbBuffer) {
     return RDO.GetRootAsRDO(new ByteBuffer(fbBuffer)).UnPack();
@@ -691,6 +755,13 @@ static public class RDOVerify
       && verifier.VerifyString(tablePos, 102 /*RAW_FILE_URI*/, false)
       && verifier.VerifyString(tablePos, 104 /*DESCRIPTOR*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 106 /*TAGS*/, false)
+      && verifier.VerifyField(tablePos, 108 /*CORR_MAHALANOBIS_SQ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 110 /*CORR_DOF*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 112 /*CORR_GATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 114 /*CORR_P_VALUE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 116 /*CORR_AMBIGUOUS*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 118 /*CORR_QUALITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 120 /*DOPPLER_FREQUENCY*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

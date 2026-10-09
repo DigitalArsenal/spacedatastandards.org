@@ -731,22 +731,83 @@ class RFO extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Association: squared Mahalanobis distance of the observation's
+    /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+    /**
+     * @return double
+     */
+    public function getCORR_MAHALANOBIS_SQ()
+    {
+        $o = $this->__offset(152);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Association: degrees of freedom of d^2 (measurement dimension).
+    /**
+     * @return byte
+     */
+    public function getCORR_DOF()
+    {
+        $o = $this->__offset(154);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+    }
+
+    /// Association: the chi-square gate d^2 was tested against.
+    /**
+     * @return double
+     */
+    public function getCORR_GATE()
+    {
+        $o = $this->__offset(156);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Association: p-value of d^2, Q(dof/2, d^2/2).
+    /**
+     * @return double
+     */
+    public function getCORR_P_VALUE()
+    {
+        $o = $this->__offset(158);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Association: true when the assignment was ambiguous.
+    /**
+     * @return bool
+     */
+    public function getCORR_AMBIGUOUS()
+    {
+        $o = $this->__offset(160);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// One-sigma uncertainty of FREQUENCY, in the same units.
+    /**
+     * @return double
+     */
+    public function getFREQUENCY_UNC()
+    {
+        $o = $this->__offset(162);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startRFO(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(74);
+        $builder->StartObject(80);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RFO
      */
-    public static function createRFO(FlatBufferBuilder $builder, $ID, $OB_TIME, $ID_SENSOR, $ORIG_SENSOR_ID, $OBS_TYPE, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $UCT, $TASK_ID, $TRANSACTION_ID, $TRACK_ID, $TRANSPONDER, $DETECTION_STATUS, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_RATE, $RANGE_RATE_UNC, $TRACK_RANGE, $SENLAT, $SENLON, $SENALT, $ELNOT, $ANTENNA_NAME, $COLLECTION_MODE, $FREQUENCY, $NOMINAL_FREQUENCY, $START_FREQUENCY, $END_FREQUENCY, $FREQUENCY_SHIFT, $BANDWIDTH, $NOMINAL_BANDWIDTH, $RESOLUTION_BANDWIDTH, $VIDEO_BANDWIDTH, $RELATIVE_CARRIER_POWER, $SPECTRUM_ANALYZER_POWER, $RELATIVE_NOISE_FLOOR, $REFERENCE_LEVEL, $NOISE_PWR_DENSITY, $PGRI, $EIRP, $NOMINAL_EIRP, $MIN_PSD, $MAX_PSD, $SNR, $NOMINAL_SNR, $POWER_OVER_NOISE, $NOMINAL_POWER_OVER_NOISE, $POLARITY, $POLARITY_TYPE, $CHANNEL, $BAUD_RATE, $SYMBOL_TO_NOISE_RATIO, $BIT_ERROR_RATE, $PEAK, $INCOMING, $SWITCH_POINT, $CONFIDENCE, $CARRIER_STANDARD, $MODULATION, $INNER_CODING_RATE, $OUTER_CODING_RATE, $TRANSMIT_FILTER_TYPE, $TRANSMIT_FILTER_ROLL_OFF, $RAW_FILE_URI, $DESCRIPTOR, $URL, $TAGS)
+    public static function createRFO(FlatBufferBuilder $builder, $ID, $OB_TIME, $ID_SENSOR, $ORIG_SENSOR_ID, $OBS_TYPE, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $UCT, $TASK_ID, $TRANSACTION_ID, $TRACK_ID, $TRANSPONDER, $DETECTION_STATUS, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_RATE, $RANGE_RATE_UNC, $TRACK_RANGE, $SENLAT, $SENLON, $SENALT, $ELNOT, $ANTENNA_NAME, $COLLECTION_MODE, $FREQUENCY, $NOMINAL_FREQUENCY, $START_FREQUENCY, $END_FREQUENCY, $FREQUENCY_SHIFT, $BANDWIDTH, $NOMINAL_BANDWIDTH, $RESOLUTION_BANDWIDTH, $VIDEO_BANDWIDTH, $RELATIVE_CARRIER_POWER, $SPECTRUM_ANALYZER_POWER, $RELATIVE_NOISE_FLOOR, $REFERENCE_LEVEL, $NOISE_PWR_DENSITY, $PGRI, $EIRP, $NOMINAL_EIRP, $MIN_PSD, $MAX_PSD, $SNR, $NOMINAL_SNR, $POWER_OVER_NOISE, $NOMINAL_POWER_OVER_NOISE, $POLARITY, $POLARITY_TYPE, $CHANNEL, $BAUD_RATE, $SYMBOL_TO_NOISE_RATIO, $BIT_ERROR_RATE, $PEAK, $INCOMING, $SWITCH_POINT, $CONFIDENCE, $CARRIER_STANDARD, $MODULATION, $INNER_CODING_RATE, $OUTER_CODING_RATE, $TRANSMIT_FILTER_TYPE, $TRANSMIT_FILTER_ROLL_OFF, $RAW_FILE_URI, $DESCRIPTOR, $URL, $TAGS, $CORR_MAHALANOBIS_SQ, $CORR_DOF, $CORR_GATE, $CORR_P_VALUE, $CORR_AMBIGUOUS, $FREQUENCY_UNC)
     {
-        $builder->startObject(74);
+        $builder->startObject(80);
         self::addID($builder, $ID);
         self::addOB_TIME($builder, $OB_TIME);
         self::addID_SENSOR($builder, $ID_SENSOR);
@@ -821,6 +882,12 @@ class RFO extends Table
         self::addDESCRIPTOR($builder, $DESCRIPTOR);
         self::addURL($builder, $URL);
         self::addTAGS($builder, $TAGS);
+        self::addCORR_MAHALANOBIS_SQ($builder, $CORR_MAHALANOBIS_SQ);
+        self::addCORR_DOF($builder, $CORR_DOF);
+        self::addCORR_GATE($builder, $CORR_GATE);
+        self::addCORR_P_VALUE($builder, $CORR_P_VALUE);
+        self::addCORR_AMBIGUOUS($builder, $CORR_AMBIGUOUS);
+        self::addFREQUENCY_UNC($builder, $FREQUENCY_UNC);
         $o = $builder->endObject();
         return $o;
     }
@@ -1587,6 +1654,66 @@ class RFO extends Table
     public static function startTAGSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORR_MAHALANOBIS_SQ(FlatBufferBuilder $builder, $CORR_MAHALANOBIS_SQ)
+    {
+        $builder->addDoubleX(74, $CORR_MAHALANOBIS_SQ, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addCORR_DOF(FlatBufferBuilder $builder, $CORR_DOF)
+    {
+        $builder->addByteX(75, $CORR_DOF, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORR_GATE(FlatBufferBuilder $builder, $CORR_GATE)
+    {
+        $builder->addDoubleX(76, $CORR_GATE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORR_P_VALUE(FlatBufferBuilder $builder, $CORR_P_VALUE)
+    {
+        $builder->addDoubleX(77, $CORR_P_VALUE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addCORR_AMBIGUOUS(FlatBufferBuilder $builder, $CORR_AMBIGUOUS)
+    {
+        $builder->addBoolX(78, $CORR_AMBIGUOUS, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFREQUENCY_UNC(FlatBufferBuilder $builder, $FREQUENCY_UNC)
+    {
+        $builder->addDoubleX(79, $FREQUENCY_UNC, 0.0);
     }
 
     /**

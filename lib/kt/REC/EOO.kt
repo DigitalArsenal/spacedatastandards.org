@@ -1245,6 +1245,47 @@ class EOO : Table() {
             val o = __offset(270)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
+    /**
+     * Association: squared Mahalanobis distance of the observation's
+     * innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+     */
+    val corrMahalanobisSq : Double
+        get() {
+            val o = __offset(272)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Association: degrees of freedom of d^2 (measurement dimension).
+     */
+    val corrDof : UByte
+        get() {
+            val o = __offset(274)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Association: the chi-square gate d^2 was tested against.
+     */
+    val corrGate : Double
+        get() {
+            val o = __offset(276)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Association: p-value of d^2, Q(dof/2, d^2/2).
+     */
+    val corrPValue : Double
+        get() {
+            val o = __offset(278)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Association: true when the assignment was ambiguous.
+     */
+    val corrAmbiguous : Boolean
+        get() {
+            val o = __offset(280)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEOO(_bb: ByteBuffer): EOO = getRootAsEOO(_bb, EOO())
@@ -1253,7 +1294,7 @@ class EOO : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EOOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOO")
-        fun startEOO(builder: FlatBufferBuilder) = builder.startTable(134)
+        fun startEOO(builder: FlatBufferBuilder) = builder.startTable(139)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addCLASSIFICATION(builder: FlatBufferBuilder, classification: Int) = builder.addOffset(1, classification, 0)
         fun addOBTIME(builder: FlatBufferBuilder, obTime: Int) = builder.addOffset(2, obTime, 0)
@@ -1388,6 +1429,11 @@ class EOO : Table() {
         fun addSUNGLINTPERCENT(builder: FlatBufferBuilder, sunglintPercent: Float) = builder.addFloat(131, sunglintPercent, 0.0)
         fun addSNOWICECOVERPERCENT(builder: FlatBufferBuilder, snowIceCoverPercent: Float) = builder.addFloat(132, snowIceCoverPercent, 0.0)
         fun addVALIDDATAAREAKM2(builder: FlatBufferBuilder, validDataAreaKm2: Float) = builder.addFloat(133, validDataAreaKm2, 0.0)
+        fun addCORRMAHALANOBISSQ(builder: FlatBufferBuilder, corrMahalanobisSq: Double) = builder.addDouble(134, corrMahalanobisSq, 0.0)
+        fun addCORRDOF(builder: FlatBufferBuilder, corrDof: UByte) = builder.addByte(135, corrDof.toByte(), 0)
+        fun addCORRGATE(builder: FlatBufferBuilder, corrGate: Double) = builder.addDouble(136, corrGate, 0.0)
+        fun addCORRPVALUE(builder: FlatBufferBuilder, corrPValue: Double) = builder.addDouble(137, corrPValue, 0.0)
+        fun addCORRAMBIGUOUS(builder: FlatBufferBuilder, corrAmbiguous: Boolean) = builder.addBoolean(138, corrAmbiguous, false)
         fun endEOO(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

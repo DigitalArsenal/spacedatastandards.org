@@ -79,6 +79,12 @@ public struct PRWForceConfiguration : IFlatbufferObject
   public ushort MAXIMUM_TESSERAL_DEGREE { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
   /// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
   public bool HAS_MAXIMUM_TESSERAL_DEGREE { get { int o = __p.__offset(62); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Solar radiation pressure model family (default: the cannonball).
+  public prwRadiationPressureFamily RADIATION_PRESSURE_MODEL { get { int o = __p.__offset(64); return o != 0 ? (prwRadiationPressureFamily)__p.bb.Get(o + __p.bb_pos) : prwRadiationPressureFamily.CANNONBALL; } }
+  /// Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+  public prwGnssSpacecraftBlock GNSS_BLOCK { get { int o = __p.__offset(66); return o != 0 ? (prwGnssSpacecraftBlock)__p.bb.Get(o + __p.bb_pos) : prwGnssSpacecraftBlock.UNSPECIFIED; } }
+  /// ECOM2 coefficients; absent means no ECOM2 term.
+  public PRWEcom2? ECOM2 { get { int o = __p.__offset(68); return o != 0 ? (PRWEcom2?)(new PRWEcom2()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<PRWForceConfiguration> CreatePRWForceConfiguration(FlatBufferBuilder builder,
       prwGravitySelection GRAVITY_CHOICE = prwGravitySelection.INFER_FLAGS,
@@ -110,8 +116,11 @@ public struct PRWForceConfiguration : IFlatbufferObject
       double DRAG_AREA_OVER_MASS_RATE_M2_KG_S = 0.0,
       bool HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = false,
       ushort MAXIMUM_TESSERAL_DEGREE = 0,
-      bool HAS_MAXIMUM_TESSERAL_DEGREE = false) {
-    builder.StartTable(30);
+      bool HAS_MAXIMUM_TESSERAL_DEGREE = false,
+      prwRadiationPressureFamily RADIATION_PRESSURE_MODEL = prwRadiationPressureFamily.CANNONBALL,
+      prwGnssSpacecraftBlock GNSS_BLOCK = prwGnssSpacecraftBlock.UNSPECIFIED,
+      Offset<PRWEcom2> ECOM2Offset = default(Offset<PRWEcom2>)) {
+    builder.StartTable(33);
     PRWForceConfiguration.AddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
     PRWForceConfiguration.AddIN_TRACK_ACCELERATION_M_S2(builder, IN_TRACK_ACCELERATION_M_S2);
     PRWForceConfiguration.AddDRAG_COEFFICIENT(builder, DRAG_COEFFICIENT);
@@ -119,12 +128,15 @@ public struct PRWForceConfiguration : IFlatbufferObject
     PRWForceConfiguration.AddAREA_M2(builder, AREA_M2);
     PRWForceConfiguration.AddINITIAL_MASS_KG(builder, INITIAL_MASS_KG);
     PRWForceConfiguration.AddGRAVITATIONAL_PARAMETER(builder, GRAVITATIONAL_PARAMETER);
+    PRWForceConfiguration.AddECOM2(builder, ECOM2Offset);
     PRWForceConfiguration.AddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCEOffset);
     PRWForceConfiguration.AddWEATHER(builder, WEATHEROffset);
     PRWForceConfiguration.AddTHIRD_BODY_IDS(builder, THIRD_BODY_IDSOffset);
     PRWForceConfiguration.AddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE);
     PRWForceConfiguration.AddMAXIMUM_ORDER(builder, MAXIMUM_ORDER);
     PRWForceConfiguration.AddMAXIMUM_DEGREE(builder, MAXIMUM_DEGREE);
+    PRWForceConfiguration.AddGNSS_BLOCK(builder, GNSS_BLOCK);
+    PRWForceConfiguration.AddRADIATION_PRESSURE_MODEL(builder, RADIATION_PRESSURE_MODEL);
     PRWForceConfiguration.AddHAS_MAXIMUM_TESSERAL_DEGREE(builder, HAS_MAXIMUM_TESSERAL_DEGREE);
     PRWForceConfiguration.AddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
     PRWForceConfiguration.AddHAS_IN_TRACK_ACCELERATION_M_S2(builder, HAS_IN_TRACK_ACCELERATION_M_S2);
@@ -145,7 +157,7 @@ public struct PRWForceConfiguration : IFlatbufferObject
     return PRWForceConfiguration.EndPRWForceConfiguration(builder);
   }
 
-  public static void StartPRWForceConfiguration(FlatBufferBuilder builder) { builder.StartTable(30); }
+  public static void StartPRWForceConfiguration(FlatBufferBuilder builder) { builder.StartTable(33); }
   public static void AddGRAVITY_CHOICE(FlatBufferBuilder builder, prwGravitySelection GRAVITY_CHOICE) { builder.AddByte(0, (byte)GRAVITY_CHOICE, 0); }
   public static void AddENABLE_POINT_MASS(FlatBufferBuilder builder, bool ENABLE_POINT_MASS) { builder.AddBool(1, ENABLE_POINT_MASS, true); }
   public static void AddGRAVITATIONAL_PARAMETER(FlatBufferBuilder builder, double GRAVITATIONAL_PARAMETER) { builder.AddDouble(2, GRAVITATIONAL_PARAMETER, 0.0); }
@@ -181,6 +193,9 @@ public struct PRWForceConfiguration : IFlatbufferObject
   public static void AddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(FlatBufferBuilder builder, bool HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S) { builder.AddBool(27, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false); }
   public static void AddMAXIMUM_TESSERAL_DEGREE(FlatBufferBuilder builder, ushort MAXIMUM_TESSERAL_DEGREE) { builder.AddUshort(28, MAXIMUM_TESSERAL_DEGREE, 0); }
   public static void AddHAS_MAXIMUM_TESSERAL_DEGREE(FlatBufferBuilder builder, bool HAS_MAXIMUM_TESSERAL_DEGREE) { builder.AddBool(29, HAS_MAXIMUM_TESSERAL_DEGREE, false); }
+  public static void AddRADIATION_PRESSURE_MODEL(FlatBufferBuilder builder, prwRadiationPressureFamily RADIATION_PRESSURE_MODEL) { builder.AddByte(30, (byte)RADIATION_PRESSURE_MODEL, 0); }
+  public static void AddGNSS_BLOCK(FlatBufferBuilder builder, prwGnssSpacecraftBlock GNSS_BLOCK) { builder.AddByte(31, (byte)GNSS_BLOCK, 0); }
+  public static void AddECOM2(FlatBufferBuilder builder, Offset<PRWEcom2> ECOM2Offset) { builder.AddOffset(32, ECOM2Offset.Value, 0); }
   public static Offset<PRWForceConfiguration> EndPRWForceConfiguration(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 46);  // EPHEMERIS_SOURCE
@@ -223,6 +238,9 @@ public struct PRWForceConfiguration : IFlatbufferObject
     _o.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
     _o.MAXIMUM_TESSERAL_DEGREE = this.MAXIMUM_TESSERAL_DEGREE;
     _o.HAS_MAXIMUM_TESSERAL_DEGREE = this.HAS_MAXIMUM_TESSERAL_DEGREE;
+    _o.RADIATION_PRESSURE_MODEL = this.RADIATION_PRESSURE_MODEL;
+    _o.GNSS_BLOCK = this.GNSS_BLOCK;
+    _o.ECOM2 = this.ECOM2.HasValue ? this.ECOM2.Value.UnPack() : null;
   }
   public static Offset<PRWForceConfiguration> Pack(FlatBufferBuilder builder, PRWForceConfigurationT _o) {
     if (_o == null) return default(Offset<PRWForceConfiguration>);
@@ -233,6 +251,7 @@ public struct PRWForceConfiguration : IFlatbufferObject
     }
     var _WEATHER = _o.WEATHER == null ? default(Offset<PRWSpaceWeather>) : PRWSpaceWeather.Pack(builder, _o.WEATHER);
     var _EPHEMERIS_SOURCE = _o.EPHEMERIS_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERIS_SOURCE);
+    var _ECOM2 = _o.ECOM2 == null ? default(Offset<PRWEcom2>) : PRWEcom2.Pack(builder, _o.ECOM2);
     return CreatePRWForceConfiguration(
       builder,
       _o.GRAVITY_CHOICE,
@@ -264,7 +283,10 @@ public struct PRWForceConfiguration : IFlatbufferObject
       _o.DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
       _o.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
       _o.MAXIMUM_TESSERAL_DEGREE,
-      _o.HAS_MAXIMUM_TESSERAL_DEGREE);
+      _o.HAS_MAXIMUM_TESSERAL_DEGREE,
+      _o.RADIATION_PRESSURE_MODEL,
+      _o.GNSS_BLOCK,
+      _ECOM2);
   }
 }
 
@@ -300,6 +322,9 @@ public class PRWForceConfigurationT
   public bool HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S { get; set; }
   public ushort MAXIMUM_TESSERAL_DEGREE { get; set; }
   public bool HAS_MAXIMUM_TESSERAL_DEGREE { get; set; }
+  public prwRadiationPressureFamily RADIATION_PRESSURE_MODEL { get; set; }
+  public prwGnssSpacecraftBlock GNSS_BLOCK { get; set; }
+  public PRWEcom2T ECOM2 { get; set; }
 
   public PRWForceConfigurationT() {
     this.GRAVITY_CHOICE = prwGravitySelection.INFER_FLAGS;
@@ -332,6 +357,9 @@ public class PRWForceConfigurationT
     this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = false;
     this.MAXIMUM_TESSERAL_DEGREE = 0;
     this.HAS_MAXIMUM_TESSERAL_DEGREE = false;
+    this.RADIATION_PRESSURE_MODEL = prwRadiationPressureFamily.CANNONBALL;
+    this.GNSS_BLOCK = prwGnssSpacecraftBlock.UNSPECIFIED;
+    this.ECOM2 = null;
   }
 }
 
@@ -371,6 +399,9 @@ static public class PRWForceConfigurationVerify
       && verifier.VerifyField(tablePos, 58 /*HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 60 /*MAXIMUM_TESSERAL_DEGREE*/, 2 /*ushort*/, 2, false)
       && verifier.VerifyField(tablePos, 62 /*HAS_MAXIMUM_TESSERAL_DEGREE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 64 /*RADIATION_PRESSURE_MODEL*/, 1 /*prwRadiationPressureFamily*/, 1, false)
+      && verifier.VerifyField(tablePos, 66 /*GNSS_BLOCK*/, 1 /*prwGnssSpacecraftBlock*/, 1, false)
+      && verifier.VerifyTable(tablePos, 68 /*ECOM2*/, PRWEcom2Verify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

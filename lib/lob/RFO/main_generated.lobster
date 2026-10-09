@@ -244,13 +244,32 @@ class RFO : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 150) + i * 4)
     def TAGS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 150)
+    /// Association: squared Mahalanobis distance of the observation's
+    /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+    def CORR_MAHALANOBIS_SQ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 152, 0.0)
+    /// Association: degrees of freedom of d^2 (measurement dimension).
+    def CORR_DOF() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 154, 0)
+    /// Association: the chi-square gate d^2 was tested against.
+    def CORR_GATE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 156, 0.0)
+    /// Association: p-value of d^2, Q(dof/2, d^2/2).
+    def CORR_P_VALUE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 158, 0.0)
+    /// Association: true when the assignment was ambiguous.
+    def CORR_AMBIGUOUS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 160, 0))
+    /// One-sigma uncertainty of FREQUENCY, in the same units.
+    def FREQUENCY_UNC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 162, 0.0)
 
 def GetRootAsRFO(buf:string): return RFO { buf, flatbuffers.indirect(buf, 0) }
 
 struct RFOBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(74)
+        b_.StartObject(80)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -473,6 +492,24 @@ struct RFOBuilder:
         return this
     def add_TAGS(TAGS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(73, TAGS)
+        return this
+    def add_CORR_MAHALANOBIS_SQ(CORR_MAHALANOBIS_SQ:float):
+        b_.PrependFloat64Slot(74, CORR_MAHALANOBIS_SQ, 0.0)
+        return this
+    def add_CORR_DOF(CORR_DOF:int):
+        b_.PrependUint8Slot(75, CORR_DOF, 0)
+        return this
+    def add_CORR_GATE(CORR_GATE:float):
+        b_.PrependFloat64Slot(76, CORR_GATE, 0.0)
+        return this
+    def add_CORR_P_VALUE(CORR_P_VALUE:float):
+        b_.PrependFloat64Slot(77, CORR_P_VALUE, 0.0)
+        return this
+    def add_CORR_AMBIGUOUS(CORR_AMBIGUOUS:bool):
+        b_.PrependBoolSlot(78, CORR_AMBIGUOUS, 0)
+        return this
+    def add_FREQUENCY_UNC(FREQUENCY_UNC:float):
+        b_.PrependFloat64Slot(79, FREQUENCY_UNC, 0.0)
         return this
     def end():
         return b_.EndObject()

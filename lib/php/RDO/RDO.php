@@ -532,22 +532,93 @@ class RDO extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Association: squared Mahalanobis distance of the observation's
+    /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+    /**
+     * @return double
+     */
+    public function getCORR_MAHALANOBIS_SQ()
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Association: degrees of freedom of d^2 (measurement dimension).
+    /**
+     * @return byte
+     */
+    public function getCORR_DOF()
+    {
+        $o = $this->__offset(110);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+    }
+
+    /// Association: the chi-square gate d^2 was tested against.
+    /**
+     * @return double
+     */
+    public function getCORR_GATE()
+    {
+        $o = $this->__offset(112);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Association: p-value of d^2, Q(dof/2, d^2/2).
+    /**
+     * @return double
+     */
+    public function getCORR_P_VALUE()
+    {
+        $o = $this->__offset(114);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Association: true when the assignment was ambiguous.
+    /**
+     * @return bool
+     */
+    public function getCORR_AMBIGUOUS()
+    {
+        $o = $this->__offset(116);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Association: posterior probability of the association.
+    /**
+     * @return double
+     */
+    public function getCORR_QUALITY()
+    {
+        $o = $this->__offset(118);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Carrier frequency the DOPPLER shift refers to, in Hz.
+    /**
+     * @return double
+     */
+    public function getDOPPLER_FREQUENCY()
+    {
+        $o = $this->__offset(120);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startRDO(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(52);
+        $builder->StartObject(59);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RDO
      */
-    public static function createRDO(FlatBufferBuilder $builder, $ID, $OB_TIME, $ID_SENSOR, $ORIG_SENSOR_ID, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $UCT, $OBS_TYPE, $TASK_ID, $TRANSACTION_ID, $TRACK_ID, $OB_POSITION, $SEN_REFERENCE_FRAME, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_BIAS, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_BIAS, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_BIAS, $RANGE_RATE, $RANGE_RATE_UNC, $RANGE_ACCEL, $RANGE_ACCEL_UNC, $DOPPLER, $DOPPLER_UNC, $RA, $DECLINATION, $X, $Y, $Z, $XVEL, $YVEL, $ZVEL, $SENX, $SENY, $SENZ, $RCS, $RCS_UNC, $ORTHOGONAL_RCS, $ORTHOGONAL_RCS_UNC, $SNR, $BEAM, $TIMING_BIAS, $RAW_FILE_URI, $DESCRIPTOR, $TAGS)
+    public static function createRDO(FlatBufferBuilder $builder, $ID, $OB_TIME, $ID_SENSOR, $ORIG_SENSOR_ID, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $UCT, $OBS_TYPE, $TASK_ID, $TRANSACTION_ID, $TRACK_ID, $OB_POSITION, $SEN_REFERENCE_FRAME, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_BIAS, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_BIAS, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_BIAS, $RANGE_RATE, $RANGE_RATE_UNC, $RANGE_ACCEL, $RANGE_ACCEL_UNC, $DOPPLER, $DOPPLER_UNC, $RA, $DECLINATION, $X, $Y, $Z, $XVEL, $YVEL, $ZVEL, $SENX, $SENY, $SENZ, $RCS, $RCS_UNC, $ORTHOGONAL_RCS, $ORTHOGONAL_RCS_UNC, $SNR, $BEAM, $TIMING_BIAS, $RAW_FILE_URI, $DESCRIPTOR, $TAGS, $CORR_MAHALANOBIS_SQ, $CORR_DOF, $CORR_GATE, $CORR_P_VALUE, $CORR_AMBIGUOUS, $CORR_QUALITY, $DOPPLER_FREQUENCY)
     {
-        $builder->startObject(52);
+        $builder->startObject(59);
         self::addID($builder, $ID);
         self::addOB_TIME($builder, $OB_TIME);
         self::addID_SENSOR($builder, $ID_SENSOR);
@@ -600,6 +671,13 @@ class RDO extends Table
         self::addRAW_FILE_URI($builder, $RAW_FILE_URI);
         self::addDESCRIPTOR($builder, $DESCRIPTOR);
         self::addTAGS($builder, $TAGS);
+        self::addCORR_MAHALANOBIS_SQ($builder, $CORR_MAHALANOBIS_SQ);
+        self::addCORR_DOF($builder, $CORR_DOF);
+        self::addCORR_GATE($builder, $CORR_GATE);
+        self::addCORR_P_VALUE($builder, $CORR_P_VALUE);
+        self::addCORR_AMBIGUOUS($builder, $CORR_AMBIGUOUS);
+        self::addCORR_QUALITY($builder, $CORR_QUALITY);
+        self::addDOPPLER_FREQUENCY($builder, $DOPPLER_FREQUENCY);
         $o = $builder->endObject();
         return $o;
     }
@@ -1146,6 +1224,76 @@ class RDO extends Table
     public static function startTAGSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORR_MAHALANOBIS_SQ(FlatBufferBuilder $builder, $CORR_MAHALANOBIS_SQ)
+    {
+        $builder->addDoubleX(52, $CORR_MAHALANOBIS_SQ, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addCORR_DOF(FlatBufferBuilder $builder, $CORR_DOF)
+    {
+        $builder->addByteX(53, $CORR_DOF, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORR_GATE(FlatBufferBuilder $builder, $CORR_GATE)
+    {
+        $builder->addDoubleX(54, $CORR_GATE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORR_P_VALUE(FlatBufferBuilder $builder, $CORR_P_VALUE)
+    {
+        $builder->addDoubleX(55, $CORR_P_VALUE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addCORR_AMBIGUOUS(FlatBufferBuilder $builder, $CORR_AMBIGUOUS)
+    {
+        $builder->addBoolX(56, $CORR_AMBIGUOUS, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORR_QUALITY(FlatBufferBuilder $builder, $CORR_QUALITY)
+    {
+        $builder->addDoubleX(57, $CORR_QUALITY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDOPPLER_FREQUENCY(FlatBufferBuilder $builder, $DOPPLER_FREQUENCY)
+    {
+        $builder->addDoubleX(58, $DOPPLER_FREQUENCY, 0.0);
     }
 
     /**

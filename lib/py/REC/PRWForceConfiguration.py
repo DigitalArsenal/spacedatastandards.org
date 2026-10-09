@@ -282,8 +282,36 @@ class PRWForceConfiguration(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Solar radiation pressure model family (default: the cannonball).
+    # PRWForceConfiguration
+    def RADIATION_PRESSURE_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+    # PRWForceConfiguration
+    def GNSS_BLOCK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # ECOM2 coefficients; absent means no ECOM2 term.
+    # PRWForceConfiguration
+    def ECOM2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWEcom2 import PRWEcom2
+            obj = PRWEcom2()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def PRWForceConfigurationStart(builder):
-    builder.StartObject(30)
+    builder.StartObject(33)
 
 def Start(builder):
     PRWForceConfigurationStart(builder)
@@ -484,12 +512,31 @@ def PRWForceConfigurationAddHAS_MAXIMUM_TESSERAL_DEGREE(builder, HAS_MAXIMUM_TES
 def AddHAS_MAXIMUM_TESSERAL_DEGREE(builder, HAS_MAXIMUM_TESSERAL_DEGREE):
     PRWForceConfigurationAddHAS_MAXIMUM_TESSERAL_DEGREE(builder, HAS_MAXIMUM_TESSERAL_DEGREE)
 
+def PRWForceConfigurationAddRADIATION_PRESSURE_MODEL(builder, RADIATION_PRESSURE_MODEL):
+    builder.PrependUint8Slot(30, RADIATION_PRESSURE_MODEL, 0)
+
+def AddRADIATION_PRESSURE_MODEL(builder, RADIATION_PRESSURE_MODEL):
+    PRWForceConfigurationAddRADIATION_PRESSURE_MODEL(builder, RADIATION_PRESSURE_MODEL)
+
+def PRWForceConfigurationAddGNSS_BLOCK(builder, GNSS_BLOCK):
+    builder.PrependUint8Slot(31, GNSS_BLOCK, 0)
+
+def AddGNSS_BLOCK(builder, GNSS_BLOCK):
+    PRWForceConfigurationAddGNSS_BLOCK(builder, GNSS_BLOCK)
+
+def PRWForceConfigurationAddECOM2(builder, ECOM2):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(ECOM2), 0)
+
+def AddECOM2(builder, ECOM2):
+    PRWForceConfigurationAddECOM2(builder, ECOM2)
+
 def PRWForceConfigurationEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return PRWForceConfigurationEnd(builder)
 
+import PRWEcom2
 import PRWSpaceWeather
 try:
     from typing import List, Optional
@@ -531,6 +578,9 @@ class PRWForceConfigurationT(object):
         HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = False,
         MAXIMUM_TESSERAL_DEGREE = 0,
         HAS_MAXIMUM_TESSERAL_DEGREE = False,
+        RADIATION_PRESSURE_MODEL = 0,
+        GNSS_BLOCK = 0,
+        ECOM2 = None,
     ):
         self.GRAVITY_CHOICE = GRAVITY_CHOICE  # type: int
         self.ENABLE_POINT_MASS = ENABLE_POINT_MASS  # type: bool
@@ -562,6 +612,9 @@ class PRWForceConfigurationT(object):
         self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S  # type: bool
         self.MAXIMUM_TESSERAL_DEGREE = MAXIMUM_TESSERAL_DEGREE  # type: int
         self.HAS_MAXIMUM_TESSERAL_DEGREE = HAS_MAXIMUM_TESSERAL_DEGREE  # type: bool
+        self.RADIATION_PRESSURE_MODEL = RADIATION_PRESSURE_MODEL  # type: int
+        self.GNSS_BLOCK = GNSS_BLOCK  # type: int
+        self.ECOM2 = ECOM2  # type: Optional[PRWEcom2.PRWEcom2T]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -621,6 +674,10 @@ class PRWForceConfigurationT(object):
         self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = PRWForceConfiguration.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S()
         self.MAXIMUM_TESSERAL_DEGREE = PRWForceConfiguration.MAXIMUM_TESSERAL_DEGREE()
         self.HAS_MAXIMUM_TESSERAL_DEGREE = PRWForceConfiguration.HAS_MAXIMUM_TESSERAL_DEGREE()
+        self.RADIATION_PRESSURE_MODEL = PRWForceConfiguration.RADIATION_PRESSURE_MODEL()
+        self.GNSS_BLOCK = PRWForceConfiguration.GNSS_BLOCK()
+        if PRWForceConfiguration.ECOM2() is not None:
+            self.ECOM2 = PRWEcom2.PRWEcom2T.InitFromObj(PRWForceConfiguration.ECOM2())
 
     # PRWForceConfigurationT
     def Pack(self, builder):
@@ -636,6 +693,8 @@ class PRWForceConfigurationT(object):
             WEATHER = self.WEATHER.Pack(builder)
         if self.EPHEMERIS_SOURCE is not None:
             EPHEMERIS_SOURCE = builder.CreateString(self.EPHEMERIS_SOURCE)
+        if self.ECOM2 is not None:
+            ECOM2 = self.ECOM2.Pack(builder)
         PRWForceConfigurationStart(builder)
         PRWForceConfigurationAddGRAVITY_CHOICE(builder, self.GRAVITY_CHOICE)
         PRWForceConfigurationAddENABLE_POINT_MASS(builder, self.ENABLE_POINT_MASS)
@@ -670,5 +729,9 @@ class PRWForceConfigurationT(object):
         PRWForceConfigurationAddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
         PRWForceConfigurationAddMAXIMUM_TESSERAL_DEGREE(builder, self.MAXIMUM_TESSERAL_DEGREE)
         PRWForceConfigurationAddHAS_MAXIMUM_TESSERAL_DEGREE(builder, self.HAS_MAXIMUM_TESSERAL_DEGREE)
+        PRWForceConfigurationAddRADIATION_PRESSURE_MODEL(builder, self.RADIATION_PRESSURE_MODEL)
+        PRWForceConfigurationAddGNSS_BLOCK(builder, self.GNSS_BLOCK)
+        if self.ECOM2 is not None:
+            PRWForceConfigurationAddECOM2(builder, ECOM2)
         PRWForceConfiguration = PRWForceConfigurationEnd(builder)
         return PRWForceConfiguration

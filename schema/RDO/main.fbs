@@ -1,5 +1,5 @@
-// Hash: a5ec7b5c21df888e4605bd26687b608916f2ca4eaf930c43b5a58820e44f597b
-// Version: 0.0.3
+// Hash: ab4cf26780a1b44969a7a8125fe8969b41ad37690bccfe2a8ca8216259ec0763
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 enum radarObsType : byte {
   DETECTION,
@@ -116,6 +116,21 @@ table RDO {
   DESCRIPTOR:string;
   /// Associated tags
   TAGS:[string];
+  /// Association: squared Mahalanobis distance of the observation's
+  /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+  CORR_MAHALANOBIS_SQ:double;
+  /// Association: degrees of freedom of d^2 (measurement dimension).
+  CORR_DOF:ubyte;
+  /// Association: the chi-square gate d^2 was tested against.
+  CORR_GATE:double;
+  /// Association: p-value of d^2, Q(dof/2, d^2/2).
+  CORR_P_VALUE:double;
+  /// Association: true when the assignment was ambiguous.
+  CORR_AMBIGUOUS:bool;
+  /// Association: posterior probability of the association.
+  CORR_QUALITY:double;
+  /// Carrier frequency the DOPPLER shift refers to, in Hz.
+  DOPPLER_FREQUENCY:double;
 }
 
 root_type RDO;

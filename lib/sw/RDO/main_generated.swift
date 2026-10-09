@@ -89,6 +89,13 @@ public struct RDO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let RAW_FILE_URI: VOffset = 102
     static let DESCRIPTOR: VOffset = 104
     static let TAGS: VOffset = 106
+    static let CORR_MAHALANOBIS_SQ: VOffset = 108
+    static let CORR_DOF: VOffset = 110
+    static let CORR_GATE: VOffset = 112
+    static let CORR_P_VALUE: VOffset = 114
+    static let CORR_AMBIGUOUS: VOffset = 116
+    static let CORR_QUALITY: VOffset = 118
+    static let DOPPLER_FREQUENCY: VOffset = 120
   }
 
   ///  Unique identifier
@@ -208,7 +215,22 @@ public struct RDO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var DESCRIPTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTOR) }
   ///  Associated tags
   public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TAGS, byteSize: 4) }
-  public static func startRDO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 52) }
+  ///  Association: squared Mahalanobis distance of the observation's
+  ///  innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+  public var CORR_MAHALANOBIS_SQ: Double { let o = _accessor.offset(VT.CORR_MAHALANOBIS_SQ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Association: degrees of freedom of d^2 (measurement dimension).
+  public var CORR_DOF: UInt8 { let o = _accessor.offset(VT.CORR_DOF); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Association: the chi-square gate d^2 was tested against.
+  public var CORR_GATE: Double { let o = _accessor.offset(VT.CORR_GATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Association: p-value of d^2, Q(dof/2, d^2/2).
+  public var CORR_P_VALUE: Double { let o = _accessor.offset(VT.CORR_P_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Association: true when the assignment was ambiguous.
+  public var CORR_AMBIGUOUS: Bool { let o = _accessor.offset(VT.CORR_AMBIGUOUS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Association: posterior probability of the association.
+  public var CORR_QUALITY: Double { let o = _accessor.offset(VT.CORR_QUALITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Carrier frequency the DOPPLER shift refers to, in Hz.
+  public var DOPPLER_FREQUENCY: Double { let o = _accessor.offset(VT.DOPPLER_FREQUENCY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startRDO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 59) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VT.OB_TIME) }
   public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VT.ID_SENSOR) }
@@ -262,6 +284,14 @@ public struct RDO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(RAW_FILE_URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RAW_FILE_URI, at: VT.RAW_FILE_URI) }
   public static func add(DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTOR, at: VT.DESCRIPTOR) }
   public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VT.TAGS) }
+  public static func add(CORR_MAHALANOBIS_SQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_MAHALANOBIS_SQ, def: 0.0, at: VT.CORR_MAHALANOBIS_SQ) }
+  public static func add(CORR_DOF: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_DOF, def: 0, at: VT.CORR_DOF) }
+  public static func add(CORR_GATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_GATE, def: 0.0, at: VT.CORR_GATE) }
+  public static func add(CORR_P_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_P_VALUE, def: 0.0, at: VT.CORR_P_VALUE) }
+  public static func add(CORR_AMBIGUOUS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_AMBIGUOUS, def: false,
+   at: VT.CORR_AMBIGUOUS) }
+  public static func add(CORR_QUALITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_QUALITY, def: 0.0, at: VT.CORR_QUALITY) }
+  public static func add(DOPPLER_FREQUENCY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DOPPLER_FREQUENCY, def: 0.0, at: VT.DOPPLER_FREQUENCY) }
   public static func endRDO(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRDO(
     _ fbb: inout FlatBufferBuilder,
@@ -316,7 +346,14 @@ public struct RDO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     TIMING_BIAS: Double = 0.0,
     RAW_FILE_URIOffset RAW_FILE_URI: Offset = Offset(),
     DESCRIPTOROffset DESCRIPTOR: Offset = Offset(),
-    TAGSVectorOffset TAGS: Offset = Offset()
+    TAGSVectorOffset TAGS: Offset = Offset(),
+    CORR_MAHALANOBIS_SQ: Double = 0.0,
+    CORR_DOF: UInt8 = 0,
+    CORR_GATE: Double = 0.0,
+    CORR_P_VALUE: Double = 0.0,
+    CORR_AMBIGUOUS: Bool = false,
+    CORR_QUALITY: Double = 0.0,
+    DOPPLER_FREQUENCY: Double = 0.0
   ) -> Offset {
     let __start = RDO.startRDO(&fbb)
     RDO.add(ID: ID, &fbb)
@@ -371,6 +408,13 @@ public struct RDO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     RDO.add(RAW_FILE_URI: RAW_FILE_URI, &fbb)
     RDO.add(DESCRIPTOR: DESCRIPTOR, &fbb)
     RDO.addVectorOf(TAGS: TAGS, &fbb)
+    RDO.add(CORR_MAHALANOBIS_SQ: CORR_MAHALANOBIS_SQ, &fbb)
+    RDO.add(CORR_DOF: CORR_DOF, &fbb)
+    RDO.add(CORR_GATE: CORR_GATE, &fbb)
+    RDO.add(CORR_P_VALUE: CORR_P_VALUE, &fbb)
+    RDO.add(CORR_AMBIGUOUS: CORR_AMBIGUOUS, &fbb)
+    RDO.add(CORR_QUALITY: CORR_QUALITY, &fbb)
+    RDO.add(DOPPLER_FREQUENCY: DOPPLER_FREQUENCY, &fbb)
     return RDO.endRDO(&fbb, start: __start)
   }
 
@@ -428,6 +472,13 @@ public struct RDO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.RAW_FILE_URI, fieldName: "RAW_FILE_URI", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.DESCRIPTOR, fieldName: "DESCRIPTOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.TAGS, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.CORR_MAHALANOBIS_SQ, fieldName: "CORR_MAHALANOBIS_SQ", required: false, type: Double.self)
+    try _v.visit(field: VT.CORR_DOF, fieldName: "CORR_DOF", required: false, type: UInt8.self)
+    try _v.visit(field: VT.CORR_GATE, fieldName: "CORR_GATE", required: false, type: Double.self)
+    try _v.visit(field: VT.CORR_P_VALUE, fieldName: "CORR_P_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.CORR_AMBIGUOUS, fieldName: "CORR_AMBIGUOUS", required: false, type: Bool.self)
+    try _v.visit(field: VT.CORR_QUALITY, fieldName: "CORR_QUALITY", required: false, type: Double.self)
+    try _v.visit(field: VT.DOPPLER_FREQUENCY, fieldName: "DOPPLER_FREQUENCY", required: false, type: Double.self)
     _v.finish()
   }
 }

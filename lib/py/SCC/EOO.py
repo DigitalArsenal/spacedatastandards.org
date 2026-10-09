@@ -1125,8 +1125,49 @@ class EOO(object):
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
+    # Association: squared Mahalanobis distance of the observation's
+    # innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+    # EOO
+    def CORR_MAHALANOBIS_SQ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(272))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Association: degrees of freedom of d^2 (measurement dimension).
+    # EOO
+    def CORR_DOF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(274))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Association: the chi-square gate d^2 was tested against.
+    # EOO
+    def CORR_GATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(276))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Association: p-value of d^2, Q(dof/2, d^2/2).
+    # EOO
+    def CORR_P_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(278))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Association: true when the assignment was ambiguous.
+    # EOO
+    def CORR_AMBIGUOUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(280))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def EOOStart(builder):
-    builder.StartObject(134)
+    builder.StartObject(139)
 
 def Start(builder):
     EOOStart(builder)
@@ -1935,6 +1976,36 @@ def EOOAddVALID_DATA_AREA_KM2(builder, VALID_DATA_AREA_KM2):
 def AddVALID_DATA_AREA_KM2(builder, VALID_DATA_AREA_KM2):
     EOOAddVALID_DATA_AREA_KM2(builder, VALID_DATA_AREA_KM2)
 
+def EOOAddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ):
+    builder.PrependFloat64Slot(134, CORR_MAHALANOBIS_SQ, 0.0)
+
+def AddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ):
+    EOOAddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ)
+
+def EOOAddCORR_DOF(builder, CORR_DOF):
+    builder.PrependUint8Slot(135, CORR_DOF, 0)
+
+def AddCORR_DOF(builder, CORR_DOF):
+    EOOAddCORR_DOF(builder, CORR_DOF)
+
+def EOOAddCORR_GATE(builder, CORR_GATE):
+    builder.PrependFloat64Slot(136, CORR_GATE, 0.0)
+
+def AddCORR_GATE(builder, CORR_GATE):
+    EOOAddCORR_GATE(builder, CORR_GATE)
+
+def EOOAddCORR_P_VALUE(builder, CORR_P_VALUE):
+    builder.PrependFloat64Slot(137, CORR_P_VALUE, 0.0)
+
+def AddCORR_P_VALUE(builder, CORR_P_VALUE):
+    EOOAddCORR_P_VALUE(builder, CORR_P_VALUE)
+
+def EOOAddCORR_AMBIGUOUS(builder, CORR_AMBIGUOUS):
+    builder.PrependBoolSlot(138, CORR_AMBIGUOUS, 0)
+
+def AddCORR_AMBIGUOUS(builder, CORR_AMBIGUOUS):
+    EOOAddCORR_AMBIGUOUS(builder, CORR_AMBIGUOUS)
+
 def EOOEnd(builder):
     return builder.EndObject()
 
@@ -2086,6 +2157,11 @@ class EOOT(object):
         SUNGLINT_PERCENT = 0.0,
         SNOW_ICE_COVER_PERCENT = 0.0,
         VALID_DATA_AREA_KM2 = 0.0,
+        CORR_MAHALANOBIS_SQ = 0.0,
+        CORR_DOF = 0,
+        CORR_GATE = 0.0,
+        CORR_P_VALUE = 0.0,
+        CORR_AMBIGUOUS = False,
     ):
         self.ID = ID  # type: Optional[str]
         self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
@@ -2221,6 +2297,11 @@ class EOOT(object):
         self.SUNGLINT_PERCENT = SUNGLINT_PERCENT  # type: float
         self.SNOW_ICE_COVER_PERCENT = SNOW_ICE_COVER_PERCENT  # type: float
         self.VALID_DATA_AREA_KM2 = VALID_DATA_AREA_KM2  # type: float
+        self.CORR_MAHALANOBIS_SQ = CORR_MAHALANOBIS_SQ  # type: float
+        self.CORR_DOF = CORR_DOF  # type: int
+        self.CORR_GATE = CORR_GATE  # type: float
+        self.CORR_P_VALUE = CORR_P_VALUE  # type: float
+        self.CORR_AMBIGUOUS = CORR_AMBIGUOUS  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -2379,6 +2460,11 @@ class EOOT(object):
         self.SUNGLINT_PERCENT = EOO.SUNGLINT_PERCENT()
         self.SNOW_ICE_COVER_PERCENT = EOO.SNOW_ICE_COVER_PERCENT()
         self.VALID_DATA_AREA_KM2 = EOO.VALID_DATA_AREA_KM2()
+        self.CORR_MAHALANOBIS_SQ = EOO.CORR_MAHALANOBIS_SQ()
+        self.CORR_DOF = EOO.CORR_DOF()
+        self.CORR_GATE = EOO.CORR_GATE()
+        self.CORR_P_VALUE = EOO.CORR_P_VALUE()
+        self.CORR_AMBIGUOUS = EOO.CORR_AMBIGUOUS()
 
     # EOOT
     def Pack(self, builder):
@@ -2583,5 +2669,10 @@ class EOOT(object):
         EOOAddSUNGLINT_PERCENT(builder, self.SUNGLINT_PERCENT)
         EOOAddSNOW_ICE_COVER_PERCENT(builder, self.SNOW_ICE_COVER_PERCENT)
         EOOAddVALID_DATA_AREA_KM2(builder, self.VALID_DATA_AREA_KM2)
+        EOOAddCORR_MAHALANOBIS_SQ(builder, self.CORR_MAHALANOBIS_SQ)
+        EOOAddCORR_DOF(builder, self.CORR_DOF)
+        EOOAddCORR_GATE(builder, self.CORR_GATE)
+        EOOAddCORR_P_VALUE(builder, self.CORR_P_VALUE)
+        EOOAddCORR_AMBIGUOUS(builder, self.CORR_AMBIGUOUS)
         EOO = EOOEnd(builder)
         return EOO

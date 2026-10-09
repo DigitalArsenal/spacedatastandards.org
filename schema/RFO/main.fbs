@@ -1,5 +1,5 @@
-// Hash: 029209669f16529948240356cd105ecb5f9d7f193319aef72c626bc3e33db254
-// Version: 0.0.3
+// Hash: 0285b1149d36e8118cc30f1483520aae73c09f274aedf49771db7390fac37344
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 enum rfObsType : byte {
   EMISSION,
@@ -168,6 +168,19 @@ table RFO {
   URL:string;
   /// Associated tags
   TAGS:[string];
+  /// Association: squared Mahalanobis distance of the observation's
+  /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+  CORR_MAHALANOBIS_SQ:double;
+  /// Association: degrees of freedom of d^2 (measurement dimension).
+  CORR_DOF:ubyte;
+  /// Association: the chi-square gate d^2 was tested against.
+  CORR_GATE:double;
+  /// Association: p-value of d^2, Q(dof/2, d^2/2).
+  CORR_P_VALUE:double;
+  /// Association: true when the assignment was ambiguous.
+  CORR_AMBIGUOUS:bool;
+  /// One-sigma uncertainty of FREQUENCY, in the same units.
+  FREQUENCY_UNC:double;
 }
 
 root_type RFO;

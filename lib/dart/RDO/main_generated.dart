@@ -195,10 +195,32 @@ class RDO {
   String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 104);
   ///  Associated tags
   List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 106);
+  ///  Association: squared Mahalanobis distance of the observation's
+  ///  innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+  double get CORR_MAHALANOBIS_SQ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 108, 0.0);
+  double get corrMahalanobisSq => CORR_MAHALANOBIS_SQ;
+  ///  Association: degrees of freedom of d^2 (measurement dimension).
+  int get CORR_DOF => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 110, 0);
+  int get corrDof => CORR_DOF;
+  ///  Association: the chi-square gate d^2 was tested against.
+  double get CORR_GATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 112, 0.0);
+  double get corrGate => CORR_GATE;
+  ///  Association: p-value of d^2, Q(dof/2, d^2/2).
+  double get CORR_P_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 114, 0.0);
+  double get corrPValue => CORR_P_VALUE;
+  ///  Association: true when the assignment was ambiguous.
+  bool get CORR_AMBIGUOUS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 116, false);
+  bool get corrAmbiguous => CORR_AMBIGUOUS;
+  ///  Association: posterior probability of the association.
+  double get CORR_QUALITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 118, 0.0);
+  double get corrQuality => CORR_QUALITY;
+  ///  Carrier frequency the DOPPLER shift refers to, in Hz.
+  double get DOPPLER_FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 120, 0.0);
+  double get dopplerFrequency => DOPPLER_FREQUENCY;
 
   @override
   String toString() {
-    return 'RDO{ID: ${ID}, obTime: ${obTime}, idSensor: ${idSensor}, origSensorId: ${origSensorId}, satNo: ${satNo}, origObjectId: ${origObjectId}, onOrbit: ${onOrbit}, UCT: ${UCT}, obsType: ${obsType}, taskId: ${taskId}, transactionId: ${transactionId}, trackId: ${trackId}, obPosition: ${obPosition}, senReferenceFrame: ${senReferenceFrame}, AZIMUTH: ${AZIMUTH}, azimuthUnc: ${azimuthUnc}, azimuthBias: ${azimuthBias}, azimuthRate: ${azimuthRate}, ELEVATION: ${ELEVATION}, elevationUnc: ${elevationUnc}, elevationBias: ${elevationBias}, elevationRate: ${elevationRate}, RANGE: ${RANGE}, rangeUnc: ${rangeUnc}, rangeBias: ${rangeBias}, rangeRate: ${rangeRate}, rangeRateUnc: ${rangeRateUnc}, rangeAccel: ${rangeAccel}, rangeAccelUnc: ${rangeAccelUnc}, DOPPLER: ${DOPPLER}, dopplerUnc: ${dopplerUnc}, RA: ${RA}, DECLINATION: ${DECLINATION}, X: ${X}, Y: ${Y}, Z: ${Z}, XVEL: ${XVEL}, YVEL: ${YVEL}, ZVEL: ${ZVEL}, SENX: ${SENX}, SENY: ${SENY}, SENZ: ${SENZ}, RCS: ${RCS}, rcsUnc: ${rcsUnc}, orthogonalRcs: ${orthogonalRcs}, orthogonalRcsUnc: ${orthogonalRcsUnc}, SNR: ${SNR}, BEAM: ${BEAM}, timingBias: ${timingBias}, rawFileUri: ${rawFileUri}, DESCRIPTOR: ${DESCRIPTOR}, TAGS: ${TAGS}}';
+    return 'RDO{ID: ${ID}, obTime: ${obTime}, idSensor: ${idSensor}, origSensorId: ${origSensorId}, satNo: ${satNo}, origObjectId: ${origObjectId}, onOrbit: ${onOrbit}, UCT: ${UCT}, obsType: ${obsType}, taskId: ${taskId}, transactionId: ${transactionId}, trackId: ${trackId}, obPosition: ${obPosition}, senReferenceFrame: ${senReferenceFrame}, AZIMUTH: ${AZIMUTH}, azimuthUnc: ${azimuthUnc}, azimuthBias: ${azimuthBias}, azimuthRate: ${azimuthRate}, ELEVATION: ${ELEVATION}, elevationUnc: ${elevationUnc}, elevationBias: ${elevationBias}, elevationRate: ${elevationRate}, RANGE: ${RANGE}, rangeUnc: ${rangeUnc}, rangeBias: ${rangeBias}, rangeRate: ${rangeRate}, rangeRateUnc: ${rangeRateUnc}, rangeAccel: ${rangeAccel}, rangeAccelUnc: ${rangeAccelUnc}, DOPPLER: ${DOPPLER}, dopplerUnc: ${dopplerUnc}, RA: ${RA}, DECLINATION: ${DECLINATION}, X: ${X}, Y: ${Y}, Z: ${Z}, XVEL: ${XVEL}, YVEL: ${YVEL}, ZVEL: ${ZVEL}, SENX: ${SENX}, SENY: ${SENY}, SENZ: ${SENZ}, RCS: ${RCS}, rcsUnc: ${rcsUnc}, orthogonalRcs: ${orthogonalRcs}, orthogonalRcsUnc: ${orthogonalRcsUnc}, SNR: ${SNR}, BEAM: ${BEAM}, timingBias: ${timingBias}, rawFileUri: ${rawFileUri}, DESCRIPTOR: ${DESCRIPTOR}, TAGS: ${TAGS}, corrMahalanobisSq: ${corrMahalanobisSq}, corrDof: ${corrDof}, corrGate: ${corrGate}, corrPValue: ${corrPValue}, corrAmbiguous: ${corrAmbiguous}, corrQuality: ${corrQuality}, dopplerFrequency: ${dopplerFrequency}}';
   }
 }
 
@@ -216,7 +238,7 @@ class RDOBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(52);
+    fbBuilder.startTable(59);
   }
 
   int addIdOffset(int? offset) {
@@ -427,6 +449,34 @@ class RDOBuilder {
     fbBuilder.addOffset(51, offset);
     return fbBuilder.offset;
   }
+  int addCorrMahalanobisSq(double? CORR_MAHALANOBIS_SQ) {
+    fbBuilder.addFloat64(52, CORR_MAHALANOBIS_SQ);
+    return fbBuilder.offset;
+  }
+  int addCorrDof(int? CORR_DOF) {
+    fbBuilder.addUint8(53, CORR_DOF);
+    return fbBuilder.offset;
+  }
+  int addCorrGate(double? CORR_GATE) {
+    fbBuilder.addFloat64(54, CORR_GATE);
+    return fbBuilder.offset;
+  }
+  int addCorrPValue(double? CORR_P_VALUE) {
+    fbBuilder.addFloat64(55, CORR_P_VALUE);
+    return fbBuilder.offset;
+  }
+  int addCorrAmbiguous(bool? CORR_AMBIGUOUS) {
+    fbBuilder.addBool(56, CORR_AMBIGUOUS);
+    return fbBuilder.offset;
+  }
+  int addCorrQuality(double? CORR_QUALITY) {
+    fbBuilder.addFloat64(57, CORR_QUALITY);
+    return fbBuilder.offset;
+  }
+  int addDopplerFrequency(double? DOPPLER_FREQUENCY) {
+    fbBuilder.addFloat64(58, DOPPLER_FREQUENCY);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -486,6 +536,13 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
   final String? _RAW_FILE_URI;
   final String? _DESCRIPTOR;
   final List<String>? _TAGS;
+  final double? _CORR_MAHALANOBIS_SQ;
+  final int? _CORR_DOF;
+  final double? _CORR_GATE;
+  final double? _CORR_P_VALUE;
+  final bool? _CORR_AMBIGUOUS;
+  final double? _CORR_QUALITY;
+  final double? _DOPPLER_FREQUENCY;
 
   RDOObjectBuilder({
     String? ID,
@@ -570,6 +627,20 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
     String? rawFileUri,
     String? DESCRIPTOR,
     List<String>? TAGS,
+    double? CORR_MAHALANOBIS_SQ,
+    double? corrMahalanobisSq,
+    int? CORR_DOF,
+    int? corrDof,
+    double? CORR_GATE,
+    double? corrGate,
+    double? CORR_P_VALUE,
+    double? corrPValue,
+    bool? CORR_AMBIGUOUS,
+    bool? corrAmbiguous,
+    double? CORR_QUALITY,
+    double? corrQuality,
+    double? DOPPLER_FREQUENCY,
+    double? dopplerFrequency,
   })
       : _ID = ID,
         _OB_TIME = obTime ?? OB_TIME,
@@ -622,7 +693,14 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
         _TIMING_BIAS = timingBias ?? TIMING_BIAS,
         _RAW_FILE_URI = rawFileUri ?? RAW_FILE_URI,
         _DESCRIPTOR = DESCRIPTOR,
-        _TAGS = TAGS;
+        _TAGS = TAGS,
+        _CORR_MAHALANOBIS_SQ = corrMahalanobisSq ?? CORR_MAHALANOBIS_SQ,
+        _CORR_DOF = corrDof ?? CORR_DOF,
+        _CORR_GATE = corrGate ?? CORR_GATE,
+        _CORR_P_VALUE = corrPValue ?? CORR_P_VALUE,
+        _CORR_AMBIGUOUS = corrAmbiguous ?? CORR_AMBIGUOUS,
+        _CORR_QUALITY = corrQuality ?? CORR_QUALITY,
+        _DOPPLER_FREQUENCY = dopplerFrequency ?? DOPPLER_FREQUENCY;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -655,7 +733,7 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_DESCRIPTOR!);
     final int? TAGSOffset = _TAGS == null ? null
         : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(52);
+    fbBuilder.startTable(59);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, OB_TIMEOffset);
     fbBuilder.addOffset(2, ID_SENSOROffset);
@@ -708,6 +786,13 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(49, RAW_FILE_URIOffset);
     fbBuilder.addOffset(50, DESCRIPTOROffset);
     fbBuilder.addOffset(51, TAGSOffset);
+    fbBuilder.addFloat64(52, _CORR_MAHALANOBIS_SQ);
+    fbBuilder.addUint8(53, _CORR_DOF);
+    fbBuilder.addFloat64(54, _CORR_GATE);
+    fbBuilder.addFloat64(55, _CORR_P_VALUE);
+    fbBuilder.addBool(56, _CORR_AMBIGUOUS);
+    fbBuilder.addFloat64(57, _CORR_QUALITY);
+    fbBuilder.addFloat64(58, _DOPPLER_FREQUENCY);
     return fbBuilder.endTable();
   }
 

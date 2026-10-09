@@ -15,6 +15,18 @@ class prwDynamicParameter
     const DRAG_AREA_OVER_MASS_RATE = 2;
     const SRP_AREA_OVER_MASS = 3;
     const IN_TRACK_ACCELERATION = 4;
+    /// ECOM2 coefficients (PRWEcom2), in their order there.
+    const ECOM2_D0 = 5;
+    const ECOM2_Y0 = 6;
+    const ECOM2_B0 = 7;
+    const ECOM2_D2_COS = 8;
+    const ECOM2_D2_SIN = 9;
+    const ECOM2_D4_COS = 10;
+    const ECOM2_D4_SIN = 11;
+    const ECOM2_B1_COS = 12;
+    const ECOM2_B1_SIN = 13;
+    const ECOM2_B3_COS = 14;
+    const ECOM2_B3_SIN = 15;
 
     private static $names = array(
         prwDynamicParameter::UNSPECIFIED=>"UNSPECIFIED",
@@ -22,6 +34,17 @@ class prwDynamicParameter
         prwDynamicParameter::DRAG_AREA_OVER_MASS_RATE=>"DRAG_AREA_OVER_MASS_RATE",
         prwDynamicParameter::SRP_AREA_OVER_MASS=>"SRP_AREA_OVER_MASS",
         prwDynamicParameter::IN_TRACK_ACCELERATION=>"IN_TRACK_ACCELERATION",
+        prwDynamicParameter::ECOM2_D0=>"ECOM2_D0",
+        prwDynamicParameter::ECOM2_Y0=>"ECOM2_Y0",
+        prwDynamicParameter::ECOM2_B0=>"ECOM2_B0",
+        prwDynamicParameter::ECOM2_D2_COS=>"ECOM2_D2_COS",
+        prwDynamicParameter::ECOM2_D2_SIN=>"ECOM2_D2_SIN",
+        prwDynamicParameter::ECOM2_D4_COS=>"ECOM2_D4_COS",
+        prwDynamicParameter::ECOM2_D4_SIN=>"ECOM2_D4_SIN",
+        prwDynamicParameter::ECOM2_B1_COS=>"ECOM2_B1_COS",
+        prwDynamicParameter::ECOM2_B1_SIN=>"ECOM2_B1_SIN",
+        prwDynamicParameter::ECOM2_B3_COS=>"ECOM2_B3_COS",
+        prwDynamicParameter::ECOM2_B3_SIN=>"ECOM2_B3_SIN",
     );
 
     public static function Name($e)

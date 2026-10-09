@@ -367,6 +367,11 @@ impl<'a> EOO<'a> {
     pub const VT_SUNGLINT_PERCENT: ::flatbuffers::VOffsetT = 266;
     pub const VT_SNOW_ICE_COVER_PERCENT: ::flatbuffers::VOffsetT = 268;
     pub const VT_VALID_DATA_AREA_KM2: ::flatbuffers::VOffsetT = 270;
+    pub const VT_CORR_MAHALANOBIS_SQ: ::flatbuffers::VOffsetT = 272;
+    pub const VT_CORR_DOF: ::flatbuffers::VOffsetT = 274;
+    pub const VT_CORR_GATE: ::flatbuffers::VOffsetT = 276;
+    pub const VT_CORR_P_VALUE: ::flatbuffers::VOffsetT = 278;
+    pub const VT_CORR_AMBIGUOUS: ::flatbuffers::VOffsetT = 280;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -379,6 +384,9 @@ impl<'a> EOO<'a> {
         args: &'args EOOArgs<'args>
     ) -> ::flatbuffers::WIPOffset<EOO<'bldr>> {
         let mut builder = EOOBuilder::new(_fbb);
+        builder.add_CORR_P_VALUE(args.CORR_P_VALUE);
+        builder.add_CORR_GATE(args.CORR_GATE);
+        builder.add_CORR_MAHALANOBIS_SQ(args.CORR_MAHALANOBIS_SQ);
         builder.add_VALID_DATA_AREA_KM2(args.VALID_DATA_AREA_KM2);
         builder.add_SNOW_ICE_COVER_PERCENT(args.SNOW_ICE_COVER_PERCENT);
         builder.add_SUNGLINT_PERCENT(args.SUNGLINT_PERCENT);
@@ -496,6 +504,8 @@ impl<'a> EOO<'a> {
         if let Some(x) = args.OB_TIME { builder.add_OB_TIME(x); }
         if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
         if let Some(x) = args.ID { builder.add_ID(x); }
+        builder.add_CORR_AMBIGUOUS(args.CORR_AMBIGUOUS);
+        builder.add_CORR_DOF(args.CORR_DOF);
         builder.add_SUNGLINT_PRESENT(args.SUNGLINT_PRESENT);
         builder.add_SYNTHETIC_TRACKING_USED(args.SYNTHETIC_TRACKING_USED);
         builder.add_MULTI_FRAME_STACKED(args.MULTI_FRAME_STACKED);
@@ -695,6 +705,11 @@ impl<'a> EOO<'a> {
         let SUNGLINT_PERCENT = self.SUNGLINT_PERCENT();
         let SNOW_ICE_COVER_PERCENT = self.SNOW_ICE_COVER_PERCENT();
         let VALID_DATA_AREA_KM2 = self.VALID_DATA_AREA_KM2();
+        let CORR_MAHALANOBIS_SQ = self.CORR_MAHALANOBIS_SQ();
+        let CORR_DOF = self.CORR_DOF();
+        let CORR_GATE = self.CORR_GATE();
+        let CORR_P_VALUE = self.CORR_P_VALUE();
+        let CORR_AMBIGUOUS = self.CORR_AMBIGUOUS();
         EOOT {
             ID,
             CLASSIFICATION,
@@ -830,6 +845,11 @@ impl<'a> EOO<'a> {
             SUNGLINT_PERCENT,
             SNOW_ICE_COVER_PERCENT,
             VALID_DATA_AREA_KM2,
+            CORR_MAHALANOBIS_SQ,
+            CORR_DOF,
+            CORR_GATE,
+            CORR_P_VALUE,
+            CORR_AMBIGUOUS,
         }
     }
 
@@ -2054,6 +2074,52 @@ impl<'a> EOO<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f32>(EOO::VT_VALID_DATA_AREA_KM2, Some(0.0)).unwrap()}
     }
+
+    /// Association: squared Mahalanobis distance of the observation's
+    /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+    #[inline]
+    pub fn CORR_MAHALANOBIS_SQ(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(EOO::VT_CORR_MAHALANOBIS_SQ, Some(0.0)).unwrap()}
+    }
+
+    /// Association: degrees of freedom of d^2 (measurement dimension).
+    #[inline]
+    pub fn CORR_DOF(&self) -> u8 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u8>(EOO::VT_CORR_DOF, Some(0)).unwrap()}
+    }
+
+    /// Association: the chi-square gate d^2 was tested against.
+    #[inline]
+    pub fn CORR_GATE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(EOO::VT_CORR_GATE, Some(0.0)).unwrap()}
+    }
+
+    /// Association: p-value of d^2, Q(dof/2, d^2/2).
+    #[inline]
+    pub fn CORR_P_VALUE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(EOO::VT_CORR_P_VALUE, Some(0.0)).unwrap()}
+    }
+
+    /// Association: true when the assignment was ambiguous.
+    #[inline]
+    pub fn CORR_AMBIGUOUS(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(EOO::VT_CORR_AMBIGUOUS, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for EOO<'_> {
@@ -2196,6 +2262,11 @@ impl ::flatbuffers::Verifiable for EOO<'_> {
             .visit_field::<f32>("SUNGLINT_PERCENT", Self::VT_SUNGLINT_PERCENT, false)?
             .visit_field::<f32>("SNOW_ICE_COVER_PERCENT", Self::VT_SNOW_ICE_COVER_PERCENT, false)?
             .visit_field::<f32>("VALID_DATA_AREA_KM2", Self::VT_VALID_DATA_AREA_KM2, false)?
+            .visit_field::<f64>("CORR_MAHALANOBIS_SQ", Self::VT_CORR_MAHALANOBIS_SQ, false)?
+            .visit_field::<u8>("CORR_DOF", Self::VT_CORR_DOF, false)?
+            .visit_field::<f64>("CORR_GATE", Self::VT_CORR_GATE, false)?
+            .visit_field::<f64>("CORR_P_VALUE", Self::VT_CORR_P_VALUE, false)?
+            .visit_field::<bool>("CORR_AMBIGUOUS", Self::VT_CORR_AMBIGUOUS, false)?
             .finish();
         Ok(())
     }
@@ -2336,6 +2407,11 @@ pub struct EOOArgs<'a> {
     pub SUNGLINT_PERCENT: f32,
     pub SNOW_ICE_COVER_PERCENT: f32,
     pub VALID_DATA_AREA_KM2: f32,
+    pub CORR_MAHALANOBIS_SQ: f64,
+    pub CORR_DOF: u8,
+    pub CORR_GATE: f64,
+    pub CORR_P_VALUE: f64,
+    pub CORR_AMBIGUOUS: bool,
 }
 
 impl<'a> Default for EOOArgs<'a> {
@@ -2476,6 +2552,11 @@ impl<'a> Default for EOOArgs<'a> {
             SUNGLINT_PERCENT: 0.0,
             SNOW_ICE_COVER_PERCENT: 0.0,
             VALID_DATA_AREA_KM2: 0.0,
+            CORR_MAHALANOBIS_SQ: 0.0,
+            CORR_DOF: 0,
+            CORR_GATE: 0.0,
+            CORR_P_VALUE: 0.0,
+            CORR_AMBIGUOUS: false,
         }
     }
 }
@@ -3157,6 +3238,31 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EOOBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_CORR_MAHALANOBIS_SQ(&mut self, CORR_MAHALANOBIS_SQ: f64) {
+        self.fbb_.push_slot::<f64>(EOO::VT_CORR_MAHALANOBIS_SQ, CORR_MAHALANOBIS_SQ, 0.0);
+    }
+
+    #[inline]
+    pub fn add_CORR_DOF(&mut self, CORR_DOF: u8) {
+        self.fbb_.push_slot::<u8>(EOO::VT_CORR_DOF, CORR_DOF, 0);
+    }
+
+    #[inline]
+    pub fn add_CORR_GATE(&mut self, CORR_GATE: f64) {
+        self.fbb_.push_slot::<f64>(EOO::VT_CORR_GATE, CORR_GATE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_CORR_P_VALUE(&mut self, CORR_P_VALUE: f64) {
+        self.fbb_.push_slot::<f64>(EOO::VT_CORR_P_VALUE, CORR_P_VALUE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_CORR_AMBIGUOUS(&mut self, CORR_AMBIGUOUS: bool) {
+        self.fbb_.push_slot::<bool>(EOO::VT_CORR_AMBIGUOUS, CORR_AMBIGUOUS, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EOOBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         EOOBuilder {
@@ -3309,6 +3415,11 @@ impl ::core::fmt::Debug for EOO<'_> {
         ds.field("SUNGLINT_PERCENT", &self.SUNGLINT_PERCENT());
         ds.field("SNOW_ICE_COVER_PERCENT", &self.SNOW_ICE_COVER_PERCENT());
         ds.field("VALID_DATA_AREA_KM2", &self.VALID_DATA_AREA_KM2());
+        ds.field("CORR_MAHALANOBIS_SQ", &self.CORR_MAHALANOBIS_SQ());
+        ds.field("CORR_DOF", &self.CORR_DOF());
+        ds.field("CORR_GATE", &self.CORR_GATE());
+        ds.field("CORR_P_VALUE", &self.CORR_P_VALUE());
+        ds.field("CORR_AMBIGUOUS", &self.CORR_AMBIGUOUS());
         ds.finish()
     }
 }
@@ -3450,6 +3561,11 @@ pub struct EOOT {
     pub SUNGLINT_PERCENT: f32,
     pub SNOW_ICE_COVER_PERCENT: f32,
     pub VALID_DATA_AREA_KM2: f32,
+    pub CORR_MAHALANOBIS_SQ: f64,
+    pub CORR_DOF: u8,
+    pub CORR_GATE: f64,
+    pub CORR_P_VALUE: f64,
+    pub CORR_AMBIGUOUS: bool,
 }
 
 impl Default for EOOT {
@@ -3589,6 +3705,11 @@ impl Default for EOOT {
             SUNGLINT_PERCENT: 0.0,
             SNOW_ICE_COVER_PERCENT: 0.0,
             VALID_DATA_AREA_KM2: 0.0,
+            CORR_MAHALANOBIS_SQ: 0.0,
+            CORR_DOF: 0,
+            CORR_GATE: 0.0,
+            CORR_P_VALUE: 0.0,
+            CORR_AMBIGUOUS: false,
         }
     }
 }
@@ -3776,6 +3897,11 @@ impl EOOT {
         let SUNGLINT_PERCENT = self.SUNGLINT_PERCENT;
         let SNOW_ICE_COVER_PERCENT = self.SNOW_ICE_COVER_PERCENT;
         let VALID_DATA_AREA_KM2 = self.VALID_DATA_AREA_KM2;
+        let CORR_MAHALANOBIS_SQ = self.CORR_MAHALANOBIS_SQ;
+        let CORR_DOF = self.CORR_DOF;
+        let CORR_GATE = self.CORR_GATE;
+        let CORR_P_VALUE = self.CORR_P_VALUE;
+        let CORR_AMBIGUOUS = self.CORR_AMBIGUOUS;
         EOO::create(_fbb, &EOOArgs{
             ID,
             CLASSIFICATION,
@@ -3911,6 +4037,11 @@ impl EOOT {
             SUNGLINT_PERCENT,
             SNOW_ICE_COVER_PERCENT,
             VALID_DATA_AREA_KM2,
+            CORR_MAHALANOBIS_SQ,
+            CORR_DOF,
+            CORR_GATE,
+            CORR_P_VALUE,
+            CORR_AMBIGUOUS,
         })
     }
 }

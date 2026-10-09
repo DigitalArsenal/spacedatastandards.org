@@ -6222,6 +6222,32 @@
                                 "type": "string"
                             },
                             "description": "Associated tags"
+                        },
+                        "CORR_MAHALANOBIS_SQ": {
+                            "type": "number",
+                            "description": "Association: squared Mahalanobis distance of the observation's\ninnovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v."
+                        },
+                        "CORR_DOF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Association: degrees of freedom of d^2 (measurement dimension)."
+                        },
+                        "CORR_GATE": {
+                            "type": "number",
+                            "description": "Association: the chi-square gate d^2 was tested against."
+                        },
+                        "CORR_P_VALUE": {
+                            "type": "number",
+                            "description": "Association: p-value of d^2, Q(dof/2, d^2/2)."
+                        },
+                        "CORR_AMBIGUOUS": {
+                            "type": "boolean",
+                            "description": "Association: true when the assignment was ambiguous."
+                        },
+                        "FREQUENCY_UNC": {
+                            "type": "number",
+                            "description": "One-sigma uncertainty of FREQUENCY, in the same units."
                         }
                     },
                     "additionalProperties": false
@@ -38637,6 +38663,28 @@
                         "VALID_DATA_AREA_KM2": {
                             "type": "number",
                             "description": "Total area covered by valid data (non-masked, usable imagery) in square kilometers."
+                        },
+                        "CORR_MAHALANOBIS_SQ": {
+                            "type": "number",
+                            "description": "Association: squared Mahalanobis distance of the observation's\ninnovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v."
+                        },
+                        "CORR_DOF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Association: degrees of freedom of d^2 (measurement dimension)."
+                        },
+                        "CORR_GATE": {
+                            "type": "number",
+                            "description": "Association: the chi-square gate d^2 was tested against."
+                        },
+                        "CORR_P_VALUE": {
+                            "type": "number",
+                            "description": "Association: p-value of d^2, Q(dof/2, d^2/2)."
+                        },
+                        "CORR_AMBIGUOUS": {
+                            "type": "boolean",
+                            "description": "Association: true when the assignment was ambiguous."
                         }
                     },
                     "additionalProperties": false
@@ -38857,6 +38905,36 @@
                                 "type": "string"
                             },
                             "description": "Associated tags"
+                        },
+                        "CORR_MAHALANOBIS_SQ": {
+                            "type": "number",
+                            "description": "Association: squared Mahalanobis distance of the observation's\ninnovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v."
+                        },
+                        "CORR_DOF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Association: degrees of freedom of d^2 (measurement dimension)."
+                        },
+                        "CORR_GATE": {
+                            "type": "number",
+                            "description": "Association: the chi-square gate d^2 was tested against."
+                        },
+                        "CORR_P_VALUE": {
+                            "type": "number",
+                            "description": "Association: p-value of d^2, Q(dof/2, d^2/2)."
+                        },
+                        "CORR_AMBIGUOUS": {
+                            "type": "boolean",
+                            "description": "Association: true when the assignment was ambiguous."
+                        },
+                        "CORR_QUALITY": {
+                            "type": "number",
+                            "description": "Association: posterior probability of the association."
+                        },
+                        "DOPPLER_FREQUENCY": {
+                            "type": "number",
+                            "description": "Carrier frequency the DOPPLER shift refers to, in Hz."
                         }
                     },
                     "additionalProperties": false
@@ -65783,7 +65861,35 @@
                         "DRAG_AREA_OVER_MASS",
                         "DRAG_AREA_OVER_MASS_RATE",
                         "SRP_AREA_OVER_MASS",
-                        "IN_TRACK_ACCELERATION"
+                        "IN_TRACK_ACCELERATION",
+                        "ECOM2_D0",
+                        "ECOM2_Y0",
+                        "ECOM2_B0",
+                        "ECOM2_D2_COS",
+                        "ECOM2_D2_SIN",
+                        "ECOM2_D4_COS",
+                        "ECOM2_D4_SIN",
+                        "ECOM2_B1_COS",
+                        "ECOM2_B1_SIN",
+                        "ECOM2_B3_COS",
+                        "ECOM2_B3_SIN"
+                    ]
+                },
+                "prwRadiationPressureFamily": {
+                    "type": "string",
+                    "enum": [
+                        "CANNONBALL",
+                        "GNSS_BOX_WING",
+                        "NONE"
+                    ]
+                },
+                "prwGnssSpacecraftBlock": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "GPS_IIR",
+                        "GPS_IIR_M",
+                        "GPS_IIF"
                     ]
                 },
                 "meanElementSource": {
@@ -83337,6 +83443,46 @@
                     },
                     "additionalProperties": false
                 },
+                "PRWEcom2": {
+                    "type": "object",
+                    "description": "ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,\ndoi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,\nadded to the a priori model and scaled by the visible Sun fraction.",
+                    "properties": {
+                        "D0_M_S2": {
+                            "type": "number"
+                        },
+                        "Y0_M_S2": {
+                            "type": "number"
+                        },
+                        "B0_M_S2": {
+                            "type": "number"
+                        },
+                        "D2_COS_M_S2": {
+                            "type": "number"
+                        },
+                        "D2_SIN_M_S2": {
+                            "type": "number"
+                        },
+                        "D4_COS_M_S2": {
+                            "type": "number"
+                        },
+                        "D4_SIN_M_S2": {
+                            "type": "number"
+                        },
+                        "B1_COS_M_S2": {
+                            "type": "number"
+                        },
+                        "B1_SIN_M_S2": {
+                            "type": "number"
+                        },
+                        "B3_COS_M_S2": {
+                            "type": "number"
+                        },
+                        "B3_SIN_M_S2": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "PRWInstance": {
                     "type": "object",
                     "description": "Instance identity is host-provided, opaque, and not a physical quantity.",
@@ -83540,6 +83686,18 @@
                         "HAS_MAXIMUM_TESSERAL_DEGREE": {
                             "type": "boolean",
                             "description": "True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent."
+                        },
+                        "RADIATION_PRESSURE_MODEL": {
+                            "$ref": "#/definitions/prwRadiationPressureFamily",
+                            "description": "Solar radiation pressure model family (default: the cannonball)."
+                        },
+                        "GNSS_BLOCK": {
+                            "$ref": "#/definitions/prwGnssSpacecraftBlock",
+                            "description": "Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING."
+                        },
+                        "ECOM2": {
+                            "$ref": "#/definitions/PRWEcom2",
+                            "description": "ECOM2 coefficients; absent means no ECOM2 term."
                         }
                     },
                     "required": [
@@ -93344,6 +93502,28 @@
                         "VALID_DATA_AREA_KM2": {
                             "type": "number",
                             "description": "Total area covered by valid data (non-masked, usable imagery) in square kilometers."
+                        },
+                        "CORR_MAHALANOBIS_SQ": {
+                            "type": "number",
+                            "description": "Association: squared Mahalanobis distance of the observation's\ninnovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v."
+                        },
+                        "CORR_DOF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Association: degrees of freedom of d^2 (measurement dimension)."
+                        },
+                        "CORR_GATE": {
+                            "type": "number",
+                            "description": "Association: the chi-square gate d^2 was tested against."
+                        },
+                        "CORR_P_VALUE": {
+                            "type": "number",
+                            "description": "Association: p-value of d^2, Q(dof/2, d^2/2)."
+                        },
+                        "CORR_AMBIGUOUS": {
+                            "type": "boolean",
+                            "description": "Association: true when the assignment was ambiguous."
                         }
                     },
                     "additionalProperties": false
@@ -110934,6 +111114,36 @@
                                 "type": "string"
                             },
                             "description": "Associated tags"
+                        },
+                        "CORR_MAHALANOBIS_SQ": {
+                            "type": "number",
+                            "description": "Association: squared Mahalanobis distance of the observation's\ninnovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v."
+                        },
+                        "CORR_DOF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Association: degrees of freedom of d^2 (measurement dimension)."
+                        },
+                        "CORR_GATE": {
+                            "type": "number",
+                            "description": "Association: the chi-square gate d^2 was tested against."
+                        },
+                        "CORR_P_VALUE": {
+                            "type": "number",
+                            "description": "Association: p-value of d^2, Q(dof/2, d^2/2)."
+                        },
+                        "CORR_AMBIGUOUS": {
+                            "type": "boolean",
+                            "description": "Association: true when the assignment was ambiguous."
+                        },
+                        "CORR_QUALITY": {
+                            "type": "number",
+                            "description": "Association: posterior probability of the association."
+                        },
+                        "DOPPLER_FREQUENCY": {
+                            "type": "number",
+                            "description": "Carrier frequency the DOPPLER shift refers to, in Hz."
                         }
                     },
                     "additionalProperties": false
@@ -111942,6 +112152,32 @@
                                 "type": "string"
                             },
                             "description": "Associated tags"
+                        },
+                        "CORR_MAHALANOBIS_SQ": {
+                            "type": "number",
+                            "description": "Association: squared Mahalanobis distance of the observation's\ninnovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v."
+                        },
+                        "CORR_DOF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Association: degrees of freedom of d^2 (measurement dimension)."
+                        },
+                        "CORR_GATE": {
+                            "type": "number",
+                            "description": "Association: the chi-square gate d^2 was tested against."
+                        },
+                        "CORR_P_VALUE": {
+                            "type": "number",
+                            "description": "Association: p-value of d^2, Q(dof/2, d^2/2)."
+                        },
+                        "CORR_AMBIGUOUS": {
+                            "type": "boolean",
+                            "description": "Association: true when the assignment was ambiguous."
+                        },
+                        "FREQUENCY_UNC": {
+                            "type": "number",
+                            "description": "One-sigma uncertainty of FREQUENCY, in the same units."
                         }
                     },
                     "additionalProperties": false
@@ -145555,7 +145791,35 @@
                         "DRAG_AREA_OVER_MASS",
                         "DRAG_AREA_OVER_MASS_RATE",
                         "SRP_AREA_OVER_MASS",
-                        "IN_TRACK_ACCELERATION"
+                        "IN_TRACK_ACCELERATION",
+                        "ECOM2_D0",
+                        "ECOM2_Y0",
+                        "ECOM2_B0",
+                        "ECOM2_D2_COS",
+                        "ECOM2_D2_SIN",
+                        "ECOM2_D4_COS",
+                        "ECOM2_D4_SIN",
+                        "ECOM2_B1_COS",
+                        "ECOM2_B1_SIN",
+                        "ECOM2_B3_COS",
+                        "ECOM2_B3_SIN"
+                    ]
+                },
+                "prwRadiationPressureFamily": {
+                    "type": "string",
+                    "enum": [
+                        "CANNONBALL",
+                        "GNSS_BOX_WING",
+                        "NONE"
+                    ]
+                },
+                "prwGnssSpacecraftBlock": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "GPS_IIR",
+                        "GPS_IIR_M",
+                        "GPS_IIF"
                     ]
                 },
                 "RFMOrigin": {
@@ -148214,6 +148478,46 @@
                     },
                     "additionalProperties": false
                 },
+                "PRWEcom2": {
+                    "type": "object",
+                    "description": "ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,\ndoi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,\nadded to the a priori model and scaled by the visible Sun fraction.",
+                    "properties": {
+                        "D0_M_S2": {
+                            "type": "number"
+                        },
+                        "Y0_M_S2": {
+                            "type": "number"
+                        },
+                        "B0_M_S2": {
+                            "type": "number"
+                        },
+                        "D2_COS_M_S2": {
+                            "type": "number"
+                        },
+                        "D2_SIN_M_S2": {
+                            "type": "number"
+                        },
+                        "D4_COS_M_S2": {
+                            "type": "number"
+                        },
+                        "D4_SIN_M_S2": {
+                            "type": "number"
+                        },
+                        "B1_COS_M_S2": {
+                            "type": "number"
+                        },
+                        "B1_SIN_M_S2": {
+                            "type": "number"
+                        },
+                        "B3_COS_M_S2": {
+                            "type": "number"
+                        },
+                        "B3_SIN_M_S2": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "PRWInstance": {
                     "type": "object",
                     "description": "Instance identity is host-provided, opaque, and not a physical quantity.",
@@ -148417,6 +148721,18 @@
                         "HAS_MAXIMUM_TESSERAL_DEGREE": {
                             "type": "boolean",
                             "description": "True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent."
+                        },
+                        "RADIATION_PRESSURE_MODEL": {
+                            "$ref": "#/definitions/prwRadiationPressureFamily",
+                            "description": "Solar radiation pressure model family (default: the cannonball)."
+                        },
+                        "GNSS_BLOCK": {
+                            "$ref": "#/definitions/prwGnssSpacecraftBlock",
+                            "description": "Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING."
+                        },
+                        "ECOM2": {
+                            "$ref": "#/definitions/PRWEcom2",
+                            "description": "ECOM2 coefficients; absent means no ECOM2 term."
                         }
                     },
                     "required": [
@@ -168620,7 +168936,35 @@
                         "DRAG_AREA_OVER_MASS",
                         "DRAG_AREA_OVER_MASS_RATE",
                         "SRP_AREA_OVER_MASS",
-                        "IN_TRACK_ACCELERATION"
+                        "IN_TRACK_ACCELERATION",
+                        "ECOM2_D0",
+                        "ECOM2_Y0",
+                        "ECOM2_B0",
+                        "ECOM2_D2_COS",
+                        "ECOM2_D2_SIN",
+                        "ECOM2_D4_COS",
+                        "ECOM2_D4_SIN",
+                        "ECOM2_B1_COS",
+                        "ECOM2_B1_SIN",
+                        "ECOM2_B3_COS",
+                        "ECOM2_B3_SIN"
+                    ]
+                },
+                "prwRadiationPressureFamily": {
+                    "type": "string",
+                    "enum": [
+                        "CANNONBALL",
+                        "GNSS_BOX_WING",
+                        "NONE"
+                    ]
+                },
+                "prwGnssSpacecraftBlock": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "GPS_IIR",
+                        "GPS_IIR_M",
+                        "GPS_IIF"
                     ]
                 },
                 "meanElementSource": {
@@ -171508,6 +171852,46 @@
                     },
                     "additionalProperties": false
                 },
+                "PRWEcom2": {
+                    "type": "object",
+                    "description": "ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,\ndoi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,\nadded to the a priori model and scaled by the visible Sun fraction.",
+                    "properties": {
+                        "D0_M_S2": {
+                            "type": "number"
+                        },
+                        "Y0_M_S2": {
+                            "type": "number"
+                        },
+                        "B0_M_S2": {
+                            "type": "number"
+                        },
+                        "D2_COS_M_S2": {
+                            "type": "number"
+                        },
+                        "D2_SIN_M_S2": {
+                            "type": "number"
+                        },
+                        "D4_COS_M_S2": {
+                            "type": "number"
+                        },
+                        "D4_SIN_M_S2": {
+                            "type": "number"
+                        },
+                        "B1_COS_M_S2": {
+                            "type": "number"
+                        },
+                        "B1_SIN_M_S2": {
+                            "type": "number"
+                        },
+                        "B3_COS_M_S2": {
+                            "type": "number"
+                        },
+                        "B3_SIN_M_S2": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "PRWInstance": {
                     "type": "object",
                     "description": "Instance identity is host-provided, opaque, and not a physical quantity.",
@@ -171711,6 +172095,18 @@
                         "HAS_MAXIMUM_TESSERAL_DEGREE": {
                             "type": "boolean",
                             "description": "True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent."
+                        },
+                        "RADIATION_PRESSURE_MODEL": {
+                            "$ref": "#/definitions/prwRadiationPressureFamily",
+                            "description": "Solar radiation pressure model family (default: the cannonball)."
+                        },
+                        "GNSS_BLOCK": {
+                            "$ref": "#/definitions/prwGnssSpacecraftBlock",
+                            "description": "Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING."
+                        },
+                        "ECOM2": {
+                            "$ref": "#/definitions/PRWEcom2",
+                            "description": "ECOM2 coefficients; absent means no ECOM2 term."
                         }
                     },
                     "required": [
@@ -178340,6 +178736,28 @@
                         "VALID_DATA_AREA_KM2": {
                             "type": "number",
                             "description": "Total area covered by valid data (non-masked, usable imagery) in square kilometers."
+                        },
+                        "CORR_MAHALANOBIS_SQ": {
+                            "type": "number",
+                            "description": "Association: squared Mahalanobis distance of the observation's\ninnovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v."
+                        },
+                        "CORR_DOF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Association: degrees of freedom of d^2 (measurement dimension)."
+                        },
+                        "CORR_GATE": {
+                            "type": "number",
+                            "description": "Association: the chi-square gate d^2 was tested against."
+                        },
+                        "CORR_P_VALUE": {
+                            "type": "number",
+                            "description": "Association: p-value of d^2, Q(dof/2, d^2/2)."
+                        },
+                        "CORR_AMBIGUOUS": {
+                            "type": "boolean",
+                            "description": "Association: true when the assignment was ambiguous."
                         }
                     },
                     "additionalProperties": false
@@ -178560,6 +178978,36 @@
                                 "type": "string"
                             },
                             "description": "Associated tags"
+                        },
+                        "CORR_MAHALANOBIS_SQ": {
+                            "type": "number",
+                            "description": "Association: squared Mahalanobis distance of the observation's\ninnovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v."
+                        },
+                        "CORR_DOF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Association: degrees of freedom of d^2 (measurement dimension)."
+                        },
+                        "CORR_GATE": {
+                            "type": "number",
+                            "description": "Association: the chi-square gate d^2 was tested against."
+                        },
+                        "CORR_P_VALUE": {
+                            "type": "number",
+                            "description": "Association: p-value of d^2, Q(dof/2, d^2/2)."
+                        },
+                        "CORR_AMBIGUOUS": {
+                            "type": "boolean",
+                            "description": "Association: true when the assignment was ambiguous."
+                        },
+                        "CORR_QUALITY": {
+                            "type": "number",
+                            "description": "Association: posterior probability of the association."
+                        },
+                        "DOPPLER_FREQUENCY": {
+                            "type": "number",
+                            "description": "Carrier frequency the DOPPLER shift refers to, in Hz."
                         }
                     },
                     "additionalProperties": false
@@ -184216,6 +184664,28 @@
                         "VALID_DATA_AREA_KM2": {
                             "type": "number",
                             "description": "Total area covered by valid data (non-masked, usable imagery) in square kilometers."
+                        },
+                        "CORR_MAHALANOBIS_SQ": {
+                            "type": "number",
+                            "description": "Association: squared Mahalanobis distance of the observation's\ninnovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v."
+                        },
+                        "CORR_DOF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Association: degrees of freedom of d^2 (measurement dimension)."
+                        },
+                        "CORR_GATE": {
+                            "type": "number",
+                            "description": "Association: the chi-square gate d^2 was tested against."
+                        },
+                        "CORR_P_VALUE": {
+                            "type": "number",
+                            "description": "Association: p-value of d^2, Q(dof/2, d^2/2)."
+                        },
+                        "CORR_AMBIGUOUS": {
+                            "type": "boolean",
+                            "description": "Association: true when the assignment was ambiguous."
                         }
                     },
                     "additionalProperties": false
@@ -196413,6 +196883,36 @@
                                 "type": "string"
                             },
                             "description": "Associated tags"
+                        },
+                        "CORR_MAHALANOBIS_SQ": {
+                            "type": "number",
+                            "description": "Association: squared Mahalanobis distance of the observation's\ninnovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v."
+                        },
+                        "CORR_DOF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Association: degrees of freedom of d^2 (measurement dimension)."
+                        },
+                        "CORR_GATE": {
+                            "type": "number",
+                            "description": "Association: the chi-square gate d^2 was tested against."
+                        },
+                        "CORR_P_VALUE": {
+                            "type": "number",
+                            "description": "Association: p-value of d^2, Q(dof/2, d^2/2)."
+                        },
+                        "CORR_AMBIGUOUS": {
+                            "type": "boolean",
+                            "description": "Association: true when the assignment was ambiguous."
+                        },
+                        "CORR_QUALITY": {
+                            "type": "number",
+                            "description": "Association: posterior probability of the association."
+                        },
+                        "DOPPLER_FREQUENCY": {
+                            "type": "number",
+                            "description": "Carrier frequency the DOPPLER shift refers to, in Hz."
                         }
                     },
                     "additionalProperties": false

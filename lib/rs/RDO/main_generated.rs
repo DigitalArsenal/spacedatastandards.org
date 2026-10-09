@@ -183,6 +183,13 @@ impl<'a> RDO<'a> {
     pub const VT_RAW_FILE_URI: ::flatbuffers::VOffsetT = 102;
     pub const VT_DESCRIPTOR: ::flatbuffers::VOffsetT = 104;
     pub const VT_TAGS: ::flatbuffers::VOffsetT = 106;
+    pub const VT_CORR_MAHALANOBIS_SQ: ::flatbuffers::VOffsetT = 108;
+    pub const VT_CORR_DOF: ::flatbuffers::VOffsetT = 110;
+    pub const VT_CORR_GATE: ::flatbuffers::VOffsetT = 112;
+    pub const VT_CORR_P_VALUE: ::flatbuffers::VOffsetT = 114;
+    pub const VT_CORR_AMBIGUOUS: ::flatbuffers::VOffsetT = 116;
+    pub const VT_CORR_QUALITY: ::flatbuffers::VOffsetT = 118;
+    pub const VT_DOPPLER_FREQUENCY: ::flatbuffers::VOffsetT = 120;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -195,6 +202,11 @@ impl<'a> RDO<'a> {
         args: &'args RDOArgs<'args>
     ) -> ::flatbuffers::WIPOffset<RDO<'bldr>> {
         let mut builder = RDOBuilder::new(_fbb);
+        builder.add_DOPPLER_FREQUENCY(args.DOPPLER_FREQUENCY);
+        builder.add_CORR_QUALITY(args.CORR_QUALITY);
+        builder.add_CORR_P_VALUE(args.CORR_P_VALUE);
+        builder.add_CORR_GATE(args.CORR_GATE);
+        builder.add_CORR_MAHALANOBIS_SQ(args.CORR_MAHALANOBIS_SQ);
         builder.add_TIMING_BIAS(args.TIMING_BIAS);
         builder.add_BEAM(args.BEAM);
         builder.add_SNR(args.SNR);
@@ -245,6 +257,8 @@ impl<'a> RDO<'a> {
         if let Some(x) = args.ID_SENSOR { builder.add_ID_SENSOR(x); }
         if let Some(x) = args.OB_TIME { builder.add_OB_TIME(x); }
         if let Some(x) = args.ID { builder.add_ID(x); }
+        builder.add_CORR_AMBIGUOUS(args.CORR_AMBIGUOUS);
+        builder.add_CORR_DOF(args.CORR_DOF);
         builder.add_OBS_TYPE(args.OBS_TYPE);
         builder.add_UCT(args.UCT);
         builder.finish()
@@ -331,6 +345,13 @@ impl<'a> RDO<'a> {
         let TAGS = self.TAGS().map(|x| {
             x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
         });
+        let CORR_MAHALANOBIS_SQ = self.CORR_MAHALANOBIS_SQ();
+        let CORR_DOF = self.CORR_DOF();
+        let CORR_GATE = self.CORR_GATE();
+        let CORR_P_VALUE = self.CORR_P_VALUE();
+        let CORR_AMBIGUOUS = self.CORR_AMBIGUOUS();
+        let CORR_QUALITY = self.CORR_QUALITY();
+        let DOPPLER_FREQUENCY = self.DOPPLER_FREQUENCY();
         RDOT {
             ID,
             OB_TIME,
@@ -384,6 +405,13 @@ impl<'a> RDO<'a> {
             RAW_FILE_URI,
             DESCRIPTOR,
             TAGS,
+            CORR_MAHALANOBIS_SQ,
+            CORR_DOF,
+            CORR_GATE,
+            CORR_P_VALUE,
+            CORR_AMBIGUOUS,
+            CORR_QUALITY,
+            DOPPLER_FREQUENCY,
         }
     }
 
@@ -854,6 +882,70 @@ impl<'a> RDO<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(RDO::VT_TAGS, None)}
     }
+
+    /// Association: squared Mahalanobis distance of the observation's
+    /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+    #[inline]
+    pub fn CORR_MAHALANOBIS_SQ(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDO::VT_CORR_MAHALANOBIS_SQ, Some(0.0)).unwrap()}
+    }
+
+    /// Association: degrees of freedom of d^2 (measurement dimension).
+    #[inline]
+    pub fn CORR_DOF(&self) -> u8 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u8>(RDO::VT_CORR_DOF, Some(0)).unwrap()}
+    }
+
+    /// Association: the chi-square gate d^2 was tested against.
+    #[inline]
+    pub fn CORR_GATE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDO::VT_CORR_GATE, Some(0.0)).unwrap()}
+    }
+
+    /// Association: p-value of d^2, Q(dof/2, d^2/2).
+    #[inline]
+    pub fn CORR_P_VALUE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDO::VT_CORR_P_VALUE, Some(0.0)).unwrap()}
+    }
+
+    /// Association: true when the assignment was ambiguous.
+    #[inline]
+    pub fn CORR_AMBIGUOUS(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(RDO::VT_CORR_AMBIGUOUS, Some(false)).unwrap()}
+    }
+
+    /// Association: posterior probability of the association.
+    #[inline]
+    pub fn CORR_QUALITY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDO::VT_CORR_QUALITY, Some(0.0)).unwrap()}
+    }
+
+    /// Carrier frequency the DOPPLER shift refers to, in Hz.
+    #[inline]
+    pub fn DOPPLER_FREQUENCY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDO::VT_DOPPLER_FREQUENCY, Some(0.0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for RDO<'_> {
@@ -914,6 +1006,13 @@ impl ::flatbuffers::Verifiable for RDO<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RAW_FILE_URI", Self::VT_RAW_FILE_URI, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTOR", Self::VT_DESCRIPTOR, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
+            .visit_field::<f64>("CORR_MAHALANOBIS_SQ", Self::VT_CORR_MAHALANOBIS_SQ, false)?
+            .visit_field::<u8>("CORR_DOF", Self::VT_CORR_DOF, false)?
+            .visit_field::<f64>("CORR_GATE", Self::VT_CORR_GATE, false)?
+            .visit_field::<f64>("CORR_P_VALUE", Self::VT_CORR_P_VALUE, false)?
+            .visit_field::<bool>("CORR_AMBIGUOUS", Self::VT_CORR_AMBIGUOUS, false)?
+            .visit_field::<f64>("CORR_QUALITY", Self::VT_CORR_QUALITY, false)?
+            .visit_field::<f64>("DOPPLER_FREQUENCY", Self::VT_DOPPLER_FREQUENCY, false)?
             .finish();
         Ok(())
     }
@@ -972,6 +1071,13 @@ pub struct RDOArgs<'a> {
     pub RAW_FILE_URI: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub DESCRIPTOR: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub TAGS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub CORR_MAHALANOBIS_SQ: f64,
+    pub CORR_DOF: u8,
+    pub CORR_GATE: f64,
+    pub CORR_P_VALUE: f64,
+    pub CORR_AMBIGUOUS: bool,
+    pub CORR_QUALITY: f64,
+    pub DOPPLER_FREQUENCY: f64,
 }
 
 impl<'a> Default for RDOArgs<'a> {
@@ -1030,6 +1136,13 @@ impl<'a> Default for RDOArgs<'a> {
             RAW_FILE_URI: None,
             DESCRIPTOR: None,
             TAGS: None,
+            CORR_MAHALANOBIS_SQ: 0.0,
+            CORR_DOF: 0,
+            CORR_GATE: 0.0,
+            CORR_P_VALUE: 0.0,
+            CORR_AMBIGUOUS: false,
+            CORR_QUALITY: 0.0,
+            DOPPLER_FREQUENCY: 0.0,
         }
     }
 }
@@ -1301,6 +1414,41 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RDOBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_CORR_MAHALANOBIS_SQ(&mut self, CORR_MAHALANOBIS_SQ: f64) {
+        self.fbb_.push_slot::<f64>(RDO::VT_CORR_MAHALANOBIS_SQ, CORR_MAHALANOBIS_SQ, 0.0);
+    }
+
+    #[inline]
+    pub fn add_CORR_DOF(&mut self, CORR_DOF: u8) {
+        self.fbb_.push_slot::<u8>(RDO::VT_CORR_DOF, CORR_DOF, 0);
+    }
+
+    #[inline]
+    pub fn add_CORR_GATE(&mut self, CORR_GATE: f64) {
+        self.fbb_.push_slot::<f64>(RDO::VT_CORR_GATE, CORR_GATE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_CORR_P_VALUE(&mut self, CORR_P_VALUE: f64) {
+        self.fbb_.push_slot::<f64>(RDO::VT_CORR_P_VALUE, CORR_P_VALUE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_CORR_AMBIGUOUS(&mut self, CORR_AMBIGUOUS: bool) {
+        self.fbb_.push_slot::<bool>(RDO::VT_CORR_AMBIGUOUS, CORR_AMBIGUOUS, false);
+    }
+
+    #[inline]
+    pub fn add_CORR_QUALITY(&mut self, CORR_QUALITY: f64) {
+        self.fbb_.push_slot::<f64>(RDO::VT_CORR_QUALITY, CORR_QUALITY, 0.0);
+    }
+
+    #[inline]
+    pub fn add_DOPPLER_FREQUENCY(&mut self, DOPPLER_FREQUENCY: f64) {
+        self.fbb_.push_slot::<f64>(RDO::VT_DOPPLER_FREQUENCY, DOPPLER_FREQUENCY, 0.0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RDOBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         RDOBuilder {
@@ -1371,6 +1519,13 @@ impl ::core::fmt::Debug for RDO<'_> {
         ds.field("RAW_FILE_URI", &self.RAW_FILE_URI());
         ds.field("DESCRIPTOR", &self.DESCRIPTOR());
         ds.field("TAGS", &self.TAGS());
+        ds.field("CORR_MAHALANOBIS_SQ", &self.CORR_MAHALANOBIS_SQ());
+        ds.field("CORR_DOF", &self.CORR_DOF());
+        ds.field("CORR_GATE", &self.CORR_GATE());
+        ds.field("CORR_P_VALUE", &self.CORR_P_VALUE());
+        ds.field("CORR_AMBIGUOUS", &self.CORR_AMBIGUOUS());
+        ds.field("CORR_QUALITY", &self.CORR_QUALITY());
+        ds.field("DOPPLER_FREQUENCY", &self.DOPPLER_FREQUENCY());
         ds.finish()
     }
 }
@@ -1430,6 +1585,13 @@ pub struct RDOT {
     pub RAW_FILE_URI: Option<alloc::string::String>,
     pub DESCRIPTOR: Option<alloc::string::String>,
     pub TAGS: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub CORR_MAHALANOBIS_SQ: f64,
+    pub CORR_DOF: u8,
+    pub CORR_GATE: f64,
+    pub CORR_P_VALUE: f64,
+    pub CORR_AMBIGUOUS: bool,
+    pub CORR_QUALITY: f64,
+    pub DOPPLER_FREQUENCY: f64,
 }
 
 impl Default for RDOT {
@@ -1487,6 +1649,13 @@ impl Default for RDOT {
             RAW_FILE_URI: None,
             DESCRIPTOR: None,
             TAGS: None,
+            CORR_MAHALANOBIS_SQ: 0.0,
+            CORR_DOF: 0,
+            CORR_GATE: 0.0,
+            CORR_P_VALUE: 0.0,
+            CORR_AMBIGUOUS: false,
+            CORR_QUALITY: 0.0,
+            DOPPLER_FREQUENCY: 0.0,
         }
     }
 }
@@ -1576,6 +1745,13 @@ impl RDOT {
         let TAGS = self.TAGS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
         });
+        let CORR_MAHALANOBIS_SQ = self.CORR_MAHALANOBIS_SQ;
+        let CORR_DOF = self.CORR_DOF;
+        let CORR_GATE = self.CORR_GATE;
+        let CORR_P_VALUE = self.CORR_P_VALUE;
+        let CORR_AMBIGUOUS = self.CORR_AMBIGUOUS;
+        let CORR_QUALITY = self.CORR_QUALITY;
+        let DOPPLER_FREQUENCY = self.DOPPLER_FREQUENCY;
         RDO::create(_fbb, &RDOArgs{
             ID,
             OB_TIME,
@@ -1629,6 +1805,13 @@ impl RDOT {
             RAW_FILE_URI,
             DESCRIPTOR,
             TAGS,
+            CORR_MAHALANOBIS_SQ,
+            CORR_DOF,
+            CORR_GATE,
+            CORR_P_VALUE,
+            CORR_AMBIGUOUS,
+            CORR_QUALITY,
+            DOPPLER_FREQUENCY,
         })
     }
 }

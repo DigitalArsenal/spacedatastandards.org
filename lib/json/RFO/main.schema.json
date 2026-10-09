@@ -308,6 +308,30 @@
         "TAGS" : {
                 "type" : "array", "items" : {"type" : "string"},
                 "description" : "Associated tags"
+              },
+        "CORR_MAHALANOBIS_SQ" : {
+                "type" : "number",
+                "description" : "Association: squared Mahalanobis distance of the observation's\ninnovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v."
+              },
+        "CORR_DOF" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Association: degrees of freedom of d^2 (measurement dimension)."
+              },
+        "CORR_GATE" : {
+                "type" : "number",
+                "description" : "Association: the chi-square gate d^2 was tested against."
+              },
+        "CORR_P_VALUE" : {
+                "type" : "number",
+                "description" : "Association: p-value of d^2, Q(dof/2, d^2/2)."
+              },
+        "CORR_AMBIGUOUS" : {
+                "type" : "boolean",
+                "description" : "Association: true when the assignment was ambiguous."
+              },
+        "FREQUENCY_UNC" : {
+                "type" : "number",
+                "description" : "One-sigma uncertainty of FREQUENCY, in the same units."
               }
       },
       "additionalProperties" : false

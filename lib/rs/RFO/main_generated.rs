@@ -312,6 +312,12 @@ impl<'a> RFO<'a> {
     pub const VT_DESCRIPTOR: ::flatbuffers::VOffsetT = 146;
     pub const VT_URL: ::flatbuffers::VOffsetT = 148;
     pub const VT_TAGS: ::flatbuffers::VOffsetT = 150;
+    pub const VT_CORR_MAHALANOBIS_SQ: ::flatbuffers::VOffsetT = 152;
+    pub const VT_CORR_DOF: ::flatbuffers::VOffsetT = 154;
+    pub const VT_CORR_GATE: ::flatbuffers::VOffsetT = 156;
+    pub const VT_CORR_P_VALUE: ::flatbuffers::VOffsetT = 158;
+    pub const VT_CORR_AMBIGUOUS: ::flatbuffers::VOffsetT = 160;
+    pub const VT_FREQUENCY_UNC: ::flatbuffers::VOffsetT = 162;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -324,6 +330,10 @@ impl<'a> RFO<'a> {
         args: &'args RFOArgs<'args>
     ) -> ::flatbuffers::WIPOffset<RFO<'bldr>> {
         let mut builder = RFOBuilder::new(_fbb);
+        builder.add_FREQUENCY_UNC(args.FREQUENCY_UNC);
+        builder.add_CORR_P_VALUE(args.CORR_P_VALUE);
+        builder.add_CORR_GATE(args.CORR_GATE);
+        builder.add_CORR_MAHALANOBIS_SQ(args.CORR_MAHALANOBIS_SQ);
         builder.add_TRANSMIT_FILTER_ROLL_OFF(args.TRANSMIT_FILTER_ROLL_OFF);
         builder.add_CONFIDENCE(args.CONFIDENCE);
         builder.add_BIT_ERROR_RATE(args.BIT_ERROR_RATE);
@@ -391,6 +401,8 @@ impl<'a> RFO<'a> {
         if let Some(x) = args.ID { builder.add_ID(x); }
         builder.add_SWITCH_POINT(args.SWITCH_POINT);
         builder.add_CHANNEL(args.CHANNEL);
+        builder.add_CORR_AMBIGUOUS(args.CORR_AMBIGUOUS);
+        builder.add_CORR_DOF(args.CORR_DOF);
         builder.add_OUTER_CODING_RATE(args.OUTER_CODING_RATE);
         builder.add_INNER_CODING_RATE(args.INNER_CODING_RATE);
         builder.add_INCOMING(args.INCOMING);
@@ -518,6 +530,12 @@ impl<'a> RFO<'a> {
         let TAGS = self.TAGS().map(|x| {
             x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
         });
+        let CORR_MAHALANOBIS_SQ = self.CORR_MAHALANOBIS_SQ();
+        let CORR_DOF = self.CORR_DOF();
+        let CORR_GATE = self.CORR_GATE();
+        let CORR_P_VALUE = self.CORR_P_VALUE();
+        let CORR_AMBIGUOUS = self.CORR_AMBIGUOUS();
+        let FREQUENCY_UNC = self.FREQUENCY_UNC();
         RFOT {
             ID,
             OB_TIME,
@@ -593,6 +611,12 @@ impl<'a> RFO<'a> {
             DESCRIPTOR,
             URL,
             TAGS,
+            CORR_MAHALANOBIS_SQ,
+            CORR_DOF,
+            CORR_GATE,
+            CORR_P_VALUE,
+            CORR_AMBIGUOUS,
+            FREQUENCY_UNC,
         }
     }
 
@@ -1261,6 +1285,61 @@ impl<'a> RFO<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(RFO::VT_TAGS, None)}
     }
+
+    /// Association: squared Mahalanobis distance of the observation's
+    /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+    #[inline]
+    pub fn CORR_MAHALANOBIS_SQ(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFO::VT_CORR_MAHALANOBIS_SQ, Some(0.0)).unwrap()}
+    }
+
+    /// Association: degrees of freedom of d^2 (measurement dimension).
+    #[inline]
+    pub fn CORR_DOF(&self) -> u8 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u8>(RFO::VT_CORR_DOF, Some(0)).unwrap()}
+    }
+
+    /// Association: the chi-square gate d^2 was tested against.
+    #[inline]
+    pub fn CORR_GATE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFO::VT_CORR_GATE, Some(0.0)).unwrap()}
+    }
+
+    /// Association: p-value of d^2, Q(dof/2, d^2/2).
+    #[inline]
+    pub fn CORR_P_VALUE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFO::VT_CORR_P_VALUE, Some(0.0)).unwrap()}
+    }
+
+    /// Association: true when the assignment was ambiguous.
+    #[inline]
+    pub fn CORR_AMBIGUOUS(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(RFO::VT_CORR_AMBIGUOUS, Some(false)).unwrap()}
+    }
+
+    /// One-sigma uncertainty of FREQUENCY, in the same units.
+    #[inline]
+    pub fn FREQUENCY_UNC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFO::VT_FREQUENCY_UNC, Some(0.0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for RFO<'_> {
@@ -1343,6 +1422,12 @@ impl ::flatbuffers::Verifiable for RFO<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTOR", Self::VT_DESCRIPTOR, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("URL", Self::VT_URL, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
+            .visit_field::<f64>("CORR_MAHALANOBIS_SQ", Self::VT_CORR_MAHALANOBIS_SQ, false)?
+            .visit_field::<u8>("CORR_DOF", Self::VT_CORR_DOF, false)?
+            .visit_field::<f64>("CORR_GATE", Self::VT_CORR_GATE, false)?
+            .visit_field::<f64>("CORR_P_VALUE", Self::VT_CORR_P_VALUE, false)?
+            .visit_field::<bool>("CORR_AMBIGUOUS", Self::VT_CORR_AMBIGUOUS, false)?
+            .visit_field::<f64>("FREQUENCY_UNC", Self::VT_FREQUENCY_UNC, false)?
             .finish();
         Ok(())
     }
@@ -1423,6 +1508,12 @@ pub struct RFOArgs<'a> {
     pub DESCRIPTOR: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub URL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub TAGS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub CORR_MAHALANOBIS_SQ: f64,
+    pub CORR_DOF: u8,
+    pub CORR_GATE: f64,
+    pub CORR_P_VALUE: f64,
+    pub CORR_AMBIGUOUS: bool,
+    pub FREQUENCY_UNC: f64,
 }
 
 impl<'a> Default for RFOArgs<'a> {
@@ -1503,6 +1594,12 @@ impl<'a> Default for RFOArgs<'a> {
             DESCRIPTOR: None,
             URL: None,
             TAGS: None,
+            CORR_MAHALANOBIS_SQ: 0.0,
+            CORR_DOF: 0,
+            CORR_GATE: 0.0,
+            CORR_P_VALUE: 0.0,
+            CORR_AMBIGUOUS: false,
+            FREQUENCY_UNC: 0.0,
         }
     }
 }
@@ -1884,6 +1981,36 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFOBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_CORR_MAHALANOBIS_SQ(&mut self, CORR_MAHALANOBIS_SQ: f64) {
+        self.fbb_.push_slot::<f64>(RFO::VT_CORR_MAHALANOBIS_SQ, CORR_MAHALANOBIS_SQ, 0.0);
+    }
+
+    #[inline]
+    pub fn add_CORR_DOF(&mut self, CORR_DOF: u8) {
+        self.fbb_.push_slot::<u8>(RFO::VT_CORR_DOF, CORR_DOF, 0);
+    }
+
+    #[inline]
+    pub fn add_CORR_GATE(&mut self, CORR_GATE: f64) {
+        self.fbb_.push_slot::<f64>(RFO::VT_CORR_GATE, CORR_GATE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_CORR_P_VALUE(&mut self, CORR_P_VALUE: f64) {
+        self.fbb_.push_slot::<f64>(RFO::VT_CORR_P_VALUE, CORR_P_VALUE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_CORR_AMBIGUOUS(&mut self, CORR_AMBIGUOUS: bool) {
+        self.fbb_.push_slot::<bool>(RFO::VT_CORR_AMBIGUOUS, CORR_AMBIGUOUS, false);
+    }
+
+    #[inline]
+    pub fn add_FREQUENCY_UNC(&mut self, FREQUENCY_UNC: f64) {
+        self.fbb_.push_slot::<f64>(RFO::VT_FREQUENCY_UNC, FREQUENCY_UNC, 0.0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFOBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         RFOBuilder {
@@ -1976,6 +2103,12 @@ impl ::core::fmt::Debug for RFO<'_> {
         ds.field("DESCRIPTOR", &self.DESCRIPTOR());
         ds.field("URL", &self.URL());
         ds.field("TAGS", &self.TAGS());
+        ds.field("CORR_MAHALANOBIS_SQ", &self.CORR_MAHALANOBIS_SQ());
+        ds.field("CORR_DOF", &self.CORR_DOF());
+        ds.field("CORR_GATE", &self.CORR_GATE());
+        ds.field("CORR_P_VALUE", &self.CORR_P_VALUE());
+        ds.field("CORR_AMBIGUOUS", &self.CORR_AMBIGUOUS());
+        ds.field("FREQUENCY_UNC", &self.FREQUENCY_UNC());
         ds.finish()
     }
 }
@@ -2057,6 +2190,12 @@ pub struct RFOT {
     pub DESCRIPTOR: Option<alloc::string::String>,
     pub URL: Option<alloc::string::String>,
     pub TAGS: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub CORR_MAHALANOBIS_SQ: f64,
+    pub CORR_DOF: u8,
+    pub CORR_GATE: f64,
+    pub CORR_P_VALUE: f64,
+    pub CORR_AMBIGUOUS: bool,
+    pub FREQUENCY_UNC: f64,
 }
 
 impl Default for RFOT {
@@ -2136,6 +2275,12 @@ impl Default for RFOT {
             DESCRIPTOR: None,
             URL: None,
             TAGS: None,
+            CORR_MAHALANOBIS_SQ: 0.0,
+            CORR_DOF: 0,
+            CORR_GATE: 0.0,
+            CORR_P_VALUE: 0.0,
+            CORR_AMBIGUOUS: false,
+            FREQUENCY_UNC: 0.0,
         }
     }
 }
@@ -2261,6 +2406,12 @@ impl RFOT {
         let TAGS = self.TAGS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
         });
+        let CORR_MAHALANOBIS_SQ = self.CORR_MAHALANOBIS_SQ;
+        let CORR_DOF = self.CORR_DOF;
+        let CORR_GATE = self.CORR_GATE;
+        let CORR_P_VALUE = self.CORR_P_VALUE;
+        let CORR_AMBIGUOUS = self.CORR_AMBIGUOUS;
+        let FREQUENCY_UNC = self.FREQUENCY_UNC;
         RFO::create(_fbb, &RFOArgs{
             ID,
             OB_TIME,
@@ -2336,6 +2487,12 @@ impl RFOT {
             DESCRIPTOR,
             URL,
             TAGS,
+            CORR_MAHALANOBIS_SQ,
+            CORR_DOF,
+            CORR_GATE,
+            CORR_P_VALUE,
+            CORR_AMBIGUOUS,
+            FREQUENCY_UNC,
         })
     }
 }

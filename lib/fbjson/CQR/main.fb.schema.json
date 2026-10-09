@@ -4248,7 +4248,18 @@
         "DRAG_AREA_OVER_MASS",
         "DRAG_AREA_OVER_MASS_RATE",
         "SRP_AREA_OVER_MASS",
-        "IN_TRACK_ACCELERATION"
+        "IN_TRACK_ACCELERATION",
+        "ECOM2_D0",
+        "ECOM2_Y0",
+        "ECOM2_B0",
+        "ECOM2_D2_COS",
+        "ECOM2_D2_SIN",
+        "ECOM2_D4_COS",
+        "ECOM2_D4_SIN",
+        "ECOM2_B1_COS",
+        "ECOM2_B1_SIN",
+        "ECOM2_B3_COS",
+        "ECOM2_B3_SIN"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -4258,6 +4269,47 @@
         },
         "SRP_AREA_OVER_MASS": {
           "value": 3
+        },
+        "ECOM2_D0": {
+          "value": 5,
+          "description": "ECOM2 coefficients (PRWEcom2), in their order there."
+        },
+        "ECOM2_D4_COS": {
+          "value": 10
+        },
+        "ECOM2_B3_COS": {
+          "value": 14
+        }
+      }
+    },
+    "prwRadiationPressureFamily": {
+      "type": "string",
+      "enum": [
+        "CANNONBALL",
+        "GNSS_BOX_WING",
+        "NONE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "CANNONBALL": {
+          "value": 0
+        }
+      }
+    },
+    "prwGnssSpacecraftBlock": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "GPS_IIR",
+        "GPS_IIR_M",
+        "GPS_IIF"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
         }
       }
     },
@@ -14638,6 +14690,57 @@
       },
       "additionalProperties": false
     },
+    "PRWEcom2": {
+      "type": "object",
+      "description": "ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,\ndoi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,\nadded to the a priori model and scaled by the visible Sun fraction.",
+      "properties": {
+        "D0_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y0_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "B0_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "D2_COS_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "D2_SIN_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "D4_COS_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "D4_SIN_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "B1_COS_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "B1_SIN_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "B3_COS_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "B3_SIN_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "PRWInstance": {
       "type": "object",
       "description": "Instance identity is host-provided, opaque, and not a physical quantity.",
@@ -14976,6 +15079,35 @@
           "description": "True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.",
           "x-flatbuffer-type": "bool",
           "x-flatbuffer-default": "false"
+        },
+        "RADIATION_PRESSURE_MODEL": {
+          "$ref": "#/definitions/prwRadiationPressureFamily",
+          "description": "Solar radiation pressure model family (default: the cannonball).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "CANNONBALL": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "CANNONBALL"
+        },
+        "GNSS_BLOCK": {
+          "$ref": "#/definitions/prwGnssSpacecraftBlock",
+          "description": "Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ECOM2": {
+          "$ref": "#/definitions/PRWEcom2",
+          "description": "ECOM2 coefficients; absent means no ECOM2 term.",
+          "x-flatbuffer-type": "PRWEcom2"
         }
       },
       "required": [

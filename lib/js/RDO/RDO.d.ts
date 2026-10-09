@@ -233,6 +233,35 @@ export declare class RDO implements flatbuffers.IUnpackableObject<RDOT> {
     TAGS(index: number): string;
     TAGS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     tagsLength(): number;
+    /**
+     * Association: squared Mahalanobis distance of the observation's
+     * innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+     */
+    CORR_MAHALANOBIS_SQ(): number;
+    /**
+     * Association: degrees of freedom of d^2 (measurement dimension).
+     */
+    CORR_DOF(): number;
+    /**
+     * Association: the chi-square gate d^2 was tested against.
+     */
+    CORR_GATE(): number;
+    /**
+     * Association: p-value of d^2, Q(dof/2, d^2/2).
+     */
+    CORR_P_VALUE(): number;
+    /**
+     * Association: true when the assignment was ambiguous.
+     */
+    CORR_AMBIGUOUS(): boolean;
+    /**
+     * Association: posterior probability of the association.
+     */
+    CORR_QUALITY(): number;
+    /**
+     * Carrier frequency the DOPPLER shift refers to, in Hz.
+     */
+    DOPPLER_FREQUENCY(): number;
     static startRDO(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addObTime(builder: flatbuffers.Builder, OB_TIMEOffset: flatbuffers.Offset): void;
@@ -288,10 +317,17 @@ export declare class RDO implements flatbuffers.IUnpackableObject<RDOT> {
     static addTags(builder: flatbuffers.Builder, TAGSOffset: flatbuffers.Offset): void;
     static createTagsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startTagsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCorrMahalanobisSq(builder: flatbuffers.Builder, CORR_MAHALANOBIS_SQ: number): void;
+    static addCorrDof(builder: flatbuffers.Builder, CORR_DOF: number): void;
+    static addCorrGate(builder: flatbuffers.Builder, CORR_GATE: number): void;
+    static addCorrPValue(builder: flatbuffers.Builder, CORR_P_VALUE: number): void;
+    static addCorrAmbiguous(builder: flatbuffers.Builder, CORR_AMBIGUOUS: boolean): void;
+    static addCorrQuality(builder: flatbuffers.Builder, CORR_QUALITY: number): void;
+    static addDopplerFrequency(builder: flatbuffers.Builder, DOPPLER_FREQUENCY: number): void;
     static endRDO(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishRDOBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedRDOBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createRDO(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, OB_TIMEOffset: flatbuffers.Offset, ID_SENSOROffset: flatbuffers.Offset, ORIG_SENSOR_IDOffset: flatbuffers.Offset, SAT_NO: number, ORIG_OBJECT_IDOffset: flatbuffers.Offset, ON_ORBITOffset: flatbuffers.Offset, UCT: boolean, OBS_TYPE: radarObsType, TASK_IDOffset: flatbuffers.Offset, TRANSACTION_IDOffset: flatbuffers.Offset, TRACK_IDOffset: flatbuffers.Offset, OB_POSITIONOffset: flatbuffers.Offset, SEN_REFERENCE_FRAMEOffset: flatbuffers.Offset, AZIMUTH: number, AZIMUTH_UNC: number, AZIMUTH_BIAS: number, AZIMUTH_RATE: number, ELEVATION: number, ELEVATION_UNC: number, ELEVATION_BIAS: number, ELEVATION_RATE: number, RANGE: number, RANGE_UNC: number, RANGE_BIAS: number, RANGE_RATE: number, RANGE_RATE_UNC: number, RANGE_ACCEL: number, RANGE_ACCEL_UNC: number, DOPPLER: number, DOPPLER_UNC: number, RA: number, DECLINATION: number, X: number, Y: number, Z: number, XVEL: number, YVEL: number, ZVEL: number, SENX: number, SENY: number, SENZ: number, RCS: number, RCS_UNC: number, ORTHOGONAL_RCS: number, ORTHOGONAL_RCS_UNC: number, SNR: number, BEAM: number, TIMING_BIAS: number, RAW_FILE_URIOffset: flatbuffers.Offset, DESCRIPTOROffset: flatbuffers.Offset, TAGSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createRDO(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, OB_TIMEOffset: flatbuffers.Offset, ID_SENSOROffset: flatbuffers.Offset, ORIG_SENSOR_IDOffset: flatbuffers.Offset, SAT_NO: number, ORIG_OBJECT_IDOffset: flatbuffers.Offset, ON_ORBITOffset: flatbuffers.Offset, UCT: boolean, OBS_TYPE: radarObsType, TASK_IDOffset: flatbuffers.Offset, TRANSACTION_IDOffset: flatbuffers.Offset, TRACK_IDOffset: flatbuffers.Offset, OB_POSITIONOffset: flatbuffers.Offset, SEN_REFERENCE_FRAMEOffset: flatbuffers.Offset, AZIMUTH: number, AZIMUTH_UNC: number, AZIMUTH_BIAS: number, AZIMUTH_RATE: number, ELEVATION: number, ELEVATION_UNC: number, ELEVATION_BIAS: number, ELEVATION_RATE: number, RANGE: number, RANGE_UNC: number, RANGE_BIAS: number, RANGE_RATE: number, RANGE_RATE_UNC: number, RANGE_ACCEL: number, RANGE_ACCEL_UNC: number, DOPPLER: number, DOPPLER_UNC: number, RA: number, DECLINATION: number, X: number, Y: number, Z: number, XVEL: number, YVEL: number, ZVEL: number, SENX: number, SENY: number, SENZ: number, RCS: number, RCS_UNC: number, ORTHOGONAL_RCS: number, ORTHOGONAL_RCS_UNC: number, SNR: number, BEAM: number, TIMING_BIAS: number, RAW_FILE_URIOffset: flatbuffers.Offset, DESCRIPTOROffset: flatbuffers.Offset, TAGSOffset: flatbuffers.Offset, CORR_MAHALANOBIS_SQ: number, CORR_DOF: number, CORR_GATE: number, CORR_P_VALUE: number, CORR_AMBIGUOUS: boolean, CORR_QUALITY: number, DOPPLER_FREQUENCY: number): flatbuffers.Offset;
     unpack(): RDOT;
     unpackTo(_o: RDOT): void;
 }
@@ -348,7 +384,14 @@ export declare class RDOT implements flatbuffers.IGeneratedObject {
     RAW_FILE_URI: string | Uint8Array | null;
     DESCRIPTOR: string | Uint8Array | null;
     TAGS: (string)[];
-    constructor(ID?: string | Uint8Array | null, OB_TIME?: string | Uint8Array | null, ID_SENSOR?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, SAT_NO?: number, ORIG_OBJECT_ID?: string | Uint8Array | null, ON_ORBIT?: string | Uint8Array | null, UCT?: boolean, OBS_TYPE?: radarObsType, TASK_ID?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, TRACK_ID?: string | Uint8Array | null, OB_POSITION?: string | Uint8Array | null, SEN_REFERENCE_FRAME?: string | Uint8Array | null, AZIMUTH?: number, AZIMUTH_UNC?: number, AZIMUTH_BIAS?: number, AZIMUTH_RATE?: number, ELEVATION?: number, ELEVATION_UNC?: number, ELEVATION_BIAS?: number, ELEVATION_RATE?: number, RANGE?: number, RANGE_UNC?: number, RANGE_BIAS?: number, RANGE_RATE?: number, RANGE_RATE_UNC?: number, RANGE_ACCEL?: number, RANGE_ACCEL_UNC?: number, DOPPLER?: number, DOPPLER_UNC?: number, RA?: number, DECLINATION?: number, X?: number, Y?: number, Z?: number, XVEL?: number, YVEL?: number, ZVEL?: number, SENX?: number, SENY?: number, SENZ?: number, RCS?: number, RCS_UNC?: number, ORTHOGONAL_RCS?: number, ORTHOGONAL_RCS_UNC?: number, SNR?: number, BEAM?: number, TIMING_BIAS?: number, RAW_FILE_URI?: string | Uint8Array | null, DESCRIPTOR?: string | Uint8Array | null, TAGS?: (string)[]);
+    CORR_MAHALANOBIS_SQ: number;
+    CORR_DOF: number;
+    CORR_GATE: number;
+    CORR_P_VALUE: number;
+    CORR_AMBIGUOUS: boolean;
+    CORR_QUALITY: number;
+    DOPPLER_FREQUENCY: number;
+    constructor(ID?: string | Uint8Array | null, OB_TIME?: string | Uint8Array | null, ID_SENSOR?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, SAT_NO?: number, ORIG_OBJECT_ID?: string | Uint8Array | null, ON_ORBIT?: string | Uint8Array | null, UCT?: boolean, OBS_TYPE?: radarObsType, TASK_ID?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, TRACK_ID?: string | Uint8Array | null, OB_POSITION?: string | Uint8Array | null, SEN_REFERENCE_FRAME?: string | Uint8Array | null, AZIMUTH?: number, AZIMUTH_UNC?: number, AZIMUTH_BIAS?: number, AZIMUTH_RATE?: number, ELEVATION?: number, ELEVATION_UNC?: number, ELEVATION_BIAS?: number, ELEVATION_RATE?: number, RANGE?: number, RANGE_UNC?: number, RANGE_BIAS?: number, RANGE_RATE?: number, RANGE_RATE_UNC?: number, RANGE_ACCEL?: number, RANGE_ACCEL_UNC?: number, DOPPLER?: number, DOPPLER_UNC?: number, RA?: number, DECLINATION?: number, X?: number, Y?: number, Z?: number, XVEL?: number, YVEL?: number, ZVEL?: number, SENX?: number, SENY?: number, SENZ?: number, RCS?: number, RCS_UNC?: number, ORTHOGONAL_RCS?: number, ORTHOGONAL_RCS_UNC?: number, SNR?: number, BEAM?: number, TIMING_BIAS?: number, RAW_FILE_URI?: string | Uint8Array | null, DESCRIPTOR?: string | Uint8Array | null, TAGS?: (string)[], CORR_MAHALANOBIS_SQ?: number, CORR_DOF?: number, CORR_GATE?: number, CORR_P_VALUE?: number, CORR_AMBIGUOUS?: boolean, CORR_QUALITY?: number, DOPPLER_FREQUENCY?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=RDO.d.ts.map

@@ -2868,8 +2868,120 @@ func (rcv *EOO) MutateValidDataAreaKm2(n float32) bool {
 	return rcv.MutateVALID_DATA_AREA_KM2(n)
 }
 
+/// Association: squared Mahalanobis distance of the observation's
+/// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+func (rcv *EOO) CORR_MAHALANOBIS_SQ() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(272))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOO) CorrMahalanobisSq() float64 {
+	return rcv.CORR_MAHALANOBIS_SQ()
+}
+
+/// Association: squared Mahalanobis distance of the observation's
+/// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+func (rcv *EOO) MutateCORR_MAHALANOBIS_SQ(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(272, n)
+}
+
+func (rcv *EOO) MutateCorrMahalanobisSq(n float64) bool {
+	return rcv.MutateCORR_MAHALANOBIS_SQ(n)
+}
+
+/// Association: degrees of freedom of d^2 (measurement dimension).
+func (rcv *EOO) CORR_DOF() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(274))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *EOO) CorrDof() byte {
+	return rcv.CORR_DOF()
+}
+
+/// Association: degrees of freedom of d^2 (measurement dimension).
+func (rcv *EOO) MutateCORR_DOF(n byte) bool {
+	return rcv._tab.MutateByteSlot(274, n)
+}
+
+func (rcv *EOO) MutateCorrDof(n byte) bool {
+	return rcv.MutateCORR_DOF(n)
+}
+
+/// Association: the chi-square gate d^2 was tested against.
+func (rcv *EOO) CORR_GATE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(276))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOO) CorrGate() float64 {
+	return rcv.CORR_GATE()
+}
+
+/// Association: the chi-square gate d^2 was tested against.
+func (rcv *EOO) MutateCORR_GATE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(276, n)
+}
+
+func (rcv *EOO) MutateCorrGate(n float64) bool {
+	return rcv.MutateCORR_GATE(n)
+}
+
+/// Association: p-value of d^2, Q(dof/2, d^2/2).
+func (rcv *EOO) CORR_P_VALUE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(278))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOO) CorrPValue() float64 {
+	return rcv.CORR_P_VALUE()
+}
+
+/// Association: p-value of d^2, Q(dof/2, d^2/2).
+func (rcv *EOO) MutateCORR_P_VALUE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(278, n)
+}
+
+func (rcv *EOO) MutateCorrPValue(n float64) bool {
+	return rcv.MutateCORR_P_VALUE(n)
+}
+
+/// Association: true when the assignment was ambiguous.
+func (rcv *EOO) CORR_AMBIGUOUS() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(280))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *EOO) CorrAmbiguous() bool {
+	return rcv.CORR_AMBIGUOUS()
+}
+
+/// Association: true when the assignment was ambiguous.
+func (rcv *EOO) MutateCORR_AMBIGUOUS(n bool) bool {
+	return rcv._tab.MutateBoolSlot(280, n)
+}
+
+func (rcv *EOO) MutateCorrAmbiguous(n bool) bool {
+	return rcv.MutateCORR_AMBIGUOUS(n)
+}
+
 func EOOStart(builder *flatbuffers.Builder) {
-	builder.StartObject(134)
+	builder.StartObject(139)
 }
 func EOOAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -3674,6 +3786,36 @@ func EOOAddVALID_DATA_AREA_KM2(builder *flatbuffers.Builder, VALID_DATA_AREA_KM2
 }
 func EOOAddValidDataAreaKm2(builder *flatbuffers.Builder, VALID_DATA_AREA_KM2 float32) {
 	EOOAddVALID_DATA_AREA_KM2(builder, VALID_DATA_AREA_KM2)
+}
+func EOOAddCORR_MAHALANOBIS_SQ(builder *flatbuffers.Builder, CORR_MAHALANOBIS_SQ float64) {
+	builder.PrependFloat64Slot(134, CORR_MAHALANOBIS_SQ, 0.0)
+}
+func EOOAddCorrMahalanobisSq(builder *flatbuffers.Builder, CORR_MAHALANOBIS_SQ float64) {
+	EOOAddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ)
+}
+func EOOAddCORR_DOF(builder *flatbuffers.Builder, CORR_DOF byte) {
+	builder.PrependByteSlot(135, CORR_DOF, 0)
+}
+func EOOAddCorrDof(builder *flatbuffers.Builder, CORR_DOF byte) {
+	EOOAddCORR_DOF(builder, CORR_DOF)
+}
+func EOOAddCORR_GATE(builder *flatbuffers.Builder, CORR_GATE float64) {
+	builder.PrependFloat64Slot(136, CORR_GATE, 0.0)
+}
+func EOOAddCorrGate(builder *flatbuffers.Builder, CORR_GATE float64) {
+	EOOAddCORR_GATE(builder, CORR_GATE)
+}
+func EOOAddCORR_P_VALUE(builder *flatbuffers.Builder, CORR_P_VALUE float64) {
+	builder.PrependFloat64Slot(137, CORR_P_VALUE, 0.0)
+}
+func EOOAddCorrPValue(builder *flatbuffers.Builder, CORR_P_VALUE float64) {
+	EOOAddCORR_P_VALUE(builder, CORR_P_VALUE)
+}
+func EOOAddCORR_AMBIGUOUS(builder *flatbuffers.Builder, CORR_AMBIGUOUS bool) {
+	builder.PrependBoolSlot(138, CORR_AMBIGUOUS, false)
+}
+func EOOAddCorrAmbiguous(builder *flatbuffers.Builder, CORR_AMBIGUOUS bool) {
+	EOOAddCORR_AMBIGUOUS(builder, CORR_AMBIGUOUS)
 }
 func EOOEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -1333,22 +1333,73 @@ class EOO extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
+    /// Association: squared Mahalanobis distance of the observation's
+    /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+    /**
+     * @return double
+     */
+    public function getCORR_MAHALANOBIS_SQ()
+    {
+        $o = $this->__offset(272);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Association: degrees of freedom of d^2 (measurement dimension).
+    /**
+     * @return byte
+     */
+    public function getCORR_DOF()
+    {
+        $o = $this->__offset(274);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+    }
+
+    /// Association: the chi-square gate d^2 was tested against.
+    /**
+     * @return double
+     */
+    public function getCORR_GATE()
+    {
+        $o = $this->__offset(276);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Association: p-value of d^2, Q(dof/2, d^2/2).
+    /**
+     * @return double
+     */
+    public function getCORR_P_VALUE()
+    {
+        $o = $this->__offset(278);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Association: true when the assignment was ambiguous.
+    /**
+     * @return bool
+     */
+    public function getCORR_AMBIGUOUS()
+    {
+        $o = $this->__offset(280);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startEOO(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(134);
+        $builder->StartObject(139);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EOO
      */
-    public static function createEOO(FlatBufferBuilder $builder, $ID, $CLASSIFICATION, $OB_TIME, $CORR_QUALITY, $ID_ON_ORBIT, $SENSOR_ID, $COLLECT_METHOD, $NORAD_CAT_ID, $TASK_ID, $TRANSACTION_ID, $IMAGE_SET_ID, $IMAGE_SET_LENGTH, $SEQUENCE_ID, $OB_POSITION, $ORIG_OBJECT_ID, $ORIG_SENSOR_ID, $UCT, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_BIAS, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_BIAS, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_BIAS, $RANGE_RATE, $RANGE_RATE_UNC, $RA, $RA_RATE, $RA_UNC, $RA_BIAS, $DECLINATION, $DECLINATION_RATE, $DECLINATION_UNC, $DECLINATION_BIAS, $LOSX, $LOSY, $LOSZ, $LOS_UNC, $LOSXVEL, $LOSYVEL, $LOSZVEL, $SENLAT, $SENLON, $SENALT, $SENX, $SENY, $SENZ, $FOV_COUNT, $FOV_COUNT_UCTS, $EXP_DURATION, $ZEROPTD, $NET_OBJ_SIG, $NET_OBJ_SIG_UNC, $MAG, $MAG_UNC, $MAG_NORM_RANGE, $GEOLAT, $GEOLON, $GEOALT, $GEORANGE, $SKY_BKGRND, $PRIMARY_EXTINCTION, $PRIMARY_EXTINCTION_UNC, $SOLAR_PHASE_ANGLE, $SOLAR_EQ_PHASE_ANGLE, $SOLAR_DEC_ANGLE, $SHUTTER_DELAY, $TIMING_BIAS, $RAW_FILE_URI, $INTENSITY, $BG_INTENSITY, $DESCRIPTOR, $SOURCE, $ORIGIN, $DATA_MODE, $CREATED_AT, $CREATED_BY, $REFERENCE_FRAME, $SEN_REFERENCE_FRAME, $UMBRA, $PENUMBRA, $ORIG_NETWORK, $SOURCE_DL, $TYPE, $AZIMUTH_MEASURED, $ELEVATION_MEASURED, $RANGE_MEASURED, $RANGERATE_MEASURED, $RA_MEASURED, $DECLINATION_MEASURED, $NIIRS, $METERS_PER_PIXEL, $IMAGE_SNR, $IMAGE_BIT_DEPTH, $IMAGE_WIDTH, $IMAGE_HEIGHT, $IMAGE_COMPRESSION, $IMAGE_COMPRESSION_RATIO, $PROCESSED_IMAGE_URI, $IMAGE_AUTO_ENHANCED, $MULTI_FRAME_STACKED, $SYNTHETIC_TRACKING_USED, $IMAGE_SHARPNESS, $IMAGE_NOISE_STDDEV, $IMAGE_CONTRAST, $IMAGE_DYNAMIC_RANGE, $IMAGE_ENTROPY, $BACKGROUND_UNIFORMITY, $BACKGROUND_MEAN_LEVEL, $SATURATED_PIXEL_PERCENT, $DEAD_PIXEL_PERCENT, $PSF_FWHM, $CLOUD_COVER_PERCENT, $CLOUD_DETECTION_CONFIDENCE, $HAZE_PERCENT, $AEROSOL_OPTICAL_THICKNESS, $WATER_VAPOR_CONTENT, $SUN_ELEVATION, $SUN_AZIMUTH, $VIEW_ZENITH_ANGLE, $VIEW_AZIMUTH_ANGLE, $OFF_NADIR_ANGLE, $SWATH_WIDTH_KM, $MEAN_TERRAIN_ELEVATION, $TERRAIN_ELEVATION_STDDEV, $SHADOW_COVER_PERCENT, $SUNGLINT_PRESENT, $SUNGLINT_PERCENT, $SNOW_ICE_COVER_PERCENT, $VALID_DATA_AREA_KM2)
+    public static function createEOO(FlatBufferBuilder $builder, $ID, $CLASSIFICATION, $OB_TIME, $CORR_QUALITY, $ID_ON_ORBIT, $SENSOR_ID, $COLLECT_METHOD, $NORAD_CAT_ID, $TASK_ID, $TRANSACTION_ID, $IMAGE_SET_ID, $IMAGE_SET_LENGTH, $SEQUENCE_ID, $OB_POSITION, $ORIG_OBJECT_ID, $ORIG_SENSOR_ID, $UCT, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_BIAS, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_BIAS, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_BIAS, $RANGE_RATE, $RANGE_RATE_UNC, $RA, $RA_RATE, $RA_UNC, $RA_BIAS, $DECLINATION, $DECLINATION_RATE, $DECLINATION_UNC, $DECLINATION_BIAS, $LOSX, $LOSY, $LOSZ, $LOS_UNC, $LOSXVEL, $LOSYVEL, $LOSZVEL, $SENLAT, $SENLON, $SENALT, $SENX, $SENY, $SENZ, $FOV_COUNT, $FOV_COUNT_UCTS, $EXP_DURATION, $ZEROPTD, $NET_OBJ_SIG, $NET_OBJ_SIG_UNC, $MAG, $MAG_UNC, $MAG_NORM_RANGE, $GEOLAT, $GEOLON, $GEOALT, $GEORANGE, $SKY_BKGRND, $PRIMARY_EXTINCTION, $PRIMARY_EXTINCTION_UNC, $SOLAR_PHASE_ANGLE, $SOLAR_EQ_PHASE_ANGLE, $SOLAR_DEC_ANGLE, $SHUTTER_DELAY, $TIMING_BIAS, $RAW_FILE_URI, $INTENSITY, $BG_INTENSITY, $DESCRIPTOR, $SOURCE, $ORIGIN, $DATA_MODE, $CREATED_AT, $CREATED_BY, $REFERENCE_FRAME, $SEN_REFERENCE_FRAME, $UMBRA, $PENUMBRA, $ORIG_NETWORK, $SOURCE_DL, $TYPE, $AZIMUTH_MEASURED, $ELEVATION_MEASURED, $RANGE_MEASURED, $RANGERATE_MEASURED, $RA_MEASURED, $DECLINATION_MEASURED, $NIIRS, $METERS_PER_PIXEL, $IMAGE_SNR, $IMAGE_BIT_DEPTH, $IMAGE_WIDTH, $IMAGE_HEIGHT, $IMAGE_COMPRESSION, $IMAGE_COMPRESSION_RATIO, $PROCESSED_IMAGE_URI, $IMAGE_AUTO_ENHANCED, $MULTI_FRAME_STACKED, $SYNTHETIC_TRACKING_USED, $IMAGE_SHARPNESS, $IMAGE_NOISE_STDDEV, $IMAGE_CONTRAST, $IMAGE_DYNAMIC_RANGE, $IMAGE_ENTROPY, $BACKGROUND_UNIFORMITY, $BACKGROUND_MEAN_LEVEL, $SATURATED_PIXEL_PERCENT, $DEAD_PIXEL_PERCENT, $PSF_FWHM, $CLOUD_COVER_PERCENT, $CLOUD_DETECTION_CONFIDENCE, $HAZE_PERCENT, $AEROSOL_OPTICAL_THICKNESS, $WATER_VAPOR_CONTENT, $SUN_ELEVATION, $SUN_AZIMUTH, $VIEW_ZENITH_ANGLE, $VIEW_AZIMUTH_ANGLE, $OFF_NADIR_ANGLE, $SWATH_WIDTH_KM, $MEAN_TERRAIN_ELEVATION, $TERRAIN_ELEVATION_STDDEV, $SHADOW_COVER_PERCENT, $SUNGLINT_PRESENT, $SUNGLINT_PERCENT, $SNOW_ICE_COVER_PERCENT, $VALID_DATA_AREA_KM2, $CORR_MAHALANOBIS_SQ, $CORR_DOF, $CORR_GATE, $CORR_P_VALUE, $CORR_AMBIGUOUS)
     {
-        $builder->startObject(134);
+        $builder->startObject(139);
         self::addID($builder, $ID);
         self::addCLASSIFICATION($builder, $CLASSIFICATION);
         self::addOB_TIME($builder, $OB_TIME);
@@ -1483,6 +1534,11 @@ class EOO extends Table
         self::addSUNGLINT_PERCENT($builder, $SUNGLINT_PERCENT);
         self::addSNOW_ICE_COVER_PERCENT($builder, $SNOW_ICE_COVER_PERCENT);
         self::addVALID_DATA_AREA_KM2($builder, $VALID_DATA_AREA_KM2);
+        self::addCORR_MAHALANOBIS_SQ($builder, $CORR_MAHALANOBIS_SQ);
+        self::addCORR_DOF($builder, $CORR_DOF);
+        self::addCORR_GATE($builder, $CORR_GATE);
+        self::addCORR_P_VALUE($builder, $CORR_P_VALUE);
+        self::addCORR_AMBIGUOUS($builder, $CORR_AMBIGUOUS);
         $o = $builder->endObject();
         return $o;
     }
@@ -2825,6 +2881,56 @@ class EOO extends Table
     public static function addVALID_DATA_AREA_KM2(FlatBufferBuilder $builder, $VALID_DATA_AREA_KM2)
     {
         $builder->addFloatX(133, $VALID_DATA_AREA_KM2, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORR_MAHALANOBIS_SQ(FlatBufferBuilder $builder, $CORR_MAHALANOBIS_SQ)
+    {
+        $builder->addDoubleX(134, $CORR_MAHALANOBIS_SQ, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addCORR_DOF(FlatBufferBuilder $builder, $CORR_DOF)
+    {
+        $builder->addByteX(135, $CORR_DOF, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORR_GATE(FlatBufferBuilder $builder, $CORR_GATE)
+    {
+        $builder->addDoubleX(136, $CORR_GATE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORR_P_VALUE(FlatBufferBuilder $builder, $CORR_P_VALUE)
+    {
+        $builder->addDoubleX(137, $CORR_P_VALUE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addCORR_AMBIGUOUS(FlatBufferBuilder $builder, $CORR_AMBIGUOUS)
+    {
+        $builder->addBoolX(138, $CORR_AMBIGUOUS, false);
     }
 
     /**

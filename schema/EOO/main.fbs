@@ -1,5 +1,5 @@
-// Hash: a2aff2147d3766df49ebc109b37db2416df55e41405bc96482363392c85730d9
-// Version: 1.0.9
+// Hash: 4ada06a564dd7cadf9d82879083bcbcf840c199058ae0e2b5676268c7e067a4d
+// Version: 1.0.10
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../IDM/main.fbs";
@@ -441,6 +441,17 @@ table EOO {
   /// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
   VALID_DATA_AREA_KM2: float;
 
+  /// Association: squared Mahalanobis distance of the observation's
+  /// innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+  CORR_MAHALANOBIS_SQ:double;
+  /// Association: degrees of freedom of d^2 (measurement dimension).
+  CORR_DOF:ubyte;
+  /// Association: the chi-square gate d^2 was tested against.
+  CORR_GATE:double;
+  /// Association: p-value of d^2, Q(dof/2, d^2/2).
+  CORR_P_VALUE:double;
+  /// Association: true when the assignment was ambiguous.
+  CORR_AMBIGUOUS:bool;
 }
 
 root_type EOO;

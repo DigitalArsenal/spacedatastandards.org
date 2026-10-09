@@ -19,6 +19,18 @@ const (
 	prwDynamicParameterDRAG_AREA_OVER_MASS_RATE prwDynamicParameter = 2
 	prwDynamicParameterSRP_AREA_OVER_MASS       prwDynamicParameter = 3
 	prwDynamicParameterIN_TRACK_ACCELERATION    prwDynamicParameter = 4
+	/// ECOM2 coefficients (PRWEcom2), in their order there.
+	prwDynamicParameterECOM2_D0                 prwDynamicParameter = 5
+	prwDynamicParameterECOM2_Y0                 prwDynamicParameter = 6
+	prwDynamicParameterECOM2_B0                 prwDynamicParameter = 7
+	prwDynamicParameterECOM2_D2_COS             prwDynamicParameter = 8
+	prwDynamicParameterECOM2_D2_SIN             prwDynamicParameter = 9
+	prwDynamicParameterECOM2_D4_COS             prwDynamicParameter = 10
+	prwDynamicParameterECOM2_D4_SIN             prwDynamicParameter = 11
+	prwDynamicParameterECOM2_B1_COS             prwDynamicParameter = 12
+	prwDynamicParameterECOM2_B1_SIN             prwDynamicParameter = 13
+	prwDynamicParameterECOM2_B3_COS             prwDynamicParameter = 14
+	prwDynamicParameterECOM2_B3_SIN             prwDynamicParameter = 15
 )
 
 var EnumNamesprwDynamicParameter = map[prwDynamicParameter]string{
@@ -27,6 +39,17 @@ var EnumNamesprwDynamicParameter = map[prwDynamicParameter]string{
 	prwDynamicParameterDRAG_AREA_OVER_MASS_RATE: "DRAG_AREA_OVER_MASS_RATE",
 	prwDynamicParameterSRP_AREA_OVER_MASS:       "SRP_AREA_OVER_MASS",
 	prwDynamicParameterIN_TRACK_ACCELERATION:    "IN_TRACK_ACCELERATION",
+	prwDynamicParameterECOM2_D0:                 "ECOM2_D0",
+	prwDynamicParameterECOM2_Y0:                 "ECOM2_Y0",
+	prwDynamicParameterECOM2_B0:                 "ECOM2_B0",
+	prwDynamicParameterECOM2_D2_COS:             "ECOM2_D2_COS",
+	prwDynamicParameterECOM2_D2_SIN:             "ECOM2_D2_SIN",
+	prwDynamicParameterECOM2_D4_COS:             "ECOM2_D4_COS",
+	prwDynamicParameterECOM2_D4_SIN:             "ECOM2_D4_SIN",
+	prwDynamicParameterECOM2_B1_COS:             "ECOM2_B1_COS",
+	prwDynamicParameterECOM2_B1_SIN:             "ECOM2_B1_SIN",
+	prwDynamicParameterECOM2_B3_COS:             "ECOM2_B3_COS",
+	prwDynamicParameterECOM2_B3_SIN:             "ECOM2_B3_SIN",
 }
 
 var EnumValuesprwDynamicParameter = map[string]prwDynamicParameter{
@@ -35,6 +58,17 @@ var EnumValuesprwDynamicParameter = map[string]prwDynamicParameter{
 	"DRAG_AREA_OVER_MASS_RATE": prwDynamicParameterDRAG_AREA_OVER_MASS_RATE,
 	"SRP_AREA_OVER_MASS":       prwDynamicParameterSRP_AREA_OVER_MASS,
 	"IN_TRACK_ACCELERATION":    prwDynamicParameterIN_TRACK_ACCELERATION,
+	"ECOM2_D0":                 prwDynamicParameterECOM2_D0,
+	"ECOM2_Y0":                 prwDynamicParameterECOM2_Y0,
+	"ECOM2_B0":                 prwDynamicParameterECOM2_B0,
+	"ECOM2_D2_COS":             prwDynamicParameterECOM2_D2_COS,
+	"ECOM2_D2_SIN":             prwDynamicParameterECOM2_D2_SIN,
+	"ECOM2_D4_COS":             prwDynamicParameterECOM2_D4_COS,
+	"ECOM2_D4_SIN":             prwDynamicParameterECOM2_D4_SIN,
+	"ECOM2_B1_COS":             prwDynamicParameterECOM2_B1_COS,
+	"ECOM2_B1_SIN":             prwDynamicParameterECOM2_B1_SIN,
+	"ECOM2_B3_COS":             prwDynamicParameterECOM2_B3_COS,
+	"ECOM2_B3_SIN":             prwDynamicParameterECOM2_B3_SIN,
 }
 
 func (v prwDynamicParameter) String() string {

@@ -748,6 +748,55 @@ class RFO : Table() {
         get() {
             val o = __offset(150); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Association: squared Mahalanobis distance of the observation's
+     * innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+     */
+    val corrMahalanobisSq : Double
+        get() {
+            val o = __offset(152)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Association: degrees of freedom of d^2 (measurement dimension).
+     */
+    val corrDof : UByte
+        get() {
+            val o = __offset(154)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Association: the chi-square gate d^2 was tested against.
+     */
+    val corrGate : Double
+        get() {
+            val o = __offset(156)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Association: p-value of d^2, Q(dof/2, d^2/2).
+     */
+    val corrPValue : Double
+        get() {
+            val o = __offset(158)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Association: true when the assignment was ambiguous.
+     */
+    val corrAmbiguous : Boolean
+        get() {
+            val o = __offset(160)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * One-sigma uncertainty of FREQUENCY, in the same units.
+     */
+    val frequencyUnc : Double
+        get() {
+            val o = __offset(162)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRFO(_bb: ByteBuffer): RFO = getRootAsRFO(_bb, RFO())
@@ -756,8 +805,12 @@ class RFO : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RFOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFO")
-        fun createRFO(builder: FlatBufferBuilder, idOffset: Int, obTimeOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, obsType: Byte, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, uct: Boolean, taskIdOffset: Int, transactionIdOffset: Int, trackIdOffset: Int, transponderOffset: Int, detectionStatus: Byte, azimuth: Double, azimuthUnc: Double, azimuthRate: Double, elevation: Double, elevationUnc: Double, elevationRate: Double, range: Double, rangeUnc: Double, rangeRate: Double, rangeRateUnc: Double, trackRange: Double, senlat: Double, senlon: Double, senalt: Double, elnotOffset: Int, antennaNameOffset: Int, collectionModeOffset: Int, frequency: Double, nominalFrequency: Double, startFrequency: Double, endFrequency: Double, frequencyShift: Double, bandwidth: Double, nominalBandwidth: Double, resolutionBandwidth: Double, videoBandwidth: Double, relativeCarrierPower: Double, spectrumAnalyzerPower: Double, relativeNoiseFloor: Double, referenceLevel: Double, noisePwrDensity: Double, pgri: Double, eirp: Double, nominalEirp: Double, minPsd: Double, maxPsd: Double, snr: Double, nominalSnr: Double, powerOverNoise: Double, nominalPowerOverNoise: Double, polarity: Double, polarityTypeOffset: Int, channel: UShort, baudRate: Double, symbolToNoiseRatio: Double, bitErrorRate: Double, peak: Boolean, incoming: Boolean, switchPoint: UShort, confidence: Double, carrierStandardOffset: Int, modulationOffset: Int, innerCodingRate: UByte, outerCodingRate: UByte, transmitFilterTypeOffset: Int, transmitFilterRollOff: Double, rawFileUriOffset: Int, descriptorOffset: Int, urlOffset: Int, tagsOffset: Int) : Int {
-            builder.startTable(74)
+        fun createRFO(builder: FlatBufferBuilder, idOffset: Int, obTimeOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, obsType: Byte, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, uct: Boolean, taskIdOffset: Int, transactionIdOffset: Int, trackIdOffset: Int, transponderOffset: Int, detectionStatus: Byte, azimuth: Double, azimuthUnc: Double, azimuthRate: Double, elevation: Double, elevationUnc: Double, elevationRate: Double, range: Double, rangeUnc: Double, rangeRate: Double, rangeRateUnc: Double, trackRange: Double, senlat: Double, senlon: Double, senalt: Double, elnotOffset: Int, antennaNameOffset: Int, collectionModeOffset: Int, frequency: Double, nominalFrequency: Double, startFrequency: Double, endFrequency: Double, frequencyShift: Double, bandwidth: Double, nominalBandwidth: Double, resolutionBandwidth: Double, videoBandwidth: Double, relativeCarrierPower: Double, spectrumAnalyzerPower: Double, relativeNoiseFloor: Double, referenceLevel: Double, noisePwrDensity: Double, pgri: Double, eirp: Double, nominalEirp: Double, minPsd: Double, maxPsd: Double, snr: Double, nominalSnr: Double, powerOverNoise: Double, nominalPowerOverNoise: Double, polarity: Double, polarityTypeOffset: Int, channel: UShort, baudRate: Double, symbolToNoiseRatio: Double, bitErrorRate: Double, peak: Boolean, incoming: Boolean, switchPoint: UShort, confidence: Double, carrierStandardOffset: Int, modulationOffset: Int, innerCodingRate: UByte, outerCodingRate: UByte, transmitFilterTypeOffset: Int, transmitFilterRollOff: Double, rawFileUriOffset: Int, descriptorOffset: Int, urlOffset: Int, tagsOffset: Int, corrMahalanobisSq: Double, corrDof: UByte, corrGate: Double, corrPValue: Double, corrAmbiguous: Boolean, frequencyUnc: Double) : Int {
+            builder.startTable(80)
+            addFREQUENCYUNC(builder, frequencyUnc)
+            addCORRPVALUE(builder, corrPValue)
+            addCORRGATE(builder, corrGate)
+            addCORRMAHALANOBISSQ(builder, corrMahalanobisSq)
             addTRANSMITFILTERROLLOFF(builder, transmitFilterRollOff)
             addCONFIDENCE(builder, confidence)
             addBITERRORRATE(builder, bitErrorRate)
@@ -825,6 +878,8 @@ class RFO : Table() {
             addID(builder, idOffset)
             addSWITCHPOINT(builder, switchPoint)
             addCHANNEL(builder, channel)
+            addCORRAMBIGUOUS(builder, corrAmbiguous)
+            addCORRDOF(builder, corrDof)
             addOUTERCODINGRATE(builder, outerCodingRate)
             addINNERCODINGRATE(builder, innerCodingRate)
             addINCOMING(builder, incoming)
@@ -834,7 +889,7 @@ class RFO : Table() {
             addOBSTYPE(builder, obsType)
             return endRFO(builder)
         }
-        fun startRFO(builder: FlatBufferBuilder) = builder.startTable(74)
+        fun startRFO(builder: FlatBufferBuilder) = builder.startTable(80)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addOBTIME(builder: FlatBufferBuilder, obTime: Int) = builder.addOffset(1, obTime, 0)
         fun addIDSENSOR(builder: FlatBufferBuilder, idSensor: Int) = builder.addOffset(2, idSensor, 0)
@@ -917,6 +972,12 @@ class RFO : Table() {
             return builder.endVector()
         }
         fun startTagsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addCORRMAHALANOBISSQ(builder: FlatBufferBuilder, corrMahalanobisSq: Double) = builder.addDouble(74, corrMahalanobisSq, 0.0)
+        fun addCORRDOF(builder: FlatBufferBuilder, corrDof: UByte) = builder.addByte(75, corrDof.toByte(), 0)
+        fun addCORRGATE(builder: FlatBufferBuilder, corrGate: Double) = builder.addDouble(76, corrGate, 0.0)
+        fun addCORRPVALUE(builder: FlatBufferBuilder, corrPValue: Double) = builder.addDouble(77, corrPValue, 0.0)
+        fun addCORRAMBIGUOUS(builder: FlatBufferBuilder, corrAmbiguous: Boolean) = builder.addBoolean(78, corrAmbiguous, false)
+        fun addFREQUENCYUNC(builder: FlatBufferBuilder, frequencyUnc: Double) = builder.addDouble(79, frequencyUnc, 0.0)
         fun endRFO(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

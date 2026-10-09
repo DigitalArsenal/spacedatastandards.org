@@ -586,6 +586,27 @@ export declare class EOO implements flatbuffers.IUnpackableObject<EOOT> {
      * Total area covered by valid data (non-masked, usable imagery) in square kilometers.
      */
     VALID_DATA_AREA_KM2(): number;
+    /**
+     * Association: squared Mahalanobis distance of the observation's
+     * innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+     */
+    CORR_MAHALANOBIS_SQ(): number;
+    /**
+     * Association: degrees of freedom of d^2 (measurement dimension).
+     */
+    CORR_DOF(): number;
+    /**
+     * Association: the chi-square gate d^2 was tested against.
+     */
+    CORR_GATE(): number;
+    /**
+     * Association: p-value of d^2, Q(dof/2, d^2/2).
+     */
+    CORR_P_VALUE(): number;
+    /**
+     * Association: true when the assignment was ambiguous.
+     */
+    CORR_AMBIGUOUS(): boolean;
     static startEOO(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addClassification(builder: flatbuffers.Builder, CLASSIFICATIONOffset: flatbuffers.Offset): void;
@@ -721,6 +742,11 @@ export declare class EOO implements flatbuffers.IUnpackableObject<EOOT> {
     static addSunglintPercent(builder: flatbuffers.Builder, SUNGLINT_PERCENT: number): void;
     static addSnowIceCoverPercent(builder: flatbuffers.Builder, SNOW_ICE_COVER_PERCENT: number): void;
     static addValidDataAreaKm2(builder: flatbuffers.Builder, VALID_DATA_AREA_KM2: number): void;
+    static addCorrMahalanobisSq(builder: flatbuffers.Builder, CORR_MAHALANOBIS_SQ: number): void;
+    static addCorrDof(builder: flatbuffers.Builder, CORR_DOF: number): void;
+    static addCorrGate(builder: flatbuffers.Builder, CORR_GATE: number): void;
+    static addCorrPValue(builder: flatbuffers.Builder, CORR_P_VALUE: number): void;
+    static addCorrAmbiguous(builder: flatbuffers.Builder, CORR_AMBIGUOUS: boolean): void;
     static endEOO(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEOOBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEOOBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -862,7 +888,12 @@ export declare class EOOT implements flatbuffers.IGeneratedObject {
     SUNGLINT_PERCENT: number;
     SNOW_ICE_COVER_PERCENT: number;
     VALID_DATA_AREA_KM2: number;
-    constructor(ID?: string | Uint8Array | null, CLASSIFICATION?: string | Uint8Array | null, OB_TIME?: string | Uint8Array | null, CORR_QUALITY?: number, ID_ON_ORBIT?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, COLLECT_METHOD?: CollectMethod, NORAD_CAT_ID?: number, TASK_ID?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, IMAGE_SET_ID?: string | Uint8Array | null, IMAGE_SET_LENGTH?: number, SEQUENCE_ID?: number, OB_POSITION?: ObservationPosition, ORIG_OBJECT_ID?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, UCT?: boolean, AZIMUTH?: number, AZIMUTH_UNC?: number, AZIMUTH_BIAS?: number, AZIMUTH_RATE?: number, ELEVATION?: number, ELEVATION_UNC?: number, ELEVATION_BIAS?: number, ELEVATION_RATE?: number, RANGE?: number, RANGE_UNC?: number, RANGE_BIAS?: number, RANGE_RATE?: number, RANGE_RATE_UNC?: number, RA?: number, RA_RATE?: number, RA_UNC?: number, RA_BIAS?: number, DECLINATION?: number, DECLINATION_RATE?: number, DECLINATION_UNC?: number, DECLINATION_BIAS?: number, LOSX?: number, LOSY?: number, LOSZ?: number, LOS_UNC?: number, LOSXVEL?: number, LOSYVEL?: number, LOSZVEL?: number, SENLAT?: number, SENLON?: number, SENALT?: number, SENX?: number, SENY?: number, SENZ?: number, FOV_COUNT?: number, FOV_COUNT_UCTS?: number, EXP_DURATION?: number, ZEROPTD?: number, NET_OBJ_SIG?: number, NET_OBJ_SIG_UNC?: number, MAG?: number, MAG_UNC?: number, MAG_NORM_RANGE?: number, GEOLAT?: number, GEOLON?: number, GEOALT?: number, GEORANGE?: number, SKY_BKGRND?: number, PRIMARY_EXTINCTION?: number, PRIMARY_EXTINCTION_UNC?: number, SOLAR_PHASE_ANGLE?: number, SOLAR_EQ_PHASE_ANGLE?: number, SOLAR_DEC_ANGLE?: number, SHUTTER_DELAY?: number, TIMING_BIAS?: number, RAW_FILE_URI?: string | Uint8Array | null, INTENSITY?: number, BG_INTENSITY?: number, DESCRIPTOR?: string | Uint8Array | null, SOURCE?: string | Uint8Array | null, ORIGIN?: string | Uint8Array | null, DATA_MODE?: DataMode, CREATED_AT?: string | Uint8Array | null, CREATED_BY?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, SEN_REFERENCE_FRAME?: RFMT | null, UMBRA?: boolean, PENUMBRA?: boolean, ORIG_NETWORK?: string | Uint8Array | null, SOURCE_DL?: string | Uint8Array | null, TYPE?: DeviceType, AZIMUTH_MEASURED?: boolean, ELEVATION_MEASURED?: boolean, RANGE_MEASURED?: boolean, RANGERATE_MEASURED?: boolean, RA_MEASURED?: boolean, DECLINATION_MEASURED?: boolean, NIIRS?: number, METERS_PER_PIXEL?: number, IMAGE_SNR?: number, IMAGE_BIT_DEPTH?: number, IMAGE_WIDTH?: number, IMAGE_HEIGHT?: number, IMAGE_COMPRESSION?: string | Uint8Array | null, IMAGE_COMPRESSION_RATIO?: number, PROCESSED_IMAGE_URI?: string | Uint8Array | null, IMAGE_AUTO_ENHANCED?: boolean, MULTI_FRAME_STACKED?: boolean, SYNTHETIC_TRACKING_USED?: boolean, IMAGE_SHARPNESS?: number, IMAGE_NOISE_STDDEV?: number, IMAGE_CONTRAST?: number, IMAGE_DYNAMIC_RANGE?: number, IMAGE_ENTROPY?: number, BACKGROUND_UNIFORMITY?: number, BACKGROUND_MEAN_LEVEL?: number, SATURATED_PIXEL_PERCENT?: number, DEAD_PIXEL_PERCENT?: number, PSF_FWHM?: number, CLOUD_COVER_PERCENT?: number, CLOUD_DETECTION_CONFIDENCE?: number, HAZE_PERCENT?: number, AEROSOL_OPTICAL_THICKNESS?: number, WATER_VAPOR_CONTENT?: number, SUN_ELEVATION?: number, SUN_AZIMUTH?: number, VIEW_ZENITH_ANGLE?: number, VIEW_AZIMUTH_ANGLE?: number, OFF_NADIR_ANGLE?: number, SWATH_WIDTH_KM?: number, MEAN_TERRAIN_ELEVATION?: number, TERRAIN_ELEVATION_STDDEV?: number, SHADOW_COVER_PERCENT?: number, SUNGLINT_PRESENT?: boolean, SUNGLINT_PERCENT?: number, SNOW_ICE_COVER_PERCENT?: number, VALID_DATA_AREA_KM2?: number);
+    CORR_MAHALANOBIS_SQ: number;
+    CORR_DOF: number;
+    CORR_GATE: number;
+    CORR_P_VALUE: number;
+    CORR_AMBIGUOUS: boolean;
+    constructor(ID?: string | Uint8Array | null, CLASSIFICATION?: string | Uint8Array | null, OB_TIME?: string | Uint8Array | null, CORR_QUALITY?: number, ID_ON_ORBIT?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, COLLECT_METHOD?: CollectMethod, NORAD_CAT_ID?: number, TASK_ID?: string | Uint8Array | null, TRANSACTION_ID?: string | Uint8Array | null, IMAGE_SET_ID?: string | Uint8Array | null, IMAGE_SET_LENGTH?: number, SEQUENCE_ID?: number, OB_POSITION?: ObservationPosition, ORIG_OBJECT_ID?: string | Uint8Array | null, ORIG_SENSOR_ID?: string | Uint8Array | null, UCT?: boolean, AZIMUTH?: number, AZIMUTH_UNC?: number, AZIMUTH_BIAS?: number, AZIMUTH_RATE?: number, ELEVATION?: number, ELEVATION_UNC?: number, ELEVATION_BIAS?: number, ELEVATION_RATE?: number, RANGE?: number, RANGE_UNC?: number, RANGE_BIAS?: number, RANGE_RATE?: number, RANGE_RATE_UNC?: number, RA?: number, RA_RATE?: number, RA_UNC?: number, RA_BIAS?: number, DECLINATION?: number, DECLINATION_RATE?: number, DECLINATION_UNC?: number, DECLINATION_BIAS?: number, LOSX?: number, LOSY?: number, LOSZ?: number, LOS_UNC?: number, LOSXVEL?: number, LOSYVEL?: number, LOSZVEL?: number, SENLAT?: number, SENLON?: number, SENALT?: number, SENX?: number, SENY?: number, SENZ?: number, FOV_COUNT?: number, FOV_COUNT_UCTS?: number, EXP_DURATION?: number, ZEROPTD?: number, NET_OBJ_SIG?: number, NET_OBJ_SIG_UNC?: number, MAG?: number, MAG_UNC?: number, MAG_NORM_RANGE?: number, GEOLAT?: number, GEOLON?: number, GEOALT?: number, GEORANGE?: number, SKY_BKGRND?: number, PRIMARY_EXTINCTION?: number, PRIMARY_EXTINCTION_UNC?: number, SOLAR_PHASE_ANGLE?: number, SOLAR_EQ_PHASE_ANGLE?: number, SOLAR_DEC_ANGLE?: number, SHUTTER_DELAY?: number, TIMING_BIAS?: number, RAW_FILE_URI?: string | Uint8Array | null, INTENSITY?: number, BG_INTENSITY?: number, DESCRIPTOR?: string | Uint8Array | null, SOURCE?: string | Uint8Array | null, ORIGIN?: string | Uint8Array | null, DATA_MODE?: DataMode, CREATED_AT?: string | Uint8Array | null, CREATED_BY?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, SEN_REFERENCE_FRAME?: RFMT | null, UMBRA?: boolean, PENUMBRA?: boolean, ORIG_NETWORK?: string | Uint8Array | null, SOURCE_DL?: string | Uint8Array | null, TYPE?: DeviceType, AZIMUTH_MEASURED?: boolean, ELEVATION_MEASURED?: boolean, RANGE_MEASURED?: boolean, RANGERATE_MEASURED?: boolean, RA_MEASURED?: boolean, DECLINATION_MEASURED?: boolean, NIIRS?: number, METERS_PER_PIXEL?: number, IMAGE_SNR?: number, IMAGE_BIT_DEPTH?: number, IMAGE_WIDTH?: number, IMAGE_HEIGHT?: number, IMAGE_COMPRESSION?: string | Uint8Array | null, IMAGE_COMPRESSION_RATIO?: number, PROCESSED_IMAGE_URI?: string | Uint8Array | null, IMAGE_AUTO_ENHANCED?: boolean, MULTI_FRAME_STACKED?: boolean, SYNTHETIC_TRACKING_USED?: boolean, IMAGE_SHARPNESS?: number, IMAGE_NOISE_STDDEV?: number, IMAGE_CONTRAST?: number, IMAGE_DYNAMIC_RANGE?: number, IMAGE_ENTROPY?: number, BACKGROUND_UNIFORMITY?: number, BACKGROUND_MEAN_LEVEL?: number, SATURATED_PIXEL_PERCENT?: number, DEAD_PIXEL_PERCENT?: number, PSF_FWHM?: number, CLOUD_COVER_PERCENT?: number, CLOUD_DETECTION_CONFIDENCE?: number, HAZE_PERCENT?: number, AEROSOL_OPTICAL_THICKNESS?: number, WATER_VAPOR_CONTENT?: number, SUN_ELEVATION?: number, SUN_AZIMUTH?: number, VIEW_ZENITH_ANGLE?: number, VIEW_AZIMUTH_ANGLE?: number, OFF_NADIR_ANGLE?: number, SWATH_WIDTH_KM?: number, MEAN_TERRAIN_ELEVATION?: number, TERRAIN_ELEVATION_STDDEV?: number, SHADOW_COVER_PERCENT?: number, SUNGLINT_PRESENT?: boolean, SUNGLINT_PERCENT?: number, SNOW_ICE_COVER_PERCENT?: number, VALID_DATA_AREA_KM2?: number, CORR_MAHALANOBIS_SQ?: number, CORR_DOF?: number, CORR_GATE?: number, CORR_P_VALUE?: number, CORR_AMBIGUOUS?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EOO.d.ts.map

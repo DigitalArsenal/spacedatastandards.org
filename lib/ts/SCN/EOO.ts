@@ -1164,8 +1164,49 @@ VALID_DATA_AREA_KM2():number {
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Association: squared Mahalanobis distance of the observation's
+ * innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+ */
+CORR_MAHALANOBIS_SQ():number {
+  const offset = this.bb!.__offset(this.bb_pos, 272);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Association: degrees of freedom of d^2 (measurement dimension).
+ */
+CORR_DOF():number {
+  const offset = this.bb!.__offset(this.bb_pos, 274);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Association: the chi-square gate d^2 was tested against.
+ */
+CORR_GATE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 276);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Association: p-value of d^2, Q(dof/2, d^2/2).
+ */
+CORR_P_VALUE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 278);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Association: true when the assignment was ambiguous.
+ */
+CORR_AMBIGUOUS():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 280);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startEOO(builder:flatbuffers.Builder) {
-  builder.startObject(134);
+  builder.startObject(139);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -1704,6 +1745,26 @@ static addValidDataAreaKm2(builder:flatbuffers.Builder, VALID_DATA_AREA_KM2:numb
   builder.addFieldFloat32(133, VALID_DATA_AREA_KM2, 0.0);
 }
 
+static addCorrMahalanobisSq(builder:flatbuffers.Builder, CORR_MAHALANOBIS_SQ:number) {
+  builder.addFieldFloat64(134, CORR_MAHALANOBIS_SQ, 0.0);
+}
+
+static addCorrDof(builder:flatbuffers.Builder, CORR_DOF:number) {
+  builder.addFieldInt8(135, CORR_DOF, 0);
+}
+
+static addCorrGate(builder:flatbuffers.Builder, CORR_GATE:number) {
+  builder.addFieldFloat64(136, CORR_GATE, 0.0);
+}
+
+static addCorrPValue(builder:flatbuffers.Builder, CORR_P_VALUE:number) {
+  builder.addFieldFloat64(137, CORR_P_VALUE, 0.0);
+}
+
+static addCorrAmbiguous(builder:flatbuffers.Builder, CORR_AMBIGUOUS:boolean) {
+  builder.addFieldInt8(138, +CORR_AMBIGUOUS, +false);
+}
+
 static endEOO(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -1853,7 +1914,12 @@ unpack(): EOOT {
     this.SUNGLINT_PRESENT(),
     this.SUNGLINT_PERCENT(),
     this.SNOW_ICE_COVER_PERCENT(),
-    this.VALID_DATA_AREA_KM2()
+    this.VALID_DATA_AREA_KM2(),
+    this.CORR_MAHALANOBIS_SQ(),
+    this.CORR_DOF(),
+    this.CORR_GATE(),
+    this.CORR_P_VALUE(),
+    this.CORR_AMBIGUOUS()
   );
 }
 
@@ -1993,6 +2059,11 @@ unpackTo(_o: EOOT): void {
   _o.SUNGLINT_PERCENT = this.SUNGLINT_PERCENT();
   _o.SNOW_ICE_COVER_PERCENT = this.SNOW_ICE_COVER_PERCENT();
   _o.VALID_DATA_AREA_KM2 = this.VALID_DATA_AREA_KM2();
+  _o.CORR_MAHALANOBIS_SQ = this.CORR_MAHALANOBIS_SQ();
+  _o.CORR_DOF = this.CORR_DOF();
+  _o.CORR_GATE = this.CORR_GATE();
+  _o.CORR_P_VALUE = this.CORR_P_VALUE();
+  _o.CORR_AMBIGUOUS = this.CORR_AMBIGUOUS();
 }
 }
 
@@ -2131,7 +2202,12 @@ constructor(
   public SUNGLINT_PRESENT: boolean = false,
   public SUNGLINT_PERCENT: number = 0.0,
   public SNOW_ICE_COVER_PERCENT: number = 0.0,
-  public VALID_DATA_AREA_KM2: number = 0.0
+  public VALID_DATA_AREA_KM2: number = 0.0,
+  public CORR_MAHALANOBIS_SQ: number = 0.0,
+  public CORR_DOF: number = 0,
+  public CORR_GATE: number = 0.0,
+  public CORR_P_VALUE: number = 0.0,
+  public CORR_AMBIGUOUS: boolean = false
 ){}
 
 
@@ -2294,6 +2370,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   EOO.addSunglintPercent(builder, this.SUNGLINT_PERCENT);
   EOO.addSnowIceCoverPercent(builder, this.SNOW_ICE_COVER_PERCENT);
   EOO.addValidDataAreaKm2(builder, this.VALID_DATA_AREA_KM2);
+  EOO.addCorrMahalanobisSq(builder, this.CORR_MAHALANOBIS_SQ);
+  EOO.addCorrDof(builder, this.CORR_DOF);
+  EOO.addCorrGate(builder, this.CORR_GATE);
+  EOO.addCorrPValue(builder, this.CORR_P_VALUE);
+  EOO.addCorrAmbiguous(builder, this.CORR_AMBIGUOUS);
 
   return EOO.endEOO(builder);
 }

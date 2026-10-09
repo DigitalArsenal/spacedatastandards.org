@@ -243,7 +243,15 @@
     },
     "prwDynamicParameter" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "DRAG_AREA_OVER_MASS", "DRAG_AREA_OVER_MASS_RATE", "SRP_AREA_OVER_MASS", "IN_TRACK_ACCELERATION"]
+      "enum": ["UNSPECIFIED", "DRAG_AREA_OVER_MASS", "DRAG_AREA_OVER_MASS_RATE", "SRP_AREA_OVER_MASS", "IN_TRACK_ACCELERATION", "ECOM2_D0", "ECOM2_Y0", "ECOM2_B0", "ECOM2_D2_COS", "ECOM2_D2_SIN", "ECOM2_D4_COS", "ECOM2_D4_SIN", "ECOM2_B1_COS", "ECOM2_B1_SIN", "ECOM2_B3_COS", "ECOM2_B3_SIN"]
+    },
+    "prwRadiationPressureFamily" : {
+      "type" : "string",
+      "enum": ["CANNONBALL", "GNSS_BOX_WING", "NONE"]
+    },
+    "prwGnssSpacecraftBlock" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "GPS_IIR", "GPS_IIR_M", "GPS_IIF"]
     },
     "meanElementSource" : {
       "type" : "string",
@@ -2662,6 +2670,46 @@
       },
       "additionalProperties" : false
     },
+    "PRWEcom2" : {
+      "type" : "object",
+      "description" : "ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,\ndoi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,\nadded to the a priori model and scaled by the visible Sun fraction.",
+      "properties" : {
+        "D0_M_S2" : {
+                "type" : "number"
+              },
+        "Y0_M_S2" : {
+                "type" : "number"
+              },
+        "B0_M_S2" : {
+                "type" : "number"
+              },
+        "D2_COS_M_S2" : {
+                "type" : "number"
+              },
+        "D2_SIN_M_S2" : {
+                "type" : "number"
+              },
+        "D4_COS_M_S2" : {
+                "type" : "number"
+              },
+        "D4_SIN_M_S2" : {
+                "type" : "number"
+              },
+        "B1_COS_M_S2" : {
+                "type" : "number"
+              },
+        "B1_SIN_M_S2" : {
+                "type" : "number"
+              },
+        "B3_COS_M_S2" : {
+                "type" : "number"
+              },
+        "B3_SIN_M_S2" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
     "PRWInstance" : {
       "type" : "object",
       "description" : "Instance identity is host-provided, opaque, and not a physical quantity.",
@@ -2840,6 +2888,18 @@
         "HAS_MAXIMUM_TESSERAL_DEGREE" : {
                 "type" : "boolean",
                 "description" : "True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent."
+              },
+        "RADIATION_PRESSURE_MODEL" : {
+                "$ref" : "#/definitions/prwRadiationPressureFamily",
+                "description" : "Solar radiation pressure model family (default: the cannonball)."
+              },
+        "GNSS_BLOCK" : {
+                "$ref" : "#/definitions/prwGnssSpacecraftBlock",
+                "description" : "Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING."
+              },
+        "ECOM2" : {
+                "$ref" : "#/definitions/PRWEcom2",
+                "description" : "ECOM2 coefficients; absent means no ECOM2 term."
               }
       },
       "required" : ["EPHEMERIS_SOURCE"],

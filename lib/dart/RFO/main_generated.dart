@@ -299,10 +299,29 @@ class RFO {
   String? get URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 148);
   ///  Associated tags
   List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 150);
+  ///  Association: squared Mahalanobis distance of the observation's
+  ///  innovation against its predicted value, d^2 = v^T (H P H^T + R)^-1 v.
+  double get CORR_MAHALANOBIS_SQ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 152, 0.0);
+  double get corrMahalanobisSq => CORR_MAHALANOBIS_SQ;
+  ///  Association: degrees of freedom of d^2 (measurement dimension).
+  int get CORR_DOF => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 154, 0);
+  int get corrDof => CORR_DOF;
+  ///  Association: the chi-square gate d^2 was tested against.
+  double get CORR_GATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 156, 0.0);
+  double get corrGate => CORR_GATE;
+  ///  Association: p-value of d^2, Q(dof/2, d^2/2).
+  double get CORR_P_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 158, 0.0);
+  double get corrPValue => CORR_P_VALUE;
+  ///  Association: true when the assignment was ambiguous.
+  bool get CORR_AMBIGUOUS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 160, false);
+  bool get corrAmbiguous => CORR_AMBIGUOUS;
+  ///  One-sigma uncertainty of FREQUENCY, in the same units.
+  double get FREQUENCY_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 162, 0.0);
+  double get frequencyUnc => FREQUENCY_UNC;
 
   @override
   String toString() {
-    return 'RFO{ID: ${ID}, obTime: ${obTime}, idSensor: ${idSensor}, origSensorId: ${origSensorId}, obsType: ${obsType}, satNo: ${satNo}, origObjectId: ${origObjectId}, onOrbit: ${onOrbit}, UCT: ${UCT}, taskId: ${taskId}, transactionId: ${transactionId}, trackId: ${trackId}, TRANSPONDER: ${TRANSPONDER}, detectionStatus: ${detectionStatus}, AZIMUTH: ${AZIMUTH}, azimuthUnc: ${azimuthUnc}, azimuthRate: ${azimuthRate}, ELEVATION: ${ELEVATION}, elevationUnc: ${elevationUnc}, elevationRate: ${elevationRate}, RANGE: ${RANGE}, rangeUnc: ${rangeUnc}, rangeRate: ${rangeRate}, rangeRateUnc: ${rangeRateUnc}, trackRange: ${trackRange}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, ELNOT: ${ELNOT}, antennaName: ${antennaName}, collectionMode: ${collectionMode}, FREQUENCY: ${FREQUENCY}, nominalFrequency: ${nominalFrequency}, startFrequency: ${startFrequency}, endFrequency: ${endFrequency}, frequencyShift: ${frequencyShift}, BANDWIDTH: ${BANDWIDTH}, nominalBandwidth: ${nominalBandwidth}, resolutionBandwidth: ${resolutionBandwidth}, videoBandwidth: ${videoBandwidth}, relativeCarrierPower: ${relativeCarrierPower}, spectrumAnalyzerPower: ${spectrumAnalyzerPower}, relativeNoiseFloor: ${relativeNoiseFloor}, referenceLevel: ${referenceLevel}, noisePwrDensity: ${noisePwrDensity}, PGRI: ${PGRI}, EIRP: ${EIRP}, nominalEirp: ${nominalEirp}, minPsd: ${minPsd}, maxPsd: ${maxPsd}, SNR: ${SNR}, nominalSnr: ${nominalSnr}, powerOverNoise: ${powerOverNoise}, nominalPowerOverNoise: ${nominalPowerOverNoise}, POLARITY: ${POLARITY}, polarityType: ${polarityType}, CHANNEL: ${CHANNEL}, baudRate: ${baudRate}, symbolToNoiseRatio: ${symbolToNoiseRatio}, bitErrorRate: ${bitErrorRate}, PEAK: ${PEAK}, INCOMING: ${INCOMING}, switchPoint: ${switchPoint}, CONFIDENCE: ${CONFIDENCE}, carrierStandard: ${carrierStandard}, MODULATION: ${MODULATION}, innerCodingRate: ${innerCodingRate}, outerCodingRate: ${outerCodingRate}, transmitFilterType: ${transmitFilterType}, transmitFilterRollOff: ${transmitFilterRollOff}, rawFileUri: ${rawFileUri}, DESCRIPTOR: ${DESCRIPTOR}, URL: ${URL}, TAGS: ${TAGS}}';
+    return 'RFO{ID: ${ID}, obTime: ${obTime}, idSensor: ${idSensor}, origSensorId: ${origSensorId}, obsType: ${obsType}, satNo: ${satNo}, origObjectId: ${origObjectId}, onOrbit: ${onOrbit}, UCT: ${UCT}, taskId: ${taskId}, transactionId: ${transactionId}, trackId: ${trackId}, TRANSPONDER: ${TRANSPONDER}, detectionStatus: ${detectionStatus}, AZIMUTH: ${AZIMUTH}, azimuthUnc: ${azimuthUnc}, azimuthRate: ${azimuthRate}, ELEVATION: ${ELEVATION}, elevationUnc: ${elevationUnc}, elevationRate: ${elevationRate}, RANGE: ${RANGE}, rangeUnc: ${rangeUnc}, rangeRate: ${rangeRate}, rangeRateUnc: ${rangeRateUnc}, trackRange: ${trackRange}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, ELNOT: ${ELNOT}, antennaName: ${antennaName}, collectionMode: ${collectionMode}, FREQUENCY: ${FREQUENCY}, nominalFrequency: ${nominalFrequency}, startFrequency: ${startFrequency}, endFrequency: ${endFrequency}, frequencyShift: ${frequencyShift}, BANDWIDTH: ${BANDWIDTH}, nominalBandwidth: ${nominalBandwidth}, resolutionBandwidth: ${resolutionBandwidth}, videoBandwidth: ${videoBandwidth}, relativeCarrierPower: ${relativeCarrierPower}, spectrumAnalyzerPower: ${spectrumAnalyzerPower}, relativeNoiseFloor: ${relativeNoiseFloor}, referenceLevel: ${referenceLevel}, noisePwrDensity: ${noisePwrDensity}, PGRI: ${PGRI}, EIRP: ${EIRP}, nominalEirp: ${nominalEirp}, minPsd: ${minPsd}, maxPsd: ${maxPsd}, SNR: ${SNR}, nominalSnr: ${nominalSnr}, powerOverNoise: ${powerOverNoise}, nominalPowerOverNoise: ${nominalPowerOverNoise}, POLARITY: ${POLARITY}, polarityType: ${polarityType}, CHANNEL: ${CHANNEL}, baudRate: ${baudRate}, symbolToNoiseRatio: ${symbolToNoiseRatio}, bitErrorRate: ${bitErrorRate}, PEAK: ${PEAK}, INCOMING: ${INCOMING}, switchPoint: ${switchPoint}, CONFIDENCE: ${CONFIDENCE}, carrierStandard: ${carrierStandard}, MODULATION: ${MODULATION}, innerCodingRate: ${innerCodingRate}, outerCodingRate: ${outerCodingRate}, transmitFilterType: ${transmitFilterType}, transmitFilterRollOff: ${transmitFilterRollOff}, rawFileUri: ${rawFileUri}, DESCRIPTOR: ${DESCRIPTOR}, URL: ${URL}, TAGS: ${TAGS}, corrMahalanobisSq: ${corrMahalanobisSq}, corrDof: ${corrDof}, corrGate: ${corrGate}, corrPValue: ${corrPValue}, corrAmbiguous: ${corrAmbiguous}, frequencyUnc: ${frequencyUnc}}';
   }
 }
 
@@ -320,7 +339,7 @@ class RFOBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(74);
+    fbBuilder.startTable(80);
   }
 
   int addIdOffset(int? offset) {
@@ -619,6 +638,30 @@ class RFOBuilder {
     fbBuilder.addOffset(73, offset);
     return fbBuilder.offset;
   }
+  int addCorrMahalanobisSq(double? CORR_MAHALANOBIS_SQ) {
+    fbBuilder.addFloat64(74, CORR_MAHALANOBIS_SQ);
+    return fbBuilder.offset;
+  }
+  int addCorrDof(int? CORR_DOF) {
+    fbBuilder.addUint8(75, CORR_DOF);
+    return fbBuilder.offset;
+  }
+  int addCorrGate(double? CORR_GATE) {
+    fbBuilder.addFloat64(76, CORR_GATE);
+    return fbBuilder.offset;
+  }
+  int addCorrPValue(double? CORR_P_VALUE) {
+    fbBuilder.addFloat64(77, CORR_P_VALUE);
+    return fbBuilder.offset;
+  }
+  int addCorrAmbiguous(bool? CORR_AMBIGUOUS) {
+    fbBuilder.addBool(78, CORR_AMBIGUOUS);
+    return fbBuilder.offset;
+  }
+  int addFrequencyUnc(double? FREQUENCY_UNC) {
+    fbBuilder.addFloat64(79, FREQUENCY_UNC);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -700,6 +743,12 @@ class RFOObjectBuilder extends fb.ObjectBuilder {
   final String? _DESCRIPTOR;
   final String? _URL;
   final List<String>? _TAGS;
+  final double? _CORR_MAHALANOBIS_SQ;
+  final int? _CORR_DOF;
+  final double? _CORR_GATE;
+  final double? _CORR_P_VALUE;
+  final bool? _CORR_AMBIGUOUS;
+  final double? _FREQUENCY_UNC;
 
   RFOObjectBuilder({
     String? ID,
@@ -826,6 +875,18 @@ class RFOObjectBuilder extends fb.ObjectBuilder {
     String? DESCRIPTOR,
     String? URL,
     List<String>? TAGS,
+    double? CORR_MAHALANOBIS_SQ,
+    double? corrMahalanobisSq,
+    int? CORR_DOF,
+    int? corrDof,
+    double? CORR_GATE,
+    double? corrGate,
+    double? CORR_P_VALUE,
+    double? corrPValue,
+    bool? CORR_AMBIGUOUS,
+    bool? corrAmbiguous,
+    double? FREQUENCY_UNC,
+    double? frequencyUnc,
   })
       : _ID = ID,
         _OB_TIME = obTime ?? OB_TIME,
@@ -900,7 +961,13 @@ class RFOObjectBuilder extends fb.ObjectBuilder {
         _RAW_FILE_URI = rawFileUri ?? RAW_FILE_URI,
         _DESCRIPTOR = DESCRIPTOR,
         _URL = URL,
-        _TAGS = TAGS;
+        _TAGS = TAGS,
+        _CORR_MAHALANOBIS_SQ = corrMahalanobisSq ?? CORR_MAHALANOBIS_SQ,
+        _CORR_DOF = corrDof ?? CORR_DOF,
+        _CORR_GATE = corrGate ?? CORR_GATE,
+        _CORR_P_VALUE = corrPValue ?? CORR_P_VALUE,
+        _CORR_AMBIGUOUS = corrAmbiguous ?? CORR_AMBIGUOUS,
+        _FREQUENCY_UNC = frequencyUnc ?? FREQUENCY_UNC;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -947,7 +1014,7 @@ class RFOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_URL!);
     final int? TAGSOffset = _TAGS == null ? null
         : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(74);
+    fbBuilder.startTable(80);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, OB_TIMEOffset);
     fbBuilder.addOffset(2, ID_SENSOROffset);
@@ -1022,6 +1089,12 @@ class RFOObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(71, DESCRIPTOROffset);
     fbBuilder.addOffset(72, URLOffset);
     fbBuilder.addOffset(73, TAGSOffset);
+    fbBuilder.addFloat64(74, _CORR_MAHALANOBIS_SQ);
+    fbBuilder.addUint8(75, _CORR_DOF);
+    fbBuilder.addFloat64(76, _CORR_GATE);
+    fbBuilder.addFloat64(77, _CORR_P_VALUE);
+    fbBuilder.addBool(78, _CORR_AMBIGUOUS);
+    fbBuilder.addFloat64(79, _FREQUENCY_UNC);
     return fbBuilder.endTable();
   }
 

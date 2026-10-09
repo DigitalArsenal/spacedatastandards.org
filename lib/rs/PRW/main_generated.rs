@@ -1753,16 +1753,27 @@ impl ::flatbuffers::SimpleToVerifyInSlice for prwRelativityTerms {}
 pub const ENUM_MIN_PRW_DYNAMIC_PARAMETER: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PRW_DYNAMIC_PARAMETER: u8 = 4;
+pub const ENUM_MAX_PRW_DYNAMIC_PARAMETER: u8 = 15;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PRW_DYNAMIC_PARAMETER: [prwDynamicParameter; 5] = [
+pub const ENUM_VALUES_PRW_DYNAMIC_PARAMETER: [prwDynamicParameter; 16] = [
     prwDynamicParameter::UNSPECIFIED,
     prwDynamicParameter::DRAG_AREA_OVER_MASS,
     prwDynamicParameter::DRAG_AREA_OVER_MASS_RATE,
     prwDynamicParameter::SRP_AREA_OVER_MASS,
     prwDynamicParameter::IN_TRACK_ACCELERATION,
+    prwDynamicParameter::ECOM2_D0,
+    prwDynamicParameter::ECOM2_Y0,
+    prwDynamicParameter::ECOM2_B0,
+    prwDynamicParameter::ECOM2_D2_COS,
+    prwDynamicParameter::ECOM2_D2_SIN,
+    prwDynamicParameter::ECOM2_D4_COS,
+    prwDynamicParameter::ECOM2_D4_SIN,
+    prwDynamicParameter::ECOM2_B1_COS,
+    prwDynamicParameter::ECOM2_B1_SIN,
+    prwDynamicParameter::ECOM2_B3_COS,
+    prwDynamicParameter::ECOM2_B3_SIN,
 ];
 
 /// Dynamical model parameters a covariance and STM may carry after the state
@@ -1783,15 +1794,38 @@ impl prwDynamicParameter {
     pub const DRAG_AREA_OVER_MASS_RATE: Self = Self(2);
     pub const SRP_AREA_OVER_MASS: Self = Self(3);
     pub const IN_TRACK_ACCELERATION: Self = Self(4);
+    /// ECOM2 coefficients (PRWEcom2), in their order there.
+    pub const ECOM2_D0: Self = Self(5);
+    pub const ECOM2_Y0: Self = Self(6);
+    pub const ECOM2_B0: Self = Self(7);
+    pub const ECOM2_D2_COS: Self = Self(8);
+    pub const ECOM2_D2_SIN: Self = Self(9);
+    pub const ECOM2_D4_COS: Self = Self(10);
+    pub const ECOM2_D4_SIN: Self = Self(11);
+    pub const ECOM2_B1_COS: Self = Self(12);
+    pub const ECOM2_B1_SIN: Self = Self(13);
+    pub const ECOM2_B3_COS: Self = Self(14);
+    pub const ECOM2_B3_SIN: Self = Self(15);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 4;
+    pub const ENUM_MAX: u8 = 15;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::DRAG_AREA_OVER_MASS,
         Self::DRAG_AREA_OVER_MASS_RATE,
         Self::SRP_AREA_OVER_MASS,
         Self::IN_TRACK_ACCELERATION,
+        Self::ECOM2_D0,
+        Self::ECOM2_Y0,
+        Self::ECOM2_B0,
+        Self::ECOM2_D2_COS,
+        Self::ECOM2_D2_SIN,
+        Self::ECOM2_D4_COS,
+        Self::ECOM2_D4_SIN,
+        Self::ECOM2_B1_COS,
+        Self::ECOM2_B1_SIN,
+        Self::ECOM2_B3_COS,
+        Self::ECOM2_B3_SIN,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -1802,6 +1836,17 @@ impl prwDynamicParameter {
             Self::DRAG_AREA_OVER_MASS_RATE => Some("DRAG_AREA_OVER_MASS_RATE"),
             Self::SRP_AREA_OVER_MASS => Some("SRP_AREA_OVER_MASS"),
             Self::IN_TRACK_ACCELERATION => Some("IN_TRACK_ACCELERATION"),
+            Self::ECOM2_D0 => Some("ECOM2_D0"),
+            Self::ECOM2_Y0 => Some("ECOM2_Y0"),
+            Self::ECOM2_B0 => Some("ECOM2_B0"),
+            Self::ECOM2_D2_COS => Some("ECOM2_D2_COS"),
+            Self::ECOM2_D2_SIN => Some("ECOM2_D2_SIN"),
+            Self::ECOM2_D4_COS => Some("ECOM2_D4_COS"),
+            Self::ECOM2_D4_SIN => Some("ECOM2_D4_SIN"),
+            Self::ECOM2_B1_COS => Some("ECOM2_B1_COS"),
+            Self::ECOM2_B1_SIN => Some("ECOM2_B1_SIN"),
+            Self::ECOM2_B3_COS => Some("ECOM2_B3_COS"),
+            Self::ECOM2_B3_SIN => Some("ECOM2_B3_SIN"),
             _ => None,
         }
     }
@@ -1862,6 +1907,215 @@ impl<'a> ::flatbuffers::Verifiable for prwDynamicParameter {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for prwDynamicParameter {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PRW_RADIATION_PRESSURE_FAMILY: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PRW_RADIATION_PRESSURE_FAMILY: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PRW_RADIATION_PRESSURE_FAMILY: [prwRadiationPressureFamily; 3] = [
+    prwRadiationPressureFamily::CANNONBALL,
+    prwRadiationPressureFamily::GNSS_BOX_WING,
+    prwRadiationPressureFamily::NONE,
+];
+
+/// Solar radiation pressure model family. CANNONBALL uses the
+/// radiation-pressure coefficient and area-to-mass ratio of the force
+/// configuration; GNSS_BOX_WING is the a priori box-wing model of the
+/// spacecraft block in GNSS_BLOCK (Rodriguez-Solano, Hugentobler and
+/// Steigenberger 2012, Adv. Space Res. 49, doi:10.1016/j.asr.2012.01.016)
+/// under nominal yaw steering, with the mass INITIAL_MASS_KG.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct prwRadiationPressureFamily(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl prwRadiationPressureFamily {
+    pub const CANNONBALL: Self = Self(0);
+    pub const GNSS_BOX_WING: Self = Self(1);
+    pub const NONE: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::CANNONBALL,
+        Self::GNSS_BOX_WING,
+        Self::NONE,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::CANNONBALL => Some("CANNONBALL"),
+            Self::GNSS_BOX_WING => Some("GNSS_BOX_WING"),
+            Self::NONE => Some("NONE"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for prwRadiationPressureFamily {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for prwRadiationPressureFamily {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for prwRadiationPressureFamily {
+    type Output = prwRadiationPressureFamily;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for prwRadiationPressureFamily {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for prwRadiationPressureFamily {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for prwRadiationPressureFamily {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PRW_GNSS_SPACECRAFT_BLOCK: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PRW_GNSS_SPACECRAFT_BLOCK: u8 = 3;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PRW_GNSS_SPACECRAFT_BLOCK: [prwGnssSpacecraftBlock; 4] = [
+    prwGnssSpacecraftBlock::UNSPECIFIED,
+    prwGnssSpacecraftBlock::GPS_IIR,
+    prwGnssSpacecraftBlock::GPS_IIR_M,
+    prwGnssSpacecraftBlock::GPS_IIF,
+];
+
+/// GNSS spacecraft block, selecting the box-wing surfaces.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct prwGnssSpacecraftBlock(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl prwGnssSpacecraftBlock {
+    pub const UNSPECIFIED: Self = Self(0);
+    pub const GPS_IIR: Self = Self(1);
+    pub const GPS_IIR_M: Self = Self(2);
+    pub const GPS_IIF: Self = Self(3);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 3;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::GPS_IIR,
+        Self::GPS_IIR_M,
+        Self::GPS_IIF,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::GPS_IIR => Some("GPS_IIR"),
+            Self::GPS_IIR_M => Some("GPS_IIR_M"),
+            Self::GPS_IIF => Some("GPS_IIF"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for prwGnssSpacecraftBlock {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for prwGnssSpacecraftBlock {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for prwGnssSpacecraftBlock {
+    type Output = prwGnssSpacecraftBlock;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for prwGnssSpacecraftBlock {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for prwGnssSpacecraftBlock {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for prwGnssSpacecraftBlock {}
 
 pub enum PRWInitOffset {}
 
@@ -3406,6 +3660,395 @@ impl PRWBatchResponseT {
     }
 }
 
+pub enum PRWEcom2Offset {}
+
+/// ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,
+/// doi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,
+/// added to the a priori model and scaled by the visible Sun fraction.
+#[derive(Copy, Clone, PartialEq)]
+pub struct PRWEcom2<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PRWEcom2<'a> {
+    type Inner = PRWEcom2<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> PRWEcom2<'a> {
+    pub const VT_D0_M_S2: ::flatbuffers::VOffsetT = 4;
+    pub const VT_Y0_M_S2: ::flatbuffers::VOffsetT = 6;
+    pub const VT_B0_M_S2: ::flatbuffers::VOffsetT = 8;
+    pub const VT_D2_COS_M_S2: ::flatbuffers::VOffsetT = 10;
+    pub const VT_D2_SIN_M_S2: ::flatbuffers::VOffsetT = 12;
+    pub const VT_D4_COS_M_S2: ::flatbuffers::VOffsetT = 14;
+    pub const VT_D4_SIN_M_S2: ::flatbuffers::VOffsetT = 16;
+    pub const VT_B1_COS_M_S2: ::flatbuffers::VOffsetT = 18;
+    pub const VT_B1_SIN_M_S2: ::flatbuffers::VOffsetT = 20;
+    pub const VT_B3_COS_M_S2: ::flatbuffers::VOffsetT = 22;
+    pub const VT_B3_SIN_M_S2: ::flatbuffers::VOffsetT = 24;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        PRWEcom2 { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args PRWEcom2Args
+    ) -> ::flatbuffers::WIPOffset<PRWEcom2<'bldr>> {
+        let mut builder = PRWEcom2Builder::new(_fbb);
+        builder.add_B3_SIN_M_S2(args.B3_SIN_M_S2);
+        builder.add_B3_COS_M_S2(args.B3_COS_M_S2);
+        builder.add_B1_SIN_M_S2(args.B1_SIN_M_S2);
+        builder.add_B1_COS_M_S2(args.B1_COS_M_S2);
+        builder.add_D4_SIN_M_S2(args.D4_SIN_M_S2);
+        builder.add_D4_COS_M_S2(args.D4_COS_M_S2);
+        builder.add_D2_SIN_M_S2(args.D2_SIN_M_S2);
+        builder.add_D2_COS_M_S2(args.D2_COS_M_S2);
+        builder.add_B0_M_S2(args.B0_M_S2);
+        builder.add_Y0_M_S2(args.Y0_M_S2);
+        builder.add_D0_M_S2(args.D0_M_S2);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> PRWEcom2T {
+        let D0_M_S2 = self.D0_M_S2();
+        let Y0_M_S2 = self.Y0_M_S2();
+        let B0_M_S2 = self.B0_M_S2();
+        let D2_COS_M_S2 = self.D2_COS_M_S2();
+        let D2_SIN_M_S2 = self.D2_SIN_M_S2();
+        let D4_COS_M_S2 = self.D4_COS_M_S2();
+        let D4_SIN_M_S2 = self.D4_SIN_M_S2();
+        let B1_COS_M_S2 = self.B1_COS_M_S2();
+        let B1_SIN_M_S2 = self.B1_SIN_M_S2();
+        let B3_COS_M_S2 = self.B3_COS_M_S2();
+        let B3_SIN_M_S2 = self.B3_SIN_M_S2();
+        PRWEcom2T {
+            D0_M_S2,
+            Y0_M_S2,
+            B0_M_S2,
+            D2_COS_M_S2,
+            D2_SIN_M_S2,
+            D4_COS_M_S2,
+            D4_SIN_M_S2,
+            B1_COS_M_S2,
+            B1_SIN_M_S2,
+            B3_COS_M_S2,
+            B3_SIN_M_S2,
+        }
+    }
+
+    #[inline]
+    pub fn D0_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEcom2::VT_D0_M_S2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn Y0_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEcom2::VT_Y0_M_S2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn B0_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEcom2::VT_B0_M_S2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn D2_COS_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEcom2::VT_D2_COS_M_S2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn D2_SIN_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEcom2::VT_D2_SIN_M_S2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn D4_COS_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEcom2::VT_D4_COS_M_S2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn D4_SIN_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEcom2::VT_D4_SIN_M_S2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn B1_COS_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEcom2::VT_B1_COS_M_S2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn B1_SIN_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEcom2::VT_B1_SIN_M_S2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn B3_COS_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEcom2::VT_B3_COS_M_S2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn B3_SIN_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEcom2::VT_B3_SIN_M_S2, Some(0.0)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for PRWEcom2<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<f64>("D0_M_S2", Self::VT_D0_M_S2, false)?
+            .visit_field::<f64>("Y0_M_S2", Self::VT_Y0_M_S2, false)?
+            .visit_field::<f64>("B0_M_S2", Self::VT_B0_M_S2, false)?
+            .visit_field::<f64>("D2_COS_M_S2", Self::VT_D2_COS_M_S2, false)?
+            .visit_field::<f64>("D2_SIN_M_S2", Self::VT_D2_SIN_M_S2, false)?
+            .visit_field::<f64>("D4_COS_M_S2", Self::VT_D4_COS_M_S2, false)?
+            .visit_field::<f64>("D4_SIN_M_S2", Self::VT_D4_SIN_M_S2, false)?
+            .visit_field::<f64>("B1_COS_M_S2", Self::VT_B1_COS_M_S2, false)?
+            .visit_field::<f64>("B1_SIN_M_S2", Self::VT_B1_SIN_M_S2, false)?
+            .visit_field::<f64>("B3_COS_M_S2", Self::VT_B3_COS_M_S2, false)?
+            .visit_field::<f64>("B3_SIN_M_S2", Self::VT_B3_SIN_M_S2, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct PRWEcom2Args {
+    pub D0_M_S2: f64,
+    pub Y0_M_S2: f64,
+    pub B0_M_S2: f64,
+    pub D2_COS_M_S2: f64,
+    pub D2_SIN_M_S2: f64,
+    pub D4_COS_M_S2: f64,
+    pub D4_SIN_M_S2: f64,
+    pub B1_COS_M_S2: f64,
+    pub B1_SIN_M_S2: f64,
+    pub B3_COS_M_S2: f64,
+    pub B3_SIN_M_S2: f64,
+}
+
+impl<'a> Default for PRWEcom2Args {
+    #[inline]
+    fn default() -> Self {
+        PRWEcom2Args {
+            D0_M_S2: 0.0,
+            Y0_M_S2: 0.0,
+            B0_M_S2: 0.0,
+            D2_COS_M_S2: 0.0,
+            D2_SIN_M_S2: 0.0,
+            D4_COS_M_S2: 0.0,
+            D4_SIN_M_S2: 0.0,
+            B1_COS_M_S2: 0.0,
+            B1_SIN_M_S2: 0.0,
+            B3_COS_M_S2: 0.0,
+            B3_SIN_M_S2: 0.0,
+        }
+    }
+}
+
+pub struct PRWEcom2Builder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWEcom2Builder<'a, 'b, A> {
+    #[inline]
+    pub fn add_D0_M_S2(&mut self, D0_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWEcom2::VT_D0_M_S2, D0_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_Y0_M_S2(&mut self, Y0_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWEcom2::VT_Y0_M_S2, Y0_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_B0_M_S2(&mut self, B0_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWEcom2::VT_B0_M_S2, B0_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_D2_COS_M_S2(&mut self, D2_COS_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWEcom2::VT_D2_COS_M_S2, D2_COS_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_D2_SIN_M_S2(&mut self, D2_SIN_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWEcom2::VT_D2_SIN_M_S2, D2_SIN_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_D4_COS_M_S2(&mut self, D4_COS_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWEcom2::VT_D4_COS_M_S2, D4_COS_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_D4_SIN_M_S2(&mut self, D4_SIN_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWEcom2::VT_D4_SIN_M_S2, D4_SIN_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_B1_COS_M_S2(&mut self, B1_COS_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWEcom2::VT_B1_COS_M_S2, B1_COS_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_B1_SIN_M_S2(&mut self, B1_SIN_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWEcom2::VT_B1_SIN_M_S2, B1_SIN_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_B3_COS_M_S2(&mut self, B3_COS_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWEcom2::VT_B3_COS_M_S2, B3_COS_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_B3_SIN_M_S2(&mut self, B3_SIN_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWEcom2::VT_B3_SIN_M_S2, B3_SIN_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWEcom2Builder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        PRWEcom2Builder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<PRWEcom2<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for PRWEcom2<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("PRWEcom2");
+        ds.field("D0_M_S2", &self.D0_M_S2());
+        ds.field("Y0_M_S2", &self.Y0_M_S2());
+        ds.field("B0_M_S2", &self.B0_M_S2());
+        ds.field("D2_COS_M_S2", &self.D2_COS_M_S2());
+        ds.field("D2_SIN_M_S2", &self.D2_SIN_M_S2());
+        ds.field("D4_COS_M_S2", &self.D4_COS_M_S2());
+        ds.field("D4_SIN_M_S2", &self.D4_SIN_M_S2());
+        ds.field("B1_COS_M_S2", &self.B1_COS_M_S2());
+        ds.field("B1_SIN_M_S2", &self.B1_SIN_M_S2());
+        ds.field("B3_COS_M_S2", &self.B3_COS_M_S2());
+        ds.field("B3_SIN_M_S2", &self.B3_SIN_M_S2());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PRWEcom2T {
+    pub D0_M_S2: f64,
+    pub Y0_M_S2: f64,
+    pub B0_M_S2: f64,
+    pub D2_COS_M_S2: f64,
+    pub D2_SIN_M_S2: f64,
+    pub D4_COS_M_S2: f64,
+    pub D4_SIN_M_S2: f64,
+    pub B1_COS_M_S2: f64,
+    pub B1_SIN_M_S2: f64,
+    pub B3_COS_M_S2: f64,
+    pub B3_SIN_M_S2: f64,
+}
+
+impl Default for PRWEcom2T {
+    fn default() -> Self {
+        Self {
+            D0_M_S2: 0.0,
+            Y0_M_S2: 0.0,
+            B0_M_S2: 0.0,
+            D2_COS_M_S2: 0.0,
+            D2_SIN_M_S2: 0.0,
+            D4_COS_M_S2: 0.0,
+            D4_SIN_M_S2: 0.0,
+            B1_COS_M_S2: 0.0,
+            B1_SIN_M_S2: 0.0,
+            B3_COS_M_S2: 0.0,
+            B3_SIN_M_S2: 0.0,
+        }
+    }
+}
+
+impl PRWEcom2T {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<PRWEcom2<'b>> {
+        let D0_M_S2 = self.D0_M_S2;
+        let Y0_M_S2 = self.Y0_M_S2;
+        let B0_M_S2 = self.B0_M_S2;
+        let D2_COS_M_S2 = self.D2_COS_M_S2;
+        let D2_SIN_M_S2 = self.D2_SIN_M_S2;
+        let D4_COS_M_S2 = self.D4_COS_M_S2;
+        let D4_SIN_M_S2 = self.D4_SIN_M_S2;
+        let B1_COS_M_S2 = self.B1_COS_M_S2;
+        let B1_SIN_M_S2 = self.B1_SIN_M_S2;
+        let B3_COS_M_S2 = self.B3_COS_M_S2;
+        let B3_SIN_M_S2 = self.B3_SIN_M_S2;
+        PRWEcom2::create(_fbb, &PRWEcom2Args{
+            D0_M_S2,
+            Y0_M_S2,
+            B0_M_S2,
+            D2_COS_M_S2,
+            D2_SIN_M_S2,
+            D4_COS_M_S2,
+            D4_SIN_M_S2,
+            B1_COS_M_S2,
+            B1_SIN_M_S2,
+            B3_COS_M_S2,
+            B3_SIN_M_S2,
+        })
+    }
+}
+
 pub enum PRWInstanceOffset {}
 
 /// Instance identity is host-provided, opaque, and not a physical quantity.
@@ -4197,6 +4840,9 @@ impl<'a> PRWForceConfiguration<'a> {
     pub const VT_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: ::flatbuffers::VOffsetT = 58;
     pub const VT_MAXIMUM_TESSERAL_DEGREE: ::flatbuffers::VOffsetT = 60;
     pub const VT_HAS_MAXIMUM_TESSERAL_DEGREE: ::flatbuffers::VOffsetT = 62;
+    pub const VT_RADIATION_PRESSURE_MODEL: ::flatbuffers::VOffsetT = 64;
+    pub const VT_GNSS_BLOCK: ::flatbuffers::VOffsetT = 66;
+    pub const VT_ECOM2: ::flatbuffers::VOffsetT = 68;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4216,12 +4862,15 @@ impl<'a> PRWForceConfiguration<'a> {
         builder.add_AREA_M2(args.AREA_M2);
         builder.add_INITIAL_MASS_KG(args.INITIAL_MASS_KG);
         builder.add_GRAVITATIONAL_PARAMETER(args.GRAVITATIONAL_PARAMETER);
+        if let Some(x) = args.ECOM2 { builder.add_ECOM2(x); }
         if let Some(x) = args.EPHEMERIS_SOURCE { builder.add_EPHEMERIS_SOURCE(x); }
         if let Some(x) = args.WEATHER { builder.add_WEATHER(x); }
         if let Some(x) = args.THIRD_BODY_IDS { builder.add_THIRD_BODY_IDS(x); }
         builder.add_MAXIMUM_TESSERAL_DEGREE(args.MAXIMUM_TESSERAL_DEGREE);
         builder.add_MAXIMUM_ORDER(args.MAXIMUM_ORDER);
         builder.add_MAXIMUM_DEGREE(args.MAXIMUM_DEGREE);
+        builder.add_GNSS_BLOCK(args.GNSS_BLOCK);
+        builder.add_RADIATION_PRESSURE_MODEL(args.RADIATION_PRESSURE_MODEL);
         builder.add_HAS_MAXIMUM_TESSERAL_DEGREE(args.HAS_MAXIMUM_TESSERAL_DEGREE);
         builder.add_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(args.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
         builder.add_HAS_IN_TRACK_ACCELERATION_M_S2(args.HAS_IN_TRACK_ACCELERATION_M_S2);
@@ -4280,6 +4929,11 @@ impl<'a> PRWForceConfiguration<'a> {
         let HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S();
         let MAXIMUM_TESSERAL_DEGREE = self.MAXIMUM_TESSERAL_DEGREE();
         let HAS_MAXIMUM_TESSERAL_DEGREE = self.HAS_MAXIMUM_TESSERAL_DEGREE();
+        let RADIATION_PRESSURE_MODEL = self.RADIATION_PRESSURE_MODEL();
+        let GNSS_BLOCK = self.GNSS_BLOCK();
+        let ECOM2 = self.ECOM2().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         PRWForceConfigurationT {
             GRAVITY_CHOICE,
             ENABLE_POINT_MASS,
@@ -4311,6 +4965,9 @@ impl<'a> PRWForceConfiguration<'a> {
             HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
             MAXIMUM_TESSERAL_DEGREE,
             HAS_MAXIMUM_TESSERAL_DEGREE,
+            RADIATION_PRESSURE_MODEL,
+            GNSS_BLOCK,
+            ECOM2,
         }
     }
 
@@ -4571,6 +5228,33 @@ impl<'a> PRWForceConfiguration<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<bool>(PRWForceConfiguration::VT_HAS_MAXIMUM_TESSERAL_DEGREE, Some(false)).unwrap()}
     }
+
+    /// Solar radiation pressure model family (default: the cannonball).
+    #[inline]
+    pub fn RADIATION_PRESSURE_MODEL(&self) -> prwRadiationPressureFamily {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<prwRadiationPressureFamily>(PRWForceConfiguration::VT_RADIATION_PRESSURE_MODEL, Some(prwRadiationPressureFamily::CANNONBALL)).unwrap()}
+    }
+
+    /// Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+    #[inline]
+    pub fn GNSS_BLOCK(&self) -> prwGnssSpacecraftBlock {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<prwGnssSpacecraftBlock>(PRWForceConfiguration::VT_GNSS_BLOCK, Some(prwGnssSpacecraftBlock::UNSPECIFIED)).unwrap()}
+    }
+
+    /// ECOM2 coefficients; absent means no ECOM2 term.
+    #[inline]
+    pub fn ECOM2(&self) -> Option<PRWEcom2<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWEcom2>>(PRWForceConfiguration::VT_ECOM2, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PRWForceConfiguration<'_> {
@@ -4609,6 +5293,9 @@ impl ::flatbuffers::Verifiable for PRWForceConfiguration<'_> {
             .visit_field::<bool>("HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S", Self::VT_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false)?
             .visit_field::<u16>("MAXIMUM_TESSERAL_DEGREE", Self::VT_MAXIMUM_TESSERAL_DEGREE, false)?
             .visit_field::<bool>("HAS_MAXIMUM_TESSERAL_DEGREE", Self::VT_HAS_MAXIMUM_TESSERAL_DEGREE, false)?
+            .visit_field::<prwRadiationPressureFamily>("RADIATION_PRESSURE_MODEL", Self::VT_RADIATION_PRESSURE_MODEL, false)?
+            .visit_field::<prwGnssSpacecraftBlock>("GNSS_BLOCK", Self::VT_GNSS_BLOCK, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PRWEcom2>>("ECOM2", Self::VT_ECOM2, false)?
             .finish();
         Ok(())
     }
@@ -4645,6 +5332,9 @@ pub struct PRWForceConfigurationArgs<'a> {
     pub HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: bool,
     pub MAXIMUM_TESSERAL_DEGREE: u16,
     pub HAS_MAXIMUM_TESSERAL_DEGREE: bool,
+    pub RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily,
+    pub GNSS_BLOCK: prwGnssSpacecraftBlock,
+    pub ECOM2: Option<::flatbuffers::WIPOffset<PRWEcom2<'a>>>,
 }
 
 impl<'a> Default for PRWForceConfigurationArgs<'a> {
@@ -4681,6 +5371,9 @@ impl<'a> Default for PRWForceConfigurationArgs<'a> {
             HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: false,
             MAXIMUM_TESSERAL_DEGREE: 0,
             HAS_MAXIMUM_TESSERAL_DEGREE: false,
+            RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily::CANNONBALL,
+            GNSS_BLOCK: prwGnssSpacecraftBlock::UNSPECIFIED,
+            ECOM2: None,
         }
     }
 }
@@ -4842,6 +5535,21 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWForceConfigurationBuilder<
     }
 
     #[inline]
+    pub fn add_RADIATION_PRESSURE_MODEL(&mut self, RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily) {
+        self.fbb_.push_slot::<prwRadiationPressureFamily>(PRWForceConfiguration::VT_RADIATION_PRESSURE_MODEL, RADIATION_PRESSURE_MODEL, prwRadiationPressureFamily::CANNONBALL);
+    }
+
+    #[inline]
+    pub fn add_GNSS_BLOCK(&mut self, GNSS_BLOCK: prwGnssSpacecraftBlock) {
+        self.fbb_.push_slot::<prwGnssSpacecraftBlock>(PRWForceConfiguration::VT_GNSS_BLOCK, GNSS_BLOCK, prwGnssSpacecraftBlock::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_ECOM2(&mut self, ECOM2: ::flatbuffers::WIPOffset<PRWEcom2<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PRWEcom2>>(PRWForceConfiguration::VT_ECOM2, ECOM2);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWForceConfigurationBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PRWForceConfigurationBuilder {
@@ -4891,6 +5599,9 @@ impl ::core::fmt::Debug for PRWForceConfiguration<'_> {
         ds.field("HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S", &self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S());
         ds.field("MAXIMUM_TESSERAL_DEGREE", &self.MAXIMUM_TESSERAL_DEGREE());
         ds.field("HAS_MAXIMUM_TESSERAL_DEGREE", &self.HAS_MAXIMUM_TESSERAL_DEGREE());
+        ds.field("RADIATION_PRESSURE_MODEL", &self.RADIATION_PRESSURE_MODEL());
+        ds.field("GNSS_BLOCK", &self.GNSS_BLOCK());
+        ds.field("ECOM2", &self.ECOM2());
         ds.finish()
     }
 }
@@ -4928,6 +5639,9 @@ pub struct PRWForceConfigurationT {
     pub HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: bool,
     pub MAXIMUM_TESSERAL_DEGREE: u16,
     pub HAS_MAXIMUM_TESSERAL_DEGREE: bool,
+    pub RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily,
+    pub GNSS_BLOCK: prwGnssSpacecraftBlock,
+    pub ECOM2: Option<alloc::boxed::Box<PRWEcom2T>>,
 }
 
 impl Default for PRWForceConfigurationT {
@@ -4963,6 +5677,9 @@ impl Default for PRWForceConfigurationT {
             HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: false,
             MAXIMUM_TESSERAL_DEGREE: 0,
             HAS_MAXIMUM_TESSERAL_DEGREE: false,
+            RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily::CANNONBALL,
+            GNSS_BLOCK: prwGnssSpacecraftBlock::UNSPECIFIED,
+            ECOM2: None,
         }
     }
 }
@@ -5009,6 +5726,11 @@ impl PRWForceConfigurationT {
         let HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
         let MAXIMUM_TESSERAL_DEGREE = self.MAXIMUM_TESSERAL_DEGREE;
         let HAS_MAXIMUM_TESSERAL_DEGREE = self.HAS_MAXIMUM_TESSERAL_DEGREE;
+        let RADIATION_PRESSURE_MODEL = self.RADIATION_PRESSURE_MODEL;
+        let GNSS_BLOCK = self.GNSS_BLOCK;
+        let ECOM2 = self.ECOM2.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         PRWForceConfiguration::create(_fbb, &PRWForceConfigurationArgs{
             GRAVITY_CHOICE,
             ENABLE_POINT_MASS,
@@ -5040,6 +5762,9 @@ impl PRWForceConfigurationT {
             HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
             MAXIMUM_TESSERAL_DEGREE,
             HAS_MAXIMUM_TESSERAL_DEGREE,
+            RADIATION_PRESSURE_MODEL,
+            GNSS_BLOCK,
+            ECOM2,
         })
     }
 }
