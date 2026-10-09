@@ -249,6 +249,14 @@
       "type" : "string",
       "enum": ["CANNONBALL", "GNSS_BOX_WING", "NONE"]
     },
+    "prwEarthRadiationModel" : {
+      "type" : "string",
+      "enum": ["NONE", "KNOCKE"]
+    },
+    "prwOceanTideModel" : {
+      "type" : "string",
+      "enum": ["NONE", "FES2004"]
+    },
     "prwGnssSpacecraftBlock" : {
       "type" : "string",
       "enum": ["UNSPECIFIED", "GPS_IIR", "GPS_IIR_M", "GPS_IIF"]
@@ -2808,6 +2816,33 @@
         "ECOM2" : {
                 "$ref" : "#/definitions/PRWEcom2",
                 "description" : "ECOM2 coefficients; absent means no ECOM2 term."
+              },
+        "EARTH_RADIATION" : {
+                "$ref" : "#/definitions/prwEarthRadiationModel",
+                "description" : "Earth radiation pressure (albedo and infrared). It reads the Sun's\nposition from the request's ephemeris source."
+              },
+        "EARTH_RADIATION_RESOLUTION_DEG" : {
+                "type" : "number",
+                "description" : "Angular size of the Earth surface elements it sums, degrees."
+              },
+        "EARTH_RADIATION_AREA_OVER_MASS_M2_KG" : {
+                "type" : "number",
+                "description" : "Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the\ncannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and\nfitting SRP_AREA_OVER_MASS scales both."
+              },
+        "HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG" : {
+                "type" : "boolean",
+                "description" : "True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent."
+              },
+        "OCEAN_TIDES" : {
+                "$ref" : "#/definitions/prwOceanTideModel",
+                "description" : "Ocean tides. Their field is Earth-fixed, so a provider needs Earth\norientation (PRW.EARTH_ORIENTATION) to apply them."
+              },
+        "OCEAN_TIDE_MAXIMUM_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Truncation of the ocean tide field."
+              },
+        "OCEAN_TIDE_MAXIMUM_ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
               }
       },
       "required" : ["EPHEMERIS_SOURCE"],

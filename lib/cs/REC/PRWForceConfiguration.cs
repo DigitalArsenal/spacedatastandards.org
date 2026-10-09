@@ -85,6 +85,23 @@ public struct PRWForceConfiguration : IFlatbufferObject
   public prwGnssSpacecraftBlock GNSS_BLOCK { get { int o = __p.__offset(66); return o != 0 ? (prwGnssSpacecraftBlock)__p.bb.Get(o + __p.bb_pos) : prwGnssSpacecraftBlock.UNSPECIFIED; } }
   /// ECOM2 coefficients; absent means no ECOM2 term.
   public PRWEcom2? ECOM2 { get { int o = __p.__offset(68); return o != 0 ? (PRWEcom2?)(new PRWEcom2()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Earth radiation pressure (albedo and infrared). It reads the Sun's
+  /// position from the request's ephemeris source.
+  public prwEarthRadiationModel EARTH_RADIATION { get { int o = __p.__offset(70); return o != 0 ? (prwEarthRadiationModel)__p.bb.Get(o + __p.bb_pos) : prwEarthRadiationModel.NONE; } }
+  /// Angular size of the Earth surface elements it sums, degrees.
+  public double EARTH_RADIATION_RESOLUTION_DEG { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)15.0; } }
+  /// Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+  /// cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+  /// fitting SRP_AREA_OVER_MASS scales both.
+  public double EARTH_RADIATION_AREA_OVER_MASS_M2_KG { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  public bool HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG { get { int o = __p.__offset(76); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+  /// orientation (PRW.EARTH_ORIENTATION) to apply them.
+  public prwOceanTideModel OCEAN_TIDES { get { int o = __p.__offset(78); return o != 0 ? (prwOceanTideModel)__p.bb.Get(o + __p.bb_pos) : prwOceanTideModel.NONE; } }
+  /// Truncation of the ocean tide field.
+  public ushort OCEAN_TIDE_MAXIMUM_DEGREE { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)30; } }
+  public ushort OCEAN_TIDE_MAXIMUM_ORDER { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)30; } }
 
   public static Offset<PRWForceConfiguration> CreatePRWForceConfiguration(FlatBufferBuilder builder,
       prwGravitySelection GRAVITY_CHOICE = prwGravitySelection.INFER_FLAGS,
@@ -119,8 +136,17 @@ public struct PRWForceConfiguration : IFlatbufferObject
       bool HAS_MAXIMUM_TESSERAL_DEGREE = false,
       prwRadiationPressureFamily RADIATION_PRESSURE_MODEL = prwRadiationPressureFamily.CANNONBALL,
       prwGnssSpacecraftBlock GNSS_BLOCK = prwGnssSpacecraftBlock.UNSPECIFIED,
-      Offset<PRWEcom2> ECOM2Offset = default(Offset<PRWEcom2>)) {
-    builder.StartTable(33);
+      Offset<PRWEcom2> ECOM2Offset = default(Offset<PRWEcom2>),
+      prwEarthRadiationModel EARTH_RADIATION = prwEarthRadiationModel.NONE,
+      double EARTH_RADIATION_RESOLUTION_DEG = 15.0,
+      double EARTH_RADIATION_AREA_OVER_MASS_M2_KG = 0.0,
+      bool HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG = false,
+      prwOceanTideModel OCEAN_TIDES = prwOceanTideModel.NONE,
+      ushort OCEAN_TIDE_MAXIMUM_DEGREE = 30,
+      ushort OCEAN_TIDE_MAXIMUM_ORDER = 30) {
+    builder.StartTable(40);
+    PRWForceConfiguration.AddEARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+    PRWForceConfiguration.AddEARTH_RADIATION_RESOLUTION_DEG(builder, EARTH_RADIATION_RESOLUTION_DEG);
     PRWForceConfiguration.AddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
     PRWForceConfiguration.AddIN_TRACK_ACCELERATION_M_S2(builder, IN_TRACK_ACCELERATION_M_S2);
     PRWForceConfiguration.AddDRAG_COEFFICIENT(builder, DRAG_COEFFICIENT);
@@ -132,9 +158,14 @@ public struct PRWForceConfiguration : IFlatbufferObject
     PRWForceConfiguration.AddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCEOffset);
     PRWForceConfiguration.AddWEATHER(builder, WEATHEROffset);
     PRWForceConfiguration.AddTHIRD_BODY_IDS(builder, THIRD_BODY_IDSOffset);
+    PRWForceConfiguration.AddOCEAN_TIDE_MAXIMUM_ORDER(builder, OCEAN_TIDE_MAXIMUM_ORDER);
+    PRWForceConfiguration.AddOCEAN_TIDE_MAXIMUM_DEGREE(builder, OCEAN_TIDE_MAXIMUM_DEGREE);
     PRWForceConfiguration.AddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE);
     PRWForceConfiguration.AddMAXIMUM_ORDER(builder, MAXIMUM_ORDER);
     PRWForceConfiguration.AddMAXIMUM_DEGREE(builder, MAXIMUM_DEGREE);
+    PRWForceConfiguration.AddOCEAN_TIDES(builder, OCEAN_TIDES);
+    PRWForceConfiguration.AddHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+    PRWForceConfiguration.AddEARTH_RADIATION(builder, EARTH_RADIATION);
     PRWForceConfiguration.AddGNSS_BLOCK(builder, GNSS_BLOCK);
     PRWForceConfiguration.AddRADIATION_PRESSURE_MODEL(builder, RADIATION_PRESSURE_MODEL);
     PRWForceConfiguration.AddHAS_MAXIMUM_TESSERAL_DEGREE(builder, HAS_MAXIMUM_TESSERAL_DEGREE);
@@ -157,7 +188,7 @@ public struct PRWForceConfiguration : IFlatbufferObject
     return PRWForceConfiguration.EndPRWForceConfiguration(builder);
   }
 
-  public static void StartPRWForceConfiguration(FlatBufferBuilder builder) { builder.StartTable(33); }
+  public static void StartPRWForceConfiguration(FlatBufferBuilder builder) { builder.StartTable(40); }
   public static void AddGRAVITY_CHOICE(FlatBufferBuilder builder, prwGravitySelection GRAVITY_CHOICE) { builder.AddByte(0, (byte)GRAVITY_CHOICE, 0); }
   public static void AddENABLE_POINT_MASS(FlatBufferBuilder builder, bool ENABLE_POINT_MASS) { builder.AddBool(1, ENABLE_POINT_MASS, true); }
   public static void AddGRAVITATIONAL_PARAMETER(FlatBufferBuilder builder, double GRAVITATIONAL_PARAMETER) { builder.AddDouble(2, GRAVITATIONAL_PARAMETER, 0.0); }
@@ -196,6 +227,13 @@ public struct PRWForceConfiguration : IFlatbufferObject
   public static void AddRADIATION_PRESSURE_MODEL(FlatBufferBuilder builder, prwRadiationPressureFamily RADIATION_PRESSURE_MODEL) { builder.AddByte(30, (byte)RADIATION_PRESSURE_MODEL, 0); }
   public static void AddGNSS_BLOCK(FlatBufferBuilder builder, prwGnssSpacecraftBlock GNSS_BLOCK) { builder.AddByte(31, (byte)GNSS_BLOCK, 0); }
   public static void AddECOM2(FlatBufferBuilder builder, Offset<PRWEcom2> ECOM2Offset) { builder.AddOffset(32, ECOM2Offset.Value, 0); }
+  public static void AddEARTH_RADIATION(FlatBufferBuilder builder, prwEarthRadiationModel EARTH_RADIATION) { builder.AddByte(33, (byte)EARTH_RADIATION, 0); }
+  public static void AddEARTH_RADIATION_RESOLUTION_DEG(FlatBufferBuilder builder, double EARTH_RADIATION_RESOLUTION_DEG) { builder.AddDouble(34, EARTH_RADIATION_RESOLUTION_DEG, 15.0); }
+  public static void AddEARTH_RADIATION_AREA_OVER_MASS_M2_KG(FlatBufferBuilder builder, double EARTH_RADIATION_AREA_OVER_MASS_M2_KG) { builder.AddDouble(35, EARTH_RADIATION_AREA_OVER_MASS_M2_KG, 0.0); }
+  public static void AddHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(FlatBufferBuilder builder, bool HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG) { builder.AddBool(36, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, false); }
+  public static void AddOCEAN_TIDES(FlatBufferBuilder builder, prwOceanTideModel OCEAN_TIDES) { builder.AddByte(37, (byte)OCEAN_TIDES, 0); }
+  public static void AddOCEAN_TIDE_MAXIMUM_DEGREE(FlatBufferBuilder builder, ushort OCEAN_TIDE_MAXIMUM_DEGREE) { builder.AddUshort(38, OCEAN_TIDE_MAXIMUM_DEGREE, 30); }
+  public static void AddOCEAN_TIDE_MAXIMUM_ORDER(FlatBufferBuilder builder, ushort OCEAN_TIDE_MAXIMUM_ORDER) { builder.AddUshort(39, OCEAN_TIDE_MAXIMUM_ORDER, 30); }
   public static Offset<PRWForceConfiguration> EndPRWForceConfiguration(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 46);  // EPHEMERIS_SOURCE
@@ -241,6 +279,13 @@ public struct PRWForceConfiguration : IFlatbufferObject
     _o.RADIATION_PRESSURE_MODEL = this.RADIATION_PRESSURE_MODEL;
     _o.GNSS_BLOCK = this.GNSS_BLOCK;
     _o.ECOM2 = this.ECOM2.HasValue ? this.ECOM2.Value.UnPack() : null;
+    _o.EARTH_RADIATION = this.EARTH_RADIATION;
+    _o.EARTH_RADIATION_RESOLUTION_DEG = this.EARTH_RADIATION_RESOLUTION_DEG;
+    _o.EARTH_RADIATION_AREA_OVER_MASS_M2_KG = this.EARTH_RADIATION_AREA_OVER_MASS_M2_KG;
+    _o.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG = this.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG;
+    _o.OCEAN_TIDES = this.OCEAN_TIDES;
+    _o.OCEAN_TIDE_MAXIMUM_DEGREE = this.OCEAN_TIDE_MAXIMUM_DEGREE;
+    _o.OCEAN_TIDE_MAXIMUM_ORDER = this.OCEAN_TIDE_MAXIMUM_ORDER;
   }
   public static Offset<PRWForceConfiguration> Pack(FlatBufferBuilder builder, PRWForceConfigurationT _o) {
     if (_o == null) return default(Offset<PRWForceConfiguration>);
@@ -286,7 +331,14 @@ public struct PRWForceConfiguration : IFlatbufferObject
       _o.HAS_MAXIMUM_TESSERAL_DEGREE,
       _o.RADIATION_PRESSURE_MODEL,
       _o.GNSS_BLOCK,
-      _ECOM2);
+      _ECOM2,
+      _o.EARTH_RADIATION,
+      _o.EARTH_RADIATION_RESOLUTION_DEG,
+      _o.EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+      _o.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+      _o.OCEAN_TIDES,
+      _o.OCEAN_TIDE_MAXIMUM_DEGREE,
+      _o.OCEAN_TIDE_MAXIMUM_ORDER);
   }
 }
 
@@ -325,6 +377,13 @@ public class PRWForceConfigurationT
   public prwRadiationPressureFamily RADIATION_PRESSURE_MODEL { get; set; }
   public prwGnssSpacecraftBlock GNSS_BLOCK { get; set; }
   public PRWEcom2T ECOM2 { get; set; }
+  public prwEarthRadiationModel EARTH_RADIATION { get; set; }
+  public double EARTH_RADIATION_RESOLUTION_DEG { get; set; }
+  public double EARTH_RADIATION_AREA_OVER_MASS_M2_KG { get; set; }
+  public bool HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG { get; set; }
+  public prwOceanTideModel OCEAN_TIDES { get; set; }
+  public ushort OCEAN_TIDE_MAXIMUM_DEGREE { get; set; }
+  public ushort OCEAN_TIDE_MAXIMUM_ORDER { get; set; }
 
   public PRWForceConfigurationT() {
     this.GRAVITY_CHOICE = prwGravitySelection.INFER_FLAGS;
@@ -360,6 +419,13 @@ public class PRWForceConfigurationT
     this.RADIATION_PRESSURE_MODEL = prwRadiationPressureFamily.CANNONBALL;
     this.GNSS_BLOCK = prwGnssSpacecraftBlock.UNSPECIFIED;
     this.ECOM2 = null;
+    this.EARTH_RADIATION = prwEarthRadiationModel.NONE;
+    this.EARTH_RADIATION_RESOLUTION_DEG = 15.0;
+    this.EARTH_RADIATION_AREA_OVER_MASS_M2_KG = 0.0;
+    this.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG = false;
+    this.OCEAN_TIDES = prwOceanTideModel.NONE;
+    this.OCEAN_TIDE_MAXIMUM_DEGREE = 30;
+    this.OCEAN_TIDE_MAXIMUM_ORDER = 30;
   }
 }
 
@@ -402,6 +468,13 @@ static public class PRWForceConfigurationVerify
       && verifier.VerifyField(tablePos, 64 /*RADIATION_PRESSURE_MODEL*/, 1 /*prwRadiationPressureFamily*/, 1, false)
       && verifier.VerifyField(tablePos, 66 /*GNSS_BLOCK*/, 1 /*prwGnssSpacecraftBlock*/, 1, false)
       && verifier.VerifyTable(tablePos, 68 /*ECOM2*/, PRWEcom2Verify.Verify, false)
+      && verifier.VerifyField(tablePos, 70 /*EARTH_RADIATION*/, 1 /*prwEarthRadiationModel*/, 1, false)
+      && verifier.VerifyField(tablePos, 72 /*EARTH_RADIATION_RESOLUTION_DEG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 74 /*EARTH_RADIATION_AREA_OVER_MASS_M2_KG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 76 /*HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 78 /*OCEAN_TIDES*/, 1 /*prwOceanTideModel*/, 1, false)
+      && verifier.VerifyField(tablePos, 80 /*OCEAN_TIDE_MAXIMUM_DEGREE*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 82 /*OCEAN_TIDE_MAXIMUM_ORDER*/, 2 /*ushort*/, 2, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

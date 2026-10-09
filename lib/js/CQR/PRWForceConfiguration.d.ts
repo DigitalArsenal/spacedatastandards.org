@@ -2,8 +2,10 @@ import * as flatbuffers from 'flatbuffers';
 import { PRWEcom2, PRWEcom2T } from './PRWEcom2.js';
 import { PRWSpaceWeather, PRWSpaceWeatherT } from './PRWSpaceWeather.js';
 import { prwAtmosphereFamily } from './prwAtmosphereFamily.js';
+import { prwEarthRadiationModel } from './prwEarthRadiationModel.js';
 import { prwGnssSpacecraftBlock } from './prwGnssSpacecraftBlock.js';
 import { prwGravitySelection } from './prwGravitySelection.js';
+import { prwOceanTideModel } from './prwOceanTideModel.js';
 import { prwRadiationPressureFamily } from './prwRadiationPressureFamily.js';
 import { prwRelativityTerms } from './prwRelativityTerms.js';
 import { prwSolidTideModel } from './prwSolidTideModel.js';
@@ -106,6 +108,35 @@ export declare class PRWForceConfiguration implements flatbuffers.IUnpackableObj
      * ECOM2 coefficients; absent means no ECOM2 term.
      */
     ECOM2(obj?: PRWEcom2): PRWEcom2 | null;
+    /**
+     * Earth radiation pressure (albedo and infrared). It reads the Sun's
+     * position from the request's ephemeris source.
+     */
+    EARTH_RADIATION(): prwEarthRadiationModel;
+    /**
+     * Angular size of the Earth surface elements it sums, degrees.
+     */
+    EARTH_RADIATION_RESOLUTION_DEG(): number;
+    /**
+     * Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+     * cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+     * fitting SRP_AREA_OVER_MASS scales both.
+     */
+    EARTH_RADIATION_AREA_OVER_MASS_M2_KG(): number;
+    /**
+     * True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+     */
+    HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(): boolean;
+    /**
+     * Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+     * orientation (PRW.EARTH_ORIENTATION) to apply them.
+     */
+    OCEAN_TIDES(): prwOceanTideModel;
+    /**
+     * Truncation of the ocean tide field.
+     */
+    OCEAN_TIDE_MAXIMUM_DEGREE(): number;
+    OCEAN_TIDE_MAXIMUM_ORDER(): number;
     static startPRWForceConfiguration(builder: flatbuffers.Builder): void;
     static addGravityChoice(builder: flatbuffers.Builder, GRAVITY_CHOICE: prwGravitySelection): void;
     static addEnablePointMass(builder: flatbuffers.Builder, ENABLE_POINT_MASS: boolean): void;
@@ -146,6 +177,13 @@ export declare class PRWForceConfiguration implements flatbuffers.IUnpackableObj
     static addRadiationPressureModel(builder: flatbuffers.Builder, RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily): void;
     static addGnssBlock(builder: flatbuffers.Builder, GNSS_BLOCK: prwGnssSpacecraftBlock): void;
     static addEcom2(builder: flatbuffers.Builder, ECOM2Offset: flatbuffers.Offset): void;
+    static addEarthRadiation(builder: flatbuffers.Builder, EARTH_RADIATION: prwEarthRadiationModel): void;
+    static addEarthRadiationResolutionDeg(builder: flatbuffers.Builder, EARTH_RADIATION_RESOLUTION_DEG: number): void;
+    static addEarthRadiationAreaOverMassM2Kg(builder: flatbuffers.Builder, EARTH_RADIATION_AREA_OVER_MASS_M2_KG: number): void;
+    static addHasEarthRadiationAreaOverMassM2Kg(builder: flatbuffers.Builder, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: boolean): void;
+    static addOceanTides(builder: flatbuffers.Builder, OCEAN_TIDES: prwOceanTideModel): void;
+    static addOceanTideMaximumDegree(builder: flatbuffers.Builder, OCEAN_TIDE_MAXIMUM_DEGREE: number): void;
+    static addOceanTideMaximumOrder(builder: flatbuffers.Builder, OCEAN_TIDE_MAXIMUM_ORDER: number): void;
     static endPRWForceConfiguration(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PRWForceConfigurationT;
     unpackTo(_o: PRWForceConfigurationT): void;
@@ -184,7 +222,14 @@ export declare class PRWForceConfigurationT implements flatbuffers.IGeneratedObj
     RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily;
     GNSS_BLOCK: prwGnssSpacecraftBlock;
     ECOM2: PRWEcom2T | null;
-    constructor(GRAVITY_CHOICE?: prwGravitySelection, ENABLE_POINT_MASS?: boolean, GRAVITATIONAL_PARAMETER?: number, ENABLE_J2?: boolean, ENABLE_J3?: boolean, ENABLE_J4?: boolean, ENABLE_HIGHER_ZONALS?: boolean, MAXIMUM_DEGREE?: number, HAS_MAXIMUM_DEGREE?: boolean, MAXIMUM_ORDER?: number, HAS_MAXIMUM_ORDER?: boolean, ENABLE_THIRD_BODY?: boolean, THIRD_BODY_IDS?: (number)[], ENABLE_SRP?: boolean, ENABLE_DRAG?: boolean, INITIAL_MASS_KG?: number, AREA_M2?: number, REFLECTIVITY_COEFFICIENT?: number, DRAG_COEFFICIENT?: number, ATMOSPHERE_MODEL?: prwAtmosphereFamily, WEATHER?: PRWSpaceWeatherT | null, EPHEMERIS_SOURCE?: string | Uint8Array | null, SOLID_TIDES?: prwSolidTideModel, RELATIVITY?: prwRelativityTerms, IN_TRACK_ACCELERATION_M_S2?: number, HAS_IN_TRACK_ACCELERATION_M_S2?: boolean, DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: number, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: boolean, MAXIMUM_TESSERAL_DEGREE?: number, HAS_MAXIMUM_TESSERAL_DEGREE?: boolean, RADIATION_PRESSURE_MODEL?: prwRadiationPressureFamily, GNSS_BLOCK?: prwGnssSpacecraftBlock, ECOM2?: PRWEcom2T | null);
+    EARTH_RADIATION: prwEarthRadiationModel;
+    EARTH_RADIATION_RESOLUTION_DEG: number;
+    EARTH_RADIATION_AREA_OVER_MASS_M2_KG: number;
+    HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: boolean;
+    OCEAN_TIDES: prwOceanTideModel;
+    OCEAN_TIDE_MAXIMUM_DEGREE: number;
+    OCEAN_TIDE_MAXIMUM_ORDER: number;
+    constructor(GRAVITY_CHOICE?: prwGravitySelection, ENABLE_POINT_MASS?: boolean, GRAVITATIONAL_PARAMETER?: number, ENABLE_J2?: boolean, ENABLE_J3?: boolean, ENABLE_J4?: boolean, ENABLE_HIGHER_ZONALS?: boolean, MAXIMUM_DEGREE?: number, HAS_MAXIMUM_DEGREE?: boolean, MAXIMUM_ORDER?: number, HAS_MAXIMUM_ORDER?: boolean, ENABLE_THIRD_BODY?: boolean, THIRD_BODY_IDS?: (number)[], ENABLE_SRP?: boolean, ENABLE_DRAG?: boolean, INITIAL_MASS_KG?: number, AREA_M2?: number, REFLECTIVITY_COEFFICIENT?: number, DRAG_COEFFICIENT?: number, ATMOSPHERE_MODEL?: prwAtmosphereFamily, WEATHER?: PRWSpaceWeatherT | null, EPHEMERIS_SOURCE?: string | Uint8Array | null, SOLID_TIDES?: prwSolidTideModel, RELATIVITY?: prwRelativityTerms, IN_TRACK_ACCELERATION_M_S2?: number, HAS_IN_TRACK_ACCELERATION_M_S2?: boolean, DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: number, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: boolean, MAXIMUM_TESSERAL_DEGREE?: number, HAS_MAXIMUM_TESSERAL_DEGREE?: boolean, RADIATION_PRESSURE_MODEL?: prwRadiationPressureFamily, GNSS_BLOCK?: prwGnssSpacecraftBlock, ECOM2?: PRWEcom2T | null, EARTH_RADIATION?: prwEarthRadiationModel, EARTH_RADIATION_RESOLUTION_DEG?: number, EARTH_RADIATION_AREA_OVER_MASS_M2_KG?: number, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG?: boolean, OCEAN_TIDES?: prwOceanTideModel, OCEAN_TIDE_MAXIMUM_DEGREE?: number, OCEAN_TIDE_MAXIMUM_ORDER?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PRWForceConfiguration.d.ts.map

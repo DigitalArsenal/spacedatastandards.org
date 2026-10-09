@@ -271,6 +271,63 @@ class PRWForceConfiguration : Table() {
             null
         }
     }
+    /**
+     * Earth radiation pressure (albedo and infrared). It reads the Sun's
+     * position from the request's ephemeris source.
+     */
+    val earthRadiation : UByte
+        get() {
+            val o = __offset(70)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Angular size of the Earth surface elements it sums, degrees.
+     */
+    val earthRadiationResolutionDeg : Double
+        get() {
+            val o = __offset(72)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 15.0
+        }
+    /**
+     * Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+     * cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+     * fitting SRP_AREA_OVER_MASS scales both.
+     */
+    val earthRadiationAreaOverMassM2Kg : Double
+        get() {
+            val o = __offset(74)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+     */
+    val hasEarthRadiationAreaOverMassM2Kg : Boolean
+        get() {
+            val o = __offset(76)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+     * orientation (PRW.EARTH_ORIENTATION) to apply them.
+     */
+    val oceanTides : UByte
+        get() {
+            val o = __offset(78)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Truncation of the ocean tide field.
+     */
+    val oceanTideMaximumDegree : UShort
+        get() {
+            val o = __offset(80)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 30u
+        }
+    val oceanTideMaximumOrder : UShort
+        get() {
+            val o = __offset(82)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 30u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPRWForceConfiguration(_bb: ByteBuffer): PRWForceConfiguration = getRootAsPRWForceConfiguration(_bb, PRWForceConfiguration())
@@ -278,8 +335,10 @@ class PRWForceConfiguration : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPRWForceConfiguration(builder: FlatBufferBuilder, gravityChoice: UByte, enablePointMass: Boolean, gravitationalParameter: Double, enableJ2: Boolean, enableJ3: Boolean, enableJ4: Boolean, enableHigherZonals: Boolean, maximumDegree: UShort, hasMaximumDegree: Boolean, maximumOrder: UShort, hasMaximumOrder: Boolean, enableThirdBody: Boolean, thirdBodyIdsOffset: Int, enableSrp: Boolean, enableDrag: Boolean, initialMassKg: Double, areaM2: Double, reflectivityCoefficient: Double, dragCoefficient: Double, atmosphereModel: UByte, weatherOffset: Int, ephemerisSourceOffset: Int, solidTides: UByte, relativity: UByte, inTrackAccelerationMS2: Double, hasInTrackAccelerationMS2: Boolean, dragAreaOverMassRateM2KgS: Double, hasDragAreaOverMassRateM2KgS: Boolean, maximumTesseralDegree: UShort, hasMaximumTesseralDegree: Boolean, radiationPressureModel: UByte, gnssBlock: UByte, ecom2Offset: Int) : Int {
-            builder.startTable(33)
+        fun createPRWForceConfiguration(builder: FlatBufferBuilder, gravityChoice: UByte, enablePointMass: Boolean, gravitationalParameter: Double, enableJ2: Boolean, enableJ3: Boolean, enableJ4: Boolean, enableHigherZonals: Boolean, maximumDegree: UShort, hasMaximumDegree: Boolean, maximumOrder: UShort, hasMaximumOrder: Boolean, enableThirdBody: Boolean, thirdBodyIdsOffset: Int, enableSrp: Boolean, enableDrag: Boolean, initialMassKg: Double, areaM2: Double, reflectivityCoefficient: Double, dragCoefficient: Double, atmosphereModel: UByte, weatherOffset: Int, ephemerisSourceOffset: Int, solidTides: UByte, relativity: UByte, inTrackAccelerationMS2: Double, hasInTrackAccelerationMS2: Boolean, dragAreaOverMassRateM2KgS: Double, hasDragAreaOverMassRateM2KgS: Boolean, maximumTesseralDegree: UShort, hasMaximumTesseralDegree: Boolean, radiationPressureModel: UByte, gnssBlock: UByte, ecom2Offset: Int, earthRadiation: UByte, earthRadiationResolutionDeg: Double, earthRadiationAreaOverMassM2Kg: Double, hasEarthRadiationAreaOverMassM2Kg: Boolean, oceanTides: UByte, oceanTideMaximumDegree: UShort, oceanTideMaximumOrder: UShort) : Int {
+            builder.startTable(40)
+            addEARTHRADIATIONAREAOVERMASSM2KG(builder, earthRadiationAreaOverMassM2Kg)
+            addEARTHRADIATIONRESOLUTIONDEG(builder, earthRadiationResolutionDeg)
             addDRAGAREAOVERMASSRATEM2KGS(builder, dragAreaOverMassRateM2KgS)
             addINTRACKACCELERATIONMS2(builder, inTrackAccelerationMS2)
             addDRAGCOEFFICIENT(builder, dragCoefficient)
@@ -291,9 +350,14 @@ class PRWForceConfiguration : Table() {
             addEPHEMERISSOURCE(builder, ephemerisSourceOffset)
             addWEATHER(builder, weatherOffset)
             addTHIRDBODYIDS(builder, thirdBodyIdsOffset)
+            addOCEANTIDEMAXIMUMORDER(builder, oceanTideMaximumOrder)
+            addOCEANTIDEMAXIMUMDEGREE(builder, oceanTideMaximumDegree)
             addMAXIMUMTESSERALDEGREE(builder, maximumTesseralDegree)
             addMAXIMUMORDER(builder, maximumOrder)
             addMAXIMUMDEGREE(builder, maximumDegree)
+            addOCEANTIDES(builder, oceanTides)
+            addHASEARTHRADIATIONAREAOVERMASSM2KG(builder, hasEarthRadiationAreaOverMassM2Kg)
+            addEARTHRADIATION(builder, earthRadiation)
             addGNSSBLOCK(builder, gnssBlock)
             addRADIATIONPRESSUREMODEL(builder, radiationPressureModel)
             addHASMAXIMUMTESSERALDEGREE(builder, hasMaximumTesseralDegree)
@@ -315,7 +379,7 @@ class PRWForceConfiguration : Table() {
             addGRAVITYCHOICE(builder, gravityChoice)
             return endPRWForceConfiguration(builder)
         }
-        fun startPRWForceConfiguration(builder: FlatBufferBuilder) = builder.startTable(33)
+        fun startPRWForceConfiguration(builder: FlatBufferBuilder) = builder.startTable(40)
         fun addGRAVITYCHOICE(builder: FlatBufferBuilder, gravityChoice: UByte) = builder.addByte(0, gravityChoice.toByte(), 0)
         fun addENABLEPOINTMASS(builder: FlatBufferBuilder, enablePointMass: Boolean) = builder.addBoolean(1, enablePointMass, true)
         fun addGRAVITATIONALPARAMETER(builder: FlatBufferBuilder, gravitationalParameter: Double) = builder.addDouble(2, gravitationalParameter, 0.0)
@@ -357,6 +421,13 @@ class PRWForceConfiguration : Table() {
         fun addRADIATIONPRESSUREMODEL(builder: FlatBufferBuilder, radiationPressureModel: UByte) = builder.addByte(30, radiationPressureModel.toByte(), 0)
         fun addGNSSBLOCK(builder: FlatBufferBuilder, gnssBlock: UByte) = builder.addByte(31, gnssBlock.toByte(), 0)
         fun addECOM2(builder: FlatBufferBuilder, ecom2: Int) = builder.addOffset(32, ecom2, 0)
+        fun addEARTHRADIATION(builder: FlatBufferBuilder, earthRadiation: UByte) = builder.addByte(33, earthRadiation.toByte(), 0)
+        fun addEARTHRADIATIONRESOLUTIONDEG(builder: FlatBufferBuilder, earthRadiationResolutionDeg: Double) = builder.addDouble(34, earthRadiationResolutionDeg, 15.0)
+        fun addEARTHRADIATIONAREAOVERMASSM2KG(builder: FlatBufferBuilder, earthRadiationAreaOverMassM2Kg: Double) = builder.addDouble(35, earthRadiationAreaOverMassM2Kg, 0.0)
+        fun addHASEARTHRADIATIONAREAOVERMASSM2KG(builder: FlatBufferBuilder, hasEarthRadiationAreaOverMassM2Kg: Boolean) = builder.addBoolean(36, hasEarthRadiationAreaOverMassM2Kg, false)
+        fun addOCEANTIDES(builder: FlatBufferBuilder, oceanTides: UByte) = builder.addByte(37, oceanTides.toByte(), 0)
+        fun addOCEANTIDEMAXIMUMDEGREE(builder: FlatBufferBuilder, oceanTideMaximumDegree: UShort) = builder.addShort(38, oceanTideMaximumDegree.toShort(), 30)
+        fun addOCEANTIDEMAXIMUMORDER(builder: FlatBufferBuilder, oceanTideMaximumOrder: UShort) = builder.addShort(39, oceanTideMaximumOrder.toShort(), 30)
         fun endPRWForceConfiguration(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 46)

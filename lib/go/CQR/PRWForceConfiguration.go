@@ -749,8 +749,168 @@ func (rcv *PRWForceConfiguration) Ecom2(obj *PRWEcom2) *PRWEcom2 {
 }
 
 /// ECOM2 coefficients; absent means no ECOM2 term.
+/// Earth radiation pressure (albedo and infrared). It reads the Sun's
+/// position from the request's ephemeris source.
+func (rcv *PRWForceConfiguration) EARTH_RADIATION() prwEarthRadiationModel {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return prwEarthRadiationModel(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PRWForceConfiguration) EarthRadiation() prwEarthRadiationModel {
+	return rcv.EARTH_RADIATION()
+}
+
+/// Earth radiation pressure (albedo and infrared). It reads the Sun's
+/// position from the request's ephemeris source.
+func (rcv *PRWForceConfiguration) MutateEARTH_RADIATION(n prwEarthRadiationModel) bool {
+	return rcv._tab.MutateByteSlot(70, byte(n))
+}
+
+func (rcv *PRWForceConfiguration) MutateEarthRadiation(n prwEarthRadiationModel) bool {
+	return rcv.MutateEARTH_RADIATION(n)
+}
+
+/// Angular size of the Earth surface elements it sums, degrees.
+func (rcv *PRWForceConfiguration) EARTH_RADIATION_RESOLUTION_DEG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 15.0
+}
+
+func (rcv *PRWForceConfiguration) EarthRadiationResolutionDeg() float64 {
+	return rcv.EARTH_RADIATION_RESOLUTION_DEG()
+}
+
+/// Angular size of the Earth surface elements it sums, degrees.
+func (rcv *PRWForceConfiguration) MutateEARTH_RADIATION_RESOLUTION_DEG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(72, n)
+}
+
+func (rcv *PRWForceConfiguration) MutateEarthRadiationResolutionDeg(n float64) bool {
+	return rcv.MutateEARTH_RADIATION_RESOLUTION_DEG(n)
+}
+
+/// Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+/// cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+/// fitting SRP_AREA_OVER_MASS scales both.
+func (rcv *PRWForceConfiguration) EARTH_RADIATION_AREA_OVER_MASS_M2_KG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *PRWForceConfiguration) EarthRadiationAreaOverMassM2Kg() float64 {
+	return rcv.EARTH_RADIATION_AREA_OVER_MASS_M2_KG()
+}
+
+/// Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+/// cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+/// fitting SRP_AREA_OVER_MASS scales both.
+func (rcv *PRWForceConfiguration) MutateEARTH_RADIATION_AREA_OVER_MASS_M2_KG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(74, n)
+}
+
+func (rcv *PRWForceConfiguration) MutateEarthRadiationAreaOverMassM2Kg(n float64) bool {
+	return rcv.MutateEARTH_RADIATION_AREA_OVER_MASS_M2_KG(n)
+}
+
+/// True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+func (rcv *PRWForceConfiguration) HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PRWForceConfiguration) HasEarthRadiationAreaOverMassM2Kg() bool {
+	return rcv.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG()
+}
+
+/// True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+func (rcv *PRWForceConfiguration) MutateHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(n bool) bool {
+	return rcv._tab.MutateBoolSlot(76, n)
+}
+
+func (rcv *PRWForceConfiguration) MutateHasEarthRadiationAreaOverMassM2Kg(n bool) bool {
+	return rcv.MutateHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(n)
+}
+
+/// Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+/// orientation (PRW.EARTH_ORIENTATION) to apply them.
+func (rcv *PRWForceConfiguration) OCEAN_TIDES() prwOceanTideModel {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		return prwOceanTideModel(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PRWForceConfiguration) OceanTides() prwOceanTideModel {
+	return rcv.OCEAN_TIDES()
+}
+
+/// Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+/// orientation (PRW.EARTH_ORIENTATION) to apply them.
+func (rcv *PRWForceConfiguration) MutateOCEAN_TIDES(n prwOceanTideModel) bool {
+	return rcv._tab.MutateByteSlot(78, byte(n))
+}
+
+func (rcv *PRWForceConfiguration) MutateOceanTides(n prwOceanTideModel) bool {
+	return rcv.MutateOCEAN_TIDES(n)
+}
+
+/// Truncation of the ocean tide field.
+func (rcv *PRWForceConfiguration) OCEAN_TIDE_MAXIMUM_DEGREE() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 30
+}
+
+func (rcv *PRWForceConfiguration) OceanTideMaximumDegree() uint16 {
+	return rcv.OCEAN_TIDE_MAXIMUM_DEGREE()
+}
+
+/// Truncation of the ocean tide field.
+func (rcv *PRWForceConfiguration) MutateOCEAN_TIDE_MAXIMUM_DEGREE(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(80, n)
+}
+
+func (rcv *PRWForceConfiguration) MutateOceanTideMaximumDegree(n uint16) bool {
+	return rcv.MutateOCEAN_TIDE_MAXIMUM_DEGREE(n)
+}
+
+func (rcv *PRWForceConfiguration) OCEAN_TIDE_MAXIMUM_ORDER() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 30
+}
+
+func (rcv *PRWForceConfiguration) OceanTideMaximumOrder() uint16 {
+	return rcv.OCEAN_TIDE_MAXIMUM_ORDER()
+}
+
+func (rcv *PRWForceConfiguration) MutateOCEAN_TIDE_MAXIMUM_ORDER(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(82, n)
+}
+
+func (rcv *PRWForceConfiguration) MutateOceanTideMaximumOrder(n uint16) bool {
+	return rcv.MutateOCEAN_TIDE_MAXIMUM_ORDER(n)
+}
+
 func PRWForceConfigurationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(33)
+	builder.StartObject(40)
 }
 func PRWForceConfigurationAddGRAVITY_CHOICE(builder *flatbuffers.Builder, GRAVITY_CHOICE prwGravitySelection) {
 	builder.PrependByteSlot(0, byte(GRAVITY_CHOICE), 0)
@@ -955,6 +1115,48 @@ func PRWForceConfigurationAddECOM2(builder *flatbuffers.Builder, ECOM2 flatbuffe
 }
 func PRWForceConfigurationAddEcom2(builder *flatbuffers.Builder, ECOM2 flatbuffers.UOffsetT) {
 	PRWForceConfigurationAddECOM2(builder, ECOM2)
+}
+func PRWForceConfigurationAddEARTH_RADIATION(builder *flatbuffers.Builder, EARTH_RADIATION prwEarthRadiationModel) {
+	builder.PrependByteSlot(33, byte(EARTH_RADIATION), 0)
+}
+func PRWForceConfigurationAddEarthRadiation(builder *flatbuffers.Builder, EARTH_RADIATION prwEarthRadiationModel) {
+	PRWForceConfigurationAddEARTH_RADIATION(builder, EARTH_RADIATION)
+}
+func PRWForceConfigurationAddEARTH_RADIATION_RESOLUTION_DEG(builder *flatbuffers.Builder, EARTH_RADIATION_RESOLUTION_DEG float64) {
+	builder.PrependFloat64Slot(34, EARTH_RADIATION_RESOLUTION_DEG, 15.0)
+}
+func PRWForceConfigurationAddEarthRadiationResolutionDeg(builder *flatbuffers.Builder, EARTH_RADIATION_RESOLUTION_DEG float64) {
+	PRWForceConfigurationAddEARTH_RADIATION_RESOLUTION_DEG(builder, EARTH_RADIATION_RESOLUTION_DEG)
+}
+func PRWForceConfigurationAddEARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder *flatbuffers.Builder, EARTH_RADIATION_AREA_OVER_MASS_M2_KG float64) {
+	builder.PrependFloat64Slot(35, EARTH_RADIATION_AREA_OVER_MASS_M2_KG, 0.0)
+}
+func PRWForceConfigurationAddEarthRadiationAreaOverMassM2Kg(builder *flatbuffers.Builder, EARTH_RADIATION_AREA_OVER_MASS_M2_KG float64) {
+	PRWForceConfigurationAddEARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, EARTH_RADIATION_AREA_OVER_MASS_M2_KG)
+}
+func PRWForceConfigurationAddHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder *flatbuffers.Builder, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG bool) {
+	builder.PrependBoolSlot(36, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, false)
+}
+func PRWForceConfigurationAddHasEarthRadiationAreaOverMassM2Kg(builder *flatbuffers.Builder, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG bool) {
+	PRWForceConfigurationAddHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG)
+}
+func PRWForceConfigurationAddOCEAN_TIDES(builder *flatbuffers.Builder, OCEAN_TIDES prwOceanTideModel) {
+	builder.PrependByteSlot(37, byte(OCEAN_TIDES), 0)
+}
+func PRWForceConfigurationAddOceanTides(builder *flatbuffers.Builder, OCEAN_TIDES prwOceanTideModel) {
+	PRWForceConfigurationAddOCEAN_TIDES(builder, OCEAN_TIDES)
+}
+func PRWForceConfigurationAddOCEAN_TIDE_MAXIMUM_DEGREE(builder *flatbuffers.Builder, OCEAN_TIDE_MAXIMUM_DEGREE uint16) {
+	builder.PrependUint16Slot(38, OCEAN_TIDE_MAXIMUM_DEGREE, 30)
+}
+func PRWForceConfigurationAddOceanTideMaximumDegree(builder *flatbuffers.Builder, OCEAN_TIDE_MAXIMUM_DEGREE uint16) {
+	PRWForceConfigurationAddOCEAN_TIDE_MAXIMUM_DEGREE(builder, OCEAN_TIDE_MAXIMUM_DEGREE)
+}
+func PRWForceConfigurationAddOCEAN_TIDE_MAXIMUM_ORDER(builder *flatbuffers.Builder, OCEAN_TIDE_MAXIMUM_ORDER uint16) {
+	builder.PrependUint16Slot(39, OCEAN_TIDE_MAXIMUM_ORDER, 30)
+}
+func PRWForceConfigurationAddOceanTideMaximumOrder(builder *flatbuffers.Builder, OCEAN_TIDE_MAXIMUM_ORDER uint16) {
+	PRWForceConfigurationAddOCEAN_TIDE_MAXIMUM_ORDER(builder, OCEAN_TIDE_MAXIMUM_ORDER)
 }
 func PRWForceConfigurationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

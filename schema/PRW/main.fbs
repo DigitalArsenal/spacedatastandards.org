@@ -1,5 +1,5 @@
-// Hash: 295cb82298e6f8e9e61e354f4784f494dafe9ca41b2d8ac1a2d729afb8e5f7a8
-// Version: 1.219.3
+// Hash: e26a59dc1e86e6b9e6fd79aa5bbfa5e690a690541218196dbe260a502b1bfd8d
+// Version: 1.219.4
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -272,6 +272,21 @@ enum prwDynamicParameter : ubyte {
 /// under nominal yaw steering, with the mass INITIAL_MASS_KG.
 enum prwRadiationPressureFamily : ubyte { CANNONBALL = 0, GNSS_BOX_WING = 1, NONE = 2 }
 
+/// Earth radiation pressure: the sunlight the Earth reflects (albedo) and the
+/// infrared it emits, pushing on an isotropic (cannonball) spacecraft. KNOCKE
+/// is Knocke, Ries and Tapley (1988, AIAA paper 88-4292): albedo and
+/// emissivity zonal to the second Legendre degree with the annual term of
+/// the first, from the elements of the Earth's surface the spacecraft sees
+/// (as Orekit's KnockeRediffusedForceModel evaluates it).
+enum prwEarthRadiationModel : ubyte { NONE = 0, KNOCKE = 1 }
+
+/// Ocean tide model for the central body's field. FES2004 is IERS
+/// Conventions (2010) section 6.3: the variations of the normalized Stokes
+/// coefficients of the FES2004 waves (the IERS file fes2004_Cnm-Snm.dat,
+/// eq. 6.15) at their Doodson arguments, in the field's Earth-fixed axes.
+/// The ocean pole tide is not included.
+enum prwOceanTideModel : ubyte { NONE = 0, FES2004 = 1 }
+
 /// GNSS spacecraft block, selecting the box-wing surfaces.
 enum prwGnssSpacecraftBlock : ubyte { UNSPECIFIED = 0, GPS_IIR = 1, GPS_IIR_M = 2, GPS_IIF = 3 }
 
@@ -379,6 +394,23 @@ table PRWForceConfiguration {
   GNSS_BLOCK:prwGnssSpacecraftBlock = UNSPECIFIED;
   /// ECOM2 coefficients; absent means no ECOM2 term.
   ECOM2:PRWEcom2;
+  /// Earth radiation pressure (albedo and infrared). It reads the Sun's
+  /// position from the request's ephemeris source.
+  EARTH_RADIATION:prwEarthRadiationModel = NONE;
+  /// Angular size of the Earth surface elements it sums, degrees.
+  EARTH_RADIATION_RESOLUTION_DEG:double = 15;
+  /// Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+  /// cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+  /// fitting SRP_AREA_OVER_MASS scales both.
+  EARTH_RADIATION_AREA_OVER_MASS_M2_KG:double;
+  /// True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG:bool = false;
+  /// Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+  /// orientation (PRW.EARTH_ORIENTATION) to apply them.
+  OCEAN_TIDES:prwOceanTideModel = NONE;
+  /// Truncation of the ocean tide field.
+  OCEAN_TIDE_MAXIMUM_DEGREE:ushort = 30;
+  OCEAN_TIDE_MAXIMUM_ORDER:ushort = 30;
 }
 
 /// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution

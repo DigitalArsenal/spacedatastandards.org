@@ -4297,6 +4297,34 @@
         }
       }
     },
+    "prwEarthRadiationModel": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "KNOCKE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        }
+      }
+    },
+    "prwOceanTideModel": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "FES2004"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        }
+      }
+    },
     "prwGnssSpacecraftBlock": {
       "type": "string",
       "enum": [
@@ -15108,6 +15136,62 @@
           "$ref": "#/definitions/PRWEcom2",
           "description": "ECOM2 coefficients; absent means no ECOM2 term.",
           "x-flatbuffer-type": "PRWEcom2"
+        },
+        "EARTH_RADIATION": {
+          "$ref": "#/definitions/prwEarthRadiationModel",
+          "description": "Earth radiation pressure (albedo and infrared). It reads the Sun's\nposition from the request's ephemeris source.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "EARTH_RADIATION_RESOLUTION_DEG": {
+          "type": "number",
+          "description": "Angular size of the Earth surface elements it sums, degrees.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "15"
+        },
+        "EARTH_RADIATION_AREA_OVER_MASS_M2_KG": {
+          "type": "number",
+          "description": "Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the\ncannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and\nfitting SRP_AREA_OVER_MASS scales both.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG": {
+          "type": "boolean",
+          "description": "True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "OCEAN_TIDES": {
+          "$ref": "#/definitions/prwOceanTideModel",
+          "description": "Ocean tides. Their field is Earth-fixed, so a provider needs Earth\norientation (PRW.EARTH_ORIENTATION) to apply them.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "OCEAN_TIDE_MAXIMUM_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Truncation of the ocean tide field.",
+          "x-flatbuffer-type": "ushort",
+          "x-flatbuffer-default": "30"
+        },
+        "OCEAN_TIDE_MAXIMUM_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort",
+          "x-flatbuffer-default": "30"
         }
       },
       "required": [

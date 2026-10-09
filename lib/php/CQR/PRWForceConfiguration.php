@@ -363,22 +363,95 @@ class PRWForceConfiguration extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Earth radiation pressure (albedo and infrared). It reads the Sun's
+    /// position from the request's ephemeris source.
+    /**
+     * @return byte
+     */
+    public function getEARTH_RADIATION()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \prwEarthRadiationModel::NONE;
+    }
+
+    /// Angular size of the Earth surface elements it sums, degrees.
+    /**
+     * @return double
+     */
+    public function getEARTH_RADIATION_RESOLUTION_DEG()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 15.0;
+    }
+
+    /// Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+    /// cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+    /// fitting SRP_AREA_OVER_MASS scales both.
+    /**
+     * @return double
+     */
+    public function getEARTH_RADIATION_AREA_OVER_MASS_M2_KG()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+    /**
+     * @return bool
+     */
+    public function getHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+    /// orientation (PRW.EARTH_ORIENTATION) to apply them.
+    /**
+     * @return byte
+     */
+    public function getOCEAN_TIDES()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \prwOceanTideModel::NONE;
+    }
+
+    /// Truncation of the ocean tide field.
+    /**
+     * @return ushort
+     */
+    public function getOCEAN_TIDE_MAXIMUM_DEGREE()
+    {
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 30;
+    }
+
+    /**
+     * @return ushort
+     */
+    public function getOCEAN_TIDE_MAXIMUM_ORDER()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 30;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRWForceConfiguration(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(33);
+        $builder->StartObject(40);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRWForceConfiguration
      */
-    public static function createPRWForceConfiguration(FlatBufferBuilder $builder, $GRAVITY_CHOICE, $ENABLE_POINT_MASS, $GRAVITATIONAL_PARAMETER, $ENABLE_J2, $ENABLE_J3, $ENABLE_J4, $ENABLE_HIGHER_ZONALS, $MAXIMUM_DEGREE, $HAS_MAXIMUM_DEGREE, $MAXIMUM_ORDER, $HAS_MAXIMUM_ORDER, $ENABLE_THIRD_BODY, $THIRD_BODY_IDS, $ENABLE_SRP, $ENABLE_DRAG, $INITIAL_MASS_KG, $AREA_M2, $REFLECTIVITY_COEFFICIENT, $DRAG_COEFFICIENT, $ATMOSPHERE_MODEL, $WEATHER, $EPHEMERIS_SOURCE, $SOLID_TIDES, $RELATIVITY, $IN_TRACK_ACCELERATION_M_S2, $HAS_IN_TRACK_ACCELERATION_M_S2, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $MAXIMUM_TESSERAL_DEGREE, $HAS_MAXIMUM_TESSERAL_DEGREE, $RADIATION_PRESSURE_MODEL, $GNSS_BLOCK, $ECOM2)
+    public static function createPRWForceConfiguration(FlatBufferBuilder $builder, $GRAVITY_CHOICE, $ENABLE_POINT_MASS, $GRAVITATIONAL_PARAMETER, $ENABLE_J2, $ENABLE_J3, $ENABLE_J4, $ENABLE_HIGHER_ZONALS, $MAXIMUM_DEGREE, $HAS_MAXIMUM_DEGREE, $MAXIMUM_ORDER, $HAS_MAXIMUM_ORDER, $ENABLE_THIRD_BODY, $THIRD_BODY_IDS, $ENABLE_SRP, $ENABLE_DRAG, $INITIAL_MASS_KG, $AREA_M2, $REFLECTIVITY_COEFFICIENT, $DRAG_COEFFICIENT, $ATMOSPHERE_MODEL, $WEATHER, $EPHEMERIS_SOURCE, $SOLID_TIDES, $RELATIVITY, $IN_TRACK_ACCELERATION_M_S2, $HAS_IN_TRACK_ACCELERATION_M_S2, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $MAXIMUM_TESSERAL_DEGREE, $HAS_MAXIMUM_TESSERAL_DEGREE, $RADIATION_PRESSURE_MODEL, $GNSS_BLOCK, $ECOM2, $EARTH_RADIATION, $EARTH_RADIATION_RESOLUTION_DEG, $EARTH_RADIATION_AREA_OVER_MASS_M2_KG, $HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, $OCEAN_TIDES, $OCEAN_TIDE_MAXIMUM_DEGREE, $OCEAN_TIDE_MAXIMUM_ORDER)
     {
-        $builder->startObject(33);
+        $builder->startObject(40);
         self::addGRAVITY_CHOICE($builder, $GRAVITY_CHOICE);
         self::addENABLE_POINT_MASS($builder, $ENABLE_POINT_MASS);
         self::addGRAVITATIONAL_PARAMETER($builder, $GRAVITATIONAL_PARAMETER);
@@ -412,6 +485,13 @@ class PRWForceConfiguration extends Table
         self::addRADIATION_PRESSURE_MODEL($builder, $RADIATION_PRESSURE_MODEL);
         self::addGNSS_BLOCK($builder, $GNSS_BLOCK);
         self::addECOM2($builder, $ECOM2);
+        self::addEARTH_RADIATION($builder, $EARTH_RADIATION);
+        self::addEARTH_RADIATION_RESOLUTION_DEG($builder, $EARTH_RADIATION_RESOLUTION_DEG);
+        self::addEARTH_RADIATION_AREA_OVER_MASS_M2_KG($builder, $EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+        self::addHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG($builder, $HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+        self::addOCEAN_TIDES($builder, $OCEAN_TIDES);
+        self::addOCEAN_TIDE_MAXIMUM_DEGREE($builder, $OCEAN_TIDE_MAXIMUM_DEGREE);
+        self::addOCEAN_TIDE_MAXIMUM_ORDER($builder, $OCEAN_TIDE_MAXIMUM_ORDER);
         $o = $builder->endObject();
         $builder->required($o, 46);  // EPHEMERIS_SOURCE
         return $o;
@@ -769,6 +849,76 @@ class PRWForceConfiguration extends Table
     public static function addECOM2(FlatBufferBuilder $builder, $ECOM2)
     {
         $builder->addOffsetX(32, $ECOM2, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addEARTH_RADIATION(FlatBufferBuilder $builder, $EARTH_RADIATION)
+    {
+        $builder->addByteX(33, $EARTH_RADIATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEARTH_RADIATION_RESOLUTION_DEG(FlatBufferBuilder $builder, $EARTH_RADIATION_RESOLUTION_DEG)
+    {
+        $builder->addDoubleX(34, $EARTH_RADIATION_RESOLUTION_DEG, 15.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEARTH_RADIATION_AREA_OVER_MASS_M2_KG(FlatBufferBuilder $builder, $EARTH_RADIATION_AREA_OVER_MASS_M2_KG)
+    {
+        $builder->addDoubleX(35, $EARTH_RADIATION_AREA_OVER_MASS_M2_KG, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(FlatBufferBuilder $builder, $HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG)
+    {
+        $builder->addBoolX(36, $HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addOCEAN_TIDES(FlatBufferBuilder $builder, $OCEAN_TIDES)
+    {
+        $builder->addByteX(37, $OCEAN_TIDES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addOCEAN_TIDE_MAXIMUM_DEGREE(FlatBufferBuilder $builder, $OCEAN_TIDE_MAXIMUM_DEGREE)
+    {
+        $builder->addUshortX(38, $OCEAN_TIDE_MAXIMUM_DEGREE, 30);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addOCEAN_TIDE_MAXIMUM_ORDER(FlatBufferBuilder $builder, $OCEAN_TIDE_MAXIMUM_ORDER)
+    {
+        $builder->addUshortX(39, $OCEAN_TIDE_MAXIMUM_ORDER, 30);
     }
 
     /**

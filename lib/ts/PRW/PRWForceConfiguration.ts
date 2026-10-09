@@ -7,8 +7,10 @@ import * as flatbuffers from 'flatbuffers';
 import { PRWEcom2, PRWEcom2T } from './PRWEcom2.js';
 import { PRWSpaceWeather, PRWSpaceWeatherT } from './PRWSpaceWeather.js';
 import { prwAtmosphereFamily } from './prwAtmosphereFamily.js';
+import { prwEarthRadiationModel } from './prwEarthRadiationModel.js';
 import { prwGnssSpacecraftBlock } from './prwGnssSpacecraftBlock.js';
 import { prwGravitySelection } from './prwGravitySelection.js';
+import { prwOceanTideModel } from './prwOceanTideModel.js';
 import { prwRadiationPressureFamily } from './prwRadiationPressureFamily.js';
 import { prwRelativityTerms } from './prwRelativityTerms.js';
 import { prwSolidTideModel } from './prwSolidTideModel.js';
@@ -266,8 +268,65 @@ ECOM2(obj?:PRWEcom2):PRWEcom2|null {
   return offset ? (obj || new PRWEcom2()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Earth radiation pressure (albedo and infrared). It reads the Sun's
+ * position from the request's ephemeris source.
+ */
+EARTH_RADIATION():prwEarthRadiationModel {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : prwEarthRadiationModel.NONE;
+}
+
+/**
+ * Angular size of the Earth surface elements it sums, degrees.
+ */
+EARTH_RADIATION_RESOLUTION_DEG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 15.0;
+}
+
+/**
+ * Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+ * cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+ * fitting SRP_AREA_OVER_MASS scales both.
+ */
+EARTH_RADIATION_AREA_OVER_MASS_M2_KG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+ */
+HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+ * orientation (PRW.EARTH_ORIENTATION) to apply them.
+ */
+OCEAN_TIDES():prwOceanTideModel {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : prwOceanTideModel.NONE;
+}
+
+/**
+ * Truncation of the ocean tide field.
+ */
+OCEAN_TIDE_MAXIMUM_DEGREE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 30;
+}
+
+OCEAN_TIDE_MAXIMUM_ORDER():number {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 30;
+}
+
 static startPRWForceConfiguration(builder:flatbuffers.Builder) {
-  builder.startObject(33);
+  builder.startObject(40);
 }
 
 static addGravityChoice(builder:flatbuffers.Builder, GRAVITY_CHOICE:prwGravitySelection) {
@@ -419,6 +478,34 @@ static addEcom2(builder:flatbuffers.Builder, ECOM2Offset:flatbuffers.Offset) {
   builder.addFieldOffset(32, ECOM2Offset, 0);
 }
 
+static addEarthRadiation(builder:flatbuffers.Builder, EARTH_RADIATION:prwEarthRadiationModel) {
+  builder.addFieldInt8(33, EARTH_RADIATION, prwEarthRadiationModel.NONE);
+}
+
+static addEarthRadiationResolutionDeg(builder:flatbuffers.Builder, EARTH_RADIATION_RESOLUTION_DEG:number) {
+  builder.addFieldFloat64(34, EARTH_RADIATION_RESOLUTION_DEG, 15.0);
+}
+
+static addEarthRadiationAreaOverMassM2Kg(builder:flatbuffers.Builder, EARTH_RADIATION_AREA_OVER_MASS_M2_KG:number) {
+  builder.addFieldFloat64(35, EARTH_RADIATION_AREA_OVER_MASS_M2_KG, 0.0);
+}
+
+static addHasEarthRadiationAreaOverMassM2Kg(builder:flatbuffers.Builder, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG:boolean) {
+  builder.addFieldInt8(36, +HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, +false);
+}
+
+static addOceanTides(builder:flatbuffers.Builder, OCEAN_TIDES:prwOceanTideModel) {
+  builder.addFieldInt8(37, OCEAN_TIDES, prwOceanTideModel.NONE);
+}
+
+static addOceanTideMaximumDegree(builder:flatbuffers.Builder, OCEAN_TIDE_MAXIMUM_DEGREE:number) {
+  builder.addFieldInt16(38, OCEAN_TIDE_MAXIMUM_DEGREE, 30);
+}
+
+static addOceanTideMaximumOrder(builder:flatbuffers.Builder, OCEAN_TIDE_MAXIMUM_ORDER:number) {
+  builder.addFieldInt16(39, OCEAN_TIDE_MAXIMUM_ORDER, 30);
+}
+
 static endPRWForceConfiguration(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 46) // EPHEMERIS_SOURCE
@@ -460,7 +547,14 @@ unpack(): PRWForceConfigurationT {
     this.HAS_MAXIMUM_TESSERAL_DEGREE(),
     this.RADIATION_PRESSURE_MODEL(),
     this.GNSS_BLOCK(),
-    (this.ECOM2() !== null ? this.ECOM2()!.unpack() : null)
+    (this.ECOM2() !== null ? this.ECOM2()!.unpack() : null),
+    this.EARTH_RADIATION(),
+    this.EARTH_RADIATION_RESOLUTION_DEG(),
+    this.EARTH_RADIATION_AREA_OVER_MASS_M2_KG(),
+    this.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(),
+    this.OCEAN_TIDES(),
+    this.OCEAN_TIDE_MAXIMUM_DEGREE(),
+    this.OCEAN_TIDE_MAXIMUM_ORDER()
   );
 }
 
@@ -499,6 +593,13 @@ unpackTo(_o: PRWForceConfigurationT): void {
   _o.RADIATION_PRESSURE_MODEL = this.RADIATION_PRESSURE_MODEL();
   _o.GNSS_BLOCK = this.GNSS_BLOCK();
   _o.ECOM2 = (this.ECOM2() !== null ? this.ECOM2()!.unpack() : null);
+  _o.EARTH_RADIATION = this.EARTH_RADIATION();
+  _o.EARTH_RADIATION_RESOLUTION_DEG = this.EARTH_RADIATION_RESOLUTION_DEG();
+  _o.EARTH_RADIATION_AREA_OVER_MASS_M2_KG = this.EARTH_RADIATION_AREA_OVER_MASS_M2_KG();
+  _o.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG = this.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG();
+  _o.OCEAN_TIDES = this.OCEAN_TIDES();
+  _o.OCEAN_TIDE_MAXIMUM_DEGREE = this.OCEAN_TIDE_MAXIMUM_DEGREE();
+  _o.OCEAN_TIDE_MAXIMUM_ORDER = this.OCEAN_TIDE_MAXIMUM_ORDER();
 }
 }
 
@@ -536,7 +637,14 @@ constructor(
   public HAS_MAXIMUM_TESSERAL_DEGREE: boolean = false,
   public RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily = prwRadiationPressureFamily.CANNONBALL,
   public GNSS_BLOCK: prwGnssSpacecraftBlock = prwGnssSpacecraftBlock.UNSPECIFIED,
-  public ECOM2: PRWEcom2T|null = null
+  public ECOM2: PRWEcom2T|null = null,
+  public EARTH_RADIATION: prwEarthRadiationModel = prwEarthRadiationModel.NONE,
+  public EARTH_RADIATION_RESOLUTION_DEG: number = 15.0,
+  public EARTH_RADIATION_AREA_OVER_MASS_M2_KG: number = 0.0,
+  public HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: boolean = false,
+  public OCEAN_TIDES: prwOceanTideModel = prwOceanTideModel.NONE,
+  public OCEAN_TIDE_MAXIMUM_DEGREE: number = 30,
+  public OCEAN_TIDE_MAXIMUM_ORDER: number = 30
 ){}
 
 
@@ -580,6 +688,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PRWForceConfiguration.addRadiationPressureModel(builder, this.RADIATION_PRESSURE_MODEL);
   PRWForceConfiguration.addGnssBlock(builder, this.GNSS_BLOCK);
   PRWForceConfiguration.addEcom2(builder, ECOM2);
+  PRWForceConfiguration.addEarthRadiation(builder, this.EARTH_RADIATION);
+  PRWForceConfiguration.addEarthRadiationResolutionDeg(builder, this.EARTH_RADIATION_RESOLUTION_DEG);
+  PRWForceConfiguration.addEarthRadiationAreaOverMassM2Kg(builder, this.EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+  PRWForceConfiguration.addHasEarthRadiationAreaOverMassM2Kg(builder, this.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+  PRWForceConfiguration.addOceanTides(builder, this.OCEAN_TIDES);
+  PRWForceConfiguration.addOceanTideMaximumDegree(builder, this.OCEAN_TIDE_MAXIMUM_DEGREE);
+  PRWForceConfiguration.addOceanTideMaximumOrder(builder, this.OCEAN_TIDE_MAXIMUM_ORDER);
 
   return PRWForceConfiguration.endPRWForceConfiguration(builder);
 }

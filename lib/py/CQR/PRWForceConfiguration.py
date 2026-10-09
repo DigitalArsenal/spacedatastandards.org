@@ -310,8 +310,67 @@ class PRWForceConfiguration(object):
             return obj
         return None
 
+    # Earth radiation pressure (albedo and infrared). It reads the Sun's
+    # position from the request's ephemeris source.
+    # PRWForceConfiguration
+    def EARTH_RADIATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Angular size of the Earth surface elements it sums, degrees.
+    # PRWForceConfiguration
+    def EARTH_RADIATION_RESOLUTION_DEG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 15.0
+
+    # Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+    # cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+    # fitting SRP_AREA_OVER_MASS scales both.
+    # PRWForceConfiguration
+    def EARTH_RADIATION_AREA_OVER_MASS_M2_KG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+    # PRWForceConfiguration
+    def HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+    # orientation (PRW.EARTH_ORIENTATION) to apply them.
+    # PRWForceConfiguration
+    def OCEAN_TIDES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Truncation of the ocean tide field.
+    # PRWForceConfiguration
+    def OCEAN_TIDE_MAXIMUM_DEGREE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 30
+
+    # PRWForceConfiguration
+    def OCEAN_TIDE_MAXIMUM_ORDER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 30
+
 def PRWForceConfigurationStart(builder):
-    builder.StartObject(33)
+    builder.StartObject(40)
 
 def Start(builder):
     PRWForceConfigurationStart(builder)
@@ -530,6 +589,48 @@ def PRWForceConfigurationAddECOM2(builder, ECOM2):
 def AddECOM2(builder, ECOM2):
     PRWForceConfigurationAddECOM2(builder, ECOM2)
 
+def PRWForceConfigurationAddEARTH_RADIATION(builder, EARTH_RADIATION):
+    builder.PrependUint8Slot(33, EARTH_RADIATION, 0)
+
+def AddEARTH_RADIATION(builder, EARTH_RADIATION):
+    PRWForceConfigurationAddEARTH_RADIATION(builder, EARTH_RADIATION)
+
+def PRWForceConfigurationAddEARTH_RADIATION_RESOLUTION_DEG(builder, EARTH_RADIATION_RESOLUTION_DEG):
+    builder.PrependFloat64Slot(34, EARTH_RADIATION_RESOLUTION_DEG, 15.0)
+
+def AddEARTH_RADIATION_RESOLUTION_DEG(builder, EARTH_RADIATION_RESOLUTION_DEG):
+    PRWForceConfigurationAddEARTH_RADIATION_RESOLUTION_DEG(builder, EARTH_RADIATION_RESOLUTION_DEG)
+
+def PRWForceConfigurationAddEARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, EARTH_RADIATION_AREA_OVER_MASS_M2_KG):
+    builder.PrependFloat64Slot(35, EARTH_RADIATION_AREA_OVER_MASS_M2_KG, 0.0)
+
+def AddEARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, EARTH_RADIATION_AREA_OVER_MASS_M2_KG):
+    PRWForceConfigurationAddEARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, EARTH_RADIATION_AREA_OVER_MASS_M2_KG)
+
+def PRWForceConfigurationAddHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG):
+    builder.PrependBoolSlot(36, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, 0)
+
+def AddHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG):
+    PRWForceConfigurationAddHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG)
+
+def PRWForceConfigurationAddOCEAN_TIDES(builder, OCEAN_TIDES):
+    builder.PrependUint8Slot(37, OCEAN_TIDES, 0)
+
+def AddOCEAN_TIDES(builder, OCEAN_TIDES):
+    PRWForceConfigurationAddOCEAN_TIDES(builder, OCEAN_TIDES)
+
+def PRWForceConfigurationAddOCEAN_TIDE_MAXIMUM_DEGREE(builder, OCEAN_TIDE_MAXIMUM_DEGREE):
+    builder.PrependUint16Slot(38, OCEAN_TIDE_MAXIMUM_DEGREE, 30)
+
+def AddOCEAN_TIDE_MAXIMUM_DEGREE(builder, OCEAN_TIDE_MAXIMUM_DEGREE):
+    PRWForceConfigurationAddOCEAN_TIDE_MAXIMUM_DEGREE(builder, OCEAN_TIDE_MAXIMUM_DEGREE)
+
+def PRWForceConfigurationAddOCEAN_TIDE_MAXIMUM_ORDER(builder, OCEAN_TIDE_MAXIMUM_ORDER):
+    builder.PrependUint16Slot(39, OCEAN_TIDE_MAXIMUM_ORDER, 30)
+
+def AddOCEAN_TIDE_MAXIMUM_ORDER(builder, OCEAN_TIDE_MAXIMUM_ORDER):
+    PRWForceConfigurationAddOCEAN_TIDE_MAXIMUM_ORDER(builder, OCEAN_TIDE_MAXIMUM_ORDER)
+
 def PRWForceConfigurationEnd(builder):
     return builder.EndObject()
 
@@ -581,6 +682,13 @@ class PRWForceConfigurationT(object):
         RADIATION_PRESSURE_MODEL = 0,
         GNSS_BLOCK = 0,
         ECOM2 = None,
+        EARTH_RADIATION = 0,
+        EARTH_RADIATION_RESOLUTION_DEG = 15.0,
+        EARTH_RADIATION_AREA_OVER_MASS_M2_KG = 0.0,
+        HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG = False,
+        OCEAN_TIDES = 0,
+        OCEAN_TIDE_MAXIMUM_DEGREE = 30,
+        OCEAN_TIDE_MAXIMUM_ORDER = 30,
     ):
         self.GRAVITY_CHOICE = GRAVITY_CHOICE  # type: int
         self.ENABLE_POINT_MASS = ENABLE_POINT_MASS  # type: bool
@@ -615,6 +723,13 @@ class PRWForceConfigurationT(object):
         self.RADIATION_PRESSURE_MODEL = RADIATION_PRESSURE_MODEL  # type: int
         self.GNSS_BLOCK = GNSS_BLOCK  # type: int
         self.ECOM2 = ECOM2  # type: Optional[PRWEcom2.PRWEcom2T]
+        self.EARTH_RADIATION = EARTH_RADIATION  # type: int
+        self.EARTH_RADIATION_RESOLUTION_DEG = EARTH_RADIATION_RESOLUTION_DEG  # type: float
+        self.EARTH_RADIATION_AREA_OVER_MASS_M2_KG = EARTH_RADIATION_AREA_OVER_MASS_M2_KG  # type: float
+        self.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG = HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG  # type: bool
+        self.OCEAN_TIDES = OCEAN_TIDES  # type: int
+        self.OCEAN_TIDE_MAXIMUM_DEGREE = OCEAN_TIDE_MAXIMUM_DEGREE  # type: int
+        self.OCEAN_TIDE_MAXIMUM_ORDER = OCEAN_TIDE_MAXIMUM_ORDER  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -678,6 +793,13 @@ class PRWForceConfigurationT(object):
         self.GNSS_BLOCK = PRWForceConfiguration.GNSS_BLOCK()
         if PRWForceConfiguration.ECOM2() is not None:
             self.ECOM2 = PRWEcom2.PRWEcom2T.InitFromObj(PRWForceConfiguration.ECOM2())
+        self.EARTH_RADIATION = PRWForceConfiguration.EARTH_RADIATION()
+        self.EARTH_RADIATION_RESOLUTION_DEG = PRWForceConfiguration.EARTH_RADIATION_RESOLUTION_DEG()
+        self.EARTH_RADIATION_AREA_OVER_MASS_M2_KG = PRWForceConfiguration.EARTH_RADIATION_AREA_OVER_MASS_M2_KG()
+        self.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG = PRWForceConfiguration.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG()
+        self.OCEAN_TIDES = PRWForceConfiguration.OCEAN_TIDES()
+        self.OCEAN_TIDE_MAXIMUM_DEGREE = PRWForceConfiguration.OCEAN_TIDE_MAXIMUM_DEGREE()
+        self.OCEAN_TIDE_MAXIMUM_ORDER = PRWForceConfiguration.OCEAN_TIDE_MAXIMUM_ORDER()
 
     # PRWForceConfigurationT
     def Pack(self, builder):
@@ -733,5 +855,12 @@ class PRWForceConfigurationT(object):
         PRWForceConfigurationAddGNSS_BLOCK(builder, self.GNSS_BLOCK)
         if self.ECOM2 is not None:
             PRWForceConfigurationAddECOM2(builder, ECOM2)
+        PRWForceConfigurationAddEARTH_RADIATION(builder, self.EARTH_RADIATION)
+        PRWForceConfigurationAddEARTH_RADIATION_RESOLUTION_DEG(builder, self.EARTH_RADIATION_RESOLUTION_DEG)
+        PRWForceConfigurationAddEARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, self.EARTH_RADIATION_AREA_OVER_MASS_M2_KG)
+        PRWForceConfigurationAddHAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, self.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG)
+        PRWForceConfigurationAddOCEAN_TIDES(builder, self.OCEAN_TIDES)
+        PRWForceConfigurationAddOCEAN_TIDE_MAXIMUM_DEGREE(builder, self.OCEAN_TIDE_MAXIMUM_DEGREE)
+        PRWForceConfigurationAddOCEAN_TIDE_MAXIMUM_ORDER(builder, self.OCEAN_TIDE_MAXIMUM_ORDER)
         PRWForceConfiguration = PRWForceConfigurationEnd(builder)
         return PRWForceConfiguration

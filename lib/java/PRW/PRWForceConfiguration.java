@@ -123,6 +123,35 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
    */
   public PRWEcom2 ECOM2() { return ECOM2(new PRWEcom2()); }
   public PRWEcom2 ECOM2(PRWEcom2 obj) { int o = __offset(68); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Earth radiation pressure (albedo and infrared). It reads the Sun's
+   * position from the request's ephemeris source.
+   */
+  public int EARTH_RADIATION() { int o = __offset(70); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Angular size of the Earth surface elements it sums, degrees.
+   */
+  public double EARTH_RADIATION_RESOLUTION_DEG() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 15.0; }
+  /**
+   * Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+   * cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+   * fitting SRP_AREA_OVER_MASS scales both.
+   */
+  public double EARTH_RADIATION_AREA_OVER_MASS_M2_KG() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+   */
+  public boolean HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG() { int o = __offset(76); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+   * orientation (PRW.EARTH_ORIENTATION) to apply them.
+   */
+  public int OCEAN_TIDES() { int o = __offset(78); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Truncation of the ocean tide field.
+   */
+  public int OCEAN_TIDE_MAXIMUM_DEGREE() { int o = __offset(80); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 30; }
+  public int OCEAN_TIDE_MAXIMUM_ORDER() { int o = __offset(82); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 30; }
 
   public static int createPRWForceConfiguration(FlatBufferBuilder builder,
       int GRAVITY_CHOICE,
@@ -157,8 +186,17 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
       boolean HAS_MAXIMUM_TESSERAL_DEGREE,
       int RADIATION_PRESSURE_MODEL,
       int GNSS_BLOCK,
-      int ECOM2Offset) {
-    builder.startTable(33);
+      int ECOM2Offset,
+      int EARTH_RADIATION,
+      double EARTH_RADIATION_RESOLUTION_DEG,
+      double EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+      boolean HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+      int OCEAN_TIDES,
+      int OCEAN_TIDE_MAXIMUM_DEGREE,
+      int OCEAN_TIDE_MAXIMUM_ORDER) {
+    builder.startTable(40);
+    PRWForceConfiguration.addEarthRadiationAreaOverMassM2Kg(builder, EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+    PRWForceConfiguration.addEarthRadiationResolutionDeg(builder, EARTH_RADIATION_RESOLUTION_DEG);
     PRWForceConfiguration.addDragAreaOverMassRateM2KgS(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
     PRWForceConfiguration.addInTrackAccelerationMS2(builder, IN_TRACK_ACCELERATION_M_S2);
     PRWForceConfiguration.addDragCoefficient(builder, DRAG_COEFFICIENT);
@@ -170,9 +208,14 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
     PRWForceConfiguration.addEphemerisSource(builder, EPHEMERIS_SOURCEOffset);
     PRWForceConfiguration.addWeather(builder, WEATHEROffset);
     PRWForceConfiguration.addThirdBodyIds(builder, THIRD_BODY_IDSOffset);
+    PRWForceConfiguration.addOceanTideMaximumOrder(builder, OCEAN_TIDE_MAXIMUM_ORDER);
+    PRWForceConfiguration.addOceanTideMaximumDegree(builder, OCEAN_TIDE_MAXIMUM_DEGREE);
     PRWForceConfiguration.addMaximumTesseralDegree(builder, MAXIMUM_TESSERAL_DEGREE);
     PRWForceConfiguration.addMaximumOrder(builder, MAXIMUM_ORDER);
     PRWForceConfiguration.addMaximumDegree(builder, MAXIMUM_DEGREE);
+    PRWForceConfiguration.addOceanTides(builder, OCEAN_TIDES);
+    PRWForceConfiguration.addHasEarthRadiationAreaOverMassM2Kg(builder, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+    PRWForceConfiguration.addEarthRadiation(builder, EARTH_RADIATION);
     PRWForceConfiguration.addGnssBlock(builder, GNSS_BLOCK);
     PRWForceConfiguration.addRadiationPressureModel(builder, RADIATION_PRESSURE_MODEL);
     PRWForceConfiguration.addHasMaximumTesseralDegree(builder, HAS_MAXIMUM_TESSERAL_DEGREE);
@@ -195,7 +238,7 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
     return PRWForceConfiguration.endPRWForceConfiguration(builder);
   }
 
-  public static void startPRWForceConfiguration(FlatBufferBuilder builder) { builder.startTable(33); }
+  public static void startPRWForceConfiguration(FlatBufferBuilder builder) { builder.startTable(40); }
   public static void addGravityChoice(FlatBufferBuilder builder, int GRAVITY_CHOICE) { builder.addByte(0, (byte) GRAVITY_CHOICE, (byte) 0); }
   public static void addEnablePointMass(FlatBufferBuilder builder, boolean ENABLE_POINT_MASS) { builder.addBoolean(1, ENABLE_POINT_MASS, true); }
   public static void addGravitationalParameter(FlatBufferBuilder builder, double GRAVITATIONAL_PARAMETER) { builder.addDouble(2, GRAVITATIONAL_PARAMETER, 0.0); }
@@ -231,6 +274,13 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
   public static void addRadiationPressureModel(FlatBufferBuilder builder, int RADIATION_PRESSURE_MODEL) { builder.addByte(30, (byte) RADIATION_PRESSURE_MODEL, (byte) 0); }
   public static void addGnssBlock(FlatBufferBuilder builder, int GNSS_BLOCK) { builder.addByte(31, (byte) GNSS_BLOCK, (byte) 0); }
   public static void addEcom2(FlatBufferBuilder builder, int ECOM2Offset) { builder.addOffset(32, ECOM2Offset, 0); }
+  public static void addEarthRadiation(FlatBufferBuilder builder, int EARTH_RADIATION) { builder.addByte(33, (byte) EARTH_RADIATION, (byte) 0); }
+  public static void addEarthRadiationResolutionDeg(FlatBufferBuilder builder, double EARTH_RADIATION_RESOLUTION_DEG) { builder.addDouble(34, EARTH_RADIATION_RESOLUTION_DEG, 15.0); }
+  public static void addEarthRadiationAreaOverMassM2Kg(FlatBufferBuilder builder, double EARTH_RADIATION_AREA_OVER_MASS_M2_KG) { builder.addDouble(35, EARTH_RADIATION_AREA_OVER_MASS_M2_KG, 0.0); }
+  public static void addHasEarthRadiationAreaOverMassM2Kg(FlatBufferBuilder builder, boolean HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG) { builder.addBoolean(36, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, false); }
+  public static void addOceanTides(FlatBufferBuilder builder, int OCEAN_TIDES) { builder.addByte(37, (byte) OCEAN_TIDES, (byte) 0); }
+  public static void addOceanTideMaximumDegree(FlatBufferBuilder builder, int OCEAN_TIDE_MAXIMUM_DEGREE) { builder.addShort(38, (short) OCEAN_TIDE_MAXIMUM_DEGREE, (short) 30); }
+  public static void addOceanTideMaximumOrder(FlatBufferBuilder builder, int OCEAN_TIDE_MAXIMUM_ORDER) { builder.addShort(39, (short) OCEAN_TIDE_MAXIMUM_ORDER, (short) 30); }
   public static int endPRWForceConfiguration(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 46);  // EPHEMERIS_SOURCE

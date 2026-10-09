@@ -2014,6 +2014,207 @@ impl<'a> ::flatbuffers::Verifiable for prwRadiationPressureFamily {
 impl ::flatbuffers::SimpleToVerifyInSlice for prwRadiationPressureFamily {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PRW_EARTH_RADIATION_MODEL: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PRW_EARTH_RADIATION_MODEL: u8 = 1;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PRW_EARTH_RADIATION_MODEL: [prwEarthRadiationModel; 2] = [
+    prwEarthRadiationModel::NONE,
+    prwEarthRadiationModel::KNOCKE,
+];
+
+/// Earth radiation pressure: the sunlight the Earth reflects (albedo) and the
+/// infrared it emits, pushing on an isotropic (cannonball) spacecraft. KNOCKE
+/// is Knocke, Ries and Tapley (1988, AIAA paper 88-4292): albedo and
+/// emissivity zonal to the second Legendre degree with the annual term of
+/// the first, from the elements of the Earth's surface the spacecraft sees
+/// (as Orekit's KnockeRediffusedForceModel evaluates it).
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct prwEarthRadiationModel(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl prwEarthRadiationModel {
+    pub const NONE: Self = Self(0);
+    pub const KNOCKE: Self = Self(1);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 1;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::NONE,
+        Self::KNOCKE,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::NONE => Some("NONE"),
+            Self::KNOCKE => Some("KNOCKE"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for prwEarthRadiationModel {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for prwEarthRadiationModel {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for prwEarthRadiationModel {
+    type Output = prwEarthRadiationModel;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for prwEarthRadiationModel {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for prwEarthRadiationModel {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for prwEarthRadiationModel {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PRW_OCEAN_TIDE_MODEL: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PRW_OCEAN_TIDE_MODEL: u8 = 1;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PRW_OCEAN_TIDE_MODEL: [prwOceanTideModel; 2] = [
+    prwOceanTideModel::NONE,
+    prwOceanTideModel::FES2004,
+];
+
+/// Ocean tide model for the central body's field. FES2004 is IERS
+/// Conventions (2010) section 6.3: the variations of the normalized Stokes
+/// coefficients of the FES2004 waves (the IERS file fes2004_Cnm-Snm.dat,
+/// eq. 6.15) at their Doodson arguments, in the field's Earth-fixed axes.
+/// The ocean pole tide is not included.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct prwOceanTideModel(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl prwOceanTideModel {
+    pub const NONE: Self = Self(0);
+    pub const FES2004: Self = Self(1);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 1;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::NONE,
+        Self::FES2004,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::NONE => Some("NONE"),
+            Self::FES2004 => Some("FES2004"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for prwOceanTideModel {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for prwOceanTideModel {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for prwOceanTideModel {
+    type Output = prwOceanTideModel;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for prwOceanTideModel {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for prwOceanTideModel {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for prwOceanTideModel {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PRW_GNSS_SPACECRAFT_BLOCK: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -4843,6 +5044,13 @@ impl<'a> PRWForceConfiguration<'a> {
     pub const VT_RADIATION_PRESSURE_MODEL: ::flatbuffers::VOffsetT = 64;
     pub const VT_GNSS_BLOCK: ::flatbuffers::VOffsetT = 66;
     pub const VT_ECOM2: ::flatbuffers::VOffsetT = 68;
+    pub const VT_EARTH_RADIATION: ::flatbuffers::VOffsetT = 70;
+    pub const VT_EARTH_RADIATION_RESOLUTION_DEG: ::flatbuffers::VOffsetT = 72;
+    pub const VT_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: ::flatbuffers::VOffsetT = 74;
+    pub const VT_HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: ::flatbuffers::VOffsetT = 76;
+    pub const VT_OCEAN_TIDES: ::flatbuffers::VOffsetT = 78;
+    pub const VT_OCEAN_TIDE_MAXIMUM_DEGREE: ::flatbuffers::VOffsetT = 80;
+    pub const VT_OCEAN_TIDE_MAXIMUM_ORDER: ::flatbuffers::VOffsetT = 82;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4855,6 +5063,8 @@ impl<'a> PRWForceConfiguration<'a> {
         args: &'args PRWForceConfigurationArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PRWForceConfiguration<'bldr>> {
         let mut builder = PRWForceConfigurationBuilder::new(_fbb);
+        builder.add_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(args.EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+        builder.add_EARTH_RADIATION_RESOLUTION_DEG(args.EARTH_RADIATION_RESOLUTION_DEG);
         builder.add_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(args.DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
         builder.add_IN_TRACK_ACCELERATION_M_S2(args.IN_TRACK_ACCELERATION_M_S2);
         builder.add_DRAG_COEFFICIENT(args.DRAG_COEFFICIENT);
@@ -4866,9 +5076,14 @@ impl<'a> PRWForceConfiguration<'a> {
         if let Some(x) = args.EPHEMERIS_SOURCE { builder.add_EPHEMERIS_SOURCE(x); }
         if let Some(x) = args.WEATHER { builder.add_WEATHER(x); }
         if let Some(x) = args.THIRD_BODY_IDS { builder.add_THIRD_BODY_IDS(x); }
+        builder.add_OCEAN_TIDE_MAXIMUM_ORDER(args.OCEAN_TIDE_MAXIMUM_ORDER);
+        builder.add_OCEAN_TIDE_MAXIMUM_DEGREE(args.OCEAN_TIDE_MAXIMUM_DEGREE);
         builder.add_MAXIMUM_TESSERAL_DEGREE(args.MAXIMUM_TESSERAL_DEGREE);
         builder.add_MAXIMUM_ORDER(args.MAXIMUM_ORDER);
         builder.add_MAXIMUM_DEGREE(args.MAXIMUM_DEGREE);
+        builder.add_OCEAN_TIDES(args.OCEAN_TIDES);
+        builder.add_HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(args.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+        builder.add_EARTH_RADIATION(args.EARTH_RADIATION);
         builder.add_GNSS_BLOCK(args.GNSS_BLOCK);
         builder.add_RADIATION_PRESSURE_MODEL(args.RADIATION_PRESSURE_MODEL);
         builder.add_HAS_MAXIMUM_TESSERAL_DEGREE(args.HAS_MAXIMUM_TESSERAL_DEGREE);
@@ -4934,6 +5149,13 @@ impl<'a> PRWForceConfiguration<'a> {
         let ECOM2 = self.ECOM2().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let EARTH_RADIATION = self.EARTH_RADIATION();
+        let EARTH_RADIATION_RESOLUTION_DEG = self.EARTH_RADIATION_RESOLUTION_DEG();
+        let EARTH_RADIATION_AREA_OVER_MASS_M2_KG = self.EARTH_RADIATION_AREA_OVER_MASS_M2_KG();
+        let HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG = self.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG();
+        let OCEAN_TIDES = self.OCEAN_TIDES();
+        let OCEAN_TIDE_MAXIMUM_DEGREE = self.OCEAN_TIDE_MAXIMUM_DEGREE();
+        let OCEAN_TIDE_MAXIMUM_ORDER = self.OCEAN_TIDE_MAXIMUM_ORDER();
         PRWForceConfigurationT {
             GRAVITY_CHOICE,
             ENABLE_POINT_MASS,
@@ -4968,6 +5190,13 @@ impl<'a> PRWForceConfiguration<'a> {
             RADIATION_PRESSURE_MODEL,
             GNSS_BLOCK,
             ECOM2,
+            EARTH_RADIATION,
+            EARTH_RADIATION_RESOLUTION_DEG,
+            EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+            HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+            OCEAN_TIDES,
+            OCEAN_TIDE_MAXIMUM_DEGREE,
+            OCEAN_TIDE_MAXIMUM_ORDER,
         }
     }
 
@@ -5255,6 +5484,72 @@ impl<'a> PRWForceConfiguration<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWEcom2>>(PRWForceConfiguration::VT_ECOM2, None)}
     }
+
+    /// Earth radiation pressure (albedo and infrared). It reads the Sun's
+    /// position from the request's ephemeris source.
+    #[inline]
+    pub fn EARTH_RADIATION(&self) -> prwEarthRadiationModel {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<prwEarthRadiationModel>(PRWForceConfiguration::VT_EARTH_RADIATION, Some(prwEarthRadiationModel::NONE)).unwrap()}
+    }
+
+    /// Angular size of the Earth surface elements it sums, degrees.
+    #[inline]
+    pub fn EARTH_RADIATION_RESOLUTION_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWForceConfiguration::VT_EARTH_RADIATION_RESOLUTION_DEG, Some(15.0)).unwrap()}
+    }
+
+    /// Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+    /// cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+    /// fitting SRP_AREA_OVER_MASS scales both.
+    #[inline]
+    pub fn EARTH_RADIATION_AREA_OVER_MASS_M2_KG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWForceConfiguration::VT_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, Some(0.0)).unwrap()}
+    }
+
+    /// True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+    #[inline]
+    pub fn HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(PRWForceConfiguration::VT_HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, Some(false)).unwrap()}
+    }
+
+    /// Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+    /// orientation (PRW.EARTH_ORIENTATION) to apply them.
+    #[inline]
+    pub fn OCEAN_TIDES(&self) -> prwOceanTideModel {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<prwOceanTideModel>(PRWForceConfiguration::VT_OCEAN_TIDES, Some(prwOceanTideModel::NONE)).unwrap()}
+    }
+
+    /// Truncation of the ocean tide field.
+    #[inline]
+    pub fn OCEAN_TIDE_MAXIMUM_DEGREE(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(PRWForceConfiguration::VT_OCEAN_TIDE_MAXIMUM_DEGREE, Some(30)).unwrap()}
+    }
+
+    #[inline]
+    pub fn OCEAN_TIDE_MAXIMUM_ORDER(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(PRWForceConfiguration::VT_OCEAN_TIDE_MAXIMUM_ORDER, Some(30)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PRWForceConfiguration<'_> {
@@ -5296,6 +5591,13 @@ impl ::flatbuffers::Verifiable for PRWForceConfiguration<'_> {
             .visit_field::<prwRadiationPressureFamily>("RADIATION_PRESSURE_MODEL", Self::VT_RADIATION_PRESSURE_MODEL, false)?
             .visit_field::<prwGnssSpacecraftBlock>("GNSS_BLOCK", Self::VT_GNSS_BLOCK, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PRWEcom2>>("ECOM2", Self::VT_ECOM2, false)?
+            .visit_field::<prwEarthRadiationModel>("EARTH_RADIATION", Self::VT_EARTH_RADIATION, false)?
+            .visit_field::<f64>("EARTH_RADIATION_RESOLUTION_DEG", Self::VT_EARTH_RADIATION_RESOLUTION_DEG, false)?
+            .visit_field::<f64>("EARTH_RADIATION_AREA_OVER_MASS_M2_KG", Self::VT_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, false)?
+            .visit_field::<bool>("HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG", Self::VT_HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, false)?
+            .visit_field::<prwOceanTideModel>("OCEAN_TIDES", Self::VT_OCEAN_TIDES, false)?
+            .visit_field::<u16>("OCEAN_TIDE_MAXIMUM_DEGREE", Self::VT_OCEAN_TIDE_MAXIMUM_DEGREE, false)?
+            .visit_field::<u16>("OCEAN_TIDE_MAXIMUM_ORDER", Self::VT_OCEAN_TIDE_MAXIMUM_ORDER, false)?
             .finish();
         Ok(())
     }
@@ -5335,6 +5637,13 @@ pub struct PRWForceConfigurationArgs<'a> {
     pub RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily,
     pub GNSS_BLOCK: prwGnssSpacecraftBlock,
     pub ECOM2: Option<::flatbuffers::WIPOffset<PRWEcom2<'a>>>,
+    pub EARTH_RADIATION: prwEarthRadiationModel,
+    pub EARTH_RADIATION_RESOLUTION_DEG: f64,
+    pub EARTH_RADIATION_AREA_OVER_MASS_M2_KG: f64,
+    pub HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: bool,
+    pub OCEAN_TIDES: prwOceanTideModel,
+    pub OCEAN_TIDE_MAXIMUM_DEGREE: u16,
+    pub OCEAN_TIDE_MAXIMUM_ORDER: u16,
 }
 
 impl<'a> Default for PRWForceConfigurationArgs<'a> {
@@ -5374,6 +5683,13 @@ impl<'a> Default for PRWForceConfigurationArgs<'a> {
             RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily::CANNONBALL,
             GNSS_BLOCK: prwGnssSpacecraftBlock::UNSPECIFIED,
             ECOM2: None,
+            EARTH_RADIATION: prwEarthRadiationModel::NONE,
+            EARTH_RADIATION_RESOLUTION_DEG: 15.0,
+            EARTH_RADIATION_AREA_OVER_MASS_M2_KG: 0.0,
+            HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: false,
+            OCEAN_TIDES: prwOceanTideModel::NONE,
+            OCEAN_TIDE_MAXIMUM_DEGREE: 30,
+            OCEAN_TIDE_MAXIMUM_ORDER: 30,
         }
     }
 }
@@ -5550,6 +5866,41 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWForceConfigurationBuilder<
     }
 
     #[inline]
+    pub fn add_EARTH_RADIATION(&mut self, EARTH_RADIATION: prwEarthRadiationModel) {
+        self.fbb_.push_slot::<prwEarthRadiationModel>(PRWForceConfiguration::VT_EARTH_RADIATION, EARTH_RADIATION, prwEarthRadiationModel::NONE);
+    }
+
+    #[inline]
+    pub fn add_EARTH_RADIATION_RESOLUTION_DEG(&mut self, EARTH_RADIATION_RESOLUTION_DEG: f64) {
+        self.fbb_.push_slot::<f64>(PRWForceConfiguration::VT_EARTH_RADIATION_RESOLUTION_DEG, EARTH_RADIATION_RESOLUTION_DEG, 15.0);
+    }
+
+    #[inline]
+    pub fn add_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(&mut self, EARTH_RADIATION_AREA_OVER_MASS_M2_KG: f64) {
+        self.fbb_.push_slot::<f64>(PRWForceConfiguration::VT_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, EARTH_RADIATION_AREA_OVER_MASS_M2_KG, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(&mut self, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: bool) {
+        self.fbb_.push_slot::<bool>(PRWForceConfiguration::VT_HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, false);
+    }
+
+    #[inline]
+    pub fn add_OCEAN_TIDES(&mut self, OCEAN_TIDES: prwOceanTideModel) {
+        self.fbb_.push_slot::<prwOceanTideModel>(PRWForceConfiguration::VT_OCEAN_TIDES, OCEAN_TIDES, prwOceanTideModel::NONE);
+    }
+
+    #[inline]
+    pub fn add_OCEAN_TIDE_MAXIMUM_DEGREE(&mut self, OCEAN_TIDE_MAXIMUM_DEGREE: u16) {
+        self.fbb_.push_slot::<u16>(PRWForceConfiguration::VT_OCEAN_TIDE_MAXIMUM_DEGREE, OCEAN_TIDE_MAXIMUM_DEGREE, 30);
+    }
+
+    #[inline]
+    pub fn add_OCEAN_TIDE_MAXIMUM_ORDER(&mut self, OCEAN_TIDE_MAXIMUM_ORDER: u16) {
+        self.fbb_.push_slot::<u16>(PRWForceConfiguration::VT_OCEAN_TIDE_MAXIMUM_ORDER, OCEAN_TIDE_MAXIMUM_ORDER, 30);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWForceConfigurationBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PRWForceConfigurationBuilder {
@@ -5602,6 +5953,13 @@ impl ::core::fmt::Debug for PRWForceConfiguration<'_> {
         ds.field("RADIATION_PRESSURE_MODEL", &self.RADIATION_PRESSURE_MODEL());
         ds.field("GNSS_BLOCK", &self.GNSS_BLOCK());
         ds.field("ECOM2", &self.ECOM2());
+        ds.field("EARTH_RADIATION", &self.EARTH_RADIATION());
+        ds.field("EARTH_RADIATION_RESOLUTION_DEG", &self.EARTH_RADIATION_RESOLUTION_DEG());
+        ds.field("EARTH_RADIATION_AREA_OVER_MASS_M2_KG", &self.EARTH_RADIATION_AREA_OVER_MASS_M2_KG());
+        ds.field("HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG", &self.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG());
+        ds.field("OCEAN_TIDES", &self.OCEAN_TIDES());
+        ds.field("OCEAN_TIDE_MAXIMUM_DEGREE", &self.OCEAN_TIDE_MAXIMUM_DEGREE());
+        ds.field("OCEAN_TIDE_MAXIMUM_ORDER", &self.OCEAN_TIDE_MAXIMUM_ORDER());
         ds.finish()
     }
 }
@@ -5642,6 +6000,13 @@ pub struct PRWForceConfigurationT {
     pub RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily,
     pub GNSS_BLOCK: prwGnssSpacecraftBlock,
     pub ECOM2: Option<alloc::boxed::Box<PRWEcom2T>>,
+    pub EARTH_RADIATION: prwEarthRadiationModel,
+    pub EARTH_RADIATION_RESOLUTION_DEG: f64,
+    pub EARTH_RADIATION_AREA_OVER_MASS_M2_KG: f64,
+    pub HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: bool,
+    pub OCEAN_TIDES: prwOceanTideModel,
+    pub OCEAN_TIDE_MAXIMUM_DEGREE: u16,
+    pub OCEAN_TIDE_MAXIMUM_ORDER: u16,
 }
 
 impl Default for PRWForceConfigurationT {
@@ -5680,6 +6045,13 @@ impl Default for PRWForceConfigurationT {
             RADIATION_PRESSURE_MODEL: prwRadiationPressureFamily::CANNONBALL,
             GNSS_BLOCK: prwGnssSpacecraftBlock::UNSPECIFIED,
             ECOM2: None,
+            EARTH_RADIATION: prwEarthRadiationModel::NONE,
+            EARTH_RADIATION_RESOLUTION_DEG: 15.0,
+            EARTH_RADIATION_AREA_OVER_MASS_M2_KG: 0.0,
+            HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: false,
+            OCEAN_TIDES: prwOceanTideModel::NONE,
+            OCEAN_TIDE_MAXIMUM_DEGREE: 30,
+            OCEAN_TIDE_MAXIMUM_ORDER: 30,
         }
     }
 }
@@ -5731,6 +6103,13 @@ impl PRWForceConfigurationT {
         let ECOM2 = self.ECOM2.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let EARTH_RADIATION = self.EARTH_RADIATION;
+        let EARTH_RADIATION_RESOLUTION_DEG = self.EARTH_RADIATION_RESOLUTION_DEG;
+        let EARTH_RADIATION_AREA_OVER_MASS_M2_KG = self.EARTH_RADIATION_AREA_OVER_MASS_M2_KG;
+        let HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG = self.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG;
+        let OCEAN_TIDES = self.OCEAN_TIDES;
+        let OCEAN_TIDE_MAXIMUM_DEGREE = self.OCEAN_TIDE_MAXIMUM_DEGREE;
+        let OCEAN_TIDE_MAXIMUM_ORDER = self.OCEAN_TIDE_MAXIMUM_ORDER;
         PRWForceConfiguration::create(_fbb, &PRWForceConfigurationArgs{
             GRAVITY_CHOICE,
             ENABLE_POINT_MASS,
@@ -5765,6 +6144,13 @@ impl PRWForceConfigurationT {
             RADIATION_PRESSURE_MODEL,
             GNSS_BLOCK,
             ECOM2,
+            EARTH_RADIATION,
+            EARTH_RADIATION_RESOLUTION_DEG,
+            EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+            HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+            OCEAN_TIDES,
+            OCEAN_TIDE_MAXIMUM_DEGREE,
+            OCEAN_TIDE_MAXIMUM_ORDER,
         })
     }
 }
