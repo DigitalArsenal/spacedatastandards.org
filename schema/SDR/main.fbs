@@ -1,5 +1,5 @@
-// Hash: 34a8f4ac3b5b7043add8ee49977baa17bfb63c1cd3a53b2ae64490e7743eb88b
-// Version: 0.0.2
+// Hash: 2ebd990f2bf5a2a7d27c900bdaf775b0d2601a4b551528446e20cb391f2b18da
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 /// Sensor Detection Report — runtime I/O contract for sensor detection
 /// plugins. Distinct from SNR (sensor hardware catalog) and SEN (sensor
@@ -64,7 +64,9 @@ struct detectionResult {
   RANGE:double;
   /// Signal-to-noise ratio (dB).
   SNR:double;
-  /// Doppler shift (Hz).
+  /// Two-way (monostatic) Doppler shift of the echo relative to
+  /// SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+  /// $RDO DOPPLER convention.
   DOPPLER:double;
   /// Probability of detection (0.0 – 1.0).
   PROBABILITY:double;
@@ -187,7 +189,8 @@ table SDRSingleResult {
   AZIMUTH:double;
   /// Elevation angle to target (radians).
   ELEVATION:double;
-  /// Range rate / Doppler velocity (m/s).
+  /// Range rate, the time derivative of RANGE (m/s): positive when the range
+  /// is opening, negative when it is closing.
   RANGE_RATE:double;
   /// Detection timestamp (milliseconds since epoch).
   TIMESTAMP_MS:ulong;

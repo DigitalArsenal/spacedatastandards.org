@@ -199,8 +199,18 @@ class ACWSensor(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # RADAR: transmitted carrier frequency, hertz. A DOPPLER error model
+    # measures the echo's two-way shift relative to it, reported as $RDO
+    # DOPPLER with DOPPLER_FREQUENCY set to this value.
+    # ACWSensor
+    def TRANSMIT_FREQUENCY_HZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def ACWSensorStart(builder):
-    builder.StartObject(18)
+    builder.StartObject(19)
 
 def Start(builder):
     ACWSensorStart(builder)
@@ -325,6 +335,12 @@ def ACWSensorAddFALSE_ALARM_RATE_PER_HOUR(builder, FALSE_ALARM_RATE_PER_HOUR):
 def AddFALSE_ALARM_RATE_PER_HOUR(builder, FALSE_ALARM_RATE_PER_HOUR):
     ACWSensorAddFALSE_ALARM_RATE_PER_HOUR(builder, FALSE_ALARM_RATE_PER_HOUR)
 
+def ACWSensorAddTRANSMIT_FREQUENCY_HZ(builder, TRANSMIT_FREQUENCY_HZ):
+    builder.PrependFloat64Slot(18, TRANSMIT_FREQUENCY_HZ, 0.0)
+
+def AddTRANSMIT_FREQUENCY_HZ(builder, TRANSMIT_FREQUENCY_HZ):
+    ACWSensorAddTRANSMIT_FREQUENCY_HZ(builder, TRANSMIT_FREQUENCY_HZ)
+
 def ACWSensorEnd(builder):
     return builder.EndObject()
 
@@ -361,6 +377,7 @@ class ACWSensorT(object):
         LIMITING_MAGNITUDE = 0.0,
         MAX_HOST_SUN_ELEVATION_RAD = 0.0,
         FALSE_ALARM_RATE_PER_HOUR = 0.0,
+        TRANSMIT_FREQUENCY_HZ = 0.0,
     ):
         self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
         self.HOST_ID = HOST_ID  # type: Optional[str]
@@ -380,6 +397,7 @@ class ACWSensorT(object):
         self.LIMITING_MAGNITUDE = LIMITING_MAGNITUDE  # type: float
         self.MAX_HOST_SUN_ELEVATION_RAD = MAX_HOST_SUN_ELEVATION_RAD  # type: float
         self.FALSE_ALARM_RATE_PER_HOUR = FALSE_ALARM_RATE_PER_HOUR  # type: float
+        self.TRANSMIT_FREQUENCY_HZ = TRANSMIT_FREQUENCY_HZ  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -428,6 +446,7 @@ class ACWSensorT(object):
         self.LIMITING_MAGNITUDE = ACWSensor.LIMITING_MAGNITUDE()
         self.MAX_HOST_SUN_ELEVATION_RAD = ACWSensor.MAX_HOST_SUN_ELEVATION_RAD()
         self.FALSE_ALARM_RATE_PER_HOUR = ACWSensor.FALSE_ALARM_RATE_PER_HOUR()
+        self.TRANSMIT_FREQUENCY_HZ = ACWSensor.TRANSMIT_FREQUENCY_HZ()
 
     # ACWSensorT
     def Pack(self, builder):
@@ -468,5 +487,6 @@ class ACWSensorT(object):
         ACWSensorAddLIMITING_MAGNITUDE(builder, self.LIMITING_MAGNITUDE)
         ACWSensorAddMAX_HOST_SUN_ELEVATION_RAD(builder, self.MAX_HOST_SUN_ELEVATION_RAD)
         ACWSensorAddFALSE_ALARM_RATE_PER_HOUR(builder, self.FALSE_ALARM_RATE_PER_HOUR)
+        ACWSensorAddTRANSMIT_FREQUENCY_HZ(builder, self.TRANSMIT_FREQUENCY_HZ)
         ACWSensor = ACWSensorEnd(builder)
         return ACWSensor

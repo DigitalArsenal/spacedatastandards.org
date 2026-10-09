@@ -26,7 +26,8 @@ export declare class SDRSingleResult implements flatbuffers.IUnpackableObject<SD
      */
     ELEVATION(): number;
     /**
-     * Range rate / Doppler velocity (m/s).
+     * Range rate, the time derivative of RANGE (m/s): positive when the range
+     * is opening, negative when it is closing.
      */
     RANGE_RATE(): number;
     /**

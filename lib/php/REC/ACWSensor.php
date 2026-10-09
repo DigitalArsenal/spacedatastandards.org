@@ -227,22 +227,34 @@ class ACWSensor extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// RADAR: transmitted carrier frequency, hertz. A DOPPLER error model
+    /// measures the echo's two-way shift relative to it, reported as $RDO
+    /// DOPPLER with DOPPLER_FREQUENCY set to this value.
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_FREQUENCY_HZ()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWSensor(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(18);
+        $builder->StartObject(19);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWSensor
      */
-    public static function createACWSensor(FlatBufferBuilder $builder, $SENSOR_ID, $HOST_ID, $PHENOMENOLOGY, $ERROR_MODELS, $CONSTRAINTS, $OBSERVATION_INTERVAL_S, $TRACK_DURATION_S, $REVISIT_INTERVAL_S, $MAX_SIMULTANEOUS_TRACKS, $REFERENCE_SNR_DB, $REFERENCE_RANGE_M, $REFERENCE_RCS_M2, $DETECTION_THRESHOLD_DB, $RECEIVER_G_OVER_T_DB_PER_K, $RECEIVER_BANDWIDTH_HZ, $LIMITING_MAGNITUDE, $MAX_HOST_SUN_ELEVATION_RAD, $FALSE_ALARM_RATE_PER_HOUR)
+    public static function createACWSensor(FlatBufferBuilder $builder, $SENSOR_ID, $HOST_ID, $PHENOMENOLOGY, $ERROR_MODELS, $CONSTRAINTS, $OBSERVATION_INTERVAL_S, $TRACK_DURATION_S, $REVISIT_INTERVAL_S, $MAX_SIMULTANEOUS_TRACKS, $REFERENCE_SNR_DB, $REFERENCE_RANGE_M, $REFERENCE_RCS_M2, $DETECTION_THRESHOLD_DB, $RECEIVER_G_OVER_T_DB_PER_K, $RECEIVER_BANDWIDTH_HZ, $LIMITING_MAGNITUDE, $MAX_HOST_SUN_ELEVATION_RAD, $FALSE_ALARM_RATE_PER_HOUR, $TRANSMIT_FREQUENCY_HZ)
     {
-        $builder->startObject(18);
+        $builder->startObject(19);
         self::addSENSOR_ID($builder, $SENSOR_ID);
         self::addHOST_ID($builder, $HOST_ID);
         self::addPHENOMENOLOGY($builder, $PHENOMENOLOGY);
@@ -261,6 +273,7 @@ class ACWSensor extends Table
         self::addLIMITING_MAGNITUDE($builder, $LIMITING_MAGNITUDE);
         self::addMAX_HOST_SUN_ELEVATION_RAD($builder, $MAX_HOST_SUN_ELEVATION_RAD);
         self::addFALSE_ALARM_RATE_PER_HOUR($builder, $FALSE_ALARM_RATE_PER_HOUR);
+        self::addTRANSMIT_FREQUENCY_HZ($builder, $TRANSMIT_FREQUENCY_HZ);
         $o = $builder->endObject();
         return $o;
     }
@@ -467,6 +480,16 @@ class ACWSensor extends Table
     public static function addFALSE_ALARM_RATE_PER_HOUR(FlatBufferBuilder $builder, $FALSE_ALARM_RATE_PER_HOUR)
     {
         $builder->addDoubleX(17, $FALSE_ALARM_RATE_PER_HOUR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_FREQUENCY_HZ(FlatBufferBuilder $builder, $TRANSMIT_FREQUENCY_HZ)
+    {
+        $builder->addDoubleX(18, $TRANSMIT_FREQUENCY_HZ, 0.0);
     }
 
     /**

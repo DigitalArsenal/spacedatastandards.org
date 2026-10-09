@@ -627,6 +627,10 @@
         "FALSE_ALARM_RATE_PER_HOUR" : {
                 "type" : "number",
                 "description" : "Uncorrelated detections per hour of tracking, reported with UCT set."
+              },
+        "TRANSMIT_FREQUENCY_HZ" : {
+                "type" : "number",
+                "description" : "RADAR: transmitted carrier frequency, hertz. A DOPPLER error model\nmeasures the echo's two-way shift relative to it, reported as $RDO\nDOPPLER with DOPPLER_FREQUENCY set to this value."
               }
       },
       "additionalProperties" : false

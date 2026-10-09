@@ -1,5 +1,5 @@
-// Hash: d33171d7d76fb9646f9d99a816eed6c1c2d0697115642445db78f0ad3777cd02
-// Version: 0.0.4
+// Hash: 29e529f09e927164c78b97475a9452ae9ca741c7551769b87ce32dc2f8632c5a
+// Version: 0.0.5
 // -----------------------------------END_HEADER
 include "../MEM/main.fbs";
 include "../EOP/main.fbs";
@@ -190,11 +190,13 @@ table ACWObserverTrajectory {
 /// Sensing phenomenology of a simulated sensor.
 enum acwSensorPhenomenology : ubyte {
   UNSPECIFIED = 0,
-  /// Monostatic radar: range, range rate, azimuth, elevation.
+  /// Monostatic radar: range, range rate, two-way Doppler, azimuth,
+  /// elevation.
   RADAR = 1,
   /// Passive optical: right ascension and declination, magnitude.
   OPTICAL = 2,
-  /// Passive RF: angles and received frequency of a target's emitter.
+  /// Passive RF: angles and the received (one-way) frequency of a target's
+  /// emitter.
   PASSIVE_RF = 3,
   /// Satellite laser ranging: two-way range.
   LASER_RANGING = 4
@@ -265,6 +267,10 @@ table ACWSensor {
   MAX_HOST_SUN_ELEVATION_RAD:double;
   /// Uncorrelated detections per hour of tracking, reported with UCT set.
   FALSE_ALARM_RATE_PER_HOUR:double;
+  /// RADAR: transmitted carrier frequency, hertz. A DOPPLER error model
+  /// measures the echo's two-way shift relative to it, reported as $RDO
+  /// DOPPLER with DOPPLER_FREQUENCY set to this value.
+  TRANSMIT_FREQUENCY_HZ:double;
 }
 /// Access windows of one sensor to one target (SIMULATE_OBSERVATIONS input).
 table ACWSensorAccess {

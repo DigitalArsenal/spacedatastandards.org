@@ -47,7 +47,9 @@ SNR():number {
 }
 
 /**
- * Doppler shift (Hz).
+ * Two-way (monostatic) Doppler shift of the echo relative to
+ * SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+ * $RDO DOPPLER convention.
  */
 DOPPLER():number {
   return this.bb!.readFloat64(this.bb_pos + 24);

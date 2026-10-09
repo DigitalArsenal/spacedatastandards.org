@@ -161,7 +161,8 @@ class RFO {
   ///  Range uncertainty (km, 1-sigma)
   double get RANGE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
   double get rangeUnc => RANGE_UNC;
-  ///  Range rate (km/s)
+  ///  Range rate, the time derivative of RANGE (km/s): positive when the range
+  ///  is opening, negative when it is closing.
   double get RANGE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
   double get rangeRate => RANGE_RATE;
   ///  Range rate uncertainty (km/s, 1-sigma)
@@ -184,7 +185,9 @@ class RFO {
   ///  Collection mode
   String? get COLLECTION_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
   String? get collectionMode => COLLECTION_MODE;
-  ///  Measured center frequency (MHz)
+  ///  Measured center frequency as received at the sensor (MHz). One-way: it
+  ///  includes the Doppler shift of the emitter's motion relative to the
+  ///  sensor.
   double get FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
   ///  Nominal center frequency (MHz)
   double get NOMINAL_FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
@@ -195,7 +198,10 @@ class RFO {
   ///  End frequency of emission (MHz)
   double get END_FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
   double get endFrequency => END_FREQUENCY;
-  ///  Frequency shift from nominal (MHz)
+  ///  Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When
+  ///  NOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler
+  ///  shift, positive when the range is closing: to first order in
+  ///  RANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY.
   double get FREQUENCY_SHIFT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
   double get frequencyShift => FREQUENCY_SHIFT;
   ///  Measured bandwidth (MHz)

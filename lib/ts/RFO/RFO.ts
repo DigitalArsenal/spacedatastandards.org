@@ -230,7 +230,8 @@ RANGE_UNC():number {
 }
 
 /**
- * Range rate (km/s)
+ * Range rate, the time derivative of RANGE (km/s): positive when the range
+ * is opening, negative when it is closing.
  */
 RANGE_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
@@ -308,7 +309,9 @@ COLLECTION_MODE(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Measured center frequency (MHz)
+ * Measured center frequency as received at the sensor (MHz). One-way: it
+ * includes the Doppler shift of the emitter's motion relative to the
+ * sensor.
  */
 FREQUENCY():number {
   const offset = this.bb!.__offset(this.bb_pos, 66);
@@ -340,7 +343,10 @@ END_FREQUENCY():number {
 }
 
 /**
- * Frequency shift from nominal (MHz)
+ * Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When
+ * NOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler
+ * shift, positive when the range is closing: to first order in
+ * RANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY.
  */
 FREQUENCY_SHIFT():number {
   const offset = this.bb!.__offset(this.bb_pos, 74);

@@ -90,7 +90,8 @@ class SDRSingleResult extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Range rate / Doppler velocity (m/s).
+    /// Range rate, the time derivative of RANGE (m/s): positive when the range
+    /// is opening, negative when it is closing.
     /**
      * @return double
      */

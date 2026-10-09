@@ -438,8 +438,34 @@ func (rcv *ACWSensor) MutateFalseAlarmRatePerHour(n float64) bool {
 	return rcv.MutateFALSE_ALARM_RATE_PER_HOUR(n)
 }
 
+/// RADAR: transmitted carrier frequency, hertz. A DOPPLER error model
+/// measures the echo's two-way shift relative to it, reported as $RDO
+/// DOPPLER with DOPPLER_FREQUENCY set to this value.
+func (rcv *ACWSensor) TRANSMIT_FREQUENCY_HZ() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ACWSensor) TransmitFrequencyHz() float64 {
+	return rcv.TRANSMIT_FREQUENCY_HZ()
+}
+
+/// RADAR: transmitted carrier frequency, hertz. A DOPPLER error model
+/// measures the echo's two-way shift relative to it, reported as $RDO
+/// DOPPLER with DOPPLER_FREQUENCY set to this value.
+func (rcv *ACWSensor) MutateTRANSMIT_FREQUENCY_HZ(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *ACWSensor) MutateTransmitFrequencyHz(n float64) bool {
+	return rcv.MutateTRANSMIT_FREQUENCY_HZ(n)
+}
+
 func ACWSensorStart(builder *flatbuffers.Builder) {
-	builder.StartObject(18)
+	builder.StartObject(19)
 }
 func ACWSensorAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SENSOR_ID), 0)
@@ -554,6 +580,12 @@ func ACWSensorAddFALSE_ALARM_RATE_PER_HOUR(builder *flatbuffers.Builder, FALSE_A
 }
 func ACWSensorAddFalseAlarmRatePerHour(builder *flatbuffers.Builder, FALSE_ALARM_RATE_PER_HOUR float64) {
 	ACWSensorAddFALSE_ALARM_RATE_PER_HOUR(builder, FALSE_ALARM_RATE_PER_HOUR)
+}
+func ACWSensorAddTRANSMIT_FREQUENCY_HZ(builder *flatbuffers.Builder, TRANSMIT_FREQUENCY_HZ float64) {
+	builder.PrependFloat64Slot(18, TRANSMIT_FREQUENCY_HZ, 0.0)
+}
+func ACWSensorAddTransmitFrequencyHz(builder *flatbuffers.Builder, TRANSMIT_FREQUENCY_HZ float64) {
+	ACWSensorAddTRANSMIT_FREQUENCY_HZ(builder, TRANSMIT_FREQUENCY_HZ)
 }
 func ACWSensorEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

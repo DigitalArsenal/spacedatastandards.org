@@ -5,6 +5,8 @@ class gnssObsType
 {
     const PSEUDORANGE = 0;
     const CARRIER_PHASE = 1;
+    /// One-way Doppler of the received carrier (Hz), positive when the
+    /// satellite is approaching (the RINEX convention).
     const DOPPLER = 2;
     const SNR = 3;
     const RAW_IF = 4;

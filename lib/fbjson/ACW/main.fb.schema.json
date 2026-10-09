@@ -511,7 +511,7 @@
         },
         "RADAR": {
           "value": 1,
-          "description": "Monostatic radar: range, range rate, azimuth, elevation."
+          "description": "Monostatic radar: range, range rate, two-way Doppler, azimuth, elevation."
         },
         "OPTICAL": {
           "value": 2,
@@ -519,7 +519,7 @@
         },
         "PASSIVE_RF": {
           "value": 3,
-          "description": "Passive RF: angles and received frequency of a target's emitter."
+          "description": "Passive RF: angles and the received (one-way) frequency of a target's emitter."
         },
         "LASER_RANGING": {
           "value": 4,
@@ -1503,7 +1503,7 @@
             },
             "RADAR": {
               "value": 1,
-              "description": "Monostatic radar: range, range rate, azimuth, elevation."
+              "description": "Monostatic radar: range, range rate, two-way Doppler, azimuth, elevation."
             },
             "OPTICAL": {
               "value": 2,
@@ -1511,7 +1511,7 @@
             },
             "PASSIVE_RF": {
               "value": 3,
-              "description": "Passive RF: angles and received frequency of a target's emitter."
+              "description": "Passive RF: angles and the received (one-way) frequency of a target's emitter."
             },
             "LASER_RANGING": {
               "value": 4,
@@ -1596,6 +1596,11 @@
         "FALSE_ALARM_RATE_PER_HOUR": {
           "type": "number",
           "description": "Uncorrelated detections per hour of tracking, reported with UCT set.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMIT_FREQUENCY_HZ": {
+          "type": "number",
+          "description": "RADAR: transmitted carrier frequency, hertz. A DOPPLER error model\nmeasures the echo's two-way shift relative to it, reported as $RDO\nDOPPLER with DOPPLER_FREQUENCY set to this value.",
           "x-flatbuffer-type": "double"
         }
       },

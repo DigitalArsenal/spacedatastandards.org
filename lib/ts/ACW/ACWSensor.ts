@@ -177,8 +177,18 @@ FALSE_ALARM_RATE_PER_HOUR():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * RADAR: transmitted carrier frequency, hertz. A DOPPLER error model
+ * measures the echo's two-way shift relative to it, reported as $RDO
+ * DOPPLER with DOPPLER_FREQUENCY set to this value.
+ */
+TRANSMIT_FREQUENCY_HZ():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startACWSensor(builder:flatbuffers.Builder) {
-  builder.startObject(18);
+  builder.startObject(19);
 }
 
 static addSensorId(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset) {
@@ -265,6 +275,10 @@ static addFalseAlarmRatePerHour(builder:flatbuffers.Builder, FALSE_ALARM_RATE_PE
   builder.addFieldFloat64(17, FALSE_ALARM_RATE_PER_HOUR, 0.0);
 }
 
+static addTransmitFrequencyHz(builder:flatbuffers.Builder, TRANSMIT_FREQUENCY_HZ:number) {
+  builder.addFieldFloat64(18, TRANSMIT_FREQUENCY_HZ, 0.0);
+}
+
 static endACWSensor(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -290,7 +304,8 @@ unpack(): ACWSensorT {
     this.RECEIVER_BANDWIDTH_HZ(),
     this.LIMITING_MAGNITUDE(),
     this.MAX_HOST_SUN_ELEVATION_RAD(),
-    this.FALSE_ALARM_RATE_PER_HOUR()
+    this.FALSE_ALARM_RATE_PER_HOUR(),
+    this.TRANSMIT_FREQUENCY_HZ()
   );
 }
 
@@ -314,6 +329,7 @@ unpackTo(_o: ACWSensorT): void {
   _o.LIMITING_MAGNITUDE = this.LIMITING_MAGNITUDE();
   _o.MAX_HOST_SUN_ELEVATION_RAD = this.MAX_HOST_SUN_ELEVATION_RAD();
   _o.FALSE_ALARM_RATE_PER_HOUR = this.FALSE_ALARM_RATE_PER_HOUR();
+  _o.TRANSMIT_FREQUENCY_HZ = this.TRANSMIT_FREQUENCY_HZ();
 }
 }
 
@@ -336,7 +352,8 @@ constructor(
   public RECEIVER_BANDWIDTH_HZ: number = 0.0,
   public LIMITING_MAGNITUDE: number = 0.0,
   public MAX_HOST_SUN_ELEVATION_RAD: number = 0.0,
-  public FALSE_ALARM_RATE_PER_HOUR: number = 0.0
+  public FALSE_ALARM_RATE_PER_HOUR: number = 0.0,
+  public TRANSMIT_FREQUENCY_HZ: number = 0.0
 ){}
 
 
@@ -365,6 +382,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   ACWSensor.addLimitingMagnitude(builder, this.LIMITING_MAGNITUDE);
   ACWSensor.addMaxHostSunElevationRad(builder, this.MAX_HOST_SUN_ELEVATION_RAD);
   ACWSensor.addFalseAlarmRatePerHour(builder, this.FALSE_ALARM_RATE_PER_HOUR);
+  ACWSensor.addTransmitFrequencyHz(builder, this.TRANSMIT_FREQUENCY_HZ);
 
   return ACWSensor.endACWSensor(builder);
 }

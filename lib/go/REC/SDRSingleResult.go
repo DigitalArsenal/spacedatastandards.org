@@ -150,7 +150,8 @@ func (rcv *SDRSingleResult) MutateElevation(n float64) bool {
 	return rcv.MutateELEVATION(n)
 }
 
-/// Range rate / Doppler velocity (m/s).
+/// Range rate, the time derivative of RANGE (m/s): positive when the range
+/// is opening, negative when it is closing.
 func (rcv *SDRSingleResult) RANGE_RATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -163,7 +164,8 @@ func (rcv *SDRSingleResult) RangeRate() float64 {
 	return rcv.RANGE_RATE()
 }
 
-/// Range rate / Doppler velocity (m/s).
+/// Range rate, the time derivative of RANGE (m/s): positive when the range
+/// is opening, negative when it is closing.
 func (rcv *SDRSingleResult) MutateRANGE_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }

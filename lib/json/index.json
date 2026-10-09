@@ -6006,7 +6006,7 @@
                         },
                         "RANGE_RATE": {
                             "type": "number",
-                            "description": "Range rate (km/s)"
+                            "description": "Range rate, the time derivative of RANGE (km/s): positive when the range\nis opening, negative when it is closing."
                         },
                         "RANGE_RATE_UNC": {
                             "type": "number",
@@ -6042,7 +6042,7 @@
                         },
                         "FREQUENCY": {
                             "type": "number",
-                            "description": "Measured center frequency (MHz)"
+                            "description": "Measured center frequency as received at the sensor (MHz). One-way: it\nincludes the Doppler shift of the emitter's motion relative to the\nsensor."
                         },
                         "NOMINAL_FREQUENCY": {
                             "type": "number",
@@ -6058,7 +6058,7 @@
                         },
                         "FREQUENCY_SHIFT": {
                             "type": "number",
-                            "description": "Frequency shift from nominal (MHz)"
+                            "description": "Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When\nNOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler\nshift, positive when the range is closing: to first order in\nRANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY."
                         },
                         "BANDWIDTH": {
                             "type": "number",
@@ -13648,7 +13648,7 @@
                             "items": {
                                 "type": "number"
                             },
-                            "description": "Doppler shift of the carrier, hertz; positive is closing. Hertz, not the\nMHz used for frequencies elsewhere in this record \u2014 a shift of a few kHz\non a GHz carrier is destroyed by an MHz encoding."
+                            "description": "One-way Doppler shift of the carrier at the receiving endpoint, hertz;\npositive is closing. Hertz, not the MHz used for frequencies elsewhere in\nthis record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\nMHz encoding."
                         },
                         "DOPPLER_RATE_HZ_S": {
                             "type": "array",
@@ -23492,7 +23492,7 @@
                             "items": {
                                 "type": "number"
                             },
-                            "description": "Doppler shift of the carrier, hertz; positive is closing. Hertz, not the\nMHz used for frequencies elsewhere in this record \u2014 a shift of a few kHz\non a GHz carrier is destroyed by an MHz encoding."
+                            "description": "One-way Doppler shift of the carrier at the receiving endpoint, hertz;\npositive is closing. Hertz, not the MHz used for frequencies elsewhere in\nthis record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\nMHz encoding."
                         },
                         "DOPPLER_RATE_HZ_S": {
                             "type": "array",
@@ -24459,7 +24459,7 @@
                         },
                         "DOPPLER": {
                             "type": "number",
-                            "description": "Doppler shift (Hz)."
+                            "description": "Two-way (monostatic) Doppler shift of the echo relative to\nSDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the\n$RDO DOPPLER convention."
                         },
                         "PROBABILITY": {
                             "type": "number",
@@ -24731,7 +24731,7 @@
                         },
                         "RANGE_RATE": {
                             "type": "number",
-                            "description": "Range rate / Doppler velocity (m/s)."
+                            "description": "Range rate, the time derivative of RANGE (m/s): positive when the range\nis opening, negative when it is closing."
                         },
                         "TIMESTAMP_MS": {
                             "type": "integer",
@@ -38797,7 +38797,7 @@
                         },
                         "RANGE_RATE": {
                             "type": "number",
-                            "description": "Range rate (km/s)"
+                            "description": "Range rate, the time derivative of RANGE (km/s): positive when the range\nis opening, negative when it is closing."
                         },
                         "RANGE_RATE_UNC": {
                             "type": "number",
@@ -38813,11 +38813,11 @@
                         },
                         "DOPPLER": {
                             "type": "number",
-                            "description": "Doppler shift (Hz)"
+                            "description": "Two-way (monostatic radar) Doppler shift (Hz): the received echo's\nfrequency minus the transmitted carrier DOPPLER_FREQUENCY. Positive when\nthe range is closing. To first order in RANGE_RATE / c,\nRANGE_RATE = -c * DOPPLER / (2 * DOPPLER_FREQUENCY), c = 299792.458 km/s."
                         },
                         "DOPPLER_UNC": {
                             "type": "number",
-                            "description": "Doppler uncertainty (Hz, 1-sigma)"
+                            "description": "Uncertainty of DOPPLER (Hz, 1-sigma). The range-rate uncertainty is\nc * DOPPLER_UNC / (2 * DOPPLER_FREQUENCY)."
                         },
                         "RA": {
                             "type": "number",
@@ -38934,7 +38934,7 @@
                         },
                         "DOPPLER_FREQUENCY": {
                             "type": "number",
-                            "description": "Carrier frequency the DOPPLER shift refers to, in Hz."
+                            "description": "Transmitted carrier frequency (Hz) that the two-way DOPPLER shift is\nrelative to. Set whenever DOPPLER is: without it DOPPLER cannot be\nconverted to range rate."
                         }
                     },
                     "additionalProperties": false
@@ -46339,7 +46339,7 @@
                             "items": {
                                 "type": "number"
                             },
-                            "description": "Doppler shift of the carrier, hertz; positive is closing. Hertz, not the\nMHz used for frequencies elsewhere in this record \u2014 a shift of a few kHz\non a GHz carrier is destroyed by an MHz encoding."
+                            "description": "One-way Doppler shift of the carrier at the receiving endpoint, hertz;\npositive is closing. Hertz, not the MHz used for frequencies elsewhere in\nthis record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\nMHz encoding."
                         },
                         "DOPPLER_RATE_HZ_S": {
                             "type": "array",
@@ -52145,7 +52145,7 @@
                             "items": {
                                 "type": "number"
                             },
-                            "description": "Doppler shift of the carrier, hertz; positive is closing. Hertz, not the\nMHz used for frequencies elsewhere in this record \u2014 a shift of a few kHz\non a GHz carrier is destroyed by an MHz encoding."
+                            "description": "One-way Doppler shift of the carrier at the receiving endpoint, hertz;\npositive is closing. Hertz, not the MHz used for frequencies elsewhere in\nthis record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\nMHz encoding."
                         },
                         "DOPPLER_RATE_HZ_S": {
                             "type": "array",
@@ -62854,7 +62854,7 @@
                             "items": {
                                 "type": "number"
                             },
-                            "description": "Doppler shift of the carrier, hertz; positive is closing. Hertz, not the\nMHz used for frequencies elsewhere in this record \u2014 a shift of a few kHz\non a GHz carrier is destroyed by an MHz encoding."
+                            "description": "One-way Doppler shift of the carrier at the receiving endpoint, hertz;\npositive is closing. Hertz, not the MHz used for frequencies elsewhere in\nthis record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\nMHz encoding."
                         },
                         "DOPPLER_RATE_HZ_S": {
                             "type": "array",
@@ -72320,7 +72320,7 @@
                             "items": {
                                 "type": "number"
                             },
-                            "description": "Doppler shift of the carrier, hertz; positive is closing. Hertz, not the\nMHz used for frequencies elsewhere in this record \u2014 a shift of a few kHz\non a GHz carrier is destroyed by an MHz encoding."
+                            "description": "One-way Doppler shift of the carrier at the receiving endpoint, hertz;\npositive is closing. Hertz, not the MHz used for frequencies elsewhere in\nthis record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\nMHz encoding."
                         },
                         "DOPPLER_RATE_HZ_S": {
                             "type": "array",
@@ -75096,6 +75096,10 @@
                         "FALSE_ALARM_RATE_PER_HOUR": {
                             "type": "number",
                             "description": "Uncorrelated detections per hour of tracking, reported with UCT set."
+                        },
+                        "TRANSMIT_FREQUENCY_HZ": {
+                            "type": "number",
+                            "description": "RADAR: transmitted carrier frequency, hertz. A DOPPLER error model\nmeasures the echo's two-way shift relative to it, reported as $RDO\nDOPPLER with DOPPLER_FREQUENCY set to this value."
                         }
                     },
                     "additionalProperties": false
@@ -111006,7 +111010,7 @@
                         },
                         "RANGE_RATE": {
                             "type": "number",
-                            "description": "Range rate (km/s)"
+                            "description": "Range rate, the time derivative of RANGE (km/s): positive when the range\nis opening, negative when it is closing."
                         },
                         "RANGE_RATE_UNC": {
                             "type": "number",
@@ -111022,11 +111026,11 @@
                         },
                         "DOPPLER": {
                             "type": "number",
-                            "description": "Doppler shift (Hz)"
+                            "description": "Two-way (monostatic radar) Doppler shift (Hz): the received echo's\nfrequency minus the transmitted carrier DOPPLER_FREQUENCY. Positive when\nthe range is closing. To first order in RANGE_RATE / c,\nRANGE_RATE = -c * DOPPLER / (2 * DOPPLER_FREQUENCY), c = 299792.458 km/s."
                         },
                         "DOPPLER_UNC": {
                             "type": "number",
-                            "description": "Doppler uncertainty (Hz, 1-sigma)"
+                            "description": "Uncertainty of DOPPLER (Hz, 1-sigma). The range-rate uncertainty is\nc * DOPPLER_UNC / (2 * DOPPLER_FREQUENCY)."
                         },
                         "RA": {
                             "type": "number",
@@ -111143,7 +111147,7 @@
                         },
                         "DOPPLER_FREQUENCY": {
                             "type": "number",
-                            "description": "Carrier frequency the DOPPLER shift refers to, in Hz."
+                            "description": "Transmitted carrier frequency (Hz) that the two-way DOPPLER shift is\nrelative to. Set whenever DOPPLER is: without it DOPPLER cannot be\nconverted to range rate."
                         }
                     },
                     "additionalProperties": false
@@ -111936,7 +111940,7 @@
                         },
                         "RANGE_RATE": {
                             "type": "number",
-                            "description": "Range rate (km/s)"
+                            "description": "Range rate, the time derivative of RANGE (km/s): positive when the range\nis opening, negative when it is closing."
                         },
                         "RANGE_RATE_UNC": {
                             "type": "number",
@@ -111972,7 +111976,7 @@
                         },
                         "FREQUENCY": {
                             "type": "number",
-                            "description": "Measured center frequency (MHz)"
+                            "description": "Measured center frequency as received at the sensor (MHz). One-way: it\nincludes the Doppler shift of the emitter's motion relative to the\nsensor."
                         },
                         "NOMINAL_FREQUENCY": {
                             "type": "number",
@@ -111988,7 +111992,7 @@
                         },
                         "FREQUENCY_SHIFT": {
                             "type": "number",
-                            "description": "Frequency shift from nominal (MHz)"
+                            "description": "Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When\nNOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler\nshift, positive when the range is closing: to first order in\nRANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY."
                         },
                         "BANDWIDTH": {
                             "type": "number",
@@ -115633,7 +115637,7 @@
                         },
                         "DOPPLER": {
                             "type": "number",
-                            "description": "Doppler shift (Hz)."
+                            "description": "Two-way (monostatic) Doppler shift of the echo relative to\nSDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the\n$RDO DOPPLER convention."
                         },
                         "PROBABILITY": {
                             "type": "number",
@@ -115905,7 +115909,7 @@
                         },
                         "RANGE_RATE": {
                             "type": "number",
-                            "description": "Range rate / Doppler velocity (m/s)."
+                            "description": "Range rate, the time derivative of RANGE (m/s): positive when the range\nis opening, negative when it is closing."
                         },
                         "TIMESTAMP_MS": {
                             "type": "integer",
@@ -136981,7 +136985,7 @@
                             "items": {
                                 "type": "number"
                             },
-                            "description": "Doppler shift of the carrier, hertz; positive is closing. Hertz, not the\nMHz used for frequencies elsewhere in this record \u2014 a shift of a few kHz\non a GHz carrier is destroyed by an MHz encoding."
+                            "description": "One-way Doppler shift of the carrier at the receiving endpoint, hertz;\npositive is closing. Hertz, not the MHz used for frequencies elsewhere in\nthis record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\nMHz encoding."
                         },
                         "DOPPLER_RATE_HZ_S": {
                             "type": "array",
@@ -160488,7 +160492,7 @@
                             "items": {
                                 "type": "number"
                             },
-                            "description": "Doppler shift of the carrier, hertz; positive is closing. Hertz, not the\nMHz used for frequencies elsewhere in this record \u2014 a shift of a few kHz\non a GHz carrier is destroyed by an MHz encoding."
+                            "description": "One-way Doppler shift of the carrier at the receiving endpoint, hertz;\npositive is closing. Hertz, not the MHz used for frequencies elsewhere in\nthis record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\nMHz encoding."
                         },
                         "DOPPLER_RATE_HZ_S": {
                             "type": "array",
@@ -164956,7 +164960,7 @@
                             "items": {
                                 "type": "number"
                             },
-                            "description": "Doppler shift of the carrier, hertz; positive is closing. Hertz, not the\nMHz used for frequencies elsewhere in this record \u2014 a shift of a few kHz\non a GHz carrier is destroyed by an MHz encoding."
+                            "description": "One-way Doppler shift of the carrier at the receiving endpoint, hertz;\npositive is closing. Hertz, not the MHz used for frequencies elsewhere in\nthis record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\nMHz encoding."
                         },
                         "DOPPLER_RATE_HZ_S": {
                             "type": "array",
@@ -178870,7 +178874,7 @@
                         },
                         "RANGE_RATE": {
                             "type": "number",
-                            "description": "Range rate (km/s)"
+                            "description": "Range rate, the time derivative of RANGE (km/s): positive when the range\nis opening, negative when it is closing."
                         },
                         "RANGE_RATE_UNC": {
                             "type": "number",
@@ -178886,11 +178890,11 @@
                         },
                         "DOPPLER": {
                             "type": "number",
-                            "description": "Doppler shift (Hz)"
+                            "description": "Two-way (monostatic radar) Doppler shift (Hz): the received echo's\nfrequency minus the transmitted carrier DOPPLER_FREQUENCY. Positive when\nthe range is closing. To first order in RANGE_RATE / c,\nRANGE_RATE = -c * DOPPLER / (2 * DOPPLER_FREQUENCY), c = 299792.458 km/s."
                         },
                         "DOPPLER_UNC": {
                             "type": "number",
-                            "description": "Doppler uncertainty (Hz, 1-sigma)"
+                            "description": "Uncertainty of DOPPLER (Hz, 1-sigma). The range-rate uncertainty is\nc * DOPPLER_UNC / (2 * DOPPLER_FREQUENCY)."
                         },
                         "RA": {
                             "type": "number",
@@ -179007,7 +179011,7 @@
                         },
                         "DOPPLER_FREQUENCY": {
                             "type": "number",
-                            "description": "Carrier frequency the DOPPLER shift refers to, in Hz."
+                            "description": "Transmitted carrier frequency (Hz) that the two-way DOPPLER shift is\nrelative to. Set whenever DOPPLER is: without it DOPPLER cannot be\nconverted to range rate."
                         }
                     },
                     "additionalProperties": false
@@ -192931,6 +192935,10 @@
                         "FALSE_ALARM_RATE_PER_HOUR": {
                             "type": "number",
                             "description": "Uncorrelated detections per hour of tracking, reported with UCT set."
+                        },
+                        "TRANSMIT_FREQUENCY_HZ": {
+                            "type": "number",
+                            "description": "RADAR: transmitted carrier frequency, hertz. A DOPPLER error model\nmeasures the echo's two-way shift relative to it, reported as $RDO\nDOPPLER with DOPPLER_FREQUENCY set to this value."
                         }
                     },
                     "additionalProperties": false
@@ -196038,7 +196046,7 @@
                             "items": {
                                 "type": "number"
                             },
-                            "description": "Doppler shift of the carrier, hertz; positive is closing. Hertz, not the\nMHz used for frequencies elsewhere in this record \u2014 a shift of a few kHz\non a GHz carrier is destroyed by an MHz encoding."
+                            "description": "One-way Doppler shift of the carrier at the receiving endpoint, hertz;\npositive is closing. Hertz, not the MHz used for frequencies elsewhere in\nthis record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\nMHz encoding."
                         },
                         "DOPPLER_RATE_HZ_S": {
                             "type": "array",
@@ -196775,7 +196783,7 @@
                         },
                         "RANGE_RATE": {
                             "type": "number",
-                            "description": "Range rate (km/s)"
+                            "description": "Range rate, the time derivative of RANGE (km/s): positive when the range\nis opening, negative when it is closing."
                         },
                         "RANGE_RATE_UNC": {
                             "type": "number",
@@ -196791,11 +196799,11 @@
                         },
                         "DOPPLER": {
                             "type": "number",
-                            "description": "Doppler shift (Hz)"
+                            "description": "Two-way (monostatic radar) Doppler shift (Hz): the received echo's\nfrequency minus the transmitted carrier DOPPLER_FREQUENCY. Positive when\nthe range is closing. To first order in RANGE_RATE / c,\nRANGE_RATE = -c * DOPPLER / (2 * DOPPLER_FREQUENCY), c = 299792.458 km/s."
                         },
                         "DOPPLER_UNC": {
                             "type": "number",
-                            "description": "Doppler uncertainty (Hz, 1-sigma)"
+                            "description": "Uncertainty of DOPPLER (Hz, 1-sigma). The range-rate uncertainty is\nc * DOPPLER_UNC / (2 * DOPPLER_FREQUENCY)."
                         },
                         "RA": {
                             "type": "number",
@@ -196912,7 +196920,7 @@
                         },
                         "DOPPLER_FREQUENCY": {
                             "type": "number",
-                            "description": "Carrier frequency the DOPPLER shift refers to, in Hz."
+                            "description": "Transmitted carrier frequency (Hz) that the two-way DOPPLER shift is\nrelative to. Set whenever DOPPLER is: without it DOPPLER cannot be\nconverted to range rate."
                         }
                     },
                     "additionalProperties": false

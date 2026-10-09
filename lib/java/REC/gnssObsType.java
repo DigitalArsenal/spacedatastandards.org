@@ -5,6 +5,10 @@ public final class gnssObsType {
   private gnssObsType() { }
   public static final byte PSEUDORANGE = 0;
   public static final byte CARRIER_PHASE = 1;
+  /**
+   * One-way Doppler of the received carrier (Hz), positive when the
+   * satellite is approaching (the RINEX convention).
+   */
   public static final byte DOPPLER = 2;
   public static final byte SNR = 3;
   public static final byte RAW_IF = 4;

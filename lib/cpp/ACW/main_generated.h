@@ -354,11 +354,13 @@ inline const char *EnumNameacwLightingCondition(acwLightingCondition e) {
 /// Sensing phenomenology of a simulated sensor.
 enum acwSensorPhenomenology : uint8_t {
   acwSensorPhenomenology_UNSPECIFIED = 0,
-  /// Monostatic radar: range, range rate, azimuth, elevation.
+  /// Monostatic radar: range, range rate, two-way Doppler, azimuth,
+  /// elevation.
   acwSensorPhenomenology_RADAR = 1,
   /// Passive optical: right ascension and declination, magnitude.
   acwSensorPhenomenology_OPTICAL = 2,
-  /// Passive RF: angles and received frequency of a target's emitter.
+  /// Passive RF: angles and the received (one-way) frequency of a target's
+  /// emitter.
   acwSensorPhenomenology_PASSIVE_RF = 3,
   /// Satellite laser ranging: two-way range.
   acwSensorPhenomenology_LASER_RANGING = 4,
@@ -1388,7 +1390,8 @@ struct ACWSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_RECEIVER_BANDWIDTH_HZ = 32,
     VT_LIMITING_MAGNITUDE = 34,
     VT_MAX_HOST_SUN_ELEVATION_RAD = 36,
-    VT_FALSE_ALARM_RATE_PER_HOUR = 38
+    VT_FALSE_ALARM_RATE_PER_HOUR = 38,
+    VT_TRANSMIT_FREQUENCY_HZ = 40
   };
   const ::flatbuffers::String *SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
@@ -1466,6 +1469,12 @@ struct ACWSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double FALSE_ALARM_RATE_PER_HOUR() const {
     return GetField<double>(VT_FALSE_ALARM_RATE_PER_HOUR, 0.0);
   }
+  /// RADAR: transmitted carrier frequency, hertz. A DOPPLER error model
+  /// measures the echo's two-way shift relative to it, reported as $RDO
+  /// DOPPLER with DOPPLER_FREQUENCY set to this value.
+  double TRANSMIT_FREQUENCY_HZ() const {
+    return GetField<double>(VT_TRANSMIT_FREQUENCY_HZ, 0.0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1492,6 +1501,7 @@ struct ACWSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_LIMITING_MAGNITUDE, 8) &&
            VerifyField<double>(verifier, VT_MAX_HOST_SUN_ELEVATION_RAD, 8) &&
            VerifyField<double>(verifier, VT_FALSE_ALARM_RATE_PER_HOUR, 8) &&
+           VerifyField<double>(verifier, VT_TRANSMIT_FREQUENCY_HZ, 8) &&
            verifier.EndTable();
   }
 };
@@ -1554,6 +1564,9 @@ struct ACWSensorBuilder {
   void add_FALSE_ALARM_RATE_PER_HOUR(double FALSE_ALARM_RATE_PER_HOUR) {
     fbb_.AddElement<double>(ACWSensor::VT_FALSE_ALARM_RATE_PER_HOUR, FALSE_ALARM_RATE_PER_HOUR, 0.0);
   }
+  void add_TRANSMIT_FREQUENCY_HZ(double TRANSMIT_FREQUENCY_HZ) {
+    fbb_.AddElement<double>(ACWSensor::VT_TRANSMIT_FREQUENCY_HZ, TRANSMIT_FREQUENCY_HZ, 0.0);
+  }
   explicit ACWSensorBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1584,8 +1597,10 @@ inline ::flatbuffers::Offset<ACWSensor> CreateACWSensor(
     double RECEIVER_BANDWIDTH_HZ = 0.0,
     double LIMITING_MAGNITUDE = 0.0,
     double MAX_HOST_SUN_ELEVATION_RAD = 0.0,
-    double FALSE_ALARM_RATE_PER_HOUR = 0.0) {
+    double FALSE_ALARM_RATE_PER_HOUR = 0.0,
+    double TRANSMIT_FREQUENCY_HZ = 0.0) {
   ACWSensorBuilder builder_(_fbb);
+  builder_.add_TRANSMIT_FREQUENCY_HZ(TRANSMIT_FREQUENCY_HZ);
   builder_.add_FALSE_ALARM_RATE_PER_HOUR(FALSE_ALARM_RATE_PER_HOUR);
   builder_.add_MAX_HOST_SUN_ELEVATION_RAD(MAX_HOST_SUN_ELEVATION_RAD);
   builder_.add_LIMITING_MAGNITUDE(LIMITING_MAGNITUDE);
@@ -1626,7 +1641,8 @@ inline ::flatbuffers::Offset<ACWSensor> CreateACWSensorDirect(
     double RECEIVER_BANDWIDTH_HZ = 0.0,
     double LIMITING_MAGNITUDE = 0.0,
     double MAX_HOST_SUN_ELEVATION_RAD = 0.0,
-    double FALSE_ALARM_RATE_PER_HOUR = 0.0) {
+    double FALSE_ALARM_RATE_PER_HOUR = 0.0,
+    double TRANSMIT_FREQUENCY_HZ = 0.0) {
   auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
   auto HOST_ID__ = HOST_ID ? _fbb.CreateString(HOST_ID) : 0;
   auto ERROR_MODELS__ = ERROR_MODELS ? _fbb.CreateVector<::flatbuffers::Offset<MEMErrorModel>>(*ERROR_MODELS) : 0;
@@ -1649,7 +1665,8 @@ inline ::flatbuffers::Offset<ACWSensor> CreateACWSensorDirect(
       RECEIVER_BANDWIDTH_HZ,
       LIMITING_MAGNITUDE,
       MAX_HOST_SUN_ELEVATION_RAD,
-      FALSE_ALARM_RATE_PER_HOUR);
+      FALSE_ALARM_RATE_PER_HOUR,
+      TRANSMIT_FREQUENCY_HZ);
 }
 
 /// Access windows of one sensor to one target (SIMULATE_OBSERVATIONS input).

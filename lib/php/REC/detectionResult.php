@@ -57,7 +57,9 @@ class detectionResult extends Struct
         return $this->bb->getDouble($this->bb_pos + 16);
     }
 
-    /// Doppler shift (Hz).
+    /// Two-way (monostatic) Doppler shift of the echo relative to
+    /// SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+    /// $RDO DOPPLER convention.
     /**
      * @return double
      */

@@ -102,6 +102,12 @@ public final class ACWSensor extends com.google.flatbuffers.Table {
    * Uncorrelated detections per hour of tracking, reported with UCT set.
    */
   public double FALSE_ALARM_RATE_PER_HOUR() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * RADAR: transmitted carrier frequency, hertz. A DOPPLER error model
+   * measures the echo's two-way shift relative to it, reported as $RDO
+   * DOPPLER with DOPPLER_FREQUENCY set to this value.
+   */
+  public double TRANSMIT_FREQUENCY_HZ() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createACWSensor(FlatBufferBuilder builder,
       int SENSOR_IDOffset,
@@ -121,8 +127,10 @@ public final class ACWSensor extends com.google.flatbuffers.Table {
       double RECEIVER_BANDWIDTH_HZ,
       double LIMITING_MAGNITUDE,
       double MAX_HOST_SUN_ELEVATION_RAD,
-      double FALSE_ALARM_RATE_PER_HOUR) {
-    builder.startTable(18);
+      double FALSE_ALARM_RATE_PER_HOUR,
+      double TRANSMIT_FREQUENCY_HZ) {
+    builder.startTable(19);
+    ACWSensor.addTransmitFrequencyHz(builder, TRANSMIT_FREQUENCY_HZ);
     ACWSensor.addFalseAlarmRatePerHour(builder, FALSE_ALARM_RATE_PER_HOUR);
     ACWSensor.addMaxHostSunElevationRad(builder, MAX_HOST_SUN_ELEVATION_RAD);
     ACWSensor.addLimitingMagnitude(builder, LIMITING_MAGNITUDE);
@@ -144,7 +152,7 @@ public final class ACWSensor extends com.google.flatbuffers.Table {
     return ACWSensor.endACWSensor(builder);
   }
 
-  public static void startACWSensor(FlatBufferBuilder builder) { builder.startTable(18); }
+  public static void startACWSensor(FlatBufferBuilder builder) { builder.startTable(19); }
   public static void addSensorId(FlatBufferBuilder builder, int SENSOR_IDOffset) { builder.addOffset(0, SENSOR_IDOffset, 0); }
   public static void addHostId(FlatBufferBuilder builder, int HOST_IDOffset) { builder.addOffset(1, HOST_IDOffset, 0); }
   public static void addPhenomenology(FlatBufferBuilder builder, int PHENOMENOLOGY) { builder.addByte(2, (byte) PHENOMENOLOGY, (byte) 0); }
@@ -165,6 +173,7 @@ public final class ACWSensor extends com.google.flatbuffers.Table {
   public static void addLimitingMagnitude(FlatBufferBuilder builder, double LIMITING_MAGNITUDE) { builder.addDouble(15, LIMITING_MAGNITUDE, 0.0); }
   public static void addMaxHostSunElevationRad(FlatBufferBuilder builder, double MAX_HOST_SUN_ELEVATION_RAD) { builder.addDouble(16, MAX_HOST_SUN_ELEVATION_RAD, 0.0); }
   public static void addFalseAlarmRatePerHour(FlatBufferBuilder builder, double FALSE_ALARM_RATE_PER_HOUR) { builder.addDouble(17, FALSE_ALARM_RATE_PER_HOUR, 0.0); }
+  public static void addTransmitFrequencyHz(FlatBufferBuilder builder, double TRANSMIT_FREQUENCY_HZ) { builder.addDouble(18, TRANSMIT_FREQUENCY_HZ, 0.0); }
   public static int endACWSensor(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

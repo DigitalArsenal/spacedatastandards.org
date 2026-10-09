@@ -5,11 +5,13 @@
 class acwSensorPhenomenology
 {
     const UNSPECIFIED = 0;
-    /// Monostatic radar: range, range rate, azimuth, elevation.
+    /// Monostatic radar: range, range rate, two-way Doppler, azimuth,
+    /// elevation.
     const RADAR = 1;
     /// Passive optical: right ascension and declination, magnitude.
     const OPTICAL = 2;
-    /// Passive RF: angles and received frequency of a target's emitter.
+    /// Passive RF: angles and the received (one-way) frequency of a target's
+    /// emitter.
     const PASSIVE_RF = 3;
     /// Satellite laser ranging: two-way range.
     const LASER_RANGING = 4;

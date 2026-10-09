@@ -122,7 +122,7 @@
         },
         "DOPPLER": {
           "type": "number",
-          "description": "Doppler shift (Hz)."
+          "description": "Two-way (monostatic) Doppler shift of the echo relative to\nSDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the\n$RDO DOPPLER convention."
         },
         "PROBABILITY": {
           "type": "number",
@@ -470,7 +470,7 @@
         },
         "RANGE_RATE": {
           "type": "number",
-          "description": "Range rate / Doppler velocity (m/s).",
+          "description": "Range rate, the time derivative of RANGE (m/s): positive when the range\nis opening, negative when it is closing.",
           "x-flatbuffer-type": "double"
         },
         "TIMESTAMP_MS": {

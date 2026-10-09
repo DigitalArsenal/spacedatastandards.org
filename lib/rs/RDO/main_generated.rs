@@ -640,7 +640,8 @@ impl<'a> RDO<'a> {
         unsafe { self._tab.get::<f64>(RDO::VT_RANGE_BIAS, Some(0.0)).unwrap()}
     }
 
-    /// Range rate (km/s)
+    /// Range rate, the time derivative of RANGE (km/s): positive when the range
+    /// is opening, negative when it is closing.
     #[inline]
     pub fn RANGE_RATE(&self) -> f64 {
         // Safety:
@@ -676,7 +677,10 @@ impl<'a> RDO<'a> {
         unsafe { self._tab.get::<f64>(RDO::VT_RANGE_ACCEL_UNC, Some(0.0)).unwrap()}
     }
 
-    /// Doppler shift (Hz)
+    /// Two-way (monostatic radar) Doppler shift (Hz): the received echo's
+    /// frequency minus the transmitted carrier DOPPLER_FREQUENCY. Positive when
+    /// the range is closing. To first order in RANGE_RATE / c,
+    /// RANGE_RATE = -c * DOPPLER / (2 * DOPPLER_FREQUENCY), c = 299792.458 km/s.
     #[inline]
     pub fn DOPPLER(&self) -> f64 {
         // Safety:
@@ -685,7 +689,8 @@ impl<'a> RDO<'a> {
         unsafe { self._tab.get::<f64>(RDO::VT_DOPPLER, Some(0.0)).unwrap()}
     }
 
-    /// Doppler uncertainty (Hz, 1-sigma)
+    /// Uncertainty of DOPPLER (Hz, 1-sigma). The range-rate uncertainty is
+    /// c * DOPPLER_UNC / (2 * DOPPLER_FREQUENCY).
     #[inline]
     pub fn DOPPLER_UNC(&self) -> f64 {
         // Safety:
@@ -938,7 +943,9 @@ impl<'a> RDO<'a> {
         unsafe { self._tab.get::<f64>(RDO::VT_CORR_QUALITY, Some(0.0)).unwrap()}
     }
 
-    /// Carrier frequency the DOPPLER shift refers to, in Hz.
+    /// Transmitted carrier frequency (Hz) that the two-way DOPPLER shift is
+    /// relative to. Set whenever DOPPLER is: without it DOPPLER cannot be
+    /// converted to range rate.
     #[inline]
     pub fn DOPPLER_FREQUENCY(&self) -> f64 {
         // Safety:

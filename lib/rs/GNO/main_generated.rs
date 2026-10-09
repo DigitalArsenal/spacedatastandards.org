@@ -145,6 +145,8 @@ pub struct gnssObsType(pub i8);
 impl gnssObsType {
     pub const PSEUDORANGE: Self = Self(0);
     pub const CARRIER_PHASE: Self = Self(1);
+    /// One-way Doppler of the received carrier (Hz), positive when the
+    /// satellite is approaching (the RINEX convention).
     pub const DOPPLER: Self = Self(2);
     pub const SNR: Self = Self(3);
     pub const RAW_IF: Self = Self(4);

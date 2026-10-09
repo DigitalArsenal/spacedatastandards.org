@@ -41,7 +41,9 @@ public final class detectionResult extends Struct {
    */
   public double SNR() { return bb.getDouble(bb_pos + 16); }
   /**
-   * Doppler shift (Hz).
+   * Two-way (monostatic) Doppler shift of the echo relative to
+   * SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+   * $RDO DOPPLER convention.
    */
   public double DOPPLER() { return bb.getDouble(bb_pos + 24); }
   /**

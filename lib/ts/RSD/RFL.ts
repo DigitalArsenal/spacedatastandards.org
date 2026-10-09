@@ -266,9 +266,10 @@ transmitElevationDegArray():Float64Array|null {
 }
 
 /**
- * Doppler shift of the carrier, hertz; positive is closing. Hertz, not the
- * MHz used for frequencies elsewhere in this record — a shift of a few kHz
- * on a GHz carrier is destroyed by an MHz encoding.
+ * One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+ * positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+ * this record — a shift of a few kHz on a GHz carrier is destroyed by an
+ * MHz encoding.
  */
 DOPPLER_SHIFT_HZ(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 34);

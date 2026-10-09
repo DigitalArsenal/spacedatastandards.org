@@ -266,7 +266,8 @@ class RFO : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Range rate (km/s)
+     * Range rate, the time derivative of RANGE (km/s): positive when the range
+     * is opening, negative when it is closing.
      */
     val rangeRate : Double
         get() {
@@ -356,7 +357,9 @@ class RFO : Table() {
     val collectionModeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(64, 1)
     fun collectionModeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 64, 1)
     /**
-     * Measured center frequency (MHz)
+     * Measured center frequency as received at the sensor (MHz). One-way: it
+     * includes the Doppler shift of the emitter's motion relative to the
+     * sensor.
      */
     val frequency : Double
         get() {
@@ -388,7 +391,10 @@ class RFO : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Frequency shift from nominal (MHz)
+     * Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When
+     * NOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler
+     * shift, positive when the range is closing: to first order in
+     * RANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY.
      */
     val frequencyShift : Double
         get() {

@@ -288,9 +288,10 @@ class RFL extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Doppler shift of the carrier, hertz; positive is closing. Hertz, not the
-    /// MHz used for frequencies elsewhere in this record — a shift of a few kHz
-    /// on a GHz carrier is destroyed by an MHz encoding.
+    /// One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+    /// positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+    /// this record — a shift of a few kHz on a GHz carrier is destroyed by an
+    /// MHz encoding.
     /**
      * @param int offset
      * @return double

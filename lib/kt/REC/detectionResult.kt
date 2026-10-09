@@ -46,7 +46,9 @@ class detectionResult : Struct() {
      */
     val snr : Double get() = bb.getDouble(bb_pos + 16)
     /**
-     * Doppler shift (Hz).
+     * Two-way (monostatic) Doppler shift of the echo relative to
+     * SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+     * $RDO DOPPLER convention.
      */
     val doppler : Double get() = bb.getDouble(bb_pos + 24)
     /**

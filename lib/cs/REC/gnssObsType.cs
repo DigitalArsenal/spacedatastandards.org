@@ -6,6 +6,8 @@ public enum gnssObsType : sbyte
 {
   PSEUDORANGE = 0,
   CARRIER_PHASE = 1,
+  /// One-way Doppler of the received carrier (Hz), positive when the
+  /// satellite is approaching (the RINEX convention).
   DOPPLER = 2,
   SNR = 3,
   RAW_IF = 4,

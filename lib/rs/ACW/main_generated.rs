@@ -780,11 +780,13 @@ pub struct acwSensorPhenomenology(pub u8);
 #[allow(non_upper_case_globals)]
 impl acwSensorPhenomenology {
     pub const UNSPECIFIED: Self = Self(0);
-    /// Monostatic radar: range, range rate, azimuth, elevation.
+    /// Monostatic radar: range, range rate, two-way Doppler, azimuth,
+    /// elevation.
     pub const RADAR: Self = Self(1);
     /// Passive optical: right ascension and declination, magnitude.
     pub const OPTICAL: Self = Self(2);
-    /// Passive RF: angles and received frequency of a target's emitter.
+    /// Passive RF: angles and the received (one-way) frequency of a target's
+    /// emitter.
     pub const PASSIVE_RF: Self = Self(3);
     /// Satellite laser ranging: two-way range.
     pub const LASER_RANGING: Self = Self(4);
@@ -3324,6 +3326,7 @@ impl<'a> ACWSensor<'a> {
     pub const VT_LIMITING_MAGNITUDE: ::flatbuffers::VOffsetT = 34;
     pub const VT_MAX_HOST_SUN_ELEVATION_RAD: ::flatbuffers::VOffsetT = 36;
     pub const VT_FALSE_ALARM_RATE_PER_HOUR: ::flatbuffers::VOffsetT = 38;
+    pub const VT_TRANSMIT_FREQUENCY_HZ: ::flatbuffers::VOffsetT = 40;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3336,6 +3339,7 @@ impl<'a> ACWSensor<'a> {
         args: &'args ACWSensorArgs<'args>
     ) -> ::flatbuffers::WIPOffset<ACWSensor<'bldr>> {
         let mut builder = ACWSensorBuilder::new(_fbb);
+        builder.add_TRANSMIT_FREQUENCY_HZ(args.TRANSMIT_FREQUENCY_HZ);
         builder.add_FALSE_ALARM_RATE_PER_HOUR(args.FALSE_ALARM_RATE_PER_HOUR);
         builder.add_MAX_HOST_SUN_ELEVATION_RAD(args.MAX_HOST_SUN_ELEVATION_RAD);
         builder.add_LIMITING_MAGNITUDE(args.LIMITING_MAGNITUDE);
@@ -3384,6 +3388,7 @@ impl<'a> ACWSensor<'a> {
         let LIMITING_MAGNITUDE = self.LIMITING_MAGNITUDE();
         let MAX_HOST_SUN_ELEVATION_RAD = self.MAX_HOST_SUN_ELEVATION_RAD();
         let FALSE_ALARM_RATE_PER_HOUR = self.FALSE_ALARM_RATE_PER_HOUR();
+        let TRANSMIT_FREQUENCY_HZ = self.TRANSMIT_FREQUENCY_HZ();
         ACWSensorT {
             SENSOR_ID,
             HOST_ID,
@@ -3403,6 +3408,7 @@ impl<'a> ACWSensor<'a> {
             LIMITING_MAGNITUDE,
             MAX_HOST_SUN_ELEVATION_RAD,
             FALSE_ALARM_RATE_PER_HOUR,
+            TRANSMIT_FREQUENCY_HZ,
         }
     }
 
@@ -3571,6 +3577,17 @@ impl<'a> ACWSensor<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(ACWSensor::VT_FALSE_ALARM_RATE_PER_HOUR, Some(0.0)).unwrap()}
     }
+
+    /// RADAR: transmitted carrier frequency, hertz. A DOPPLER error model
+    /// measures the echo's two-way shift relative to it, reported as $RDO
+    /// DOPPLER with DOPPLER_FREQUENCY set to this value.
+    #[inline]
+    pub fn TRANSMIT_FREQUENCY_HZ(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ACWSensor::VT_TRANSMIT_FREQUENCY_HZ, Some(0.0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWSensor<'_> {
@@ -3597,6 +3614,7 @@ impl ::flatbuffers::Verifiable for ACWSensor<'_> {
             .visit_field::<f64>("LIMITING_MAGNITUDE", Self::VT_LIMITING_MAGNITUDE, false)?
             .visit_field::<f64>("MAX_HOST_SUN_ELEVATION_RAD", Self::VT_MAX_HOST_SUN_ELEVATION_RAD, false)?
             .visit_field::<f64>("FALSE_ALARM_RATE_PER_HOUR", Self::VT_FALSE_ALARM_RATE_PER_HOUR, false)?
+            .visit_field::<f64>("TRANSMIT_FREQUENCY_HZ", Self::VT_TRANSMIT_FREQUENCY_HZ, false)?
             .finish();
         Ok(())
     }
@@ -3621,6 +3639,7 @@ pub struct ACWSensorArgs<'a> {
     pub LIMITING_MAGNITUDE: f64,
     pub MAX_HOST_SUN_ELEVATION_RAD: f64,
     pub FALSE_ALARM_RATE_PER_HOUR: f64,
+    pub TRANSMIT_FREQUENCY_HZ: f64,
 }
 
 impl<'a> Default for ACWSensorArgs<'a> {
@@ -3645,6 +3664,7 @@ impl<'a> Default for ACWSensorArgs<'a> {
             LIMITING_MAGNITUDE: 0.0,
             MAX_HOST_SUN_ELEVATION_RAD: 0.0,
             FALSE_ALARM_RATE_PER_HOUR: 0.0,
+            TRANSMIT_FREQUENCY_HZ: 0.0,
         }
     }
 }
@@ -3746,6 +3766,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWSensorBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_TRANSMIT_FREQUENCY_HZ(&mut self, TRANSMIT_FREQUENCY_HZ: f64) {
+        self.fbb_.push_slot::<f64>(ACWSensor::VT_TRANSMIT_FREQUENCY_HZ, TRANSMIT_FREQUENCY_HZ, 0.0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWSensorBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWSensorBuilder {
@@ -3782,6 +3807,7 @@ impl ::core::fmt::Debug for ACWSensor<'_> {
         ds.field("LIMITING_MAGNITUDE", &self.LIMITING_MAGNITUDE());
         ds.field("MAX_HOST_SUN_ELEVATION_RAD", &self.MAX_HOST_SUN_ELEVATION_RAD());
         ds.field("FALSE_ALARM_RATE_PER_HOUR", &self.FALSE_ALARM_RATE_PER_HOUR());
+        ds.field("TRANSMIT_FREQUENCY_HZ", &self.TRANSMIT_FREQUENCY_HZ());
         ds.finish()
     }
 }
@@ -3807,6 +3833,7 @@ pub struct ACWSensorT {
     pub LIMITING_MAGNITUDE: f64,
     pub MAX_HOST_SUN_ELEVATION_RAD: f64,
     pub FALSE_ALARM_RATE_PER_HOUR: f64,
+    pub TRANSMIT_FREQUENCY_HZ: f64,
 }
 
 impl Default for ACWSensorT {
@@ -3830,6 +3857,7 @@ impl Default for ACWSensorT {
             LIMITING_MAGNITUDE: 0.0,
             MAX_HOST_SUN_ELEVATION_RAD: 0.0,
             FALSE_ALARM_RATE_PER_HOUR: 0.0,
+            TRANSMIT_FREQUENCY_HZ: 0.0,
         }
     }
 }
@@ -3865,6 +3893,7 @@ impl ACWSensorT {
         let LIMITING_MAGNITUDE = self.LIMITING_MAGNITUDE;
         let MAX_HOST_SUN_ELEVATION_RAD = self.MAX_HOST_SUN_ELEVATION_RAD;
         let FALSE_ALARM_RATE_PER_HOUR = self.FALSE_ALARM_RATE_PER_HOUR;
+        let TRANSMIT_FREQUENCY_HZ = self.TRANSMIT_FREQUENCY_HZ;
         ACWSensor::create(_fbb, &ACWSensorArgs{
             SENSOR_ID,
             HOST_ID,
@@ -3884,6 +3913,7 @@ impl ACWSensorT {
             LIMITING_MAGNITUDE,
             MAX_HOST_SUN_ELEVATION_RAD,
             FALSE_ALARM_RATE_PER_HOUR,
+            TRANSMIT_FREQUENCY_HZ,
         })
     }
 }

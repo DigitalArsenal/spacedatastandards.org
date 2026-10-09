@@ -1,5 +1,5 @@
-// Hash: 0285b1149d36e8118cc30f1483520aae73c09f274aedf49771db7390fac37344
-// Version: 0.0.4
+// Hash: b8852756a6a3d32a68b462ea481df128dca7139fd414799560d511d1cec2d1af
+// Version: 0.0.5
 // -----------------------------------END_HEADER
 enum rfObsType : byte {
   EMISSION,
@@ -64,7 +64,8 @@ table RFO {
   RANGE:double;
   /// Range uncertainty (km, 1-sigma)
   RANGE_UNC:double;
-  /// Range rate (km/s)
+  /// Range rate, the time derivative of RANGE (km/s): positive when the range
+  /// is opening, negative when it is closing.
   RANGE_RATE:double;
   /// Range rate uncertainty (km/s, 1-sigma)
   RANGE_RATE_UNC:double;
@@ -82,7 +83,9 @@ table RFO {
   ANTENNA_NAME:string;
   /// Collection mode
   COLLECTION_MODE:string;
-  /// Measured center frequency (MHz)
+  /// Measured center frequency as received at the sensor (MHz). One-way: it
+  /// includes the Doppler shift of the emitter's motion relative to the
+  /// sensor.
   FREQUENCY:double;
   /// Nominal center frequency (MHz)
   NOMINAL_FREQUENCY:double;
@@ -90,7 +93,10 @@ table RFO {
   START_FREQUENCY:double;
   /// End frequency of emission (MHz)
   END_FREQUENCY:double;
-  /// Frequency shift from nominal (MHz)
+  /// Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When
+  /// NOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler
+  /// shift, positive when the range is closing: to first order in
+  /// RANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY.
   FREQUENCY_SHIFT:double;
   /// Measured bandwidth (MHz)
   BANDWIDTH:double;

@@ -5,6 +5,10 @@ class gnssObsType private constructor() {
     companion object {
         const val PSEUDORANGE: Byte = 0
         const val CARRIER_PHASE: Byte = 1
+        /**
+         * One-way Doppler of the received carrier (Hz), positive when the
+         * satellite is approaching (the RINEX convention).
+         */
         const val DOPPLER: Byte = 2
         const val SNR: Byte = 3
         const val RAW_IF: Byte = 4

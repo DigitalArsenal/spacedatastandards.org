@@ -188,7 +188,8 @@ public struct RFO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var RANGE: Double { let o = _accessor.offset(VT.RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Range uncertainty (km, 1-sigma)
   public var RANGE_UNC: Double { let o = _accessor.offset(VT.RANGE_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Range rate (km/s)
+  ///  Range rate, the time derivative of RANGE (km/s): positive when the range
+  ///  is opening, negative when it is closing.
   public var RANGE_RATE: Double { let o = _accessor.offset(VT.RANGE_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Range rate uncertainty (km/s, 1-sigma)
   public var RANGE_RATE_UNC: Double { let o = _accessor.offset(VT.RANGE_RATE_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
@@ -209,7 +210,9 @@ public struct RFO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Collection mode
   public var COLLECTION_MODE: String? { let o = _accessor.offset(VT.COLLECTION_MODE); return o == 0 ? nil : _accessor.string(at: o) }
   public var COLLECTION_MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLLECTION_MODE) }
-  ///  Measured center frequency (MHz)
+  ///  Measured center frequency as received at the sensor (MHz). One-way: it
+  ///  includes the Doppler shift of the emitter's motion relative to the
+  ///  sensor.
   public var FREQUENCY: Double { let o = _accessor.offset(VT.FREQUENCY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Nominal center frequency (MHz)
   public var NOMINAL_FREQUENCY: Double { let o = _accessor.offset(VT.NOMINAL_FREQUENCY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
@@ -217,7 +220,10 @@ public struct RFO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var START_FREQUENCY: Double { let o = _accessor.offset(VT.START_FREQUENCY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  End frequency of emission (MHz)
   public var END_FREQUENCY: Double { let o = _accessor.offset(VT.END_FREQUENCY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Frequency shift from nominal (MHz)
+  ///  Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When
+  ///  NOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler
+  ///  shift, positive when the range is closing: to first order in
+  ///  RANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY.
   public var FREQUENCY_SHIFT: Double { let o = _accessor.offset(VT.FREQUENCY_SHIFT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Measured bandwidth (MHz)
   public var BANDWIDTH: Double { let o = _accessor.offset(VT.BANDWIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }

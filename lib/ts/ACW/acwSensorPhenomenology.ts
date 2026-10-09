@@ -9,7 +9,8 @@ export enum acwSensorPhenomenology {
   UNSPECIFIED = 0,
 
   /**
-   * Monostatic radar: range, range rate, azimuth, elevation.
+   * Monostatic radar: range, range rate, two-way Doppler, azimuth,
+   * elevation.
    */
   RADAR = 1,
 
@@ -19,7 +20,8 @@ export enum acwSensorPhenomenology {
   OPTICAL = 2,
 
   /**
-   * Passive RF: angles and received frequency of a target's emitter.
+   * Passive RF: angles and the received (one-way) frequency of a target's
+   * emitter.
    */
   PASSIVE_RF = 3,
 

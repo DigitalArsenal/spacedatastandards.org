@@ -3260,7 +3260,7 @@
           "items": {
             "type": "number"
           },
-          "description": "Doppler shift of the carrier, hertz; positive is closing. Hertz, not the\nMHz used for frequencies elsewhere in this record \u2014 a shift of a few kHz\non a GHz carrier is destroyed by an MHz encoding.",
+          "description": "One-way Doppler shift of the carrier at the receiving endpoint, hertz;\npositive is closing. Hertz, not the MHz used for frequencies elsewhere in\nthis record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\nMHz encoding.",
           "x-flatbuffer-type": "[double]"
         },
         "DOPPLER_RATE_HZ_S": {

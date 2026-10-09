@@ -32,6 +32,8 @@ public enum gnssObsType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
   public var value: Int8 { return self.rawValue }
   case pseudorange = 0
   case carrierPhase = 1
+  ///  One-way Doppler of the received carrier (Hz), positive when the
+  ///  satellite is approaching (the RINEX convention).
   case doppler = 2
   case snr = 3
   case rawIf = 4

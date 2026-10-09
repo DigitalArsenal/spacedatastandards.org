@@ -222,7 +222,8 @@ struct RDO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double RANGE_BIAS() const {
     return GetField<double>(VT_RANGE_BIAS, 0.0);
   }
-  /// Range rate (km/s)
+  /// Range rate, the time derivative of RANGE (km/s): positive when the range
+  /// is opening, negative when it is closing.
   double RANGE_RATE() const {
     return GetField<double>(VT_RANGE_RATE, 0.0);
   }
@@ -238,11 +239,15 @@ struct RDO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double RANGE_ACCEL_UNC() const {
     return GetField<double>(VT_RANGE_ACCEL_UNC, 0.0);
   }
-  /// Doppler shift (Hz)
+  /// Two-way (monostatic radar) Doppler shift (Hz): the received echo's
+  /// frequency minus the transmitted carrier DOPPLER_FREQUENCY. Positive when
+  /// the range is closing. To first order in RANGE_RATE / c,
+  /// RANGE_RATE = -c * DOPPLER / (2 * DOPPLER_FREQUENCY), c = 299792.458 km/s.
   double DOPPLER() const {
     return GetField<double>(VT_DOPPLER, 0.0);
   }
-  /// Doppler uncertainty (Hz, 1-sigma)
+  /// Uncertainty of DOPPLER (Hz, 1-sigma). The range-rate uncertainty is
+  /// c * DOPPLER_UNC / (2 * DOPPLER_FREQUENCY).
   double DOPPLER_UNC() const {
     return GetField<double>(VT_DOPPLER_UNC, 0.0);
   }
@@ -355,7 +360,9 @@ struct RDO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double CORR_QUALITY() const {
     return GetField<double>(VT_CORR_QUALITY, 0.0);
   }
-  /// Carrier frequency the DOPPLER shift refers to, in Hz.
+  /// Transmitted carrier frequency (Hz) that the two-way DOPPLER shift is
+  /// relative to. Set whenever DOPPLER is: without it DOPPLER cannot be
+  /// converted to range rate.
   double DOPPLER_FREQUENCY() const {
     return GetField<double>(VT_DOPPLER_FREQUENCY, 0.0);
   }

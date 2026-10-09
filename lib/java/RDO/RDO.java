@@ -151,7 +151,8 @@ public final class RDO extends com.google.flatbuffers.Table {
    */
   public double RANGE_BIAS() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Range rate (km/s)
+   * Range rate, the time derivative of RANGE (km/s): positive when the range
+   * is opening, negative when it is closing.
    */
   public double RANGE_RATE() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -167,11 +168,15 @@ public final class RDO extends com.google.flatbuffers.Table {
    */
   public double RANGE_ACCEL_UNC() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Doppler shift (Hz)
+   * Two-way (monostatic radar) Doppler shift (Hz): the received echo's
+   * frequency minus the transmitted carrier DOPPLER_FREQUENCY. Positive when
+   * the range is closing. To first order in RANGE_RATE / c,
+   * RANGE_RATE = -c * DOPPLER / (2 * DOPPLER_FREQUENCY), c = 299792.458 km/s.
    */
   public double DOPPLER() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Doppler uncertainty (Hz, 1-sigma)
+   * Uncertainty of DOPPLER (Hz, 1-sigma). The range-rate uncertainty is
+   * c * DOPPLER_UNC / (2 * DOPPLER_FREQUENCY).
    */
   public double DOPPLER_UNC() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -291,7 +296,9 @@ public final class RDO extends com.google.flatbuffers.Table {
    */
   public double CORR_QUALITY() { int o = __offset(118); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Carrier frequency the DOPPLER shift refers to, in Hz.
+   * Transmitted carrier frequency (Hz) that the two-way DOPPLER shift is
+   * relative to. Set whenever DOPPLER is: without it DOPPLER cannot be
+   * converted to range rate.
    */
   public double DOPPLER_FREQUENCY() { int o = __offset(120); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 

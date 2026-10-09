@@ -73,6 +73,8 @@ inline const char *EnumNamegnssConstellation(gnssConstellation e) {
 enum gnssObsType : int8_t {
   gnssObsType_PSEUDORANGE = 0,
   gnssObsType_CARRIER_PHASE = 1,
+  /// One-way Doppler of the received carrier (Hz), positive when the
+  /// satellite is approaching (the RINEX convention).
   gnssObsType_DOPPLER = 2,
   gnssObsType_SNR = 3,
   gnssObsType_RAW_IF = 4,

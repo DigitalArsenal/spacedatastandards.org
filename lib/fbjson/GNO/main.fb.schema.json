@@ -61,7 +61,8 @@
           "value": 1
         },
         "DOPPLER": {
-          "value": 2
+          "value": 2,
+          "description": "One-way Doppler of the received carrier (Hz), positive when the satellite is approaching (the RINEX convention)."
         },
         "SNR": {
           "value": 3
@@ -93,7 +94,8 @@
               "value": 1
             },
             "DOPPLER": {
-              "value": 2
+              "value": 2,
+              "description": "One-way Doppler of the received carrier (Hz), positive when the satellite is approaching (the RINEX convention)."
             },
             "SNR": {
               "value": 3

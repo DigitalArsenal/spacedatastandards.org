@@ -30,7 +30,9 @@ class detectionResult(object):
     # Signal-to-noise ratio (dB).
     # detectionResult
     def SNR(self): return self._tab.Get(flatbuffers.number_types.Float64Flags, self._tab.Pos + flatbuffers.number_types.UOffsetTFlags.py_type(16))
-    # Doppler shift (Hz).
+    # Two-way (monostatic) Doppler shift of the echo relative to
+    # SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+    # $RDO DOPPLER convention.
     # detectionResult
     def DOPPLER(self): return self._tab.Get(flatbuffers.number_types.Float64Flags, self._tab.Pos + flatbuffers.number_types.UOffsetTFlags.py_type(24))
     # Probability of detection (0.0 – 1.0).

@@ -8,7 +8,8 @@ public final class acwSensorPhenomenology {
   private acwSensorPhenomenology() { }
   public static final int UNSPECIFIED = 0;
   /**
-   * Monostatic radar: range, range rate, azimuth, elevation.
+   * Monostatic radar: range, range rate, two-way Doppler, azimuth,
+   * elevation.
    */
   public static final int RADAR = 1;
   /**
@@ -16,7 +17,8 @@ public final class acwSensorPhenomenology {
    */
   public static final int OPTICAL = 2;
   /**
-   * Passive RF: angles and received frequency of a target's emitter.
+   * Passive RF: angles and the received (one-way) frequency of a target's
+   * emitter.
    */
   public static final int PASSIVE_RF = 3;
   /**

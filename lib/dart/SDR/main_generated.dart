@@ -268,7 +268,9 @@ class detectionResult {
   double get RANGE => const fb.Float64Reader().read(_bc, _bcOffset + 8);
   ///  Signal-to-noise ratio (dB).
   double get SNR => const fb.Float64Reader().read(_bc, _bcOffset + 16);
-  ///  Doppler shift (Hz).
+  ///  Two-way (monostatic) Doppler shift of the echo relative to
+  ///  SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+  ///  $RDO DOPPLER convention.
   double get DOPPLER => const fb.Float64Reader().read(_bc, _bcOffset + 24);
   ///  Probability of detection (0.0 – 1.0).
   double get PROBABILITY => const fb.Float64Reader().read(_bc, _bcOffset + 32);
@@ -1233,7 +1235,8 @@ class SDRSingleResult {
   double get AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
   ///  Elevation angle to target (radians).
   double get ELEVATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  ///  Range rate / Doppler velocity (m/s).
+  ///  Range rate, the time derivative of RANGE (m/s): positive when the range
+  ///  is opening, negative when it is closing.
   double get RANGE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
   double get rangeRate => RANGE_RATE;
   ///  Detection timestamp (milliseconds since epoch).

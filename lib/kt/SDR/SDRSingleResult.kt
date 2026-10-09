@@ -67,7 +67,8 @@ class SDRSingleResult : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Range rate / Doppler velocity (m/s).
+     * Range rate, the time derivative of RANGE (m/s): positive when the range
+     * is opening, negative when it is closing.
      */
     val rangeRate : Double
         get() {

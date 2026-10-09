@@ -2541,9 +2541,10 @@ struct RFL FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<double> *TRANSMIT_ELEVATION_DEG() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_TRANSMIT_ELEVATION_DEG);
   }
-  /// Doppler shift of the carrier, hertz; positive is closing. Hertz, not the
-  /// MHz used for frequencies elsewhere in this record — a shift of a few kHz
-  /// on a GHz carrier is destroyed by an MHz encoding.
+  /// One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+  /// positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+  /// this record — a shift of a few kHz on a GHz carrier is destroyed by an
+  /// MHz encoding.
   const ::flatbuffers::Vector<double> *DOPPLER_SHIFT_HZ() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_DOPPLER_SHIFT_HZ);
   }

@@ -259,7 +259,9 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) detectionResult FLATBUFFERS_FINAL_CLASS {
   double SNR() const {
     return ::flatbuffers::EndianScalar(SNR_);
   }
-  /// Doppler shift (Hz).
+  /// Two-way (monostatic) Doppler shift of the echo relative to
+  /// SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+  /// $RDO DOPPLER convention.
   double DOPPLER() const {
     return ::flatbuffers::EndianScalar(DOPPLER_);
   }
@@ -999,7 +1001,8 @@ struct SDRSingleResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double ELEVATION() const {
     return GetField<double>(VT_ELEVATION, 0.0);
   }
-  /// Range rate / Doppler velocity (m/s).
+  /// Range rate, the time derivative of RANGE (m/s): positive when the range
+  /// is opening, negative when it is closing.
   double RANGE_RATE() const {
     return GetField<double>(VT_RANGE_RATE, 0.0);
   }

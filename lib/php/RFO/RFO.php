@@ -231,7 +231,8 @@ class RFO extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Range rate (km/s)
+    /// Range rate, the time derivative of RANGE (km/s): positive when the range
+    /// is opening, negative when it is closing.
     /**
      * @return double
      */
@@ -312,7 +313,9 @@ class RFO extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Measured center frequency (MHz)
+    /// Measured center frequency as received at the sensor (MHz). One-way: it
+    /// includes the Doppler shift of the emitter's motion relative to the
+    /// sensor.
     /**
      * @return double
      */
@@ -352,7 +355,10 @@ class RFO extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Frequency shift from nominal (MHz)
+    /// Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When
+    /// NOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler
+    /// shift, positive when the range is closing: to first order in
+    /// RANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY.
     /**
      * @return double
      */

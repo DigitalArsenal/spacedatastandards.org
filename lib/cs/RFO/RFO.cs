@@ -123,7 +123,8 @@ public struct RFO : IFlatbufferObject
   public double RANGE { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Range uncertainty (km, 1-sigma)
   public double RANGE_UNC { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Range rate (km/s)
+  /// Range rate, the time derivative of RANGE (km/s): positive when the range
+  /// is opening, negative when it is closing.
   public double RANGE_RATE { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Range rate uncertainty (km/s, 1-sigma)
   public double RANGE_RATE_UNC { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
@@ -159,7 +160,9 @@ public struct RFO : IFlatbufferObject
   public ArraySegment<byte>? GetCOLLECTION_MODEBytes() { return __p.__vector_as_arraysegment(64); }
 #endif
   public byte[] GetCOLLECTION_MODEArray() { return __p.__vector_as_array<byte>(64); }
-  /// Measured center frequency (MHz)
+  /// Measured center frequency as received at the sensor (MHz). One-way: it
+  /// includes the Doppler shift of the emitter's motion relative to the
+  /// sensor.
   public double FREQUENCY { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Nominal center frequency (MHz)
   public double NOMINAL_FREQUENCY { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
@@ -167,7 +170,10 @@ public struct RFO : IFlatbufferObject
   public double START_FREQUENCY { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// End frequency of emission (MHz)
   public double END_FREQUENCY { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Frequency shift from nominal (MHz)
+  /// Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When
+  /// NOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler
+  /// shift, positive when the range is closing: to first order in
+  /// RANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY.
   public double FREQUENCY_SHIFT { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Measured bandwidth (MHz)
   public double BANDWIDTH { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }

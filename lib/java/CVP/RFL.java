@@ -150,9 +150,10 @@ public final class RFL extends com.google.flatbuffers.Table {
   public ByteBuffer TRANSMIT_ELEVATION_DEGAsByteBuffer() { return __vector_as_bytebuffer(32, 8); }
   public ByteBuffer TRANSMIT_ELEVATION_DEGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 8); }
   /**
-   * Doppler shift of the carrier, hertz; positive is closing. Hertz, not the
-   * MHz used for frequencies elsewhere in this record — a shift of a few kHz
-   * on a GHz carrier is destroyed by an MHz encoding.
+   * One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+   * positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+   * this record — a shift of a few kHz on a GHz carrier is destroyed by an
+   * MHz encoding.
    */
   public double DOPPLER_SHIFT_HZ(int j) { int o = __offset(34); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int DOPPLER_SHIFT_HZLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }

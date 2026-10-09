@@ -88,7 +88,9 @@ func (rcv *detectionResult) MutateSnr(n float64) bool {
 	return rcv.MutateSNR(n)
 }
 
-/// Doppler shift (Hz).
+/// Two-way (monostatic) Doppler shift of the echo relative to
+/// SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+/// $RDO DOPPLER convention.
 func (rcv *detectionResult) DOPPLER() float64 {
 	return rcv._tab.GetFloat64(rcv._tab.Pos + flatbuffers.UOffsetT(24))
 }
@@ -96,7 +98,9 @@ func (rcv *detectionResult) DOPPLER() float64 {
 func (rcv *detectionResult) Doppler() float64 {
 	return rcv.DOPPLER()
 }
-/// Doppler shift (Hz).
+/// Two-way (monostatic) Doppler shift of the echo relative to
+/// SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+/// $RDO DOPPLER convention.
 func (rcv *detectionResult) MutateDOPPLER(n float64) bool {
 	return rcv._tab.MutateFloat64(rcv._tab.Pos+flatbuffers.UOffsetT(24), n)
 }

@@ -70,6 +70,10 @@ public struct ACWSensor : IFlatbufferObject
   public double MAX_HOST_SUN_ELEVATION_RAD { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Uncorrelated detections per hour of tracking, reported with UCT set.
   public double FALSE_ALARM_RATE_PER_HOUR { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// RADAR: transmitted carrier frequency, hertz. A DOPPLER error model
+  /// measures the echo's two-way shift relative to it, reported as $RDO
+  /// DOPPLER with DOPPLER_FREQUENCY set to this value.
+  public double TRANSMIT_FREQUENCY_HZ { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<ACWSensor> CreateACWSensor(FlatBufferBuilder builder,
       StringOffset SENSOR_IDOffset = default(StringOffset),
@@ -89,8 +93,10 @@ public struct ACWSensor : IFlatbufferObject
       double RECEIVER_BANDWIDTH_HZ = 0.0,
       double LIMITING_MAGNITUDE = 0.0,
       double MAX_HOST_SUN_ELEVATION_RAD = 0.0,
-      double FALSE_ALARM_RATE_PER_HOUR = 0.0) {
-    builder.StartTable(18);
+      double FALSE_ALARM_RATE_PER_HOUR = 0.0,
+      double TRANSMIT_FREQUENCY_HZ = 0.0) {
+    builder.StartTable(19);
+    ACWSensor.AddTRANSMIT_FREQUENCY_HZ(builder, TRANSMIT_FREQUENCY_HZ);
     ACWSensor.AddFALSE_ALARM_RATE_PER_HOUR(builder, FALSE_ALARM_RATE_PER_HOUR);
     ACWSensor.AddMAX_HOST_SUN_ELEVATION_RAD(builder, MAX_HOST_SUN_ELEVATION_RAD);
     ACWSensor.AddLIMITING_MAGNITUDE(builder, LIMITING_MAGNITUDE);
@@ -112,7 +118,7 @@ public struct ACWSensor : IFlatbufferObject
     return ACWSensor.EndACWSensor(builder);
   }
 
-  public static void StartACWSensor(FlatBufferBuilder builder) { builder.StartTable(18); }
+  public static void StartACWSensor(FlatBufferBuilder builder) { builder.StartTable(19); }
   public static void AddSENSOR_ID(FlatBufferBuilder builder, StringOffset SENSOR_IDOffset) { builder.AddOffset(0, SENSOR_IDOffset.Value, 0); }
   public static void AddHOST_ID(FlatBufferBuilder builder, StringOffset HOST_IDOffset) { builder.AddOffset(1, HOST_IDOffset.Value, 0); }
   public static void AddPHENOMENOLOGY(FlatBufferBuilder builder, acwSensorPhenomenology PHENOMENOLOGY) { builder.AddByte(2, (byte)PHENOMENOLOGY, 0); }
@@ -136,6 +142,7 @@ public struct ACWSensor : IFlatbufferObject
   public static void AddLIMITING_MAGNITUDE(FlatBufferBuilder builder, double LIMITING_MAGNITUDE) { builder.AddDouble(15, LIMITING_MAGNITUDE, 0.0); }
   public static void AddMAX_HOST_SUN_ELEVATION_RAD(FlatBufferBuilder builder, double MAX_HOST_SUN_ELEVATION_RAD) { builder.AddDouble(16, MAX_HOST_SUN_ELEVATION_RAD, 0.0); }
   public static void AddFALSE_ALARM_RATE_PER_HOUR(FlatBufferBuilder builder, double FALSE_ALARM_RATE_PER_HOUR) { builder.AddDouble(17, FALSE_ALARM_RATE_PER_HOUR, 0.0); }
+  public static void AddTRANSMIT_FREQUENCY_HZ(FlatBufferBuilder builder, double TRANSMIT_FREQUENCY_HZ) { builder.AddDouble(18, TRANSMIT_FREQUENCY_HZ, 0.0); }
   public static Offset<ACWSensor> EndACWSensor(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWSensor>(o);
@@ -165,6 +172,7 @@ public struct ACWSensor : IFlatbufferObject
     _o.LIMITING_MAGNITUDE = this.LIMITING_MAGNITUDE;
     _o.MAX_HOST_SUN_ELEVATION_RAD = this.MAX_HOST_SUN_ELEVATION_RAD;
     _o.FALSE_ALARM_RATE_PER_HOUR = this.FALSE_ALARM_RATE_PER_HOUR;
+    _o.TRANSMIT_FREQUENCY_HZ = this.TRANSMIT_FREQUENCY_HZ;
   }
   public static Offset<ACWSensor> Pack(FlatBufferBuilder builder, ACWSensorT _o) {
     if (_o == null) return default(Offset<ACWSensor>);
@@ -196,7 +204,8 @@ public struct ACWSensor : IFlatbufferObject
       _o.RECEIVER_BANDWIDTH_HZ,
       _o.LIMITING_MAGNITUDE,
       _o.MAX_HOST_SUN_ELEVATION_RAD,
-      _o.FALSE_ALARM_RATE_PER_HOUR);
+      _o.FALSE_ALARM_RATE_PER_HOUR,
+      _o.TRANSMIT_FREQUENCY_HZ);
   }
 }
 
@@ -220,6 +229,7 @@ public class ACWSensorT
   public double LIMITING_MAGNITUDE { get; set; }
   public double MAX_HOST_SUN_ELEVATION_RAD { get; set; }
   public double FALSE_ALARM_RATE_PER_HOUR { get; set; }
+  public double TRANSMIT_FREQUENCY_HZ { get; set; }
 
   public ACWSensorT() {
     this.SENSOR_ID = null;
@@ -240,6 +250,7 @@ public class ACWSensorT
     this.LIMITING_MAGNITUDE = 0.0;
     this.MAX_HOST_SUN_ELEVATION_RAD = 0.0;
     this.FALSE_ALARM_RATE_PER_HOUR = 0.0;
+    this.TRANSMIT_FREQUENCY_HZ = 0.0;
   }
 }
 
@@ -267,6 +278,7 @@ static public class ACWSensorVerify
       && verifier.VerifyField(tablePos, 34 /*LIMITING_MAGNITUDE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 36 /*MAX_HOST_SUN_ELEVATION_RAD*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 38 /*FALSE_ALARM_RATE_PER_HOUR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*TRANSMIT_FREQUENCY_HZ*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

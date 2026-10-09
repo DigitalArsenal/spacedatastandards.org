@@ -68,7 +68,8 @@ class SDRSingleResult(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Range rate / Doppler velocity (m/s).
+    # Range rate, the time derivative of RANGE (m/s): positive when the range
+    # is opening, negative when it is closing.
     # SDRSingleResult
     def RANGE_RATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))

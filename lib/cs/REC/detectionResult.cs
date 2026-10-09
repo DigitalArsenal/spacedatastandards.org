@@ -22,7 +22,9 @@ public struct detectionResult : IFlatbufferObject
   public double RANGE { get { return __p.bb.GetDouble(__p.bb_pos + 8); } }
   /// Signal-to-noise ratio (dB).
   public double SNR { get { return __p.bb.GetDouble(__p.bb_pos + 16); } }
-  /// Doppler shift (Hz).
+  /// Two-way (monostatic) Doppler shift of the echo relative to
+  /// SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+  /// $RDO DOPPLER convention.
   public double DOPPLER { get { return __p.bb.GetDouble(__p.bb_pos + 24); } }
   /// Probability of detection (0.0 – 1.0).
   public double PROBABILITY { get { return __p.bb.GetDouble(__p.bb_pos + 32); } }

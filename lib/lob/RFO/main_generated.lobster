@@ -86,7 +86,8 @@ class RFO : flatbuffers.handle
     /// Range uncertainty (km, 1-sigma)
     def RANGE_UNC() -> float:
         return flatbuffers.field_float64(buf_, pos_, 46, 0.0)
-    /// Range rate (km/s)
+    /// Range rate, the time derivative of RANGE (km/s): positive when the range
+    /// is opening, negative when it is closing.
     def RANGE_RATE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
     /// Range rate uncertainty (km/s, 1-sigma)
@@ -113,7 +114,9 @@ class RFO : flatbuffers.handle
     /// Collection mode
     def COLLECTION_MODE() -> string:
         return flatbuffers.field_string(buf_, pos_, 64)
-    /// Measured center frequency (MHz)
+    /// Measured center frequency as received at the sensor (MHz). One-way: it
+    /// includes the Doppler shift of the emitter's motion relative to the
+    /// sensor.
     def FREQUENCY() -> float:
         return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
     /// Nominal center frequency (MHz)
@@ -125,7 +128,10 @@ class RFO : flatbuffers.handle
     /// End frequency of emission (MHz)
     def END_FREQUENCY() -> float:
         return flatbuffers.field_float64(buf_, pos_, 72, 0.0)
-    /// Frequency shift from nominal (MHz)
+    /// Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When
+    /// NOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler
+    /// shift, positive when the range is closing: to first order in
+    /// RANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY.
     def FREQUENCY_SHIFT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 74, 0.0)
     /// Measured bandwidth (MHz)

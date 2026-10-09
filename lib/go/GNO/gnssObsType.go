@@ -9,6 +9,8 @@ type gnssObsType int8
 const (
 	gnssObsTypePSEUDORANGE   gnssObsType = 0
 	gnssObsTypeCARRIER_PHASE gnssObsType = 1
+	/// One-way Doppler of the received carrier (Hz), positive when the
+	/// satellite is approaching (the RINEX convention).
 	gnssObsTypeDOPPLER       gnssObsType = 2
 	gnssObsTypeSNR           gnssObsType = 3
 	gnssObsTypeRAW_IF        gnssObsType = 4

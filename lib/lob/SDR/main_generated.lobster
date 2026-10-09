@@ -97,7 +97,9 @@ class detectionResult : flatbuffers.handle
     /// Signal-to-noise ratio (dB).
     def SNR() -> float:
         return buf_.read_float64_le(pos_ + 16)
-    /// Doppler shift (Hz).
+    /// Two-way (monostatic) Doppler shift of the echo relative to
+    /// SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+    /// $RDO DOPPLER convention.
     def DOPPLER() -> float:
         return buf_.read_float64_le(pos_ + 24)
     /// Probability of detection (0.0 – 1.0).
@@ -474,7 +476,8 @@ class SDRSingleResult : flatbuffers.handle
     /// Elevation angle to target (radians).
     def ELEVATION() -> float:
         return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
-    /// Range rate / Doppler velocity (m/s).
+    /// Range rate, the time derivative of RANGE (m/s): positive when the range
+    /// is opening, negative when it is closing.
     def RANGE_RATE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
     /// Detection timestamp (milliseconds since epoch).

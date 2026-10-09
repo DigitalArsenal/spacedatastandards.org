@@ -782,7 +782,9 @@ impl<'a> detectionResult {
         }
     }
 
-    /// Doppler shift (Hz).
+    /// Two-way (monostatic) Doppler shift of the echo relative to
+    /// SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+    /// $RDO DOPPLER convention.
     pub fn DOPPLER(&self) -> f64 {
         let mut mem = ::core::mem::MaybeUninit::<<f64 as ::flatbuffers::EndianScalar>::Scalar>::uninit();
         // Safety:
@@ -2849,7 +2851,8 @@ impl<'a> SDRSingleResult<'a> {
         unsafe { self._tab.get::<f64>(SDRSingleResult::VT_ELEVATION, Some(0.0)).unwrap()}
     }
 
-    /// Range rate / Doppler velocity (m/s).
+    /// Range rate, the time derivative of RANGE (m/s): positive when the range
+    /// is opening, negative when it is closing.
     #[inline]
     pub fn RANGE_RATE(&self) -> f64 {
         // Safety:

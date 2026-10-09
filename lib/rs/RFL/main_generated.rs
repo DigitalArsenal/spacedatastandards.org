@@ -5555,9 +5555,10 @@ impl<'a> RFL<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RFL::VT_TRANSMIT_ELEVATION_DEG, None)}
     }
 
-    /// Doppler shift of the carrier, hertz; positive is closing. Hertz, not the
-    /// MHz used for frequencies elsewhere in this record — a shift of a few kHz
-    /// on a GHz carrier is destroyed by an MHz encoding.
+    /// One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+    /// positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+    /// this record — a shift of a few kHz on a GHz carrier is destroyed by an
+    /// MHz encoding.
     #[inline]
     pub fn DOPPLER_SHIFT_HZ(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
         // Safety:

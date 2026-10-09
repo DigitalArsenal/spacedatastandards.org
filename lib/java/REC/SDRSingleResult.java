@@ -45,7 +45,8 @@ public final class SDRSingleResult extends com.google.flatbuffers.Table {
    */
   public double ELEVATION() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Range rate / Doppler velocity (m/s).
+   * Range rate, the time derivative of RANGE (m/s): positive when the range
+   * is opening, negative when it is closing.
    */
   public double RANGE_RATE() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**

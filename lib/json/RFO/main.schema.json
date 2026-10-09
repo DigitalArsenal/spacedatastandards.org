@@ -103,7 +103,7 @@
               },
         "RANGE_RATE" : {
                 "type" : "number",
-                "description" : "Range rate (km/s)"
+                "description" : "Range rate, the time derivative of RANGE (km/s): positive when the range\nis opening, negative when it is closing."
               },
         "RANGE_RATE_UNC" : {
                 "type" : "number",
@@ -139,7 +139,7 @@
               },
         "FREQUENCY" : {
                 "type" : "number",
-                "description" : "Measured center frequency (MHz)"
+                "description" : "Measured center frequency as received at the sensor (MHz). One-way: it\nincludes the Doppler shift of the emitter's motion relative to the\nsensor."
               },
         "NOMINAL_FREQUENCY" : {
                 "type" : "number",
@@ -155,7 +155,7 @@
               },
         "FREQUENCY_SHIFT" : {
                 "type" : "number",
-                "description" : "Frequency shift from nominal (MHz)"
+                "description" : "Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When\nNOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler\nshift, positive when the range is closing: to first order in\nRANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY."
               },
         "BANDWIDTH" : {
                 "type" : "number",

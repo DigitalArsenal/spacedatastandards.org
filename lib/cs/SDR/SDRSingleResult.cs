@@ -26,7 +26,8 @@ public struct SDRSingleResult : IFlatbufferObject
   public double AZIMUTH { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Elevation angle to target (radians).
   public double ELEVATION { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Range rate / Doppler velocity (m/s).
+  /// Range rate, the time derivative of RANGE (m/s): positive when the range
+  /// is opening, negative when it is closing.
   public double RANGE_RATE { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Detection timestamp (milliseconds since epoch).
   public ulong TIMESTAMP_MS { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }

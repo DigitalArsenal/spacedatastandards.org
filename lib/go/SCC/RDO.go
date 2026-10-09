@@ -516,7 +516,8 @@ func (rcv *RDO) MutateRangeBias(n float64) bool {
 	return rcv.MutateRANGE_BIAS(n)
 }
 
-/// Range rate (km/s)
+/// Range rate, the time derivative of RANGE (km/s): positive when the range
+/// is opening, negative when it is closing.
 func (rcv *RDO) RANGE_RATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
@@ -529,7 +530,8 @@ func (rcv *RDO) RangeRate() float64 {
 	return rcv.RANGE_RATE()
 }
 
-/// Range rate (km/s)
+/// Range rate, the time derivative of RANGE (km/s): positive when the range
+/// is opening, negative when it is closing.
 func (rcv *RDO) MutateRANGE_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
 }
@@ -604,7 +606,10 @@ func (rcv *RDO) MutateRangeAccelUnc(n float64) bool {
 	return rcv.MutateRANGE_ACCEL_UNC(n)
 }
 
-/// Doppler shift (Hz)
+/// Two-way (monostatic radar) Doppler shift (Hz): the received echo's
+/// frequency minus the transmitted carrier DOPPLER_FREQUENCY. Positive when
+/// the range is closing. To first order in RANGE_RATE / c,
+/// RANGE_RATE = -c * DOPPLER / (2 * DOPPLER_FREQUENCY), c = 299792.458 km/s.
 func (rcv *RDO) DOPPLER() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
@@ -617,7 +622,10 @@ func (rcv *RDO) Doppler() float64 {
 	return rcv.DOPPLER()
 }
 
-/// Doppler shift (Hz)
+/// Two-way (monostatic radar) Doppler shift (Hz): the received echo's
+/// frequency minus the transmitted carrier DOPPLER_FREQUENCY. Positive when
+/// the range is closing. To first order in RANGE_RATE / c,
+/// RANGE_RATE = -c * DOPPLER / (2 * DOPPLER_FREQUENCY), c = 299792.458 km/s.
 func (rcv *RDO) MutateDOPPLER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
 }
@@ -626,7 +634,8 @@ func (rcv *RDO) MutateDoppler(n float64) bool {
 	return rcv.MutateDOPPLER(n)
 }
 
-/// Doppler uncertainty (Hz, 1-sigma)
+/// Uncertainty of DOPPLER (Hz, 1-sigma). The range-rate uncertainty is
+/// c * DOPPLER_UNC / (2 * DOPPLER_FREQUENCY).
 func (rcv *RDO) DOPPLER_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
@@ -639,7 +648,8 @@ func (rcv *RDO) DopplerUnc() float64 {
 	return rcv.DOPPLER_UNC()
 }
 
-/// Doppler uncertainty (Hz, 1-sigma)
+/// Uncertainty of DOPPLER (Hz, 1-sigma). The range-rate uncertainty is
+/// c * DOPPLER_UNC / (2 * DOPPLER_FREQUENCY).
 func (rcv *RDO) MutateDOPPLER_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
 }
@@ -1209,7 +1219,9 @@ func (rcv *RDO) MutateCorrQuality(n float64) bool {
 	return rcv.MutateCORR_QUALITY(n)
 }
 
-/// Carrier frequency the DOPPLER shift refers to, in Hz.
+/// Transmitted carrier frequency (Hz) that the two-way DOPPLER shift is
+/// relative to. Set whenever DOPPLER is: without it DOPPLER cannot be
+/// converted to range rate.
 func (rcv *RDO) DOPPLER_FREQUENCY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
 	if o != 0 {
@@ -1222,7 +1234,9 @@ func (rcv *RDO) DopplerFrequency() float64 {
 	return rcv.DOPPLER_FREQUENCY()
 }
 
-/// Carrier frequency the DOPPLER shift refers to, in Hz.
+/// Transmitted carrier frequency (Hz) that the two-way DOPPLER shift is
+/// relative to. Set whenever DOPPLER is: without it DOPPLER cannot be
+/// converted to range rate.
 func (rcv *RDO) MutateDOPPLER_FREQUENCY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(120, n)
 }

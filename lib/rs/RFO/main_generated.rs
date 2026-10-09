@@ -818,7 +818,8 @@ impl<'a> RFO<'a> {
         unsafe { self._tab.get::<f64>(RFO::VT_RANGE_UNC, Some(0.0)).unwrap()}
     }
 
-    /// Range rate (km/s)
+    /// Range rate, the time derivative of RANGE (km/s): positive when the range
+    /// is opening, negative when it is closing.
     #[inline]
     pub fn RANGE_RATE(&self) -> f64 {
         // Safety:
@@ -899,7 +900,9 @@ impl<'a> RFO<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFO::VT_COLLECTION_MODE, None)}
     }
 
-    /// Measured center frequency (MHz)
+    /// Measured center frequency as received at the sensor (MHz). One-way: it
+    /// includes the Doppler shift of the emitter's motion relative to the
+    /// sensor.
     #[inline]
     pub fn FREQUENCY(&self) -> f64 {
         // Safety:
@@ -935,7 +938,10 @@ impl<'a> RFO<'a> {
         unsafe { self._tab.get::<f64>(RFO::VT_END_FREQUENCY, Some(0.0)).unwrap()}
     }
 
-    /// Frequency shift from nominal (MHz)
+    /// Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When
+    /// NOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler
+    /// shift, positive when the range is closing: to first order in
+    /// RANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY.
     #[inline]
     pub fn FREQUENCY_SHIFT(&self) -> f64 {
         // Safety:

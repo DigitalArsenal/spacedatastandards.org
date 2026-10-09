@@ -263,9 +263,10 @@ class RFL : Table() {
     val transmitElevationDegAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 8)
     fun transmitElevationDegInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 8)
     /**
-     * Doppler shift of the carrier, hertz; positive is closing. Hertz, not the
-     * MHz used for frequencies elsewhere in this record — a shift of a few kHz
-     * on a GHz carrier is destroyed by an MHz encoding.
+     * One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+     * positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+     * this record — a shift of a few kHz on a GHz carrier is destroyed by an
+     * MHz encoding.
      */
     fun dopplerShiftHz(j: Int) : Double {
         val o = __offset(34)

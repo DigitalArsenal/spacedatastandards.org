@@ -137,9 +137,10 @@ public struct RFL : IFlatbufferObject
   public ArraySegment<byte>? GetTRANSMIT_ELEVATION_DEGBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
   public double[] GetTRANSMIT_ELEVATION_DEGArray() { return __p.__vector_as_array<double>(32); }
-  /// Doppler shift of the carrier, hertz; positive is closing. Hertz, not the
-  /// MHz used for frequencies elsewhere in this record — a shift of a few kHz
-  /// on a GHz carrier is destroyed by an MHz encoding.
+  /// One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+  /// positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+  /// this record — a shift of a few kHz on a GHz carrier is destroyed by an
+  /// MHz encoding.
   public double DOPPLER_SHIFT_HZ(int j) { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int DOPPLER_SHIFT_HZLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T

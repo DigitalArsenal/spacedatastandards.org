@@ -1,5 +1,5 @@
-// Hash: abd9f332ab53b48889720b65790ae930db16dbaf6b237ab10223bc3900b066c0
-// Version: 1.186.2
+// Hash: 9de4dfc933f9cd58cf185dff7812713cc78d607aad4126ff2ee5a61010136ac4
+// Version: 1.186.3
 // -----------------------------------END_HEADER
 include "../RFB/main.fbs";
 include "../TIM/main.fbs";
@@ -549,9 +549,10 @@ table RFL {
   TRANSMIT_AZIMUTH_DEG: [double];
   /// Elevation at the transmitting endpoint, degrees.
   TRANSMIT_ELEVATION_DEG: [double];
-  /// Doppler shift of the carrier, hertz; positive is closing. Hertz, not the
-  /// MHz used for frequencies elsewhere in this record — a shift of a few kHz
-  /// on a GHz carrier is destroyed by an MHz encoding.
+  /// One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+  /// positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+  /// this record — a shift of a few kHz on a GHz carrier is destroyed by an
+  /// MHz encoding.
   DOPPLER_SHIFT_HZ: [double];
   /// Doppler rate, hertz per second.
   DOPPLER_RATE_HZ_S: [double];

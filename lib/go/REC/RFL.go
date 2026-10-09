@@ -545,9 +545,10 @@ func (rcv *RFL) MutateTransmitElevationDeg(j int, n float64) bool {
 	return rcv.MutateTRANSMIT_ELEVATION_DEG(j, n)
 }
 
-/// Doppler shift of the carrier, hertz; positive is closing. Hertz, not the
-/// MHz used for frequencies elsewhere in this record — a shift of a few kHz
-/// on a GHz carrier is destroyed by an MHz encoding.
+/// One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+/// positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+/// this record — a shift of a few kHz on a GHz carrier is destroyed by an
+/// MHz encoding.
 func (rcv *RFL) DOPPLER_SHIFT_HZ(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -573,9 +574,10 @@ func (rcv *RFL) DopplerShiftHzLength() int {
 	return rcv.DOPPLER_SHIFT_HZLength()
 }
 
-/// Doppler shift of the carrier, hertz; positive is closing. Hertz, not the
-/// MHz used for frequencies elsewhere in this record — a shift of a few kHz
-/// on a GHz carrier is destroyed by an MHz encoding.
+/// One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+/// positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+/// this record — a shift of a few kHz on a GHz carrier is destroyed by an
+/// MHz encoding.
 func (rcv *RFL) MutateDOPPLER_SHIFT_HZ(j int, n float64) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {

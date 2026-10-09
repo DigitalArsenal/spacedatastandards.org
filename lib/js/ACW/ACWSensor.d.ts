@@ -80,6 +80,12 @@ export declare class ACWSensor implements flatbuffers.IUnpackableObject<ACWSenso
      * Uncorrelated detections per hour of tracking, reported with UCT set.
      */
     FALSE_ALARM_RATE_PER_HOUR(): number;
+    /**
+     * RADAR: transmitted carrier frequency, hertz. A DOPPLER error model
+     * measures the echo's two-way shift relative to it, reported as $RDO
+     * DOPPLER with DOPPLER_FREQUENCY set to this value.
+     */
+    TRANSMIT_FREQUENCY_HZ(): number;
     static startACWSensor(builder: flatbuffers.Builder): void;
     static addSensorId(builder: flatbuffers.Builder, SENSOR_IDOffset: flatbuffers.Offset): void;
     static addHostId(builder: flatbuffers.Builder, HOST_IDOffset: flatbuffers.Offset): void;
@@ -101,6 +107,7 @@ export declare class ACWSensor implements flatbuffers.IUnpackableObject<ACWSenso
     static addLimitingMagnitude(builder: flatbuffers.Builder, LIMITING_MAGNITUDE: number): void;
     static addMaxHostSunElevationRad(builder: flatbuffers.Builder, MAX_HOST_SUN_ELEVATION_RAD: number): void;
     static addFalseAlarmRatePerHour(builder: flatbuffers.Builder, FALSE_ALARM_RATE_PER_HOUR: number): void;
+    static addTransmitFrequencyHz(builder: flatbuffers.Builder, TRANSMIT_FREQUENCY_HZ: number): void;
     static endACWSensor(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): ACWSensorT;
     unpackTo(_o: ACWSensorT): void;
@@ -124,7 +131,8 @@ export declare class ACWSensorT implements flatbuffers.IGeneratedObject {
     LIMITING_MAGNITUDE: number;
     MAX_HOST_SUN_ELEVATION_RAD: number;
     FALSE_ALARM_RATE_PER_HOUR: number;
-    constructor(SENSOR_ID?: string | Uint8Array | null, HOST_ID?: string | Uint8Array | null, PHENOMENOLOGY?: acwSensorPhenomenology, ERROR_MODELS?: (MEMErrorModelT)[], CONSTRAINTS?: ACWConstraintSetT | null, OBSERVATION_INTERVAL_S?: number, TRACK_DURATION_S?: number, REVISIT_INTERVAL_S?: number, MAX_SIMULTANEOUS_TRACKS?: number, REFERENCE_SNR_DB?: number, REFERENCE_RANGE_M?: number, REFERENCE_RCS_M2?: number, DETECTION_THRESHOLD_DB?: number, RECEIVER_G_OVER_T_DB_PER_K?: number, RECEIVER_BANDWIDTH_HZ?: number, LIMITING_MAGNITUDE?: number, MAX_HOST_SUN_ELEVATION_RAD?: number, FALSE_ALARM_RATE_PER_HOUR?: number);
+    TRANSMIT_FREQUENCY_HZ: number;
+    constructor(SENSOR_ID?: string | Uint8Array | null, HOST_ID?: string | Uint8Array | null, PHENOMENOLOGY?: acwSensorPhenomenology, ERROR_MODELS?: (MEMErrorModelT)[], CONSTRAINTS?: ACWConstraintSetT | null, OBSERVATION_INTERVAL_S?: number, TRACK_DURATION_S?: number, REVISIT_INTERVAL_S?: number, MAX_SIMULTANEOUS_TRACKS?: number, REFERENCE_SNR_DB?: number, REFERENCE_RANGE_M?: number, REFERENCE_RCS_M2?: number, DETECTION_THRESHOLD_DB?: number, RECEIVER_G_OVER_T_DB_PER_K?: number, RECEIVER_BANDWIDTH_HZ?: number, LIMITING_MAGNITUDE?: number, MAX_HOST_SUN_ELEVATION_RAD?: number, FALSE_ALARM_RATE_PER_HOUR?: number, TRANSMIT_FREQUENCY_HZ?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACWSensor.d.ts.map

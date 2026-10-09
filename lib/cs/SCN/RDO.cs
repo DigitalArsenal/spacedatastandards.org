@@ -135,7 +135,8 @@ public struct RDO : IFlatbufferObject
   public double RANGE_UNC { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Range bias (km)
   public double RANGE_BIAS { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Range rate (km/s)
+  /// Range rate, the time derivative of RANGE (km/s): positive when the range
+  /// is opening, negative when it is closing.
   public double RANGE_RATE { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Range rate uncertainty (km/s, 1-sigma)
   public double RANGE_RATE_UNC { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
@@ -143,9 +144,13 @@ public struct RDO : IFlatbufferObject
   public double RANGE_ACCEL { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Range acceleration uncertainty (km/s^2, 1-sigma)
   public double RANGE_ACCEL_UNC { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Doppler shift (Hz)
+  /// Two-way (monostatic radar) Doppler shift (Hz): the received echo's
+  /// frequency minus the transmitted carrier DOPPLER_FREQUENCY. Positive when
+  /// the range is closing. To first order in RANGE_RATE / c,
+  /// RANGE_RATE = -c * DOPPLER / (2 * DOPPLER_FREQUENCY), c = 299792.458 km/s.
   public double DOPPLER { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Doppler uncertainty (Hz, 1-sigma)
+  /// Uncertainty of DOPPLER (Hz, 1-sigma). The range-rate uncertainty is
+  /// c * DOPPLER_UNC / (2 * DOPPLER_FREQUENCY).
   public double DOPPLER_UNC { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Right ascension (degrees)
   public double RA { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
@@ -215,7 +220,9 @@ public struct RDO : IFlatbufferObject
   public bool CORR_AMBIGUOUS { get { int o = __p.__offset(116); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Association: posterior probability of the association.
   public double CORR_QUALITY { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Carrier frequency the DOPPLER shift refers to, in Hz.
+  /// Transmitted carrier frequency (Hz) that the two-way DOPPLER shift is
+  /// relative to. Set whenever DOPPLER is: without it DOPPLER cannot be
+  /// converted to range rate.
   public double DOPPLER_FREQUENCY { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<RDO> CreateRDO(FlatBufferBuilder builder,

@@ -353,9 +353,10 @@ class RFL(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
-    # Doppler shift of the carrier, hertz; positive is closing. Hertz, not the
-    # MHz used for frequencies elsewhere in this record — a shift of a few kHz
-    # on a GHz carrier is destroyed by an MHz encoding.
+    # One-way Doppler shift of the carrier at the receiving endpoint, hertz;
+    # positive is closing. Hertz, not the MHz used for frequencies elsewhere in
+    # this record — a shift of a few kHz on a GHz carrier is destroyed by an
+    # MHz encoding.
     # RFL
     def DOPPLER_SHIFT_HZ(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))

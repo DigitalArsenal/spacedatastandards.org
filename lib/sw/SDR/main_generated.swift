@@ -153,7 +153,9 @@ public struct detectionResult: NativeStruct, FlatbuffersVectorInitializable, Ver
   private var _RANGE: Double
   ///  Signal-to-noise ratio (dB).
   private var _SNR: Double
-  ///  Doppler shift (Hz).
+  ///  Two-way (monostatic) Doppler shift of the echo relative to
+  ///  SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+  ///  $RDO DOPPLER convention.
   private var _DOPPLER: Double
   ///  Probability of detection (0.0 – 1.0).
   private var _PROBABILITY: Double
@@ -196,7 +198,9 @@ public struct detectionResult: NativeStruct, FlatbuffersVectorInitializable, Ver
   public var RANGE: Double { _RANGE }
   ///  Signal-to-noise ratio (dB).
   public var SNR: Double { _SNR }
-  ///  Doppler shift (Hz).
+  ///  Two-way (monostatic) Doppler shift of the echo relative to
+  ///  SDRRadarConfig.FREQUENCY (Hz), positive when the range is closing: the
+  ///  $RDO DOPPLER convention.
   public var DOPPLER: Double { _DOPPLER }
   ///  Probability of detection (0.0 – 1.0).
   public var PROBABILITY: Double { _PROBABILITY }
@@ -729,7 +733,8 @@ public struct SDRSingleResult: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   public var AZIMUTH: Double { let o = _accessor.offset(VT.AZIMUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Elevation angle to target (radians).
   public var ELEVATION: Double { let o = _accessor.offset(VT.ELEVATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Range rate / Doppler velocity (m/s).
+  ///  Range rate, the time derivative of RANGE (m/s): positive when the range
+  ///  is opening, negative when it is closing.
   public var RANGE_RATE: Double { let o = _accessor.offset(VT.RANGE_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Detection timestamp (milliseconds since epoch).
   public var TIMESTAMP_MS: UInt64 { let o = _accessor.offset(VT.TIMESTAMP_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }

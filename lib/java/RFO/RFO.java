@@ -137,7 +137,8 @@ public final class RFO extends com.google.flatbuffers.Table {
    */
   public double RANGE_UNC() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Range rate (km/s)
+   * Range rate, the time derivative of RANGE (km/s): positive when the range
+   * is opening, negative when it is closing.
    */
   public double RANGE_RATE() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -179,7 +180,9 @@ public final class RFO extends com.google.flatbuffers.Table {
   public ByteBuffer COLLECTION_MODEAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
   public ByteBuffer COLLECTION_MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
   /**
-   * Measured center frequency (MHz)
+   * Measured center frequency as received at the sensor (MHz). One-way: it
+   * includes the Doppler shift of the emitter's motion relative to the
+   * sensor.
    */
   public double FREQUENCY() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -195,7 +198,10 @@ public final class RFO extends com.google.flatbuffers.Table {
    */
   public double END_FREQUENCY() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Frequency shift from nominal (MHz)
+   * Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When
+   * NOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler
+   * shift, positive when the range is closing: to first order in
+   * RANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY.
    */
   public double FREQUENCY_SHIFT() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**

@@ -8,7 +8,8 @@ class acwSensorPhenomenology private constructor() {
     companion object {
         const val UNSPECIFIED: UByte = 0u
         /**
-         * Monostatic radar: range, range rate, azimuth, elevation.
+         * Monostatic radar: range, range rate, two-way Doppler, azimuth,
+         * elevation.
          */
         const val RADAR: UByte = 1u
         /**
@@ -16,7 +17,8 @@ class acwSensorPhenomenology private constructor() {
          */
         const val OPTICAL: UByte = 2u
         /**
-         * Passive RF: angles and received frequency of a target's emitter.
+         * Passive RF: angles and the received (one-way) frequency of a target's
+         * emitter.
          */
         const val PASSIVE_RF: UByte = 3u
         /**

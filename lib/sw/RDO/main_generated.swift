@@ -159,7 +159,8 @@ public struct RDO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var RANGE_UNC: Double { let o = _accessor.offset(VT.RANGE_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Range bias (km)
   public var RANGE_BIAS: Double { let o = _accessor.offset(VT.RANGE_BIAS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Range rate (km/s)
+  ///  Range rate, the time derivative of RANGE (km/s): positive when the range
+  ///  is opening, negative when it is closing.
   public var RANGE_RATE: Double { let o = _accessor.offset(VT.RANGE_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Range rate uncertainty (km/s, 1-sigma)
   public var RANGE_RATE_UNC: Double { let o = _accessor.offset(VT.RANGE_RATE_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
@@ -167,9 +168,13 @@ public struct RDO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var RANGE_ACCEL: Double { let o = _accessor.offset(VT.RANGE_ACCEL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Range acceleration uncertainty (km/s^2, 1-sigma)
   public var RANGE_ACCEL_UNC: Double { let o = _accessor.offset(VT.RANGE_ACCEL_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Doppler shift (Hz)
+  ///  Two-way (monostatic radar) Doppler shift (Hz): the received echo's
+  ///  frequency minus the transmitted carrier DOPPLER_FREQUENCY. Positive when
+  ///  the range is closing. To first order in RANGE_RATE / c,
+  ///  RANGE_RATE = -c * DOPPLER / (2 * DOPPLER_FREQUENCY), c = 299792.458 km/s.
   public var DOPPLER: Double { let o = _accessor.offset(VT.DOPPLER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Doppler uncertainty (Hz, 1-sigma)
+  ///  Uncertainty of DOPPLER (Hz, 1-sigma). The range-rate uncertainty is
+  ///  c * DOPPLER_UNC / (2 * DOPPLER_FREQUENCY).
   public var DOPPLER_UNC: Double { let o = _accessor.offset(VT.DOPPLER_UNC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Right ascension (degrees)
   public var RA: Double { let o = _accessor.offset(VT.RA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
@@ -228,7 +233,9 @@ public struct RDO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var CORR_AMBIGUOUS: Bool { let o = _accessor.offset(VT.CORR_AMBIGUOUS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Association: posterior probability of the association.
   public var CORR_QUALITY: Double { let o = _accessor.offset(VT.CORR_QUALITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Carrier frequency the DOPPLER shift refers to, in Hz.
+  ///  Transmitted carrier frequency (Hz) that the two-way DOPPLER shift is
+  ///  relative to. Set whenever DOPPLER is: without it DOPPLER cannot be
+  ///  converted to range rate.
   public var DOPPLER_FREQUENCY: Double { let o = _accessor.offset(VT.DOPPLER_FREQUENCY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startRDO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 59) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }

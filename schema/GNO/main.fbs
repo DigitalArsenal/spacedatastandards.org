@@ -1,5 +1,5 @@
-// Hash: 85c6ef32dcbb24a44c10592a5608843b193949629c38d22554bf65d18b991085
-// Version: 0.0.3
+// Hash: fba642c744b9381a422e12c33535b2a61eb195102c57cb58804ce856f05e8312
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 enum gnssConstellation : byte {
   GPS,
@@ -15,6 +15,8 @@ enum gnssConstellation : byte {
 enum gnssObsType : byte {
   PSEUDORANGE,
   CARRIER_PHASE,
+  /// One-way Doppler of the received carrier (Hz), positive when the
+  /// satellite is approaching (the RINEX convention).
   DOPPLER,
   SNR,
   RAW_IF

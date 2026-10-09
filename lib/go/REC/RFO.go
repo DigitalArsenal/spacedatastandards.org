@@ -458,7 +458,8 @@ func (rcv *RFO) MutateRangeUnc(n float64) bool {
 	return rcv.MutateRANGE_UNC(n)
 }
 
-/// Range rate (km/s)
+/// Range rate, the time derivative of RANGE (km/s): positive when the range
+/// is opening, negative when it is closing.
 func (rcv *RFO) RANGE_RATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
@@ -471,7 +472,8 @@ func (rcv *RFO) RangeRate() float64 {
 	return rcv.RANGE_RATE()
 }
 
-/// Range rate (km/s)
+/// Range rate, the time derivative of RANGE (km/s): positive when the range
+/// is opening, negative when it is closing.
 func (rcv *RFO) MutateRANGE_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
 }
@@ -632,7 +634,9 @@ func (rcv *RFO) CollectionMode() []byte {
 }
 
 /// Collection mode
-/// Measured center frequency (MHz)
+/// Measured center frequency as received at the sensor (MHz). One-way: it
+/// includes the Doppler shift of the emitter's motion relative to the
+/// sensor.
 func (rcv *RFO) FREQUENCY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
@@ -645,7 +649,9 @@ func (rcv *RFO) Frequency() float64 {
 	return rcv.FREQUENCY()
 }
 
-/// Measured center frequency (MHz)
+/// Measured center frequency as received at the sensor (MHz). One-way: it
+/// includes the Doppler shift of the emitter's motion relative to the
+/// sensor.
 func (rcv *RFO) MutateFREQUENCY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
 }
@@ -720,7 +726,10 @@ func (rcv *RFO) MutateEndFrequency(n float64) bool {
 	return rcv.MutateEND_FREQUENCY(n)
 }
 
-/// Frequency shift from nominal (MHz)
+/// Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When
+/// NOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler
+/// shift, positive when the range is closing: to first order in
+/// RANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY.
 func (rcv *RFO) FREQUENCY_SHIFT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
@@ -733,7 +742,10 @@ func (rcv *RFO) FrequencyShift() float64 {
 	return rcv.FREQUENCY_SHIFT()
 }
 
-/// Frequency shift from nominal (MHz)
+/// Frequency shift from nominal, FREQUENCY - NOMINAL_FREQUENCY (MHz). When
+/// NOMINAL_FREQUENCY is the emitted frequency this is the one-way Doppler
+/// shift, positive when the range is closing: to first order in
+/// RANGE_RATE / c, RANGE_RATE = -c * FREQUENCY_SHIFT / NOMINAL_FREQUENCY.
 func (rcv *RFO) MutateFREQUENCY_SHIFT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(74, n)
 }
