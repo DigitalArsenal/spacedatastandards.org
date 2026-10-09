@@ -224,8 +224,41 @@ class PRW(object):
             return obj
         return None
 
+    # PRW
+    def EARTH_ORIENTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWEarthOrientation import PRWEarthOrientation
+            obj = PRWEarthOrientation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def SPACE_WEATHER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWSpaceWeatherTable import PRWSpaceWeatherTable
+            obj = PRWSpaceWeatherTable()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def JB2008_INDICES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWJB2008IndicesTable import PRWJB2008IndicesTable
+            obj = PRWJB2008IndicesTable()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def PRWStart(builder):
-    builder.StartObject(18)
+    builder.StartObject(21)
 
 def Start(builder):
     PRWStart(builder)
@@ -338,6 +371,24 @@ def PRWAddVERSION_RESULT(builder, VERSION_RESULT):
 def AddVERSION_RESULT(builder, VERSION_RESULT):
     PRWAddVERSION_RESULT(builder, VERSION_RESULT)
 
+def PRWAddEARTH_ORIENTATION(builder, EARTH_ORIENTATION):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(EARTH_ORIENTATION), 0)
+
+def AddEARTH_ORIENTATION(builder, EARTH_ORIENTATION):
+    PRWAddEARTH_ORIENTATION(builder, EARTH_ORIENTATION)
+
+def PRWAddSPACE_WEATHER(builder, SPACE_WEATHER):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(SPACE_WEATHER), 0)
+
+def AddSPACE_WEATHER(builder, SPACE_WEATHER):
+    PRWAddSPACE_WEATHER(builder, SPACE_WEATHER)
+
+def PRWAddJB2008_INDICES(builder, JB2008_INDICES):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(JB2008_INDICES), 0)
+
+def AddJB2008_INDICES(builder, JB2008_INDICES):
+    PRWAddJB2008_INDICES(builder, JB2008_INDICES)
+
 def PRWEnd(builder):
     return builder.EndObject()
 
@@ -350,16 +401,19 @@ import PRWBatchRequest
 import PRWBatchResponse
 import PRWDescribeRequest
 import PRWDescribeResult
+import PRWEarthOrientation
 import PRWEphemerisRequest
 import PRWEphemerisResult
 import PRWExecutionRequest
 import PRWExecutionResult
 import PRWInit
+import PRWJB2008IndicesTable
 import PRWNativeInput
 import PRWPrepareRequest
 import PRWPrepareResult
 import PRWResidentRequest
 import PRWResidentState
+import PRWSpaceWeatherTable
 import PRWVersionResult
 try:
     from typing import Optional
@@ -389,6 +443,9 @@ class PRWT(object):
         ATMOSPHERE_RESULT = None,
         VERSION_QUERY = False,
         VERSION_RESULT = None,
+        EARTH_ORIENTATION = None,
+        SPACE_WEATHER = None,
+        JB2008_INDICES = None,
     ):
         self.INIT = INIT  # type: Optional[PRWInit.PRWInitT]
         self.BATCH_REQUEST = BATCH_REQUEST  # type: Optional[PRWBatchRequest.PRWBatchRequestT]
@@ -408,6 +465,9 @@ class PRWT(object):
         self.ATMOSPHERE_RESULT = ATMOSPHERE_RESULT  # type: Optional[PRWAtmosphereResult.PRWAtmosphereResultT]
         self.VERSION_QUERY = VERSION_QUERY  # type: bool
         self.VERSION_RESULT = VERSION_RESULT  # type: Optional[PRWVersionResult.PRWVersionResultT]
+        self.EARTH_ORIENTATION = EARTH_ORIENTATION  # type: Optional[PRWEarthOrientation.PRWEarthOrientationT]
+        self.SPACE_WEATHER = SPACE_WEATHER  # type: Optional[PRWSpaceWeatherTable.PRWSpaceWeatherTableT]
+        self.JB2008_INDICES = JB2008_INDICES  # type: Optional[PRWJB2008IndicesTable.PRWJB2008IndicesTableT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -465,6 +525,12 @@ class PRWT(object):
         self.VERSION_QUERY = PRW.VERSION_QUERY()
         if PRW.VERSION_RESULT() is not None:
             self.VERSION_RESULT = PRWVersionResult.PRWVersionResultT.InitFromObj(PRW.VERSION_RESULT())
+        if PRW.EARTH_ORIENTATION() is not None:
+            self.EARTH_ORIENTATION = PRWEarthOrientation.PRWEarthOrientationT.InitFromObj(PRW.EARTH_ORIENTATION())
+        if PRW.SPACE_WEATHER() is not None:
+            self.SPACE_WEATHER = PRWSpaceWeatherTable.PRWSpaceWeatherTableT.InitFromObj(PRW.SPACE_WEATHER())
+        if PRW.JB2008_INDICES() is not None:
+            self.JB2008_INDICES = PRWJB2008IndicesTable.PRWJB2008IndicesTableT.InitFromObj(PRW.JB2008_INDICES())
 
     # PRWT
     def Pack(self, builder):
@@ -502,6 +568,12 @@ class PRWT(object):
             ATMOSPHERE_RESULT = self.ATMOSPHERE_RESULT.Pack(builder)
         if self.VERSION_RESULT is not None:
             VERSION_RESULT = self.VERSION_RESULT.Pack(builder)
+        if self.EARTH_ORIENTATION is not None:
+            EARTH_ORIENTATION = self.EARTH_ORIENTATION.Pack(builder)
+        if self.SPACE_WEATHER is not None:
+            SPACE_WEATHER = self.SPACE_WEATHER.Pack(builder)
+        if self.JB2008_INDICES is not None:
+            JB2008_INDICES = self.JB2008_INDICES.Pack(builder)
         PRWStart(builder)
         if self.INIT is not None:
             PRWAddINIT(builder, INIT)
@@ -538,5 +610,11 @@ class PRWT(object):
         PRWAddVERSION_QUERY(builder, self.VERSION_QUERY)
         if self.VERSION_RESULT is not None:
             PRWAddVERSION_RESULT(builder, VERSION_RESULT)
+        if self.EARTH_ORIENTATION is not None:
+            PRWAddEARTH_ORIENTATION(builder, EARTH_ORIENTATION)
+        if self.SPACE_WEATHER is not None:
+            PRWAddSPACE_WEATHER(builder, SPACE_WEATHER)
+        if self.JB2008_INDICES is not None:
+            PRWAddJB2008_INDICES(builder, JB2008_INDICES)
         PRW = PRWEnd(builder)
         return PRW

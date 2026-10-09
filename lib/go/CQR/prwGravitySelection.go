@@ -13,6 +13,8 @@ const (
 	prwGravitySelectionJ2_TO_J4            prwGravitySelection = 3
 	prwGravitySelectionSPHERICAL_HARMONICS prwGravitySelection = 4
 	prwGravitySelectionEGM2008             prwGravitySelection = 5
+	/// NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.
+	prwGravitySelectionEGM96               prwGravitySelection = 6
 )
 
 var EnumNamesprwGravitySelection = map[prwGravitySelection]string{
@@ -22,6 +24,7 @@ var EnumNamesprwGravitySelection = map[prwGravitySelection]string{
 	prwGravitySelectionJ2_TO_J4:            "J2_TO_J4",
 	prwGravitySelectionSPHERICAL_HARMONICS: "SPHERICAL_HARMONICS",
 	prwGravitySelectionEGM2008:             "EGM2008",
+	prwGravitySelectionEGM96:               "EGM96",
 }
 
 var EnumValuesprwGravitySelection = map[string]prwGravitySelection{
@@ -31,6 +34,7 @@ var EnumValuesprwGravitySelection = map[string]prwGravitySelection{
 	"J2_TO_J4":            prwGravitySelectionJ2_TO_J4,
 	"SPHERICAL_HARMONICS": prwGravitySelectionSPHERICAL_HARMONICS,
 	"EGM2008":             prwGravitySelectionEGM2008,
+	"EGM96":               prwGravitySelectionEGM96,
 }
 
 func (v prwGravitySelection) String() string {

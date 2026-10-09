@@ -335,8 +335,98 @@ func (rcv *PRWResidentState) ProcessNoise(obj *PRWProcessNoise) *PRWProcessNoise
 
 /// Process noise for COVARIANCE: on input, what propagation adds; on
 /// output, what the propagated COVARIANCE includes. Absent means none.
+/// Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch
+/// (the BDOT of a VCM).
+func (rcv *PRWResidentState) DRAG_AREA_OVER_MASS_RATE_M2_KG_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *PRWResidentState) DragAreaOverMassRateM2KgS() float64 {
+	return rcv.DRAG_AREA_OVER_MASS_RATE_M2_KG_S()
+}
+
+/// Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch
+/// (the BDOT of a VCM).
+func (rcv *PRWResidentState) MutateDRAG_AREA_OVER_MASS_RATE_M2_KG_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *PRWResidentState) MutateDragAreaOverMassRateM2KgS(n float64) bool {
+	return rcv.MutateDRAG_AREA_OVER_MASS_RATE_M2_KG_S(n)
+}
+
+/// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+func (rcv *PRWResidentState) HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PRWResidentState) HasDragAreaOverMassRateM2KgS() bool {
+	return rcv.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S()
+}
+
+/// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+func (rcv *PRWResidentState) MutateHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(n bool) bool {
+	return rcv._tab.MutateBoolSlot(36, n)
+}
+
+func (rcv *PRWResidentState) MutateHasDragAreaOverMassRateM2KgS(n bool) bool {
+	return rcv.MutateHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(n)
+}
+
+/// Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+func (rcv *PRWResidentState) IN_TRACK_ACCELERATION_M_S2() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *PRWResidentState) InTrackAccelerationMS2() float64 {
+	return rcv.IN_TRACK_ACCELERATION_M_S2()
+}
+
+/// Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+func (rcv *PRWResidentState) MutateIN_TRACK_ACCELERATION_M_S2(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *PRWResidentState) MutateInTrackAccelerationMS2(n float64) bool {
+	return rcv.MutateIN_TRACK_ACCELERATION_M_S2(n)
+}
+
+/// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+func (rcv *PRWResidentState) HAS_IN_TRACK_ACCELERATION_M_S2() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PRWResidentState) HasInTrackAccelerationMS2() bool {
+	return rcv.HAS_IN_TRACK_ACCELERATION_M_S2()
+}
+
+/// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+func (rcv *PRWResidentState) MutateHAS_IN_TRACK_ACCELERATION_M_S2(n bool) bool {
+	return rcv._tab.MutateBoolSlot(40, n)
+}
+
+func (rcv *PRWResidentState) MutateHasInTrackAccelerationMS2(n bool) bool {
+	return rcv.MutateHAS_IN_TRACK_ACCELERATION_M_S2(n)
+}
+
 func PRWResidentStateStart(builder *flatbuffers.Builder) {
-	builder.StartObject(15)
+	builder.StartObject(19)
 }
 func PRWResidentStateAddINSTANCE(builder *flatbuffers.Builder, INSTANCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(INSTANCE), 0)
@@ -427,6 +517,30 @@ func PRWResidentStateAddPROCESS_NOISE(builder *flatbuffers.Builder, PROCESS_NOIS
 }
 func PRWResidentStateAddProcessNoise(builder *flatbuffers.Builder, PROCESS_NOISE flatbuffers.UOffsetT) {
 	PRWResidentStateAddPROCESS_NOISE(builder, PROCESS_NOISE)
+}
+func PRWResidentStateAddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder *flatbuffers.Builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S float64) {
+	builder.PrependFloat64Slot(15, DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0)
+}
+func PRWResidentStateAddDragAreaOverMassRateM2KgS(builder *flatbuffers.Builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S float64) {
+	PRWResidentStateAddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+}
+func PRWResidentStateAddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder *flatbuffers.Builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S bool) {
+	builder.PrependBoolSlot(16, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false)
+}
+func PRWResidentStateAddHasDragAreaOverMassRateM2KgS(builder *flatbuffers.Builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S bool) {
+	PRWResidentStateAddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+}
+func PRWResidentStateAddIN_TRACK_ACCELERATION_M_S2(builder *flatbuffers.Builder, IN_TRACK_ACCELERATION_M_S2 float64) {
+	builder.PrependFloat64Slot(17, IN_TRACK_ACCELERATION_M_S2, 0.0)
+}
+func PRWResidentStateAddInTrackAccelerationMS2(builder *flatbuffers.Builder, IN_TRACK_ACCELERATION_M_S2 float64) {
+	PRWResidentStateAddIN_TRACK_ACCELERATION_M_S2(builder, IN_TRACK_ACCELERATION_M_S2)
+}
+func PRWResidentStateAddHAS_IN_TRACK_ACCELERATION_M_S2(builder *flatbuffers.Builder, HAS_IN_TRACK_ACCELERATION_M_S2 bool) {
+	builder.PrependBoolSlot(18, HAS_IN_TRACK_ACCELERATION_M_S2, false)
+}
+func PRWResidentStateAddHasInTrackAccelerationMS2(builder *flatbuffers.Builder, HAS_IN_TRACK_ACCELERATION_M_S2 bool) {
+	PRWResidentStateAddHAS_IN_TRACK_ACCELERATION_M_S2(builder, HAS_IN_TRACK_ACCELERATION_M_S2)
 }
 func PRWResidentStateEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

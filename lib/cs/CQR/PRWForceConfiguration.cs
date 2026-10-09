@@ -59,6 +59,26 @@ public struct PRWForceConfiguration : IFlatbufferObject
   public ArraySegment<byte>? GetEPHEMERIS_SOURCEBytes() { return __p.__vector_as_arraysegment(46); }
 #endif
   public byte[] GetEPHEMERIS_SOURCEArray() { return __p.__vector_as_array<byte>(46); }
+  /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+  /// orientation (PRW.EARTH_ORIENTATION) to apply them.
+  public prwSolidTideModel SOLID_TIDES { get { int o = __p.__offset(48); return o != 0 ? (prwSolidTideModel)__p.bb.Get(o + __p.bb_pos) : prwSolidTideModel.NONE; } }
+  public prwRelativityTerms RELATIVITY { get { int o = __p.__offset(50); return o != 0 ? (prwRelativityTerms)__p.bb.Get(o + __p.bb_pos) : prwRelativityTerms.NONE; } }
+  /// Constant acceleration along the in-track axis, m/s2: T of RTN,
+  /// N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+  public double IN_TRACK_ACCELERATION_M_S2 { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+  public bool HAS_IN_TRACK_ACCELERATION_M_S2 { get { int o = __p.__offset(54); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+  /// BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+  public double DRAG_AREA_OVER_MASS_RATE_M2_KG_S { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+  public bool HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S { get { int o = __p.__offset(58); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Highest degree of the tesseral and sectorial terms (order >= 1); the
+  /// zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+  /// MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+  public ushort MAXIMUM_TESSERAL_DEGREE { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+  public bool HAS_MAXIMUM_TESSERAL_DEGREE { get { int o = __p.__offset(62); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<PRWForceConfiguration> CreatePRWForceConfiguration(FlatBufferBuilder builder,
       prwGravitySelection GRAVITY_CHOICE = prwGravitySelection.INFER_FLAGS,
@@ -82,8 +102,18 @@ public struct PRWForceConfiguration : IFlatbufferObject
       double DRAG_COEFFICIENT = 2.2,
       prwAtmosphereFamily ATMOSPHERE_MODEL = prwAtmosphereFamily.NRLMSISE00,
       Offset<PRWSpaceWeather> WEATHEROffset = default(Offset<PRWSpaceWeather>),
-      StringOffset EPHEMERIS_SOURCEOffset = default(StringOffset)) {
-    builder.StartTable(22);
+      StringOffset EPHEMERIS_SOURCEOffset = default(StringOffset),
+      prwSolidTideModel SOLID_TIDES = prwSolidTideModel.NONE,
+      prwRelativityTerms RELATIVITY = prwRelativityTerms.NONE,
+      double IN_TRACK_ACCELERATION_M_S2 = 0.0,
+      bool HAS_IN_TRACK_ACCELERATION_M_S2 = false,
+      double DRAG_AREA_OVER_MASS_RATE_M2_KG_S = 0.0,
+      bool HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = false,
+      ushort MAXIMUM_TESSERAL_DEGREE = 0,
+      bool HAS_MAXIMUM_TESSERAL_DEGREE = false) {
+    builder.StartTable(30);
+    PRWForceConfiguration.AddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    PRWForceConfiguration.AddIN_TRACK_ACCELERATION_M_S2(builder, IN_TRACK_ACCELERATION_M_S2);
     PRWForceConfiguration.AddDRAG_COEFFICIENT(builder, DRAG_COEFFICIENT);
     PRWForceConfiguration.AddREFLECTIVITY_COEFFICIENT(builder, REFLECTIVITY_COEFFICIENT);
     PRWForceConfiguration.AddAREA_M2(builder, AREA_M2);
@@ -92,8 +122,14 @@ public struct PRWForceConfiguration : IFlatbufferObject
     PRWForceConfiguration.AddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCEOffset);
     PRWForceConfiguration.AddWEATHER(builder, WEATHEROffset);
     PRWForceConfiguration.AddTHIRD_BODY_IDS(builder, THIRD_BODY_IDSOffset);
+    PRWForceConfiguration.AddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE);
     PRWForceConfiguration.AddMAXIMUM_ORDER(builder, MAXIMUM_ORDER);
     PRWForceConfiguration.AddMAXIMUM_DEGREE(builder, MAXIMUM_DEGREE);
+    PRWForceConfiguration.AddHAS_MAXIMUM_TESSERAL_DEGREE(builder, HAS_MAXIMUM_TESSERAL_DEGREE);
+    PRWForceConfiguration.AddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    PRWForceConfiguration.AddHAS_IN_TRACK_ACCELERATION_M_S2(builder, HAS_IN_TRACK_ACCELERATION_M_S2);
+    PRWForceConfiguration.AddRELATIVITY(builder, RELATIVITY);
+    PRWForceConfiguration.AddSOLID_TIDES(builder, SOLID_TIDES);
     PRWForceConfiguration.AddATMOSPHERE_MODEL(builder, ATMOSPHERE_MODEL);
     PRWForceConfiguration.AddENABLE_DRAG(builder, ENABLE_DRAG);
     PRWForceConfiguration.AddENABLE_SRP(builder, ENABLE_SRP);
@@ -109,7 +145,7 @@ public struct PRWForceConfiguration : IFlatbufferObject
     return PRWForceConfiguration.EndPRWForceConfiguration(builder);
   }
 
-  public static void StartPRWForceConfiguration(FlatBufferBuilder builder) { builder.StartTable(22); }
+  public static void StartPRWForceConfiguration(FlatBufferBuilder builder) { builder.StartTable(30); }
   public static void AddGRAVITY_CHOICE(FlatBufferBuilder builder, prwGravitySelection GRAVITY_CHOICE) { builder.AddByte(0, (byte)GRAVITY_CHOICE, 0); }
   public static void AddENABLE_POINT_MASS(FlatBufferBuilder builder, bool ENABLE_POINT_MASS) { builder.AddBool(1, ENABLE_POINT_MASS, true); }
   public static void AddGRAVITATIONAL_PARAMETER(FlatBufferBuilder builder, double GRAVITATIONAL_PARAMETER) { builder.AddDouble(2, GRAVITATIONAL_PARAMETER, 0.0); }
@@ -137,6 +173,14 @@ public struct PRWForceConfiguration : IFlatbufferObject
   public static void AddATMOSPHERE_MODEL(FlatBufferBuilder builder, prwAtmosphereFamily ATMOSPHERE_MODEL) { builder.AddByte(19, (byte)ATMOSPHERE_MODEL, 1); }
   public static void AddWEATHER(FlatBufferBuilder builder, Offset<PRWSpaceWeather> WEATHEROffset) { builder.AddOffset(20, WEATHEROffset.Value, 0); }
   public static void AddEPHEMERIS_SOURCE(FlatBufferBuilder builder, StringOffset EPHEMERIS_SOURCEOffset) { builder.AddOffset(21, EPHEMERIS_SOURCEOffset.Value, 0); }
+  public static void AddSOLID_TIDES(FlatBufferBuilder builder, prwSolidTideModel SOLID_TIDES) { builder.AddByte(22, (byte)SOLID_TIDES, 0); }
+  public static void AddRELATIVITY(FlatBufferBuilder builder, prwRelativityTerms RELATIVITY) { builder.AddByte(23, (byte)RELATIVITY, 0); }
+  public static void AddIN_TRACK_ACCELERATION_M_S2(FlatBufferBuilder builder, double IN_TRACK_ACCELERATION_M_S2) { builder.AddDouble(24, IN_TRACK_ACCELERATION_M_S2, 0.0); }
+  public static void AddHAS_IN_TRACK_ACCELERATION_M_S2(FlatBufferBuilder builder, bool HAS_IN_TRACK_ACCELERATION_M_S2) { builder.AddBool(25, HAS_IN_TRACK_ACCELERATION_M_S2, false); }
+  public static void AddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(FlatBufferBuilder builder, double DRAG_AREA_OVER_MASS_RATE_M2_KG_S) { builder.AddDouble(26, DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0); }
+  public static void AddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(FlatBufferBuilder builder, bool HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S) { builder.AddBool(27, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false); }
+  public static void AddMAXIMUM_TESSERAL_DEGREE(FlatBufferBuilder builder, ushort MAXIMUM_TESSERAL_DEGREE) { builder.AddUshort(28, MAXIMUM_TESSERAL_DEGREE, 0); }
+  public static void AddHAS_MAXIMUM_TESSERAL_DEGREE(FlatBufferBuilder builder, bool HAS_MAXIMUM_TESSERAL_DEGREE) { builder.AddBool(29, HAS_MAXIMUM_TESSERAL_DEGREE, false); }
   public static Offset<PRWForceConfiguration> EndPRWForceConfiguration(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 46);  // EPHEMERIS_SOURCE
@@ -171,6 +215,14 @@ public struct PRWForceConfiguration : IFlatbufferObject
     _o.ATMOSPHERE_MODEL = this.ATMOSPHERE_MODEL;
     _o.WEATHER = this.WEATHER.HasValue ? this.WEATHER.Value.UnPack() : null;
     _o.EPHEMERIS_SOURCE = this.EPHEMERIS_SOURCE;
+    _o.SOLID_TIDES = this.SOLID_TIDES;
+    _o.RELATIVITY = this.RELATIVITY;
+    _o.IN_TRACK_ACCELERATION_M_S2 = this.IN_TRACK_ACCELERATION_M_S2;
+    _o.HAS_IN_TRACK_ACCELERATION_M_S2 = this.HAS_IN_TRACK_ACCELERATION_M_S2;
+    _o.DRAG_AREA_OVER_MASS_RATE_M2_KG_S = this.DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+    _o.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+    _o.MAXIMUM_TESSERAL_DEGREE = this.MAXIMUM_TESSERAL_DEGREE;
+    _o.HAS_MAXIMUM_TESSERAL_DEGREE = this.HAS_MAXIMUM_TESSERAL_DEGREE;
   }
   public static Offset<PRWForceConfiguration> Pack(FlatBufferBuilder builder, PRWForceConfigurationT _o) {
     if (_o == null) return default(Offset<PRWForceConfiguration>);
@@ -204,7 +256,15 @@ public struct PRWForceConfiguration : IFlatbufferObject
       _o.DRAG_COEFFICIENT,
       _o.ATMOSPHERE_MODEL,
       _WEATHER,
-      _EPHEMERIS_SOURCE);
+      _EPHEMERIS_SOURCE,
+      _o.SOLID_TIDES,
+      _o.RELATIVITY,
+      _o.IN_TRACK_ACCELERATION_M_S2,
+      _o.HAS_IN_TRACK_ACCELERATION_M_S2,
+      _o.DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+      _o.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+      _o.MAXIMUM_TESSERAL_DEGREE,
+      _o.HAS_MAXIMUM_TESSERAL_DEGREE);
   }
 }
 
@@ -232,6 +292,14 @@ public class PRWForceConfigurationT
   public prwAtmosphereFamily ATMOSPHERE_MODEL { get; set; }
   public PRWSpaceWeatherT WEATHER { get; set; }
   public string EPHEMERIS_SOURCE { get; set; }
+  public prwSolidTideModel SOLID_TIDES { get; set; }
+  public prwRelativityTerms RELATIVITY { get; set; }
+  public double IN_TRACK_ACCELERATION_M_S2 { get; set; }
+  public bool HAS_IN_TRACK_ACCELERATION_M_S2 { get; set; }
+  public double DRAG_AREA_OVER_MASS_RATE_M2_KG_S { get; set; }
+  public bool HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S { get; set; }
+  public ushort MAXIMUM_TESSERAL_DEGREE { get; set; }
+  public bool HAS_MAXIMUM_TESSERAL_DEGREE { get; set; }
 
   public PRWForceConfigurationT() {
     this.GRAVITY_CHOICE = prwGravitySelection.INFER_FLAGS;
@@ -256,6 +324,14 @@ public class PRWForceConfigurationT
     this.ATMOSPHERE_MODEL = prwAtmosphereFamily.NRLMSISE00;
     this.WEATHER = null;
     this.EPHEMERIS_SOURCE = null;
+    this.SOLID_TIDES = prwSolidTideModel.NONE;
+    this.RELATIVITY = prwRelativityTerms.NONE;
+    this.IN_TRACK_ACCELERATION_M_S2 = 0.0;
+    this.HAS_IN_TRACK_ACCELERATION_M_S2 = false;
+    this.DRAG_AREA_OVER_MASS_RATE_M2_KG_S = 0.0;
+    this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = false;
+    this.MAXIMUM_TESSERAL_DEGREE = 0;
+    this.HAS_MAXIMUM_TESSERAL_DEGREE = false;
   }
 }
 
@@ -287,6 +363,14 @@ static public class PRWForceConfigurationVerify
       && verifier.VerifyField(tablePos, 42 /*ATMOSPHERE_MODEL*/, 1 /*prwAtmosphereFamily*/, 1, false)
       && verifier.VerifyTable(tablePos, 44 /*WEATHER*/, PRWSpaceWeatherVerify.Verify, false)
       && verifier.VerifyString(tablePos, 46 /*EPHEMERIS_SOURCE*/, true)
+      && verifier.VerifyField(tablePos, 48 /*SOLID_TIDES*/, 1 /*prwSolidTideModel*/, 1, false)
+      && verifier.VerifyField(tablePos, 50 /*RELATIVITY*/, 1 /*prwRelativityTerms*/, 1, false)
+      && verifier.VerifyField(tablePos, 52 /*IN_TRACK_ACCELERATION_M_S2*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*HAS_IN_TRACK_ACCELERATION_M_S2*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 56 /*DRAG_AREA_OVER_MASS_RATE_M2_KG_S*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 60 /*MAXIMUM_TESSERAL_DEGREE*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 62 /*HAS_MAXIMUM_TESSERAL_DEGREE*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

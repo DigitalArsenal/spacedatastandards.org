@@ -9,3 +9,5 @@ class prwGravitySelection(object):
     J2_TO_J4 = 3
     SPHERICAL_HARMONICS = 4
     EGM2008 = 5
+    # NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.
+    EGM96 = 6

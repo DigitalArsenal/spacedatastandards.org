@@ -502,8 +502,192 @@ func (rcv *PRWForceConfiguration) EphemerisSource() []byte {
 }
 
 /// Actual configured source name, e.g. an analytic series or a planetary SPK kernel.
+/// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+/// orientation (PRW.EARTH_ORIENTATION) to apply them.
+func (rcv *PRWForceConfiguration) SOLID_TIDES() prwSolidTideModel {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return prwSolidTideModel(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PRWForceConfiguration) SolidTides() prwSolidTideModel {
+	return rcv.SOLID_TIDES()
+}
+
+/// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+/// orientation (PRW.EARTH_ORIENTATION) to apply them.
+func (rcv *PRWForceConfiguration) MutateSOLID_TIDES(n prwSolidTideModel) bool {
+	return rcv._tab.MutateByteSlot(48, byte(n))
+}
+
+func (rcv *PRWForceConfiguration) MutateSolidTides(n prwSolidTideModel) bool {
+	return rcv.MutateSOLID_TIDES(n)
+}
+
+func (rcv *PRWForceConfiguration) RELATIVITY() prwRelativityTerms {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return prwRelativityTerms(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PRWForceConfiguration) Relativity() prwRelativityTerms {
+	return rcv.RELATIVITY()
+}
+
+func (rcv *PRWForceConfiguration) MutateRELATIVITY(n prwRelativityTerms) bool {
+	return rcv._tab.MutateByteSlot(50, byte(n))
+}
+
+func (rcv *PRWForceConfiguration) MutateRelativity(n prwRelativityTerms) bool {
+	return rcv.MutateRELATIVITY(n)
+}
+
+/// Constant acceleration along the in-track axis, m/s2: T of RTN,
+/// N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+func (rcv *PRWForceConfiguration) IN_TRACK_ACCELERATION_M_S2() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *PRWForceConfiguration) InTrackAccelerationMS2() float64 {
+	return rcv.IN_TRACK_ACCELERATION_M_S2()
+}
+
+/// Constant acceleration along the in-track axis, m/s2: T of RTN,
+/// N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+func (rcv *PRWForceConfiguration) MutateIN_TRACK_ACCELERATION_M_S2(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *PRWForceConfiguration) MutateInTrackAccelerationMS2(n float64) bool {
+	return rcv.MutateIN_TRACK_ACCELERATION_M_S2(n)
+}
+
+/// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+func (rcv *PRWForceConfiguration) HAS_IN_TRACK_ACCELERATION_M_S2() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PRWForceConfiguration) HasInTrackAccelerationMS2() bool {
+	return rcv.HAS_IN_TRACK_ACCELERATION_M_S2()
+}
+
+/// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+func (rcv *PRWForceConfiguration) MutateHAS_IN_TRACK_ACCELERATION_M_S2(n bool) bool {
+	return rcv._tab.MutateBoolSlot(54, n)
+}
+
+func (rcv *PRWForceConfiguration) MutateHasInTrackAccelerationMS2(n bool) bool {
+	return rcv.MutateHAS_IN_TRACK_ACCELERATION_M_S2(n)
+}
+
+/// Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+/// BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+func (rcv *PRWForceConfiguration) DRAG_AREA_OVER_MASS_RATE_M2_KG_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *PRWForceConfiguration) DragAreaOverMassRateM2KgS() float64 {
+	return rcv.DRAG_AREA_OVER_MASS_RATE_M2_KG_S()
+}
+
+/// Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+/// BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+func (rcv *PRWForceConfiguration) MutateDRAG_AREA_OVER_MASS_RATE_M2_KG_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *PRWForceConfiguration) MutateDragAreaOverMassRateM2KgS(n float64) bool {
+	return rcv.MutateDRAG_AREA_OVER_MASS_RATE_M2_KG_S(n)
+}
+
+/// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+func (rcv *PRWForceConfiguration) HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PRWForceConfiguration) HasDragAreaOverMassRateM2KgS() bool {
+	return rcv.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S()
+}
+
+/// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+func (rcv *PRWForceConfiguration) MutateHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(n bool) bool {
+	return rcv._tab.MutateBoolSlot(58, n)
+}
+
+func (rcv *PRWForceConfiguration) MutateHasDragAreaOverMassRateM2KgS(n bool) bool {
+	return rcv.MutateHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(n)
+}
+
+/// Highest degree of the tesseral and sectorial terms (order >= 1); the
+/// zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+/// MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+func (rcv *PRWForceConfiguration) MAXIMUM_TESSERAL_DEGREE() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PRWForceConfiguration) MaximumTesseralDegree() uint16 {
+	return rcv.MAXIMUM_TESSERAL_DEGREE()
+}
+
+/// Highest degree of the tesseral and sectorial terms (order >= 1); the
+/// zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+/// MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+func (rcv *PRWForceConfiguration) MutateMAXIMUM_TESSERAL_DEGREE(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(60, n)
+}
+
+func (rcv *PRWForceConfiguration) MutateMaximumTesseralDegree(n uint16) bool {
+	return rcv.MutateMAXIMUM_TESSERAL_DEGREE(n)
+}
+
+/// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+func (rcv *PRWForceConfiguration) HAS_MAXIMUM_TESSERAL_DEGREE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PRWForceConfiguration) HasMaximumTesseralDegree() bool {
+	return rcv.HAS_MAXIMUM_TESSERAL_DEGREE()
+}
+
+/// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+func (rcv *PRWForceConfiguration) MutateHAS_MAXIMUM_TESSERAL_DEGREE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(62, n)
+}
+
+func (rcv *PRWForceConfiguration) MutateHasMaximumTesseralDegree(n bool) bool {
+	return rcv.MutateHAS_MAXIMUM_TESSERAL_DEGREE(n)
+}
+
 func PRWForceConfigurationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(22)
+	builder.StartObject(30)
 }
 func PRWForceConfigurationAddGRAVITY_CHOICE(builder *flatbuffers.Builder, GRAVITY_CHOICE prwGravitySelection) {
 	builder.PrependByteSlot(0, byte(GRAVITY_CHOICE), 0)
@@ -642,6 +826,54 @@ func PRWForceConfigurationAddEPHEMERIS_SOURCE(builder *flatbuffers.Builder, EPHE
 }
 func PRWForceConfigurationAddEphemerisSource(builder *flatbuffers.Builder, EPHEMERIS_SOURCE flatbuffers.UOffsetT) {
 	PRWForceConfigurationAddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCE)
+}
+func PRWForceConfigurationAddSOLID_TIDES(builder *flatbuffers.Builder, SOLID_TIDES prwSolidTideModel) {
+	builder.PrependByteSlot(22, byte(SOLID_TIDES), 0)
+}
+func PRWForceConfigurationAddSolidTides(builder *flatbuffers.Builder, SOLID_TIDES prwSolidTideModel) {
+	PRWForceConfigurationAddSOLID_TIDES(builder, SOLID_TIDES)
+}
+func PRWForceConfigurationAddRELATIVITY(builder *flatbuffers.Builder, RELATIVITY prwRelativityTerms) {
+	builder.PrependByteSlot(23, byte(RELATIVITY), 0)
+}
+func PRWForceConfigurationAddRelativity(builder *flatbuffers.Builder, RELATIVITY prwRelativityTerms) {
+	PRWForceConfigurationAddRELATIVITY(builder, RELATIVITY)
+}
+func PRWForceConfigurationAddIN_TRACK_ACCELERATION_M_S2(builder *flatbuffers.Builder, IN_TRACK_ACCELERATION_M_S2 float64) {
+	builder.PrependFloat64Slot(24, IN_TRACK_ACCELERATION_M_S2, 0.0)
+}
+func PRWForceConfigurationAddInTrackAccelerationMS2(builder *flatbuffers.Builder, IN_TRACK_ACCELERATION_M_S2 float64) {
+	PRWForceConfigurationAddIN_TRACK_ACCELERATION_M_S2(builder, IN_TRACK_ACCELERATION_M_S2)
+}
+func PRWForceConfigurationAddHAS_IN_TRACK_ACCELERATION_M_S2(builder *flatbuffers.Builder, HAS_IN_TRACK_ACCELERATION_M_S2 bool) {
+	builder.PrependBoolSlot(25, HAS_IN_TRACK_ACCELERATION_M_S2, false)
+}
+func PRWForceConfigurationAddHasInTrackAccelerationMS2(builder *flatbuffers.Builder, HAS_IN_TRACK_ACCELERATION_M_S2 bool) {
+	PRWForceConfigurationAddHAS_IN_TRACK_ACCELERATION_M_S2(builder, HAS_IN_TRACK_ACCELERATION_M_S2)
+}
+func PRWForceConfigurationAddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder *flatbuffers.Builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S float64) {
+	builder.PrependFloat64Slot(26, DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0)
+}
+func PRWForceConfigurationAddDragAreaOverMassRateM2KgS(builder *flatbuffers.Builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S float64) {
+	PRWForceConfigurationAddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+}
+func PRWForceConfigurationAddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder *flatbuffers.Builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S bool) {
+	builder.PrependBoolSlot(27, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false)
+}
+func PRWForceConfigurationAddHasDragAreaOverMassRateM2KgS(builder *flatbuffers.Builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S bool) {
+	PRWForceConfigurationAddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+}
+func PRWForceConfigurationAddMAXIMUM_TESSERAL_DEGREE(builder *flatbuffers.Builder, MAXIMUM_TESSERAL_DEGREE uint16) {
+	builder.PrependUint16Slot(28, MAXIMUM_TESSERAL_DEGREE, 0)
+}
+func PRWForceConfigurationAddMaximumTesseralDegree(builder *flatbuffers.Builder, MAXIMUM_TESSERAL_DEGREE uint16) {
+	PRWForceConfigurationAddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE)
+}
+func PRWForceConfigurationAddHAS_MAXIMUM_TESSERAL_DEGREE(builder *flatbuffers.Builder, HAS_MAXIMUM_TESSERAL_DEGREE bool) {
+	builder.PrependBoolSlot(29, HAS_MAXIMUM_TESSERAL_DEGREE, false)
+}
+func PRWForceConfigurationAddHasMaximumTesseralDegree(builder *flatbuffers.Builder, HAS_MAXIMUM_TESSERAL_DEGREE bool) {
+	PRWForceConfigurationAddHAS_MAXIMUM_TESSERAL_DEGREE(builder, HAS_MAXIMUM_TESSERAL_DEGREE)
 }
 func PRWForceConfigurationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

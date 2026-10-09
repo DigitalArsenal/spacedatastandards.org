@@ -76,6 +76,40 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
   public String EPHEMERIS_SOURCE() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EPHEMERIS_SOURCEAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
   public ByteBuffer EPHEMERIS_SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+   * orientation (PRW.EARTH_ORIENTATION) to apply them.
+   */
+  public int SOLID_TIDES() { int o = __offset(48); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  public int RELATIVITY() { int o = __offset(50); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Constant acceleration along the in-track axis, m/s2: T of RTN,
+   * N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+   */
+  public double IN_TRACK_ACCELERATION_M_S2() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+   */
+  public boolean HAS_IN_TRACK_ACCELERATION_M_S2() { int o = __offset(54); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+   * BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+   */
+  public double DRAG_AREA_OVER_MASS_RATE_M2_KG_S() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+   */
+  public boolean HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S() { int o = __offset(58); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Highest degree of the tesseral and sectorial terms (order >= 1); the
+   * zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+   * MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+   */
+  public int MAXIMUM_TESSERAL_DEGREE() { int o = __offset(60); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+   */
+  public boolean HAS_MAXIMUM_TESSERAL_DEGREE() { int o = __offset(62); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createPRWForceConfiguration(FlatBufferBuilder builder,
       int GRAVITY_CHOICE,
@@ -99,8 +133,18 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
       double DRAG_COEFFICIENT,
       int ATMOSPHERE_MODEL,
       int WEATHEROffset,
-      int EPHEMERIS_SOURCEOffset) {
-    builder.startTable(22);
+      int EPHEMERIS_SOURCEOffset,
+      int SOLID_TIDES,
+      int RELATIVITY,
+      double IN_TRACK_ACCELERATION_M_S2,
+      boolean HAS_IN_TRACK_ACCELERATION_M_S2,
+      double DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+      boolean HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+      int MAXIMUM_TESSERAL_DEGREE,
+      boolean HAS_MAXIMUM_TESSERAL_DEGREE) {
+    builder.startTable(30);
+    PRWForceConfiguration.addDragAreaOverMassRateM2KgS(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    PRWForceConfiguration.addInTrackAccelerationMS2(builder, IN_TRACK_ACCELERATION_M_S2);
     PRWForceConfiguration.addDragCoefficient(builder, DRAG_COEFFICIENT);
     PRWForceConfiguration.addReflectivityCoefficient(builder, REFLECTIVITY_COEFFICIENT);
     PRWForceConfiguration.addAreaM2(builder, AREA_M2);
@@ -109,8 +153,14 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
     PRWForceConfiguration.addEphemerisSource(builder, EPHEMERIS_SOURCEOffset);
     PRWForceConfiguration.addWeather(builder, WEATHEROffset);
     PRWForceConfiguration.addThirdBodyIds(builder, THIRD_BODY_IDSOffset);
+    PRWForceConfiguration.addMaximumTesseralDegree(builder, MAXIMUM_TESSERAL_DEGREE);
     PRWForceConfiguration.addMaximumOrder(builder, MAXIMUM_ORDER);
     PRWForceConfiguration.addMaximumDegree(builder, MAXIMUM_DEGREE);
+    PRWForceConfiguration.addHasMaximumTesseralDegree(builder, HAS_MAXIMUM_TESSERAL_DEGREE);
+    PRWForceConfiguration.addHasDragAreaOverMassRateM2KgS(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    PRWForceConfiguration.addHasInTrackAccelerationMS2(builder, HAS_IN_TRACK_ACCELERATION_M_S2);
+    PRWForceConfiguration.addRelativity(builder, RELATIVITY);
+    PRWForceConfiguration.addSolidTides(builder, SOLID_TIDES);
     PRWForceConfiguration.addAtmosphereModel(builder, ATMOSPHERE_MODEL);
     PRWForceConfiguration.addEnableDrag(builder, ENABLE_DRAG);
     PRWForceConfiguration.addEnableSrp(builder, ENABLE_SRP);
@@ -126,7 +176,7 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
     return PRWForceConfiguration.endPRWForceConfiguration(builder);
   }
 
-  public static void startPRWForceConfiguration(FlatBufferBuilder builder) { builder.startTable(22); }
+  public static void startPRWForceConfiguration(FlatBufferBuilder builder) { builder.startTable(30); }
   public static void addGravityChoice(FlatBufferBuilder builder, int GRAVITY_CHOICE) { builder.addByte(0, (byte) GRAVITY_CHOICE, (byte) 0); }
   public static void addEnablePointMass(FlatBufferBuilder builder, boolean ENABLE_POINT_MASS) { builder.addBoolean(1, ENABLE_POINT_MASS, true); }
   public static void addGravitationalParameter(FlatBufferBuilder builder, double GRAVITATIONAL_PARAMETER) { builder.addDouble(2, GRAVITATIONAL_PARAMETER, 0.0); }
@@ -151,6 +201,14 @@ public final class PRWForceConfiguration extends com.google.flatbuffers.Table {
   public static void addAtmosphereModel(FlatBufferBuilder builder, int ATMOSPHERE_MODEL) { builder.addByte(19, (byte) ATMOSPHERE_MODEL, (byte) 1); }
   public static void addWeather(FlatBufferBuilder builder, int WEATHEROffset) { builder.addOffset(20, WEATHEROffset, 0); }
   public static void addEphemerisSource(FlatBufferBuilder builder, int EPHEMERIS_SOURCEOffset) { builder.addOffset(21, EPHEMERIS_SOURCEOffset, 0); }
+  public static void addSolidTides(FlatBufferBuilder builder, int SOLID_TIDES) { builder.addByte(22, (byte) SOLID_TIDES, (byte) 0); }
+  public static void addRelativity(FlatBufferBuilder builder, int RELATIVITY) { builder.addByte(23, (byte) RELATIVITY, (byte) 0); }
+  public static void addInTrackAccelerationMS2(FlatBufferBuilder builder, double IN_TRACK_ACCELERATION_M_S2) { builder.addDouble(24, IN_TRACK_ACCELERATION_M_S2, 0.0); }
+  public static void addHasInTrackAccelerationMS2(FlatBufferBuilder builder, boolean HAS_IN_TRACK_ACCELERATION_M_S2) { builder.addBoolean(25, HAS_IN_TRACK_ACCELERATION_M_S2, false); }
+  public static void addDragAreaOverMassRateM2KgS(FlatBufferBuilder builder, double DRAG_AREA_OVER_MASS_RATE_M2_KG_S) { builder.addDouble(26, DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0); }
+  public static void addHasDragAreaOverMassRateM2KgS(FlatBufferBuilder builder, boolean HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S) { builder.addBoolean(27, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false); }
+  public static void addMaximumTesseralDegree(FlatBufferBuilder builder, int MAXIMUM_TESSERAL_DEGREE) { builder.addShort(28, (short) MAXIMUM_TESSERAL_DEGREE, (short) 0); }
+  public static void addHasMaximumTesseralDegree(FlatBufferBuilder builder, boolean HAS_MAXIMUM_TESSERAL_DEGREE) { builder.addBoolean(29, HAS_MAXIMUM_TESSERAL_DEGREE, false); }
   public static int endPRWForceConfiguration(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 46);  // EPHEMERIS_SOURCE

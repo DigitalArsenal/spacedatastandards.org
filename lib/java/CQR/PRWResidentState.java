@@ -69,6 +69,23 @@ public final class PRWResidentState extends com.google.flatbuffers.Table {
    */
   public PRWProcessNoise PROCESS_NOISE() { return PROCESS_NOISE(new PRWProcessNoise()); }
   public PRWProcessNoise PROCESS_NOISE(PRWProcessNoise obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch
+   * (the BDOT of a VCM).
+   */
+  public double DRAG_AREA_OVER_MASS_RATE_M2_KG_S() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+   */
+  public boolean HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S() { int o = __offset(36); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+   */
+  public double IN_TRACK_ACCELERATION_M_S2() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+   */
+  public boolean HAS_IN_TRACK_ACCELERATION_M_S2() { int o = __offset(40); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createPRWResidentState(FlatBufferBuilder builder,
       int INSTANCEOffset,
@@ -85,8 +102,14 @@ public final class PRWResidentState extends com.google.flatbuffers.Table {
       double SRP_AREA_OVER_MASS_M2_KG,
       boolean HAS_SRP_AREA_OVER_MASS_M2_KG,
       boolean VALID,
-      int PROCESS_NOISEOffset) {
-    builder.startTable(15);
+      int PROCESS_NOISEOffset,
+      double DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+      boolean HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+      double IN_TRACK_ACCELERATION_M_S2,
+      boolean HAS_IN_TRACK_ACCELERATION_M_S2) {
+    builder.startTable(19);
+    PRWResidentState.addInTrackAccelerationMS2(builder, IN_TRACK_ACCELERATION_M_S2);
+    PRWResidentState.addDragAreaOverMassRateM2KgS(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
     PRWResidentState.addSrpAreaOverMassM2Kg(builder, SRP_AREA_OVER_MASS_M2_KG);
     PRWResidentState.addDragAreaOverMassM2Kg(builder, DRAG_AREA_OVER_MASS_M2_KG);
     PRWResidentState.addMassKg(builder, MASS_KG);
@@ -98,6 +121,8 @@ public final class PRWResidentState extends com.google.flatbuffers.Table {
     PRWResidentState.addCatalogNumber(builder, CATALOG_NUMBER);
     PRWResidentState.addEntityHandle(builder, ENTITY_HANDLE);
     PRWResidentState.addInstance(builder, INSTANCEOffset);
+    PRWResidentState.addHasInTrackAccelerationMS2(builder, HAS_IN_TRACK_ACCELERATION_M_S2);
+    PRWResidentState.addHasDragAreaOverMassRateM2KgS(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
     PRWResidentState.addValid(builder, VALID);
     PRWResidentState.addHasSrpAreaOverMassM2Kg(builder, HAS_SRP_AREA_OVER_MASS_M2_KG);
     PRWResidentState.addHasDragAreaOverMassM2Kg(builder, HAS_DRAG_AREA_OVER_MASS_M2_KG);
@@ -105,7 +130,7 @@ public final class PRWResidentState extends com.google.flatbuffers.Table {
     return PRWResidentState.endPRWResidentState(builder);
   }
 
-  public static void startPRWResidentState(FlatBufferBuilder builder) { builder.startTable(15); }
+  public static void startPRWResidentState(FlatBufferBuilder builder) { builder.startTable(19); }
   public static void addInstance(FlatBufferBuilder builder, int INSTANCEOffset) { builder.addOffset(0, INSTANCEOffset, 0); }
   public static void addEntityHandle(FlatBufferBuilder builder, long ENTITY_HANDLE) { builder.addInt(1, (int) ENTITY_HANDLE, (int) 0L); }
   public static void addCatalogNumber(FlatBufferBuilder builder, long CATALOG_NUMBER) { builder.addInt(2, (int) CATALOG_NUMBER, (int) 0L); }
@@ -121,6 +146,10 @@ public final class PRWResidentState extends com.google.flatbuffers.Table {
   public static void addHasSrpAreaOverMassM2Kg(FlatBufferBuilder builder, boolean HAS_SRP_AREA_OVER_MASS_M2_KG) { builder.addBoolean(12, HAS_SRP_AREA_OVER_MASS_M2_KG, false); }
   public static void addValid(FlatBufferBuilder builder, boolean VALID) { builder.addBoolean(13, VALID, true); }
   public static void addProcessNoise(FlatBufferBuilder builder, int PROCESS_NOISEOffset) { builder.addOffset(14, PROCESS_NOISEOffset, 0); }
+  public static void addDragAreaOverMassRateM2KgS(FlatBufferBuilder builder, double DRAG_AREA_OVER_MASS_RATE_M2_KG_S) { builder.addDouble(15, DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0); }
+  public static void addHasDragAreaOverMassRateM2KgS(FlatBufferBuilder builder, boolean HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S) { builder.addBoolean(16, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false); }
+  public static void addInTrackAccelerationMS2(FlatBufferBuilder builder, double IN_TRACK_ACCELERATION_M_S2) { builder.addDouble(17, IN_TRACK_ACCELERATION_M_S2, 0.0); }
+  public static void addHasInTrackAccelerationMS2(FlatBufferBuilder builder, boolean HAS_IN_TRACK_ACCELERATION_M_S2) { builder.addBoolean(18, HAS_IN_TRACK_ACCELERATION_M_S2, false); }
   public static int endPRWResidentState(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 12);  // STATE

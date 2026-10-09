@@ -36,6 +36,18 @@ public struct PRWExecutionRequest : IFlatbufferObject
   public int FINITE_BURNSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Process noise added to the propagated covariance. Absent means none.
   public PRWProcessNoise? PROCESS_NOISE { get { int o = __p.__offset(30); return o != 0 ? (PRWProcessNoise?)(new PRWProcessNoise()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Model parameters appended, in this order and without repeats, to
+  /// INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+  /// covariance carries their uncertainty and correlation (a VCM's 7x7 to
+  /// 10x10). Each must be active in FORCES. Empty means the state alone.
+  public prwDynamicParameter DYNAMIC_PARAMETERS(int j) { int o = __p.__offset(32); return o != 0 ? (prwDynamicParameter)__p.bb.Get(__p.__vector(o) + j * 1) : (prwDynamicParameter)0; }
+  public int DYNAMIC_PARAMETERSLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<prwDynamicParameter> GetDYNAMIC_PARAMETERSBytes() { return __p.__vector_as_span<prwDynamicParameter>(32, 1); }
+#else
+  public ArraySegment<byte>? GetDYNAMIC_PARAMETERSBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public prwDynamicParameter[] GetDYNAMIC_PARAMETERSArray() { int o = __p.__offset(32); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); prwDynamicParameter[] a = new prwDynamicParameter[l]; for (int i = 0; i < l; i++) { a[i] = (prwDynamicParameter)__p.bb.Get(p + i * 1); } return a; }
 
   public static Offset<PRWExecutionRequest> CreatePRWExecutionRequest(FlatBufferBuilder builder,
       Offset<PRWResidentState> INITIALOffset = default(Offset<PRWResidentState>),
@@ -51,8 +63,10 @@ public struct PRWExecutionRequest : IFlatbufferObject
       VectorOffset IMPULSESOffset = default(VectorOffset),
       bool INCLUDE_MASS_DYNAMICS = false,
       VectorOffset FINITE_BURNSOffset = default(VectorOffset),
-      Offset<PRWProcessNoise> PROCESS_NOISEOffset = default(Offset<PRWProcessNoise>)) {
-    builder.StartTable(14);
+      Offset<PRWProcessNoise> PROCESS_NOISEOffset = default(Offset<PRWProcessNoise>),
+      VectorOffset DYNAMIC_PARAMETERSOffset = default(VectorOffset)) {
+    builder.StartTable(15);
+    PRWExecutionRequest.AddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERSOffset);
     PRWExecutionRequest.AddPROCESS_NOISE(builder, PROCESS_NOISEOffset);
     PRWExecutionRequest.AddFINITE_BURNS(builder, FINITE_BURNSOffset);
     PRWExecutionRequest.AddIMPULSES(builder, IMPULSESOffset);
@@ -70,7 +84,7 @@ public struct PRWExecutionRequest : IFlatbufferObject
     return PRWExecutionRequest.EndPRWExecutionRequest(builder);
   }
 
-  public static void StartPRWExecutionRequest(FlatBufferBuilder builder) { builder.StartTable(14); }
+  public static void StartPRWExecutionRequest(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddINITIAL(FlatBufferBuilder builder, Offset<PRWResidentState> INITIALOffset) { builder.AddOffset(0, INITIALOffset.Value, 0); }
   public static void AddTARGET_EPOCH(FlatBufferBuilder builder, Offset<TIMInstant> TARGET_EPOCHOffset) { builder.AddOffset(1, TARGET_EPOCHOffset.Value, 0); }
   public static void AddINTEGRATOR(FlatBufferBuilder builder, Offset<PRWIntegratorSettings> INTEGRATOROffset) { builder.AddOffset(2, INTEGRATOROffset.Value, 0); }
@@ -100,6 +114,12 @@ public struct PRWExecutionRequest : IFlatbufferObject
   public static VectorOffset CreateFINITE_BURNSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PRWFiniteBurn>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartFINITE_BURNSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddPROCESS_NOISE(FlatBufferBuilder builder, Offset<PRWProcessNoise> PROCESS_NOISEOffset) { builder.AddOffset(13, PROCESS_NOISEOffset.Value, 0); }
+  public static void AddDYNAMIC_PARAMETERS(FlatBufferBuilder builder, VectorOffset DYNAMIC_PARAMETERSOffset) { builder.AddOffset(14, DYNAMIC_PARAMETERSOffset.Value, 0); }
+  public static VectorOffset CreateDYNAMIC_PARAMETERSVector(FlatBufferBuilder builder, prwDynamicParameter[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte((byte)data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, prwDynamicParameter[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<prwDynamicParameter> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<prwDynamicParameter>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDYNAMIC_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<PRWExecutionRequest> EndPRWExecutionRequest(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // INITIAL
@@ -131,6 +151,8 @@ public struct PRWExecutionRequest : IFlatbufferObject
     _o.FINITE_BURNS = new List<PRWFiniteBurnT>();
     for (var _j = 0; _j < this.FINITE_BURNSLength; ++_j) {_o.FINITE_BURNS.Add(this.FINITE_BURNS(_j).HasValue ? this.FINITE_BURNS(_j).Value.UnPack() : null);}
     _o.PROCESS_NOISE = this.PROCESS_NOISE.HasValue ? this.PROCESS_NOISE.Value.UnPack() : null;
+    _o.DYNAMIC_PARAMETERS = new List<prwDynamicParameter>();
+    for (var _j = 0; _j < this.DYNAMIC_PARAMETERSLength; ++_j) {_o.DYNAMIC_PARAMETERS.Add(this.DYNAMIC_PARAMETERS(_j));}
   }
   public static Offset<PRWExecutionRequest> Pack(FlatBufferBuilder builder, PRWExecutionRequestT _o) {
     if (_o == null) return default(Offset<PRWExecutionRequest>);
@@ -159,6 +181,11 @@ public struct PRWExecutionRequest : IFlatbufferObject
       _FINITE_BURNS = CreateFINITE_BURNSVector(builder, __FINITE_BURNS);
     }
     var _PROCESS_NOISE = _o.PROCESS_NOISE == null ? default(Offset<PRWProcessNoise>) : PRWProcessNoise.Pack(builder, _o.PROCESS_NOISE);
+    var _DYNAMIC_PARAMETERS = default(VectorOffset);
+    if (_o.DYNAMIC_PARAMETERS != null) {
+      var __DYNAMIC_PARAMETERS = _o.DYNAMIC_PARAMETERS.ToArray();
+      _DYNAMIC_PARAMETERS = CreateDYNAMIC_PARAMETERSVector(builder, __DYNAMIC_PARAMETERS);
+    }
     return CreatePRWExecutionRequest(
       builder,
       _INITIAL,
@@ -174,7 +201,8 @@ public struct PRWExecutionRequest : IFlatbufferObject
       _IMPULSES,
       _o.INCLUDE_MASS_DYNAMICS,
       _FINITE_BURNS,
-      _PROCESS_NOISE);
+      _PROCESS_NOISE,
+      _DYNAMIC_PARAMETERS);
   }
 }
 
@@ -194,6 +222,7 @@ public class PRWExecutionRequestT
   public bool INCLUDE_MASS_DYNAMICS { get; set; }
   public List<PRWFiniteBurnT> FINITE_BURNS { get; set; }
   public PRWProcessNoiseT PROCESS_NOISE { get; set; }
+  public List<prwDynamicParameter> DYNAMIC_PARAMETERS { get; set; }
 
   public PRWExecutionRequestT() {
     this.INITIAL = null;
@@ -210,6 +239,7 @@ public class PRWExecutionRequestT
     this.INCLUDE_MASS_DYNAMICS = false;
     this.FINITE_BURNS = null;
     this.PROCESS_NOISE = null;
+    this.DYNAMIC_PARAMETERS = null;
   }
 }
 
@@ -233,6 +263,7 @@ static public class PRWExecutionRequestVerify
       && verifier.VerifyField(tablePos, 26 /*INCLUDE_MASS_DYNAMICS*/, 1 /*bool*/, 1, false)
       && verifier.VerifyVectorOfTables(tablePos, 28 /*FINITE_BURNS*/, PRWFiniteBurnVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 30 /*PROCESS_NOISE*/, PRWProcessNoiseVerify.Verify, false)
+      && verifier.VerifyVectorOfData(tablePos, 32 /*DYNAMIC_PARAMETERS*/, 1 /*prwDynamicParameter*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

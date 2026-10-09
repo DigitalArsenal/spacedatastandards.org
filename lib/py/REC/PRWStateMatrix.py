@@ -6,8 +6,10 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], SI state units.
-# Covariance entries have row*column units; STM entries row/column units.
+# Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution
+# request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).
+# Covariance entries have row*column units; STM entries row/column units;
+# an STM's parameter rows are the identity (parameters are constant).
 class PRWStateMatrix(object):
     __slots__ = ['_tab']
 

@@ -8951,6 +8951,61 @@
         }
       }
     },
+    "FluxQualifier": {
+      "type": "string",
+      "enum": [
+        "OBSERVED",
+        "BURST_ADJUSTED",
+        "INTERPOLATED_EXTRAPOLATED",
+        "NO_OBSERVATION",
+        "PROVIDER_INTERPOLATED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OBSERVED": {
+          "value": 0
+        },
+        "BURST_ADJUSTED": {
+          "value": 1
+        },
+        "INTERPOLATED_EXTRAPOLATED": {
+          "value": 2
+        },
+        "NO_OBSERVATION": {
+          "value": 3
+        },
+        "PROVIDER_INTERPOLATED": {
+          "value": 4,
+          "description": "Interpolated by the upstream data provider rather than the issuing observatory. Wire value 4 is unchanged from prior releases."
+        }
+      }
+    },
+    "F107DataType": {
+      "type": "string",
+      "enum": [
+        "OBS",
+        "INT",
+        "PRD",
+        "PRM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OBS": {
+          "value": 0
+        },
+        "INT": {
+          "value": 1
+        },
+        "PRD": {
+          "value": 2
+        },
+        "PRM": {
+          "value": 3
+        }
+      }
+    },
     "propagatorStateFlags": {
       "type": "string",
       "enum": [
@@ -9079,7 +9134,8 @@
         "J2_ONLY",
         "J2_TO_J4",
         "SPHERICAL_HARMONICS",
-        "EGM2008"
+        "EGM2008",
+        "EGM96"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -9089,6 +9145,10 @@
         },
         "SPHERICAL_HARMONICS": {
           "value": 4
+        },
+        "EGM96": {
+          "value": 6,
+          "description": "NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free."
         }
       }
     },
@@ -9099,7 +9159,9 @@
         "NRLMSISE00",
         "EXPONENTIAL",
         "USSA1976",
-        "HARRIS_PRIESTER"
+        "HARRIS_PRIESTER",
+        "JACCHIA_ROBERTS",
+        "JB2008"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -9109,6 +9171,14 @@
         },
         "USSA1976": {
           "value": 3
+        },
+        "JACCHIA_ROBERTS": {
+          "value": 5,
+          "description": "Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form evaluation of Jacchia's static diffusion model with the constants NASA GTDS and GMAT use (inflection temperature, mean molecular mass and 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers: F10.7 of the previous day, that day's 81-day centred average, and the three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held constant). A VCM's JACCHIA_70 is carried here."
+        },
+        "JB2008": {
+          "value": 6,
+          "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from PRW.JB2008_INDICES."
         }
       }
     },
@@ -9247,6 +9317,55 @@
         },
         "ANOMALOUS_OXYGEN": {
           "value": 8
+        }
+      }
+    },
+    "prwSolidTideModel": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "IERS_2010"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        }
+      }
+    },
+    "prwRelativityTerms": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "SCHWARZSCHILD",
+        "IERS_2010"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        }
+      }
+    },
+    "prwDynamicParameter": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "DRAG_AREA_OVER_MASS",
+        "DRAG_AREA_OVER_MASS_RATE",
+        "SRP_AREA_OVER_MASS",
+        "IN_TRACK_ACCELERATION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "SRP_AREA_OVER_MASS": {
+          "value": 3
         }
       }
     },
@@ -22232,61 +22351,6 @@
         },
         "TC": {
           "value": 1
-        }
-      }
-    },
-    "FluxQualifier": {
-      "type": "string",
-      "enum": [
-        "OBSERVED",
-        "BURST_ADJUSTED",
-        "INTERPOLATED_EXTRAPOLATED",
-        "NO_OBSERVATION",
-        "PROVIDER_INTERPOLATED"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "OBSERVED": {
-          "value": 0
-        },
-        "BURST_ADJUSTED": {
-          "value": 1
-        },
-        "INTERPOLATED_EXTRAPOLATED": {
-          "value": 2
-        },
-        "NO_OBSERVATION": {
-          "value": 3
-        },
-        "PROVIDER_INTERPOLATED": {
-          "value": 4,
-          "description": "Interpolated by the upstream data provider rather than the issuing observatory. Wire value 4 is unchanged from prior releases."
-        }
-      }
-    },
-    "F107DataType": {
-      "type": "string",
-      "enum": [
-        "OBS",
-        "INT",
-        "PRD",
-        "PRM"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "OBS": {
-          "value": 0
-        },
-        "INT": {
-          "value": 1
-        },
-        "PRD": {
-          "value": 2
-        },
-        "PRM": {
-          "value": 3
         }
       }
     },
@@ -50560,6 +50624,240 @@
       },
       "additionalProperties": false
     },
+    "SPW": {
+      "type": "object",
+      "description": "Space Weather Data Record",
+      "properties": {
+        "DATE": {
+          "type": "string",
+          "description": "Date in ISO 8601 format",
+          "x-flatbuffer-type": "string"
+        },
+        "BSRN": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Bartels Solar Rotation Number",
+          "x-flatbuffer-type": "int"
+        },
+        "ND": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Day within Bartels cycle (1-27)",
+          "x-flatbuffer-type": "int"
+        },
+        "KP1": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP2": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP3": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP4": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP5": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP6": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP7": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP8": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10",
+          "x-flatbuffer-type": "int"
+        },
+        "KP_SUM": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Sum of the 8 Kp indices for the day",
+          "x-flatbuffer-type": "int"
+        },
+        "AP1": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 0000-0300 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP2": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 0300-0600 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP3": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 0600-0900 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP4": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 0900-1200 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP5": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 1200-1500 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP6": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 1500-1800 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP7": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 1800-2100 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP8": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Planetary Equivalent Amplitude (Ap) for 2100-0000 UT",
+          "x-flatbuffer-type": "int"
+        },
+        "AP_AVG": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Arithmetic average of the 8 Ap indices for the day",
+          "x-flatbuffer-type": "int"
+        },
+        "CP": {
+          "type": "number",
+          "description": "Planetary Daily Character Figure (0.0 to 2.5)",
+          "x-flatbuffer-type": "float"
+        },
+        "C9": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "C9 index (0-9)",
+          "x-flatbuffer-type": "int"
+        },
+        "ISN": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "International Sunspot Number",
+          "x-flatbuffer-type": "int"
+        },
+        "F107_OBS": {
+          "type": "number",
+          "description": "Observed 10.7cm Solar Radio Flux",
+          "x-flatbuffer-type": "float"
+        },
+        "F107_ADJ": {
+          "type": "number",
+          "description": "Adjusted 10.7cm Solar Radio Flux (to 1 AU)",
+          "x-flatbuffer-type": "float"
+        },
+        "F107_DATA_TYPE": {
+          "$ref": "#/definitions/F107DataType",
+          "description": "F10.7 Data Type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OBS": {
+              "value": 0
+            },
+            "INT": {
+              "value": 1
+            },
+            "PRD": {
+              "value": 2
+            },
+            "PRM": {
+              "value": 3
+            }
+          }
+        },
+        "F107_OBS_CENTER81": {
+          "type": "number",
+          "description": "81-day centered average of observed F10.7",
+          "x-flatbuffer-type": "float"
+        },
+        "F107_OBS_LAST81": {
+          "type": "number",
+          "description": "81-day trailing average of observed F10.7",
+          "x-flatbuffer-type": "float"
+        },
+        "F107_ADJ_CENTER81": {
+          "type": "number",
+          "description": "81-day centered average of adjusted F10.7",
+          "x-flatbuffer-type": "float"
+        },
+        "F107_ADJ_LAST81": {
+          "type": "number",
+          "description": "81-day trailing average of adjusted F10.7",
+          "x-flatbuffer-type": "float"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SPWCOLLECTION": {
+      "type": "object",
+      "properties": {
+        "RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SPW"
+          },
+          "x-flatbuffer-type": "[SPW]"
+        }
+      },
+      "additionalProperties": false
+    },
     "PRWInit": {
       "type": "object",
       "description": "Propagator initialization request \u2014 assigns TLE / OMM / Keplerian /\npolynomial inputs to entity handles.\n\nThe actual per-entity source record is carried inline as raw bytes\ntagged with SOURCE_KIND and, where useful, a SDS file_identifier.\nCallers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the\nbytes verbatim; the propagator uses SOURCE_KIND to decide how to\nconsume them.",
@@ -50982,6 +51280,10 @@
             },
             "SPHERICAL_HARMONICS": {
               "value": 4
+            },
+            "EGM96": {
+              "value": 6,
+              "description": "NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free."
             }
           },
           "x-flatbuffer-default": "INFER_FLAGS"
@@ -51096,6 +51398,14 @@
             },
             "USSA1976": {
               "value": 3
+            },
+            "JACCHIA_ROBERTS": {
+              "value": 5,
+              "description": "Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form evaluation of Jacchia's static diffusion model with the constants NASA GTDS and GMAT use (inflection temperature, mean molecular mass and 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers: F10.7 of the previous day, that day's 81-day centred average, and the three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held constant). A VCM's JACCHIA_70 is carried here."
+            },
+            "JB2008": {
+              "value": 6,
+              "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from PRW.JB2008_INDICES."
             }
           },
           "x-flatbuffer-default": "NRLMSISE00"
@@ -51109,6 +51419,64 @@
           "description": "Actual configured source name, e.g. an analytic series or a planetary SPK kernel.",
           "x-flatbuffer-type": "string",
           "x-flatbuffer-required": true
+        },
+        "SOLID_TIDES": {
+          "$ref": "#/definitions/prwSolidTideModel",
+          "description": "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (PRW.EARTH_ORIENTATION) to apply them.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "RELATIVITY": {
+          "$ref": "#/definitions/prwRelativityTerms",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "IN_TRACK_ACCELERATION_M_S2": {
+          "type": "number",
+          "description": "Constant acceleration along the in-track axis, m/s2: T of RTN,\nN cross rhat with N = unit(r cross v) (the \"in-track thrust\" of a VCM).",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_IN_TRACK_ACCELERATION_M_S2": {
+          "type": "boolean",
+          "description": "True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "DRAG_AREA_OVER_MASS_RATE_M2_KG_S": {
+          "type": "number",
+          "description": "Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the\nBDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S": {
+          "type": "boolean",
+          "description": "True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "MAXIMUM_TESSERAL_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Highest degree of the tesseral and sectorial terms (order >= 1); the\nzonals run to MAXIMUM_DEGREE. A VCM's \"mmZ,nnT\" is MAXIMUM_DEGREE mm,\nMAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "HAS_MAXIMUM_TESSERAL_DEGREE": {
+          "type": "boolean",
+          "description": "True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
         }
       },
       "required": [
@@ -51118,7 +51486,7 @@
     },
     "PRWStateMatrix": {
       "type": "object",
-      "description": "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], SI state units.\nCovariance entries have row*column units; STM entries row/column units.",
+      "description": "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
       "properties": {
         "DIMENSION": {
           "type": "integer",
@@ -51261,6 +51629,28 @@
           "$ref": "#/definitions/PRWProcessNoise",
           "description": "Process noise for COVARIANCE: on input, what propagation adds; on\noutput, what the propagated COVARIANCE includes. Absent means none.",
           "x-flatbuffer-type": "PRWProcessNoise"
+        },
+        "DRAG_AREA_OVER_MASS_RATE_M2_KG_S": {
+          "type": "number",
+          "description": "Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch\n(the BDOT of a VCM).",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S": {
+          "type": "boolean",
+          "description": "True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "IN_TRACK_ACCELERATION_M_S2": {
+          "type": "number",
+          "description": "Constant in-track acceleration, m/s2, as PRWForceConfiguration's.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_IN_TRACK_ACCELERATION_M_S2": {
+          "type": "boolean",
+          "description": "True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
         }
       },
       "required": [
@@ -51518,6 +51908,14 @@
           "$ref": "#/definitions/PRWProcessNoise",
           "description": "Process noise added to the propagated covariance. Absent means none.",
           "x-flatbuffer-type": "PRWProcessNoise"
+        },
+        "DYNAMIC_PARAMETERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/prwDynamicParameter"
+          },
+          "description": "Model parameters appended, in this order and without repeats, to\nINITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a\ncovariance carries their uncertainty and correlation (a VCM's 7x7 to\n10x10). Each must be active in FORCES. Empty means the state alone.",
+          "x-flatbuffer-type": "[prwDynamicParameter]"
         }
       },
       "required": [
@@ -51694,6 +52092,14 @@
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "DYNAMIC_PARAMETERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/prwDynamicParameter"
+          },
+          "description": "The parameters the samples' STM and COVARIANCE carry after the state.",
+          "x-flatbuffer-type": "[prwDynamicParameter]"
         }
       },
       "required": [
@@ -51993,6 +52399,121 @@
       ],
       "additionalProperties": false
     },
+    "PRWEarthOrientation": {
+      "type": "object",
+      "description": "Earth orientation for a propagation: one instantaneous row, or daily rows\nof one series (same SERIES, IAU_CONVENTION and data-set provenance) with\nstrictly increasing MJD that cover the arc. A provider interpolates as\npublished by the series and does not extrapolate.",
+      "properties": {
+        "ROWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EOP"
+          },
+          "x-flatbuffer-type": "[EOP]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "ROWS"
+      ],
+      "additionalProperties": false
+    },
+    "PRWSpaceWeatherTable": {
+      "type": "object",
+      "description": "Daily space weather for a propagation, as published (`SPW`), with strictly\nincreasing DATE covering the arc plus what the atmosphere model reads\nbefore it (NRLMSISE-00 reads the previous day's F10.7). A provider derives\nits model inputs from these rows and reports which ones it reads.",
+      "properties": {
+        "ROWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SPW"
+          },
+          "x-flatbuffer-type": "[SPW]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "ROWS"
+      ],
+      "additionalProperties": false
+    },
+    "PRWJB2008Indices": {
+      "type": "object",
+      "description": "One UTC day of JB2008 drivers, as Space Environment Technologies publishes\nthem (SOLFSMY.TXT and DTCFILE.TXT): solar indices in SFU with their\n81-day centred averages, reported at 12 UT of DATE, and the hourly\nDst-derived exospheric temperature change. A provider applies the model's\nown lags (1 day for F10 and S10, 2 for M10, 5 for Y10) by reading earlier\nrows, and states how it interpolates between them.",
+      "properties": {
+        "DATE": {
+          "type": "string",
+          "description": "ISO 8601 calendar date (UTC) the row's values apply to.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "F10": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "F10_CENTRED_81": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "S10": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "S10_CENTRED_81": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M10": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "M10_CENTRED_81": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y10": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y10_CENTRED_81": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DTC_HOURLY_K": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Exospheric temperature change from Dst (K), hours 00 through 23 UTC.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "SOURCE_FLAGS": {
+          "type": "string",
+          "description": "Source flags as published (SOLFSMY Ssrc), e.g. \"4B\".",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "DATE"
+      ],
+      "additionalProperties": false
+    },
+    "PRWJB2008IndicesTable": {
+      "type": "object",
+      "description": "JB2008 drivers for a propagation: daily rows with strictly increasing\nDATE covering the arc plus the days the model's lags read before it.",
+      "properties": {
+        "ROWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PRWJB2008Indices"
+          },
+          "x-flatbuffer-type": "[PRWJB2008Indices]",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "ROWS"
+      ],
+      "additionalProperties": false
+    },
     "PRWEphemerisRequest": {
       "type": "object",
       "description": "Geometric SPK state query, TDB; NAIF IDs state origin and target explicitly.",
@@ -52068,6 +52589,14 @@
             },
             "USSA1976": {
               "value": 3
+            },
+            "JACCHIA_ROBERTS": {
+              "value": 5,
+              "description": "Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form evaluation of Jacchia's static diffusion model with the constants NASA GTDS and GMAT use (inflection temperature, mean molecular mass and 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers: F10.7 of the previous day, that day's 81-day centred average, and the three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held constant). A VCM's JACCHIA_70 is carried here."
+            },
+            "JB2008": {
+              "value": 6,
+              "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from PRW.JB2008_INDICES."
             }
           },
           "x-flatbuffer-default": "NRLMSISE00"
@@ -52166,6 +52695,14 @@
             },
             "USSA1976": {
               "value": 3
+            },
+            "JACCHIA_ROBERTS": {
+              "value": 5,
+              "description": "Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form evaluation of Jacchia's static diffusion model with the constants NASA GTDS and GMAT use (inflection temperature, mean molecular mass and 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers: F10.7 of the previous day, that day's 81-day centred average, and the three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held constant). A VCM's JACCHIA_70 is carried here."
+            },
+            "JB2008": {
+              "value": 6,
+              "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from PRW.JB2008_INDICES."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -52320,6 +52857,18 @@
         "VERSION_RESULT": {
           "$ref": "#/definitions/PRWVersionResult",
           "x-flatbuffer-type": "PRWVersionResult"
+        },
+        "EARTH_ORIENTATION": {
+          "$ref": "#/definitions/PRWEarthOrientation",
+          "x-flatbuffer-type": "PRWEarthOrientation"
+        },
+        "SPACE_WEATHER": {
+          "$ref": "#/definitions/PRWSpaceWeatherTable",
+          "x-flatbuffer-type": "PRWSpaceWeatherTable"
+        },
+        "JB2008_INDICES": {
+          "$ref": "#/definitions/PRWJB2008IndicesTable",
+          "x-flatbuffer-type": "PRWJB2008IndicesTable"
         }
       },
       "additionalProperties": false
@@ -106692,240 +107241,6 @@
           },
           "description": "Packet data zone",
           "x-flatbuffer-type": "[ubyte]"
-        }
-      },
-      "additionalProperties": false
-    },
-    "SPW": {
-      "type": "object",
-      "description": "Space Weather Data Record",
-      "properties": {
-        "DATE": {
-          "type": "string",
-          "description": "Date in ISO 8601 format",
-          "x-flatbuffer-type": "string"
-        },
-        "BSRN": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Bartels Solar Rotation Number",
-          "x-flatbuffer-type": "int"
-        },
-        "ND": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Day within Bartels cycle (1-27)",
-          "x-flatbuffer-type": "int"
-        },
-        "KP1": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10",
-          "x-flatbuffer-type": "int"
-        },
-        "KP2": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10",
-          "x-flatbuffer-type": "int"
-        },
-        "KP3": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10",
-          "x-flatbuffer-type": "int"
-        },
-        "KP4": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10",
-          "x-flatbuffer-type": "int"
-        },
-        "KP5": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10",
-          "x-flatbuffer-type": "int"
-        },
-        "KP6": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10",
-          "x-flatbuffer-type": "int"
-        },
-        "KP7": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10",
-          "x-flatbuffer-type": "int"
-        },
-        "KP8": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10",
-          "x-flatbuffer-type": "int"
-        },
-        "KP_SUM": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Sum of the 8 Kp indices for the day",
-          "x-flatbuffer-type": "int"
-        },
-        "AP1": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary Equivalent Amplitude (Ap) for 0000-0300 UT",
-          "x-flatbuffer-type": "int"
-        },
-        "AP2": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary Equivalent Amplitude (Ap) for 0300-0600 UT",
-          "x-flatbuffer-type": "int"
-        },
-        "AP3": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary Equivalent Amplitude (Ap) for 0600-0900 UT",
-          "x-flatbuffer-type": "int"
-        },
-        "AP4": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary Equivalent Amplitude (Ap) for 0900-1200 UT",
-          "x-flatbuffer-type": "int"
-        },
-        "AP5": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary Equivalent Amplitude (Ap) for 1200-1500 UT",
-          "x-flatbuffer-type": "int"
-        },
-        "AP6": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary Equivalent Amplitude (Ap) for 1500-1800 UT",
-          "x-flatbuffer-type": "int"
-        },
-        "AP7": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary Equivalent Amplitude (Ap) for 1800-2100 UT",
-          "x-flatbuffer-type": "int"
-        },
-        "AP8": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Planetary Equivalent Amplitude (Ap) for 2100-0000 UT",
-          "x-flatbuffer-type": "int"
-        },
-        "AP_AVG": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Arithmetic average of the 8 Ap indices for the day",
-          "x-flatbuffer-type": "int"
-        },
-        "CP": {
-          "type": "number",
-          "description": "Planetary Daily Character Figure (0.0 to 2.5)",
-          "x-flatbuffer-type": "float"
-        },
-        "C9": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "C9 index (0-9)",
-          "x-flatbuffer-type": "int"
-        },
-        "ISN": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "International Sunspot Number",
-          "x-flatbuffer-type": "int"
-        },
-        "F107_OBS": {
-          "type": "number",
-          "description": "Observed 10.7cm Solar Radio Flux",
-          "x-flatbuffer-type": "float"
-        },
-        "F107_ADJ": {
-          "type": "number",
-          "description": "Adjusted 10.7cm Solar Radio Flux (to 1 AU)",
-          "x-flatbuffer-type": "float"
-        },
-        "F107_DATA_TYPE": {
-          "$ref": "#/definitions/F107DataType",
-          "description": "F10.7 Data Type",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "OBS": {
-              "value": 0
-            },
-            "INT": {
-              "value": 1
-            },
-            "PRD": {
-              "value": 2
-            },
-            "PRM": {
-              "value": 3
-            }
-          }
-        },
-        "F107_OBS_CENTER81": {
-          "type": "number",
-          "description": "81-day centered average of observed F10.7",
-          "x-flatbuffer-type": "float"
-        },
-        "F107_OBS_LAST81": {
-          "type": "number",
-          "description": "81-day trailing average of observed F10.7",
-          "x-flatbuffer-type": "float"
-        },
-        "F107_ADJ_CENTER81": {
-          "type": "number",
-          "description": "81-day centered average of adjusted F10.7",
-          "x-flatbuffer-type": "float"
-        },
-        "F107_ADJ_LAST81": {
-          "type": "number",
-          "description": "81-day trailing average of adjusted F10.7",
-          "x-flatbuffer-type": "float"
-        }
-      },
-      "additionalProperties": false
-    },
-    "SPWCOLLECTION": {
-      "type": "object",
-      "properties": {
-        "RECORDS": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SPW"
-          },
-          "x-flatbuffer-type": "[SPW]"
         }
       },
       "additionalProperties": false

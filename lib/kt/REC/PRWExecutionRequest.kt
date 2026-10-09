@@ -157,6 +157,26 @@ class PRWExecutionRequest : Table() {
             null
         }
     }
+    /**
+     * Model parameters appended, in this order and without repeats, to
+     * INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+     * covariance carries their uncertainty and correlation (a VCM's 7x7 to
+     * 10x10). Each must be active in FORCES. Empty means the state alone.
+     */
+    fun dynamicParameters(j: Int) : UByte {
+        val o = __offset(32)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val dynamicParametersLength : Int
+        get() {
+            val o = __offset(32); return if (o != 0) __vector_len(o) else 0
+        }
+    val dynamicParametersAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun dynamicParametersInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPRWExecutionRequest(_bb: ByteBuffer): PRWExecutionRequest = getRootAsPRWExecutionRequest(_bb, PRWExecutionRequest())
@@ -164,8 +184,9 @@ class PRWExecutionRequest : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPRWExecutionRequest(builder: FlatBufferBuilder, initialOffset: Int, targetEpochOffset: Int, integratorOffset: Int, forcesOffset: Int, includeStm: Boolean, stmTechnique: UByte, densityTreatment: UByte, initialCovarianceOffset: Int, initialMassCovarianceOffset: Int, sampleEpochsOffset: Int, impulsesOffset: Int, includeMassDynamics: Boolean, finiteBurnsOffset: Int, processNoiseOffset: Int) : Int {
-            builder.startTable(14)
+        fun createPRWExecutionRequest(builder: FlatBufferBuilder, initialOffset: Int, targetEpochOffset: Int, integratorOffset: Int, forcesOffset: Int, includeStm: Boolean, stmTechnique: UByte, densityTreatment: UByte, initialCovarianceOffset: Int, initialMassCovarianceOffset: Int, sampleEpochsOffset: Int, impulsesOffset: Int, includeMassDynamics: Boolean, finiteBurnsOffset: Int, processNoiseOffset: Int, dynamicParametersOffset: Int) : Int {
+            builder.startTable(15)
+            addDYNAMICPARAMETERS(builder, dynamicParametersOffset)
             addPROCESSNOISE(builder, processNoiseOffset)
             addFINITEBURNS(builder, finiteBurnsOffset)
             addIMPULSES(builder, impulsesOffset)
@@ -182,7 +203,7 @@ class PRWExecutionRequest : Table() {
             addINCLUDESTM(builder, includeStm)
             return endPRWExecutionRequest(builder)
         }
-        fun startPRWExecutionRequest(builder: FlatBufferBuilder) = builder.startTable(14)
+        fun startPRWExecutionRequest(builder: FlatBufferBuilder) = builder.startTable(15)
         fun addINITIAL(builder: FlatBufferBuilder, initial: Int) = builder.addOffset(0, initial, 0)
         fun addTARGETEPOCH(builder: FlatBufferBuilder, targetEpoch: Int) = builder.addOffset(1, targetEpoch, 0)
         fun addINTEGRATOR(builder: FlatBufferBuilder, integrator: Int) = builder.addOffset(2, integrator, 0)
@@ -221,6 +242,16 @@ class PRWExecutionRequest : Table() {
         }
         fun startFiniteBurnsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addPROCESSNOISE(builder: FlatBufferBuilder, processNoise: Int) = builder.addOffset(13, processNoise, 0)
+        fun addDYNAMICPARAMETERS(builder: FlatBufferBuilder, dynamicParameters: Int) = builder.addOffset(14, dynamicParameters, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createDynamicParametersVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startDynamicParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun endPRWExecutionRequest(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

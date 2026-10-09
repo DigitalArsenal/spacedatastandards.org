@@ -177,6 +177,72 @@ class PRWForceConfiguration : Table() {
         }
     val ephemerisSourceAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
     fun ephemerisSourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
+    /**
+     * Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+     * orientation (PRW.EARTH_ORIENTATION) to apply them.
+     */
+    val solidTides : UByte
+        get() {
+            val o = __offset(48)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    val relativity : UByte
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Constant acceleration along the in-track axis, m/s2: T of RTN,
+     * N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+     */
+    val inTrackAccelerationMS2 : Double
+        get() {
+            val o = __offset(52)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+     */
+    val hasInTrackAccelerationMS2 : Boolean
+        get() {
+            val o = __offset(54)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+     * BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+     */
+    val dragAreaOverMassRateM2KgS : Double
+        get() {
+            val o = __offset(56)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+     */
+    val hasDragAreaOverMassRateM2KgS : Boolean
+        get() {
+            val o = __offset(58)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Highest degree of the tesseral and sectorial terms (order >= 1); the
+     * zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+     * MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+     */
+    val maximumTesseralDegree : UShort
+        get() {
+            val o = __offset(60)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+     */
+    val hasMaximumTesseralDegree : Boolean
+        get() {
+            val o = __offset(62)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPRWForceConfiguration(_bb: ByteBuffer): PRWForceConfiguration = getRootAsPRWForceConfiguration(_bb, PRWForceConfiguration())
@@ -184,8 +250,10 @@ class PRWForceConfiguration : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPRWForceConfiguration(builder: FlatBufferBuilder, gravityChoice: UByte, enablePointMass: Boolean, gravitationalParameter: Double, enableJ2: Boolean, enableJ3: Boolean, enableJ4: Boolean, enableHigherZonals: Boolean, maximumDegree: UShort, hasMaximumDegree: Boolean, maximumOrder: UShort, hasMaximumOrder: Boolean, enableThirdBody: Boolean, thirdBodyIdsOffset: Int, enableSrp: Boolean, enableDrag: Boolean, initialMassKg: Double, areaM2: Double, reflectivityCoefficient: Double, dragCoefficient: Double, atmosphereModel: UByte, weatherOffset: Int, ephemerisSourceOffset: Int) : Int {
-            builder.startTable(22)
+        fun createPRWForceConfiguration(builder: FlatBufferBuilder, gravityChoice: UByte, enablePointMass: Boolean, gravitationalParameter: Double, enableJ2: Boolean, enableJ3: Boolean, enableJ4: Boolean, enableHigherZonals: Boolean, maximumDegree: UShort, hasMaximumDegree: Boolean, maximumOrder: UShort, hasMaximumOrder: Boolean, enableThirdBody: Boolean, thirdBodyIdsOffset: Int, enableSrp: Boolean, enableDrag: Boolean, initialMassKg: Double, areaM2: Double, reflectivityCoefficient: Double, dragCoefficient: Double, atmosphereModel: UByte, weatherOffset: Int, ephemerisSourceOffset: Int, solidTides: UByte, relativity: UByte, inTrackAccelerationMS2: Double, hasInTrackAccelerationMS2: Boolean, dragAreaOverMassRateM2KgS: Double, hasDragAreaOverMassRateM2KgS: Boolean, maximumTesseralDegree: UShort, hasMaximumTesseralDegree: Boolean) : Int {
+            builder.startTable(30)
+            addDRAGAREAOVERMASSRATEM2KGS(builder, dragAreaOverMassRateM2KgS)
+            addINTRACKACCELERATIONMS2(builder, inTrackAccelerationMS2)
             addDRAGCOEFFICIENT(builder, dragCoefficient)
             addREFLECTIVITYCOEFFICIENT(builder, reflectivityCoefficient)
             addAREAM2(builder, areaM2)
@@ -194,8 +262,14 @@ class PRWForceConfiguration : Table() {
             addEPHEMERISSOURCE(builder, ephemerisSourceOffset)
             addWEATHER(builder, weatherOffset)
             addTHIRDBODYIDS(builder, thirdBodyIdsOffset)
+            addMAXIMUMTESSERALDEGREE(builder, maximumTesseralDegree)
             addMAXIMUMORDER(builder, maximumOrder)
             addMAXIMUMDEGREE(builder, maximumDegree)
+            addHASMAXIMUMTESSERALDEGREE(builder, hasMaximumTesseralDegree)
+            addHASDRAGAREAOVERMASSRATEM2KGS(builder, hasDragAreaOverMassRateM2KgS)
+            addHASINTRACKACCELERATIONMS2(builder, hasInTrackAccelerationMS2)
+            addRELATIVITY(builder, relativity)
+            addSOLIDTIDES(builder, solidTides)
             addATMOSPHEREMODEL(builder, atmosphereModel)
             addENABLEDRAG(builder, enableDrag)
             addENABLESRP(builder, enableSrp)
@@ -210,7 +284,7 @@ class PRWForceConfiguration : Table() {
             addGRAVITYCHOICE(builder, gravityChoice)
             return endPRWForceConfiguration(builder)
         }
-        fun startPRWForceConfiguration(builder: FlatBufferBuilder) = builder.startTable(22)
+        fun startPRWForceConfiguration(builder: FlatBufferBuilder) = builder.startTable(30)
         fun addGRAVITYCHOICE(builder: FlatBufferBuilder, gravityChoice: UByte) = builder.addByte(0, gravityChoice.toByte(), 0)
         fun addENABLEPOINTMASS(builder: FlatBufferBuilder, enablePointMass: Boolean) = builder.addBoolean(1, enablePointMass, true)
         fun addGRAVITATIONALPARAMETER(builder: FlatBufferBuilder, gravitationalParameter: Double) = builder.addDouble(2, gravitationalParameter, 0.0)
@@ -241,6 +315,14 @@ class PRWForceConfiguration : Table() {
         fun addATMOSPHEREMODEL(builder: FlatBufferBuilder, atmosphereModel: UByte) = builder.addByte(19, atmosphereModel.toByte(), 1)
         fun addWEATHER(builder: FlatBufferBuilder, weather: Int) = builder.addOffset(20, weather, 0)
         fun addEPHEMERISSOURCE(builder: FlatBufferBuilder, ephemerisSource: Int) = builder.addOffset(21, ephemerisSource, 0)
+        fun addSOLIDTIDES(builder: FlatBufferBuilder, solidTides: UByte) = builder.addByte(22, solidTides.toByte(), 0)
+        fun addRELATIVITY(builder: FlatBufferBuilder, relativity: UByte) = builder.addByte(23, relativity.toByte(), 0)
+        fun addINTRACKACCELERATIONMS2(builder: FlatBufferBuilder, inTrackAccelerationMS2: Double) = builder.addDouble(24, inTrackAccelerationMS2, 0.0)
+        fun addHASINTRACKACCELERATIONMS2(builder: FlatBufferBuilder, hasInTrackAccelerationMS2: Boolean) = builder.addBoolean(25, hasInTrackAccelerationMS2, false)
+        fun addDRAGAREAOVERMASSRATEM2KGS(builder: FlatBufferBuilder, dragAreaOverMassRateM2KgS: Double) = builder.addDouble(26, dragAreaOverMassRateM2KgS, 0.0)
+        fun addHASDRAGAREAOVERMASSRATEM2KGS(builder: FlatBufferBuilder, hasDragAreaOverMassRateM2KgS: Boolean) = builder.addBoolean(27, hasDragAreaOverMassRateM2KgS, false)
+        fun addMAXIMUMTESSERALDEGREE(builder: FlatBufferBuilder, maximumTesseralDegree: UShort) = builder.addShort(28, maximumTesseralDegree.toShort(), 0)
+        fun addHASMAXIMUMTESSERALDEGREE(builder: FlatBufferBuilder, hasMaximumTesseralDegree: Boolean) = builder.addBoolean(29, hasMaximumTesseralDegree, false)
         fun endPRWForceConfiguration(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 46)

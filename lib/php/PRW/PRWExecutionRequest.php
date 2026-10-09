@@ -185,22 +185,53 @@ class PRWExecutionRequest extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Model parameters appended, in this order and without repeats, to
+    /// INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+    /// covariance carries their uncertainty and correlation (a VCM's 7x7 to
+    /// 10x10). Each must be active in FORCES. Empty means the state alone.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getDYNAMIC_PARAMETERS($j)
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : \prwDynamicParameter::UNSPECIFIED;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDYNAMIC_PARAMETERSLength()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDYNAMIC_PARAMETERSBytes()
+    {
+        return $this->__vector_as_bytes(32);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRWExecutionRequest(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(15);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRWExecutionRequest
      */
-    public static function createPRWExecutionRequest(FlatBufferBuilder $builder, $INITIAL, $TARGET_EPOCH, $INTEGRATOR, $FORCES, $INCLUDE_STM, $STM_TECHNIQUE, $DENSITY_TREATMENT, $INITIAL_COVARIANCE, $INITIAL_MASS_COVARIANCE, $SAMPLE_EPOCHS, $IMPULSES, $INCLUDE_MASS_DYNAMICS, $FINITE_BURNS, $PROCESS_NOISE)
+    public static function createPRWExecutionRequest(FlatBufferBuilder $builder, $INITIAL, $TARGET_EPOCH, $INTEGRATOR, $FORCES, $INCLUDE_STM, $STM_TECHNIQUE, $DENSITY_TREATMENT, $INITIAL_COVARIANCE, $INITIAL_MASS_COVARIANCE, $SAMPLE_EPOCHS, $IMPULSES, $INCLUDE_MASS_DYNAMICS, $FINITE_BURNS, $PROCESS_NOISE, $DYNAMIC_PARAMETERS)
     {
-        $builder->startObject(14);
+        $builder->startObject(15);
         self::addINITIAL($builder, $INITIAL);
         self::addTARGET_EPOCH($builder, $TARGET_EPOCH);
         self::addINTEGRATOR($builder, $INTEGRATOR);
@@ -215,6 +246,7 @@ class PRWExecutionRequest extends Table
         self::addINCLUDE_MASS_DYNAMICS($builder, $INCLUDE_MASS_DYNAMICS);
         self::addFINITE_BURNS($builder, $FINITE_BURNS);
         self::addPROCESS_NOISE($builder, $PROCESS_NOISE);
+        self::addDYNAMIC_PARAMETERS($builder, $DYNAMIC_PARAMETERS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // INITIAL
         $builder->required($o, 6);  // TARGET_EPOCH
@@ -433,6 +465,40 @@ class PRWExecutionRequest extends Table
     public static function addPROCESS_NOISE(FlatBufferBuilder $builder, $PROCESS_NOISE)
     {
         $builder->addOffsetX(13, $PROCESS_NOISE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDYNAMIC_PARAMETERS(FlatBufferBuilder $builder, $DYNAMIC_PARAMETERS)
+    {
+        $builder->addOffsetX(14, $DYNAMIC_PARAMETERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDYNAMIC_PARAMETERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDYNAMIC_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

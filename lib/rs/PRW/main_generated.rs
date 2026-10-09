@@ -10,6 +10,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[allow(non_upper_case_globals)]
@@ -20,10 +22,10 @@ mod bitflags_propagator_state_flags {
         /// into a shared memory arena.
         ///
         /// Data interchange for the underlying content (state vectors, covariance,
-        /// maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris)
-        /// lives in SDS `OCM` + `OMM` + `PPE` + `RFM` + `ATM`. PRW is the runtime
-        /// wire that moves those across a JS ↔ WASM boundary, not a substitute for
-        /// any of them.
+        /// maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris,
+        /// Earth orientation, space weather) lives in SDS `OCM` + `OMM` + `PPE` +
+        /// `RFM` + `ATM` + `EOP` + `SPW`. PRW is the runtime wire that moves those
+        /// across a JS ↔ WASM boundary, not a substitute for any of them.
         /// Runtime state-flag bitfield (sized to match a single uint).
         /// Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;
         /// HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining
@@ -472,17 +474,18 @@ impl ::flatbuffers::SimpleToVerifyInSlice for prwSolverAlgorithm {}
 pub const ENUM_MIN_PRW_GRAVITY_SELECTION: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PRW_GRAVITY_SELECTION: u8 = 5;
+pub const ENUM_MAX_PRW_GRAVITY_SELECTION: u8 = 6;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PRW_GRAVITY_SELECTION: [prwGravitySelection; 6] = [
+pub const ENUM_VALUES_PRW_GRAVITY_SELECTION: [prwGravitySelection; 7] = [
     prwGravitySelection::INFER_FLAGS,
     prwGravitySelection::POINT_MASS,
     prwGravitySelection::J2_ONLY,
     prwGravitySelection::J2_TO_J4,
     prwGravitySelection::SPHERICAL_HARMONICS,
     prwGravitySelection::EGM2008,
+    prwGravitySelection::EGM96,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -497,9 +500,11 @@ impl prwGravitySelection {
     pub const J2_TO_J4: Self = Self(3);
     pub const SPHERICAL_HARMONICS: Self = Self(4);
     pub const EGM2008: Self = Self(5);
+    /// NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.
+    pub const EGM96: Self = Self(6);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 5;
+    pub const ENUM_MAX: u8 = 6;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::INFER_FLAGS,
         Self::POINT_MASS,
@@ -507,6 +512,7 @@ impl prwGravitySelection {
         Self::J2_TO_J4,
         Self::SPHERICAL_HARMONICS,
         Self::EGM2008,
+        Self::EGM96,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -518,6 +524,7 @@ impl prwGravitySelection {
             Self::J2_TO_J4 => Some("J2_TO_J4"),
             Self::SPHERICAL_HARMONICS => Some("SPHERICAL_HARMONICS"),
             Self::EGM2008 => Some("EGM2008"),
+            Self::EGM96 => Some("EGM96"),
             _ => None,
         }
     }
@@ -583,16 +590,18 @@ impl ::flatbuffers::SimpleToVerifyInSlice for prwGravitySelection {}
 pub const ENUM_MIN_PRW_ATMOSPHERE_FAMILY: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PRW_ATMOSPHERE_FAMILY: u8 = 4;
+pub const ENUM_MAX_PRW_ATMOSPHERE_FAMILY: u8 = 6;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PRW_ATMOSPHERE_FAMILY: [prwAtmosphereFamily; 5] = [
+pub const ENUM_VALUES_PRW_ATMOSPHERE_FAMILY: [prwAtmosphereFamily; 7] = [
     prwAtmosphereFamily::UNSPECIFIED,
     prwAtmosphereFamily::NRLMSISE00,
     prwAtmosphereFamily::EXPONENTIAL,
     prwAtmosphereFamily::USSA1976,
     prwAtmosphereFamily::HARRIS_PRIESTER,
+    prwAtmosphereFamily::JACCHIA_ROBERTS,
+    prwAtmosphereFamily::JB2008,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -606,15 +615,28 @@ impl prwAtmosphereFamily {
     pub const EXPONENTIAL: Self = Self(2);
     pub const USSA1976: Self = Self(3);
     pub const HARRIS_PRIESTER: Self = Self(4);
+    /// Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form
+    /// evaluation of Jacchia's static diffusion model with the constants NASA
+    /// GTDS and GMAT use (inflection temperature, mean molecular mass and
+    /// 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers:
+    /// F10.7 of the previous day, that day's 81-day centred average, and the
+    /// three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held
+    /// constant). A VCM's JACCHIA_70 is carried here.
+    pub const JACCHIA_ROBERTS: Self = Self(5);
+    /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
+    /// Dst-derived temperature change from PRW.JB2008_INDICES.
+    pub const JB2008: Self = Self(6);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 4;
+    pub const ENUM_MAX: u8 = 6;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::NRLMSISE00,
         Self::EXPONENTIAL,
         Self::USSA1976,
         Self::HARRIS_PRIESTER,
+        Self::JACCHIA_ROBERTS,
+        Self::JB2008,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -625,6 +647,8 @@ impl prwAtmosphereFamily {
             Self::EXPONENTIAL => Some("EXPONENTIAL"),
             Self::USSA1976 => Some("USSA1976"),
             Self::HARRIS_PRIESTER => Some("HARRIS_PRIESTER"),
+            Self::JACCHIA_ROBERTS => Some("JACCHIA_ROBERTS"),
+            Self::JB2008 => Some("JB2008"),
             _ => None,
         }
     }
@@ -1519,6 +1543,325 @@ impl<'a> ::flatbuffers::Verifiable for prwDensitySpecies {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for prwDensitySpecies {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PRW_SOLID_TIDE_MODEL: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PRW_SOLID_TIDE_MODEL: u8 = 1;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PRW_SOLID_TIDE_MODEL: [prwSolidTideModel; 2] = [
+    prwSolidTideModel::NONE,
+    prwSolidTideModel::IERS_2010,
+];
+
+/// Solid Earth tide model for the central body's field. NONE leaves the
+/// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
+/// and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
+/// numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
+/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
+/// the permanent tide handled for the field's own tide system. Pole tide is
+/// not included.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct prwSolidTideModel(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl prwSolidTideModel {
+    pub const NONE: Self = Self(0);
+    pub const IERS_2010: Self = Self(1);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 1;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::NONE,
+        Self::IERS_2010,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::NONE => Some("NONE"),
+            Self::IERS_2010 => Some("IERS_2010"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for prwSolidTideModel {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for prwSolidTideModel {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for prwSolidTideModel {
+    type Output = prwSolidTideModel;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for prwSolidTideModel {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for prwSolidTideModel {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for prwSolidTideModel {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PRW_RELATIVITY_TERMS: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PRW_RELATIVITY_TERMS: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PRW_RELATIVITY_TERMS: [prwRelativityTerms; 3] = [
+    prwRelativityTerms::NONE,
+    prwRelativityTerms::SCHWARZSCHILD,
+    prwRelativityTerms::IERS_2010,
+];
+
+/// Post-Newtonian corrections to the central body's acceleration (IERS
+/// Conventions (2010) eq. 10.12). NONE leaves them out. SCHWARZSCHILD is the
+/// point-mass term only. IERS_2010 adds Lense-Thirring and de Sitter
+/// (geodesic) precession.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct prwRelativityTerms(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl prwRelativityTerms {
+    pub const NONE: Self = Self(0);
+    pub const SCHWARZSCHILD: Self = Self(1);
+    pub const IERS_2010: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::NONE,
+        Self::SCHWARZSCHILD,
+        Self::IERS_2010,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::NONE => Some("NONE"),
+            Self::SCHWARZSCHILD => Some("SCHWARZSCHILD"),
+            Self::IERS_2010 => Some("IERS_2010"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for prwRelativityTerms {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for prwRelativityTerms {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for prwRelativityTerms {
+    type Output = prwRelativityTerms;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for prwRelativityTerms {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for prwRelativityTerms {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for prwRelativityTerms {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PRW_DYNAMIC_PARAMETER: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PRW_DYNAMIC_PARAMETER: u8 = 4;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PRW_DYNAMIC_PARAMETER: [prwDynamicParameter; 5] = [
+    prwDynamicParameter::UNSPECIFIED,
+    prwDynamicParameter::DRAG_AREA_OVER_MASS,
+    prwDynamicParameter::DRAG_AREA_OVER_MASS_RATE,
+    prwDynamicParameter::SRP_AREA_OVER_MASS,
+    prwDynamicParameter::IN_TRACK_ACCELERATION,
+];
+
+/// Dynamical model parameters a covariance and STM may carry after the state
+/// (a VCM's B, BDOT, AGOM and T). Values are the request's FORCES, in SI:
+/// DRAG_AREA_OVER_MASS Cd*A/m (m2/kg, DRAG_COEFFICIENT * AREA_M2 /
+/// INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,
+/// DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,
+/// REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);
+/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct prwDynamicParameter(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl prwDynamicParameter {
+    pub const UNSPECIFIED: Self = Self(0);
+    pub const DRAG_AREA_OVER_MASS: Self = Self(1);
+    pub const DRAG_AREA_OVER_MASS_RATE: Self = Self(2);
+    pub const SRP_AREA_OVER_MASS: Self = Self(3);
+    pub const IN_TRACK_ACCELERATION: Self = Self(4);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 4;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::DRAG_AREA_OVER_MASS,
+        Self::DRAG_AREA_OVER_MASS_RATE,
+        Self::SRP_AREA_OVER_MASS,
+        Self::IN_TRACK_ACCELERATION,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::DRAG_AREA_OVER_MASS => Some("DRAG_AREA_OVER_MASS"),
+            Self::DRAG_AREA_OVER_MASS_RATE => Some("DRAG_AREA_OVER_MASS_RATE"),
+            Self::SRP_AREA_OVER_MASS => Some("SRP_AREA_OVER_MASS"),
+            Self::IN_TRACK_ACCELERATION => Some("IN_TRACK_ACCELERATION"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for prwDynamicParameter {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for prwDynamicParameter {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for prwDynamicParameter {
+    type Output = prwDynamicParameter;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for prwDynamicParameter {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for prwDynamicParameter {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for prwDynamicParameter {}
 
 pub enum PRWInitOffset {}
 
@@ -3846,6 +4189,14 @@ impl<'a> PRWForceConfiguration<'a> {
     pub const VT_ATMOSPHERE_MODEL: ::flatbuffers::VOffsetT = 42;
     pub const VT_WEATHER: ::flatbuffers::VOffsetT = 44;
     pub const VT_EPHEMERIS_SOURCE: ::flatbuffers::VOffsetT = 46;
+    pub const VT_SOLID_TIDES: ::flatbuffers::VOffsetT = 48;
+    pub const VT_RELATIVITY: ::flatbuffers::VOffsetT = 50;
+    pub const VT_IN_TRACK_ACCELERATION_M_S2: ::flatbuffers::VOffsetT = 52;
+    pub const VT_HAS_IN_TRACK_ACCELERATION_M_S2: ::flatbuffers::VOffsetT = 54;
+    pub const VT_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: ::flatbuffers::VOffsetT = 56;
+    pub const VT_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: ::flatbuffers::VOffsetT = 58;
+    pub const VT_MAXIMUM_TESSERAL_DEGREE: ::flatbuffers::VOffsetT = 60;
+    pub const VT_HAS_MAXIMUM_TESSERAL_DEGREE: ::flatbuffers::VOffsetT = 62;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3858,6 +4209,8 @@ impl<'a> PRWForceConfiguration<'a> {
         args: &'args PRWForceConfigurationArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PRWForceConfiguration<'bldr>> {
         let mut builder = PRWForceConfigurationBuilder::new(_fbb);
+        builder.add_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(args.DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+        builder.add_IN_TRACK_ACCELERATION_M_S2(args.IN_TRACK_ACCELERATION_M_S2);
         builder.add_DRAG_COEFFICIENT(args.DRAG_COEFFICIENT);
         builder.add_REFLECTIVITY_COEFFICIENT(args.REFLECTIVITY_COEFFICIENT);
         builder.add_AREA_M2(args.AREA_M2);
@@ -3866,8 +4219,14 @@ impl<'a> PRWForceConfiguration<'a> {
         if let Some(x) = args.EPHEMERIS_SOURCE { builder.add_EPHEMERIS_SOURCE(x); }
         if let Some(x) = args.WEATHER { builder.add_WEATHER(x); }
         if let Some(x) = args.THIRD_BODY_IDS { builder.add_THIRD_BODY_IDS(x); }
+        builder.add_MAXIMUM_TESSERAL_DEGREE(args.MAXIMUM_TESSERAL_DEGREE);
         builder.add_MAXIMUM_ORDER(args.MAXIMUM_ORDER);
         builder.add_MAXIMUM_DEGREE(args.MAXIMUM_DEGREE);
+        builder.add_HAS_MAXIMUM_TESSERAL_DEGREE(args.HAS_MAXIMUM_TESSERAL_DEGREE);
+        builder.add_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(args.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+        builder.add_HAS_IN_TRACK_ACCELERATION_M_S2(args.HAS_IN_TRACK_ACCELERATION_M_S2);
+        builder.add_RELATIVITY(args.RELATIVITY);
+        builder.add_SOLID_TIDES(args.SOLID_TIDES);
         builder.add_ATMOSPHERE_MODEL(args.ATMOSPHERE_MODEL);
         builder.add_ENABLE_DRAG(args.ENABLE_DRAG);
         builder.add_ENABLE_SRP(args.ENABLE_SRP);
@@ -3913,6 +4272,14 @@ impl<'a> PRWForceConfiguration<'a> {
             let x = self.EPHEMERIS_SOURCE();
             alloc::string::ToString::to_string(x)
         };
+        let SOLID_TIDES = self.SOLID_TIDES();
+        let RELATIVITY = self.RELATIVITY();
+        let IN_TRACK_ACCELERATION_M_S2 = self.IN_TRACK_ACCELERATION_M_S2();
+        let HAS_IN_TRACK_ACCELERATION_M_S2 = self.HAS_IN_TRACK_ACCELERATION_M_S2();
+        let DRAG_AREA_OVER_MASS_RATE_M2_KG_S = self.DRAG_AREA_OVER_MASS_RATE_M2_KG_S();
+        let HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S();
+        let MAXIMUM_TESSERAL_DEGREE = self.MAXIMUM_TESSERAL_DEGREE();
+        let HAS_MAXIMUM_TESSERAL_DEGREE = self.HAS_MAXIMUM_TESSERAL_DEGREE();
         PRWForceConfigurationT {
             GRAVITY_CHOICE,
             ENABLE_POINT_MASS,
@@ -3936,6 +4303,14 @@ impl<'a> PRWForceConfiguration<'a> {
             ATMOSPHERE_MODEL,
             WEATHER,
             EPHEMERIS_SOURCE,
+            SOLID_TIDES,
+            RELATIVITY,
+            IN_TRACK_ACCELERATION_M_S2,
+            HAS_IN_TRACK_ACCELERATION_M_S2,
+            DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+            HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+            MAXIMUM_TESSERAL_DEGREE,
+            HAS_MAXIMUM_TESSERAL_DEGREE,
         }
     }
 
@@ -4120,6 +4495,82 @@ impl<'a> PRWForceConfiguration<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PRWForceConfiguration::VT_EPHEMERIS_SOURCE, None).unwrap()}
     }
+
+    /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+    /// orientation (PRW.EARTH_ORIENTATION) to apply them.
+    #[inline]
+    pub fn SOLID_TIDES(&self) -> prwSolidTideModel {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<prwSolidTideModel>(PRWForceConfiguration::VT_SOLID_TIDES, Some(prwSolidTideModel::NONE)).unwrap()}
+    }
+
+    #[inline]
+    pub fn RELATIVITY(&self) -> prwRelativityTerms {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<prwRelativityTerms>(PRWForceConfiguration::VT_RELATIVITY, Some(prwRelativityTerms::NONE)).unwrap()}
+    }
+
+    /// Constant acceleration along the in-track axis, m/s2: T of RTN,
+    /// N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+    #[inline]
+    pub fn IN_TRACK_ACCELERATION_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWForceConfiguration::VT_IN_TRACK_ACCELERATION_M_S2, Some(0.0)).unwrap()}
+    }
+
+    /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+    #[inline]
+    pub fn HAS_IN_TRACK_ACCELERATION_M_S2(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(PRWForceConfiguration::VT_HAS_IN_TRACK_ACCELERATION_M_S2, Some(false)).unwrap()}
+    }
+
+    /// Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+    /// BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+    #[inline]
+    pub fn DRAG_AREA_OVER_MASS_RATE_M2_KG_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWForceConfiguration::VT_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, Some(0.0)).unwrap()}
+    }
+
+    /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+    #[inline]
+    pub fn HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(PRWForceConfiguration::VT_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, Some(false)).unwrap()}
+    }
+
+    /// Highest degree of the tesseral and sectorial terms (order >= 1); the
+    /// zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+    /// MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+    #[inline]
+    pub fn MAXIMUM_TESSERAL_DEGREE(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(PRWForceConfiguration::VT_MAXIMUM_TESSERAL_DEGREE, Some(0)).unwrap()}
+    }
+
+    /// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+    #[inline]
+    pub fn HAS_MAXIMUM_TESSERAL_DEGREE(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(PRWForceConfiguration::VT_HAS_MAXIMUM_TESSERAL_DEGREE, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PRWForceConfiguration<'_> {
@@ -4150,6 +4601,14 @@ impl ::flatbuffers::Verifiable for PRWForceConfiguration<'_> {
             .visit_field::<prwAtmosphereFamily>("ATMOSPHERE_MODEL", Self::VT_ATMOSPHERE_MODEL, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PRWSpaceWeather>>("WEATHER", Self::VT_WEATHER, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_SOURCE", Self::VT_EPHEMERIS_SOURCE, true)?
+            .visit_field::<prwSolidTideModel>("SOLID_TIDES", Self::VT_SOLID_TIDES, false)?
+            .visit_field::<prwRelativityTerms>("RELATIVITY", Self::VT_RELATIVITY, false)?
+            .visit_field::<f64>("IN_TRACK_ACCELERATION_M_S2", Self::VT_IN_TRACK_ACCELERATION_M_S2, false)?
+            .visit_field::<bool>("HAS_IN_TRACK_ACCELERATION_M_S2", Self::VT_HAS_IN_TRACK_ACCELERATION_M_S2, false)?
+            .visit_field::<f64>("DRAG_AREA_OVER_MASS_RATE_M2_KG_S", Self::VT_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false)?
+            .visit_field::<bool>("HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S", Self::VT_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false)?
+            .visit_field::<u16>("MAXIMUM_TESSERAL_DEGREE", Self::VT_MAXIMUM_TESSERAL_DEGREE, false)?
+            .visit_field::<bool>("HAS_MAXIMUM_TESSERAL_DEGREE", Self::VT_HAS_MAXIMUM_TESSERAL_DEGREE, false)?
             .finish();
         Ok(())
     }
@@ -4178,6 +4637,14 @@ pub struct PRWForceConfigurationArgs<'a> {
     pub ATMOSPHERE_MODEL: prwAtmosphereFamily,
     pub WEATHER: Option<::flatbuffers::WIPOffset<PRWSpaceWeather<'a>>>,
     pub EPHEMERIS_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOLID_TIDES: prwSolidTideModel,
+    pub RELATIVITY: prwRelativityTerms,
+    pub IN_TRACK_ACCELERATION_M_S2: f64,
+    pub HAS_IN_TRACK_ACCELERATION_M_S2: bool,
+    pub DRAG_AREA_OVER_MASS_RATE_M2_KG_S: f64,
+    pub HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: bool,
+    pub MAXIMUM_TESSERAL_DEGREE: u16,
+    pub HAS_MAXIMUM_TESSERAL_DEGREE: bool,
 }
 
 impl<'a> Default for PRWForceConfigurationArgs<'a> {
@@ -4206,6 +4673,14 @@ impl<'a> Default for PRWForceConfigurationArgs<'a> {
             ATMOSPHERE_MODEL: prwAtmosphereFamily::NRLMSISE00,
             WEATHER: None,
             EPHEMERIS_SOURCE: None, // required field
+            SOLID_TIDES: prwSolidTideModel::NONE,
+            RELATIVITY: prwRelativityTerms::NONE,
+            IN_TRACK_ACCELERATION_M_S2: 0.0,
+            HAS_IN_TRACK_ACCELERATION_M_S2: false,
+            DRAG_AREA_OVER_MASS_RATE_M2_KG_S: 0.0,
+            HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: false,
+            MAXIMUM_TESSERAL_DEGREE: 0,
+            HAS_MAXIMUM_TESSERAL_DEGREE: false,
         }
     }
 }
@@ -4327,6 +4802,46 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWForceConfigurationBuilder<
     }
 
     #[inline]
+    pub fn add_SOLID_TIDES(&mut self, SOLID_TIDES: prwSolidTideModel) {
+        self.fbb_.push_slot::<prwSolidTideModel>(PRWForceConfiguration::VT_SOLID_TIDES, SOLID_TIDES, prwSolidTideModel::NONE);
+    }
+
+    #[inline]
+    pub fn add_RELATIVITY(&mut self, RELATIVITY: prwRelativityTerms) {
+        self.fbb_.push_slot::<prwRelativityTerms>(PRWForceConfiguration::VT_RELATIVITY, RELATIVITY, prwRelativityTerms::NONE);
+    }
+
+    #[inline]
+    pub fn add_IN_TRACK_ACCELERATION_M_S2(&mut self, IN_TRACK_ACCELERATION_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWForceConfiguration::VT_IN_TRACK_ACCELERATION_M_S2, IN_TRACK_ACCELERATION_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_IN_TRACK_ACCELERATION_M_S2(&mut self, HAS_IN_TRACK_ACCELERATION_M_S2: bool) {
+        self.fbb_.push_slot::<bool>(PRWForceConfiguration::VT_HAS_IN_TRACK_ACCELERATION_M_S2, HAS_IN_TRACK_ACCELERATION_M_S2, false);
+    }
+
+    #[inline]
+    pub fn add_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(&mut self, DRAG_AREA_OVER_MASS_RATE_M2_KG_S: f64) {
+        self.fbb_.push_slot::<f64>(PRWForceConfiguration::VT_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(&mut self, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: bool) {
+        self.fbb_.push_slot::<bool>(PRWForceConfiguration::VT_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false);
+    }
+
+    #[inline]
+    pub fn add_MAXIMUM_TESSERAL_DEGREE(&mut self, MAXIMUM_TESSERAL_DEGREE: u16) {
+        self.fbb_.push_slot::<u16>(PRWForceConfiguration::VT_MAXIMUM_TESSERAL_DEGREE, MAXIMUM_TESSERAL_DEGREE, 0);
+    }
+
+    #[inline]
+    pub fn add_HAS_MAXIMUM_TESSERAL_DEGREE(&mut self, HAS_MAXIMUM_TESSERAL_DEGREE: bool) {
+        self.fbb_.push_slot::<bool>(PRWForceConfiguration::VT_HAS_MAXIMUM_TESSERAL_DEGREE, HAS_MAXIMUM_TESSERAL_DEGREE, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWForceConfigurationBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PRWForceConfigurationBuilder {
@@ -4368,6 +4883,14 @@ impl ::core::fmt::Debug for PRWForceConfiguration<'_> {
         ds.field("ATMOSPHERE_MODEL", &self.ATMOSPHERE_MODEL());
         ds.field("WEATHER", &self.WEATHER());
         ds.field("EPHEMERIS_SOURCE", &self.EPHEMERIS_SOURCE());
+        ds.field("SOLID_TIDES", &self.SOLID_TIDES());
+        ds.field("RELATIVITY", &self.RELATIVITY());
+        ds.field("IN_TRACK_ACCELERATION_M_S2", &self.IN_TRACK_ACCELERATION_M_S2());
+        ds.field("HAS_IN_TRACK_ACCELERATION_M_S2", &self.HAS_IN_TRACK_ACCELERATION_M_S2());
+        ds.field("DRAG_AREA_OVER_MASS_RATE_M2_KG_S", &self.DRAG_AREA_OVER_MASS_RATE_M2_KG_S());
+        ds.field("HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S", &self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S());
+        ds.field("MAXIMUM_TESSERAL_DEGREE", &self.MAXIMUM_TESSERAL_DEGREE());
+        ds.field("HAS_MAXIMUM_TESSERAL_DEGREE", &self.HAS_MAXIMUM_TESSERAL_DEGREE());
         ds.finish()
     }
 }
@@ -4397,6 +4920,14 @@ pub struct PRWForceConfigurationT {
     pub ATMOSPHERE_MODEL: prwAtmosphereFamily,
     pub WEATHER: Option<alloc::boxed::Box<PRWSpaceWeatherT>>,
     pub EPHEMERIS_SOURCE: alloc::string::String,
+    pub SOLID_TIDES: prwSolidTideModel,
+    pub RELATIVITY: prwRelativityTerms,
+    pub IN_TRACK_ACCELERATION_M_S2: f64,
+    pub HAS_IN_TRACK_ACCELERATION_M_S2: bool,
+    pub DRAG_AREA_OVER_MASS_RATE_M2_KG_S: f64,
+    pub HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: bool,
+    pub MAXIMUM_TESSERAL_DEGREE: u16,
+    pub HAS_MAXIMUM_TESSERAL_DEGREE: bool,
 }
 
 impl Default for PRWForceConfigurationT {
@@ -4424,6 +4955,14 @@ impl Default for PRWForceConfigurationT {
             ATMOSPHERE_MODEL: prwAtmosphereFamily::NRLMSISE00,
             WEATHER: None,
             EPHEMERIS_SOURCE: alloc::string::ToString::to_string(""),
+            SOLID_TIDES: prwSolidTideModel::NONE,
+            RELATIVITY: prwRelativityTerms::NONE,
+            IN_TRACK_ACCELERATION_M_S2: 0.0,
+            HAS_IN_TRACK_ACCELERATION_M_S2: false,
+            DRAG_AREA_OVER_MASS_RATE_M2_KG_S: 0.0,
+            HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: false,
+            MAXIMUM_TESSERAL_DEGREE: 0,
+            HAS_MAXIMUM_TESSERAL_DEGREE: false,
         }
     }
 }
@@ -4462,6 +5001,14 @@ impl PRWForceConfigurationT {
             let x = &self.EPHEMERIS_SOURCE;
             _fbb.create_string(x)
         });
+        let SOLID_TIDES = self.SOLID_TIDES;
+        let RELATIVITY = self.RELATIVITY;
+        let IN_TRACK_ACCELERATION_M_S2 = self.IN_TRACK_ACCELERATION_M_S2;
+        let HAS_IN_TRACK_ACCELERATION_M_S2 = self.HAS_IN_TRACK_ACCELERATION_M_S2;
+        let DRAG_AREA_OVER_MASS_RATE_M2_KG_S = self.DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+        let HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+        let MAXIMUM_TESSERAL_DEGREE = self.MAXIMUM_TESSERAL_DEGREE;
+        let HAS_MAXIMUM_TESSERAL_DEGREE = self.HAS_MAXIMUM_TESSERAL_DEGREE;
         PRWForceConfiguration::create(_fbb, &PRWForceConfigurationArgs{
             GRAVITY_CHOICE,
             ENABLE_POINT_MASS,
@@ -4485,14 +5032,24 @@ impl PRWForceConfigurationT {
             ATMOSPHERE_MODEL,
             WEATHER,
             EPHEMERIS_SOURCE,
+            SOLID_TIDES,
+            RELATIVITY,
+            IN_TRACK_ACCELERATION_M_S2,
+            HAS_IN_TRACK_ACCELERATION_M_S2,
+            DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+            HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+            MAXIMUM_TESSERAL_DEGREE,
+            HAS_MAXIMUM_TESSERAL_DEGREE,
         })
     }
 }
 
 pub enum PRWStateMatrixOffset {}
 
-/// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], SI state units.
-/// Covariance entries have row*column units; STM entries row/column units.
+/// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution
+/// request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).
+/// Covariance entries have row*column units; STM entries row/column units;
+/// an STM's parameter rows are the identity (parameters are constant).
 #[derive(Copy, Clone, PartialEq)]
 pub struct PRWStateMatrix<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -4910,6 +5467,10 @@ impl<'a> PRWResidentState<'a> {
     pub const VT_HAS_SRP_AREA_OVER_MASS_M2_KG: ::flatbuffers::VOffsetT = 28;
     pub const VT_VALID: ::flatbuffers::VOffsetT = 30;
     pub const VT_PROCESS_NOISE: ::flatbuffers::VOffsetT = 32;
+    pub const VT_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: ::flatbuffers::VOffsetT = 34;
+    pub const VT_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: ::flatbuffers::VOffsetT = 36;
+    pub const VT_IN_TRACK_ACCELERATION_M_S2: ::flatbuffers::VOffsetT = 38;
+    pub const VT_HAS_IN_TRACK_ACCELERATION_M_S2: ::flatbuffers::VOffsetT = 40;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4922,6 +5483,8 @@ impl<'a> PRWResidentState<'a> {
         args: &'args PRWResidentStateArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PRWResidentState<'bldr>> {
         let mut builder = PRWResidentStateBuilder::new(_fbb);
+        builder.add_IN_TRACK_ACCELERATION_M_S2(args.IN_TRACK_ACCELERATION_M_S2);
+        builder.add_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(args.DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
         builder.add_SRP_AREA_OVER_MASS_M2_KG(args.SRP_AREA_OVER_MASS_M2_KG);
         builder.add_DRAG_AREA_OVER_MASS_M2_KG(args.DRAG_AREA_OVER_MASS_M2_KG);
         builder.add_MASS_KG(args.MASS_KG);
@@ -4933,6 +5496,8 @@ impl<'a> PRWResidentState<'a> {
         builder.add_CATALOG_NUMBER(args.CATALOG_NUMBER);
         builder.add_ENTITY_HANDLE(args.ENTITY_HANDLE);
         if let Some(x) = args.INSTANCE { builder.add_INSTANCE(x); }
+        builder.add_HAS_IN_TRACK_ACCELERATION_M_S2(args.HAS_IN_TRACK_ACCELERATION_M_S2);
+        builder.add_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(args.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
         builder.add_VALID(args.VALID);
         builder.add_HAS_SRP_AREA_OVER_MASS_M2_KG(args.HAS_SRP_AREA_OVER_MASS_M2_KG);
         builder.add_HAS_DRAG_AREA_OVER_MASS_M2_KG(args.HAS_DRAG_AREA_OVER_MASS_M2_KG);
@@ -4970,6 +5535,10 @@ impl<'a> PRWResidentState<'a> {
         let PROCESS_NOISE = self.PROCESS_NOISE().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let DRAG_AREA_OVER_MASS_RATE_M2_KG_S = self.DRAG_AREA_OVER_MASS_RATE_M2_KG_S();
+        let HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S();
+        let IN_TRACK_ACCELERATION_M_S2 = self.IN_TRACK_ACCELERATION_M_S2();
+        let HAS_IN_TRACK_ACCELERATION_M_S2 = self.HAS_IN_TRACK_ACCELERATION_M_S2();
         PRWResidentStateT {
             INSTANCE,
             ENTITY_HANDLE,
@@ -4986,6 +5555,10 @@ impl<'a> PRWResidentState<'a> {
             HAS_SRP_AREA_OVER_MASS_M2_KG,
             VALID,
             PROCESS_NOISE,
+            DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+            HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+            IN_TRACK_ACCELERATION_M_S2,
+            HAS_IN_TRACK_ACCELERATION_M_S2,
         }
     }
 
@@ -5116,6 +5689,43 @@ impl<'a> PRWResidentState<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWProcessNoise>>(PRWResidentState::VT_PROCESS_NOISE, None)}
     }
+
+    /// Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch
+    /// (the BDOT of a VCM).
+    #[inline]
+    pub fn DRAG_AREA_OVER_MASS_RATE_M2_KG_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWResidentState::VT_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, Some(0.0)).unwrap()}
+    }
+
+    /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+    #[inline]
+    pub fn HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(PRWResidentState::VT_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, Some(false)).unwrap()}
+    }
+
+    /// Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+    #[inline]
+    pub fn IN_TRACK_ACCELERATION_M_S2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWResidentState::VT_IN_TRACK_ACCELERATION_M_S2, Some(0.0)).unwrap()}
+    }
+
+    /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+    #[inline]
+    pub fn HAS_IN_TRACK_ACCELERATION_M_S2(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(PRWResidentState::VT_HAS_IN_TRACK_ACCELERATION_M_S2, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PRWResidentState<'_> {
@@ -5139,6 +5749,10 @@ impl ::flatbuffers::Verifiable for PRWResidentState<'_> {
             .visit_field::<bool>("HAS_SRP_AREA_OVER_MASS_M2_KG", Self::VT_HAS_SRP_AREA_OVER_MASS_M2_KG, false)?
             .visit_field::<bool>("VALID", Self::VT_VALID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PRWProcessNoise>>("PROCESS_NOISE", Self::VT_PROCESS_NOISE, false)?
+            .visit_field::<f64>("DRAG_AREA_OVER_MASS_RATE_M2_KG_S", Self::VT_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false)?
+            .visit_field::<bool>("HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S", Self::VT_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false)?
+            .visit_field::<f64>("IN_TRACK_ACCELERATION_M_S2", Self::VT_IN_TRACK_ACCELERATION_M_S2, false)?
+            .visit_field::<bool>("HAS_IN_TRACK_ACCELERATION_M_S2", Self::VT_HAS_IN_TRACK_ACCELERATION_M_S2, false)?
             .finish();
         Ok(())
     }
@@ -5160,6 +5774,10 @@ pub struct PRWResidentStateArgs<'a> {
     pub HAS_SRP_AREA_OVER_MASS_M2_KG: bool,
     pub VALID: bool,
     pub PROCESS_NOISE: Option<::flatbuffers::WIPOffset<PRWProcessNoise<'a>>>,
+    pub DRAG_AREA_OVER_MASS_RATE_M2_KG_S: f64,
+    pub HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: bool,
+    pub IN_TRACK_ACCELERATION_M_S2: f64,
+    pub HAS_IN_TRACK_ACCELERATION_M_S2: bool,
 }
 
 impl<'a> Default for PRWResidentStateArgs<'a> {
@@ -5181,6 +5799,10 @@ impl<'a> Default for PRWResidentStateArgs<'a> {
             HAS_SRP_AREA_OVER_MASS_M2_KG: false,
             VALID: true,
             PROCESS_NOISE: None,
+            DRAG_AREA_OVER_MASS_RATE_M2_KG_S: 0.0,
+            HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: false,
+            IN_TRACK_ACCELERATION_M_S2: 0.0,
+            HAS_IN_TRACK_ACCELERATION_M_S2: false,
         }
     }
 }
@@ -5267,6 +5889,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWResidentStateBuilder<'a, '
     }
 
     #[inline]
+    pub fn add_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(&mut self, DRAG_AREA_OVER_MASS_RATE_M2_KG_S: f64) {
+        self.fbb_.push_slot::<f64>(PRWResidentState::VT_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(&mut self, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: bool) {
+        self.fbb_.push_slot::<bool>(PRWResidentState::VT_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false);
+    }
+
+    #[inline]
+    pub fn add_IN_TRACK_ACCELERATION_M_S2(&mut self, IN_TRACK_ACCELERATION_M_S2: f64) {
+        self.fbb_.push_slot::<f64>(PRWResidentState::VT_IN_TRACK_ACCELERATION_M_S2, IN_TRACK_ACCELERATION_M_S2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_IN_TRACK_ACCELERATION_M_S2(&mut self, HAS_IN_TRACK_ACCELERATION_M_S2: bool) {
+        self.fbb_.push_slot::<bool>(PRWResidentState::VT_HAS_IN_TRACK_ACCELERATION_M_S2, HAS_IN_TRACK_ACCELERATION_M_S2, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWResidentStateBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PRWResidentStateBuilder {
@@ -5302,6 +5944,10 @@ impl ::core::fmt::Debug for PRWResidentState<'_> {
         ds.field("HAS_SRP_AREA_OVER_MASS_M2_KG", &self.HAS_SRP_AREA_OVER_MASS_M2_KG());
         ds.field("VALID", &self.VALID());
         ds.field("PROCESS_NOISE", &self.PROCESS_NOISE());
+        ds.field("DRAG_AREA_OVER_MASS_RATE_M2_KG_S", &self.DRAG_AREA_OVER_MASS_RATE_M2_KG_S());
+        ds.field("HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S", &self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S());
+        ds.field("IN_TRACK_ACCELERATION_M_S2", &self.IN_TRACK_ACCELERATION_M_S2());
+        ds.field("HAS_IN_TRACK_ACCELERATION_M_S2", &self.HAS_IN_TRACK_ACCELERATION_M_S2());
         ds.finish()
     }
 }
@@ -5324,6 +5970,10 @@ pub struct PRWResidentStateT {
     pub HAS_SRP_AREA_OVER_MASS_M2_KG: bool,
     pub VALID: bool,
     pub PROCESS_NOISE: Option<alloc::boxed::Box<PRWProcessNoiseT>>,
+    pub DRAG_AREA_OVER_MASS_RATE_M2_KG_S: f64,
+    pub HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: bool,
+    pub IN_TRACK_ACCELERATION_M_S2: f64,
+    pub HAS_IN_TRACK_ACCELERATION_M_S2: bool,
 }
 
 impl Default for PRWResidentStateT {
@@ -5344,6 +5994,10 @@ impl Default for PRWResidentStateT {
             HAS_SRP_AREA_OVER_MASS_M2_KG: false,
             VALID: true,
             PROCESS_NOISE: None,
+            DRAG_AREA_OVER_MASS_RATE_M2_KG_S: 0.0,
+            HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: false,
+            IN_TRACK_ACCELERATION_M_S2: 0.0,
+            HAS_IN_TRACK_ACCELERATION_M_S2: false,
         }
     }
 }
@@ -5382,6 +6036,10 @@ impl PRWResidentStateT {
         let PROCESS_NOISE = self.PROCESS_NOISE.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let DRAG_AREA_OVER_MASS_RATE_M2_KG_S = self.DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+        let HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+        let IN_TRACK_ACCELERATION_M_S2 = self.IN_TRACK_ACCELERATION_M_S2;
+        let HAS_IN_TRACK_ACCELERATION_M_S2 = self.HAS_IN_TRACK_ACCELERATION_M_S2;
         PRWResidentState::create(_fbb, &PRWResidentStateArgs{
             INSTANCE,
             ENTITY_HANDLE,
@@ -5398,6 +6056,10 @@ impl PRWResidentStateT {
             HAS_SRP_AREA_OVER_MASS_M2_KG,
             VALID,
             PROCESS_NOISE,
+            DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+            HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+            IN_TRACK_ACCELERATION_M_S2,
+            HAS_IN_TRACK_ACCELERATION_M_S2,
         })
     }
 }
@@ -6433,6 +7095,7 @@ impl<'a> PRWExecutionRequest<'a> {
     pub const VT_INCLUDE_MASS_DYNAMICS: ::flatbuffers::VOffsetT = 26;
     pub const VT_FINITE_BURNS: ::flatbuffers::VOffsetT = 28;
     pub const VT_PROCESS_NOISE: ::flatbuffers::VOffsetT = 30;
+    pub const VT_DYNAMIC_PARAMETERS: ::flatbuffers::VOffsetT = 32;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -6445,6 +7108,7 @@ impl<'a> PRWExecutionRequest<'a> {
         args: &'args PRWExecutionRequestArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PRWExecutionRequest<'bldr>> {
         let mut builder = PRWExecutionRequestBuilder::new(_fbb);
+        if let Some(x) = args.DYNAMIC_PARAMETERS { builder.add_DYNAMIC_PARAMETERS(x); }
         if let Some(x) = args.PROCESS_NOISE { builder.add_PROCESS_NOISE(x); }
         if let Some(x) = args.FINITE_BURNS { builder.add_FINITE_BURNS(x); }
         if let Some(x) = args.IMPULSES { builder.add_IMPULSES(x); }
@@ -6501,6 +7165,9 @@ impl<'a> PRWExecutionRequest<'a> {
         let PROCESS_NOISE = self.PROCESS_NOISE().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let DYNAMIC_PARAMETERS = self.DYNAMIC_PARAMETERS().map(|x| {
+            x.into_iter().collect()
+        });
         PRWExecutionRequestT {
             INITIAL,
             TARGET_EPOCH,
@@ -6516,6 +7183,7 @@ impl<'a> PRWExecutionRequest<'a> {
             INCLUDE_MASS_DYNAMICS,
             FINITE_BURNS,
             PROCESS_NOISE,
+            DYNAMIC_PARAMETERS,
         }
     }
 
@@ -6632,6 +7300,18 @@ impl<'a> PRWExecutionRequest<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWProcessNoise>>(PRWExecutionRequest::VT_PROCESS_NOISE, None)}
     }
+
+    /// Model parameters appended, in this order and without repeats, to
+    /// INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+    /// covariance carries their uncertainty and correlation (a VCM's 7x7 to
+    /// 10x10). Each must be active in FORCES. Empty means the state alone.
+    #[inline]
+    pub fn DYNAMIC_PARAMETERS(&self) -> Option<::flatbuffers::Vector<'a, prwDynamicParameter>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, prwDynamicParameter>>>(PRWExecutionRequest::VT_DYNAMIC_PARAMETERS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PRWExecutionRequest<'_> {
@@ -6654,6 +7334,7 @@ impl ::flatbuffers::Verifiable for PRWExecutionRequest<'_> {
             .visit_field::<bool>("INCLUDE_MASS_DYNAMICS", Self::VT_INCLUDE_MASS_DYNAMICS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PRWFiniteBurn>>>>("FINITE_BURNS", Self::VT_FINITE_BURNS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PRWProcessNoise>>("PROCESS_NOISE", Self::VT_PROCESS_NOISE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, prwDynamicParameter>>>("DYNAMIC_PARAMETERS", Self::VT_DYNAMIC_PARAMETERS, false)?
             .finish();
         Ok(())
     }
@@ -6674,6 +7355,7 @@ pub struct PRWExecutionRequestArgs<'a> {
     pub INCLUDE_MASS_DYNAMICS: bool,
     pub FINITE_BURNS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWFiniteBurn<'a>>>>>,
     pub PROCESS_NOISE: Option<::flatbuffers::WIPOffset<PRWProcessNoise<'a>>>,
+    pub DYNAMIC_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, prwDynamicParameter>>>,
 }
 
 impl<'a> Default for PRWExecutionRequestArgs<'a> {
@@ -6694,6 +7376,7 @@ impl<'a> Default for PRWExecutionRequestArgs<'a> {
             INCLUDE_MASS_DYNAMICS: false,
             FINITE_BURNS: None,
             PROCESS_NOISE: None,
+            DYNAMIC_PARAMETERS: None,
         }
     }
 }
@@ -6775,6 +7458,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWExecutionRequestBuilder<'a
     }
 
     #[inline]
+    pub fn add_DYNAMIC_PARAMETERS(&mut self, DYNAMIC_PARAMETERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , prwDynamicParameter>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PRWExecutionRequest::VT_DYNAMIC_PARAMETERS, DYNAMIC_PARAMETERS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWExecutionRequestBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PRWExecutionRequestBuilder {
@@ -6811,6 +7499,7 @@ impl ::core::fmt::Debug for PRWExecutionRequest<'_> {
         ds.field("INCLUDE_MASS_DYNAMICS", &self.INCLUDE_MASS_DYNAMICS());
         ds.field("FINITE_BURNS", &self.FINITE_BURNS());
         ds.field("PROCESS_NOISE", &self.PROCESS_NOISE());
+        ds.field("DYNAMIC_PARAMETERS", &self.DYNAMIC_PARAMETERS());
         ds.finish()
     }
 }
@@ -6832,6 +7521,7 @@ pub struct PRWExecutionRequestT {
     pub INCLUDE_MASS_DYNAMICS: bool,
     pub FINITE_BURNS: Option<alloc::vec::Vec<PRWFiniteBurnT>>,
     pub PROCESS_NOISE: Option<alloc::boxed::Box<PRWProcessNoiseT>>,
+    pub DYNAMIC_PARAMETERS: Option<alloc::vec::Vec<prwDynamicParameter>>,
 }
 
 impl Default for PRWExecutionRequestT {
@@ -6851,6 +7541,7 @@ impl Default for PRWExecutionRequestT {
             INCLUDE_MASS_DYNAMICS: false,
             FINITE_BURNS: None,
             PROCESS_NOISE: None,
+            DYNAMIC_PARAMETERS: None,
         }
     }
 }
@@ -6898,6 +7589,9 @@ impl PRWExecutionRequestT {
         let PROCESS_NOISE = self.PROCESS_NOISE.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let DYNAMIC_PARAMETERS = self.DYNAMIC_PARAMETERS.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
         PRWExecutionRequest::create(_fbb, &PRWExecutionRequestArgs{
             INITIAL,
             TARGET_EPOCH,
@@ -6913,6 +7607,7 @@ impl PRWExecutionRequestT {
             INCLUDE_MASS_DYNAMICS,
             FINITE_BURNS,
             PROCESS_NOISE,
+            DYNAMIC_PARAMETERS,
         })
     }
 }
@@ -7757,6 +8452,7 @@ impl<'a> PRWExecutionResult<'a> {
     pub const VT_EPHEMERIS_SOURCE: ::flatbuffers::VOffsetT = 10;
     pub const VT_STM_TECHNIQUE: ::flatbuffers::VOffsetT = 12;
     pub const VT_DENSITY_TREATMENT: ::flatbuffers::VOffsetT = 14;
+    pub const VT_DYNAMIC_PARAMETERS: ::flatbuffers::VOffsetT = 16;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -7770,6 +8466,7 @@ impl<'a> PRWExecutionResult<'a> {
     ) -> ::flatbuffers::WIPOffset<PRWExecutionResult<'bldr>> {
         let mut builder = PRWExecutionResultBuilder::new(_fbb);
         builder.add_ELAPSED_SECONDS(args.ELAPSED_SECONDS);
+        if let Some(x) = args.DYNAMIC_PARAMETERS { builder.add_DYNAMIC_PARAMETERS(x); }
         if let Some(x) = args.EPHEMERIS_SOURCE { builder.add_EPHEMERIS_SOURCE(x); }
         if let Some(x) = args.SAMPLES { builder.add_SAMPLES(x); }
         if let Some(x) = args.FINAL_SAMPLE { builder.add_FINAL_SAMPLE(x); }
@@ -7793,6 +8490,9 @@ impl<'a> PRWExecutionResult<'a> {
         };
         let STM_TECHNIQUE = self.STM_TECHNIQUE();
         let DENSITY_TREATMENT = self.DENSITY_TREATMENT();
+        let DYNAMIC_PARAMETERS = self.DYNAMIC_PARAMETERS().map(|x| {
+            x.into_iter().collect()
+        });
         PRWExecutionResultT {
             FINAL_SAMPLE,
             SAMPLES,
@@ -7800,6 +8500,7 @@ impl<'a> PRWExecutionResult<'a> {
             EPHEMERIS_SOURCE,
             STM_TECHNIQUE,
             DENSITY_TREATMENT,
+            DYNAMIC_PARAMETERS,
         }
     }
 
@@ -7850,6 +8551,15 @@ impl<'a> PRWExecutionResult<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<prwDensityTreatment>(PRWExecutionResult::VT_DENSITY_TREATMENT, Some(prwDensityTreatment::UNSPECIFIED)).unwrap()}
     }
+
+    /// The parameters the samples' STM and COVARIANCE carry after the state.
+    #[inline]
+    pub fn DYNAMIC_PARAMETERS(&self) -> Option<::flatbuffers::Vector<'a, prwDynamicParameter>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, prwDynamicParameter>>>(PRWExecutionResult::VT_DYNAMIC_PARAMETERS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PRWExecutionResult<'_> {
@@ -7864,6 +8574,7 @@ impl ::flatbuffers::Verifiable for PRWExecutionResult<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_SOURCE", Self::VT_EPHEMERIS_SOURCE, true)?
             .visit_field::<prwDerivativeTechnique>("STM_TECHNIQUE", Self::VT_STM_TECHNIQUE, false)?
             .visit_field::<prwDensityTreatment>("DENSITY_TREATMENT", Self::VT_DENSITY_TREATMENT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, prwDynamicParameter>>>("DYNAMIC_PARAMETERS", Self::VT_DYNAMIC_PARAMETERS, false)?
             .finish();
         Ok(())
     }
@@ -7876,6 +8587,7 @@ pub struct PRWExecutionResultArgs<'a> {
     pub EPHEMERIS_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub STM_TECHNIQUE: prwDerivativeTechnique,
     pub DENSITY_TREATMENT: prwDensityTreatment,
+    pub DYNAMIC_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, prwDynamicParameter>>>,
 }
 
 impl<'a> Default for PRWExecutionResultArgs<'a> {
@@ -7888,6 +8600,7 @@ impl<'a> Default for PRWExecutionResultArgs<'a> {
             EPHEMERIS_SOURCE: None, // required field
             STM_TECHNIQUE: prwDerivativeTechnique::UNSPECIFIED,
             DENSITY_TREATMENT: prwDensityTreatment::UNSPECIFIED,
+            DYNAMIC_PARAMETERS: None,
         }
     }
 }
@@ -7929,6 +8642,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWExecutionResultBuilder<'a,
     }
 
     #[inline]
+    pub fn add_DYNAMIC_PARAMETERS(&mut self, DYNAMIC_PARAMETERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , prwDynamicParameter>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PRWExecutionResult::VT_DYNAMIC_PARAMETERS, DYNAMIC_PARAMETERS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWExecutionResultBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PRWExecutionResultBuilder {
@@ -7955,6 +8673,7 @@ impl ::core::fmt::Debug for PRWExecutionResult<'_> {
         ds.field("EPHEMERIS_SOURCE", &self.EPHEMERIS_SOURCE());
         ds.field("STM_TECHNIQUE", &self.STM_TECHNIQUE());
         ds.field("DENSITY_TREATMENT", &self.DENSITY_TREATMENT());
+        ds.field("DYNAMIC_PARAMETERS", &self.DYNAMIC_PARAMETERS());
         ds.finish()
     }
 }
@@ -7968,6 +8687,7 @@ pub struct PRWExecutionResultT {
     pub EPHEMERIS_SOURCE: alloc::string::String,
     pub STM_TECHNIQUE: prwDerivativeTechnique,
     pub DENSITY_TREATMENT: prwDensityTreatment,
+    pub DYNAMIC_PARAMETERS: Option<alloc::vec::Vec<prwDynamicParameter>>,
 }
 
 impl Default for PRWExecutionResultT {
@@ -7979,6 +8699,7 @@ impl Default for PRWExecutionResultT {
             EPHEMERIS_SOURCE: alloc::string::ToString::to_string(""),
             STM_TECHNIQUE: prwDerivativeTechnique::UNSPECIFIED,
             DENSITY_TREATMENT: prwDensityTreatment::UNSPECIFIED,
+            DYNAMIC_PARAMETERS: None,
         }
     }
 }
@@ -8002,6 +8723,9 @@ impl PRWExecutionResultT {
         });
         let STM_TECHNIQUE = self.STM_TECHNIQUE;
         let DENSITY_TREATMENT = self.DENSITY_TREATMENT;
+        let DYNAMIC_PARAMETERS = self.DYNAMIC_PARAMETERS.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
         PRWExecutionResult::create(_fbb, &PRWExecutionResultArgs{
             FINAL_SAMPLE,
             SAMPLES,
@@ -8009,6 +8733,7 @@ impl PRWExecutionResultT {
             EPHEMERIS_SOURCE,
             STM_TECHNIQUE,
             DENSITY_TREATMENT,
+            DYNAMIC_PARAMETERS,
         })
     }
 }
@@ -9932,6 +10657,855 @@ impl PRWNativeInputT {
     }
 }
 
+pub enum PRWEarthOrientationOffset {}
+
+/// Earth orientation for a propagation: one instantaneous row, or daily rows
+/// of one series (same SERIES, IAU_CONVENTION and data-set provenance) with
+/// strictly increasing MJD that cover the arc. A provider interpolates as
+/// published by the series and does not extrapolate.
+#[derive(Copy, Clone, PartialEq)]
+pub struct PRWEarthOrientation<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PRWEarthOrientation<'a> {
+    type Inner = PRWEarthOrientation<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> PRWEarthOrientation<'a> {
+    pub const VT_ROWS: ::flatbuffers::VOffsetT = 4;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        PRWEarthOrientation { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args PRWEarthOrientationArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<PRWEarthOrientation<'bldr>> {
+        let mut builder = PRWEarthOrientationBuilder::new(_fbb);
+        if let Some(x) = args.ROWS { builder.add_ROWS(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> PRWEarthOrientationT {
+        let ROWS = {
+            let x = self.ROWS();
+            x.iter().map(|t| t.unpack()).collect()
+        };
+        PRWEarthOrientationT {
+            ROWS,
+        }
+    }
+
+    #[inline]
+    pub fn ROWS(&self) -> ::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<EOP<'a>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<EOP>>>>(PRWEarthOrientation::VT_ROWS, None).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for PRWEarthOrientation<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<EOP>>>>("ROWS", Self::VT_ROWS, true)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct PRWEarthOrientationArgs<'a> {
+    pub ROWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<EOP<'a>>>>>,
+}
+
+impl<'a> Default for PRWEarthOrientationArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        PRWEarthOrientationArgs {
+            ROWS: None, // required field
+        }
+    }
+}
+
+pub struct PRWEarthOrientationBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWEarthOrientationBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_ROWS(&mut self, ROWS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<EOP<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PRWEarthOrientation::VT_ROWS, ROWS);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWEarthOrientationBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        PRWEarthOrientationBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<PRWEarthOrientation<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        self.fbb_.required(o, PRWEarthOrientation::VT_ROWS,"ROWS");
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for PRWEarthOrientation<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("PRWEarthOrientation");
+        ds.field("ROWS", &self.ROWS());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PRWEarthOrientationT {
+    pub ROWS: alloc::vec::Vec<EOPT>,
+}
+
+impl Default for PRWEarthOrientationT {
+    fn default() -> Self {
+        Self {
+            ROWS: Default::default(),
+        }
+    }
+}
+
+impl PRWEarthOrientationT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<PRWEarthOrientation<'b>> {
+        let ROWS = Some({
+            let x = &self.ROWS;
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        PRWEarthOrientation::create(_fbb, &PRWEarthOrientationArgs{
+            ROWS,
+        })
+    }
+}
+
+pub enum PRWSpaceWeatherTableOffset {}
+
+/// Daily space weather for a propagation, as published (`SPW`), with strictly
+/// increasing DATE covering the arc plus what the atmosphere model reads
+/// before it (NRLMSISE-00 reads the previous day's F10.7). A provider derives
+/// its model inputs from these rows and reports which ones it reads.
+#[derive(Copy, Clone, PartialEq)]
+pub struct PRWSpaceWeatherTable<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PRWSpaceWeatherTable<'a> {
+    type Inner = PRWSpaceWeatherTable<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> PRWSpaceWeatherTable<'a> {
+    pub const VT_ROWS: ::flatbuffers::VOffsetT = 4;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        PRWSpaceWeatherTable { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args PRWSpaceWeatherTableArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<PRWSpaceWeatherTable<'bldr>> {
+        let mut builder = PRWSpaceWeatherTableBuilder::new(_fbb);
+        if let Some(x) = args.ROWS { builder.add_ROWS(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> PRWSpaceWeatherTableT {
+        let ROWS = {
+            let x = self.ROWS();
+            x.iter().map(|t| t.unpack()).collect()
+        };
+        PRWSpaceWeatherTableT {
+            ROWS,
+        }
+    }
+
+    #[inline]
+    pub fn ROWS(&self) -> ::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SPW<'a>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SPW>>>>(PRWSpaceWeatherTable::VT_ROWS, None).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for PRWSpaceWeatherTable<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SPW>>>>("ROWS", Self::VT_ROWS, true)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct PRWSpaceWeatherTableArgs<'a> {
+    pub ROWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SPW<'a>>>>>,
+}
+
+impl<'a> Default for PRWSpaceWeatherTableArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        PRWSpaceWeatherTableArgs {
+            ROWS: None, // required field
+        }
+    }
+}
+
+pub struct PRWSpaceWeatherTableBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWSpaceWeatherTableBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_ROWS(&mut self, ROWS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SPW<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PRWSpaceWeatherTable::VT_ROWS, ROWS);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWSpaceWeatherTableBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        PRWSpaceWeatherTableBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<PRWSpaceWeatherTable<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        self.fbb_.required(o, PRWSpaceWeatherTable::VT_ROWS,"ROWS");
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for PRWSpaceWeatherTable<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("PRWSpaceWeatherTable");
+        ds.field("ROWS", &self.ROWS());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PRWSpaceWeatherTableT {
+    pub ROWS: alloc::vec::Vec<SPWT>,
+}
+
+impl Default for PRWSpaceWeatherTableT {
+    fn default() -> Self {
+        Self {
+            ROWS: Default::default(),
+        }
+    }
+}
+
+impl PRWSpaceWeatherTableT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<PRWSpaceWeatherTable<'b>> {
+        let ROWS = Some({
+            let x = &self.ROWS;
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        PRWSpaceWeatherTable::create(_fbb, &PRWSpaceWeatherTableArgs{
+            ROWS,
+        })
+    }
+}
+
+pub enum PRWJB2008IndicesOffset {}
+
+/// One UTC day of JB2008 drivers, as Space Environment Technologies publishes
+/// them (SOLFSMY.TXT and DTCFILE.TXT): solar indices in SFU with their
+/// 81-day centred averages, reported at 12 UT of DATE, and the hourly
+/// Dst-derived exospheric temperature change. A provider applies the model's
+/// own lags (1 day for F10 and S10, 2 for M10, 5 for Y10) by reading earlier
+/// rows, and states how it interpolates between them.
+#[derive(Copy, Clone, PartialEq)]
+pub struct PRWJB2008Indices<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PRWJB2008Indices<'a> {
+    type Inner = PRWJB2008Indices<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> PRWJB2008Indices<'a> {
+    pub const VT_DATE: ::flatbuffers::VOffsetT = 4;
+    pub const VT_F10: ::flatbuffers::VOffsetT = 6;
+    pub const VT_F10_CENTRED_81: ::flatbuffers::VOffsetT = 8;
+    pub const VT_S10: ::flatbuffers::VOffsetT = 10;
+    pub const VT_S10_CENTRED_81: ::flatbuffers::VOffsetT = 12;
+    pub const VT_M10: ::flatbuffers::VOffsetT = 14;
+    pub const VT_M10_CENTRED_81: ::flatbuffers::VOffsetT = 16;
+    pub const VT_Y10: ::flatbuffers::VOffsetT = 18;
+    pub const VT_Y10_CENTRED_81: ::flatbuffers::VOffsetT = 20;
+    pub const VT_DTC_HOURLY_K: ::flatbuffers::VOffsetT = 22;
+    pub const VT_SOURCE_FLAGS: ::flatbuffers::VOffsetT = 24;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        PRWJB2008Indices { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args PRWJB2008IndicesArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<PRWJB2008Indices<'bldr>> {
+        let mut builder = PRWJB2008IndicesBuilder::new(_fbb);
+        builder.add_Y10_CENTRED_81(args.Y10_CENTRED_81);
+        builder.add_Y10(args.Y10);
+        builder.add_M10_CENTRED_81(args.M10_CENTRED_81);
+        builder.add_M10(args.M10);
+        builder.add_S10_CENTRED_81(args.S10_CENTRED_81);
+        builder.add_S10(args.S10);
+        builder.add_F10_CENTRED_81(args.F10_CENTRED_81);
+        builder.add_F10(args.F10);
+        if let Some(x) = args.SOURCE_FLAGS { builder.add_SOURCE_FLAGS(x); }
+        if let Some(x) = args.DTC_HOURLY_K { builder.add_DTC_HOURLY_K(x); }
+        if let Some(x) = args.DATE { builder.add_DATE(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> PRWJB2008IndicesT {
+        let DATE = {
+            let x = self.DATE();
+            alloc::string::ToString::to_string(x)
+        };
+        let F10 = self.F10();
+        let F10_CENTRED_81 = self.F10_CENTRED_81();
+        let S10 = self.S10();
+        let S10_CENTRED_81 = self.S10_CENTRED_81();
+        let M10 = self.M10();
+        let M10_CENTRED_81 = self.M10_CENTRED_81();
+        let Y10 = self.Y10();
+        let Y10_CENTRED_81 = self.Y10_CENTRED_81();
+        let DTC_HOURLY_K = self.DTC_HOURLY_K().map(|x| {
+            x.into_iter().collect()
+        });
+        let SOURCE_FLAGS = self.SOURCE_FLAGS().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        PRWJB2008IndicesT {
+            DATE,
+            F10,
+            F10_CENTRED_81,
+            S10,
+            S10_CENTRED_81,
+            M10,
+            M10_CENTRED_81,
+            Y10,
+            Y10_CENTRED_81,
+            DTC_HOURLY_K,
+            SOURCE_FLAGS,
+        }
+    }
+
+    /// ISO 8601 calendar date (UTC) the row's values apply to.
+    #[inline]
+    pub fn DATE(&self) -> &'a str {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PRWJB2008Indices::VT_DATE, None).unwrap()}
+    }
+
+    #[inline]
+    pub fn F10(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWJB2008Indices::VT_F10, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn F10_CENTRED_81(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWJB2008Indices::VT_F10_CENTRED_81, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn S10(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWJB2008Indices::VT_S10, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn S10_CENTRED_81(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWJB2008Indices::VT_S10_CENTRED_81, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn M10(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWJB2008Indices::VT_M10, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn M10_CENTRED_81(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWJB2008Indices::VT_M10_CENTRED_81, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn Y10(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWJB2008Indices::VT_Y10, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn Y10_CENTRED_81(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWJB2008Indices::VT_Y10_CENTRED_81, Some(0.0)).unwrap()}
+    }
+
+    /// Exospheric temperature change from Dst (K), hours 00 through 23 UTC.
+    #[inline]
+    pub fn DTC_HOURLY_K(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PRWJB2008Indices::VT_DTC_HOURLY_K, None)}
+    }
+
+    /// Source flags as published (SOLFSMY Ssrc), e.g. "4B".
+    #[inline]
+    pub fn SOURCE_FLAGS(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PRWJB2008Indices::VT_SOURCE_FLAGS, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for PRWJB2008Indices<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATE", Self::VT_DATE, true)?
+            .visit_field::<f64>("F10", Self::VT_F10, false)?
+            .visit_field::<f64>("F10_CENTRED_81", Self::VT_F10_CENTRED_81, false)?
+            .visit_field::<f64>("S10", Self::VT_S10, false)?
+            .visit_field::<f64>("S10_CENTRED_81", Self::VT_S10_CENTRED_81, false)?
+            .visit_field::<f64>("M10", Self::VT_M10, false)?
+            .visit_field::<f64>("M10_CENTRED_81", Self::VT_M10_CENTRED_81, false)?
+            .visit_field::<f64>("Y10", Self::VT_Y10, false)?
+            .visit_field::<f64>("Y10_CENTRED_81", Self::VT_Y10_CENTRED_81, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DTC_HOURLY_K", Self::VT_DTC_HOURLY_K, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_FLAGS", Self::VT_SOURCE_FLAGS, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct PRWJB2008IndicesArgs<'a> {
+    pub DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub F10: f64,
+    pub F10_CENTRED_81: f64,
+    pub S10: f64,
+    pub S10_CENTRED_81: f64,
+    pub M10: f64,
+    pub M10_CENTRED_81: f64,
+    pub Y10: f64,
+    pub Y10_CENTRED_81: f64,
+    pub DTC_HOURLY_K: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub SOURCE_FLAGS: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+
+impl<'a> Default for PRWJB2008IndicesArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        PRWJB2008IndicesArgs {
+            DATE: None, // required field
+            F10: 0.0,
+            F10_CENTRED_81: 0.0,
+            S10: 0.0,
+            S10_CENTRED_81: 0.0,
+            M10: 0.0,
+            M10_CENTRED_81: 0.0,
+            Y10: 0.0,
+            Y10_CENTRED_81: 0.0,
+            DTC_HOURLY_K: None,
+            SOURCE_FLAGS: None,
+        }
+    }
+}
+
+pub struct PRWJB2008IndicesBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWJB2008IndicesBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_DATE(&mut self, DATE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PRWJB2008Indices::VT_DATE, DATE);
+    }
+
+    #[inline]
+    pub fn add_F10(&mut self, F10: f64) {
+        self.fbb_.push_slot::<f64>(PRWJB2008Indices::VT_F10, F10, 0.0);
+    }
+
+    #[inline]
+    pub fn add_F10_CENTRED_81(&mut self, F10_CENTRED_81: f64) {
+        self.fbb_.push_slot::<f64>(PRWJB2008Indices::VT_F10_CENTRED_81, F10_CENTRED_81, 0.0);
+    }
+
+    #[inline]
+    pub fn add_S10(&mut self, S10: f64) {
+        self.fbb_.push_slot::<f64>(PRWJB2008Indices::VT_S10, S10, 0.0);
+    }
+
+    #[inline]
+    pub fn add_S10_CENTRED_81(&mut self, S10_CENTRED_81: f64) {
+        self.fbb_.push_slot::<f64>(PRWJB2008Indices::VT_S10_CENTRED_81, S10_CENTRED_81, 0.0);
+    }
+
+    #[inline]
+    pub fn add_M10(&mut self, M10: f64) {
+        self.fbb_.push_slot::<f64>(PRWJB2008Indices::VT_M10, M10, 0.0);
+    }
+
+    #[inline]
+    pub fn add_M10_CENTRED_81(&mut self, M10_CENTRED_81: f64) {
+        self.fbb_.push_slot::<f64>(PRWJB2008Indices::VT_M10_CENTRED_81, M10_CENTRED_81, 0.0);
+    }
+
+    #[inline]
+    pub fn add_Y10(&mut self, Y10: f64) {
+        self.fbb_.push_slot::<f64>(PRWJB2008Indices::VT_Y10, Y10, 0.0);
+    }
+
+    #[inline]
+    pub fn add_Y10_CENTRED_81(&mut self, Y10_CENTRED_81: f64) {
+        self.fbb_.push_slot::<f64>(PRWJB2008Indices::VT_Y10_CENTRED_81, Y10_CENTRED_81, 0.0);
+    }
+
+    #[inline]
+    pub fn add_DTC_HOURLY_K(&mut self, DTC_HOURLY_K: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PRWJB2008Indices::VT_DTC_HOURLY_K, DTC_HOURLY_K);
+    }
+
+    #[inline]
+    pub fn add_SOURCE_FLAGS(&mut self, SOURCE_FLAGS: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PRWJB2008Indices::VT_SOURCE_FLAGS, SOURCE_FLAGS);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWJB2008IndicesBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        PRWJB2008IndicesBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<PRWJB2008Indices<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        self.fbb_.required(o, PRWJB2008Indices::VT_DATE,"DATE");
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for PRWJB2008Indices<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("PRWJB2008Indices");
+        ds.field("DATE", &self.DATE());
+        ds.field("F10", &self.F10());
+        ds.field("F10_CENTRED_81", &self.F10_CENTRED_81());
+        ds.field("S10", &self.S10());
+        ds.field("S10_CENTRED_81", &self.S10_CENTRED_81());
+        ds.field("M10", &self.M10());
+        ds.field("M10_CENTRED_81", &self.M10_CENTRED_81());
+        ds.field("Y10", &self.Y10());
+        ds.field("Y10_CENTRED_81", &self.Y10_CENTRED_81());
+        ds.field("DTC_HOURLY_K", &self.DTC_HOURLY_K());
+        ds.field("SOURCE_FLAGS", &self.SOURCE_FLAGS());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PRWJB2008IndicesT {
+    pub DATE: alloc::string::String,
+    pub F10: f64,
+    pub F10_CENTRED_81: f64,
+    pub S10: f64,
+    pub S10_CENTRED_81: f64,
+    pub M10: f64,
+    pub M10_CENTRED_81: f64,
+    pub Y10: f64,
+    pub Y10_CENTRED_81: f64,
+    pub DTC_HOURLY_K: Option<alloc::vec::Vec<f64>>,
+    pub SOURCE_FLAGS: Option<alloc::string::String>,
+}
+
+impl Default for PRWJB2008IndicesT {
+    fn default() -> Self {
+        Self {
+            DATE: alloc::string::ToString::to_string(""),
+            F10: 0.0,
+            F10_CENTRED_81: 0.0,
+            S10: 0.0,
+            S10_CENTRED_81: 0.0,
+            M10: 0.0,
+            M10_CENTRED_81: 0.0,
+            Y10: 0.0,
+            Y10_CENTRED_81: 0.0,
+            DTC_HOURLY_K: None,
+            SOURCE_FLAGS: None,
+        }
+    }
+}
+
+impl PRWJB2008IndicesT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<PRWJB2008Indices<'b>> {
+        let DATE = Some({
+            let x = &self.DATE;
+            _fbb.create_string(x)
+        });
+        let F10 = self.F10;
+        let F10_CENTRED_81 = self.F10_CENTRED_81;
+        let S10 = self.S10;
+        let S10_CENTRED_81 = self.S10_CENTRED_81;
+        let M10 = self.M10;
+        let M10_CENTRED_81 = self.M10_CENTRED_81;
+        let Y10 = self.Y10;
+        let Y10_CENTRED_81 = self.Y10_CENTRED_81;
+        let DTC_HOURLY_K = self.DTC_HOURLY_K.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let SOURCE_FLAGS = self.SOURCE_FLAGS.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        PRWJB2008Indices::create(_fbb, &PRWJB2008IndicesArgs{
+            DATE,
+            F10,
+            F10_CENTRED_81,
+            S10,
+            S10_CENTRED_81,
+            M10,
+            M10_CENTRED_81,
+            Y10,
+            Y10_CENTRED_81,
+            DTC_HOURLY_K,
+            SOURCE_FLAGS,
+        })
+    }
+}
+
+pub enum PRWJB2008IndicesTableOffset {}
+
+/// JB2008 drivers for a propagation: daily rows with strictly increasing
+/// DATE covering the arc plus the days the model's lags read before it.
+#[derive(Copy, Clone, PartialEq)]
+pub struct PRWJB2008IndicesTable<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PRWJB2008IndicesTable<'a> {
+    type Inner = PRWJB2008IndicesTable<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> PRWJB2008IndicesTable<'a> {
+    pub const VT_ROWS: ::flatbuffers::VOffsetT = 4;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        PRWJB2008IndicesTable { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args PRWJB2008IndicesTableArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<PRWJB2008IndicesTable<'bldr>> {
+        let mut builder = PRWJB2008IndicesTableBuilder::new(_fbb);
+        if let Some(x) = args.ROWS { builder.add_ROWS(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> PRWJB2008IndicesTableT {
+        let ROWS = {
+            let x = self.ROWS();
+            x.iter().map(|t| t.unpack()).collect()
+        };
+        PRWJB2008IndicesTableT {
+            ROWS,
+        }
+    }
+
+    #[inline]
+    pub fn ROWS(&self) -> ::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWJB2008Indices<'a>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWJB2008Indices>>>>(PRWJB2008IndicesTable::VT_ROWS, None).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for PRWJB2008IndicesTable<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PRWJB2008Indices>>>>("ROWS", Self::VT_ROWS, true)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct PRWJB2008IndicesTableArgs<'a> {
+    pub ROWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWJB2008Indices<'a>>>>>,
+}
+
+impl<'a> Default for PRWJB2008IndicesTableArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        PRWJB2008IndicesTableArgs {
+            ROWS: None, // required field
+        }
+    }
+}
+
+pub struct PRWJB2008IndicesTableBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWJB2008IndicesTableBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_ROWS(&mut self, ROWS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PRWJB2008Indices<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PRWJB2008IndicesTable::VT_ROWS, ROWS);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWJB2008IndicesTableBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        PRWJB2008IndicesTableBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<PRWJB2008IndicesTable<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        self.fbb_.required(o, PRWJB2008IndicesTable::VT_ROWS,"ROWS");
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for PRWJB2008IndicesTable<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("PRWJB2008IndicesTable");
+        ds.field("ROWS", &self.ROWS());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PRWJB2008IndicesTableT {
+    pub ROWS: alloc::vec::Vec<PRWJB2008IndicesT>,
+}
+
+impl Default for PRWJB2008IndicesTableT {
+    fn default() -> Self {
+        Self {
+            ROWS: Default::default(),
+        }
+    }
+}
+
+impl PRWJB2008IndicesTableT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<PRWJB2008IndicesTable<'b>> {
+        let ROWS = Some({
+            let x = &self.ROWS;
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        PRWJB2008IndicesTable::create(_fbb, &PRWJB2008IndicesTableArgs{
+            ROWS,
+        })
+    }
+}
+
 pub enum PRWEphemerisRequestOffset {}
 
 /// Geometric SPK state query, TDB; NAIF IDs state origin and target explicitly.
@@ -11518,6 +13092,9 @@ impl<'a> PRW<'a> {
     pub const VT_ATMOSPHERE_RESULT: ::flatbuffers::VOffsetT = 34;
     pub const VT_VERSION_QUERY: ::flatbuffers::VOffsetT = 36;
     pub const VT_VERSION_RESULT: ::flatbuffers::VOffsetT = 38;
+    pub const VT_EARTH_ORIENTATION: ::flatbuffers::VOffsetT = 40;
+    pub const VT_SPACE_WEATHER: ::flatbuffers::VOffsetT = 42;
+    pub const VT_JB2008_INDICES: ::flatbuffers::VOffsetT = 44;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -11530,6 +13107,9 @@ impl<'a> PRW<'a> {
         args: &'args PRWArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PRW<'bldr>> {
         let mut builder = PRWBuilder::new(_fbb);
+        if let Some(x) = args.JB2008_INDICES { builder.add_JB2008_INDICES(x); }
+        if let Some(x) = args.SPACE_WEATHER { builder.add_SPACE_WEATHER(x); }
+        if let Some(x) = args.EARTH_ORIENTATION { builder.add_EARTH_ORIENTATION(x); }
         if let Some(x) = args.VERSION_RESULT { builder.add_VERSION_RESULT(x); }
         if let Some(x) = args.ATMOSPHERE_RESULT { builder.add_ATMOSPHERE_RESULT(x); }
         if let Some(x) = args.ATMOSPHERE_REQUEST { builder.add_ATMOSPHERE_REQUEST(x); }
@@ -11604,6 +13184,15 @@ impl<'a> PRW<'a> {
         let VERSION_RESULT = self.VERSION_RESULT().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let EARTH_ORIENTATION = self.EARTH_ORIENTATION().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let SPACE_WEATHER = self.SPACE_WEATHER().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let JB2008_INDICES = self.JB2008_INDICES().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         PRWT {
             INIT,
             BATCH_REQUEST,
@@ -11623,6 +13212,9 @@ impl<'a> PRW<'a> {
             ATMOSPHERE_RESULT,
             VERSION_QUERY,
             VERSION_RESULT,
+            EARTH_ORIENTATION,
+            SPACE_WEATHER,
+            JB2008_INDICES,
         }
     }
 
@@ -11770,6 +13362,30 @@ impl<'a> PRW<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWVersionResult>>(PRW::VT_VERSION_RESULT, None)}
     }
+
+    #[inline]
+    pub fn EARTH_ORIENTATION(&self) -> Option<PRWEarthOrientation<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWEarthOrientation>>(PRW::VT_EARTH_ORIENTATION, None)}
+    }
+
+    #[inline]
+    pub fn SPACE_WEATHER(&self) -> Option<PRWSpaceWeatherTable<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWSpaceWeatherTable>>(PRW::VT_SPACE_WEATHER, None)}
+    }
+
+    #[inline]
+    pub fn JB2008_INDICES(&self) -> Option<PRWJB2008IndicesTable<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWJB2008IndicesTable>>(PRW::VT_JB2008_INDICES, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PRW<'_> {
@@ -11796,6 +13412,9 @@ impl ::flatbuffers::Verifiable for PRW<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<PRWAtmosphereResult>>("ATMOSPHERE_RESULT", Self::VT_ATMOSPHERE_RESULT, false)?
             .visit_field::<bool>("VERSION_QUERY", Self::VT_VERSION_QUERY, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PRWVersionResult>>("VERSION_RESULT", Self::VT_VERSION_RESULT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PRWEarthOrientation>>("EARTH_ORIENTATION", Self::VT_EARTH_ORIENTATION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PRWSpaceWeatherTable>>("SPACE_WEATHER", Self::VT_SPACE_WEATHER, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PRWJB2008IndicesTable>>("JB2008_INDICES", Self::VT_JB2008_INDICES, false)?
             .finish();
         Ok(())
     }
@@ -11820,6 +13439,9 @@ pub struct PRWArgs<'a> {
     pub ATMOSPHERE_RESULT: Option<::flatbuffers::WIPOffset<PRWAtmosphereResult<'a>>>,
     pub VERSION_QUERY: bool,
     pub VERSION_RESULT: Option<::flatbuffers::WIPOffset<PRWVersionResult<'a>>>,
+    pub EARTH_ORIENTATION: Option<::flatbuffers::WIPOffset<PRWEarthOrientation<'a>>>,
+    pub SPACE_WEATHER: Option<::flatbuffers::WIPOffset<PRWSpaceWeatherTable<'a>>>,
+    pub JB2008_INDICES: Option<::flatbuffers::WIPOffset<PRWJB2008IndicesTable<'a>>>,
 }
 
 impl<'a> Default for PRWArgs<'a> {
@@ -11844,6 +13466,9 @@ impl<'a> Default for PRWArgs<'a> {
             ATMOSPHERE_RESULT: None,
             VERSION_QUERY: false,
             VERSION_RESULT: None,
+            EARTH_ORIENTATION: None,
+            SPACE_WEATHER: None,
+            JB2008_INDICES: None,
         }
     }
 }
@@ -11945,6 +13570,21 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_EARTH_ORIENTATION(&mut self, EARTH_ORIENTATION: ::flatbuffers::WIPOffset<PRWEarthOrientation<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PRWEarthOrientation>>(PRW::VT_EARTH_ORIENTATION, EARTH_ORIENTATION);
+    }
+
+    #[inline]
+    pub fn add_SPACE_WEATHER(&mut self, SPACE_WEATHER: ::flatbuffers::WIPOffset<PRWSpaceWeatherTable<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PRWSpaceWeatherTable>>(PRW::VT_SPACE_WEATHER, SPACE_WEATHER);
+    }
+
+    #[inline]
+    pub fn add_JB2008_INDICES(&mut self, JB2008_INDICES: ::flatbuffers::WIPOffset<PRWJB2008IndicesTable<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PRWJB2008IndicesTable>>(PRW::VT_JB2008_INDICES, JB2008_INDICES);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PRWBuilder {
@@ -11981,6 +13621,9 @@ impl ::core::fmt::Debug for PRW<'_> {
         ds.field("ATMOSPHERE_RESULT", &self.ATMOSPHERE_RESULT());
         ds.field("VERSION_QUERY", &self.VERSION_QUERY());
         ds.field("VERSION_RESULT", &self.VERSION_RESULT());
+        ds.field("EARTH_ORIENTATION", &self.EARTH_ORIENTATION());
+        ds.field("SPACE_WEATHER", &self.SPACE_WEATHER());
+        ds.field("JB2008_INDICES", &self.JB2008_INDICES());
         ds.finish()
     }
 }
@@ -12006,6 +13649,9 @@ pub struct PRWT {
     pub ATMOSPHERE_RESULT: Option<alloc::boxed::Box<PRWAtmosphereResultT>>,
     pub VERSION_QUERY: bool,
     pub VERSION_RESULT: Option<alloc::boxed::Box<PRWVersionResultT>>,
+    pub EARTH_ORIENTATION: Option<alloc::boxed::Box<PRWEarthOrientationT>>,
+    pub SPACE_WEATHER: Option<alloc::boxed::Box<PRWSpaceWeatherTableT>>,
+    pub JB2008_INDICES: Option<alloc::boxed::Box<PRWJB2008IndicesTableT>>,
 }
 
 impl Default for PRWT {
@@ -12029,6 +13675,9 @@ impl Default for PRWT {
             ATMOSPHERE_RESULT: None,
             VERSION_QUERY: false,
             VERSION_RESULT: None,
+            EARTH_ORIENTATION: None,
+            SPACE_WEATHER: None,
+            JB2008_INDICES: None,
         }
     }
 }
@@ -12090,6 +13739,15 @@ impl PRWT {
         let VERSION_RESULT = self.VERSION_RESULT.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let EARTH_ORIENTATION = self.EARTH_ORIENTATION.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let SPACE_WEATHER = self.SPACE_WEATHER.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let JB2008_INDICES = self.JB2008_INDICES.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         PRW::create(_fbb, &PRWArgs{
             INIT,
             BATCH_REQUEST,
@@ -12109,6 +13767,9 @@ impl PRWT {
             ATMOSPHERE_RESULT,
             VERSION_QUERY,
             VERSION_RESULT,
+            EARTH_ORIENTATION,
+            SPACE_WEATHER,
+            JB2008_INDICES,
         })
     }
 }

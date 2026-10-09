@@ -677,6 +677,14 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "SPK_DAF", "SP3_C", "SP3_D", "CODE_500", "SCENARIO_EPOCH_EPHEMERIS_TEXT", "SCENARIO_EPOCH_ATTITUDE_TEXT", "CCSDS_OEM_KVN", "CCSDS_OEM_XML", "CCSDS_AEM_KVN", "CCSDS_AEM_XML", "CCSDS_TDM_KVN", "CCSDS_TDM_XML", "PROVIDER_DEFINED"]
     },
+    "FluxQualifier" : {
+      "type" : "string",
+      "enum": ["OBSERVED", "BURST_ADJUSTED", "INTERPOLATED_EXTRAPOLATED", "NO_OBSERVATION", "PROVIDER_INTERPOLATED"]
+    },
+    "F107DataType" : {
+      "type" : "string",
+      "enum": ["OBS", "INT", "PRD", "PRM"]
+    },
     "propagatorStateFlags" : {
       "type" : "string",
       "enum": ["VALID", "IN_ECLIPSE", "DECAYED", "EXTRAPOLATED", "RESERVED_4", "RESERVED_5", "RESERVED_6", "RESERVED_7"]
@@ -695,11 +703,11 @@
     },
     "prwGravitySelection" : {
       "type" : "string",
-      "enum": ["INFER_FLAGS", "POINT_MASS", "J2_ONLY", "J2_TO_J4", "SPHERICAL_HARMONICS", "EGM2008"]
+      "enum": ["INFER_FLAGS", "POINT_MASS", "J2_ONLY", "J2_TO_J4", "SPHERICAL_HARMONICS", "EGM2008", "EGM96"]
     },
     "prwAtmosphereFamily" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "NRLMSISE00", "EXPONENTIAL", "USSA1976", "HARRIS_PRIESTER"]
+      "enum": ["UNSPECIFIED", "NRLMSISE00", "EXPONENTIAL", "USSA1976", "HARRIS_PRIESTER", "JACCHIA_ROBERTS", "JB2008"]
     },
     "prwDerivativeTechnique" : {
       "type" : "string",
@@ -732,6 +740,18 @@
     "prwDensitySpecies" : {
       "type" : "string",
       "enum": ["UNSPECIFIED", "HELIUM", "ATOMIC_OXYGEN", "MOLECULAR_NITROGEN", "MOLECULAR_OXYGEN", "ARGON", "HYDROGEN", "ATOMIC_NITROGEN", "ANOMALOUS_OXYGEN"]
+    },
+    "prwSolidTideModel" : {
+      "type" : "string",
+      "enum": ["NONE", "IERS_2010"]
+    },
+    "prwRelativityTerms" : {
+      "type" : "string",
+      "enum": ["NONE", "SCHWARZSCHILD", "IERS_2010"]
+    },
+    "prwDynamicParameter" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "DRAG_AREA_OVER_MASS", "DRAG_AREA_OVER_MASS_RATE", "SRP_AREA_OVER_MASS", "IN_TRACK_ACCELERATION"]
     },
     "meanElementSource" : {
       "type" : "string",
@@ -2176,14 +2196,6 @@
     "packetKind" : {
       "type" : "string",
       "enum": ["TM", "TC"]
-    },
-    "FluxQualifier" : {
-      "type" : "string",
-      "enum": ["OBSERVED", "BURST_ADJUSTED", "INTERPOLATED_EXTRAPOLATED", "NO_OBSERVATION", "PROVIDER_INTERPOLATED"]
-    },
-    "F107DataType" : {
-      "type" : "string",
-      "enum": ["OBS", "INT", "PRD", "PRM"]
     },
     "txsServiceClass" : {
       "type" : "string",
@@ -12608,6 +12620,146 @@
       },
       "additionalProperties" : false
     },
+    "SPW" : {
+      "type" : "object",
+      "description" : "Space Weather Data Record",
+      "properties" : {
+        "DATE" : {
+                "type" : "string",
+                "description" : "Date in ISO 8601 format"
+              },
+        "BSRN" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Bartels Solar Rotation Number"
+              },
+        "ND" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Day within Bartels cycle (1-27)"
+              },
+        "KP1" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10"
+              },
+        "KP2" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10"
+              },
+        "KP3" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10"
+              },
+        "KP4" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10"
+              },
+        "KP5" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10"
+              },
+        "KP6" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10"
+              },
+        "KP7" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10"
+              },
+        "KP8" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10"
+              },
+        "KP_SUM" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Sum of the 8 Kp indices for the day"
+              },
+        "AP1" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 0000-0300 UT"
+              },
+        "AP2" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 0300-0600 UT"
+              },
+        "AP3" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 0600-0900 UT"
+              },
+        "AP4" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 0900-1200 UT"
+              },
+        "AP5" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 1200-1500 UT"
+              },
+        "AP6" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 1500-1800 UT"
+              },
+        "AP7" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 1800-2100 UT"
+              },
+        "AP8" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Planetary Equivalent Amplitude (Ap) for 2100-0000 UT"
+              },
+        "AP_AVG" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Arithmetic average of the 8 Ap indices for the day"
+              },
+        "CP" : {
+                "type" : "number",
+                "description" : "Planetary Daily Character Figure (0.0 to 2.5)"
+              },
+        "C9" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "C9 index (0-9)"
+              },
+        "ISN" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "International Sunspot Number"
+              },
+        "F107_OBS" : {
+                "type" : "number",
+                "description" : "Observed 10.7cm Solar Radio Flux"
+              },
+        "F107_ADJ" : {
+                "type" : "number",
+                "description" : "Adjusted 10.7cm Solar Radio Flux (to 1 AU)"
+              },
+        "F107_DATA_TYPE" : {
+                "$ref" : "#/definitions/F107DataType",
+                "description" : "F10.7 Data Type"
+              },
+        "F107_OBS_CENTER81" : {
+                "type" : "number",
+                "description" : "81-day centered average of observed F10.7"
+              },
+        "F107_OBS_LAST81" : {
+                "type" : "number",
+                "description" : "81-day trailing average of observed F10.7"
+              },
+        "F107_ADJ_CENTER81" : {
+                "type" : "number",
+                "description" : "81-day centered average of adjusted F10.7"
+              },
+        "F107_ADJ_LAST81" : {
+                "type" : "number",
+                "description" : "81-day trailing average of adjusted F10.7"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SPWCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SPW"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "PRWInit" : {
       "type" : "object",
       "description" : "Propagator initialization request — assigns TLE / OMM / Keplerian /\npolynomial inputs to entity handles.\n\nThe actual per-entity source record is carried inline as raw bytes\ntagged with SOURCE_KIND and, where useful, a SDS file_identifier.\nCallers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the\nbytes verbatim; the propagator uses SOURCE_KIND to decide how to\nconsume them.",
@@ -12918,6 +13070,37 @@
         "EPHEMERIS_SOURCE" : {
                 "type" : "string",
                 "description" : "Actual configured source name, e.g. an analytic series or a planetary SPK kernel."
+              },
+        "SOLID_TIDES" : {
+                "$ref" : "#/definitions/prwSolidTideModel",
+                "description" : "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (PRW.EARTH_ORIENTATION) to apply them."
+              },
+        "RELATIVITY" : {
+                "$ref" : "#/definitions/prwRelativityTerms"
+              },
+        "IN_TRACK_ACCELERATION_M_S2" : {
+                "type" : "number",
+                "description" : "Constant acceleration along the in-track axis, m/s2: T of RTN,\nN cross rhat with N = unit(r cross v) (the \"in-track thrust\" of a VCM)."
+              },
+        "HAS_IN_TRACK_ACCELERATION_M_S2" : {
+                "type" : "boolean",
+                "description" : "True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent."
+              },
+        "DRAG_AREA_OVER_MASS_RATE_M2_KG_S" : {
+                "type" : "number",
+                "description" : "Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the\nBDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch)."
+              },
+        "HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S" : {
+                "type" : "boolean",
+                "description" : "True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent."
+              },
+        "MAXIMUM_TESSERAL_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Highest degree of the tesseral and sectorial terms (order >= 1); the\nzonals run to MAXIMUM_DEGREE. A VCM's \"mmZ,nnT\" is MAXIMUM_DEGREE mm,\nMAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn."
+              },
+        "HAS_MAXIMUM_TESSERAL_DEGREE" : {
+                "type" : "boolean",
+                "description" : "True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent."
               }
       },
       "required" : ["EPHEMERIS_SOURCE"],
@@ -12925,7 +13108,7 @@
     },
     "PRWStateMatrix" : {
       "type" : "object",
-      "description" : "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], SI state units.\nCovariance entries have row*column units; STM entries row/column units.",
+      "description" : "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
       "properties" : {
         "DIMENSION" : {
                 "type" : "integer", "minimum" : 0, "maximum" :255
@@ -13012,6 +13195,22 @@
         "PROCESS_NOISE" : {
                 "$ref" : "#/definitions/PRWProcessNoise",
                 "description" : "Process noise for COVARIANCE: on input, what propagation adds; on\noutput, what the propagated COVARIANCE includes. Absent means none."
+              },
+        "DRAG_AREA_OVER_MASS_RATE_M2_KG_S" : {
+                "type" : "number",
+                "description" : "Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch\n(the BDOT of a VCM)."
+              },
+        "HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S" : {
+                "type" : "boolean",
+                "description" : "True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent."
+              },
+        "IN_TRACK_ACCELERATION_M_S2" : {
+                "type" : "number",
+                "description" : "Constant in-track acceleration, m/s2, as PRWForceConfiguration's."
+              },
+        "HAS_IN_TRACK_ACCELERATION_M_S2" : {
+                "type" : "boolean",
+                "description" : "True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent."
               }
       },
       "required" : ["STATE", "COORDINATE_SYSTEM"],
@@ -13160,6 +13359,10 @@
         "PROCESS_NOISE" : {
                 "$ref" : "#/definitions/PRWProcessNoise",
                 "description" : "Process noise added to the propagated covariance. Absent means none."
+              },
+        "DYNAMIC_PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/prwDynamicParameter"},
+                "description" : "Model parameters appended, in this order and without repeats, to\nINITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a\ncovariance carries their uncertainty and correlation (a VCM's 7x7 to\n10x10). Each must be active in FORCES. Empty means the state alone."
               }
       },
       "required" : ["INITIAL", "TARGET_EPOCH", "INTEGRATOR", "FORCES"],
@@ -13270,6 +13473,10 @@
               },
         "DENSITY_TREATMENT" : {
                 "$ref" : "#/definitions/prwDensityTreatment"
+              },
+        "DYNAMIC_PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/prwDynamicParameter"},
+                "description" : "The parameters the samples' STM and COVARIANCE carry after the state."
               }
       },
       "required" : ["FINAL_SAMPLE", "EPHEMERIS_SOURCE"],
@@ -13447,6 +13654,83 @@
               }
       },
       "required" : ["DESCRIPTOR", "CONTENT"],
+      "additionalProperties" : false
+    },
+    "PRWEarthOrientation" : {
+      "type" : "object",
+      "description" : "Earth orientation for a propagation: one instantaneous row, or daily rows\nof one series (same SERIES, IAU_CONVENTION and data-set provenance) with\nstrictly increasing MJD that cover the arc. A provider interpolates as\npublished by the series and does not extrapolate.",
+      "properties" : {
+        "ROWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EOP"}
+              }
+      },
+      "required" : ["ROWS"],
+      "additionalProperties" : false
+    },
+    "PRWSpaceWeatherTable" : {
+      "type" : "object",
+      "description" : "Daily space weather for a propagation, as published (`SPW`), with strictly\nincreasing DATE covering the arc plus what the atmosphere model reads\nbefore it (NRLMSISE-00 reads the previous day's F10.7). A provider derives\nits model inputs from these rows and reports which ones it reads.",
+      "properties" : {
+        "ROWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SPW"}
+              }
+      },
+      "required" : ["ROWS"],
+      "additionalProperties" : false
+    },
+    "PRWJB2008Indices" : {
+      "type" : "object",
+      "description" : "One UTC day of JB2008 drivers, as Space Environment Technologies publishes\nthem (SOLFSMY.TXT and DTCFILE.TXT): solar indices in SFU with their\n81-day centred averages, reported at 12 UT of DATE, and the hourly\nDst-derived exospheric temperature change. A provider applies the model's\nown lags (1 day for F10 and S10, 2 for M10, 5 for Y10) by reading earlier\nrows, and states how it interpolates between them.",
+      "properties" : {
+        "DATE" : {
+                "type" : "string",
+                "description" : "ISO 8601 calendar date (UTC) the row's values apply to."
+              },
+        "F10" : {
+                "type" : "number"
+              },
+        "F10_CENTRED_81" : {
+                "type" : "number"
+              },
+        "S10" : {
+                "type" : "number"
+              },
+        "S10_CENTRED_81" : {
+                "type" : "number"
+              },
+        "M10" : {
+                "type" : "number"
+              },
+        "M10_CENTRED_81" : {
+                "type" : "number"
+              },
+        "Y10" : {
+                "type" : "number"
+              },
+        "Y10_CENTRED_81" : {
+                "type" : "number"
+              },
+        "DTC_HOURLY_K" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Exospheric temperature change from Dst (K), hours 00 through 23 UTC."
+              },
+        "SOURCE_FLAGS" : {
+                "type" : "string",
+                "description" : "Source flags as published (SOLFSMY Ssrc), e.g. \"4B\"."
+              }
+      },
+      "required" : ["DATE"],
+      "additionalProperties" : false
+    },
+    "PRWJB2008IndicesTable" : {
+      "type" : "object",
+      "description" : "JB2008 drivers for a propagation: daily rows with strictly increasing\nDATE covering the arc plus the days the model's lags read before it.",
+      "properties" : {
+        "ROWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PRWJB2008Indices"}
+              }
+      },
+      "required" : ["ROWS"],
       "additionalProperties" : false
     },
     "PRWEphemerisRequest" : {
@@ -13655,6 +13939,15 @@
               },
         "VERSION_RESULT" : {
                 "$ref" : "#/definitions/PRWVersionResult"
+              },
+        "EARTH_ORIENTATION" : {
+                "$ref" : "#/definitions/PRWEarthOrientation"
+              },
+        "SPACE_WEATHER" : {
+                "$ref" : "#/definitions/PRWSpaceWeatherTable"
+              },
+        "JB2008_INDICES" : {
+                "$ref" : "#/definitions/PRWJB2008IndicesTable"
               }
       },
       "additionalProperties" : false
@@ -42619,146 +42912,6 @@
         "DATA" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
                 "description" : "Packet data zone"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SPW" : {
-      "type" : "object",
-      "description" : "Space Weather Data Record",
-      "properties" : {
-        "DATE" : {
-                "type" : "string",
-                "description" : "Date in ISO 8601 format"
-              },
-        "BSRN" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Bartels Solar Rotation Number"
-              },
-        "ND" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Day within Bartels cycle (1-27)"
-              },
-        "KP1" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10"
-              },
-        "KP2" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10"
-              },
-        "KP3" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10"
-              },
-        "KP4" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10"
-              },
-        "KP5" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10"
-              },
-        "KP6" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10"
-              },
-        "KP7" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10"
-              },
-        "KP8" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10"
-              },
-        "KP_SUM" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Sum of the 8 Kp indices for the day"
-              },
-        "AP1" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary Equivalent Amplitude (Ap) for 0000-0300 UT"
-              },
-        "AP2" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary Equivalent Amplitude (Ap) for 0300-0600 UT"
-              },
-        "AP3" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary Equivalent Amplitude (Ap) for 0600-0900 UT"
-              },
-        "AP4" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary Equivalent Amplitude (Ap) for 0900-1200 UT"
-              },
-        "AP5" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary Equivalent Amplitude (Ap) for 1200-1500 UT"
-              },
-        "AP6" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary Equivalent Amplitude (Ap) for 1500-1800 UT"
-              },
-        "AP7" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary Equivalent Amplitude (Ap) for 1800-2100 UT"
-              },
-        "AP8" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Planetary Equivalent Amplitude (Ap) for 2100-0000 UT"
-              },
-        "AP_AVG" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Arithmetic average of the 8 Ap indices for the day"
-              },
-        "CP" : {
-                "type" : "number",
-                "description" : "Planetary Daily Character Figure (0.0 to 2.5)"
-              },
-        "C9" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "C9 index (0-9)"
-              },
-        "ISN" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "International Sunspot Number"
-              },
-        "F107_OBS" : {
-                "type" : "number",
-                "description" : "Observed 10.7cm Solar Radio Flux"
-              },
-        "F107_ADJ" : {
-                "type" : "number",
-                "description" : "Adjusted 10.7cm Solar Radio Flux (to 1 AU)"
-              },
-        "F107_DATA_TYPE" : {
-                "$ref" : "#/definitions/F107DataType",
-                "description" : "F10.7 Data Type"
-              },
-        "F107_OBS_CENTER81" : {
-                "type" : "number",
-                "description" : "81-day centered average of observed F10.7"
-              },
-        "F107_OBS_LAST81" : {
-                "type" : "number",
-                "description" : "81-day trailing average of observed F10.7"
-              },
-        "F107_ADJ_CENTER81" : {
-                "type" : "number",
-                "description" : "81-day centered average of adjusted F10.7"
-              },
-        "F107_ADJ_LAST81" : {
-                "type" : "number",
-                "description" : "81-day trailing average of adjusted F10.7"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SPWCOLLECTION" : {
-      "type" : "object",
-      "properties" : {
-        "RECORDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SPW"}
               }
       },
       "additionalProperties" : false

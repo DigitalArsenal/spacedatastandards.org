@@ -162,8 +162,41 @@ class PRWResidentState(object):
             return obj
         return None
 
+    # Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch
+    # (the BDOT of a VCM).
+    # PRWResidentState
+    def DRAG_AREA_OVER_MASS_RATE_M2_KG_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+    # PRWResidentState
+    def HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+    # PRWResidentState
+    def IN_TRACK_ACCELERATION_M_S2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+    # PRWResidentState
+    def HAS_IN_TRACK_ACCELERATION_M_S2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def PRWResidentStateStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(19)
 
 def Start(builder):
     PRWResidentStateStart(builder)
@@ -258,6 +291,30 @@ def PRWResidentStateAddPROCESS_NOISE(builder, PROCESS_NOISE):
 def AddPROCESS_NOISE(builder, PROCESS_NOISE):
     PRWResidentStateAddPROCESS_NOISE(builder, PROCESS_NOISE)
 
+def PRWResidentStateAddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S):
+    builder.PrependFloat64Slot(15, DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0)
+
+def AddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S):
+    PRWResidentStateAddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+
+def PRWResidentStateAddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S):
+    builder.PrependBoolSlot(16, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0)
+
+def AddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S):
+    PRWResidentStateAddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+
+def PRWResidentStateAddIN_TRACK_ACCELERATION_M_S2(builder, IN_TRACK_ACCELERATION_M_S2):
+    builder.PrependFloat64Slot(17, IN_TRACK_ACCELERATION_M_S2, 0.0)
+
+def AddIN_TRACK_ACCELERATION_M_S2(builder, IN_TRACK_ACCELERATION_M_S2):
+    PRWResidentStateAddIN_TRACK_ACCELERATION_M_S2(builder, IN_TRACK_ACCELERATION_M_S2)
+
+def PRWResidentStateAddHAS_IN_TRACK_ACCELERATION_M_S2(builder, HAS_IN_TRACK_ACCELERATION_M_S2):
+    builder.PrependBoolSlot(18, HAS_IN_TRACK_ACCELERATION_M_S2, 0)
+
+def AddHAS_IN_TRACK_ACCELERATION_M_S2(builder, HAS_IN_TRACK_ACCELERATION_M_S2):
+    PRWResidentStateAddHAS_IN_TRACK_ACCELERATION_M_S2(builder, HAS_IN_TRACK_ACCELERATION_M_S2)
+
 def PRWResidentStateEnd(builder):
     return builder.EndObject()
 
@@ -294,6 +351,10 @@ class PRWResidentStateT(object):
         HAS_SRP_AREA_OVER_MASS_M2_KG = False,
         VALID = True,
         PROCESS_NOISE = None,
+        DRAG_AREA_OVER_MASS_RATE_M2_KG_S = 0.0,
+        HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = False,
+        IN_TRACK_ACCELERATION_M_S2 = 0.0,
+        HAS_IN_TRACK_ACCELERATION_M_S2 = False,
     ):
         self.INSTANCE = INSTANCE  # type: Optional[PRWInstance.PRWInstanceT]
         self.ENTITY_HANDLE = ENTITY_HANDLE  # type: int
@@ -310,6 +371,10 @@ class PRWResidentStateT(object):
         self.HAS_SRP_AREA_OVER_MASS_M2_KG = HAS_SRP_AREA_OVER_MASS_M2_KG  # type: bool
         self.VALID = VALID  # type: bool
         self.PROCESS_NOISE = PROCESS_NOISE  # type: Optional[PRWProcessNoise.PRWProcessNoiseT]
+        self.DRAG_AREA_OVER_MASS_RATE_M2_KG_S = DRAG_AREA_OVER_MASS_RATE_M2_KG_S  # type: float
+        self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S  # type: bool
+        self.IN_TRACK_ACCELERATION_M_S2 = IN_TRACK_ACCELERATION_M_S2  # type: float
+        self.HAS_IN_TRACK_ACCELERATION_M_S2 = HAS_IN_TRACK_ACCELERATION_M_S2  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -352,6 +417,10 @@ class PRWResidentStateT(object):
         self.VALID = PRWResidentState.VALID()
         if PRWResidentState.PROCESS_NOISE() is not None:
             self.PROCESS_NOISE = PRWProcessNoise.PRWProcessNoiseT.InitFromObj(PRWResidentState.PROCESS_NOISE())
+        self.DRAG_AREA_OVER_MASS_RATE_M2_KG_S = PRWResidentState.DRAG_AREA_OVER_MASS_RATE_M2_KG_S()
+        self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = PRWResidentState.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S()
+        self.IN_TRACK_ACCELERATION_M_S2 = PRWResidentState.IN_TRACK_ACCELERATION_M_S2()
+        self.HAS_IN_TRACK_ACCELERATION_M_S2 = PRWResidentState.HAS_IN_TRACK_ACCELERATION_M_S2()
 
     # PRWResidentStateT
     def Pack(self, builder):
@@ -389,5 +458,9 @@ class PRWResidentStateT(object):
         PRWResidentStateAddVALID(builder, self.VALID)
         if self.PROCESS_NOISE is not None:
             PRWResidentStateAddPROCESS_NOISE(builder, PROCESS_NOISE)
+        PRWResidentStateAddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, self.DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+        PRWResidentStateAddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+        PRWResidentStateAddIN_TRACK_ACCELERATION_M_S2(builder, self.IN_TRACK_ACCELERATION_M_S2)
+        PRWResidentStateAddHAS_IN_TRACK_ACCELERATION_M_S2(builder, self.HAS_IN_TRACK_ACCELERATION_M_S2)
         PRWResidentState = PRWResidentStateEnd(builder)
         return PRWResidentState

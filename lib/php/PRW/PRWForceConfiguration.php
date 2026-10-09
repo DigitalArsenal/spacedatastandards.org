@@ -251,22 +251,106 @@ class PRWForceConfiguration extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+    /// orientation (PRW.EARTH_ORIENTATION) to apply them.
+    /**
+     * @return byte
+     */
+    public function getSOLID_TIDES()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \prwSolidTideModel::NONE;
+    }
+
+    /**
+     * @return byte
+     */
+    public function getRELATIVITY()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \prwRelativityTerms::NONE;
+    }
+
+    /// Constant acceleration along the in-track axis, m/s2: T of RTN,
+    /// N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+    /**
+     * @return double
+     */
+    public function getIN_TRACK_ACCELERATION_M_S2()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+    /**
+     * @return bool
+     */
+    public function getHAS_IN_TRACK_ACCELERATION_M_S2()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+    /// BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+    /**
+     * @return double
+     */
+    public function getDRAG_AREA_OVER_MASS_RATE_M2_KG_S()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+    /**
+     * @return bool
+     */
+    public function getHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Highest degree of the tesseral and sectorial terms (order >= 1); the
+    /// zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+    /// MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+    /**
+     * @return ushort
+     */
+    public function getMAXIMUM_TESSERAL_DEGREE()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+    /**
+     * @return bool
+     */
+    public function getHAS_MAXIMUM_TESSERAL_DEGREE()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRWForceConfiguration(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(22);
+        $builder->StartObject(30);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRWForceConfiguration
      */
-    public static function createPRWForceConfiguration(FlatBufferBuilder $builder, $GRAVITY_CHOICE, $ENABLE_POINT_MASS, $GRAVITATIONAL_PARAMETER, $ENABLE_J2, $ENABLE_J3, $ENABLE_J4, $ENABLE_HIGHER_ZONALS, $MAXIMUM_DEGREE, $HAS_MAXIMUM_DEGREE, $MAXIMUM_ORDER, $HAS_MAXIMUM_ORDER, $ENABLE_THIRD_BODY, $THIRD_BODY_IDS, $ENABLE_SRP, $ENABLE_DRAG, $INITIAL_MASS_KG, $AREA_M2, $REFLECTIVITY_COEFFICIENT, $DRAG_COEFFICIENT, $ATMOSPHERE_MODEL, $WEATHER, $EPHEMERIS_SOURCE)
+    public static function createPRWForceConfiguration(FlatBufferBuilder $builder, $GRAVITY_CHOICE, $ENABLE_POINT_MASS, $GRAVITATIONAL_PARAMETER, $ENABLE_J2, $ENABLE_J3, $ENABLE_J4, $ENABLE_HIGHER_ZONALS, $MAXIMUM_DEGREE, $HAS_MAXIMUM_DEGREE, $MAXIMUM_ORDER, $HAS_MAXIMUM_ORDER, $ENABLE_THIRD_BODY, $THIRD_BODY_IDS, $ENABLE_SRP, $ENABLE_DRAG, $INITIAL_MASS_KG, $AREA_M2, $REFLECTIVITY_COEFFICIENT, $DRAG_COEFFICIENT, $ATMOSPHERE_MODEL, $WEATHER, $EPHEMERIS_SOURCE, $SOLID_TIDES, $RELATIVITY, $IN_TRACK_ACCELERATION_M_S2, $HAS_IN_TRACK_ACCELERATION_M_S2, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $MAXIMUM_TESSERAL_DEGREE, $HAS_MAXIMUM_TESSERAL_DEGREE)
     {
-        $builder->startObject(22);
+        $builder->startObject(30);
         self::addGRAVITY_CHOICE($builder, $GRAVITY_CHOICE);
         self::addENABLE_POINT_MASS($builder, $ENABLE_POINT_MASS);
         self::addGRAVITATIONAL_PARAMETER($builder, $GRAVITATIONAL_PARAMETER);
@@ -289,6 +373,14 @@ class PRWForceConfiguration extends Table
         self::addATMOSPHERE_MODEL($builder, $ATMOSPHERE_MODEL);
         self::addWEATHER($builder, $WEATHER);
         self::addEPHEMERIS_SOURCE($builder, $EPHEMERIS_SOURCE);
+        self::addSOLID_TIDES($builder, $SOLID_TIDES);
+        self::addRELATIVITY($builder, $RELATIVITY);
+        self::addIN_TRACK_ACCELERATION_M_S2($builder, $IN_TRACK_ACCELERATION_M_S2);
+        self::addHAS_IN_TRACK_ACCELERATION_M_S2($builder, $HAS_IN_TRACK_ACCELERATION_M_S2);
+        self::addDRAG_AREA_OVER_MASS_RATE_M2_KG_S($builder, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+        self::addHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S($builder, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+        self::addMAXIMUM_TESSERAL_DEGREE($builder, $MAXIMUM_TESSERAL_DEGREE);
+        self::addHAS_MAXIMUM_TESSERAL_DEGREE($builder, $HAS_MAXIMUM_TESSERAL_DEGREE);
         $o = $builder->endObject();
         $builder->required($o, 46);  // EPHEMERIS_SOURCE
         return $o;
@@ -536,6 +628,86 @@ class PRWForceConfiguration extends Table
     public static function addEPHEMERIS_SOURCE(FlatBufferBuilder $builder, $EPHEMERIS_SOURCE)
     {
         $builder->addOffsetX(21, $EPHEMERIS_SOURCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addSOLID_TIDES(FlatBufferBuilder $builder, $SOLID_TIDES)
+    {
+        $builder->addByteX(22, $SOLID_TIDES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addRELATIVITY(FlatBufferBuilder $builder, $RELATIVITY)
+    {
+        $builder->addByteX(23, $RELATIVITY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIN_TRACK_ACCELERATION_M_S2(FlatBufferBuilder $builder, $IN_TRACK_ACCELERATION_M_S2)
+    {
+        $builder->addDoubleX(24, $IN_TRACK_ACCELERATION_M_S2, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_IN_TRACK_ACCELERATION_M_S2(FlatBufferBuilder $builder, $HAS_IN_TRACK_ACCELERATION_M_S2)
+    {
+        $builder->addBoolX(25, $HAS_IN_TRACK_ACCELERATION_M_S2, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDRAG_AREA_OVER_MASS_RATE_M2_KG_S(FlatBufferBuilder $builder, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+    {
+        $builder->addDoubleX(26, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(FlatBufferBuilder $builder, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+    {
+        $builder->addBoolX(27, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addMAXIMUM_TESSERAL_DEGREE(FlatBufferBuilder $builder, $MAXIMUM_TESSERAL_DEGREE)
+    {
+        $builder->addUshortX(28, $MAXIMUM_TESSERAL_DEGREE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_MAXIMUM_TESSERAL_DEGREE(FlatBufferBuilder $builder, $HAS_MAXIMUM_TESSERAL_DEGREE)
+    {
+        $builder->addBoolX(29, $HAS_MAXIMUM_TESSERAL_DEGREE, false);
     }
 
     /**

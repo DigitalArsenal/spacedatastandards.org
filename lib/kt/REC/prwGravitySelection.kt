@@ -9,5 +9,9 @@ class prwGravitySelection private constructor() {
         const val J2_TO_J4: UByte = 3u
         const val SPHERICAL_HARMONICS: UByte = 4u
         const val EGM2008: UByte = 5u
+        /**
+         * NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.
+         */
+        const val EGM96: UByte = 6u
     }
 }

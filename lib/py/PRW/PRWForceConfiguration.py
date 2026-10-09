@@ -214,8 +214,76 @@ class PRWForceConfiguration(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+    # orientation (PRW.EARTH_ORIENTATION) to apply them.
+    # PRWForceConfiguration
+    def SOLID_TIDES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # PRWForceConfiguration
+    def RELATIVITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Constant acceleration along the in-track axis, m/s2: T of RTN,
+    # N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+    # PRWForceConfiguration
+    def IN_TRACK_ACCELERATION_M_S2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+    # PRWForceConfiguration
+    def HAS_IN_TRACK_ACCELERATION_M_S2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+    # BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+    # PRWForceConfiguration
+    def DRAG_AREA_OVER_MASS_RATE_M2_KG_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+    # PRWForceConfiguration
+    def HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Highest degree of the tesseral and sectorial terms (order >= 1); the
+    # zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+    # MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+    # PRWForceConfiguration
+    def MAXIMUM_TESSERAL_DEGREE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+    # PRWForceConfiguration
+    def HAS_MAXIMUM_TESSERAL_DEGREE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def PRWForceConfigurationStart(builder):
-    builder.StartObject(22)
+    builder.StartObject(30)
 
 def Start(builder):
     PRWForceConfigurationStart(builder)
@@ -368,6 +436,54 @@ def PRWForceConfigurationAddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCE):
 def AddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCE):
     PRWForceConfigurationAddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCE)
 
+def PRWForceConfigurationAddSOLID_TIDES(builder, SOLID_TIDES):
+    builder.PrependUint8Slot(22, SOLID_TIDES, 0)
+
+def AddSOLID_TIDES(builder, SOLID_TIDES):
+    PRWForceConfigurationAddSOLID_TIDES(builder, SOLID_TIDES)
+
+def PRWForceConfigurationAddRELATIVITY(builder, RELATIVITY):
+    builder.PrependUint8Slot(23, RELATIVITY, 0)
+
+def AddRELATIVITY(builder, RELATIVITY):
+    PRWForceConfigurationAddRELATIVITY(builder, RELATIVITY)
+
+def PRWForceConfigurationAddIN_TRACK_ACCELERATION_M_S2(builder, IN_TRACK_ACCELERATION_M_S2):
+    builder.PrependFloat64Slot(24, IN_TRACK_ACCELERATION_M_S2, 0.0)
+
+def AddIN_TRACK_ACCELERATION_M_S2(builder, IN_TRACK_ACCELERATION_M_S2):
+    PRWForceConfigurationAddIN_TRACK_ACCELERATION_M_S2(builder, IN_TRACK_ACCELERATION_M_S2)
+
+def PRWForceConfigurationAddHAS_IN_TRACK_ACCELERATION_M_S2(builder, HAS_IN_TRACK_ACCELERATION_M_S2):
+    builder.PrependBoolSlot(25, HAS_IN_TRACK_ACCELERATION_M_S2, 0)
+
+def AddHAS_IN_TRACK_ACCELERATION_M_S2(builder, HAS_IN_TRACK_ACCELERATION_M_S2):
+    PRWForceConfigurationAddHAS_IN_TRACK_ACCELERATION_M_S2(builder, HAS_IN_TRACK_ACCELERATION_M_S2)
+
+def PRWForceConfigurationAddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S):
+    builder.PrependFloat64Slot(26, DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0)
+
+def AddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S):
+    PRWForceConfigurationAddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+
+def PRWForceConfigurationAddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S):
+    builder.PrependBoolSlot(27, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0)
+
+def AddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S):
+    PRWForceConfigurationAddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+
+def PRWForceConfigurationAddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE):
+    builder.PrependUint16Slot(28, MAXIMUM_TESSERAL_DEGREE, 0)
+
+def AddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE):
+    PRWForceConfigurationAddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE)
+
+def PRWForceConfigurationAddHAS_MAXIMUM_TESSERAL_DEGREE(builder, HAS_MAXIMUM_TESSERAL_DEGREE):
+    builder.PrependBoolSlot(29, HAS_MAXIMUM_TESSERAL_DEGREE, 0)
+
+def AddHAS_MAXIMUM_TESSERAL_DEGREE(builder, HAS_MAXIMUM_TESSERAL_DEGREE):
+    PRWForceConfigurationAddHAS_MAXIMUM_TESSERAL_DEGREE(builder, HAS_MAXIMUM_TESSERAL_DEGREE)
+
 def PRWForceConfigurationEnd(builder):
     return builder.EndObject()
 
@@ -407,6 +523,14 @@ class PRWForceConfigurationT(object):
         ATMOSPHERE_MODEL = 1,
         WEATHER = None,
         EPHEMERIS_SOURCE = None,
+        SOLID_TIDES = 0,
+        RELATIVITY = 0,
+        IN_TRACK_ACCELERATION_M_S2 = 0.0,
+        HAS_IN_TRACK_ACCELERATION_M_S2 = False,
+        DRAG_AREA_OVER_MASS_RATE_M2_KG_S = 0.0,
+        HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = False,
+        MAXIMUM_TESSERAL_DEGREE = 0,
+        HAS_MAXIMUM_TESSERAL_DEGREE = False,
     ):
         self.GRAVITY_CHOICE = GRAVITY_CHOICE  # type: int
         self.ENABLE_POINT_MASS = ENABLE_POINT_MASS  # type: bool
@@ -430,6 +554,14 @@ class PRWForceConfigurationT(object):
         self.ATMOSPHERE_MODEL = ATMOSPHERE_MODEL  # type: int
         self.WEATHER = WEATHER  # type: Optional[PRWSpaceWeather.PRWSpaceWeatherT]
         self.EPHEMERIS_SOURCE = EPHEMERIS_SOURCE  # type: Optional[str]
+        self.SOLID_TIDES = SOLID_TIDES  # type: int
+        self.RELATIVITY = RELATIVITY  # type: int
+        self.IN_TRACK_ACCELERATION_M_S2 = IN_TRACK_ACCELERATION_M_S2  # type: float
+        self.HAS_IN_TRACK_ACCELERATION_M_S2 = HAS_IN_TRACK_ACCELERATION_M_S2  # type: bool
+        self.DRAG_AREA_OVER_MASS_RATE_M2_KG_S = DRAG_AREA_OVER_MASS_RATE_M2_KG_S  # type: float
+        self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S  # type: bool
+        self.MAXIMUM_TESSERAL_DEGREE = MAXIMUM_TESSERAL_DEGREE  # type: int
+        self.HAS_MAXIMUM_TESSERAL_DEGREE = HAS_MAXIMUM_TESSERAL_DEGREE  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -481,6 +613,14 @@ class PRWForceConfigurationT(object):
         if PRWForceConfiguration.WEATHER() is not None:
             self.WEATHER = PRWSpaceWeather.PRWSpaceWeatherT.InitFromObj(PRWForceConfiguration.WEATHER())
         self.EPHEMERIS_SOURCE = PRWForceConfiguration.EPHEMERIS_SOURCE()
+        self.SOLID_TIDES = PRWForceConfiguration.SOLID_TIDES()
+        self.RELATIVITY = PRWForceConfiguration.RELATIVITY()
+        self.IN_TRACK_ACCELERATION_M_S2 = PRWForceConfiguration.IN_TRACK_ACCELERATION_M_S2()
+        self.HAS_IN_TRACK_ACCELERATION_M_S2 = PRWForceConfiguration.HAS_IN_TRACK_ACCELERATION_M_S2()
+        self.DRAG_AREA_OVER_MASS_RATE_M2_KG_S = PRWForceConfiguration.DRAG_AREA_OVER_MASS_RATE_M2_KG_S()
+        self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = PRWForceConfiguration.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S()
+        self.MAXIMUM_TESSERAL_DEGREE = PRWForceConfiguration.MAXIMUM_TESSERAL_DEGREE()
+        self.HAS_MAXIMUM_TESSERAL_DEGREE = PRWForceConfiguration.HAS_MAXIMUM_TESSERAL_DEGREE()
 
     # PRWForceConfigurationT
     def Pack(self, builder):
@@ -522,5 +662,13 @@ class PRWForceConfigurationT(object):
             PRWForceConfigurationAddWEATHER(builder, WEATHER)
         if self.EPHEMERIS_SOURCE is not None:
             PRWForceConfigurationAddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCE)
+        PRWForceConfigurationAddSOLID_TIDES(builder, self.SOLID_TIDES)
+        PRWForceConfigurationAddRELATIVITY(builder, self.RELATIVITY)
+        PRWForceConfigurationAddIN_TRACK_ACCELERATION_M_S2(builder, self.IN_TRACK_ACCELERATION_M_S2)
+        PRWForceConfigurationAddHAS_IN_TRACK_ACCELERATION_M_S2(builder, self.HAS_IN_TRACK_ACCELERATION_M_S2)
+        PRWForceConfigurationAddDRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, self.DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+        PRWForceConfigurationAddHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(builder, self.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+        PRWForceConfigurationAddMAXIMUM_TESSERAL_DEGREE(builder, self.MAXIMUM_TESSERAL_DEGREE)
+        PRWForceConfigurationAddHAS_MAXIMUM_TESSERAL_DEGREE(builder, self.HAS_MAXIMUM_TESSERAL_DEGREE)
         PRWForceConfiguration = PRWForceConfigurationEnd(builder)
         return PRWForceConfiguration

@@ -7,6 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 import { PRWPropagationSample, PRWPropagationSampleT } from './PRWPropagationSample.js';
 import { prwDensityTreatment } from './prwDensityTreatment.js';
 import { prwDerivativeTechnique } from './prwDerivativeTechnique.js';
+import { prwDynamicParameter } from './prwDynamicParameter.js';
 
 
 export class PRWExecutionResult implements flatbuffers.IUnpackableObject<PRWExecutionResultT> {
@@ -64,8 +65,26 @@ DENSITY_TREATMENT():prwDensityTreatment {
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : prwDensityTreatment.UNSPECIFIED;
 }
 
+/**
+ * The parameters the samples' STM and COVARIANCE carry after the state.
+ */
+DYNAMIC_PARAMETERS(index: number):prwDynamicParameter|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
+}
+
+dynamicParametersLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+dynamicParametersArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startPRWExecutionResult(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(7);
 }
 
 static addFinalSample(builder:flatbuffers.Builder, FINAL_SAMPLEOffset:flatbuffers.Offset) {
@@ -104,6 +123,22 @@ static addDensityTreatment(builder:flatbuffers.Builder, DENSITY_TREATMENT:prwDen
   builder.addFieldInt8(5, DENSITY_TREATMENT, prwDensityTreatment.UNSPECIFIED);
 }
 
+static addDynamicParameters(builder:flatbuffers.Builder, DYNAMIC_PARAMETERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, DYNAMIC_PARAMETERSOffset, 0);
+}
+
+static createDynamicParametersVector(builder:flatbuffers.Builder, data:prwDynamicParameter[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDynamicParametersVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endPRWExecutionResult(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // FINAL_SAMPLE
@@ -111,7 +146,7 @@ static endPRWExecutionResult(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createPRWExecutionResult(builder:flatbuffers.Builder, FINAL_SAMPLEOffset:flatbuffers.Offset, SAMPLESOffset:flatbuffers.Offset, ELAPSED_SECONDS:number, EPHEMERIS_SOURCEOffset:flatbuffers.Offset, STM_TECHNIQUE:prwDerivativeTechnique, DENSITY_TREATMENT:prwDensityTreatment):flatbuffers.Offset {
+static createPRWExecutionResult(builder:flatbuffers.Builder, FINAL_SAMPLEOffset:flatbuffers.Offset, SAMPLESOffset:flatbuffers.Offset, ELAPSED_SECONDS:number, EPHEMERIS_SOURCEOffset:flatbuffers.Offset, STM_TECHNIQUE:prwDerivativeTechnique, DENSITY_TREATMENT:prwDensityTreatment, DYNAMIC_PARAMETERSOffset:flatbuffers.Offset):flatbuffers.Offset {
   PRWExecutionResult.startPRWExecutionResult(builder);
   PRWExecutionResult.addFinalSample(builder, FINAL_SAMPLEOffset);
   PRWExecutionResult.addSamples(builder, SAMPLESOffset);
@@ -119,6 +154,7 @@ static createPRWExecutionResult(builder:flatbuffers.Builder, FINAL_SAMPLEOffset:
   PRWExecutionResult.addEphemerisSource(builder, EPHEMERIS_SOURCEOffset);
   PRWExecutionResult.addStmTechnique(builder, STM_TECHNIQUE);
   PRWExecutionResult.addDensityTreatment(builder, DENSITY_TREATMENT);
+  PRWExecutionResult.addDynamicParameters(builder, DYNAMIC_PARAMETERSOffset);
   return PRWExecutionResult.endPRWExecutionResult(builder);
 }
 
@@ -129,7 +165,8 @@ unpack(): PRWExecutionResultT {
     this.ELAPSED_SECONDS(),
     this.EPHEMERIS_SOURCE(),
     this.STM_TECHNIQUE(),
-    this.DENSITY_TREATMENT()
+    this.DENSITY_TREATMENT(),
+    this.bb!.createScalarList<prwDynamicParameter>(this.DYNAMIC_PARAMETERS.bind(this), this.dynamicParametersLength())
   );
 }
 
@@ -141,6 +178,7 @@ unpackTo(_o: PRWExecutionResultT): void {
   _o.EPHEMERIS_SOURCE = this.EPHEMERIS_SOURCE();
   _o.STM_TECHNIQUE = this.STM_TECHNIQUE();
   _o.DENSITY_TREATMENT = this.DENSITY_TREATMENT();
+  _o.DYNAMIC_PARAMETERS = this.bb!.createScalarList<prwDynamicParameter>(this.DYNAMIC_PARAMETERS.bind(this), this.dynamicParametersLength());
 }
 }
 
@@ -151,7 +189,8 @@ constructor(
   public ELAPSED_SECONDS: number = 0.0,
   public EPHEMERIS_SOURCE: string|Uint8Array|null = null,
   public STM_TECHNIQUE: prwDerivativeTechnique = prwDerivativeTechnique.UNSPECIFIED,
-  public DENSITY_TREATMENT: prwDensityTreatment = prwDensityTreatment.UNSPECIFIED
+  public DENSITY_TREATMENT: prwDensityTreatment = prwDensityTreatment.UNSPECIFIED,
+  public DYNAMIC_PARAMETERS: (prwDynamicParameter)[] = []
 ){}
 
 
@@ -159,6 +198,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const FINAL_SAMPLE = (this.FINAL_SAMPLE !== null ? this.FINAL_SAMPLE!.pack(builder) : 0);
   const SAMPLES = PRWExecutionResult.createSamplesVector(builder, builder.createObjectOffsetList(this.SAMPLES));
   const EPHEMERIS_SOURCE = (this.EPHEMERIS_SOURCE !== null ? builder.createString(this.EPHEMERIS_SOURCE!) : 0);
+  const DYNAMIC_PARAMETERS = PRWExecutionResult.createDynamicParametersVector(builder, this.DYNAMIC_PARAMETERS);
 
   return PRWExecutionResult.createPRWExecutionResult(builder,
     FINAL_SAMPLE,
@@ -166,7 +206,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.ELAPSED_SECONDS,
     EPHEMERIS_SOURCE,
     this.STM_TECHNIQUE,
-    this.DENSITY_TREATMENT
+    this.DENSITY_TREATMENT,
+    DYNAMIC_PARAMETERS
   );
 }
 }

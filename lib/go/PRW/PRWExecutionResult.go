@@ -161,8 +161,60 @@ func (rcv *PRWExecutionResult) MutateDensityTreatment(n prwDensityTreatment) boo
 	return rcv.MutateDENSITY_TREATMENT(n)
 }
 
+/// The parameters the samples' STM and COVARIANCE carry after the state.
+func (rcv *PRWExecutionResult) DYNAMIC_PARAMETERS(j int) prwDynamicParameter {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return prwDynamicParameter(rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1)))
+	}
+	return 0
+}
+
+func (rcv *PRWExecutionResult) DynamicParameters(j int) prwDynamicParameter {
+	return rcv.DYNAMIC_PARAMETERS(j)
+}
+
+func (rcv *PRWExecutionResult) DYNAMIC_PARAMETERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PRWExecutionResult) DynamicParametersLength() int {
+	return rcv.DYNAMIC_PARAMETERSLength()
+}
+
+func (rcv *PRWExecutionResult) DYNAMIC_PARAMETERSBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PRWExecutionResult) DynamicParametersBytes() []byte {
+	return rcv.DYNAMIC_PARAMETERSBytes()
+}
+
+/// The parameters the samples' STM and COVARIANCE carry after the state.
+func (rcv *PRWExecutionResult) MutateDYNAMIC_PARAMETERS(j int, n prwDynamicParameter) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), byte(n))
+	}
+	return false
+}
+
+func (rcv *PRWExecutionResult) MutateDynamicParameters(j int, n prwDynamicParameter) bool {
+	return rcv.MutateDYNAMIC_PARAMETERS(j, n)
+}
+
 func PRWExecutionResultStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(7)
 }
 func PRWExecutionResultAddFINAL_SAMPLE(builder *flatbuffers.Builder, FINAL_SAMPLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(FINAL_SAMPLE), 0)
@@ -205,6 +257,18 @@ func PRWExecutionResultAddDENSITY_TREATMENT(builder *flatbuffers.Builder, DENSIT
 }
 func PRWExecutionResultAddDensityTreatment(builder *flatbuffers.Builder, DENSITY_TREATMENT prwDensityTreatment) {
 	PRWExecutionResultAddDENSITY_TREATMENT(builder, DENSITY_TREATMENT)
+}
+func PRWExecutionResultAddDYNAMIC_PARAMETERS(builder *flatbuffers.Builder, DYNAMIC_PARAMETERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(DYNAMIC_PARAMETERS), 0)
+}
+func PRWExecutionResultAddDynamicParameters(builder *flatbuffers.Builder, DYNAMIC_PARAMETERS flatbuffers.UOffsetT) {
+	PRWExecutionResultAddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERS)
+}
+func PRWExecutionResultStartDYNAMIC_PARAMETERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func PRWExecutionResultStartDynamicParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PRWExecutionResultStartDYNAMIC_PARAMETERSVector(builder, numElems)
 }
 func PRWExecutionResultEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -9,10 +9,10 @@ import "strconv"
 /// into a shared memory arena.
 ///
 /// Data interchange for the underlying content (state vectors, covariance,
-/// maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris)
-/// lives in SDS `OCM` + `OMM` + `PPE` + `RFM` + `ATM`. PRW is the runtime
-/// wire that moves those across a JS ↔ WASM boundary, not a substitute for
-/// any of them.
+/// maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris,
+/// Earth orientation, space weather) lives in SDS `OCM` + `OMM` + `PPE` +
+/// `RFM` + `ATM` + `EOP` + `SPW`. PRW is the runtime wire that moves those
+/// across a JS ↔ WASM boundary, not a substitute for any of them.
 /// Runtime state-flag bitfield (sized to match a single uint).
 /// Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;
 /// HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining

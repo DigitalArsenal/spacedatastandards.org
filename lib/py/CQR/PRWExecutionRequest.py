@@ -211,8 +211,39 @@ class PRWExecutionRequest(object):
             return obj
         return None
 
+    # Model parameters appended, in this order and without repeats, to
+    # INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+    # covariance carries their uncertainty and correlation (a VCM's 7x7 to
+    # 10x10). Each must be active in FORCES. Empty means the state alone.
+    # PRWExecutionRequest
+    def DYNAMIC_PARAMETERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # PRWExecutionRequest
+    def DYNAMIC_PARAMETERSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # PRWExecutionRequest
+    def DYNAMIC_PARAMETERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PRWExecutionRequest
+    def DYNAMIC_PARAMETERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        return o == 0
+
 def PRWExecutionRequestStart(builder):
-    builder.StartObject(14)
+    builder.StartObject(15)
 
 def Start(builder):
     PRWExecutionRequestStart(builder)
@@ -337,6 +368,28 @@ def PRWExecutionRequestAddPROCESS_NOISE(builder, PROCESS_NOISE):
 def AddPROCESS_NOISE(builder, PROCESS_NOISE):
     PRWExecutionRequestAddPROCESS_NOISE(builder, PROCESS_NOISE)
 
+def PRWExecutionRequestAddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(DYNAMIC_PARAMETERS), 0)
+
+def AddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERS):
+    PRWExecutionRequestAddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERS)
+
+def PRWExecutionRequestStartDYNAMIC_PARAMETERSVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartDYNAMIC_PARAMETERSVector(builder, numElems):
+    return PRWExecutionRequestStartDYNAMIC_PARAMETERSVector(builder, numElems)
+
+def PRWExecutionRequestCreateDYNAMIC_PARAMETERSVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateDYNAMIC_PARAMETERSVector(builder, data):
+    return PRWExecutionRequestCreateDYNAMIC_PARAMETERSVector(builder, data)
+
 def PRWExecutionRequestEnd(builder):
     return builder.EndObject()
 
@@ -375,6 +428,7 @@ class PRWExecutionRequestT(object):
         INCLUDE_MASS_DYNAMICS = False,
         FINITE_BURNS = None,
         PROCESS_NOISE = None,
+        DYNAMIC_PARAMETERS = None,
     ):
         self.INITIAL = INITIAL  # type: Optional[PRWResidentState.PRWResidentStateT]
         self.TARGET_EPOCH = TARGET_EPOCH  # type: Optional[TIMInstant.TIMInstantT]
@@ -390,6 +444,7 @@ class PRWExecutionRequestT(object):
         self.INCLUDE_MASS_DYNAMICS = INCLUDE_MASS_DYNAMICS  # type: bool
         self.FINITE_BURNS = FINITE_BURNS  # type: Optional[List[PRWFiniteBurn.PRWFiniteBurnT]]
         self.PROCESS_NOISE = PROCESS_NOISE  # type: Optional[PRWProcessNoise.PRWProcessNoiseT]
+        self.DYNAMIC_PARAMETERS = DYNAMIC_PARAMETERS  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -454,6 +509,13 @@ class PRWExecutionRequestT(object):
                     self.FINITE_BURNS.append(pRWFiniteBurn_)
         if PRWExecutionRequest.PROCESS_NOISE() is not None:
             self.PROCESS_NOISE = PRWProcessNoise.PRWProcessNoiseT.InitFromObj(PRWExecutionRequest.PROCESS_NOISE())
+        if not PRWExecutionRequest.DYNAMIC_PARAMETERSIsNone():
+            if np is None:
+                self.DYNAMIC_PARAMETERS = []
+                for i in range(PRWExecutionRequest.DYNAMIC_PARAMETERSLength()):
+                    self.DYNAMIC_PARAMETERS.append(PRWExecutionRequest.DYNAMIC_PARAMETERS(i))
+            else:
+                self.DYNAMIC_PARAMETERS = PRWExecutionRequest.DYNAMIC_PARAMETERSAsNumpy()
 
     # PRWExecutionRequestT
     def Pack(self, builder):
@@ -495,6 +557,14 @@ class PRWExecutionRequestT(object):
             FINITE_BURNS = builder.EndVector()
         if self.PROCESS_NOISE is not None:
             PROCESS_NOISE = self.PROCESS_NOISE.Pack(builder)
+        if self.DYNAMIC_PARAMETERS is not None:
+            if np is not None and type(self.DYNAMIC_PARAMETERS) is np.ndarray:
+                DYNAMIC_PARAMETERS = builder.CreateNumpyVector(self.DYNAMIC_PARAMETERS)
+            else:
+                PRWExecutionRequestStartDYNAMIC_PARAMETERSVector(builder, len(self.DYNAMIC_PARAMETERS))
+                for i in reversed(range(len(self.DYNAMIC_PARAMETERS))):
+                    builder.PrependUint8(self.DYNAMIC_PARAMETERS[i])
+                DYNAMIC_PARAMETERS = builder.EndVector()
         PRWExecutionRequestStart(builder)
         if self.INITIAL is not None:
             PRWExecutionRequestAddINITIAL(builder, INITIAL)
@@ -520,5 +590,7 @@ class PRWExecutionRequestT(object):
             PRWExecutionRequestAddFINITE_BURNS(builder, FINITE_BURNS)
         if self.PROCESS_NOISE is not None:
             PRWExecutionRequestAddPROCESS_NOISE(builder, PROCESS_NOISE)
+        if self.DYNAMIC_PARAMETERS is not None:
+            PRWExecutionRequestAddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERS)
         PRWExecutionRequest = PRWExecutionRequestEnd(builder)
         return PRWExecutionRequest

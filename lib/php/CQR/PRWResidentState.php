@@ -171,22 +171,63 @@ class PRWResidentState extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch
+    /// (the BDOT of a VCM).
+    /**
+     * @return double
+     */
+    public function getDRAG_AREA_OVER_MASS_RATE_M2_KG_S()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+    /**
+     * @return bool
+     */
+    public function getHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+    /**
+     * @return double
+     */
+    public function getIN_TRACK_ACCELERATION_M_S2()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+    /**
+     * @return bool
+     */
+    public function getHAS_IN_TRACK_ACCELERATION_M_S2()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRWResidentState(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(19);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRWResidentState
      */
-    public static function createPRWResidentState(FlatBufferBuilder $builder, $INSTANCE, $ENTITY_HANDLE, $CATALOG_NUMBER, $OBJECT_ID, $STATE, $COORDINATE_SYSTEM, $COVARIANCE, $MASS_KG, $HAS_MASS_KG, $DRAG_AREA_OVER_MASS_M2_KG, $HAS_DRAG_AREA_OVER_MASS_M2_KG, $SRP_AREA_OVER_MASS_M2_KG, $HAS_SRP_AREA_OVER_MASS_M2_KG, $VALID, $PROCESS_NOISE)
+    public static function createPRWResidentState(FlatBufferBuilder $builder, $INSTANCE, $ENTITY_HANDLE, $CATALOG_NUMBER, $OBJECT_ID, $STATE, $COORDINATE_SYSTEM, $COVARIANCE, $MASS_KG, $HAS_MASS_KG, $DRAG_AREA_OVER_MASS_M2_KG, $HAS_DRAG_AREA_OVER_MASS_M2_KG, $SRP_AREA_OVER_MASS_M2_KG, $HAS_SRP_AREA_OVER_MASS_M2_KG, $VALID, $PROCESS_NOISE, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $IN_TRACK_ACCELERATION_M_S2, $HAS_IN_TRACK_ACCELERATION_M_S2)
     {
-        $builder->startObject(15);
+        $builder->startObject(19);
         self::addINSTANCE($builder, $INSTANCE);
         self::addENTITY_HANDLE($builder, $ENTITY_HANDLE);
         self::addCATALOG_NUMBER($builder, $CATALOG_NUMBER);
@@ -202,6 +243,10 @@ class PRWResidentState extends Table
         self::addHAS_SRP_AREA_OVER_MASS_M2_KG($builder, $HAS_SRP_AREA_OVER_MASS_M2_KG);
         self::addVALID($builder, $VALID);
         self::addPROCESS_NOISE($builder, $PROCESS_NOISE);
+        self::addDRAG_AREA_OVER_MASS_RATE_M2_KG_S($builder, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+        self::addHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S($builder, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+        self::addIN_TRACK_ACCELERATION_M_S2($builder, $IN_TRACK_ACCELERATION_M_S2);
+        self::addHAS_IN_TRACK_ACCELERATION_M_S2($builder, $HAS_IN_TRACK_ACCELERATION_M_S2);
         $o = $builder->endObject();
         $builder->required($o, 12);  // STATE
         $builder->required($o, 14);  // COORDINATE_SYSTEM
@@ -356,6 +401,46 @@ class PRWResidentState extends Table
     public static function addPROCESS_NOISE(FlatBufferBuilder $builder, $PROCESS_NOISE)
     {
         $builder->addOffsetX(14, $PROCESS_NOISE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDRAG_AREA_OVER_MASS_RATE_M2_KG_S(FlatBufferBuilder $builder, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+    {
+        $builder->addDoubleX(15, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(FlatBufferBuilder $builder, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S)
+    {
+        $builder->addBoolX(16, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIN_TRACK_ACCELERATION_M_S2(FlatBufferBuilder $builder, $IN_TRACK_ACCELERATION_M_S2)
+    {
+        $builder->addDoubleX(17, $IN_TRACK_ACCELERATION_M_S2, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_IN_TRACK_ACCELERATION_M_S2(FlatBufferBuilder $builder, $HAS_IN_TRACK_ACCELERATION_M_S2)
+    {
+        $builder->addBoolX(18, $HAS_IN_TRACK_ACCELERATION_M_S2, false);
     }
 
     /**

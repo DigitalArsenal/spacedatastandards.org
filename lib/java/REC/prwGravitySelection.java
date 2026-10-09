@@ -9,8 +9,12 @@ public final class prwGravitySelection {
   public static final int J2_TO_J4 = 3;
   public static final int SPHERICAL_HARMONICS = 4;
   public static final int EGM2008 = 5;
+  /**
+   * NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.
+   */
+  public static final int EGM96 = 6;
 
-  public static final String[] names = { "INFER_FLAGS", "POINT_MASS", "J2_ONLY", "J2_TO_J4", "SPHERICAL_HARMONICS", "EGM2008", };
+  public static final String[] names = { "INFER_FLAGS", "POINT_MASS", "J2_ONLY", "J2_TO_J4", "SPHERICAL_HARMONICS", "EGM2008", "EGM96", };
 
   public static String name(int e) { return names[e]; }
 }

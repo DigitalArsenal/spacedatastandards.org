@@ -92,8 +92,36 @@ class PRWExecutionResult(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # The parameters the samples' STM and COVARIANCE carry after the state.
+    # PRWExecutionResult
+    def DYNAMIC_PARAMETERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # PRWExecutionResult
+    def DYNAMIC_PARAMETERSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # PRWExecutionResult
+    def DYNAMIC_PARAMETERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PRWExecutionResult
+    def DYNAMIC_PARAMETERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        return o == 0
+
 def PRWExecutionResultStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(7)
 
 def Start(builder):
     PRWExecutionResultStart(builder)
@@ -146,6 +174,28 @@ def PRWExecutionResultAddDENSITY_TREATMENT(builder, DENSITY_TREATMENT):
 def AddDENSITY_TREATMENT(builder, DENSITY_TREATMENT):
     PRWExecutionResultAddDENSITY_TREATMENT(builder, DENSITY_TREATMENT)
 
+def PRWExecutionResultAddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(DYNAMIC_PARAMETERS), 0)
+
+def AddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERS):
+    PRWExecutionResultAddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERS)
+
+def PRWExecutionResultStartDYNAMIC_PARAMETERSVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartDYNAMIC_PARAMETERSVector(builder, numElems):
+    return PRWExecutionResultStartDYNAMIC_PARAMETERSVector(builder, numElems)
+
+def PRWExecutionResultCreateDYNAMIC_PARAMETERSVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateDYNAMIC_PARAMETERSVector(builder, data):
+    return PRWExecutionResultCreateDYNAMIC_PARAMETERSVector(builder, data)
+
 def PRWExecutionResultEnd(builder):
     return builder.EndObject()
 
@@ -169,6 +219,7 @@ class PRWExecutionResultT(object):
         EPHEMERIS_SOURCE = None,
         STM_TECHNIQUE = 0,
         DENSITY_TREATMENT = 0,
+        DYNAMIC_PARAMETERS = None,
     ):
         self.FINAL_SAMPLE = FINAL_SAMPLE  # type: Optional[PRWPropagationSample.PRWPropagationSampleT]
         self.SAMPLES = SAMPLES  # type: Optional[List[PRWPropagationSample.PRWPropagationSampleT]]
@@ -176,6 +227,7 @@ class PRWExecutionResultT(object):
         self.EPHEMERIS_SOURCE = EPHEMERIS_SOURCE  # type: Optional[str]
         self.STM_TECHNIQUE = STM_TECHNIQUE  # type: int
         self.DENSITY_TREATMENT = DENSITY_TREATMENT  # type: int
+        self.DYNAMIC_PARAMETERS = DYNAMIC_PARAMETERS  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -212,6 +264,13 @@ class PRWExecutionResultT(object):
         self.EPHEMERIS_SOURCE = PRWExecutionResult.EPHEMERIS_SOURCE()
         self.STM_TECHNIQUE = PRWExecutionResult.STM_TECHNIQUE()
         self.DENSITY_TREATMENT = PRWExecutionResult.DENSITY_TREATMENT()
+        if not PRWExecutionResult.DYNAMIC_PARAMETERSIsNone():
+            if np is None:
+                self.DYNAMIC_PARAMETERS = []
+                for i in range(PRWExecutionResult.DYNAMIC_PARAMETERSLength()):
+                    self.DYNAMIC_PARAMETERS.append(PRWExecutionResult.DYNAMIC_PARAMETERS(i))
+            else:
+                self.DYNAMIC_PARAMETERS = PRWExecutionResult.DYNAMIC_PARAMETERSAsNumpy()
 
     # PRWExecutionResultT
     def Pack(self, builder):
@@ -227,6 +286,14 @@ class PRWExecutionResultT(object):
             SAMPLES = builder.EndVector()
         if self.EPHEMERIS_SOURCE is not None:
             EPHEMERIS_SOURCE = builder.CreateString(self.EPHEMERIS_SOURCE)
+        if self.DYNAMIC_PARAMETERS is not None:
+            if np is not None and type(self.DYNAMIC_PARAMETERS) is np.ndarray:
+                DYNAMIC_PARAMETERS = builder.CreateNumpyVector(self.DYNAMIC_PARAMETERS)
+            else:
+                PRWExecutionResultStartDYNAMIC_PARAMETERSVector(builder, len(self.DYNAMIC_PARAMETERS))
+                for i in reversed(range(len(self.DYNAMIC_PARAMETERS))):
+                    builder.PrependUint8(self.DYNAMIC_PARAMETERS[i])
+                DYNAMIC_PARAMETERS = builder.EndVector()
         PRWExecutionResultStart(builder)
         if self.FINAL_SAMPLE is not None:
             PRWExecutionResultAddFINAL_SAMPLE(builder, FINAL_SAMPLE)
@@ -237,5 +304,7 @@ class PRWExecutionResultT(object):
             PRWExecutionResultAddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCE)
         PRWExecutionResultAddSTM_TECHNIQUE(builder, self.STM_TECHNIQUE)
         PRWExecutionResultAddDENSITY_TREATMENT(builder, self.DENSITY_TREATMENT)
+        if self.DYNAMIC_PARAMETERS is not None:
+            PRWExecutionResultAddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERS)
         PRWExecutionResult = PRWExecutionResultEnd(builder)
         return PRWExecutionResult

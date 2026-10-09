@@ -9,6 +9,8 @@ class prwGravitySelection
     const J2_TO_J4 = 3;
     const SPHERICAL_HARMONICS = 4;
     const EGM2008 = 5;
+    /// NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.
+    const EGM96 = 6;
 
     private static $names = array(
         prwGravitySelection::INFER_FLAGS=>"INFER_FLAGS",
@@ -17,6 +19,7 @@ class prwGravitySelection
         prwGravitySelection::J2_TO_J4=>"J2_TO_J4",
         prwGravitySelection::SPHERICAL_HARMONICS=>"SPHERICAL_HARMONICS",
         prwGravitySelection::EGM2008=>"EGM2008",
+        prwGravitySelection::EGM96=>"EGM96",
     );
 
     public static function Name($e)

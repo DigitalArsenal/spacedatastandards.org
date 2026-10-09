@@ -29,6 +29,15 @@ public struct PRWExecutionResult : IFlatbufferObject
   public byte[] GetEPHEMERIS_SOURCEArray() { return __p.__vector_as_array<byte>(10); }
   public prwDerivativeTechnique STM_TECHNIQUE { get { int o = __p.__offset(12); return o != 0 ? (prwDerivativeTechnique)__p.bb.Get(o + __p.bb_pos) : prwDerivativeTechnique.UNSPECIFIED; } }
   public prwDensityTreatment DENSITY_TREATMENT { get { int o = __p.__offset(14); return o != 0 ? (prwDensityTreatment)__p.bb.Get(o + __p.bb_pos) : prwDensityTreatment.UNSPECIFIED; } }
+  /// The parameters the samples' STM and COVARIANCE carry after the state.
+  public prwDynamicParameter DYNAMIC_PARAMETERS(int j) { int o = __p.__offset(16); return o != 0 ? (prwDynamicParameter)__p.bb.Get(__p.__vector(o) + j * 1) : (prwDynamicParameter)0; }
+  public int DYNAMIC_PARAMETERSLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<prwDynamicParameter> GetDYNAMIC_PARAMETERSBytes() { return __p.__vector_as_span<prwDynamicParameter>(16, 1); }
+#else
+  public ArraySegment<byte>? GetDYNAMIC_PARAMETERSBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public prwDynamicParameter[] GetDYNAMIC_PARAMETERSArray() { int o = __p.__offset(16); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); prwDynamicParameter[] a = new prwDynamicParameter[l]; for (int i = 0; i < l; i++) { a[i] = (prwDynamicParameter)__p.bb.Get(p + i * 1); } return a; }
 
   public static Offset<PRWExecutionResult> CreatePRWExecutionResult(FlatBufferBuilder builder,
       Offset<PRWPropagationSample> FINAL_SAMPLEOffset = default(Offset<PRWPropagationSample>),
@@ -36,9 +45,11 @@ public struct PRWExecutionResult : IFlatbufferObject
       double ELAPSED_SECONDS = 0.0,
       StringOffset EPHEMERIS_SOURCEOffset = default(StringOffset),
       prwDerivativeTechnique STM_TECHNIQUE = prwDerivativeTechnique.UNSPECIFIED,
-      prwDensityTreatment DENSITY_TREATMENT = prwDensityTreatment.UNSPECIFIED) {
-    builder.StartTable(6);
+      prwDensityTreatment DENSITY_TREATMENT = prwDensityTreatment.UNSPECIFIED,
+      VectorOffset DYNAMIC_PARAMETERSOffset = default(VectorOffset)) {
+    builder.StartTable(7);
     PRWExecutionResult.AddELAPSED_SECONDS(builder, ELAPSED_SECONDS);
+    PRWExecutionResult.AddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERSOffset);
     PRWExecutionResult.AddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCEOffset);
     PRWExecutionResult.AddSAMPLES(builder, SAMPLESOffset);
     PRWExecutionResult.AddFINAL_SAMPLE(builder, FINAL_SAMPLEOffset);
@@ -47,7 +58,7 @@ public struct PRWExecutionResult : IFlatbufferObject
     return PRWExecutionResult.EndPRWExecutionResult(builder);
   }
 
-  public static void StartPRWExecutionResult(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartPRWExecutionResult(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddFINAL_SAMPLE(FlatBufferBuilder builder, Offset<PRWPropagationSample> FINAL_SAMPLEOffset) { builder.AddOffset(0, FINAL_SAMPLEOffset.Value, 0); }
   public static void AddSAMPLES(FlatBufferBuilder builder, VectorOffset SAMPLESOffset) { builder.AddOffset(1, SAMPLESOffset.Value, 0); }
   public static VectorOffset CreateSAMPLESVector(FlatBufferBuilder builder, Offset<PRWPropagationSample>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -59,6 +70,12 @@ public struct PRWExecutionResult : IFlatbufferObject
   public static void AddEPHEMERIS_SOURCE(FlatBufferBuilder builder, StringOffset EPHEMERIS_SOURCEOffset) { builder.AddOffset(3, EPHEMERIS_SOURCEOffset.Value, 0); }
   public static void AddSTM_TECHNIQUE(FlatBufferBuilder builder, prwDerivativeTechnique STM_TECHNIQUE) { builder.AddByte(4, (byte)STM_TECHNIQUE, 0); }
   public static void AddDENSITY_TREATMENT(FlatBufferBuilder builder, prwDensityTreatment DENSITY_TREATMENT) { builder.AddByte(5, (byte)DENSITY_TREATMENT, 0); }
+  public static void AddDYNAMIC_PARAMETERS(FlatBufferBuilder builder, VectorOffset DYNAMIC_PARAMETERSOffset) { builder.AddOffset(6, DYNAMIC_PARAMETERSOffset.Value, 0); }
+  public static VectorOffset CreateDYNAMIC_PARAMETERSVector(FlatBufferBuilder builder, prwDynamicParameter[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte((byte)data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, prwDynamicParameter[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<prwDynamicParameter> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<prwDynamicParameter>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDYNAMIC_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<PRWExecutionResult> EndPRWExecutionResult(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // FINAL_SAMPLE
@@ -78,6 +95,8 @@ public struct PRWExecutionResult : IFlatbufferObject
     _o.EPHEMERIS_SOURCE = this.EPHEMERIS_SOURCE;
     _o.STM_TECHNIQUE = this.STM_TECHNIQUE;
     _o.DENSITY_TREATMENT = this.DENSITY_TREATMENT;
+    _o.DYNAMIC_PARAMETERS = new List<prwDynamicParameter>();
+    for (var _j = 0; _j < this.DYNAMIC_PARAMETERSLength; ++_j) {_o.DYNAMIC_PARAMETERS.Add(this.DYNAMIC_PARAMETERS(_j));}
   }
   public static Offset<PRWExecutionResult> Pack(FlatBufferBuilder builder, PRWExecutionResultT _o) {
     if (_o == null) return default(Offset<PRWExecutionResult>);
@@ -89,6 +108,11 @@ public struct PRWExecutionResult : IFlatbufferObject
       _SAMPLES = CreateSAMPLESVector(builder, __SAMPLES);
     }
     var _EPHEMERIS_SOURCE = _o.EPHEMERIS_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERIS_SOURCE);
+    var _DYNAMIC_PARAMETERS = default(VectorOffset);
+    if (_o.DYNAMIC_PARAMETERS != null) {
+      var __DYNAMIC_PARAMETERS = _o.DYNAMIC_PARAMETERS.ToArray();
+      _DYNAMIC_PARAMETERS = CreateDYNAMIC_PARAMETERSVector(builder, __DYNAMIC_PARAMETERS);
+    }
     return CreatePRWExecutionResult(
       builder,
       _FINAL_SAMPLE,
@@ -96,7 +120,8 @@ public struct PRWExecutionResult : IFlatbufferObject
       _o.ELAPSED_SECONDS,
       _EPHEMERIS_SOURCE,
       _o.STM_TECHNIQUE,
-      _o.DENSITY_TREATMENT);
+      _o.DENSITY_TREATMENT,
+      _DYNAMIC_PARAMETERS);
   }
 }
 
@@ -108,6 +133,7 @@ public class PRWExecutionResultT
   public string EPHEMERIS_SOURCE { get; set; }
   public prwDerivativeTechnique STM_TECHNIQUE { get; set; }
   public prwDensityTreatment DENSITY_TREATMENT { get; set; }
+  public List<prwDynamicParameter> DYNAMIC_PARAMETERS { get; set; }
 
   public PRWExecutionResultT() {
     this.FINAL_SAMPLE = null;
@@ -116,6 +142,7 @@ public class PRWExecutionResultT
     this.EPHEMERIS_SOURCE = null;
     this.STM_TECHNIQUE = prwDerivativeTechnique.UNSPECIFIED;
     this.DENSITY_TREATMENT = prwDensityTreatment.UNSPECIFIED;
+    this.DYNAMIC_PARAMETERS = null;
   }
 }
 
@@ -131,6 +158,7 @@ static public class PRWExecutionResultVerify
       && verifier.VerifyString(tablePos, 10 /*EPHEMERIS_SOURCE*/, true)
       && verifier.VerifyField(tablePos, 12 /*STM_TECHNIQUE*/, 1 /*prwDerivativeTechnique*/, 1, false)
       && verifier.VerifyField(tablePos, 14 /*DENSITY_TREATMENT*/, 1 /*prwDensityTreatment*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 16 /*DYNAMIC_PARAMETERS*/, 1 /*prwDynamicParameter*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

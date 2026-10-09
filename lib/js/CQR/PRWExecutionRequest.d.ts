@@ -9,6 +9,7 @@ import { PRWStateMatrix, PRWStateMatrixT } from './PRWStateMatrix.js';
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
 import { prwDensityTreatment } from './prwDensityTreatment.js';
 import { prwDerivativeTechnique } from './prwDerivativeTechnique.js';
+import { prwDynamicParameter } from './prwDynamicParameter.js';
 /**
  * Fixed endpoint propagation. Provider selected by the host's connected port.
  */
@@ -41,6 +42,15 @@ export declare class PRWExecutionRequest implements flatbuffers.IUnpackableObjec
      * Process noise added to the propagated covariance. Absent means none.
      */
     PROCESS_NOISE(obj?: PRWProcessNoise): PRWProcessNoise | null;
+    /**
+     * Model parameters appended, in this order and without repeats, to
+     * INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+     * covariance carries their uncertainty and correlation (a VCM's 7x7 to
+     * 10x10). Each must be active in FORCES. Empty means the state alone.
+     */
+    DYNAMIC_PARAMETERS(index: number): prwDynamicParameter | null;
+    dynamicParametersLength(): number;
+    dynamicParametersArray(): Uint8Array | null;
     static startPRWExecutionRequest(builder: flatbuffers.Builder): void;
     static addInitial(builder: flatbuffers.Builder, INITIALOffset: flatbuffers.Offset): void;
     static addTargetEpoch(builder: flatbuffers.Builder, TARGET_EPOCHOffset: flatbuffers.Offset): void;
@@ -62,6 +72,9 @@ export declare class PRWExecutionRequest implements flatbuffers.IUnpackableObjec
     static createFiniteBurnsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startFiniteBurnsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addProcessNoise(builder: flatbuffers.Builder, PROCESS_NOISEOffset: flatbuffers.Offset): void;
+    static addDynamicParameters(builder: flatbuffers.Builder, DYNAMIC_PARAMETERSOffset: flatbuffers.Offset): void;
+    static createDynamicParametersVector(builder: flatbuffers.Builder, data: prwDynamicParameter[]): flatbuffers.Offset;
+    static startDynamicParametersVector(builder: flatbuffers.Builder, numElems: number): void;
     static endPRWExecutionRequest(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PRWExecutionRequestT;
     unpackTo(_o: PRWExecutionRequestT): void;
@@ -81,7 +94,8 @@ export declare class PRWExecutionRequestT implements flatbuffers.IGeneratedObjec
     INCLUDE_MASS_DYNAMICS: boolean;
     FINITE_BURNS: (PRWFiniteBurnT)[];
     PROCESS_NOISE: PRWProcessNoiseT | null;
-    constructor(INITIAL?: PRWResidentStateT | null, TARGET_EPOCH?: TIMInstantT | null, INTEGRATOR?: PRWIntegratorSettingsT | null, FORCES?: PRWForceConfigurationT | null, INCLUDE_STM?: boolean, STM_TECHNIQUE?: prwDerivativeTechnique, DENSITY_TREATMENT?: prwDensityTreatment, INITIAL_COVARIANCE?: PRWStateMatrixT | null, INITIAL_MASS_COVARIANCE?: PRWStateMatrixT | null, SAMPLE_EPOCHS?: (TIMInstantT)[], IMPULSES?: (PRWImpulseT)[], INCLUDE_MASS_DYNAMICS?: boolean, FINITE_BURNS?: (PRWFiniteBurnT)[], PROCESS_NOISE?: PRWProcessNoiseT | null);
+    DYNAMIC_PARAMETERS: (prwDynamicParameter)[];
+    constructor(INITIAL?: PRWResidentStateT | null, TARGET_EPOCH?: TIMInstantT | null, INTEGRATOR?: PRWIntegratorSettingsT | null, FORCES?: PRWForceConfigurationT | null, INCLUDE_STM?: boolean, STM_TECHNIQUE?: prwDerivativeTechnique, DENSITY_TREATMENT?: prwDensityTreatment, INITIAL_COVARIANCE?: PRWStateMatrixT | null, INITIAL_MASS_COVARIANCE?: PRWStateMatrixT | null, SAMPLE_EPOCHS?: (TIMInstantT)[], IMPULSES?: (PRWImpulseT)[], INCLUDE_MASS_DYNAMICS?: boolean, FINITE_BURNS?: (PRWFiniteBurnT)[], PROCESS_NOISE?: PRWProcessNoiseT | null, DYNAMIC_PARAMETERS?: (prwDynamicParameter)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PRWExecutionRequest.d.ts.map

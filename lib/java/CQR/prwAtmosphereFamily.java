@@ -8,8 +8,23 @@ public final class prwAtmosphereFamily {
   public static final int EXPONENTIAL = 2;
   public static final int USSA1976 = 3;
   public static final int HARRIS_PRIESTER = 4;
+  /**
+   * Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form
+   * evaluation of Jacchia's static diffusion model with the constants NASA
+   * GTDS and GMAT use (inflection temperature, mean molecular mass and
+   * 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers:
+   * F10.7 of the previous day, that day's 81-day centred average, and the
+   * three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held
+   * constant). A VCM's JACCHIA_70 is carried here.
+   */
+  public static final int JACCHIA_ROBERTS = 5;
+  /**
+   * Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
+   * Dst-derived temperature change from PRW.JB2008_INDICES.
+   */
+  public static final int JB2008 = 6;
 
-  public static final String[] names = { "UNSPECIFIED", "NRLMSISE00", "EXPONENTIAL", "USSA1976", "HARRIS_PRIESTER", };
+  public static final String[] names = { "UNSPECIFIED", "NRLMSISE00", "EXPONENTIAL", "USSA1976", "HARRIS_PRIESTER", "JACCHIA_ROBERTS", "JB2008", };
 
   public static String name(int e) { return names[e]; }
 }

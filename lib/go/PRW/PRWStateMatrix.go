@@ -6,8 +6,10 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], SI state units.
-/// Covariance entries have row*column units; STM entries row/column units.
+/// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution
+/// request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).
+/// Covariance entries have row*column units; STM entries row/column units;
+/// an STM's parameter rows are the identity (parameters are constant).
 type PRWStateMatrix struct {
 	_tab flatbuffers.Table
 }

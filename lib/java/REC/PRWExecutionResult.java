@@ -37,6 +37,15 @@ public final class PRWExecutionResult extends com.google.flatbuffers.Table {
   public ByteBuffer EPHEMERIS_SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
   public int STM_TECHNIQUE() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   public int DENSITY_TREATMENT() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * The parameters the samples' STM and COVARIANCE carry after the state.
+   */
+  public int DYNAMIC_PARAMETERS(int j) { int o = __offset(16); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int DYNAMIC_PARAMETERSLength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector dynamicParametersVector() { return dynamicParametersVector(new ByteVector()); }
+  public ByteVector dynamicParametersVector(ByteVector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer DYNAMIC_PARAMETERSAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer DYNAMIC_PARAMETERSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
 
   public static int createPRWExecutionResult(FlatBufferBuilder builder,
       int FINAL_SAMPLEOffset,
@@ -44,9 +53,11 @@ public final class PRWExecutionResult extends com.google.flatbuffers.Table {
       double ELAPSED_SECONDS,
       int EPHEMERIS_SOURCEOffset,
       int STM_TECHNIQUE,
-      int DENSITY_TREATMENT) {
-    builder.startTable(6);
+      int DENSITY_TREATMENT,
+      int DYNAMIC_PARAMETERSOffset) {
+    builder.startTable(7);
     PRWExecutionResult.addElapsedSeconds(builder, ELAPSED_SECONDS);
+    PRWExecutionResult.addDynamicParameters(builder, DYNAMIC_PARAMETERSOffset);
     PRWExecutionResult.addEphemerisSource(builder, EPHEMERIS_SOURCEOffset);
     PRWExecutionResult.addSamples(builder, SAMPLESOffset);
     PRWExecutionResult.addFinalSample(builder, FINAL_SAMPLEOffset);
@@ -55,7 +66,7 @@ public final class PRWExecutionResult extends com.google.flatbuffers.Table {
     return PRWExecutionResult.endPRWExecutionResult(builder);
   }
 
-  public static void startPRWExecutionResult(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startPRWExecutionResult(FlatBufferBuilder builder) { builder.startTable(7); }
   public static void addFinalSample(FlatBufferBuilder builder, int FINAL_SAMPLEOffset) { builder.addOffset(0, FINAL_SAMPLEOffset, 0); }
   public static void addSamples(FlatBufferBuilder builder, int SAMPLESOffset) { builder.addOffset(1, SAMPLESOffset, 0); }
   public static int createSamplesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
@@ -64,6 +75,10 @@ public final class PRWExecutionResult extends com.google.flatbuffers.Table {
   public static void addEphemerisSource(FlatBufferBuilder builder, int EPHEMERIS_SOURCEOffset) { builder.addOffset(3, EPHEMERIS_SOURCEOffset, 0); }
   public static void addStmTechnique(FlatBufferBuilder builder, int STM_TECHNIQUE) { builder.addByte(4, (byte) STM_TECHNIQUE, (byte) 0); }
   public static void addDensityTreatment(FlatBufferBuilder builder, int DENSITY_TREATMENT) { builder.addByte(5, (byte) DENSITY_TREATMENT, (byte) 0); }
+  public static void addDynamicParameters(FlatBufferBuilder builder, int DYNAMIC_PARAMETERSOffset) { builder.addOffset(6, DYNAMIC_PARAMETERSOffset, 0); }
+  public static int createDynamicParametersVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createDynamicParametersVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startDynamicParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static int endPRWExecutionResult(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // FINAL_SAMPLE

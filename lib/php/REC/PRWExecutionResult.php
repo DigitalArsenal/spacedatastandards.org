@@ -99,28 +99,57 @@ class PRWExecutionResult extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \prwDensityTreatment::UNSPECIFIED;
     }
 
+    /// The parameters the samples' STM and COVARIANCE carry after the state.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getDYNAMIC_PARAMETERS($j)
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : \prwDynamicParameter::UNSPECIFIED;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDYNAMIC_PARAMETERSLength()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDYNAMIC_PARAMETERSBytes()
+    {
+        return $this->__vector_as_bytes(16);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRWExecutionResult(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(7);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRWExecutionResult
      */
-    public static function createPRWExecutionResult(FlatBufferBuilder $builder, $FINAL_SAMPLE, $SAMPLES, $ELAPSED_SECONDS, $EPHEMERIS_SOURCE, $STM_TECHNIQUE, $DENSITY_TREATMENT)
+    public static function createPRWExecutionResult(FlatBufferBuilder $builder, $FINAL_SAMPLE, $SAMPLES, $ELAPSED_SECONDS, $EPHEMERIS_SOURCE, $STM_TECHNIQUE, $DENSITY_TREATMENT, $DYNAMIC_PARAMETERS)
     {
-        $builder->startObject(6);
+        $builder->startObject(7);
         self::addFINAL_SAMPLE($builder, $FINAL_SAMPLE);
         self::addSAMPLES($builder, $SAMPLES);
         self::addELAPSED_SECONDS($builder, $ELAPSED_SECONDS);
         self::addEPHEMERIS_SOURCE($builder, $EPHEMERIS_SOURCE);
         self::addSTM_TECHNIQUE($builder, $STM_TECHNIQUE);
         self::addDENSITY_TREATMENT($builder, $DENSITY_TREATMENT);
+        self::addDYNAMIC_PARAMETERS($builder, $DYNAMIC_PARAMETERS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // FINAL_SAMPLE
         $builder->required($o, 10);  // EPHEMERIS_SOURCE
@@ -209,6 +238,40 @@ class PRWExecutionResult extends Table
     public static function addDENSITY_TREATMENT(FlatBufferBuilder $builder, $DENSITY_TREATMENT)
     {
         $builder->addByteX(5, $DENSITY_TREATMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDYNAMIC_PARAMETERS(FlatBufferBuilder $builder, $DYNAMIC_PARAMETERS)
+    {
+        $builder->addOffsetX(6, $DYNAMIC_PARAMETERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDYNAMIC_PARAMETERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDYNAMIC_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

@@ -66,6 +66,18 @@ public final class PRWExecutionRequest extends com.google.flatbuffers.Table {
    */
   public PRWProcessNoise PROCESS_NOISE() { return PROCESS_NOISE(new PRWProcessNoise()); }
   public PRWProcessNoise PROCESS_NOISE(PRWProcessNoise obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Model parameters appended, in this order and without repeats, to
+   * INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+   * covariance carries their uncertainty and correlation (a VCM's 7x7 to
+   * 10x10). Each must be active in FORCES. Empty means the state alone.
+   */
+  public int DYNAMIC_PARAMETERS(int j) { int o = __offset(32); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int DYNAMIC_PARAMETERSLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector dynamicParametersVector() { return dynamicParametersVector(new ByteVector()); }
+  public ByteVector dynamicParametersVector(ByteVector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer DYNAMIC_PARAMETERSAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer DYNAMIC_PARAMETERSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
 
   public static int createPRWExecutionRequest(FlatBufferBuilder builder,
       int INITIALOffset,
@@ -81,8 +93,10 @@ public final class PRWExecutionRequest extends com.google.flatbuffers.Table {
       int IMPULSESOffset,
       boolean INCLUDE_MASS_DYNAMICS,
       int FINITE_BURNSOffset,
-      int PROCESS_NOISEOffset) {
-    builder.startTable(14);
+      int PROCESS_NOISEOffset,
+      int DYNAMIC_PARAMETERSOffset) {
+    builder.startTable(15);
+    PRWExecutionRequest.addDynamicParameters(builder, DYNAMIC_PARAMETERSOffset);
     PRWExecutionRequest.addProcessNoise(builder, PROCESS_NOISEOffset);
     PRWExecutionRequest.addFiniteBurns(builder, FINITE_BURNSOffset);
     PRWExecutionRequest.addImpulses(builder, IMPULSESOffset);
@@ -100,7 +114,7 @@ public final class PRWExecutionRequest extends com.google.flatbuffers.Table {
     return PRWExecutionRequest.endPRWExecutionRequest(builder);
   }
 
-  public static void startPRWExecutionRequest(FlatBufferBuilder builder) { builder.startTable(14); }
+  public static void startPRWExecutionRequest(FlatBufferBuilder builder) { builder.startTable(15); }
   public static void addInitial(FlatBufferBuilder builder, int INITIALOffset) { builder.addOffset(0, INITIALOffset, 0); }
   public static void addTargetEpoch(FlatBufferBuilder builder, int TARGET_EPOCHOffset) { builder.addOffset(1, TARGET_EPOCHOffset, 0); }
   public static void addIntegrator(FlatBufferBuilder builder, int INTEGRATOROffset) { builder.addOffset(2, INTEGRATOROffset, 0); }
@@ -121,6 +135,10 @@ public final class PRWExecutionRequest extends com.google.flatbuffers.Table {
   public static int createFiniteBurnsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startFiniteBurnsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addProcessNoise(FlatBufferBuilder builder, int PROCESS_NOISEOffset) { builder.addOffset(13, PROCESS_NOISEOffset, 0); }
+  public static void addDynamicParameters(FlatBufferBuilder builder, int DYNAMIC_PARAMETERSOffset) { builder.addOffset(14, DYNAMIC_PARAMETERSOffset, 0); }
+  public static int createDynamicParametersVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createDynamicParametersVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startDynamicParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static int endPRWExecutionRequest(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // INITIAL

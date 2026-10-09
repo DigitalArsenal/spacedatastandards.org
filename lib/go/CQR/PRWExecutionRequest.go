@@ -338,8 +338,66 @@ func (rcv *PRWExecutionRequest) ProcessNoise(obj *PRWProcessNoise) *PRWProcessNo
 }
 
 /// Process noise added to the propagated covariance. Absent means none.
+/// Model parameters appended, in this order and without repeats, to
+/// INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+/// covariance carries their uncertainty and correlation (a VCM's 7x7 to
+/// 10x10). Each must be active in FORCES. Empty means the state alone.
+func (rcv *PRWExecutionRequest) DYNAMIC_PARAMETERS(j int) prwDynamicParameter {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return prwDynamicParameter(rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1)))
+	}
+	return 0
+}
+
+func (rcv *PRWExecutionRequest) DynamicParameters(j int) prwDynamicParameter {
+	return rcv.DYNAMIC_PARAMETERS(j)
+}
+
+func (rcv *PRWExecutionRequest) DYNAMIC_PARAMETERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PRWExecutionRequest) DynamicParametersLength() int {
+	return rcv.DYNAMIC_PARAMETERSLength()
+}
+
+func (rcv *PRWExecutionRequest) DYNAMIC_PARAMETERSBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PRWExecutionRequest) DynamicParametersBytes() []byte {
+	return rcv.DYNAMIC_PARAMETERSBytes()
+}
+
+/// Model parameters appended, in this order and without repeats, to
+/// INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+/// covariance carries their uncertainty and correlation (a VCM's 7x7 to
+/// 10x10). Each must be active in FORCES. Empty means the state alone.
+func (rcv *PRWExecutionRequest) MutateDYNAMIC_PARAMETERS(j int, n prwDynamicParameter) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), byte(n))
+	}
+	return false
+}
+
+func (rcv *PRWExecutionRequest) MutateDynamicParameters(j int, n prwDynamicParameter) bool {
+	return rcv.MutateDYNAMIC_PARAMETERS(j, n)
+}
+
 func PRWExecutionRequestStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(15)
 }
 func PRWExecutionRequestAddINITIAL(builder *flatbuffers.Builder, INITIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(INITIAL), 0)
@@ -442,6 +500,18 @@ func PRWExecutionRequestAddPROCESS_NOISE(builder *flatbuffers.Builder, PROCESS_N
 }
 func PRWExecutionRequestAddProcessNoise(builder *flatbuffers.Builder, PROCESS_NOISE flatbuffers.UOffsetT) {
 	PRWExecutionRequestAddPROCESS_NOISE(builder, PROCESS_NOISE)
+}
+func PRWExecutionRequestAddDYNAMIC_PARAMETERS(builder *flatbuffers.Builder, DYNAMIC_PARAMETERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(DYNAMIC_PARAMETERS), 0)
+}
+func PRWExecutionRequestAddDynamicParameters(builder *flatbuffers.Builder, DYNAMIC_PARAMETERS flatbuffers.UOffsetT) {
+	PRWExecutionRequestAddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERS)
+}
+func PRWExecutionRequestStartDYNAMIC_PARAMETERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func PRWExecutionRequestStartDynamicParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PRWExecutionRequestStartDYNAMIC_PARAMETERSVector(builder, numElems)
 }
 func PRWExecutionRequestEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

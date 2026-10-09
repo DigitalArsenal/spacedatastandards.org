@@ -12,6 +12,17 @@ const (
 	prwAtmosphereFamilyEXPONENTIAL     prwAtmosphereFamily = 2
 	prwAtmosphereFamilyUSSA1976        prwAtmosphereFamily = 3
 	prwAtmosphereFamilyHARRIS_PRIESTER prwAtmosphereFamily = 4
+	/// Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form
+	/// evaluation of Jacchia's static diffusion model with the constants NASA
+	/// GTDS and GMAT use (inflection temperature, mean molecular mass and
+	/// 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers:
+	/// F10.7 of the previous day, that day's 81-day centred average, and the
+	/// three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held
+	/// constant). A VCM's JACCHIA_70 is carried here.
+	prwAtmosphereFamilyJACCHIA_ROBERTS prwAtmosphereFamily = 5
+	/// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
+	/// Dst-derived temperature change from PRW.JB2008_INDICES.
+	prwAtmosphereFamilyJB2008          prwAtmosphereFamily = 6
 )
 
 var EnumNamesprwAtmosphereFamily = map[prwAtmosphereFamily]string{
@@ -20,6 +31,8 @@ var EnumNamesprwAtmosphereFamily = map[prwAtmosphereFamily]string{
 	prwAtmosphereFamilyEXPONENTIAL:     "EXPONENTIAL",
 	prwAtmosphereFamilyUSSA1976:        "USSA1976",
 	prwAtmosphereFamilyHARRIS_PRIESTER: "HARRIS_PRIESTER",
+	prwAtmosphereFamilyJACCHIA_ROBERTS: "JACCHIA_ROBERTS",
+	prwAtmosphereFamilyJB2008:          "JB2008",
 }
 
 var EnumValuesprwAtmosphereFamily = map[string]prwAtmosphereFamily{
@@ -28,6 +41,8 @@ var EnumValuesprwAtmosphereFamily = map[string]prwAtmosphereFamily{
 	"EXPONENTIAL":     prwAtmosphereFamilyEXPONENTIAL,
 	"USSA1976":        prwAtmosphereFamilyUSSA1976,
 	"HARRIS_PRIESTER": prwAtmosphereFamilyHARRIS_PRIESTER,
+	"JACCHIA_ROBERTS": prwAtmosphereFamilyJACCHIA_ROBERTS,
+	"JB2008":          prwAtmosphereFamilyJB2008,
 }
 
 func (v prwAtmosphereFamily) String() string {

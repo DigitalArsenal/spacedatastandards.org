@@ -2,6 +2,8 @@ import * as flatbuffers from 'flatbuffers';
 import { PRWSpaceWeather, PRWSpaceWeatherT } from './PRWSpaceWeather.js';
 import { prwAtmosphereFamily } from './prwAtmosphereFamily.js';
 import { prwGravitySelection } from './prwGravitySelection.js';
+import { prwRelativityTerms } from './prwRelativityTerms.js';
+import { prwSolidTideModel } from './prwSolidTideModel.js';
 /**
  * Executable subset currently reachable through HPOP invoke. No implied
  * support for coefficients, drag models or bodies the provider cannot supply.
@@ -55,6 +57,40 @@ export declare class PRWForceConfiguration implements flatbuffers.IUnpackableObj
      */
     EPHEMERIS_SOURCE(): string;
     EPHEMERIS_SOURCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    /**
+     * Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+     * orientation (PRW.EARTH_ORIENTATION) to apply them.
+     */
+    SOLID_TIDES(): prwSolidTideModel;
+    RELATIVITY(): prwRelativityTerms;
+    /**
+     * Constant acceleration along the in-track axis, m/s2: T of RTN,
+     * N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+     */
+    IN_TRACK_ACCELERATION_M_S2(): number;
+    /**
+     * True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+     */
+    HAS_IN_TRACK_ACCELERATION_M_S2(): boolean;
+    /**
+     * Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+     * BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+     */
+    DRAG_AREA_OVER_MASS_RATE_M2_KG_S(): number;
+    /**
+     * True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+     */
+    HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(): boolean;
+    /**
+     * Highest degree of the tesseral and sectorial terms (order >= 1); the
+     * zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+     * MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+     */
+    MAXIMUM_TESSERAL_DEGREE(): number;
+    /**
+     * True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+     */
+    HAS_MAXIMUM_TESSERAL_DEGREE(): boolean;
     static startPRWForceConfiguration(builder: flatbuffers.Builder): void;
     static addGravityChoice(builder: flatbuffers.Builder, GRAVITY_CHOICE: prwGravitySelection): void;
     static addEnablePointMass(builder: flatbuffers.Builder, ENABLE_POINT_MASS: boolean): void;
@@ -84,6 +120,14 @@ export declare class PRWForceConfiguration implements flatbuffers.IUnpackableObj
     static addAtmosphereModel(builder: flatbuffers.Builder, ATMOSPHERE_MODEL: prwAtmosphereFamily): void;
     static addWeather(builder: flatbuffers.Builder, WEATHEROffset: flatbuffers.Offset): void;
     static addEphemerisSource(builder: flatbuffers.Builder, EPHEMERIS_SOURCEOffset: flatbuffers.Offset): void;
+    static addSolidTides(builder: flatbuffers.Builder, SOLID_TIDES: prwSolidTideModel): void;
+    static addRelativity(builder: flatbuffers.Builder, RELATIVITY: prwRelativityTerms): void;
+    static addInTrackAccelerationMS2(builder: flatbuffers.Builder, IN_TRACK_ACCELERATION_M_S2: number): void;
+    static addHasInTrackAccelerationMS2(builder: flatbuffers.Builder, HAS_IN_TRACK_ACCELERATION_M_S2: boolean): void;
+    static addDragAreaOverMassRateM2KgS(builder: flatbuffers.Builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S: number): void;
+    static addHasDragAreaOverMassRateM2KgS(builder: flatbuffers.Builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: boolean): void;
+    static addMaximumTesseralDegree(builder: flatbuffers.Builder, MAXIMUM_TESSERAL_DEGREE: number): void;
+    static addHasMaximumTesseralDegree(builder: flatbuffers.Builder, HAS_MAXIMUM_TESSERAL_DEGREE: boolean): void;
     static endPRWForceConfiguration(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PRWForceConfigurationT;
     unpackTo(_o: PRWForceConfigurationT): void;
@@ -111,7 +155,15 @@ export declare class PRWForceConfigurationT implements flatbuffers.IGeneratedObj
     ATMOSPHERE_MODEL: prwAtmosphereFamily;
     WEATHER: PRWSpaceWeatherT | null;
     EPHEMERIS_SOURCE: string | Uint8Array | null;
-    constructor(GRAVITY_CHOICE?: prwGravitySelection, ENABLE_POINT_MASS?: boolean, GRAVITATIONAL_PARAMETER?: number, ENABLE_J2?: boolean, ENABLE_J3?: boolean, ENABLE_J4?: boolean, ENABLE_HIGHER_ZONALS?: boolean, MAXIMUM_DEGREE?: number, HAS_MAXIMUM_DEGREE?: boolean, MAXIMUM_ORDER?: number, HAS_MAXIMUM_ORDER?: boolean, ENABLE_THIRD_BODY?: boolean, THIRD_BODY_IDS?: (number)[], ENABLE_SRP?: boolean, ENABLE_DRAG?: boolean, INITIAL_MASS_KG?: number, AREA_M2?: number, REFLECTIVITY_COEFFICIENT?: number, DRAG_COEFFICIENT?: number, ATMOSPHERE_MODEL?: prwAtmosphereFamily, WEATHER?: PRWSpaceWeatherT | null, EPHEMERIS_SOURCE?: string | Uint8Array | null);
+    SOLID_TIDES: prwSolidTideModel;
+    RELATIVITY: prwRelativityTerms;
+    IN_TRACK_ACCELERATION_M_S2: number;
+    HAS_IN_TRACK_ACCELERATION_M_S2: boolean;
+    DRAG_AREA_OVER_MASS_RATE_M2_KG_S: number;
+    HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: boolean;
+    MAXIMUM_TESSERAL_DEGREE: number;
+    HAS_MAXIMUM_TESSERAL_DEGREE: boolean;
+    constructor(GRAVITY_CHOICE?: prwGravitySelection, ENABLE_POINT_MASS?: boolean, GRAVITATIONAL_PARAMETER?: number, ENABLE_J2?: boolean, ENABLE_J3?: boolean, ENABLE_J4?: boolean, ENABLE_HIGHER_ZONALS?: boolean, MAXIMUM_DEGREE?: number, HAS_MAXIMUM_DEGREE?: boolean, MAXIMUM_ORDER?: number, HAS_MAXIMUM_ORDER?: boolean, ENABLE_THIRD_BODY?: boolean, THIRD_BODY_IDS?: (number)[], ENABLE_SRP?: boolean, ENABLE_DRAG?: boolean, INITIAL_MASS_KG?: number, AREA_M2?: number, REFLECTIVITY_COEFFICIENT?: number, DRAG_COEFFICIENT?: number, ATMOSPHERE_MODEL?: prwAtmosphereFamily, WEATHER?: PRWSpaceWeatherT | null, EPHEMERIS_SOURCE?: string | Uint8Array | null, SOLID_TIDES?: prwSolidTideModel, RELATIVITY?: prwRelativityTerms, IN_TRACK_ACCELERATION_M_S2?: number, HAS_IN_TRACK_ACCELERATION_M_S2?: boolean, DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: number, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: boolean, MAXIMUM_TESSERAL_DEGREE?: number, HAS_MAXIMUM_TESSERAL_DEGREE?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PRWForceConfiguration.d.ts.map

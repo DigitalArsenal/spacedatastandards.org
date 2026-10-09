@@ -74,6 +74,23 @@ class PRWExecutionResult : Table() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    /**
+     * The parameters the samples' STM and COVARIANCE carry after the state.
+     */
+    fun dynamicParameters(j: Int) : UByte {
+        val o = __offset(16)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val dynamicParametersLength : Int
+        get() {
+            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+        }
+    val dynamicParametersAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun dynamicParametersInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPRWExecutionResult(_bb: ByteBuffer): PRWExecutionResult = getRootAsPRWExecutionResult(_bb, PRWExecutionResult())
@@ -81,9 +98,10 @@ class PRWExecutionResult : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPRWExecutionResult(builder: FlatBufferBuilder, finalSampleOffset: Int, samplesOffset: Int, elapsedSeconds: Double, ephemerisSourceOffset: Int, stmTechnique: UByte, densityTreatment: UByte) : Int {
-            builder.startTable(6)
+        fun createPRWExecutionResult(builder: FlatBufferBuilder, finalSampleOffset: Int, samplesOffset: Int, elapsedSeconds: Double, ephemerisSourceOffset: Int, stmTechnique: UByte, densityTreatment: UByte, dynamicParametersOffset: Int) : Int {
+            builder.startTable(7)
             addELAPSEDSECONDS(builder, elapsedSeconds)
+            addDYNAMICPARAMETERS(builder, dynamicParametersOffset)
             addEPHEMERISSOURCE(builder, ephemerisSourceOffset)
             addSAMPLES(builder, samplesOffset)
             addFINALSAMPLE(builder, finalSampleOffset)
@@ -91,7 +109,7 @@ class PRWExecutionResult : Table() {
             addSTMTECHNIQUE(builder, stmTechnique)
             return endPRWExecutionResult(builder)
         }
-        fun startPRWExecutionResult(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startPRWExecutionResult(builder: FlatBufferBuilder) = builder.startTable(7)
         fun addFINALSAMPLE(builder: FlatBufferBuilder, finalSample: Int) = builder.addOffset(0, finalSample, 0)
         fun addSAMPLES(builder: FlatBufferBuilder, samples: Int) = builder.addOffset(1, samples, 0)
         fun createSamplesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
@@ -106,6 +124,16 @@ class PRWExecutionResult : Table() {
         fun addEPHEMERISSOURCE(builder: FlatBufferBuilder, ephemerisSource: Int) = builder.addOffset(3, ephemerisSource, 0)
         fun addSTMTECHNIQUE(builder: FlatBufferBuilder, stmTechnique: UByte) = builder.addByte(4, stmTechnique.toByte(), 0)
         fun addDENSITYTREATMENT(builder: FlatBufferBuilder, densityTreatment: UByte) = builder.addByte(5, densityTreatment.toByte(), 0)
+        fun addDYNAMICPARAMETERS(builder: FlatBufferBuilder, dynamicParameters: Int) = builder.addOffset(6, dynamicParameters, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createDynamicParametersVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startDynamicParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun endPRWExecutionResult(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

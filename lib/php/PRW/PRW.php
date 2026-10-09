@@ -170,22 +170,43 @@ class PRW extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    public function getEARTH_ORIENTATION()
+    {
+        $obj = new PRWEarthOrientation();
+        $o = $this->__offset(40);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getSPACE_WEATHER()
+    {
+        $obj = new PRWSpaceWeatherTable();
+        $o = $this->__offset(42);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getJB2008_INDICES()
+    {
+        $obj = new PRWJB2008IndicesTable();
+        $o = $this->__offset(44);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRW(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(18);
+        $builder->StartObject(21);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRW
      */
-    public static function createPRW(FlatBufferBuilder $builder, $INIT, $BATCH_REQUEST, $BATCH_RESPONSE, $EXECUTION_REQUEST, $EXECUTION_RESULT, $RESIDENT_STATE, $RESIDENT_REQUEST, $PREPARE_REQUEST, $PREPARE_RESULT, $DESCRIBE_REQUEST, $DESCRIBE_RESULT, $NATIVE_INPUT, $EPHEMERIS_REQUEST, $EPHEMERIS_RESULT, $ATMOSPHERE_REQUEST, $ATMOSPHERE_RESULT, $VERSION_QUERY, $VERSION_RESULT)
+    public static function createPRW(FlatBufferBuilder $builder, $INIT, $BATCH_REQUEST, $BATCH_RESPONSE, $EXECUTION_REQUEST, $EXECUTION_RESULT, $RESIDENT_STATE, $RESIDENT_REQUEST, $PREPARE_REQUEST, $PREPARE_RESULT, $DESCRIBE_REQUEST, $DESCRIBE_RESULT, $NATIVE_INPUT, $EPHEMERIS_REQUEST, $EPHEMERIS_RESULT, $ATMOSPHERE_REQUEST, $ATMOSPHERE_RESULT, $VERSION_QUERY, $VERSION_RESULT, $EARTH_ORIENTATION, $SPACE_WEATHER, $JB2008_INDICES)
     {
-        $builder->startObject(18);
+        $builder->startObject(21);
         self::addINIT($builder, $INIT);
         self::addBATCH_REQUEST($builder, $BATCH_REQUEST);
         self::addBATCH_RESPONSE($builder, $BATCH_RESPONSE);
@@ -204,6 +225,9 @@ class PRW extends Table
         self::addATMOSPHERE_RESULT($builder, $ATMOSPHERE_RESULT);
         self::addVERSION_QUERY($builder, $VERSION_QUERY);
         self::addVERSION_RESULT($builder, $VERSION_RESULT);
+        self::addEARTH_ORIENTATION($builder, $EARTH_ORIENTATION);
+        self::addSPACE_WEATHER($builder, $SPACE_WEATHER);
+        self::addJB2008_INDICES($builder, $JB2008_INDICES);
         $o = $builder->endObject();
         return $o;
     }
@@ -386,6 +410,36 @@ class PRW extends Table
     public static function addVERSION_RESULT(FlatBufferBuilder $builder, $VERSION_RESULT)
     {
         $builder->addOffsetX(17, $VERSION_RESULT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEARTH_ORIENTATION(FlatBufferBuilder $builder, $EARTH_ORIENTATION)
+    {
+        $builder->addOffsetX(18, $EARTH_ORIENTATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSPACE_WEATHER(FlatBufferBuilder $builder, $SPACE_WEATHER)
+    {
+        $builder->addOffsetX(19, $SPACE_WEATHER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addJB2008_INDICES(FlatBufferBuilder $builder, $JB2008_INDICES)
+    {
+        $builder->addOffsetX(20, $JB2008_INDICES, 0);
     }
 
     /**

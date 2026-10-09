@@ -10,16 +10,19 @@ import { PRWBatchRequest, PRWBatchRequestT } from './PRWBatchRequest.js';
 import { PRWBatchResponse, PRWBatchResponseT } from './PRWBatchResponse.js';
 import { PRWDescribeRequest, PRWDescribeRequestT } from './PRWDescribeRequest.js';
 import { PRWDescribeResult, PRWDescribeResultT } from './PRWDescribeResult.js';
+import { PRWEarthOrientation, PRWEarthOrientationT } from './PRWEarthOrientation.js';
 import { PRWEphemerisRequest, PRWEphemerisRequestT } from './PRWEphemerisRequest.js';
 import { PRWEphemerisResult, PRWEphemerisResultT } from './PRWEphemerisResult.js';
 import { PRWExecutionRequest, PRWExecutionRequestT } from './PRWExecutionRequest.js';
 import { PRWExecutionResult, PRWExecutionResultT } from './PRWExecutionResult.js';
 import { PRWInit, PRWInitT } from './PRWInit.js';
+import { PRWJB2008IndicesTable, PRWJB2008IndicesTableT } from './PRWJB2008IndicesTable.js';
 import { PRWNativeInput, PRWNativeInputT } from './PRWNativeInput.js';
 import { PRWPrepareRequest, PRWPrepareRequestT } from './PRWPrepareRequest.js';
 import { PRWPrepareResult, PRWPrepareResultT } from './PRWPrepareResult.js';
 import { PRWResidentRequest, PRWResidentRequestT } from './PRWResidentRequest.js';
 import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
+import { PRWSpaceWeatherTable, PRWSpaceWeatherTableT } from './PRWSpaceWeatherTable.js';
 import { PRWVersionResult, PRWVersionResultT } from './PRWVersionResult.js';
 
 
@@ -141,8 +144,23 @@ VERSION_RESULT(obj?:PRWVersionResult):PRWVersionResult|null {
   return offset ? (obj || new PRWVersionResult()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+EARTH_ORIENTATION(obj?:PRWEarthOrientation):PRWEarthOrientation|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? (obj || new PRWEarthOrientation()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+SPACE_WEATHER(obj?:PRWSpaceWeatherTable):PRWSpaceWeatherTable|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? (obj || new PRWSpaceWeatherTable()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+JB2008_INDICES(obj?:PRWJB2008IndicesTable):PRWJB2008IndicesTable|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? (obj || new PRWJB2008IndicesTable()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startPRW(builder:flatbuffers.Builder) {
-  builder.startObject(18);
+  builder.startObject(21);
 }
 
 static addInit(builder:flatbuffers.Builder, INITOffset:flatbuffers.Offset) {
@@ -217,6 +235,18 @@ static addVersionResult(builder:flatbuffers.Builder, VERSION_RESULTOffset:flatbu
   builder.addFieldOffset(17, VERSION_RESULTOffset, 0);
 }
 
+static addEarthOrientation(builder:flatbuffers.Builder, EARTH_ORIENTATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, EARTH_ORIENTATIONOffset, 0);
+}
+
+static addSpaceWeather(builder:flatbuffers.Builder, SPACE_WEATHEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, SPACE_WEATHEROffset, 0);
+}
+
+static addJb2008Indices(builder:flatbuffers.Builder, JB2008_INDICESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, JB2008_INDICESOffset, 0);
+}
+
 static endPRW(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -250,7 +280,10 @@ unpack(): PRWT {
     (this.ATMOSPHERE_REQUEST() !== null ? this.ATMOSPHERE_REQUEST()!.unpack() : null),
     (this.ATMOSPHERE_RESULT() !== null ? this.ATMOSPHERE_RESULT()!.unpack() : null),
     this.VERSION_QUERY(),
-    (this.VERSION_RESULT() !== null ? this.VERSION_RESULT()!.unpack() : null)
+    (this.VERSION_RESULT() !== null ? this.VERSION_RESULT()!.unpack() : null),
+    (this.EARTH_ORIENTATION() !== null ? this.EARTH_ORIENTATION()!.unpack() : null),
+    (this.SPACE_WEATHER() !== null ? this.SPACE_WEATHER()!.unpack() : null),
+    (this.JB2008_INDICES() !== null ? this.JB2008_INDICES()!.unpack() : null)
   );
 }
 
@@ -274,6 +307,9 @@ unpackTo(_o: PRWT): void {
   _o.ATMOSPHERE_RESULT = (this.ATMOSPHERE_RESULT() !== null ? this.ATMOSPHERE_RESULT()!.unpack() : null);
   _o.VERSION_QUERY = this.VERSION_QUERY();
   _o.VERSION_RESULT = (this.VERSION_RESULT() !== null ? this.VERSION_RESULT()!.unpack() : null);
+  _o.EARTH_ORIENTATION = (this.EARTH_ORIENTATION() !== null ? this.EARTH_ORIENTATION()!.unpack() : null);
+  _o.SPACE_WEATHER = (this.SPACE_WEATHER() !== null ? this.SPACE_WEATHER()!.unpack() : null);
+  _o.JB2008_INDICES = (this.JB2008_INDICES() !== null ? this.JB2008_INDICES()!.unpack() : null);
 }
 }
 
@@ -296,7 +332,10 @@ constructor(
   public ATMOSPHERE_REQUEST: PRWAtmosphereRequestT|null = null,
   public ATMOSPHERE_RESULT: PRWAtmosphereResultT|null = null,
   public VERSION_QUERY: boolean = false,
-  public VERSION_RESULT: PRWVersionResultT|null = null
+  public VERSION_RESULT: PRWVersionResultT|null = null,
+  public EARTH_ORIENTATION: PRWEarthOrientationT|null = null,
+  public SPACE_WEATHER: PRWSpaceWeatherTableT|null = null,
+  public JB2008_INDICES: PRWJB2008IndicesTableT|null = null
 ){}
 
 
@@ -318,6 +357,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ATMOSPHERE_REQUEST = (this.ATMOSPHERE_REQUEST !== null ? this.ATMOSPHERE_REQUEST!.pack(builder) : 0);
   const ATMOSPHERE_RESULT = (this.ATMOSPHERE_RESULT !== null ? this.ATMOSPHERE_RESULT!.pack(builder) : 0);
   const VERSION_RESULT = (this.VERSION_RESULT !== null ? this.VERSION_RESULT!.pack(builder) : 0);
+  const EARTH_ORIENTATION = (this.EARTH_ORIENTATION !== null ? this.EARTH_ORIENTATION!.pack(builder) : 0);
+  const SPACE_WEATHER = (this.SPACE_WEATHER !== null ? this.SPACE_WEATHER!.pack(builder) : 0);
+  const JB2008_INDICES = (this.JB2008_INDICES !== null ? this.JB2008_INDICES!.pack(builder) : 0);
 
   PRW.startPRW(builder);
   PRW.addInit(builder, INIT);
@@ -338,6 +380,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PRW.addAtmosphereResult(builder, ATMOSPHERE_RESULT);
   PRW.addVersionQuery(builder, this.VERSION_QUERY);
   PRW.addVersionResult(builder, VERSION_RESULT);
+  PRW.addEarthOrientation(builder, EARTH_ORIENTATION);
+  PRW.addSpaceWeather(builder, SPACE_WEATHER);
+  PRW.addJb2008Indices(builder, JB2008_INDICES);
 
   return PRW.endPRW(builder);
 }

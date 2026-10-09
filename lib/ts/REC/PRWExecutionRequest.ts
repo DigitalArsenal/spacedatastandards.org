@@ -14,6 +14,7 @@ import { PRWStateMatrix, PRWStateMatrixT } from './PRWStateMatrix.js';
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
 import { prwDensityTreatment } from './prwDensityTreatment.js';
 import { prwDerivativeTechnique } from './prwDerivativeTechnique.js';
+import { prwDynamicParameter } from './prwDynamicParameter.js';
 
 
 /**
@@ -128,8 +129,29 @@ PROCESS_NOISE(obj?:PRWProcessNoise):PRWProcessNoise|null {
   return offset ? (obj || new PRWProcessNoise()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Model parameters appended, in this order and without repeats, to
+ * INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+ * covariance carries their uncertainty and correlation (a VCM's 7x7 to
+ * 10x10). Each must be active in FORCES. Empty means the state alone.
+ */
+DYNAMIC_PARAMETERS(index: number):prwDynamicParameter|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
+}
+
+dynamicParametersLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+dynamicParametersArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startPRWExecutionRequest(builder:flatbuffers.Builder) {
-  builder.startObject(14);
+  builder.startObject(15);
 }
 
 static addInitial(builder:flatbuffers.Builder, INITIALOffset:flatbuffers.Offset) {
@@ -224,6 +246,22 @@ static addProcessNoise(builder:flatbuffers.Builder, PROCESS_NOISEOffset:flatbuff
   builder.addFieldOffset(13, PROCESS_NOISEOffset, 0);
 }
 
+static addDynamicParameters(builder:flatbuffers.Builder, DYNAMIC_PARAMETERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, DYNAMIC_PARAMETERSOffset, 0);
+}
+
+static createDynamicParametersVector(builder:flatbuffers.Builder, data:prwDynamicParameter[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDynamicParametersVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endPRWExecutionRequest(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // INITIAL
@@ -249,7 +287,8 @@ unpack(): PRWExecutionRequestT {
     this.bb!.createObjList<PRWImpulse, PRWImpulseT>(this.IMPULSES.bind(this), this.impulsesLength()),
     this.INCLUDE_MASS_DYNAMICS(),
     this.bb!.createObjList<PRWFiniteBurn, PRWFiniteBurnT>(this.FINITE_BURNS.bind(this), this.finiteBurnsLength()),
-    (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null)
+    (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null),
+    this.bb!.createScalarList<prwDynamicParameter>(this.DYNAMIC_PARAMETERS.bind(this), this.dynamicParametersLength())
   );
 }
 
@@ -269,6 +308,7 @@ unpackTo(_o: PRWExecutionRequestT): void {
   _o.INCLUDE_MASS_DYNAMICS = this.INCLUDE_MASS_DYNAMICS();
   _o.FINITE_BURNS = this.bb!.createObjList<PRWFiniteBurn, PRWFiniteBurnT>(this.FINITE_BURNS.bind(this), this.finiteBurnsLength());
   _o.PROCESS_NOISE = (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null);
+  _o.DYNAMIC_PARAMETERS = this.bb!.createScalarList<prwDynamicParameter>(this.DYNAMIC_PARAMETERS.bind(this), this.dynamicParametersLength());
 }
 }
 
@@ -287,7 +327,8 @@ constructor(
   public IMPULSES: (PRWImpulseT)[] = [],
   public INCLUDE_MASS_DYNAMICS: boolean = false,
   public FINITE_BURNS: (PRWFiniteBurnT)[] = [],
-  public PROCESS_NOISE: PRWProcessNoiseT|null = null
+  public PROCESS_NOISE: PRWProcessNoiseT|null = null,
+  public DYNAMIC_PARAMETERS: (prwDynamicParameter)[] = []
 ){}
 
 
@@ -302,6 +343,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const IMPULSES = PRWExecutionRequest.createImpulsesVector(builder, builder.createObjectOffsetList(this.IMPULSES));
   const FINITE_BURNS = PRWExecutionRequest.createFiniteBurnsVector(builder, builder.createObjectOffsetList(this.FINITE_BURNS));
   const PROCESS_NOISE = (this.PROCESS_NOISE !== null ? this.PROCESS_NOISE!.pack(builder) : 0);
+  const DYNAMIC_PARAMETERS = PRWExecutionRequest.createDynamicParametersVector(builder, this.DYNAMIC_PARAMETERS);
 
   PRWExecutionRequest.startPRWExecutionRequest(builder);
   PRWExecutionRequest.addInitial(builder, INITIAL);
@@ -318,6 +360,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PRWExecutionRequest.addIncludeMassDynamics(builder, this.INCLUDE_MASS_DYNAMICS);
   PRWExecutionRequest.addFiniteBurns(builder, FINITE_BURNS);
   PRWExecutionRequest.addProcessNoise(builder, PROCESS_NOISE);
+  PRWExecutionRequest.addDynamicParameters(builder, DYNAMIC_PARAMETERS);
 
   return PRWExecutionRequest.endPRWExecutionRequest(builder);
 }

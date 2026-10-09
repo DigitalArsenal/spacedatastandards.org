@@ -362,8 +362,59 @@ func (rcv *PRW) VersionResult(obj *PRWVersionResult) *PRWVersionResult {
 	return rcv.VERSION_RESULT(obj)
 }
 
+func (rcv *PRW) EARTH_ORIENTATION(obj *PRWEarthOrientation) *PRWEarthOrientation {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWEarthOrientation)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) EarthOrientation(obj *PRWEarthOrientation) *PRWEarthOrientation {
+	return rcv.EARTH_ORIENTATION(obj)
+}
+
+func (rcv *PRW) SPACE_WEATHER(obj *PRWSpaceWeatherTable) *PRWSpaceWeatherTable {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWSpaceWeatherTable)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) SpaceWeather(obj *PRWSpaceWeatherTable) *PRWSpaceWeatherTable {
+	return rcv.SPACE_WEATHER(obj)
+}
+
+func (rcv *PRW) JB2008_INDICES(obj *PRWJB2008IndicesTable) *PRWJB2008IndicesTable {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWJB2008IndicesTable)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) Jb2008Indices(obj *PRWJB2008IndicesTable) *PRWJB2008IndicesTable {
+	return rcv.JB2008_INDICES(obj)
+}
+
 func PRWStart(builder *flatbuffers.Builder) {
-	builder.StartObject(18)
+	builder.StartObject(21)
 }
 func PRWAddINIT(builder *flatbuffers.Builder, INIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(INIT), 0)
@@ -472,6 +523,24 @@ func PRWAddVERSION_RESULT(builder *flatbuffers.Builder, VERSION_RESULT flatbuffe
 }
 func PRWAddVersionResult(builder *flatbuffers.Builder, VERSION_RESULT flatbuffers.UOffsetT) {
 	PRWAddVERSION_RESULT(builder, VERSION_RESULT)
+}
+func PRWAddEARTH_ORIENTATION(builder *flatbuffers.Builder, EARTH_ORIENTATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(EARTH_ORIENTATION), 0)
+}
+func PRWAddEarthOrientation(builder *flatbuffers.Builder, EARTH_ORIENTATION flatbuffers.UOffsetT) {
+	PRWAddEARTH_ORIENTATION(builder, EARTH_ORIENTATION)
+}
+func PRWAddSPACE_WEATHER(builder *flatbuffers.Builder, SPACE_WEATHER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(SPACE_WEATHER), 0)
+}
+func PRWAddSpaceWeather(builder *flatbuffers.Builder, SPACE_WEATHER flatbuffers.UOffsetT) {
+	PRWAddSPACE_WEATHER(builder, SPACE_WEATHER)
+}
+func PRWAddJB2008_INDICES(builder *flatbuffers.Builder, JB2008_INDICES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(JB2008_INDICES), 0)
+}
+func PRWAddJb2008Indices(builder *flatbuffers.Builder, JB2008_INDICES flatbuffers.UOffsetT) {
+	PRWAddJB2008_INDICES(builder, JB2008_INDICES)
 }
 func PRWEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

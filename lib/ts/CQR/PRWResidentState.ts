@@ -129,8 +129,41 @@ PROCESS_NOISE(obj?:PRWProcessNoise):PRWProcessNoise|null {
   return offset ? (obj || new PRWProcessNoise()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch
+ * (the BDOT of a VCM).
+ */
+DRAG_AREA_OVER_MASS_RATE_M2_KG_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+ */
+HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+ */
+IN_TRACK_ACCELERATION_M_S2():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+ */
+HAS_IN_TRACK_ACCELERATION_M_S2():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startPRWResidentState(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(19);
 }
 
 static addInstance(builder:flatbuffers.Builder, INSTANCEOffset:flatbuffers.Offset) {
@@ -193,6 +226,22 @@ static addProcessNoise(builder:flatbuffers.Builder, PROCESS_NOISEOffset:flatbuff
   builder.addFieldOffset(14, PROCESS_NOISEOffset, 0);
 }
 
+static addDragAreaOverMassRateM2KgS(builder:flatbuffers.Builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S:number) {
+  builder.addFieldFloat64(15, DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0);
+}
+
+static addHasDragAreaOverMassRateM2KgS(builder:flatbuffers.Builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:boolean) {
+  builder.addFieldInt8(16, +HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, +false);
+}
+
+static addInTrackAccelerationMS2(builder:flatbuffers.Builder, IN_TRACK_ACCELERATION_M_S2:number) {
+  builder.addFieldFloat64(17, IN_TRACK_ACCELERATION_M_S2, 0.0);
+}
+
+static addHasInTrackAccelerationMS2(builder:flatbuffers.Builder, HAS_IN_TRACK_ACCELERATION_M_S2:boolean) {
+  builder.addFieldInt8(18, +HAS_IN_TRACK_ACCELERATION_M_S2, +false);
+}
+
 static endPRWResidentState(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 12) // STATE
@@ -217,7 +266,11 @@ unpack(): PRWResidentStateT {
     this.SRP_AREA_OVER_MASS_M2_KG(),
     this.HAS_SRP_AREA_OVER_MASS_M2_KG(),
     this.VALID(),
-    (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null)
+    (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null),
+    this.DRAG_AREA_OVER_MASS_RATE_M2_KG_S(),
+    this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(),
+    this.IN_TRACK_ACCELERATION_M_S2(),
+    this.HAS_IN_TRACK_ACCELERATION_M_S2()
   );
 }
 
@@ -238,6 +291,10 @@ unpackTo(_o: PRWResidentStateT): void {
   _o.HAS_SRP_AREA_OVER_MASS_M2_KG = this.HAS_SRP_AREA_OVER_MASS_M2_KG();
   _o.VALID = this.VALID();
   _o.PROCESS_NOISE = (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null);
+  _o.DRAG_AREA_OVER_MASS_RATE_M2_KG_S = this.DRAG_AREA_OVER_MASS_RATE_M2_KG_S();
+  _o.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S();
+  _o.IN_TRACK_ACCELERATION_M_S2 = this.IN_TRACK_ACCELERATION_M_S2();
+  _o.HAS_IN_TRACK_ACCELERATION_M_S2 = this.HAS_IN_TRACK_ACCELERATION_M_S2();
 }
 }
 
@@ -257,7 +314,11 @@ constructor(
   public SRP_AREA_OVER_MASS_M2_KG: number = 0.0,
   public HAS_SRP_AREA_OVER_MASS_M2_KG: boolean = false,
   public VALID: boolean = true,
-  public PROCESS_NOISE: PRWProcessNoiseT|null = null
+  public PROCESS_NOISE: PRWProcessNoiseT|null = null,
+  public DRAG_AREA_OVER_MASS_RATE_M2_KG_S: number = 0.0,
+  public HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: boolean = false,
+  public IN_TRACK_ACCELERATION_M_S2: number = 0.0,
+  public HAS_IN_TRACK_ACCELERATION_M_S2: boolean = false
 ){}
 
 
@@ -285,6 +346,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PRWResidentState.addHasSrpAreaOverMassM2Kg(builder, this.HAS_SRP_AREA_OVER_MASS_M2_KG);
   PRWResidentState.addValid(builder, this.VALID);
   PRWResidentState.addProcessNoise(builder, PROCESS_NOISE);
+  PRWResidentState.addDragAreaOverMassRateM2KgS(builder, this.DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+  PRWResidentState.addHasDragAreaOverMassRateM2KgS(builder, this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+  PRWResidentState.addInTrackAccelerationMS2(builder, this.IN_TRACK_ACCELERATION_M_S2);
+  PRWResidentState.addHasInTrackAccelerationMS2(builder, this.HAS_IN_TRACK_ACCELERATION_M_S2);
 
   return PRWResidentState.endPRWResidentState(builder);
 }

@@ -66,6 +66,12 @@ public final class PRW extends com.google.flatbuffers.Table {
   public boolean VERSION_QUERY() { int o = __offset(36); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   public PRWVersionResult VERSION_RESULT() { return VERSION_RESULT(new PRWVersionResult()); }
   public PRWVersionResult VERSION_RESULT(PRWVersionResult obj) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWEarthOrientation EARTH_ORIENTATION() { return EARTH_ORIENTATION(new PRWEarthOrientation()); }
+  public PRWEarthOrientation EARTH_ORIENTATION(PRWEarthOrientation obj) { int o = __offset(40); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWSpaceWeatherTable SPACE_WEATHER() { return SPACE_WEATHER(new PRWSpaceWeatherTable()); }
+  public PRWSpaceWeatherTable SPACE_WEATHER(PRWSpaceWeatherTable obj) { int o = __offset(42); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PRWJB2008IndicesTable JB2008_INDICES() { return JB2008_INDICES(new PRWJB2008IndicesTable()); }
+  public PRWJB2008IndicesTable JB2008_INDICES(PRWJB2008IndicesTable obj) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createPRW(FlatBufferBuilder builder,
       int INITOffset,
@@ -85,8 +91,14 @@ public final class PRW extends com.google.flatbuffers.Table {
       int ATMOSPHERE_REQUESTOffset,
       int ATMOSPHERE_RESULTOffset,
       boolean VERSION_QUERY,
-      int VERSION_RESULTOffset) {
-    builder.startTable(18);
+      int VERSION_RESULTOffset,
+      int EARTH_ORIENTATIONOffset,
+      int SPACE_WEATHEROffset,
+      int JB2008_INDICESOffset) {
+    builder.startTable(21);
+    PRW.addJb2008Indices(builder, JB2008_INDICESOffset);
+    PRW.addSpaceWeather(builder, SPACE_WEATHEROffset);
+    PRW.addEarthOrientation(builder, EARTH_ORIENTATIONOffset);
     PRW.addVersionResult(builder, VERSION_RESULTOffset);
     PRW.addAtmosphereResult(builder, ATMOSPHERE_RESULTOffset);
     PRW.addAtmosphereRequest(builder, ATMOSPHERE_REQUESTOffset);
@@ -108,7 +120,7 @@ public final class PRW extends com.google.flatbuffers.Table {
     return PRW.endPRW(builder);
   }
 
-  public static void startPRW(FlatBufferBuilder builder) { builder.startTable(18); }
+  public static void startPRW(FlatBufferBuilder builder) { builder.startTable(21); }
   public static void addInit(FlatBufferBuilder builder, int INITOffset) { builder.addOffset(0, INITOffset, 0); }
   public static void addBatchRequest(FlatBufferBuilder builder, int BATCH_REQUESTOffset) { builder.addOffset(1, BATCH_REQUESTOffset, 0); }
   public static void addBatchResponse(FlatBufferBuilder builder, int BATCH_RESPONSEOffset) { builder.addOffset(2, BATCH_RESPONSEOffset, 0); }
@@ -127,6 +139,9 @@ public final class PRW extends com.google.flatbuffers.Table {
   public static void addAtmosphereResult(FlatBufferBuilder builder, int ATMOSPHERE_RESULTOffset) { builder.addOffset(15, ATMOSPHERE_RESULTOffset, 0); }
   public static void addVersionQuery(FlatBufferBuilder builder, boolean VERSION_QUERY) { builder.addBoolean(16, VERSION_QUERY, false); }
   public static void addVersionResult(FlatBufferBuilder builder, int VERSION_RESULTOffset) { builder.addOffset(17, VERSION_RESULTOffset, 0); }
+  public static void addEarthOrientation(FlatBufferBuilder builder, int EARTH_ORIENTATIONOffset) { builder.addOffset(18, EARTH_ORIENTATIONOffset, 0); }
+  public static void addSpaceWeather(FlatBufferBuilder builder, int SPACE_WEATHEROffset) { builder.addOffset(19, SPACE_WEATHEROffset, 0); }
+  public static void addJb2008Indices(FlatBufferBuilder builder, int JB2008_INDICESOffset) { builder.addOffset(20, JB2008_INDICESOffset, 0); }
   public static int endPRW(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -7,6 +7,8 @@ import * as flatbuffers from 'flatbuffers';
 import { PRWSpaceWeather, PRWSpaceWeatherT } from './PRWSpaceWeather.js';
 import { prwAtmosphereFamily } from './prwAtmosphereFamily.js';
 import { prwGravitySelection } from './prwGravitySelection.js';
+import { prwRelativityTerms } from './prwRelativityTerms.js';
+import { prwSolidTideModel } from './prwSolidTideModel.js';
 
 
 /**
@@ -171,8 +173,74 @@ EPHEMERIS_SOURCE(optionalEncoding?:any):string|Uint8Array {
   return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
+/**
+ * Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+ * orientation (PRW.EARTH_ORIENTATION) to apply them.
+ */
+SOLID_TIDES():prwSolidTideModel {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : prwSolidTideModel.NONE;
+}
+
+RELATIVITY():prwRelativityTerms {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : prwRelativityTerms.NONE;
+}
+
+/**
+ * Constant acceleration along the in-track axis, m/s2: T of RTN,
+ * N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+ */
+IN_TRACK_ACCELERATION_M_S2():number {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+ */
+HAS_IN_TRACK_ACCELERATION_M_S2():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+ * BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+ */
+DRAG_AREA_OVER_MASS_RATE_M2_KG_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+ */
+HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Highest degree of the tesseral and sectorial terms (order >= 1); the
+ * zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+ * MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+ */
+MAXIMUM_TESSERAL_DEGREE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+ */
+HAS_MAXIMUM_TESSERAL_DEGREE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startPRWForceConfiguration(builder:flatbuffers.Builder) {
-  builder.startObject(22);
+  builder.startObject(30);
 }
 
 static addGravityChoice(builder:flatbuffers.Builder, GRAVITY_CHOICE:prwGravitySelection) {
@@ -280,6 +348,38 @@ static addEphemerisSource(builder:flatbuffers.Builder, EPHEMERIS_SOURCEOffset:fl
   builder.addFieldOffset(21, EPHEMERIS_SOURCEOffset, 0);
 }
 
+static addSolidTides(builder:flatbuffers.Builder, SOLID_TIDES:prwSolidTideModel) {
+  builder.addFieldInt8(22, SOLID_TIDES, prwSolidTideModel.NONE);
+}
+
+static addRelativity(builder:flatbuffers.Builder, RELATIVITY:prwRelativityTerms) {
+  builder.addFieldInt8(23, RELATIVITY, prwRelativityTerms.NONE);
+}
+
+static addInTrackAccelerationMS2(builder:flatbuffers.Builder, IN_TRACK_ACCELERATION_M_S2:number) {
+  builder.addFieldFloat64(24, IN_TRACK_ACCELERATION_M_S2, 0.0);
+}
+
+static addHasInTrackAccelerationMS2(builder:flatbuffers.Builder, HAS_IN_TRACK_ACCELERATION_M_S2:boolean) {
+  builder.addFieldInt8(25, +HAS_IN_TRACK_ACCELERATION_M_S2, +false);
+}
+
+static addDragAreaOverMassRateM2KgS(builder:flatbuffers.Builder, DRAG_AREA_OVER_MASS_RATE_M2_KG_S:number) {
+  builder.addFieldFloat64(26, DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0);
+}
+
+static addHasDragAreaOverMassRateM2KgS(builder:flatbuffers.Builder, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:boolean) {
+  builder.addFieldInt8(27, +HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, +false);
+}
+
+static addMaximumTesseralDegree(builder:flatbuffers.Builder, MAXIMUM_TESSERAL_DEGREE:number) {
+  builder.addFieldInt16(28, MAXIMUM_TESSERAL_DEGREE, 0);
+}
+
+static addHasMaximumTesseralDegree(builder:flatbuffers.Builder, HAS_MAXIMUM_TESSERAL_DEGREE:boolean) {
+  builder.addFieldInt8(29, +HAS_MAXIMUM_TESSERAL_DEGREE, +false);
+}
+
 static endPRWForceConfiguration(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 46) // EPHEMERIS_SOURCE
@@ -310,7 +410,15 @@ unpack(): PRWForceConfigurationT {
     this.DRAG_COEFFICIENT(),
     this.ATMOSPHERE_MODEL(),
     (this.WEATHER() !== null ? this.WEATHER()!.unpack() : null),
-    this.EPHEMERIS_SOURCE()
+    this.EPHEMERIS_SOURCE(),
+    this.SOLID_TIDES(),
+    this.RELATIVITY(),
+    this.IN_TRACK_ACCELERATION_M_S2(),
+    this.HAS_IN_TRACK_ACCELERATION_M_S2(),
+    this.DRAG_AREA_OVER_MASS_RATE_M2_KG_S(),
+    this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(),
+    this.MAXIMUM_TESSERAL_DEGREE(),
+    this.HAS_MAXIMUM_TESSERAL_DEGREE()
   );
 }
 
@@ -338,6 +446,14 @@ unpackTo(_o: PRWForceConfigurationT): void {
   _o.ATMOSPHERE_MODEL = this.ATMOSPHERE_MODEL();
   _o.WEATHER = (this.WEATHER() !== null ? this.WEATHER()!.unpack() : null);
   _o.EPHEMERIS_SOURCE = this.EPHEMERIS_SOURCE();
+  _o.SOLID_TIDES = this.SOLID_TIDES();
+  _o.RELATIVITY = this.RELATIVITY();
+  _o.IN_TRACK_ACCELERATION_M_S2 = this.IN_TRACK_ACCELERATION_M_S2();
+  _o.HAS_IN_TRACK_ACCELERATION_M_S2 = this.HAS_IN_TRACK_ACCELERATION_M_S2();
+  _o.DRAG_AREA_OVER_MASS_RATE_M2_KG_S = this.DRAG_AREA_OVER_MASS_RATE_M2_KG_S();
+  _o.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S();
+  _o.MAXIMUM_TESSERAL_DEGREE = this.MAXIMUM_TESSERAL_DEGREE();
+  _o.HAS_MAXIMUM_TESSERAL_DEGREE = this.HAS_MAXIMUM_TESSERAL_DEGREE();
 }
 }
 
@@ -364,7 +480,15 @@ constructor(
   public DRAG_COEFFICIENT: number = 2.2,
   public ATMOSPHERE_MODEL: prwAtmosphereFamily = prwAtmosphereFamily.NRLMSISE00,
   public WEATHER: PRWSpaceWeatherT|null = null,
-  public EPHEMERIS_SOURCE: string|Uint8Array|null = null
+  public EPHEMERIS_SOURCE: string|Uint8Array|null = null,
+  public SOLID_TIDES: prwSolidTideModel = prwSolidTideModel.NONE,
+  public RELATIVITY: prwRelativityTerms = prwRelativityTerms.NONE,
+  public IN_TRACK_ACCELERATION_M_S2: number = 0.0,
+  public HAS_IN_TRACK_ACCELERATION_M_S2: boolean = false,
+  public DRAG_AREA_OVER_MASS_RATE_M2_KG_S: number = 0.0,
+  public HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: boolean = false,
+  public MAXIMUM_TESSERAL_DEGREE: number = 0,
+  public HAS_MAXIMUM_TESSERAL_DEGREE: boolean = false
 ){}
 
 
@@ -396,6 +520,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PRWForceConfiguration.addAtmosphereModel(builder, this.ATMOSPHERE_MODEL);
   PRWForceConfiguration.addWeather(builder, WEATHER);
   PRWForceConfiguration.addEphemerisSource(builder, EPHEMERIS_SOURCE);
+  PRWForceConfiguration.addSolidTides(builder, this.SOLID_TIDES);
+  PRWForceConfiguration.addRelativity(builder, this.RELATIVITY);
+  PRWForceConfiguration.addInTrackAccelerationMS2(builder, this.IN_TRACK_ACCELERATION_M_S2);
+  PRWForceConfiguration.addHasInTrackAccelerationMS2(builder, this.HAS_IN_TRACK_ACCELERATION_M_S2);
+  PRWForceConfiguration.addDragAreaOverMassRateM2KgS(builder, this.DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+  PRWForceConfiguration.addHasDragAreaOverMassRateM2KgS(builder, this.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+  PRWForceConfiguration.addMaximumTesseralDegree(builder, this.MAXIMUM_TESSERAL_DEGREE);
+  PRWForceConfiguration.addHasMaximumTesseralDegree(builder, this.HAS_MAXIMUM_TESSERAL_DEGREE);
 
   return PRWForceConfiguration.endPRWForceConfiguration(builder);
 }
