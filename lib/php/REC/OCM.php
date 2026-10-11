@@ -125,8 +125,11 @@ class OCM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-    /// Time alignment matches STATE_DATA epochs.
+    /// Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+    /// COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+    /// has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+    /// state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+    /// epoch, the lower triangle of the 6x6 position and velocity covariance.
     /**
      * @param int offset
      * @return double
@@ -347,22 +350,95 @@ class OCM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+    /// (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+    /// TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+    public function getCOV_TYPE()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+    /**
+     * @return sbyte
+     */
+    public function getCOV_ORDERING()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \covarianceOrdering::LTM;
+    }
+
+    /// Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+    /// COV_PARAMETERS names.
+    /**
+     * @return byte
+     */
+    public function getCOV_SIZE()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 6;
+    }
+
+    /// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+    /// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+    /// matrix reaches). A row the orbit determination did not solve for is zero.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getCOV_PARAMETERS($j)
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOV_PARAMETERSLength()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+    /// dimensionless one.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getCOV_UNITS($j)
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOV_UNITSLength()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOCM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(24);
+        $builder->StartObject(29);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OCM
      */
-    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $STATE_EPOCHS)
+    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $STATE_EPOCHS, $COV_TYPE, $COV_ORDERING, $COV_SIZE, $COV_PARAMETERS, $COV_UNITS)
     {
-        $builder->startObject(24);
+        $builder->startObject(29);
         self::addHEADER($builder, $HEADER);
         self::addMETADATA($builder, $METADATA);
         self::addTRAJ_TYPE($builder, $TRAJ_TYPE);
@@ -387,6 +463,11 @@ class OCM extends Table
         self::addCOV_CALIBRATION($builder, $COV_CALIBRATION);
         self::addCOV_CALIBRATION_REFERENCE($builder, $COV_CALIBRATION_REFERENCE);
         self::addSTATE_EPOCHS($builder, $STATE_EPOCHS);
+        self::addCOV_TYPE($builder, $COV_TYPE);
+        self::addCOV_ORDERING($builder, $COV_ORDERING);
+        self::addCOV_SIZE($builder, $COV_SIZE);
+        self::addCOV_PARAMETERS($builder, $COV_PARAMETERS);
+        self::addCOV_UNITS($builder, $COV_UNITS);
         $o = $builder->endObject();
         return $o;
     }
@@ -795,6 +876,104 @@ class OCM extends Table
      * @return void
      */
     public static function startSTATE_EPOCHSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOV_TYPE(FlatBufferBuilder $builder, $COV_TYPE)
+    {
+        $builder->addOffsetX(24, $COV_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addCOV_ORDERING(FlatBufferBuilder $builder, $COV_ORDERING)
+    {
+        $builder->addSbyteX(25, $COV_ORDERING, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addCOV_SIZE(FlatBufferBuilder $builder, $COV_SIZE)
+    {
+        $builder->addByteX(26, $COV_SIZE, 6);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_PARAMETERS(FlatBufferBuilder $builder, $COV_PARAMETERS)
+    {
+        $builder->addOffsetX(27, $COV_PARAMETERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOV_PARAMETERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOV_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_UNITS(FlatBufferBuilder $builder, $COV_UNITS)
+    {
+        $builder->addOffsetX(28, $COV_UNITS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOV_UNITSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOV_UNITSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }

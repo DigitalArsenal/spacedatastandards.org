@@ -3209,7 +3209,7 @@
     },
     "VCM": {
       "type": "object",
-      "description": "Vector Covariance Message",
+      "description": "DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.",
       "properties": {
         "CCSDS_OMM_VERS": {
           "type": "number",

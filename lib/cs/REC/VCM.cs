@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Vector Covariance Message
+/// DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
 public struct VCM : IFlatbufferObject
 {
   private Table __p;

@@ -95,6 +95,29 @@ public enum covarianceCalibration: Int8, FlatbuffersVectorInitializable, Enum, V
 }
 
 
+///  Order in which the values of an N x N covariance matrix are written at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+public enum covarianceOrdering: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values.
+  case ltm = 0
+  ///  Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values.
+  case utm = 1
+  ///  The whole matrix row by row: N*N values.
+  case full = 2
+  ///  The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places
+  ///  above the diagonal hold the correlation coefficients (covariance over the product of standard deviations).
+  case ltmwcc = 3
+  ///  The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places
+  ///  below the diagonal hold the correlation coefficients.
+  case utmwcc = 4
+
+  public static var max: covarianceOrdering { return .utmwcc }
+  public static var min: covarianceOrdering { return .ltm }
+}
+
+
 public struct Header: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -1349,6 +1372,71 @@ public struct Maneuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   }
 }
 
+///  A parameter of the dynamical model that an orbit solution carries with the state: its value at the solution
+///  epoch and whether the orbit determination solved for it (a held value is a catalog value).
+public struct OCMDynamicParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OCM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OCMDynamicParameter.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let VALUE: VOffset = 6
+    static let UNITS: VOffset = 8
+    static let SOLVED_FOR: VOffset = 10
+  }
+
+  ///  Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
+  ///  SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
+  ///  are the producer's, as in USER_DEFINED_PARAMETERS.
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  Value at the solution epoch, in UNITS.
+  public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
+  ///  m/s**2 for IN_TRACK_ACCELERATION.
+  public var UNITS: String? { let o = _accessor.offset(VT.UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UNITS) }
+  ///  True when the orbit determination solved for the parameter, false when VALUE was held.
+  public var SOLVED_FOR: Bool { let o = _accessor.offset(VT.SOLVED_FOR); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startOCMDynamicParameter(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0.0, at: VT.VALUE) }
+  public static func add(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VT.UNITS) }
+  public static func add(SOLVED_FOR: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLVED_FOR, def: false,
+   at: VT.SOLVED_FOR) }
+  public static func endOCMDynamicParameter(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOCMDynamicParameter(
+    _ fbb: inout FlatBufferBuilder,
+    NAMEOffset NAME: Offset = Offset(),
+    VALUE: Double = 0.0,
+    UNITSOffset UNITS: Offset = Offset(),
+    SOLVED_FOR: Bool = false
+  ) -> Offset {
+    let __start = OCMDynamicParameter.startOCMDynamicParameter(&fbb)
+    OCMDynamicParameter.add(NAME: NAME, &fbb)
+    OCMDynamicParameter.add(VALUE: VALUE, &fbb)
+    OCMDynamicParameter.add(UNITS: UNITS, &fbb)
+    OCMDynamicParameter.add(SOLVED_FOR: SOLVED_FOR, &fbb)
+    return OCMDynamicParameter.endOCMDynamicParameter(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.UNITS, fieldName: "UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLVED_FOR, fieldName: "SOLVED_FOR", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
 public struct OrbitDetermination: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -1386,6 +1474,7 @@ public struct OrbitDetermination: FlatBufferVerifiableTable, FlatbuffersVectorIn
     static let OD_BATCH_BASELINE_RMS: VOffset = 48
     static let SEDR: VOffset = 50
     static let WEIGHTED_RMS: VOffset = 52
+    static let OD_DYNAMIC_PARAMETERS: VOffset = 54
   }
 
   ///  Unique identifier for the orbit determination.
@@ -1458,7 +1547,11 @@ public struct OrbitDetermination: FlatBufferVerifiableTable, FlatbuffersVectorIn
   public var SEDR: Double { let o = _accessor.offset(VT.SEDR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
   public var WEIGHTED_RMS: Double { let o = _accessor.offset(VT.WEIGHTED_RMS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startOrbitDetermination(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 25) }
+  ///  Dynamical-model parameters of the solution with their values, solved for or held. An
+  ///  IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+  ///  COV_PARAMETERS names in the covariance are entries of this list.
+  public var OD_DYNAMIC_PARAMETERS: FlatbufferVector<OCMDynamicParameter> { return _accessor.vector(at: VT.OD_DYNAMIC_PARAMETERS, byteSize: 4) }
+  public static func startOrbitDetermination(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 26) }
   public static func add(OD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_ID, at: VT.OD_ID) }
   public static func add(OD_PREV_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_PREV_ID, at: VT.OD_PREV_ID) }
   public static func add(OD_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_ALGORITHM, at: VT.OD_ALGORITHM) }
@@ -1484,6 +1577,7 @@ public struct OrbitDetermination: FlatBufferVerifiableTable, FlatbuffersVectorIn
   public static func add(OD_BATCH_BASELINE_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_BATCH_BASELINE_RMS, def: 0.0, at: VT.OD_BATCH_BASELINE_RMS) }
   public static func add(SEDR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEDR, def: 0.0, at: VT.SEDR) }
   public static func add(WEIGHTED_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHTED_RMS, def: 0.0, at: VT.WEIGHTED_RMS) }
+  public static func addVectorOf(OD_DYNAMIC_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_DYNAMIC_PARAMETERS, at: VT.OD_DYNAMIC_PARAMETERS) }
   public static func endOrbitDetermination(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOrbitDetermination(
     _ fbb: inout FlatBufferBuilder,
@@ -1511,7 +1605,8 @@ public struct OrbitDetermination: FlatBufferVerifiableTable, FlatbuffersVectorIn
     OD_BATCH_BASELINE_IDOffset OD_BATCH_BASELINE_ID: Offset = Offset(),
     OD_BATCH_BASELINE_RMS: Double = 0.0,
     SEDR: Double = 0.0,
-    WEIGHTED_RMS: Double = 0.0
+    WEIGHTED_RMS: Double = 0.0,
+    OD_DYNAMIC_PARAMETERSVectorOffset OD_DYNAMIC_PARAMETERS: Offset = Offset()
   ) -> Offset {
     let __start = OrbitDetermination.startOrbitDetermination(&fbb)
     OrbitDetermination.add(OD_ID: OD_ID, &fbb)
@@ -1539,6 +1634,7 @@ public struct OrbitDetermination: FlatBufferVerifiableTable, FlatbuffersVectorIn
     OrbitDetermination.add(OD_BATCH_BASELINE_RMS: OD_BATCH_BASELINE_RMS, &fbb)
     OrbitDetermination.add(SEDR: SEDR, &fbb)
     OrbitDetermination.add(WEIGHTED_RMS: WEIGHTED_RMS, &fbb)
+    OrbitDetermination.addVectorOf(OD_DYNAMIC_PARAMETERS: OD_DYNAMIC_PARAMETERS, &fbb)
     return OrbitDetermination.endOrbitDetermination(&fbb, start: __start)
   }
 
@@ -1569,6 +1665,7 @@ public struct OrbitDetermination: FlatBufferVerifiableTable, FlatbuffersVectorIn
     try _v.visit(field: VT.OD_BATCH_BASELINE_RMS, fieldName: "OD_BATCH_BASELINE_RMS", required: false, type: Double.self)
     try _v.visit(field: VT.SEDR, fieldName: "SEDR", required: false, type: Double.self)
     try _v.visit(field: VT.WEIGHTED_RMS, fieldName: "WEIGHTED_RMS", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_DYNAMIC_PARAMETERS, fieldName: "OD_DYNAMIC_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<OCMDynamicParameter>, OCMDynamicParameter>>.self)
     _v.finish()
   }
 }
@@ -1655,6 +1752,11 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let COV_CALIBRATION: VOffset = 46
     static let COV_CALIBRATION_REFERENCE: VOffset = 48
     static let STATE_EPOCHS: VOffset = 50
+    static let COV_TYPE: VOffset = 52
+    static let COV_ORDERING: VOffset = 54
+    static let COV_SIZE: VOffset = 56
+    static let COV_PARAMETERS: VOffset = 58
+    static let COV_UNITS: VOffset = 60
   }
 
   ///  Header section of the OCM.
@@ -1684,8 +1786,11 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
   public var STATE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.STATE_DATA, byteSize: 8) }
   public func withUnsafePointerToStateData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.STATE_DATA, body: body) }
-  ///  Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-  ///  Time alignment matches STATE_DATA epochs.
+  ///  Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+  ///  COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+  ///  has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+  ///  state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+  ///  epoch, the lower triangle of the 6x6 position and velocity covariance.
   public var COVARIANCE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.COVARIANCE_DATA, byteSize: 8) }
   public func withUnsafePointerToCovarianceData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COVARIANCE_DATA, body: body) }
   ///  Polynomial position records.
@@ -1737,7 +1842,24 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
   ///  Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
   public var STATE_EPOCHS: FlatbufferVector<String?> { return _accessor.vector(at: VT.STATE_EPOCHS, byteSize: 4) }
-  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
+  ///  Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+  ///  (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+  ///  TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+  public var COV_TYPE: String? { let o = _accessor.offset(VT.COV_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_TYPE) }
+  ///  Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+  public var COV_ORDERING: covarianceOrdering { let o = _accessor.offset(VT.COV_ORDERING); return o == 0 ? .ltm : covarianceOrdering(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ltm }
+  ///  Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+  ///  COV_PARAMETERS names.
+  public var COV_SIZE: UInt8 { let o = _accessor.offset(VT.COV_SIZE); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+  ///  by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+  ///  matrix reaches). A row the orbit determination did not solve for is zero.
+  public var COV_PARAMETERS: FlatbufferVector<String?> { return _accessor.vector(at: VT.COV_PARAMETERS, byteSize: 4) }
+  ///  Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+  ///  dimensionless one.
+  public var COV_UNITS: FlatbufferVector<String?> { return _accessor.vector(at: VT.COV_UNITS, byteSize: 4) }
+  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
   public static func add(HEADER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEADER, at: VT.HEADER) }
   public static func add(METADATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METADATA, at: VT.METADATA) }
   public static func add(TRAJ_TYPE: trajectoryType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAJ_TYPE.rawValue, def: 0, at: VT.TRAJ_TYPE) }
@@ -1762,6 +1884,11 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(COV_CALIBRATION: covarianceCalibration, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_CALIBRATION.rawValue, def: 0, at: VT.COV_CALIBRATION) }
   public static func add(COV_CALIBRATION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_CALIBRATION_REFERENCE, at: VT.COV_CALIBRATION_REFERENCE) }
   public static func addVectorOf(STATE_EPOCHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE_EPOCHS, at: VT.STATE_EPOCHS) }
+  public static func add(COV_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_TYPE, at: VT.COV_TYPE) }
+  public static func add(COV_ORDERING: covarianceOrdering, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_ORDERING.rawValue, def: 0, at: VT.COV_ORDERING) }
+  public static func add(COV_SIZE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_SIZE, def: 6, at: VT.COV_SIZE) }
+  public static func addVectorOf(COV_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_PARAMETERS, at: VT.COV_PARAMETERS) }
+  public static func addVectorOf(COV_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_UNITS, at: VT.COV_UNITS) }
   public static func endOCM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOCM(
     _ fbb: inout FlatBufferBuilder,
@@ -1788,7 +1915,12 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     ORB_AVERAGINGOffset ORB_AVERAGING: Offset = Offset(),
     COV_CALIBRATION: covarianceCalibration = .unspecified,
     COV_CALIBRATION_REFERENCEOffset COV_CALIBRATION_REFERENCE: Offset = Offset(),
-    STATE_EPOCHSVectorOffset STATE_EPOCHS: Offset = Offset()
+    STATE_EPOCHSVectorOffset STATE_EPOCHS: Offset = Offset(),
+    COV_TYPEOffset COV_TYPE: Offset = Offset(),
+    COV_ORDERING: covarianceOrdering = .ltm,
+    COV_SIZE: UInt8 = 6,
+    COV_PARAMETERSVectorOffset COV_PARAMETERS: Offset = Offset(),
+    COV_UNITSVectorOffset COV_UNITS: Offset = Offset()
   ) -> Offset {
     let __start = OCM.startOCM(&fbb)
     OCM.add(HEADER: HEADER, &fbb)
@@ -1815,6 +1947,11 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     OCM.add(COV_CALIBRATION: COV_CALIBRATION, &fbb)
     OCM.add(COV_CALIBRATION_REFERENCE: COV_CALIBRATION_REFERENCE, &fbb)
     OCM.addVectorOf(STATE_EPOCHS: STATE_EPOCHS, &fbb)
+    OCM.add(COV_TYPE: COV_TYPE, &fbb)
+    OCM.add(COV_ORDERING: COV_ORDERING, &fbb)
+    OCM.add(COV_SIZE: COV_SIZE, &fbb)
+    OCM.addVectorOf(COV_PARAMETERS: COV_PARAMETERS, &fbb)
+    OCM.addVectorOf(COV_UNITS: COV_UNITS, &fbb)
     return OCM.endOCM(&fbb, start: __start)
   }
 
@@ -1844,6 +1981,11 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.COV_CALIBRATION, fieldName: "COV_CALIBRATION", required: false, type: covarianceCalibration.self)
     try _v.visit(field: VT.COV_CALIBRATION_REFERENCE, fieldName: "COV_CALIBRATION_REFERENCE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.STATE_EPOCHS, fieldName: "STATE_EPOCHS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COV_TYPE, fieldName: "COV_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_ORDERING, fieldName: "COV_ORDERING", required: false, type: covarianceOrdering.self)
+    try _v.visit(field: VT.COV_SIZE, fieldName: "COV_SIZE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.COV_PARAMETERS, fieldName: "COV_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COV_UNITS, fieldName: "COV_UNITS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

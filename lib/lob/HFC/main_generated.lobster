@@ -64,6 +64,21 @@ enum covarianceCalibration:
     /// Measured against independent reference states and passed
     covarianceCalibration_Calibrated = 2
 
+/// Order in which the values of an N x N covariance matrix are written at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+enum covarianceOrdering:
+    /// Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values.
+    covarianceOrdering_LTM = 0
+    /// Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values.
+    covarianceOrdering_UTM = 1
+    /// The whole matrix row by row: N*N values.
+    covarianceOrdering_FULL = 2
+    /// The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places
+    /// above the diagonal hold the correlation coefficients (covariance over the product of standard deviations).
+    covarianceOrdering_LTMWCC = 3
+    /// The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places
+    /// below the diagonal hold the correlation coefficients.
+    covarianceOrdering_UTMWCC = 4
+
 class Header
 
 class Metadata
@@ -75,6 +90,8 @@ class PhysicalProperties
 class Perturbations
 
 class Maneuver
+
+class OCMDynamicParameter
 
 class OrbitDetermination
 
@@ -1137,6 +1154,47 @@ def ManeuverCreateDCBODYTRIGGERVector(b_:flatbuffers.builder, v_:[float]):
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
+/// A parameter of the dynamical model that an orbit solution carries with the state: its value at the solution
+/// epoch and whether the orbit determination solved for it (a held value is a catalog value).
+class OCMDynamicParameter : flatbuffers.handle
+    /// Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
+    /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
+    /// are the producer's, as in USER_DEFINED_PARAMETERS.
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Value at the solution epoch, in UNITS.
+    def VALUE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
+    /// m/s**2 for IN_TRACK_ACCELERATION.
+    def UNITS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// True when the orbit determination solved for the parameter, false when VALUE was held.
+    def SOLVED_FOR() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
+
+def GetRootAsOCMDynamicParameter(buf:string): return OCMDynamicParameter { buf, flatbuffers.indirect(buf, 0) }
+
+struct OCMDynamicParameterBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, NAME)
+        return this
+    def add_VALUE(VALUE:float):
+        b_.PrependFloat64Slot(1, VALUE, 0.0)
+        return this
+    def add_UNITS(UNITS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, UNITS)
+        return this
+    def add_SOLVED_FOR(SOLVED_FOR:bool):
+        b_.PrependBoolSlot(3, SOLVED_FOR, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
 class OrbitDetermination : flatbuffers.handle
     /// Unique identifier for the orbit determination.
     def OD_ID() -> string:
@@ -1225,13 +1283,20 @@ class OrbitDetermination : flatbuffers.handle
     /// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
     def WEIGHTED_RMS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
+    /// Dynamical-model parameters of the solution with their values, solved for or held. An
+    /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+    /// COV_PARAMETERS names in the covariance are entries of this list.
+    def OD_DYNAMIC_PARAMETERS(i:int) -> OCMDynamicParameter:
+        return OCMDynamicParameter { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 54) + i * 4) }
+    def OD_DYNAMIC_PARAMETERS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 54)
 
 def GetRootAsOrbitDetermination(buf:string): return OrbitDetermination { buf, flatbuffers.indirect(buf, 0) }
 
 struct OrbitDeterminationBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(25)
+        b_.StartObject(26)
         return this
     def add_OD_ID(OD_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, OD_ID)
@@ -1308,6 +1373,9 @@ struct OrbitDeterminationBuilder:
     def add_WEIGHTED_RMS(WEIGHTED_RMS:float):
         b_.PrependFloat64Slot(24, WEIGHTED_RMS, 0.0)
         return this
+    def add_OD_DYNAMIC_PARAMETERS(OD_DYNAMIC_PARAMETERS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(25, OD_DYNAMIC_PARAMETERS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -1337,6 +1405,13 @@ def OrbitDeterminationStartODRESIDUALEPOCHSVector(b_:flatbuffers.builder, n_:int
 def OrbitDeterminationCreateODRESIDUALEPOCHSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OrbitDeterminationStartODDYNAMICPARAMETERSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OrbitDeterminationCreateODDYNAMICPARAMETERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
 class UserDefinedParameters : flatbuffers.handle
@@ -1401,8 +1476,11 @@ class OCM : flatbuffers.handle
         return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 8)
     def STATE_DATA_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 16)
-    /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-    /// Time alignment matches STATE_DATA epochs.
+    /// Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+    /// COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+    /// has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+    /// state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+    /// epoch, the lower triangle of the 6x6 position and velocity covariance.
     def COVARIANCE_DATA(i:int) -> float:
         return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 8)
     def COVARIANCE_DATA_length() -> int:
@@ -1483,13 +1561,38 @@ class OCM : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 50) + i * 4)
     def STATE_EPOCHS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 50)
+    /// Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+    /// (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+    /// TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+    def COV_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 52)
+    /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+    def COV_ORDERING() -> covarianceOrdering:
+        return covarianceOrdering(flatbuffers.field_int8(buf_, pos_, 54, 0))
+    /// Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+    /// COV_PARAMETERS names.
+    def COV_SIZE() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 56, 6)
+    /// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+    /// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+    /// matrix reaches). A row the orbit determination did not solve for is zero.
+    def COV_PARAMETERS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 58) + i * 4)
+    def COV_PARAMETERS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 58)
+    /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+    /// dimensionless one.
+    def COV_UNITS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 60) + i * 4)
+    def COV_UNITS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 60)
 
 def GetRootAsOCM(buf:string): return OCM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OCMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(24)
+        b_.StartObject(29)
         return this
     def add_HEADER(HEADER:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, HEADER)
@@ -1563,6 +1666,21 @@ struct OCMBuilder:
     def add_STATE_EPOCHS(STATE_EPOCHS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(23, STATE_EPOCHS)
         return this
+    def add_COV_TYPE(COV_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(24, COV_TYPE)
+        return this
+    def add_COV_ORDERING(COV_ORDERING:covarianceOrdering):
+        b_.PrependInt8Slot(25, COV_ORDERING, 0)
+        return this
+    def add_COV_SIZE(COV_SIZE:int):
+        b_.PrependUint8Slot(26, COV_SIZE, 6)
+        return this
+    def add_COV_PARAMETERS(COV_PARAMETERS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(27, COV_PARAMETERS)
+        return this
+    def add_COV_UNITS(COV_UNITS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, COV_UNITS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -1611,6 +1729,20 @@ def OCMCreateUSERDEFINEDPARAMETERSVector(b_:flatbuffers.builder, v_:[flatbuffers
 def OCMStartSTATEEPOCHSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def OCMCreateSTATEEPOCHSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def OCMStartCOVPARAMETERSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OCMCreateCOVPARAMETERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def OCMStartCOVUNITSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OCMCreateCOVUNITSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

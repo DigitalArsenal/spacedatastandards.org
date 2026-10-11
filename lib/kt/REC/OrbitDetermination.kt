@@ -346,6 +346,24 @@ class OrbitDetermination : Table() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Dynamical-model parameters of the solution with their values, solved for or held. An
+     * IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+     * COV_PARAMETERS names in the covariance are entries of this list.
+     */
+    fun odDynamicParameters(j: Int) : OCMDynamicParameter? = odDynamicParameters(OCMDynamicParameter(), j)
+    fun odDynamicParameters(obj: OCMDynamicParameter, j: Int) : OCMDynamicParameter? {
+        val o = __offset(54)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val odDynamicParametersLength : Int
+        get() {
+            val o = __offset(54); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOrbitDetermination(_bb: ByteBuffer): OrbitDetermination = getRootAsOrbitDetermination(_bb, OrbitDetermination())
@@ -353,12 +371,13 @@ class OrbitDetermination : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createOrbitDetermination(builder: FlatBufferBuilder, odIdOffset: Int, odPrevIdOffset: Int, odAlgorithmOffset: Int, odMethodOffset: Int, odEpochOffset: Int, odTimeTagOffset: Int, odProcessNoiseOffset: Int, odCovReductionOffset: Int, odNoiseModelsOffset: Int, odObservationsTypeOffset: Int, odObservationsUsed: Int, odTracksUsed: Int, odDataWeightingOffset: Int, odConvergenceCriteriaOffset: Int, odEstParametersOffset: Int, odAprioriDataOffset: Int, odResidualsOffset: Int, odEstimator: Byte, odResidualRms: Double, odResidualsSeriesOffset: Int, odResidualEpochsOffset: Int, odBatchBaselineIdOffset: Int, odBatchBaselineRms: Double, sedr: Double, weightedRms: Double) : Int {
-            builder.startTable(25)
+        fun createOrbitDetermination(builder: FlatBufferBuilder, odIdOffset: Int, odPrevIdOffset: Int, odAlgorithmOffset: Int, odMethodOffset: Int, odEpochOffset: Int, odTimeTagOffset: Int, odProcessNoiseOffset: Int, odCovReductionOffset: Int, odNoiseModelsOffset: Int, odObservationsTypeOffset: Int, odObservationsUsed: Int, odTracksUsed: Int, odDataWeightingOffset: Int, odConvergenceCriteriaOffset: Int, odEstParametersOffset: Int, odAprioriDataOffset: Int, odResidualsOffset: Int, odEstimator: Byte, odResidualRms: Double, odResidualsSeriesOffset: Int, odResidualEpochsOffset: Int, odBatchBaselineIdOffset: Int, odBatchBaselineRms: Double, sedr: Double, weightedRms: Double, odDynamicParametersOffset: Int) : Int {
+            builder.startTable(26)
             addWEIGHTEDRMS(builder, weightedRms)
             addSEDR(builder, sedr)
             addODBATCHBASELINERMS(builder, odBatchBaselineRms)
             addODRESIDUALRMS(builder, odResidualRms)
+            addODDYNAMICPARAMETERS(builder, odDynamicParametersOffset)
             addODBATCHBASELINEID(builder, odBatchBaselineIdOffset)
             addODRESIDUALEPOCHS(builder, odResidualEpochsOffset)
             addODRESIDUALSSERIES(builder, odResidualsSeriesOffset)
@@ -382,7 +401,7 @@ class OrbitDetermination : Table() {
             addODESTIMATOR(builder, odEstimator)
             return endOrbitDetermination(builder)
         }
-        fun startOrbitDetermination(builder: FlatBufferBuilder) = builder.startTable(25)
+        fun startOrbitDetermination(builder: FlatBufferBuilder) = builder.startTable(26)
         fun addODID(builder: FlatBufferBuilder, odId: Int) = builder.addOffset(0, odId, 0)
         fun addODPREVID(builder: FlatBufferBuilder, odPrevId: Int) = builder.addOffset(1, odPrevId, 0)
         fun addODALGORITHM(builder: FlatBufferBuilder, odAlgorithm: Int) = builder.addOffset(2, odAlgorithm, 0)
@@ -440,6 +459,15 @@ class OrbitDetermination : Table() {
         fun addODBATCHBASELINERMS(builder: FlatBufferBuilder, odBatchBaselineRms: Double) = builder.addDouble(22, odBatchBaselineRms, 0.0)
         fun addSEDR(builder: FlatBufferBuilder, sedr: Double) = builder.addDouble(23, sedr, 0.0)
         fun addWEIGHTEDRMS(builder: FlatBufferBuilder, weightedRms: Double) = builder.addDouble(24, weightedRms, 0.0)
+        fun addODDYNAMICPARAMETERS(builder: FlatBufferBuilder, odDynamicParameters: Int) = builder.addOffset(25, odDynamicParameters, 0)
+        fun createOdDynamicParametersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startOdDynamicParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endOrbitDetermination(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

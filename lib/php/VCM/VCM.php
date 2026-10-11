@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Vector Covariance Message
+/// DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
 class VCM extends Table
 {
     /**

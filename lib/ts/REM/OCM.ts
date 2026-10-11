@@ -15,6 +15,7 @@ import { PhysicalProperties, PhysicalPropertiesT } from './PhysicalProperties.js
 import { RFM, RFMT } from './RFM.js';
 import { UserDefinedParameters, UserDefinedParametersT } from './UserDefinedParameters.js';
 import { covarianceCalibration } from './covarianceCalibration.js';
+import { covarianceOrdering } from './covarianceOrdering.js';
 import { trajectoryType } from './trajectoryType.js';
 
 
@@ -123,8 +124,11 @@ stateDataArray():Float64Array|null {
 }
 
 /**
- * Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
- * Time alignment matches STATE_DATA epochs.
+ * Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+ * COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+ * has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+ * state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+ * epoch, the lower triangle of the 6x6 position and velocity covariance.
  */
 COVARIANCE_DATA(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 18);
@@ -317,8 +321,70 @@ stateEpochsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+ * (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+ * TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+ */
+COV_TYPE():string|null
+COV_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COV_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+ */
+COV_ORDERING():covarianceOrdering {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : covarianceOrdering.LTM;
+}
+
+/**
+ * Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+ * COV_PARAMETERS names.
+ */
+COV_SIZE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 6;
+}
+
+/**
+ * Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+ * by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+ * matrix reaches). A row the orbit determination did not solve for is zero.
+ */
+COV_PARAMETERS(index: number):string
+COV_PARAMETERS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+COV_PARAMETERS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+covParametersLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+ * dimensionless one.
+ */
+COV_UNITS(index: number):string
+COV_UNITS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+COV_UNITS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+covUnitsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startOCM(builder:flatbuffers.Builder) {
-  builder.startObject(24);
+  builder.startObject(29);
 }
 
 static addHeader(builder:flatbuffers.Builder, HEADEROffset:flatbuffers.Offset) {
@@ -511,6 +577,50 @@ static startStateEpochsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addCovType(builder:flatbuffers.Builder, COV_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(24, COV_TYPEOffset, 0);
+}
+
+static addCovOrdering(builder:flatbuffers.Builder, COV_ORDERING:covarianceOrdering) {
+  builder.addFieldInt8(25, COV_ORDERING, covarianceOrdering.LTM);
+}
+
+static addCovSize(builder:flatbuffers.Builder, COV_SIZE:number) {
+  builder.addFieldInt8(26, COV_SIZE, 6);
+}
+
+static addCovParameters(builder:flatbuffers.Builder, COV_PARAMETERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, COV_PARAMETERSOffset, 0);
+}
+
+static createCovParametersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovParametersVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addCovUnits(builder:flatbuffers.Builder, COV_UNITSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, COV_UNITSOffset, 0);
+}
+
+static createCovUnitsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovUnitsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endOCM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -550,7 +660,12 @@ unpack(): OCMT {
     this.ORB_AVERAGING(),
     this.COV_CALIBRATION(),
     this.COV_CALIBRATION_REFERENCE(),
-    this.bb!.createScalarList<string>(this.STATE_EPOCHS.bind(this), this.stateEpochsLength())
+    this.bb!.createScalarList<string>(this.STATE_EPOCHS.bind(this), this.stateEpochsLength()),
+    this.COV_TYPE(),
+    this.COV_ORDERING(),
+    this.COV_SIZE(),
+    this.bb!.createScalarList<string>(this.COV_PARAMETERS.bind(this), this.covParametersLength()),
+    this.bb!.createScalarList<string>(this.COV_UNITS.bind(this), this.covUnitsLength())
   );
 }
 
@@ -580,6 +695,11 @@ unpackTo(_o: OCMT): void {
   _o.COV_CALIBRATION = this.COV_CALIBRATION();
   _o.COV_CALIBRATION_REFERENCE = this.COV_CALIBRATION_REFERENCE();
   _o.STATE_EPOCHS = this.bb!.createScalarList<string>(this.STATE_EPOCHS.bind(this), this.stateEpochsLength());
+  _o.COV_TYPE = this.COV_TYPE();
+  _o.COV_ORDERING = this.COV_ORDERING();
+  _o.COV_SIZE = this.COV_SIZE();
+  _o.COV_PARAMETERS = this.bb!.createScalarList<string>(this.COV_PARAMETERS.bind(this), this.covParametersLength());
+  _o.COV_UNITS = this.bb!.createScalarList<string>(this.COV_UNITS.bind(this), this.covUnitsLength());
 }
 }
 
@@ -608,7 +728,12 @@ constructor(
   public ORB_AVERAGING: string|Uint8Array|null = null,
   public COV_CALIBRATION: covarianceCalibration = covarianceCalibration.Unspecified,
   public COV_CALIBRATION_REFERENCE: string|Uint8Array|null = null,
-  public STATE_EPOCHS: (string)[] = []
+  public STATE_EPOCHS: (string)[] = [],
+  public COV_TYPE: string|Uint8Array|null = null,
+  public COV_ORDERING: covarianceOrdering = covarianceOrdering.LTM,
+  public COV_SIZE: number = 6,
+  public COV_PARAMETERS: (string)[] = [],
+  public COV_UNITS: (string)[] = []
 ){}
 
 
@@ -632,6 +757,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ORB_AVERAGING = (this.ORB_AVERAGING !== null ? builder.createString(this.ORB_AVERAGING!) : 0);
   const COV_CALIBRATION_REFERENCE = (this.COV_CALIBRATION_REFERENCE !== null ? builder.createString(this.COV_CALIBRATION_REFERENCE!) : 0);
   const STATE_EPOCHS = OCM.createStateEpochsVector(builder, builder.createObjectOffsetList(this.STATE_EPOCHS));
+  const COV_TYPE = (this.COV_TYPE !== null ? builder.createString(this.COV_TYPE!) : 0);
+  const COV_PARAMETERS = OCM.createCovParametersVector(builder, builder.createObjectOffsetList(this.COV_PARAMETERS));
+  const COV_UNITS = OCM.createCovUnitsVector(builder, builder.createObjectOffsetList(this.COV_UNITS));
 
   OCM.startOCM(builder);
   OCM.addHeader(builder, HEADER);
@@ -658,6 +786,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OCM.addCovCalibration(builder, this.COV_CALIBRATION);
   OCM.addCovCalibrationReference(builder, COV_CALIBRATION_REFERENCE);
   OCM.addStateEpochs(builder, STATE_EPOCHS);
+  OCM.addCovType(builder, COV_TYPE);
+  OCM.addCovOrdering(builder, this.COV_ORDERING);
+  OCM.addCovSize(builder, this.COV_SIZE);
+  OCM.addCovParameters(builder, COV_PARAMETERS);
+  OCM.addCovUnits(builder, COV_UNITS);
 
   return OCM.endOCM(builder);
 }

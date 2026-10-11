@@ -1,5 +1,5 @@
-// Hash: 8f8a4c82d798e18c86b95d3e9189157e850d27a7925ca8b5ced5648549b80641
-// Version: 2.0.5
+// Hash: 7132d0a6925e5559956e5aa229cb6657f7de3a63b15a5972cf6cce4fadda754b
+// Version: 2.0.6
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -7,8 +7,11 @@ include "../MET/main.fbs";
 
 // Vector Covariance Message (VCM)
 //
-// SUPERSEDED by the Orbit Comprehensive Message ($OCM). New producers emit
-// $OCM; $VCM stays readable for records already published.
+// DEPRECATED. The Orbit Comprehensive Message ($OCM) carries everything a VCM does: the state, a covariance
+// of any size with the B, BDOT, AGOM and in-track thrust rows (COV_SIZE, COV_ORDERING, COV_PARAMETERS), the
+// values of those parameters (ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS), the force-model settings, Earth
+// orientation as $EOP records and integrator settings as user-defined parameters. No producer emits $VCM;
+// records already published stay readable. The legacy SP VCM text is read into an $OCM and written from one.
 //
 // The Vector Covariance Message (VCM) is used to exchange detailed orbit information, which
 // includes the spacecraft state vector, Keplerian elements, equinoctial elements, and relevant
@@ -193,7 +196,7 @@ table VCMAtmosphericModelData {
   RESONANCE_MODEL: resonanceSource;
 }
 
-/// Vector Covariance Message
+/// DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
 table VCM {
   CCSDS_OMM_VERS: double;
   CREATION_DATE: string;

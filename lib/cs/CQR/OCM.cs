@@ -57,8 +57,11 @@ public struct OCM : IFlatbufferObject
   public ArraySegment<byte>? GetSTATE_DATABytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public double[] GetSTATE_DATAArray() { return __p.__vector_as_array<double>(16); }
-  /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-  /// Time alignment matches STATE_DATA epochs.
+  /// Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+  /// COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+  /// has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+  /// state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+  /// epoch, the lower triangle of the 6x6 position and velocity covariance.
   public double COVARIANCE_DATA(int j) { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int COVARIANCE_DATALength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -141,6 +144,30 @@ public struct OCM : IFlatbufferObject
   /// Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
   public string STATE_EPOCHS(int j) { int o = __p.__offset(50); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int STATE_EPOCHSLength { get { int o = __p.__offset(50); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+  /// (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+  /// TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+  public string COV_TYPE { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOV_TYPEBytes() { return __p.__vector_as_span<byte>(52, 1); }
+#else
+  public ArraySegment<byte>? GetCOV_TYPEBytes() { return __p.__vector_as_arraysegment(52); }
+#endif
+  public byte[] GetCOV_TYPEArray() { return __p.__vector_as_array<byte>(52); }
+  /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+  public covarianceOrdering COV_ORDERING { get { int o = __p.__offset(54); return o != 0 ? (covarianceOrdering)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceOrdering.LTM; } }
+  /// Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+  /// COV_PARAMETERS names.
+  public byte COV_SIZE { get { int o = __p.__offset(56); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)6; } }
+  /// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+  /// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+  /// matrix reaches). A row the orbit determination did not solve for is zero.
+  public string COV_PARAMETERS(int j) { int o = __p.__offset(58); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int COV_PARAMETERSLength { get { int o = __p.__offset(58); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+  /// dimensionless one.
+  public string COV_UNITS(int j) { int o = __p.__offset(60); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int COV_UNITSLength { get { int o = __p.__offset(60); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<OCM> CreateOCM(FlatBufferBuilder builder,
       Offset<Header> HEADEROffset = default(Offset<Header>),
@@ -166,9 +193,17 @@ public struct OCM : IFlatbufferObject
       StringOffset ORB_AVERAGINGOffset = default(StringOffset),
       covarianceCalibration COV_CALIBRATION = covarianceCalibration.Unspecified,
       StringOffset COV_CALIBRATION_REFERENCEOffset = default(StringOffset),
-      VectorOffset STATE_EPOCHSOffset = default(VectorOffset)) {
-    builder.StartTable(24);
+      VectorOffset STATE_EPOCHSOffset = default(VectorOffset),
+      StringOffset COV_TYPEOffset = default(StringOffset),
+      covarianceOrdering COV_ORDERING = covarianceOrdering.LTM,
+      byte COV_SIZE = 6,
+      VectorOffset COV_PARAMETERSOffset = default(VectorOffset),
+      VectorOffset COV_UNITSOffset = default(VectorOffset)) {
+    builder.StartTable(29);
     OCM.AddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE);
+    OCM.AddCOV_UNITS(builder, COV_UNITSOffset);
+    OCM.AddCOV_PARAMETERS(builder, COV_PARAMETERSOffset);
+    OCM.AddCOV_TYPE(builder, COV_TYPEOffset);
     OCM.AddSTATE_EPOCHS(builder, STATE_EPOCHSOffset);
     OCM.AddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCEOffset);
     OCM.AddORB_AVERAGING(builder, ORB_AVERAGINGOffset);
@@ -189,13 +224,15 @@ public struct OCM : IFlatbufferObject
     OCM.AddTRAJ_TYPE_DESCRIPTION(builder, TRAJ_TYPE_DESCRIPTIONOffset);
     OCM.AddMETADATA(builder, METADATAOffset);
     OCM.AddHEADER(builder, HEADEROffset);
+    OCM.AddCOV_SIZE(builder, COV_SIZE);
+    OCM.AddCOV_ORDERING(builder, COV_ORDERING);
     OCM.AddCOV_CALIBRATION(builder, COV_CALIBRATION);
     OCM.AddSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE);
     OCM.AddTRAJ_TYPE(builder, TRAJ_TYPE);
     return OCM.EndOCM(builder);
   }
 
-  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(24); }
+  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(29); }
   public static void AddHEADER(FlatBufferBuilder builder, Offset<Header> HEADEROffset) { builder.AddOffset(0, HEADEROffset.Value, 0); }
   public static void AddMETADATA(FlatBufferBuilder builder, Offset<Metadata> METADATAOffset) { builder.AddOffset(1, METADATAOffset.Value, 0); }
   public static void AddTRAJ_TYPE(FlatBufferBuilder builder, trajectoryType TRAJ_TYPE) { builder.AddSbyte(2, (sbyte)TRAJ_TYPE, 0); }
@@ -255,6 +292,21 @@ public struct OCM : IFlatbufferObject
   public static VectorOffset CreateSTATE_EPOCHSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSTATE_EPOCHSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSTATE_EPOCHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCOV_TYPE(FlatBufferBuilder builder, StringOffset COV_TYPEOffset) { builder.AddOffset(24, COV_TYPEOffset.Value, 0); }
+  public static void AddCOV_ORDERING(FlatBufferBuilder builder, covarianceOrdering COV_ORDERING) { builder.AddSbyte(25, (sbyte)COV_ORDERING, 0); }
+  public static void AddCOV_SIZE(FlatBufferBuilder builder, byte COV_SIZE) { builder.AddByte(26, COV_SIZE, 6); }
+  public static void AddCOV_PARAMETERS(FlatBufferBuilder builder, VectorOffset COV_PARAMETERSOffset) { builder.AddOffset(27, COV_PARAMETERSOffset.Value, 0); }
+  public static VectorOffset CreateCOV_PARAMETERSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_PARAMETERSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOV_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCOV_UNITS(FlatBufferBuilder builder, VectorOffset COV_UNITSOffset) { builder.AddOffset(28, COV_UNITSOffset.Value, 0); }
+  public static VectorOffset CreateCOV_UNITSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_UNITSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_UNITSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_UNITSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOV_UNITSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<OCM> EndOCM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OCM>(o);
@@ -298,6 +350,13 @@ public struct OCM : IFlatbufferObject
     _o.COV_CALIBRATION_REFERENCE = this.COV_CALIBRATION_REFERENCE;
     _o.STATE_EPOCHS = new List<string>();
     for (var _j = 0; _j < this.STATE_EPOCHSLength; ++_j) {_o.STATE_EPOCHS.Add(this.STATE_EPOCHS(_j));}
+    _o.COV_TYPE = this.COV_TYPE;
+    _o.COV_ORDERING = this.COV_ORDERING;
+    _o.COV_SIZE = this.COV_SIZE;
+    _o.COV_PARAMETERS = new List<string>();
+    for (var _j = 0; _j < this.COV_PARAMETERSLength; ++_j) {_o.COV_PARAMETERS.Add(this.COV_PARAMETERS(_j));}
+    _o.COV_UNITS = new List<string>();
+    for (var _j = 0; _j < this.COV_UNITSLength; ++_j) {_o.COV_UNITS.Add(this.COV_UNITS(_j));}
   }
   public static Offset<OCM> Pack(FlatBufferBuilder builder, OCMT _o) {
     if (_o == null) return default(Offset<OCM>);
@@ -353,6 +412,19 @@ public struct OCM : IFlatbufferObject
       for (var _j = 0; _j < __STATE_EPOCHS.Length; ++_j) { __STATE_EPOCHS[_j] = builder.CreateString(_o.STATE_EPOCHS[_j]); }
       _STATE_EPOCHS = CreateSTATE_EPOCHSVector(builder, __STATE_EPOCHS);
     }
+    var _COV_TYPE = _o.COV_TYPE == null ? default(StringOffset) : builder.CreateString(_o.COV_TYPE);
+    var _COV_PARAMETERS = default(VectorOffset);
+    if (_o.COV_PARAMETERS != null) {
+      var __COV_PARAMETERS = new StringOffset[_o.COV_PARAMETERS.Count];
+      for (var _j = 0; _j < __COV_PARAMETERS.Length; ++_j) { __COV_PARAMETERS[_j] = builder.CreateString(_o.COV_PARAMETERS[_j]); }
+      _COV_PARAMETERS = CreateCOV_PARAMETERSVector(builder, __COV_PARAMETERS);
+    }
+    var _COV_UNITS = default(VectorOffset);
+    if (_o.COV_UNITS != null) {
+      var __COV_UNITS = new StringOffset[_o.COV_UNITS.Count];
+      for (var _j = 0; _j < __COV_UNITS.Length; ++_j) { __COV_UNITS[_j] = builder.CreateString(_o.COV_UNITS[_j]); }
+      _COV_UNITS = CreateCOV_UNITSVector(builder, __COV_UNITS);
+    }
     return CreateOCM(
       builder,
       _HEADER,
@@ -378,7 +450,12 @@ public struct OCM : IFlatbufferObject
       _ORB_AVERAGING,
       _o.COV_CALIBRATION,
       _COV_CALIBRATION_REFERENCE,
-      _STATE_EPOCHS);
+      _STATE_EPOCHS,
+      _COV_TYPE,
+      _o.COV_ORDERING,
+      _o.COV_SIZE,
+      _COV_PARAMETERS,
+      _COV_UNITS);
   }
 }
 
@@ -408,6 +485,11 @@ public class OCMT
   public covarianceCalibration COV_CALIBRATION { get; set; }
   public string COV_CALIBRATION_REFERENCE { get; set; }
   public List<string> STATE_EPOCHS { get; set; }
+  public string COV_TYPE { get; set; }
+  public covarianceOrdering COV_ORDERING { get; set; }
+  public byte COV_SIZE { get; set; }
+  public List<string> COV_PARAMETERS { get; set; }
+  public List<string> COV_UNITS { get; set; }
 
   public OCMT() {
     this.HEADER = null;
@@ -434,6 +516,11 @@ public class OCMT
     this.COV_CALIBRATION = covarianceCalibration.Unspecified;
     this.COV_CALIBRATION_REFERENCE = null;
     this.STATE_EPOCHS = null;
+    this.COV_TYPE = null;
+    this.COV_ORDERING = covarianceOrdering.LTM;
+    this.COV_SIZE = 6;
+    this.COV_PARAMETERS = null;
+    this.COV_UNITS = null;
   }
   public static OCMT DeserializeFromBinary(byte[] fbBuffer) {
     return OCM.GetRootAsOCM(new ByteBuffer(fbBuffer)).UnPack();
@@ -475,6 +562,11 @@ static public class OCMVerify
       && verifier.VerifyField(tablePos, 46 /*COV_CALIBRATION*/, 1 /*covarianceCalibration*/, 1, false)
       && verifier.VerifyString(tablePos, 48 /*COV_CALIBRATION_REFERENCE*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 50 /*STATE_EPOCHS*/, false)
+      && verifier.VerifyString(tablePos, 52 /*COV_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 54 /*COV_ORDERING*/, 1 /*covarianceOrdering*/, 1, false)
+      && verifier.VerifyField(tablePos, 56 /*COV_SIZE*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 58 /*COV_PARAMETERS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 60 /*COV_UNITS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { OCMDynamicParameter, OCMDynamicParameterT } from './OCMDynamicParameter.js';
 import { estimatorCategory } from './estimatorCategory.js';
 export declare class OrbitDetermination implements flatbuffers.IUnpackableObject<OrbitDeterminationT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -132,6 +133,13 @@ export declare class OrbitDetermination implements flatbuffers.IUnpackableObject
      * Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
      */
     WEIGHTED_RMS(): number;
+    /**
+     * Dynamical-model parameters of the solution with their values, solved for or held. An
+     * IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+     * COV_PARAMETERS names in the covariance are entries of this list.
+     */
+    OD_DYNAMIC_PARAMETERS(index: number, obj?: OCMDynamicParameter): OCMDynamicParameter | null;
+    odDynamicParametersLength(): number;
     static startOrbitDetermination(builder: flatbuffers.Builder): void;
     static addOdId(builder: flatbuffers.Builder, OD_IDOffset: flatbuffers.Offset): void;
     static addOdPrevId(builder: flatbuffers.Builder, OD_PREV_IDOffset: flatbuffers.Offset): void;
@@ -174,8 +182,11 @@ export declare class OrbitDetermination implements flatbuffers.IUnpackableObject
     static addOdBatchBaselineRms(builder: flatbuffers.Builder, OD_BATCH_BASELINE_RMS: number): void;
     static addSedr(builder: flatbuffers.Builder, SEDR: number): void;
     static addWeightedRms(builder: flatbuffers.Builder, WEIGHTED_RMS: number): void;
+    static addOdDynamicParameters(builder: flatbuffers.Builder, OD_DYNAMIC_PARAMETERSOffset: flatbuffers.Offset): void;
+    static createOdDynamicParametersVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startOdDynamicParametersVector(builder: flatbuffers.Builder, numElems: number): void;
     static endOrbitDetermination(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createOrbitDetermination(builder: flatbuffers.Builder, OD_IDOffset: flatbuffers.Offset, OD_PREV_IDOffset: flatbuffers.Offset, OD_ALGORITHMOffset: flatbuffers.Offset, OD_METHODOffset: flatbuffers.Offset, OD_EPOCHOffset: flatbuffers.Offset, OD_TIME_TAGOffset: flatbuffers.Offset, OD_PROCESS_NOISEOffset: flatbuffers.Offset, OD_COV_REDUCTIONOffset: flatbuffers.Offset, OD_NOISE_MODELSOffset: flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset: flatbuffers.Offset, OD_OBSERVATIONS_USED: number, OD_TRACKS_USED: number, OD_DATA_WEIGHTINGOffset: flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset: flatbuffers.Offset, OD_EST_PARAMETERSOffset: flatbuffers.Offset, OD_APRIORI_DATAOffset: flatbuffers.Offset, OD_RESIDUALSOffset: flatbuffers.Offset, OD_ESTIMATOR: estimatorCategory, OD_RESIDUAL_RMS: number, OD_RESIDUALS_SERIESOffset: flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset: flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset: flatbuffers.Offset, OD_BATCH_BASELINE_RMS: number, SEDR: number, WEIGHTED_RMS: number): flatbuffers.Offset;
+    static createOrbitDetermination(builder: flatbuffers.Builder, OD_IDOffset: flatbuffers.Offset, OD_PREV_IDOffset: flatbuffers.Offset, OD_ALGORITHMOffset: flatbuffers.Offset, OD_METHODOffset: flatbuffers.Offset, OD_EPOCHOffset: flatbuffers.Offset, OD_TIME_TAGOffset: flatbuffers.Offset, OD_PROCESS_NOISEOffset: flatbuffers.Offset, OD_COV_REDUCTIONOffset: flatbuffers.Offset, OD_NOISE_MODELSOffset: flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset: flatbuffers.Offset, OD_OBSERVATIONS_USED: number, OD_TRACKS_USED: number, OD_DATA_WEIGHTINGOffset: flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset: flatbuffers.Offset, OD_EST_PARAMETERSOffset: flatbuffers.Offset, OD_APRIORI_DATAOffset: flatbuffers.Offset, OD_RESIDUALSOffset: flatbuffers.Offset, OD_ESTIMATOR: estimatorCategory, OD_RESIDUAL_RMS: number, OD_RESIDUALS_SERIESOffset: flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset: flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset: flatbuffers.Offset, OD_BATCH_BASELINE_RMS: number, SEDR: number, WEIGHTED_RMS: number, OD_DYNAMIC_PARAMETERSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): OrbitDeterminationT;
     unpackTo(_o: OrbitDeterminationT): void;
 }
@@ -205,7 +216,8 @@ export declare class OrbitDeterminationT implements flatbuffers.IGeneratedObject
     OD_BATCH_BASELINE_RMS: number;
     SEDR: number;
     WEIGHTED_RMS: number;
-    constructor(OD_ID?: string | Uint8Array | null, OD_PREV_ID?: string | Uint8Array | null, OD_ALGORITHM?: string | Uint8Array | null, OD_METHOD?: string | Uint8Array | null, OD_EPOCH?: string | Uint8Array | null, OD_TIME_TAG?: string | Uint8Array | null, OD_PROCESS_NOISE?: string | Uint8Array | null, OD_COV_REDUCTION?: string | Uint8Array | null, OD_NOISE_MODELS?: string | Uint8Array | null, OD_OBSERVATIONS_TYPE?: (string)[], OD_OBSERVATIONS_USED?: number, OD_TRACKS_USED?: number, OD_DATA_WEIGHTING?: string | Uint8Array | null, OD_CONVERGENCE_CRITERIA?: string | Uint8Array | null, OD_EST_PARAMETERS?: (string)[], OD_APRIORI_DATA?: string | Uint8Array | null, OD_RESIDUALS?: string | Uint8Array | null, OD_ESTIMATOR?: estimatorCategory, OD_RESIDUAL_RMS?: number, OD_RESIDUALS_SERIES?: (number)[], OD_RESIDUAL_EPOCHS?: (number)[], OD_BATCH_BASELINE_ID?: string | Uint8Array | null, OD_BATCH_BASELINE_RMS?: number, SEDR?: number, WEIGHTED_RMS?: number);
+    OD_DYNAMIC_PARAMETERS: (OCMDynamicParameterT)[];
+    constructor(OD_ID?: string | Uint8Array | null, OD_PREV_ID?: string | Uint8Array | null, OD_ALGORITHM?: string | Uint8Array | null, OD_METHOD?: string | Uint8Array | null, OD_EPOCH?: string | Uint8Array | null, OD_TIME_TAG?: string | Uint8Array | null, OD_PROCESS_NOISE?: string | Uint8Array | null, OD_COV_REDUCTION?: string | Uint8Array | null, OD_NOISE_MODELS?: string | Uint8Array | null, OD_OBSERVATIONS_TYPE?: (string)[], OD_OBSERVATIONS_USED?: number, OD_TRACKS_USED?: number, OD_DATA_WEIGHTING?: string | Uint8Array | null, OD_CONVERGENCE_CRITERIA?: string | Uint8Array | null, OD_EST_PARAMETERS?: (string)[], OD_APRIORI_DATA?: string | Uint8Array | null, OD_RESIDUALS?: string | Uint8Array | null, OD_ESTIMATOR?: estimatorCategory, OD_RESIDUAL_RMS?: number, OD_RESIDUALS_SERIES?: (number)[], OD_RESIDUAL_EPOCHS?: (number)[], OD_BATCH_BASELINE_ID?: string | Uint8Array | null, OD_BATCH_BASELINE_RMS?: number, SEDR?: number, WEIGHTED_RMS?: number, OD_DYNAMIC_PARAMETERS?: (OCMDynamicParameterT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OrbitDetermination.d.ts.map

@@ -120,8 +120,11 @@ class OCM : Table() {
     val stateDataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 8)
     fun stateDataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 8)
     /**
-     * Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-     * Time alignment matches STATE_DATA epochs.
+     * Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+     * COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+     * has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+     * state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+     * epoch, the lower triangle of the 6x6 position and velocity covariance.
      */
     fun covarianceData(j: Int) : Double {
         val o = __offset(18)
@@ -361,6 +364,72 @@ class OCM : Table() {
         get() {
             val o = __offset(50); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+     * (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+     * TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+     */
+    val covType : String?
+        get() {
+            val o = __offset(52)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val covTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
+    fun covTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
+    /**
+     * Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+     */
+    val covOrdering : Byte
+        get() {
+            val o = __offset(54)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+     * COV_PARAMETERS names.
+     */
+    val covSize : UByte
+        get() {
+            val o = __offset(56)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 6u
+        }
+    /**
+     * Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+     * by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+     * matrix reaches). A row the orbit determination did not solve for is zero.
+     */
+    fun covParameters(j: Int) : String? {
+        val o = __offset(58)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val covParametersLength : Int
+        get() {
+            val o = __offset(58); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+     * dimensionless one.
+     */
+    fun covUnits(j: Int) : String? {
+        val o = __offset(60)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val covUnitsLength : Int
+        get() {
+            val o = __offset(60); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOCM(_bb: ByteBuffer): OCM = getRootAsOCM(_bb, OCM())
@@ -369,9 +438,12 @@ class OCM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OCM")
-        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int, stateEpochsOffset: Int) : Int {
-            builder.startTable(24)
+        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int, stateEpochsOffset: Int, covTypeOffset: Int, covOrdering: Byte, covSize: UByte, covParametersOffset: Int, covUnitsOffset: Int) : Int {
+            builder.startTable(29)
             addSTATESTEPSIZE(builder, stateStepSize)
+            addCOVUNITS(builder, covUnitsOffset)
+            addCOVPARAMETERS(builder, covParametersOffset)
+            addCOVTYPE(builder, covTypeOffset)
             addSTATEEPOCHS(builder, stateEpochsOffset)
             addCOVCALIBRATIONREFERENCE(builder, covCalibrationReferenceOffset)
             addORBAVERAGING(builder, orbAveragingOffset)
@@ -392,12 +464,14 @@ class OCM : Table() {
             addTRAJTYPEDESCRIPTION(builder, trajTypeDescriptionOffset)
             addMETADATA(builder, metadataOffset)
             addHEADER(builder, headerOffset)
+            addCOVSIZE(builder, covSize)
+            addCOVORDERING(builder, covOrdering)
             addCOVCALIBRATION(builder, covCalibration)
             addSTATEVECTORSIZE(builder, stateVectorSize)
             addTRAJTYPE(builder, trajType)
             return endOCM(builder)
         }
-        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(24)
+        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(29)
         fun addHEADER(builder: FlatBufferBuilder, header: Int) = builder.addOffset(0, header, 0)
         fun addMETADATA(builder: FlatBufferBuilder, metadata: Int) = builder.addOffset(1, metadata, 0)
         fun addTRAJTYPE(builder: FlatBufferBuilder, trajType: Byte) = builder.addByte(2, trajType, 0)
@@ -478,6 +552,27 @@ class OCM : Table() {
             return builder.endVector()
         }
         fun startStateEpochsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addCOVTYPE(builder: FlatBufferBuilder, covType: Int) = builder.addOffset(24, covType, 0)
+        fun addCOVORDERING(builder: FlatBufferBuilder, covOrdering: Byte) = builder.addByte(25, covOrdering, 0)
+        fun addCOVSIZE(builder: FlatBufferBuilder, covSize: UByte) = builder.addByte(26, covSize.toByte(), 6)
+        fun addCOVPARAMETERS(builder: FlatBufferBuilder, covParameters: Int) = builder.addOffset(27, covParameters, 0)
+        fun createCovParametersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addCOVUNITS(builder: FlatBufferBuilder, covUnits: Int) = builder.addOffset(28, covUnits, 0)
+        fun createCovUnitsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovUnitsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endOCM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

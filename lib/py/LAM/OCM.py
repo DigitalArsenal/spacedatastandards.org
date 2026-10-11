@@ -124,8 +124,11 @@ class OCM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         return o == 0
 
-    # Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-    # Time alignment matches STATE_DATA epochs.
+    # Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+    # COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+    # has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+    # state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+    # epoch, the lower triangle of the 6x6 position and velocity covariance.
     # OCM
     def COVARIANCE_DATA(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -399,8 +402,80 @@ class OCM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         return o == 0
 
+    # Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+    # (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+    # TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+    # OCM
+    def COV_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+    # OCM
+    def COV_ORDERING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+    # COV_PARAMETERS names.
+    # OCM
+    def COV_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 6
+
+    # Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+    # by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+    # matrix reaches). A row the orbit determination did not solve for is zero.
+    # OCM
+    def COV_PARAMETERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # OCM
+    def COV_PARAMETERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def COV_PARAMETERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        return o == 0
+
+    # Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+    # dimensionless one.
+    # OCM
+    def COV_UNITS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # OCM
+    def COV_UNITSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def COV_UNITSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        return o == 0
+
 def OCMStart(builder):
-    builder.StartObject(24)
+    builder.StartObject(29)
 
 def Start(builder):
     OCMStart(builder)
@@ -641,6 +716,60 @@ def OCMCreateSTATE_EPOCHSVector(builder, data):
 def CreateSTATE_EPOCHSVector(builder, data):
     return OCMCreateSTATE_EPOCHSVector(builder, data)
 
+def OCMAddCOV_TYPE(builder, COV_TYPE):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(COV_TYPE), 0)
+
+def AddCOV_TYPE(builder, COV_TYPE):
+    OCMAddCOV_TYPE(builder, COV_TYPE)
+
+def OCMAddCOV_ORDERING(builder, COV_ORDERING):
+    builder.PrependInt8Slot(25, COV_ORDERING, 0)
+
+def AddCOV_ORDERING(builder, COV_ORDERING):
+    OCMAddCOV_ORDERING(builder, COV_ORDERING)
+
+def OCMAddCOV_SIZE(builder, COV_SIZE):
+    builder.PrependUint8Slot(26, COV_SIZE, 6)
+
+def AddCOV_SIZE(builder, COV_SIZE):
+    OCMAddCOV_SIZE(builder, COV_SIZE)
+
+def OCMAddCOV_PARAMETERS(builder, COV_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(COV_PARAMETERS), 0)
+
+def AddCOV_PARAMETERS(builder, COV_PARAMETERS):
+    OCMAddCOV_PARAMETERS(builder, COV_PARAMETERS)
+
+def OCMStartCOV_PARAMETERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOV_PARAMETERSVector(builder, numElems):
+    return OCMStartCOV_PARAMETERSVector(builder, numElems)
+
+def OCMCreateCOV_PARAMETERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOV_PARAMETERSVector(builder, data):
+    return OCMCreateCOV_PARAMETERSVector(builder, data)
+
+def OCMAddCOV_UNITS(builder, COV_UNITS):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(COV_UNITS), 0)
+
+def AddCOV_UNITS(builder, COV_UNITS):
+    OCMAddCOV_UNITS(builder, COV_UNITS)
+
+def OCMStartCOV_UNITSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOV_UNITSVector(builder, numElems):
+    return OCMStartCOV_UNITSVector(builder, numElems)
+
+def OCMCreateCOV_UNITSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOV_UNITSVector(builder, data):
+    return OCMCreateCOV_UNITSVector(builder, data)
+
 def OCMEnd(builder):
     return builder.EndObject()
 
@@ -691,6 +820,11 @@ class OCMT(object):
         COV_CALIBRATION = 0,
         COV_CALIBRATION_REFERENCE = None,
         STATE_EPOCHS = None,
+        COV_TYPE = None,
+        COV_ORDERING = 0,
+        COV_SIZE = 6,
+        COV_PARAMETERS = None,
+        COV_UNITS = None,
     ):
         self.HEADER = HEADER  # type: Optional[Header.HeaderT]
         self.METADATA = METADATA  # type: Optional[Metadata.MetadataT]
@@ -716,6 +850,11 @@ class OCMT(object):
         self.COV_CALIBRATION = COV_CALIBRATION  # type: int
         self.COV_CALIBRATION_REFERENCE = COV_CALIBRATION_REFERENCE  # type: Optional[str]
         self.STATE_EPOCHS = STATE_EPOCHS  # type: Optional[List[Optional[str]]]
+        self.COV_TYPE = COV_TYPE  # type: Optional[str]
+        self.COV_ORDERING = COV_ORDERING  # type: int
+        self.COV_SIZE = COV_SIZE  # type: int
+        self.COV_PARAMETERS = COV_PARAMETERS  # type: Optional[List[Optional[str]]]
+        self.COV_UNITS = COV_UNITS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -812,6 +951,17 @@ class OCMT(object):
             self.STATE_EPOCHS = []
             for i in range(OCM.STATE_EPOCHSLength()):
                 self.STATE_EPOCHS.append(OCM.STATE_EPOCHS(i))
+        self.COV_TYPE = OCM.COV_TYPE()
+        self.COV_ORDERING = OCM.COV_ORDERING()
+        self.COV_SIZE = OCM.COV_SIZE()
+        if not OCM.COV_PARAMETERSIsNone():
+            self.COV_PARAMETERS = []
+            for i in range(OCM.COV_PARAMETERSLength()):
+                self.COV_PARAMETERS.append(OCM.COV_PARAMETERS(i))
+        if not OCM.COV_UNITSIsNone():
+            self.COV_UNITS = []
+            for i in range(OCM.COV_UNITSLength()):
+                self.COV_UNITS.append(OCM.COV_UNITS(i))
 
     # OCMT
     def Pack(self, builder):
@@ -895,6 +1045,24 @@ class OCMT(object):
             for i in reversed(range(len(self.STATE_EPOCHS))):
                 builder.PrependUOffsetTRelative(STATE_EPOCHSlist[i])
             STATE_EPOCHS = builder.EndVector()
+        if self.COV_TYPE is not None:
+            COV_TYPE = builder.CreateString(self.COV_TYPE)
+        if self.COV_PARAMETERS is not None:
+            COV_PARAMETERSlist = []
+            for i in range(len(self.COV_PARAMETERS)):
+                COV_PARAMETERSlist.append(builder.CreateString(self.COV_PARAMETERS[i]))
+            OCMStartCOV_PARAMETERSVector(builder, len(self.COV_PARAMETERS))
+            for i in reversed(range(len(self.COV_PARAMETERS))):
+                builder.PrependUOffsetTRelative(COV_PARAMETERSlist[i])
+            COV_PARAMETERS = builder.EndVector()
+        if self.COV_UNITS is not None:
+            COV_UNITSlist = []
+            for i in range(len(self.COV_UNITS)):
+                COV_UNITSlist.append(builder.CreateString(self.COV_UNITS[i]))
+            OCMStartCOV_UNITSVector(builder, len(self.COV_UNITS))
+            for i in reversed(range(len(self.COV_UNITS))):
+                builder.PrependUOffsetTRelative(COV_UNITSlist[i])
+            COV_UNITS = builder.EndVector()
         OCMStart(builder)
         if self.HEADER is not None:
             OCMAddHEADER(builder, HEADER)
@@ -939,5 +1107,13 @@ class OCMT(object):
             OCMAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
         if self.STATE_EPOCHS is not None:
             OCMAddSTATE_EPOCHS(builder, STATE_EPOCHS)
+        if self.COV_TYPE is not None:
+            OCMAddCOV_TYPE(builder, COV_TYPE)
+        OCMAddCOV_ORDERING(builder, self.COV_ORDERING)
+        OCMAddCOV_SIZE(builder, self.COV_SIZE)
+        if self.COV_PARAMETERS is not None:
+            OCMAddCOV_PARAMETERS(builder, COV_PARAMETERS)
+        if self.COV_UNITS is not None:
+            OCMAddCOV_UNITS(builder, COV_UNITS)
         OCM = OCMEnd(builder)
         return OCM

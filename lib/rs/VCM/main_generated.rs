@@ -2926,7 +2926,7 @@ impl VCMAtmosphericModelDataT {
 
 pub enum VCMOffset {}
 
-/// Vector Covariance Message
+/// DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
 #[derive(Copy, Clone, PartialEq)]
 pub struct VCM<'a> {
     pub _tab: ::flatbuffers::Table<'a>,

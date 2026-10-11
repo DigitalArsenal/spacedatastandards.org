@@ -533,8 +533,45 @@ func (rcv *OrbitDetermination) MutateWeightedRms(n float64) bool {
 	return rcv.MutateWEIGHTED_RMS(n)
 }
 
+/// Dynamical-model parameters of the solution with their values, solved for or held. An
+/// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+/// COV_PARAMETERS names in the covariance are entries of this list.
+func (rcv *OrbitDetermination) OD_DYNAMIC_PARAMETERS(obj *OCMDynamicParameter, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(OCMDynamicParameter)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *OrbitDetermination) OdDynamicParameters(obj *OCMDynamicParameter, j int) bool {
+	return rcv.OD_DYNAMIC_PARAMETERS(obj, j)
+}
+
+func (rcv *OrbitDetermination) OD_DYNAMIC_PARAMETERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OrbitDetermination) OdDynamicParametersLength() int {
+	return rcv.OD_DYNAMIC_PARAMETERSLength()
+}
+
+/// Dynamical-model parameters of the solution with their values, solved for or held. An
+/// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+/// COV_PARAMETERS names in the covariance are entries of this list.
 func OrbitDeterminationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(25)
+	builder.StartObject(26)
 }
 func OrbitDeterminationAddOD_ID(builder *flatbuffers.Builder, OD_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OD_ID), 0)
@@ -709,6 +746,18 @@ func OrbitDeterminationAddWEIGHTED_RMS(builder *flatbuffers.Builder, WEIGHTED_RM
 }
 func OrbitDeterminationAddWeightedRms(builder *flatbuffers.Builder, WEIGHTED_RMS float64) {
 	OrbitDeterminationAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
+}
+func OrbitDeterminationAddOD_DYNAMIC_PARAMETERS(builder *flatbuffers.Builder, OD_DYNAMIC_PARAMETERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(OD_DYNAMIC_PARAMETERS), 0)
+}
+func OrbitDeterminationAddOdDynamicParameters(builder *flatbuffers.Builder, OD_DYNAMIC_PARAMETERS flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_DYNAMIC_PARAMETERS(builder, OD_DYNAMIC_PARAMETERS)
+}
+func OrbitDeterminationStartOD_DYNAMIC_PARAMETERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OrbitDeterminationStartOdDynamicParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OrbitDeterminationStartOD_DYNAMIC_PARAMETERSVector(builder, numElems)
 }
 func OrbitDeterminationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

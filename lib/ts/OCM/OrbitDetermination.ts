@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { OCMDynamicParameter, OCMDynamicParameterT } from './OCMDynamicParameter.js';
 import { estimatorCategory } from './estimatorCategory.js';
 
 
@@ -291,8 +292,23 @@ WEIGHTED_RMS():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Dynamical-model parameters of the solution with their values, solved for or held. An
+ * IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+ * COV_PARAMETERS names in the covariance are entries of this list.
+ */
+OD_DYNAMIC_PARAMETERS(index: number, obj?:OCMDynamicParameter):OCMDynamicParameter|null {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? (obj || new OCMDynamicParameter()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+odDynamicParametersLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startOrbitDetermination(builder:flatbuffers.Builder) {
-  builder.startObject(25);
+  builder.startObject(26);
 }
 
 static addOdId(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset) {
@@ -453,12 +469,28 @@ static addWeightedRms(builder:flatbuffers.Builder, WEIGHTED_RMS:number) {
   builder.addFieldFloat64(24, WEIGHTED_RMS, 0.0);
 }
 
+static addOdDynamicParameters(builder:flatbuffers.Builder, OD_DYNAMIC_PARAMETERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(25, OD_DYNAMIC_PARAMETERSOffset, 0);
+}
+
+static createOdDynamicParametersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startOdDynamicParametersVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endOrbitDetermination(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset, OD_PREV_IDOffset:flatbuffers.Offset, OD_ALGORITHMOffset:flatbuffers.Offset, OD_METHODOffset:flatbuffers.Offset, OD_EPOCHOffset:flatbuffers.Offset, OD_TIME_TAGOffset:flatbuffers.Offset, OD_PROCESS_NOISEOffset:flatbuffers.Offset, OD_COV_REDUCTIONOffset:flatbuffers.Offset, OD_NOISE_MODELSOffset:flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset:flatbuffers.Offset, OD_OBSERVATIONS_USED:number, OD_TRACKS_USED:number, OD_DATA_WEIGHTINGOffset:flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset:flatbuffers.Offset, OD_EST_PARAMETERSOffset:flatbuffers.Offset, OD_APRIORI_DATAOffset:flatbuffers.Offset, OD_RESIDUALSOffset:flatbuffers.Offset, OD_ESTIMATOR:estimatorCategory, OD_RESIDUAL_RMS:number, OD_RESIDUALS_SERIESOffset:flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset:flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset:flatbuffers.Offset, OD_BATCH_BASELINE_RMS:number, SEDR:number, WEIGHTED_RMS:number):flatbuffers.Offset {
+static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset, OD_PREV_IDOffset:flatbuffers.Offset, OD_ALGORITHMOffset:flatbuffers.Offset, OD_METHODOffset:flatbuffers.Offset, OD_EPOCHOffset:flatbuffers.Offset, OD_TIME_TAGOffset:flatbuffers.Offset, OD_PROCESS_NOISEOffset:flatbuffers.Offset, OD_COV_REDUCTIONOffset:flatbuffers.Offset, OD_NOISE_MODELSOffset:flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset:flatbuffers.Offset, OD_OBSERVATIONS_USED:number, OD_TRACKS_USED:number, OD_DATA_WEIGHTINGOffset:flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset:flatbuffers.Offset, OD_EST_PARAMETERSOffset:flatbuffers.Offset, OD_APRIORI_DATAOffset:flatbuffers.Offset, OD_RESIDUALSOffset:flatbuffers.Offset, OD_ESTIMATOR:estimatorCategory, OD_RESIDUAL_RMS:number, OD_RESIDUALS_SERIESOffset:flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset:flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset:flatbuffers.Offset, OD_BATCH_BASELINE_RMS:number, SEDR:number, WEIGHTED_RMS:number, OD_DYNAMIC_PARAMETERSOffset:flatbuffers.Offset):flatbuffers.Offset {
   OrbitDetermination.startOrbitDetermination(builder);
   OrbitDetermination.addOdId(builder, OD_IDOffset);
   OrbitDetermination.addOdPrevId(builder, OD_PREV_IDOffset);
@@ -485,6 +517,7 @@ static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuf
   OrbitDetermination.addOdBatchBaselineRms(builder, OD_BATCH_BASELINE_RMS);
   OrbitDetermination.addSedr(builder, SEDR);
   OrbitDetermination.addWeightedRms(builder, WEIGHTED_RMS);
+  OrbitDetermination.addOdDynamicParameters(builder, OD_DYNAMIC_PARAMETERSOffset);
   return OrbitDetermination.endOrbitDetermination(builder);
 }
 
@@ -514,7 +547,8 @@ unpack(): OrbitDeterminationT {
     this.OD_BATCH_BASELINE_ID(),
     this.OD_BATCH_BASELINE_RMS(),
     this.SEDR(),
-    this.WEIGHTED_RMS()
+    this.WEIGHTED_RMS(),
+    this.bb!.createObjList<OCMDynamicParameter, OCMDynamicParameterT>(this.OD_DYNAMIC_PARAMETERS.bind(this), this.odDynamicParametersLength())
   );
 }
 
@@ -545,6 +579,7 @@ unpackTo(_o: OrbitDeterminationT): void {
   _o.OD_BATCH_BASELINE_RMS = this.OD_BATCH_BASELINE_RMS();
   _o.SEDR = this.SEDR();
   _o.WEIGHTED_RMS = this.WEIGHTED_RMS();
+  _o.OD_DYNAMIC_PARAMETERS = this.bb!.createObjList<OCMDynamicParameter, OCMDynamicParameterT>(this.OD_DYNAMIC_PARAMETERS.bind(this), this.odDynamicParametersLength());
 }
 }
 
@@ -574,7 +609,8 @@ constructor(
   public OD_BATCH_BASELINE_ID: string|Uint8Array|null = null,
   public OD_BATCH_BASELINE_RMS: number = 0.0,
   public SEDR: number = 0.0,
-  public WEIGHTED_RMS: number = 0.0
+  public WEIGHTED_RMS: number = 0.0,
+  public OD_DYNAMIC_PARAMETERS: (OCMDynamicParameterT)[] = []
 ){}
 
 
@@ -597,6 +633,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OD_RESIDUALS_SERIES = OrbitDetermination.createOdResidualsSeriesVector(builder, this.OD_RESIDUALS_SERIES);
   const OD_RESIDUAL_EPOCHS = OrbitDetermination.createOdResidualEpochsVector(builder, this.OD_RESIDUAL_EPOCHS);
   const OD_BATCH_BASELINE_ID = (this.OD_BATCH_BASELINE_ID !== null ? builder.createString(this.OD_BATCH_BASELINE_ID!) : 0);
+  const OD_DYNAMIC_PARAMETERS = OrbitDetermination.createOdDynamicParametersVector(builder, builder.createObjectOffsetList(this.OD_DYNAMIC_PARAMETERS));
 
   return OrbitDetermination.createOrbitDetermination(builder,
     OD_ID,
@@ -623,7 +660,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     OD_BATCH_BASELINE_ID,
     this.OD_BATCH_BASELINE_RMS,
     this.SEDR,
-    this.WEIGHTED_RMS
+    this.WEIGHTED_RMS,
+    OD_DYNAMIC_PARAMETERS
   );
 }
 }

@@ -10,6 +10,7 @@ import { PhysicalProperties, PhysicalPropertiesT } from './PhysicalProperties.js
 import { RFM, RFMT } from './RFM.js';
 import { UserDefinedParameters, UserDefinedParametersT } from './UserDefinedParameters.js';
 import { covarianceCalibration } from './covarianceCalibration.js';
+import { covarianceOrdering } from './covarianceOrdering.js';
 import { trajectoryType } from './trajectoryType.js';
 /**
  * Orbit Comprehensive Message
@@ -64,8 +65,11 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
     stateDataLength(): number;
     stateDataArray(): Float64Array | null;
     /**
-     * Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-     * Time alignment matches STATE_DATA epochs.
+     * Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+     * COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+     * has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+     * state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+     * epoch, the lower triangle of the 6x6 position and velocity covariance.
      */
     COVARIANCE_DATA(index: number): number | null;
     covarianceDataLength(): number;
@@ -157,6 +161,37 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
     STATE_EPOCHS(index: number): string;
     STATE_EPOCHS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     stateEpochsLength(): number;
+    /**
+     * Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+     * (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+     * TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+     */
+    COV_TYPE(): string | null;
+    COV_TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+     */
+    COV_ORDERING(): covarianceOrdering;
+    /**
+     * Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+     * COV_PARAMETERS names.
+     */
+    COV_SIZE(): number;
+    /**
+     * Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+     * by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+     * matrix reaches). A row the orbit determination did not solve for is zero.
+     */
+    COV_PARAMETERS(index: number): string;
+    COV_PARAMETERS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    covParametersLength(): number;
+    /**
+     * Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+     * dimensionless one.
+     */
+    COV_UNITS(index: number): string;
+    COV_UNITS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    covUnitsLength(): number;
     static startOCM(builder: flatbuffers.Builder): void;
     static addHeader(builder: flatbuffers.Builder, HEADEROffset: flatbuffers.Offset): void;
     static addMetadata(builder: flatbuffers.Builder, METADATAOffset: flatbuffers.Offset): void;
@@ -204,6 +239,15 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
     static addStateEpochs(builder: flatbuffers.Builder, STATE_EPOCHSOffset: flatbuffers.Offset): void;
     static createStateEpochsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startStateEpochsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCovType(builder: flatbuffers.Builder, COV_TYPEOffset: flatbuffers.Offset): void;
+    static addCovOrdering(builder: flatbuffers.Builder, COV_ORDERING: covarianceOrdering): void;
+    static addCovSize(builder: flatbuffers.Builder, COV_SIZE: number): void;
+    static addCovParameters(builder: flatbuffers.Builder, COV_PARAMETERSOffset: flatbuffers.Offset): void;
+    static createCovParametersVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startCovParametersVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCovUnits(builder: flatbuffers.Builder, COV_UNITSOffset: flatbuffers.Offset): void;
+    static createCovUnitsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startCovUnitsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endOCM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishOCMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedOCMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -235,7 +279,12 @@ export declare class OCMT implements flatbuffers.IGeneratedObject {
     COV_CALIBRATION: covarianceCalibration;
     COV_CALIBRATION_REFERENCE: string | Uint8Array | null;
     STATE_EPOCHS: (string)[];
-    constructor(HEADER?: HeaderT | null, METADATA?: MetadataT | null, TRAJ_TYPE?: trajectoryType, TRAJ_TYPE_DESCRIPTION?: string | Uint8Array | null, STATE_STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], COVARIANCE_DATA?: (number)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], POLYNOMIAL_OE_RECORDS?: (PPEOrbitalElementRecordT)[], PHYSICAL_PROPERTIES?: PhysicalPropertiesT | null, MANEUVER_DATA?: (ManeuverT)[], PERTURBATIONS?: PerturbationsT | null, ORBIT_DETERMINATION?: OrbitDeterminationT | null, USER_DEFINED_PARAMETERS?: (UserDefinedParametersT)[], CENTER_NAME?: string | Uint8Array | null, TRAJ_REF_FRAME?: RFMT | null, TRAJ_FRAME_EPOCH?: string | Uint8Array | null, COV_REF_FRAME?: RFMT | null, ORB_REVNUM?: number, ORB_AVERAGING?: string | Uint8Array | null, COV_CALIBRATION?: covarianceCalibration, COV_CALIBRATION_REFERENCE?: string | Uint8Array | null, STATE_EPOCHS?: (string)[]);
+    COV_TYPE: string | Uint8Array | null;
+    COV_ORDERING: covarianceOrdering;
+    COV_SIZE: number;
+    COV_PARAMETERS: (string)[];
+    COV_UNITS: (string)[];
+    constructor(HEADER?: HeaderT | null, METADATA?: MetadataT | null, TRAJ_TYPE?: trajectoryType, TRAJ_TYPE_DESCRIPTION?: string | Uint8Array | null, STATE_STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], COVARIANCE_DATA?: (number)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], POLYNOMIAL_OE_RECORDS?: (PPEOrbitalElementRecordT)[], PHYSICAL_PROPERTIES?: PhysicalPropertiesT | null, MANEUVER_DATA?: (ManeuverT)[], PERTURBATIONS?: PerturbationsT | null, ORBIT_DETERMINATION?: OrbitDeterminationT | null, USER_DEFINED_PARAMETERS?: (UserDefinedParametersT)[], CENTER_NAME?: string | Uint8Array | null, TRAJ_REF_FRAME?: RFMT | null, TRAJ_FRAME_EPOCH?: string | Uint8Array | null, COV_REF_FRAME?: RFMT | null, ORB_REVNUM?: number, ORB_AVERAGING?: string | Uint8Array | null, COV_CALIBRATION?: covarianceCalibration, COV_CALIBRATION_REFERENCE?: string | Uint8Array | null, STATE_EPOCHS?: (string)[], COV_TYPE?: string | Uint8Array | null, COV_ORDERING?: covarianceOrdering, COV_SIZE?: number, COV_PARAMETERS?: (string)[], COV_UNITS?: (string)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OCM.d.ts.map

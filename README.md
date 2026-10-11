@@ -34,7 +34,7 @@ Space Data Standards modernizes decades-old formats while maintaining compatibil
 | ------------- | ------------------------- | ---------- |
 | TLE           | Two-Line Element Sets     | OMM        |
 | SATCAT        | Satellite Catalog         | CAT        |
-| VCM           | Vector Covariance Message | VCM / OEM  |
+| VCM           | Vector Covariance Message | OCM        |
 | CDM (XML)     | Conjunction Data Message  | CDM        |
 | OEM (XML)     | Orbit Ephemeris Message   | OEM        |
 

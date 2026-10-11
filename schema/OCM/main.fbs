@@ -1,5 +1,5 @@
-// Hash: 45425507c0461cff64f73832bf5e062f61bd16c2692fec0cacb4c7b5b01b2b54
-// Version: 2.1.5
+// Hash: 89387c660ecc1dd8f098990ce2b32b6ebba4ca881617ab2f52c624c1285386a6
+// Version: 2.1.6
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../PPE/main.fbs";
@@ -22,7 +22,10 @@ include "../RFM/main.fbs";
 // State data layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, X_DOT1, ...]
 // Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
 //
-// Covariance uses 21 elements per epoch (lower triangular 6x6 matrix) aligned with state epochs.
+// Covariance is one matrix per state epoch. Without COV_TYPE, COV_ORDERING and COV_SIZE it is 21 elements
+// (the lower triangular 6x6 matrix of position and velocity). COV_SIZE, COV_ORDERING and COV_PARAMETERS state
+// larger matrices, a state with the dynamical-model parameters an orbit determination solved for (a VCM's
+// B, BDOT, AGOM and in-track thrust), so everything the legacy Vector Covariance Message ($VCM) holds fits here.
 
 /// Trajectory state representation type.
 /// Defines how trajectory data is parameterized in this OCM.
@@ -405,6 +408,38 @@ enum covarianceCalibration : byte {
   Calibrated
 }
 
+/// Order in which the values of an N x N covariance matrix are written at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+enum covarianceOrdering : byte {
+  /// Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values.
+  LTM,
+  /// Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values.
+  UTM,
+  /// The whole matrix row by row: N*N values.
+  FULL,
+  /// The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places
+  /// above the diagonal hold the correlation coefficients (covariance over the product of standard deviations).
+  LTMWCC,
+  /// The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places
+  /// below the diagonal hold the correlation coefficients.
+  UTMWCC
+}
+
+/// A parameter of the dynamical model that an orbit solution carries with the state: its value at the solution
+/// epoch and whether the orbit determination solved for it (a held value is a catalog value).
+table OCMDynamicParameter {
+  /// Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
+  /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
+  /// are the producer's, as in USER_DEFINED_PARAMETERS.
+  NAME: string;
+  /// Value at the solution epoch, in UNITS.
+  VALUE: double;
+  /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
+  /// m/s**2 for IN_TRACK_ACCELERATION.
+  UNITS: string;
+  /// True when the orbit determination solved for the parameter, false when VALUE was held.
+  SOLVED_FOR: bool = false;
+}
+
 table OrbitDetermination {
   /// Unique identifier for the orbit determination.
   OD_ID: string;
@@ -460,6 +495,10 @@ table OrbitDetermination {
   SEDR: double;
   /// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
   WEIGHTED_RMS: double;
+  /// Dynamical-model parameters of the solution with their values, solved for or held. An
+  /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+  /// COV_PARAMETERS names in the covariance are entries of this list.
+  OD_DYNAMIC_PARAMETERS: [OCMDynamicParameter];
 }
 
 table UserDefinedParameters {
@@ -501,8 +540,11 @@ table OCM {
   /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
   STATE_DATA:[double];
 
-  /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-  /// Time alignment matches STATE_DATA epochs.
+  /// Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+  /// COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+  /// has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+  /// state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+  /// epoch, the lower triangle of the 6x6 position and velocity covariance.
   COVARIANCE_DATA:[double];
 
   /// Polynomial position records.
@@ -552,6 +594,22 @@ table OCM {
   /// STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
   /// Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
   STATE_EPOCHS: [string];
+  /// Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+  /// (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+  /// TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+  COV_TYPE: string;
+  /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+  COV_ORDERING: covarianceOrdering = LTM;
+  /// Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+  /// COV_PARAMETERS names.
+  COV_SIZE: uint8 = 6;
+  /// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+  /// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+  /// matrix reaches). A row the orbit determination did not solve for is zero.
+  COV_PARAMETERS: [string];
+  /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+  /// dimensionless one.
+  COV_UNITS: [string];
 }
 
 root_type OCM;

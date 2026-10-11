@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Vector Covariance Message
+# DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
 class VCM(object):
     __slots__ = ['_tab']
 

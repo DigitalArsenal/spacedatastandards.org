@@ -77,8 +77,11 @@ public final class OCM extends com.google.flatbuffers.Table {
   public ByteBuffer STATE_DATAAsByteBuffer() { return __vector_as_bytebuffer(16, 8); }
   public ByteBuffer STATE_DATAInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 8); }
   /**
-   * Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-   * Time alignment matches STATE_DATA epochs.
+   * Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+   * COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+   * has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+   * state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+   * epoch, the lower triangle of the 6x6 position and velocity covariance.
    */
   public double COVARIANCE_DATA(int j) { int o = __offset(18); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int COVARIANCE_DATALength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
@@ -195,6 +198,40 @@ public final class OCM extends com.google.flatbuffers.Table {
   public int STATE_EPOCHSLength() { int o = __offset(50); return o != 0 ? __vector_len(o) : 0; }
   public StringVector stateEpochsVector() { return stateEpochsVector(new StringVector()); }
   public StringVector stateEpochsVector(StringVector obj) { int o = __offset(50); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+   * (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+   * TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+   */
+  public String COV_TYPE() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COV_TYPEAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
+  public ByteBuffer COV_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
+  /**
+   * Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+   */
+  public byte COV_ORDERING() { int o = __offset(54); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+   * COV_PARAMETERS names.
+   */
+  public int COV_SIZE() { int o = __offset(56); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 6; }
+  /**
+   * Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+   * by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+   * matrix reaches). A row the orbit determination did not solve for is zero.
+   */
+  public String COV_PARAMETERS(int j) { int o = __offset(58); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int COV_PARAMETERSLength() { int o = __offset(58); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector covParametersVector() { return covParametersVector(new StringVector()); }
+  public StringVector covParametersVector(StringVector obj) { int o = __offset(58); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+   * dimensionless one.
+   */
+  public String COV_UNITS(int j) { int o = __offset(60); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int COV_UNITSLength() { int o = __offset(60); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector covUnitsVector() { return covUnitsVector(new StringVector()); }
+  public StringVector covUnitsVector(StringVector obj) { int o = __offset(60); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createOCM(FlatBufferBuilder builder,
       int HEADEROffset,
@@ -220,9 +257,17 @@ public final class OCM extends com.google.flatbuffers.Table {
       int ORB_AVERAGINGOffset,
       byte COV_CALIBRATION,
       int COV_CALIBRATION_REFERENCEOffset,
-      int STATE_EPOCHSOffset) {
-    builder.startTable(24);
+      int STATE_EPOCHSOffset,
+      int COV_TYPEOffset,
+      byte COV_ORDERING,
+      int COV_SIZE,
+      int COV_PARAMETERSOffset,
+      int COV_UNITSOffset) {
+    builder.startTable(29);
     OCM.addStateStepSize(builder, STATE_STEP_SIZE);
+    OCM.addCovUnits(builder, COV_UNITSOffset);
+    OCM.addCovParameters(builder, COV_PARAMETERSOffset);
+    OCM.addCovType(builder, COV_TYPEOffset);
     OCM.addStateEpochs(builder, STATE_EPOCHSOffset);
     OCM.addCovCalibrationReference(builder, COV_CALIBRATION_REFERENCEOffset);
     OCM.addOrbAveraging(builder, ORB_AVERAGINGOffset);
@@ -243,13 +288,15 @@ public final class OCM extends com.google.flatbuffers.Table {
     OCM.addTrajTypeDescription(builder, TRAJ_TYPE_DESCRIPTIONOffset);
     OCM.addMetadata(builder, METADATAOffset);
     OCM.addHeader(builder, HEADEROffset);
+    OCM.addCovSize(builder, COV_SIZE);
+    OCM.addCovOrdering(builder, COV_ORDERING);
     OCM.addCovCalibration(builder, COV_CALIBRATION);
     OCM.addStateVectorSize(builder, STATE_VECTOR_SIZE);
     OCM.addTrajType(builder, TRAJ_TYPE);
     return OCM.endOCM(builder);
   }
 
-  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(24); }
+  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(29); }
   public static void addHeader(FlatBufferBuilder builder, int HEADEROffset) { builder.addOffset(0, HEADEROffset, 0); }
   public static void addMetadata(FlatBufferBuilder builder, int METADATAOffset) { builder.addOffset(1, METADATAOffset, 0); }
   public static void addTrajType(FlatBufferBuilder builder, byte TRAJ_TYPE) { builder.addByte(2, TRAJ_TYPE, 0); }
@@ -288,6 +335,15 @@ public final class OCM extends com.google.flatbuffers.Table {
   public static void addStateEpochs(FlatBufferBuilder builder, int STATE_EPOCHSOffset) { builder.addOffset(23, STATE_EPOCHSOffset, 0); }
   public static int createStateEpochsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startStateEpochsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addCovType(FlatBufferBuilder builder, int COV_TYPEOffset) { builder.addOffset(24, COV_TYPEOffset, 0); }
+  public static void addCovOrdering(FlatBufferBuilder builder, byte COV_ORDERING) { builder.addByte(25, COV_ORDERING, 0); }
+  public static void addCovSize(FlatBufferBuilder builder, int COV_SIZE) { builder.addByte(26, (byte) COV_SIZE, (byte) 6); }
+  public static void addCovParameters(FlatBufferBuilder builder, int COV_PARAMETERSOffset) { builder.addOffset(27, COV_PARAMETERSOffset, 0); }
+  public static int createCovParametersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startCovParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addCovUnits(FlatBufferBuilder builder, int COV_UNITSOffset) { builder.addOffset(28, COV_UNITSOffset, 0); }
+  public static int createCovUnitsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startCovUnitsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endOCM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

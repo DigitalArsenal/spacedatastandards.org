@@ -1145,7 +1145,7 @@ inline ::flatbuffers::Offset<VCMAtmosphericModelData> CreateVCMAtmosphericModelD
   return builder_.Finish();
 }
 
-/// Vector Covariance Message
+/// DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
 struct VCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef VCMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

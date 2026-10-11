@@ -172,6 +172,16 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
    * Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
    */
   public double WEIGHTED_RMS() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Dynamical-model parameters of the solution with their values, solved for or held. An
+   * IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+   * COV_PARAMETERS names in the covariance are entries of this list.
+   */
+  public OCMDynamicParameter OD_DYNAMIC_PARAMETERS(int j) { return OD_DYNAMIC_PARAMETERS(new OCMDynamicParameter(), j); }
+  public OCMDynamicParameter OD_DYNAMIC_PARAMETERS(OCMDynamicParameter obj, int j) { int o = __offset(54); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int OD_DYNAMIC_PARAMETERSLength() { int o = __offset(54); return o != 0 ? __vector_len(o) : 0; }
+  public OCMDynamicParameter.Vector odDynamicParametersVector() { return odDynamicParametersVector(new OCMDynamicParameter.Vector()); }
+  public OCMDynamicParameter.Vector odDynamicParametersVector(OCMDynamicParameter.Vector obj) { int o = __offset(54); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createOrbitDetermination(FlatBufferBuilder builder,
       int OD_IDOffset,
@@ -198,12 +208,14 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
       int OD_BATCH_BASELINE_IDOffset,
       double OD_BATCH_BASELINE_RMS,
       double SEDR,
-      double WEIGHTED_RMS) {
-    builder.startTable(25);
+      double WEIGHTED_RMS,
+      int OD_DYNAMIC_PARAMETERSOffset) {
+    builder.startTable(26);
     OrbitDetermination.addWeightedRms(builder, WEIGHTED_RMS);
     OrbitDetermination.addSedr(builder, SEDR);
     OrbitDetermination.addOdBatchBaselineRms(builder, OD_BATCH_BASELINE_RMS);
     OrbitDetermination.addOdResidualRms(builder, OD_RESIDUAL_RMS);
+    OrbitDetermination.addOdDynamicParameters(builder, OD_DYNAMIC_PARAMETERSOffset);
     OrbitDetermination.addOdBatchBaselineId(builder, OD_BATCH_BASELINE_IDOffset);
     OrbitDetermination.addOdResidualEpochs(builder, OD_RESIDUAL_EPOCHSOffset);
     OrbitDetermination.addOdResidualsSeries(builder, OD_RESIDUALS_SERIESOffset);
@@ -228,7 +240,7 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
     return OrbitDetermination.endOrbitDetermination(builder);
   }
 
-  public static void startOrbitDetermination(FlatBufferBuilder builder) { builder.startTable(25); }
+  public static void startOrbitDetermination(FlatBufferBuilder builder) { builder.startTable(26); }
   public static void addOdId(FlatBufferBuilder builder, int OD_IDOffset) { builder.addOffset(0, OD_IDOffset, 0); }
   public static void addOdPrevId(FlatBufferBuilder builder, int OD_PREV_IDOffset) { builder.addOffset(1, OD_PREV_IDOffset, 0); }
   public static void addOdAlgorithm(FlatBufferBuilder builder, int OD_ALGORITHMOffset) { builder.addOffset(2, OD_ALGORITHMOffset, 0); }
@@ -262,6 +274,9 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
   public static void addOdBatchBaselineRms(FlatBufferBuilder builder, double OD_BATCH_BASELINE_RMS) { builder.addDouble(22, OD_BATCH_BASELINE_RMS, 0.0); }
   public static void addSedr(FlatBufferBuilder builder, double SEDR) { builder.addDouble(23, SEDR, 0.0); }
   public static void addWeightedRms(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.addDouble(24, WEIGHTED_RMS, 0.0); }
+  public static void addOdDynamicParameters(FlatBufferBuilder builder, int OD_DYNAMIC_PARAMETERSOffset) { builder.addOffset(25, OD_DYNAMIC_PARAMETERSOffset, 0); }
+  public static int createOdDynamicParametersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startOdDynamicParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endOrbitDetermination(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

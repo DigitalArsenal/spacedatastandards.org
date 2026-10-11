@@ -170,6 +170,11 @@ public struct OrbitDetermination : IFlatbufferObject
   public double SEDR { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
   public double WEIGHTED_RMS { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Dynamical-model parameters of the solution with their values, solved for or held. An
+  /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+  /// COV_PARAMETERS names in the covariance are entries of this list.
+  public OCMDynamicParameter? OD_DYNAMIC_PARAMETERS(int j) { int o = __p.__offset(54); return o != 0 ? (OCMDynamicParameter?)(new OCMDynamicParameter()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int OD_DYNAMIC_PARAMETERSLength { get { int o = __p.__offset(54); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<OrbitDetermination> CreateOrbitDetermination(FlatBufferBuilder builder,
       StringOffset OD_IDOffset = default(StringOffset),
@@ -196,12 +201,14 @@ public struct OrbitDetermination : IFlatbufferObject
       StringOffset OD_BATCH_BASELINE_IDOffset = default(StringOffset),
       double OD_BATCH_BASELINE_RMS = 0.0,
       double SEDR = 0.0,
-      double WEIGHTED_RMS = 0.0) {
-    builder.StartTable(25);
+      double WEIGHTED_RMS = 0.0,
+      VectorOffset OD_DYNAMIC_PARAMETERSOffset = default(VectorOffset)) {
+    builder.StartTable(26);
     OrbitDetermination.AddWEIGHTED_RMS(builder, WEIGHTED_RMS);
     OrbitDetermination.AddSEDR(builder, SEDR);
     OrbitDetermination.AddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS);
     OrbitDetermination.AddOD_RESIDUAL_RMS(builder, OD_RESIDUAL_RMS);
+    OrbitDetermination.AddOD_DYNAMIC_PARAMETERS(builder, OD_DYNAMIC_PARAMETERSOffset);
     OrbitDetermination.AddOD_BATCH_BASELINE_ID(builder, OD_BATCH_BASELINE_IDOffset);
     OrbitDetermination.AddOD_RESIDUAL_EPOCHS(builder, OD_RESIDUAL_EPOCHSOffset);
     OrbitDetermination.AddOD_RESIDUALS_SERIES(builder, OD_RESIDUALS_SERIESOffset);
@@ -226,7 +233,7 @@ public struct OrbitDetermination : IFlatbufferObject
     return OrbitDetermination.EndOrbitDetermination(builder);
   }
 
-  public static void StartOrbitDetermination(FlatBufferBuilder builder) { builder.StartTable(25); }
+  public static void StartOrbitDetermination(FlatBufferBuilder builder) { builder.StartTable(26); }
   public static void AddOD_ID(FlatBufferBuilder builder, StringOffset OD_IDOffset) { builder.AddOffset(0, OD_IDOffset.Value, 0); }
   public static void AddOD_PREV_ID(FlatBufferBuilder builder, StringOffset OD_PREV_IDOffset) { builder.AddOffset(1, OD_PREV_IDOffset.Value, 0); }
   public static void AddOD_ALGORITHM(FlatBufferBuilder builder, StringOffset OD_ALGORITHMOffset) { builder.AddOffset(2, OD_ALGORITHMOffset.Value, 0); }
@@ -272,6 +279,12 @@ public struct OrbitDetermination : IFlatbufferObject
   public static void AddOD_BATCH_BASELINE_RMS(FlatBufferBuilder builder, double OD_BATCH_BASELINE_RMS) { builder.AddDouble(22, OD_BATCH_BASELINE_RMS, 0.0); }
   public static void AddSEDR(FlatBufferBuilder builder, double SEDR) { builder.AddDouble(23, SEDR, 0.0); }
   public static void AddWEIGHTED_RMS(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.AddDouble(24, WEIGHTED_RMS, 0.0); }
+  public static void AddOD_DYNAMIC_PARAMETERS(FlatBufferBuilder builder, VectorOffset OD_DYNAMIC_PARAMETERSOffset) { builder.AddOffset(25, OD_DYNAMIC_PARAMETERSOffset.Value, 0); }
+  public static VectorOffset CreateOD_DYNAMIC_PARAMETERSVector(FlatBufferBuilder builder, Offset<OCMDynamicParameter>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateOD_DYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, Offset<OCMDynamicParameter>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOD_DYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OCMDynamicParameter>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOD_DYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OCMDynamicParameter>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartOD_DYNAMIC_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<OrbitDetermination> EndOrbitDetermination(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OrbitDetermination>(o);
@@ -311,6 +324,8 @@ public struct OrbitDetermination : IFlatbufferObject
     _o.OD_BATCH_BASELINE_RMS = this.OD_BATCH_BASELINE_RMS;
     _o.SEDR = this.SEDR;
     _o.WEIGHTED_RMS = this.WEIGHTED_RMS;
+    _o.OD_DYNAMIC_PARAMETERS = new List<OCMDynamicParameterT>();
+    for (var _j = 0; _j < this.OD_DYNAMIC_PARAMETERSLength; ++_j) {_o.OD_DYNAMIC_PARAMETERS.Add(this.OD_DYNAMIC_PARAMETERS(_j).HasValue ? this.OD_DYNAMIC_PARAMETERS(_j).Value.UnPack() : null);}
   }
   public static Offset<OrbitDetermination> Pack(FlatBufferBuilder builder, OrbitDeterminationT _o) {
     if (_o == null) return default(Offset<OrbitDetermination>);
@@ -350,6 +365,12 @@ public struct OrbitDetermination : IFlatbufferObject
       _OD_RESIDUAL_EPOCHS = CreateOD_RESIDUAL_EPOCHSVector(builder, __OD_RESIDUAL_EPOCHS);
     }
     var _OD_BATCH_BASELINE_ID = _o.OD_BATCH_BASELINE_ID == null ? default(StringOffset) : builder.CreateString(_o.OD_BATCH_BASELINE_ID);
+    var _OD_DYNAMIC_PARAMETERS = default(VectorOffset);
+    if (_o.OD_DYNAMIC_PARAMETERS != null) {
+      var __OD_DYNAMIC_PARAMETERS = new Offset<OCMDynamicParameter>[_o.OD_DYNAMIC_PARAMETERS.Count];
+      for (var _j = 0; _j < __OD_DYNAMIC_PARAMETERS.Length; ++_j) { __OD_DYNAMIC_PARAMETERS[_j] = OCMDynamicParameter.Pack(builder, _o.OD_DYNAMIC_PARAMETERS[_j]); }
+      _OD_DYNAMIC_PARAMETERS = CreateOD_DYNAMIC_PARAMETERSVector(builder, __OD_DYNAMIC_PARAMETERS);
+    }
     return CreateOrbitDetermination(
       builder,
       _OD_ID,
@@ -376,7 +397,8 @@ public struct OrbitDetermination : IFlatbufferObject
       _OD_BATCH_BASELINE_ID,
       _o.OD_BATCH_BASELINE_RMS,
       _o.SEDR,
-      _o.WEIGHTED_RMS);
+      _o.WEIGHTED_RMS,
+      _OD_DYNAMIC_PARAMETERS);
   }
 }
 
@@ -407,6 +429,7 @@ public class OrbitDeterminationT
   public double OD_BATCH_BASELINE_RMS { get; set; }
   public double SEDR { get; set; }
   public double WEIGHTED_RMS { get; set; }
+  public List<OCMDynamicParameterT> OD_DYNAMIC_PARAMETERS { get; set; }
 
   public OrbitDeterminationT() {
     this.OD_ID = null;
@@ -434,6 +457,7 @@ public class OrbitDeterminationT
     this.OD_BATCH_BASELINE_RMS = 0.0;
     this.SEDR = 0.0;
     this.WEIGHTED_RMS = 0.0;
+    this.OD_DYNAMIC_PARAMETERS = null;
   }
 }
 
@@ -468,6 +492,7 @@ static public class OrbitDeterminationVerify
       && verifier.VerifyField(tablePos, 48 /*OD_BATCH_BASELINE_RMS*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 50 /*SEDR*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 52 /*WEIGHTED_RMS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfTables(tablePos, 54 /*OD_DYNAMIC_PARAMETERS*/, OCMDynamicParameterVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

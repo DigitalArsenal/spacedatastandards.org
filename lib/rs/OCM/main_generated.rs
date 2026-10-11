@@ -382,6 +382,121 @@ impl<'a> ::flatbuffers::Verifiable for covarianceCalibration {
 
 impl ::flatbuffers::SimpleToVerifyInSlice for covarianceCalibration {}
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_COVARIANCE_ORDERING: i8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_COVARIANCE_ORDERING: i8 = 4;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_COVARIANCE_ORDERING: [covarianceOrdering; 5] = [
+    covarianceOrdering::LTM,
+    covarianceOrdering::UTM,
+    covarianceOrdering::FULL,
+    covarianceOrdering::LTMWCC,
+    covarianceOrdering::UTMWCC,
+];
+
+/// Order in which the values of an N x N covariance matrix are written at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct covarianceOrdering(pub i8);
+
+#[allow(non_upper_case_globals)]
+impl covarianceOrdering {
+    /// Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values.
+    pub const LTM: Self = Self(0);
+    /// Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values.
+    pub const UTM: Self = Self(1);
+    /// The whole matrix row by row: N*N values.
+    pub const FULL: Self = Self(2);
+    /// The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places
+    /// above the diagonal hold the correlation coefficients (covariance over the product of standard deviations).
+    pub const LTMWCC: Self = Self(3);
+    /// The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places
+    /// below the diagonal hold the correlation coefficients.
+    pub const UTMWCC: Self = Self(4);
+
+    pub const ENUM_MIN: i8 = 0;
+    pub const ENUM_MAX: i8 = 4;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::LTM,
+        Self::UTM,
+        Self::FULL,
+        Self::LTMWCC,
+        Self::UTMWCC,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::LTM => Some("LTM"),
+            Self::UTM => Some("UTM"),
+            Self::FULL => Some("FULL"),
+            Self::LTMWCC => Some("LTMWCC"),
+            Self::UTMWCC => Some("UTMWCC"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for covarianceOrdering {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for covarianceOrdering {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for covarianceOrdering {
+    type Output = covarianceOrdering;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for covarianceOrdering {
+    type Scalar = i8;
+
+    #[inline]
+    fn to_little_endian(self) -> i8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: i8) -> Self {
+        let b = i8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for covarianceOrdering {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        i8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for covarianceOrdering {}
+
 pub enum HeaderOffset {}
 
 #[derive(Copy, Clone, PartialEq)]
@@ -5116,6 +5231,234 @@ impl ManeuverT {
     }
 }
 
+pub enum OCMDynamicParameterOffset {}
+
+/// A parameter of the dynamical model that an orbit solution carries with the state: its value at the solution
+/// epoch and whether the orbit determination solved for it (a held value is a catalog value).
+#[derive(Copy, Clone, PartialEq)]
+pub struct OCMDynamicParameter<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCMDynamicParameter<'a> {
+    type Inner = OCMDynamicParameter<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OCMDynamicParameter<'a> {
+    pub const VT_NAME: ::flatbuffers::VOffsetT = 4;
+    pub const VT_VALUE: ::flatbuffers::VOffsetT = 6;
+    pub const VT_UNITS: ::flatbuffers::VOffsetT = 8;
+    pub const VT_SOLVED_FOR: ::flatbuffers::VOffsetT = 10;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OCMDynamicParameter { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OCMDynamicParameterArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OCMDynamicParameter<'bldr>> {
+        let mut builder = OCMDynamicParameterBuilder::new(_fbb);
+        builder.add_VALUE(args.VALUE);
+        if let Some(x) = args.UNITS { builder.add_UNITS(x); }
+        if let Some(x) = args.NAME { builder.add_NAME(x); }
+        builder.add_SOLVED_FOR(args.SOLVED_FOR);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OCMDynamicParameterT {
+        let NAME = self.NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let VALUE = self.VALUE();
+        let UNITS = self.UNITS().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SOLVED_FOR = self.SOLVED_FOR();
+        OCMDynamicParameterT {
+            NAME,
+            VALUE,
+            UNITS,
+            SOLVED_FOR,
+        }
+    }
+
+    /// Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
+    /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
+    /// are the producer's, as in USER_DEFINED_PARAMETERS.
+    #[inline]
+    pub fn NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMDynamicParameter::VT_NAME, None)}
+    }
+
+    /// Value at the solution epoch, in UNITS.
+    #[inline]
+    pub fn VALUE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMDynamicParameter::VT_VALUE, Some(0.0)).unwrap()}
+    }
+
+    /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
+    /// m/s**2 for IN_TRACK_ACCELERATION.
+    #[inline]
+    pub fn UNITS(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMDynamicParameter::VT_UNITS, None)}
+    }
+
+    /// True when the orbit determination solved for the parameter, false when VALUE was held.
+    #[inline]
+    pub fn SOLVED_FOR(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(OCMDynamicParameter::VT_SOLVED_FOR, Some(false)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OCMDynamicParameter<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+            .visit_field::<f64>("VALUE", Self::VT_VALUE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UNITS", Self::VT_UNITS, false)?
+            .visit_field::<bool>("SOLVED_FOR", Self::VT_SOLVED_FOR, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OCMDynamicParameterArgs<'a> {
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub VALUE: f64,
+    pub UNITS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOLVED_FOR: bool,
+}
+
+impl<'a> Default for OCMDynamicParameterArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OCMDynamicParameterArgs {
+            NAME: None,
+            VALUE: 0.0,
+            UNITS: None,
+            SOLVED_FOR: false,
+        }
+    }
+}
+
+pub struct OCMDynamicParameterBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMDynamicParameterBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMDynamicParameter::VT_NAME, NAME);
+    }
+
+    #[inline]
+    pub fn add_VALUE(&mut self, VALUE: f64) {
+        self.fbb_.push_slot::<f64>(OCMDynamicParameter::VT_VALUE, VALUE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_UNITS(&mut self, UNITS: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMDynamicParameter::VT_UNITS, UNITS);
+    }
+
+    #[inline]
+    pub fn add_SOLVED_FOR(&mut self, SOLVED_FOR: bool) {
+        self.fbb_.push_slot::<bool>(OCMDynamicParameter::VT_SOLVED_FOR, SOLVED_FOR, false);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMDynamicParameterBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OCMDynamicParameterBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OCMDynamicParameter<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OCMDynamicParameter<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OCMDynamicParameter");
+        ds.field("NAME", &self.NAME());
+        ds.field("VALUE", &self.VALUE());
+        ds.field("UNITS", &self.UNITS());
+        ds.field("SOLVED_FOR", &self.SOLVED_FOR());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMDynamicParameterT {
+    pub NAME: Option<alloc::string::String>,
+    pub VALUE: f64,
+    pub UNITS: Option<alloc::string::String>,
+    pub SOLVED_FOR: bool,
+}
+
+impl Default for OCMDynamicParameterT {
+    fn default() -> Self {
+        Self {
+            NAME: None,
+            VALUE: 0.0,
+            UNITS: None,
+            SOLVED_FOR: false,
+        }
+    }
+}
+
+impl OCMDynamicParameterT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OCMDynamicParameter<'b>> {
+        let NAME = self.NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let VALUE = self.VALUE;
+        let UNITS = self.UNITS.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SOLVED_FOR = self.SOLVED_FOR;
+        OCMDynamicParameter::create(_fbb, &OCMDynamicParameterArgs{
+            NAME,
+            VALUE,
+            UNITS,
+            SOLVED_FOR,
+        })
+    }
+}
+
 pub enum OrbitDeterminationOffset {}
 
 #[derive(Copy, Clone, PartialEq)]
@@ -5158,6 +5501,7 @@ impl<'a> OrbitDetermination<'a> {
     pub const VT_OD_BATCH_BASELINE_RMS: ::flatbuffers::VOffsetT = 48;
     pub const VT_SEDR: ::flatbuffers::VOffsetT = 50;
     pub const VT_WEIGHTED_RMS: ::flatbuffers::VOffsetT = 52;
+    pub const VT_OD_DYNAMIC_PARAMETERS: ::flatbuffers::VOffsetT = 54;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5174,6 +5518,7 @@ impl<'a> OrbitDetermination<'a> {
         builder.add_SEDR(args.SEDR);
         builder.add_OD_BATCH_BASELINE_RMS(args.OD_BATCH_BASELINE_RMS);
         builder.add_OD_RESIDUAL_RMS(args.OD_RESIDUAL_RMS);
+        if let Some(x) = args.OD_DYNAMIC_PARAMETERS { builder.add_OD_DYNAMIC_PARAMETERS(x); }
         if let Some(x) = args.OD_BATCH_BASELINE_ID { builder.add_OD_BATCH_BASELINE_ID(x); }
         if let Some(x) = args.OD_RESIDUAL_EPOCHS { builder.add_OD_RESIDUAL_EPOCHS(x); }
         if let Some(x) = args.OD_RESIDUALS_SERIES { builder.add_OD_RESIDUALS_SERIES(x); }
@@ -5260,6 +5605,9 @@ impl<'a> OrbitDetermination<'a> {
         let OD_BATCH_BASELINE_RMS = self.OD_BATCH_BASELINE_RMS();
         let SEDR = self.SEDR();
         let WEIGHTED_RMS = self.WEIGHTED_RMS();
+        let OD_DYNAMIC_PARAMETERS = self.OD_DYNAMIC_PARAMETERS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         OrbitDeterminationT {
             OD_ID,
             OD_PREV_ID,
@@ -5286,6 +5634,7 @@ impl<'a> OrbitDetermination<'a> {
             OD_BATCH_BASELINE_RMS,
             SEDR,
             WEIGHTED_RMS,
+            OD_DYNAMIC_PARAMETERS,
         }
     }
 
@@ -5517,6 +5866,17 @@ impl<'a> OrbitDetermination<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(OrbitDetermination::VT_WEIGHTED_RMS, Some(0.0)).unwrap()}
     }
+
+    /// Dynamical-model parameters of the solution with their values, solved for or held. An
+    /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+    /// COV_PARAMETERS names in the covariance are entries of this list.
+    #[inline]
+    pub fn OD_DYNAMIC_PARAMETERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMDynamicParameter<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMDynamicParameter>>>>(OrbitDetermination::VT_OD_DYNAMIC_PARAMETERS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OrbitDetermination<'_> {
@@ -5550,6 +5910,7 @@ impl ::flatbuffers::Verifiable for OrbitDetermination<'_> {
             .visit_field::<f64>("OD_BATCH_BASELINE_RMS", Self::VT_OD_BATCH_BASELINE_RMS, false)?
             .visit_field::<f64>("SEDR", Self::VT_SEDR, false)?
             .visit_field::<f64>("WEIGHTED_RMS", Self::VT_WEIGHTED_RMS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OCMDynamicParameter>>>>("OD_DYNAMIC_PARAMETERS", Self::VT_OD_DYNAMIC_PARAMETERS, false)?
             .finish();
         Ok(())
     }
@@ -5581,6 +5942,7 @@ pub struct OrbitDeterminationArgs<'a> {
     pub OD_BATCH_BASELINE_RMS: f64,
     pub SEDR: f64,
     pub WEIGHTED_RMS: f64,
+    pub OD_DYNAMIC_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMDynamicParameter<'a>>>>>,
 }
 
 impl<'a> Default for OrbitDeterminationArgs<'a> {
@@ -5612,6 +5974,7 @@ impl<'a> Default for OrbitDeterminationArgs<'a> {
             OD_BATCH_BASELINE_RMS: 0.0,
             SEDR: 0.0,
             WEIGHTED_RMS: 0.0,
+            OD_DYNAMIC_PARAMETERS: None,
         }
     }
 }
@@ -5748,6 +6111,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OrbitDeterminationBuilder<'a,
     }
 
     #[inline]
+    pub fn add_OD_DYNAMIC_PARAMETERS(&mut self, OD_DYNAMIC_PARAMETERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<OCMDynamicParameter<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_DYNAMIC_PARAMETERS, OD_DYNAMIC_PARAMETERS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OrbitDeterminationBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OrbitDeterminationBuilder {
@@ -5791,6 +6159,7 @@ impl ::core::fmt::Debug for OrbitDetermination<'_> {
         ds.field("OD_BATCH_BASELINE_RMS", &self.OD_BATCH_BASELINE_RMS());
         ds.field("SEDR", &self.SEDR());
         ds.field("WEIGHTED_RMS", &self.WEIGHTED_RMS());
+        ds.field("OD_DYNAMIC_PARAMETERS", &self.OD_DYNAMIC_PARAMETERS());
         ds.finish()
     }
 }
@@ -5823,6 +6192,7 @@ pub struct OrbitDeterminationT {
     pub OD_BATCH_BASELINE_RMS: f64,
     pub SEDR: f64,
     pub WEIGHTED_RMS: f64,
+    pub OD_DYNAMIC_PARAMETERS: Option<alloc::vec::Vec<OCMDynamicParameterT>>,
 }
 
 impl Default for OrbitDeterminationT {
@@ -5853,6 +6223,7 @@ impl Default for OrbitDeterminationT {
             OD_BATCH_BASELINE_RMS: 0.0,
             SEDR: 0.0,
             WEIGHTED_RMS: 0.0,
+            OD_DYNAMIC_PARAMETERS: None,
         }
     }
 }
@@ -5923,6 +6294,9 @@ impl OrbitDeterminationT {
         let OD_BATCH_BASELINE_RMS = self.OD_BATCH_BASELINE_RMS;
         let SEDR = self.SEDR;
         let WEIGHTED_RMS = self.WEIGHTED_RMS;
+        let OD_DYNAMIC_PARAMETERS = self.OD_DYNAMIC_PARAMETERS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
         OrbitDetermination::create(_fbb, &OrbitDeterminationArgs{
             OD_ID,
             OD_PREV_ID,
@@ -5949,6 +6323,7 @@ impl OrbitDeterminationT {
             OD_BATCH_BASELINE_RMS,
             SEDR,
             WEIGHTED_RMS,
+            OD_DYNAMIC_PARAMETERS,
         })
     }
 }
@@ -6166,6 +6541,11 @@ impl<'a> OCM<'a> {
     pub const VT_COV_CALIBRATION: ::flatbuffers::VOffsetT = 46;
     pub const VT_COV_CALIBRATION_REFERENCE: ::flatbuffers::VOffsetT = 48;
     pub const VT_STATE_EPOCHS: ::flatbuffers::VOffsetT = 50;
+    pub const VT_COV_TYPE: ::flatbuffers::VOffsetT = 52;
+    pub const VT_COV_ORDERING: ::flatbuffers::VOffsetT = 54;
+    pub const VT_COV_SIZE: ::flatbuffers::VOffsetT = 56;
+    pub const VT_COV_PARAMETERS: ::flatbuffers::VOffsetT = 58;
+    pub const VT_COV_UNITS: ::flatbuffers::VOffsetT = 60;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -6179,6 +6559,9 @@ impl<'a> OCM<'a> {
     ) -> ::flatbuffers::WIPOffset<OCM<'bldr>> {
         let mut builder = OCMBuilder::new(_fbb);
         builder.add_STATE_STEP_SIZE(args.STATE_STEP_SIZE);
+        if let Some(x) = args.COV_UNITS { builder.add_COV_UNITS(x); }
+        if let Some(x) = args.COV_PARAMETERS { builder.add_COV_PARAMETERS(x); }
+        if let Some(x) = args.COV_TYPE { builder.add_COV_TYPE(x); }
         if let Some(x) = args.STATE_EPOCHS { builder.add_STATE_EPOCHS(x); }
         if let Some(x) = args.COV_CALIBRATION_REFERENCE { builder.add_COV_CALIBRATION_REFERENCE(x); }
         if let Some(x) = args.ORB_AVERAGING { builder.add_ORB_AVERAGING(x); }
@@ -6199,6 +6582,8 @@ impl<'a> OCM<'a> {
         if let Some(x) = args.TRAJ_TYPE_DESCRIPTION { builder.add_TRAJ_TYPE_DESCRIPTION(x); }
         if let Some(x) = args.METADATA { builder.add_METADATA(x); }
         if let Some(x) = args.HEADER { builder.add_HEADER(x); }
+        builder.add_COV_SIZE(args.COV_SIZE);
+        builder.add_COV_ORDERING(args.COV_ORDERING);
         builder.add_COV_CALIBRATION(args.COV_CALIBRATION);
         builder.add_STATE_VECTOR_SIZE(args.STATE_VECTOR_SIZE);
         builder.add_TRAJ_TYPE(args.TRAJ_TYPE);
@@ -6268,6 +6653,17 @@ impl<'a> OCM<'a> {
         let STATE_EPOCHS = self.STATE_EPOCHS().map(|x| {
             x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
         });
+        let COV_TYPE = self.COV_TYPE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_ORDERING = self.COV_ORDERING();
+        let COV_SIZE = self.COV_SIZE();
+        let COV_PARAMETERS = self.COV_PARAMETERS().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
+        let COV_UNITS = self.COV_UNITS().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
         OCMT {
             HEADER,
             METADATA,
@@ -6293,6 +6689,11 @@ impl<'a> OCM<'a> {
             COV_CALIBRATION,
             COV_CALIBRATION_REFERENCE,
             STATE_EPOCHS,
+            COV_TYPE,
+            COV_ORDERING,
+            COV_SIZE,
+            COV_PARAMETERS,
+            COV_UNITS,
         }
     }
 
@@ -6370,8 +6771,11 @@ impl<'a> OCM<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCM::VT_STATE_DATA, None)}
     }
 
-    /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-    /// Time alignment matches STATE_DATA epochs.
+    /// Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+    /// COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+    /// has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+    /// state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+    /// epoch, the lower triangle of the 6x6 position and velocity covariance.
     #[inline]
     pub fn COVARIANCE_DATA(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
         // Safety:
@@ -6536,6 +6940,57 @@ impl<'a> OCM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OCM::VT_STATE_EPOCHS, None)}
     }
+
+    /// Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+    /// (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+    /// TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+    #[inline]
+    pub fn COV_TYPE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCM::VT_COV_TYPE, None)}
+    }
+
+    /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+    #[inline]
+    pub fn COV_ORDERING(&self) -> covarianceOrdering {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<covarianceOrdering>(OCM::VT_COV_ORDERING, Some(covarianceOrdering::LTM)).unwrap()}
+    }
+
+    /// Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+    /// COV_PARAMETERS names.
+    #[inline]
+    pub fn COV_SIZE(&self) -> u8 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u8>(OCM::VT_COV_SIZE, Some(6)).unwrap()}
+    }
+
+    /// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+    /// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+    /// matrix reaches). A row the orbit determination did not solve for is zero.
+    #[inline]
+    pub fn COV_PARAMETERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OCM::VT_COV_PARAMETERS, None)}
+    }
+
+    /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+    /// dimensionless one.
+    #[inline]
+    pub fn COV_UNITS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OCM::VT_COV_UNITS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OCM<'_> {
@@ -6568,6 +7023,11 @@ impl ::flatbuffers::Verifiable for OCM<'_> {
             .visit_field::<covarianceCalibration>("COV_CALIBRATION", Self::VT_COV_CALIBRATION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_CALIBRATION_REFERENCE", Self::VT_COV_CALIBRATION_REFERENCE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("STATE_EPOCHS", Self::VT_STATE_EPOCHS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_TYPE", Self::VT_COV_TYPE, false)?
+            .visit_field::<covarianceOrdering>("COV_ORDERING", Self::VT_COV_ORDERING, false)?
+            .visit_field::<u8>("COV_SIZE", Self::VT_COV_SIZE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COV_PARAMETERS", Self::VT_COV_PARAMETERS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COV_UNITS", Self::VT_COV_UNITS, false)?
             .finish();
         Ok(())
     }
@@ -6598,6 +7058,11 @@ pub struct OCMArgs<'a> {
     pub COV_CALIBRATION: covarianceCalibration,
     pub COV_CALIBRATION_REFERENCE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub STATE_EPOCHS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub COV_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_ORDERING: covarianceOrdering,
+    pub COV_SIZE: u8,
+    pub COV_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub COV_UNITS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 
 impl<'a> Default for OCMArgs<'a> {
@@ -6628,6 +7093,11 @@ impl<'a> Default for OCMArgs<'a> {
             COV_CALIBRATION: covarianceCalibration::Unspecified,
             COV_CALIBRATION_REFERENCE: None,
             STATE_EPOCHS: None,
+            COV_TYPE: None,
+            COV_ORDERING: covarianceOrdering::LTM,
+            COV_SIZE: 6,
+            COV_PARAMETERS: None,
+            COV_UNITS: None,
         }
     }
 }
@@ -6759,6 +7229,31 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_COV_TYPE(&mut self, COV_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_COV_TYPE, COV_TYPE);
+    }
+
+    #[inline]
+    pub fn add_COV_ORDERING(&mut self, COV_ORDERING: covarianceOrdering) {
+        self.fbb_.push_slot::<covarianceOrdering>(OCM::VT_COV_ORDERING, COV_ORDERING, covarianceOrdering::LTM);
+    }
+
+    #[inline]
+    pub fn add_COV_SIZE(&mut self, COV_SIZE: u8) {
+        self.fbb_.push_slot::<u8>(OCM::VT_COV_SIZE, COV_SIZE, 6);
+    }
+
+    #[inline]
+    pub fn add_COV_PARAMETERS(&mut self, COV_PARAMETERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_COV_PARAMETERS, COV_PARAMETERS);
+    }
+
+    #[inline]
+    pub fn add_COV_UNITS(&mut self, COV_UNITS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_COV_UNITS, COV_UNITS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OCMBuilder {
@@ -6801,6 +7296,11 @@ impl ::core::fmt::Debug for OCM<'_> {
         ds.field("COV_CALIBRATION", &self.COV_CALIBRATION());
         ds.field("COV_CALIBRATION_REFERENCE", &self.COV_CALIBRATION_REFERENCE());
         ds.field("STATE_EPOCHS", &self.STATE_EPOCHS());
+        ds.field("COV_TYPE", &self.COV_TYPE());
+        ds.field("COV_ORDERING", &self.COV_ORDERING());
+        ds.field("COV_SIZE", &self.COV_SIZE());
+        ds.field("COV_PARAMETERS", &self.COV_PARAMETERS());
+        ds.field("COV_UNITS", &self.COV_UNITS());
         ds.finish()
     }
 }
@@ -6832,6 +7332,11 @@ pub struct OCMT {
     pub COV_CALIBRATION: covarianceCalibration,
     pub COV_CALIBRATION_REFERENCE: Option<alloc::string::String>,
     pub STATE_EPOCHS: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub COV_TYPE: Option<alloc::string::String>,
+    pub COV_ORDERING: covarianceOrdering,
+    pub COV_SIZE: u8,
+    pub COV_PARAMETERS: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub COV_UNITS: Option<alloc::vec::Vec<alloc::string::String>>,
 }
 
 impl Default for OCMT {
@@ -6861,6 +7366,11 @@ impl Default for OCMT {
             COV_CALIBRATION: covarianceCalibration::Unspecified,
             COV_CALIBRATION_REFERENCE: None,
             STATE_EPOCHS: None,
+            COV_TYPE: None,
+            COV_ORDERING: covarianceOrdering::LTM,
+            COV_SIZE: 6,
+            COV_PARAMETERS: None,
+            COV_UNITS: None,
         }
     }
 }
@@ -6932,6 +7442,17 @@ impl OCMT {
         let STATE_EPOCHS = self.STATE_EPOCHS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
         });
+        let COV_TYPE = self.COV_TYPE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_ORDERING = self.COV_ORDERING;
+        let COV_SIZE = self.COV_SIZE;
+        let COV_PARAMETERS = self.COV_PARAMETERS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
+        let COV_UNITS = self.COV_UNITS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
         OCM::create(_fbb, &OCMArgs{
             HEADER,
             METADATA,
@@ -6957,6 +7478,11 @@ impl OCMT {
             COV_CALIBRATION,
             COV_CALIBRATION_REFERENCE,
             STATE_EPOCHS,
+            COV_TYPE,
+            COV_ORDERING,
+            COV_SIZE,
+            COV_PARAMETERS,
+            COV_UNITS,
         })
     }
 }

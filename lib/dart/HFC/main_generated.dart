@@ -141,6 +141,47 @@ class _covarianceCalibrationReader extends fb.Reader<covarianceCalibration> {
       covarianceCalibration.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Order in which the values of an N x N covariance matrix are written at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+enum covarianceOrdering {
+  LTM(0),
+  UTM(1),
+  FULL(2),
+  LTMWCC(3),
+  UTMWCC(4);
+
+  final int value;
+  const covarianceOrdering(this.value);
+
+  factory covarianceOrdering.fromValue(int value) {
+    switch (value) {
+      case 0: return covarianceOrdering.LTM;
+      case 1: return covarianceOrdering.UTM;
+      case 2: return covarianceOrdering.FULL;
+      case 3: return covarianceOrdering.LTMWCC;
+      case 4: return covarianceOrdering.UTMWCC;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static covarianceOrdering? _createOrNull(int? value) =>
+      value == null ? null : covarianceOrdering.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<covarianceOrdering> reader = _covarianceOrderingReader();
+}
+
+class _covarianceOrderingReader extends fb.Reader<covarianceOrdering> {
+  const _covarianceOrderingReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  covarianceOrdering read(fb.BufferContext bc, int offset) =>
+      covarianceOrdering.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 class Header {
   Header._(this._bc, this._bcOffset);
   factory Header(List<int> bytes) {
@@ -2368,6 +2409,119 @@ class ManeuverObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  A parameter of the dynamical model that an orbit solution carries with the state: its value at the solution
+///  epoch and whether the orbit determination solved for it (a held value is a catalog value).
+class OCMDynamicParameter {
+  OCMDynamicParameter._(this._bc, this._bcOffset);
+  factory OCMDynamicParameter(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMDynamicParameter> reader = _OCMDynamicParameterReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
+  ///  SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
+  ///  are the producer's, as in USER_DEFINED_PARAMETERS.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Value at the solution epoch, in UNITS.
+  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
+  ///  m/s**2 for IN_TRACK_ACCELERATION.
+  String? get UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  True when the orbit determination solved for the parameter, false when VALUE was held.
+  bool get SOLVED_FOR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  bool get solvedFor => SOLVED_FOR;
+
+  @override
+  String toString() {
+    return 'OCMDynamicParameter{NAME: ${NAME}, VALUE: ${VALUE}, UNITS: ${UNITS}, solvedFor: ${solvedFor}}';
+  }
+}
+
+class _OCMDynamicParameterReader extends fb.TableReader<OCMDynamicParameter> {
+  const _OCMDynamicParameterReader();
+
+  @override
+  OCMDynamicParameter createObject(fb.BufferContext bc, int offset) =>
+    OCMDynamicParameter._(bc, offset);
+}
+
+class OCMDynamicParameterBuilder {
+  OCMDynamicParameterBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addValue(double? VALUE) {
+    fbBuilder.addFloat64(1, VALUE);
+    return fbBuilder.offset;
+  }
+  int addUnitsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSolvedFor(bool? SOLVED_FOR) {
+    fbBuilder.addBool(3, SOLVED_FOR);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMDynamicParameterObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final double? _VALUE;
+  final String? _UNITS;
+  final bool? _SOLVED_FOR;
+
+  OCMDynamicParameterObjectBuilder({
+    String? NAME,
+    double? VALUE,
+    String? UNITS,
+    bool? SOLVED_FOR,
+    bool? solvedFor,
+  })
+      : _NAME = NAME,
+        _VALUE = VALUE,
+        _UNITS = UNITS,
+        _SOLVED_FOR = solvedFor ?? SOLVED_FOR;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? UNITSOffset = _UNITS == null ? null
+        : fbBuilder.writeString(_UNITS!);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addFloat64(1, _VALUE);
+    fbBuilder.addOffset(2, UNITSOffset);
+    fbBuilder.addBool(3, _SOLVED_FOR);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 class OrbitDetermination {
   OrbitDetermination._(this._bc, this._bcOffset);
   factory OrbitDetermination(List<int> bytes) {
@@ -2458,10 +2612,15 @@ class OrbitDetermination {
   ///  Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
   double get WEIGHTED_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
   double get weightedRms => WEIGHTED_RMS;
+  ///  Dynamical-model parameters of the solution with their values, solved for or held. An
+  ///  IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+  ///  COV_PARAMETERS names in the covariance are entries of this list.
+  List<OCMDynamicParameter>? get OD_DYNAMIC_PARAMETERS => const fb.ListReader<OCMDynamicParameter>(OCMDynamicParameter.reader).vTableGetNullable(_bc, _bcOffset, 54);
+  List<OCMDynamicParameter>? get odDynamicParameters => OD_DYNAMIC_PARAMETERS;
 
   @override
   String toString() {
-    return 'OrbitDetermination{odId: ${odId}, odPrevId: ${odPrevId}, odAlgorithm: ${odAlgorithm}, odMethod: ${odMethod}, odEpoch: ${odEpoch}, odTimeTag: ${odTimeTag}, odProcessNoise: ${odProcessNoise}, odCovReduction: ${odCovReduction}, odNoiseModels: ${odNoiseModels}, odObservationsType: ${odObservationsType}, odObservationsUsed: ${odObservationsUsed}, odTracksUsed: ${odTracksUsed}, odDataWeighting: ${odDataWeighting}, odConvergenceCriteria: ${odConvergenceCriteria}, odEstParameters: ${odEstParameters}, odAprioriData: ${odAprioriData}, odResiduals: ${odResiduals}, odEstimator: ${odEstimator}, odResidualRms: ${odResidualRms}, odResidualsSeries: ${odResidualsSeries}, odResidualEpochs: ${odResidualEpochs}, odBatchBaselineId: ${odBatchBaselineId}, odBatchBaselineRms: ${odBatchBaselineRms}, SEDR: ${SEDR}, weightedRms: ${weightedRms}}';
+    return 'OrbitDetermination{odId: ${odId}, odPrevId: ${odPrevId}, odAlgorithm: ${odAlgorithm}, odMethod: ${odMethod}, odEpoch: ${odEpoch}, odTimeTag: ${odTimeTag}, odProcessNoise: ${odProcessNoise}, odCovReduction: ${odCovReduction}, odNoiseModels: ${odNoiseModels}, odObservationsType: ${odObservationsType}, odObservationsUsed: ${odObservationsUsed}, odTracksUsed: ${odTracksUsed}, odDataWeighting: ${odDataWeighting}, odConvergenceCriteria: ${odConvergenceCriteria}, odEstParameters: ${odEstParameters}, odAprioriData: ${odAprioriData}, odResiduals: ${odResiduals}, odEstimator: ${odEstimator}, odResidualRms: ${odResidualRms}, odResidualsSeries: ${odResidualsSeries}, odResidualEpochs: ${odResidualEpochs}, odBatchBaselineId: ${odBatchBaselineId}, odBatchBaselineRms: ${odBatchBaselineRms}, SEDR: ${SEDR}, weightedRms: ${weightedRms}, odDynamicParameters: ${odDynamicParameters}}';
   }
 }
 
@@ -2479,7 +2638,7 @@ class OrbitDeterminationBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(25);
+    fbBuilder.startTable(26);
   }
 
   int addOdIdOffset(int? offset) {
@@ -2582,6 +2741,10 @@ class OrbitDeterminationBuilder {
     fbBuilder.addFloat64(24, WEIGHTED_RMS);
     return fbBuilder.offset;
   }
+  int addOdDynamicParametersOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2614,6 +2777,7 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
   final double? _OD_BATCH_BASELINE_RMS;
   final double? _SEDR;
   final double? _WEIGHTED_RMS;
+  final List<OCMDynamicParameterObjectBuilder>? _OD_DYNAMIC_PARAMETERS;
 
   OrbitDeterminationObjectBuilder({
     String? OD_ID,
@@ -2665,6 +2829,8 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
     double? SEDR,
     double? WEIGHTED_RMS,
     double? weightedRms,
+    List<OCMDynamicParameterObjectBuilder>? OD_DYNAMIC_PARAMETERS,
+    List<OCMDynamicParameterObjectBuilder>? odDynamicParameters,
   })
       : _OD_ID = odId ?? OD_ID,
         _OD_PREV_ID = odPrevId ?? OD_PREV_ID,
@@ -2690,7 +2856,8 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
         _OD_BATCH_BASELINE_ID = odBatchBaselineId ?? OD_BATCH_BASELINE_ID,
         _OD_BATCH_BASELINE_RMS = odBatchBaselineRms ?? OD_BATCH_BASELINE_RMS,
         _SEDR = SEDR,
-        _WEIGHTED_RMS = weightedRms ?? WEIGHTED_RMS;
+        _WEIGHTED_RMS = weightedRms ?? WEIGHTED_RMS,
+        _OD_DYNAMIC_PARAMETERS = odDynamicParameters ?? OD_DYNAMIC_PARAMETERS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2731,7 +2898,9 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListFloat64(_OD_RESIDUAL_EPOCHS!);
     final int? OD_BATCH_BASELINE_IDOffset = _OD_BATCH_BASELINE_ID == null ? null
         : fbBuilder.writeString(_OD_BATCH_BASELINE_ID!);
-    fbBuilder.startTable(25);
+    final int? OD_DYNAMIC_PARAMETERSOffset = _OD_DYNAMIC_PARAMETERS == null ? null
+        : fbBuilder.writeList(_OD_DYNAMIC_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(26);
     fbBuilder.addOffset(0, OD_IDOffset);
     fbBuilder.addOffset(1, OD_PREV_IDOffset);
     fbBuilder.addOffset(2, OD_ALGORITHMOffset);
@@ -2757,6 +2926,7 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(22, _OD_BATCH_BASELINE_RMS);
     fbBuilder.addFloat64(23, _SEDR);
     fbBuilder.addFloat64(24, _WEIGHTED_RMS);
+    fbBuilder.addOffset(25, OD_DYNAMIC_PARAMETERSOffset);
     return fbBuilder.endTable();
   }
 
@@ -2901,8 +3071,11 @@ class OCM {
   ///  Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
   List<double>? get STATE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
   List<double>? get stateData => STATE_DATA;
-  ///  Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-  ///  Time alignment matches STATE_DATA epochs.
+  ///  Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+  ///  COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+  ///  has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+  ///  state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+  ///  epoch, the lower triangle of the 6x6 position and velocity covariance.
   List<double>? get COVARIANCE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 18);
   List<double>? get covarianceData => COVARIANCE_DATA;
   ///  Polynomial position records.
@@ -2965,10 +3138,31 @@ class OCM {
   ///  Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
   List<String>? get STATE_EPOCHS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 50);
   List<String>? get stateEpochs => STATE_EPOCHS;
+  ///  Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+  ///  (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+  ///  TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+  String? get COV_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get covType => COV_TYPE;
+  ///  Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+  covarianceOrdering get COV_ORDERING => covarianceOrdering.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 54, 0));
+  covarianceOrdering get covOrdering => COV_ORDERING;
+  ///  Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+  ///  COV_PARAMETERS names.
+  int get COV_SIZE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 56, 6);
+  int get covSize => COV_SIZE;
+  ///  Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+  ///  by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+  ///  matrix reaches). A row the orbit determination did not solve for is zero.
+  List<String>? get COV_PARAMETERS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 58);
+  List<String>? get covParameters => COV_PARAMETERS;
+  ///  Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+  ///  dimensionless one.
+  List<String>? get COV_UNITS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 60);
+  List<String>? get covUnits => COV_UNITS;
 
   @override
   String toString() {
-    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, covRefFrame: ${covRefFrame}, orbRevnum: ${orbRevnum}, orbAveraging: ${orbAveraging}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}, stateEpochs: ${stateEpochs}}';
+    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, covRefFrame: ${covRefFrame}, orbRevnum: ${orbRevnum}, orbAveraging: ${orbAveraging}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}, stateEpochs: ${stateEpochs}, covType: ${covType}, covOrdering: ${covOrdering}, covSize: ${covSize}, covParameters: ${covParameters}, covUnits: ${covUnits}}';
   }
 }
 
@@ -2986,7 +3180,7 @@ class OCMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(24);
+    fbBuilder.startTable(29);
   }
 
   int addHeaderOffset(int? offset) {
@@ -3085,6 +3279,26 @@ class OCMBuilder {
     fbBuilder.addOffset(23, offset);
     return fbBuilder.offset;
   }
+  int addCovTypeOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addCovOrdering(covarianceOrdering? COV_ORDERING) {
+    fbBuilder.addInt8(25, COV_ORDERING?.value);
+    return fbBuilder.offset;
+  }
+  int addCovSize(int? COV_SIZE) {
+    fbBuilder.addUint8(26, COV_SIZE);
+    return fbBuilder.offset;
+  }
+  int addCovParametersOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addCovUnitsOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -3116,6 +3330,11 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
   final covarianceCalibration? _COV_CALIBRATION;
   final String? _COV_CALIBRATION_REFERENCE;
   final List<String>? _STATE_EPOCHS;
+  final String? _COV_TYPE;
+  final covarianceOrdering? _COV_ORDERING;
+  final int? _COV_SIZE;
+  final List<String>? _COV_PARAMETERS;
+  final List<String>? _COV_UNITS;
 
   OCMObjectBuilder({
     HeaderObjectBuilder? HEADER,
@@ -3163,6 +3382,16 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     String? covCalibrationReference,
     List<String>? STATE_EPOCHS,
     List<String>? stateEpochs,
+    String? COV_TYPE,
+    String? covType,
+    covarianceOrdering? COV_ORDERING,
+    covarianceOrdering? covOrdering,
+    int? COV_SIZE,
+    int? covSize,
+    List<String>? COV_PARAMETERS,
+    List<String>? covParameters,
+    List<String>? COV_UNITS,
+    List<String>? covUnits,
   })
       : _HEADER = HEADER,
         _METADATA = METADATA,
@@ -3187,7 +3416,12 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
         _ORB_AVERAGING = orbAveraging ?? ORB_AVERAGING,
         _COV_CALIBRATION = covCalibration ?? COV_CALIBRATION,
         _COV_CALIBRATION_REFERENCE = covCalibrationReference ?? COV_CALIBRATION_REFERENCE,
-        _STATE_EPOCHS = stateEpochs ?? STATE_EPOCHS;
+        _STATE_EPOCHS = stateEpochs ?? STATE_EPOCHS,
+        _COV_TYPE = covType ?? COV_TYPE,
+        _COV_ORDERING = covOrdering ?? COV_ORDERING,
+        _COV_SIZE = covSize ?? COV_SIZE,
+        _COV_PARAMETERS = covParameters ?? COV_PARAMETERS,
+        _COV_UNITS = covUnits ?? COV_UNITS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -3223,7 +3457,13 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_COV_CALIBRATION_REFERENCE!);
     final int? STATE_EPOCHSOffset = _STATE_EPOCHS == null ? null
         : fbBuilder.writeList(_STATE_EPOCHS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(24);
+    final int? COV_TYPEOffset = _COV_TYPE == null ? null
+        : fbBuilder.writeString(_COV_TYPE!);
+    final int? COV_PARAMETERSOffset = _COV_PARAMETERS == null ? null
+        : fbBuilder.writeList(_COV_PARAMETERS!.map(fbBuilder.writeString).toList());
+    final int? COV_UNITSOffset = _COV_UNITS == null ? null
+        : fbBuilder.writeList(_COV_UNITS!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(29);
     fbBuilder.addOffset(0, HEADEROffset);
     fbBuilder.addOffset(1, METADATAOffset);
     fbBuilder.addInt8(2, _TRAJ_TYPE?.value);
@@ -3248,6 +3488,11 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addInt8(21, _COV_CALIBRATION?.value);
     fbBuilder.addOffset(22, COV_CALIBRATION_REFERENCEOffset);
     fbBuilder.addOffset(23, STATE_EPOCHSOffset);
+    fbBuilder.addOffset(24, COV_TYPEOffset);
+    fbBuilder.addInt8(25, _COV_ORDERING?.value);
+    fbBuilder.addUint8(26, _COV_SIZE);
+    fbBuilder.addOffset(27, COV_PARAMETERSOffset);
+    fbBuilder.addOffset(28, COV_UNITSOffset);
     return fbBuilder.endTable();
   }
 

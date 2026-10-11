@@ -234,8 +234,11 @@ func (rcv *OCM) MutateStateData(j int, n float64) bool {
 	return rcv.MutateSTATE_DATA(j, n)
 }
 
-/// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-/// Time alignment matches STATE_DATA epochs.
+/// Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+/// COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+/// has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+/// state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+/// epoch, the lower triangle of the 6x6 position and velocity covariance.
 func (rcv *OCM) COVARIANCE_DATA(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -261,8 +264,11 @@ func (rcv *OCM) CovarianceDataLength() int {
 	return rcv.COVARIANCE_DATALength()
 }
 
-/// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-/// Time alignment matches STATE_DATA epochs.
+/// Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+/// COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+/// has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+/// state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+/// epoch, the lower triangle of the 6x6 position and velocity covariance.
 func (rcv *OCM) MutateCOVARIANCE_DATA(j int, n float64) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -656,8 +662,132 @@ func (rcv *OCM) StateEpochsLength() int {
 /// section 6.2.4). When nonempty, length equals STATE_DATA.length /
 /// STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
 /// Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+/// Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+/// (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+/// TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+func (rcv *OCM) COV_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OCM) CovType() []byte {
+	return rcv.COV_TYPE()
+}
+
+/// Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+/// (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+/// TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+/// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+func (rcv *OCM) COV_ORDERING() covarianceOrdering {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return covarianceOrdering(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *OCM) CovOrdering() covarianceOrdering {
+	return rcv.COV_ORDERING()
+}
+
+/// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+func (rcv *OCM) MutateCOV_ORDERING(n covarianceOrdering) bool {
+	return rcv._tab.MutateInt8Slot(54, int8(n))
+}
+
+func (rcv *OCM) MutateCovOrdering(n covarianceOrdering) bool {
+	return rcv.MutateCOV_ORDERING(n)
+}
+
+/// Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+/// COV_PARAMETERS names.
+func (rcv *OCM) COV_SIZE() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 6
+}
+
+func (rcv *OCM) CovSize() byte {
+	return rcv.COV_SIZE()
+}
+
+/// Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+/// COV_PARAMETERS names.
+func (rcv *OCM) MutateCOV_SIZE(n byte) bool {
+	return rcv._tab.MutateByteSlot(56, n)
+}
+
+func (rcv *OCM) MutateCovSize(n byte) bool {
+	return rcv.MutateCOV_SIZE(n)
+}
+
+/// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+/// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+/// matrix reaches). A row the orbit determination did not solve for is zero.
+func (rcv *OCM) COV_PARAMETERS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *OCM) CovParameters(j int) []byte {
+	return rcv.COV_PARAMETERS(j)
+}
+
+func (rcv *OCM) COV_PARAMETERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OCM) CovParametersLength() int {
+	return rcv.COV_PARAMETERSLength()
+}
+
+/// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+/// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+/// matrix reaches). A row the orbit determination did not solve for is zero.
+/// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+/// dimensionless one.
+func (rcv *OCM) COV_UNITS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *OCM) CovUnits(j int) []byte {
+	return rcv.COV_UNITS(j)
+}
+
+func (rcv *OCM) COV_UNITSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OCM) CovUnitsLength() int {
+	return rcv.COV_UNITSLength()
+}
+
+/// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+/// dimensionless one.
 func OCMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(24)
+	builder.StartObject(29)
 }
 func OCMAddHEADER(builder *flatbuffers.Builder, HEADER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(HEADER), 0)
@@ -844,6 +974,48 @@ func OCMStartSTATE_EPOCHSVector(builder *flatbuffers.Builder, numElems int) flat
 }
 func OCMStartStateEpochsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return OCMStartSTATE_EPOCHSVector(builder, numElems)
+}
+func OCMAddCOV_TYPE(builder *flatbuffers.Builder, COV_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(COV_TYPE), 0)
+}
+func OCMAddCovType(builder *flatbuffers.Builder, COV_TYPE flatbuffers.UOffsetT) {
+	OCMAddCOV_TYPE(builder, COV_TYPE)
+}
+func OCMAddCOV_ORDERING(builder *flatbuffers.Builder, COV_ORDERING covarianceOrdering) {
+	builder.PrependInt8Slot(25, int8(COV_ORDERING), 0)
+}
+func OCMAddCovOrdering(builder *flatbuffers.Builder, COV_ORDERING covarianceOrdering) {
+	OCMAddCOV_ORDERING(builder, COV_ORDERING)
+}
+func OCMAddCOV_SIZE(builder *flatbuffers.Builder, COV_SIZE byte) {
+	builder.PrependByteSlot(26, COV_SIZE, 6)
+}
+func OCMAddCovSize(builder *flatbuffers.Builder, COV_SIZE byte) {
+	OCMAddCOV_SIZE(builder, COV_SIZE)
+}
+func OCMAddCOV_PARAMETERS(builder *flatbuffers.Builder, COV_PARAMETERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(COV_PARAMETERS), 0)
+}
+func OCMAddCovParameters(builder *flatbuffers.Builder, COV_PARAMETERS flatbuffers.UOffsetT) {
+	OCMAddCOV_PARAMETERS(builder, COV_PARAMETERS)
+}
+func OCMStartCOV_PARAMETERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OCMStartCovParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OCMStartCOV_PARAMETERSVector(builder, numElems)
+}
+func OCMAddCOV_UNITS(builder *flatbuffers.Builder, COV_UNITS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(COV_UNITS), 0)
+}
+func OCMAddCovUnits(builder *flatbuffers.Builder, COV_UNITS flatbuffers.UOffsetT) {
+	OCMAddCOV_UNITS(builder, COV_UNITS)
+}
+func OCMStartCOV_UNITSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OCMStartCovUnitsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OCMStartCOV_UNITSVector(builder, numElems)
 }
 func OCMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

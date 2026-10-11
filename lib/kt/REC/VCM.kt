@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Vector Covariance Message
+ * DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
  */
 @Suppress("unused")
 class VCM : Table() {

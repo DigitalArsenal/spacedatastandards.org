@@ -292,22 +292,44 @@ class OrbitDetermination extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Dynamical-model parameters of the solution with their values, solved for or held. An
+    /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+    /// COV_PARAMETERS names in the covariance are entries of this list.
+    /**
+     * @returnVectorOffset
+     */
+    public function getOD_DYNAMIC_PARAMETERS($j)
+    {
+        $o = $this->__offset(54);
+        $obj = new OCMDynamicParameter();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOD_DYNAMIC_PARAMETERSLength()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOrbitDetermination(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(25);
+        $builder->StartObject(26);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OrbitDetermination
      */
-    public static function createOrbitDetermination(FlatBufferBuilder $builder, $OD_ID, $OD_PREV_ID, $OD_ALGORITHM, $OD_METHOD, $OD_EPOCH, $OD_TIME_TAG, $OD_PROCESS_NOISE, $OD_COV_REDUCTION, $OD_NOISE_MODELS, $OD_OBSERVATIONS_TYPE, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $OD_DATA_WEIGHTING, $OD_CONVERGENCE_CRITERIA, $OD_EST_PARAMETERS, $OD_APRIORI_DATA, $OD_RESIDUALS, $OD_ESTIMATOR, $OD_RESIDUAL_RMS, $OD_RESIDUALS_SERIES, $OD_RESIDUAL_EPOCHS, $OD_BATCH_BASELINE_ID, $OD_BATCH_BASELINE_RMS, $SEDR, $WEIGHTED_RMS)
+    public static function createOrbitDetermination(FlatBufferBuilder $builder, $OD_ID, $OD_PREV_ID, $OD_ALGORITHM, $OD_METHOD, $OD_EPOCH, $OD_TIME_TAG, $OD_PROCESS_NOISE, $OD_COV_REDUCTION, $OD_NOISE_MODELS, $OD_OBSERVATIONS_TYPE, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $OD_DATA_WEIGHTING, $OD_CONVERGENCE_CRITERIA, $OD_EST_PARAMETERS, $OD_APRIORI_DATA, $OD_RESIDUALS, $OD_ESTIMATOR, $OD_RESIDUAL_RMS, $OD_RESIDUALS_SERIES, $OD_RESIDUAL_EPOCHS, $OD_BATCH_BASELINE_ID, $OD_BATCH_BASELINE_RMS, $SEDR, $WEIGHTED_RMS, $OD_DYNAMIC_PARAMETERS)
     {
-        $builder->startObject(25);
+        $builder->startObject(26);
         self::addOD_ID($builder, $OD_ID);
         self::addOD_PREV_ID($builder, $OD_PREV_ID);
         self::addOD_ALGORITHM($builder, $OD_ALGORITHM);
@@ -333,6 +355,7 @@ class OrbitDetermination extends Table
         self::addOD_BATCH_BASELINE_RMS($builder, $OD_BATCH_BASELINE_RMS);
         self::addSEDR($builder, $SEDR);
         self::addWEIGHTED_RMS($builder, $WEIGHTED_RMS);
+        self::addOD_DYNAMIC_PARAMETERS($builder, $OD_DYNAMIC_PARAMETERS);
         $o = $builder->endObject();
         return $o;
     }
@@ -681,6 +704,40 @@ class OrbitDetermination extends Table
     public static function addWEIGHTED_RMS(FlatBufferBuilder $builder, $WEIGHTED_RMS)
     {
         $builder->addDoubleX(24, $WEIGHTED_RMS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addOD_DYNAMIC_PARAMETERS(FlatBufferBuilder $builder, $OD_DYNAMIC_PARAMETERS)
+    {
+        $builder->addOffsetX(25, $OD_DYNAMIC_PARAMETERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createOD_DYNAMIC_PARAMETERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startOD_DYNAMIC_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

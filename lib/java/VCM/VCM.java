@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Vector Covariance Message
+ * DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
  */
 @SuppressWarnings("unused")
 public final class VCM extends com.google.flatbuffers.Table {

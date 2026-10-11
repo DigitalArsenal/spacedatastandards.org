@@ -35,6 +35,9 @@ struct PerturbationsBuilder;
 struct Maneuver;
 struct ManeuverBuilder;
 
+struct OCMDynamicParameter;
+struct OCMDynamicParameterBuilder;
+
 struct OrbitDetermination;
 struct OrbitDeterminationBuilder;
 
@@ -207,6 +210,53 @@ inline const char *EnumNamecovarianceCalibration(covarianceCalibration e) {
   if (::flatbuffers::IsOutRange(e, covarianceCalibration_Unspecified, covarianceCalibration_Calibrated)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamescovarianceCalibration()[index];
+}
+
+/// Order in which the values of an N x N covariance matrix are written at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+enum covarianceOrdering : int8_t {
+  /// Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values.
+  covarianceOrdering_LTM = 0,
+  /// Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values.
+  covarianceOrdering_UTM = 1,
+  /// The whole matrix row by row: N*N values.
+  covarianceOrdering_FULL = 2,
+  /// The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places
+  /// above the diagonal hold the correlation coefficients (covariance over the product of standard deviations).
+  covarianceOrdering_LTMWCC = 3,
+  /// The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places
+  /// below the diagonal hold the correlation coefficients.
+  covarianceOrdering_UTMWCC = 4,
+  covarianceOrdering_MIN = covarianceOrdering_LTM,
+  covarianceOrdering_MAX = covarianceOrdering_UTMWCC
+};
+
+inline const covarianceOrdering (&EnumValuescovarianceOrdering())[5] {
+  static const covarianceOrdering values[] = {
+    covarianceOrdering_LTM,
+    covarianceOrdering_UTM,
+    covarianceOrdering_FULL,
+    covarianceOrdering_LTMWCC,
+    covarianceOrdering_UTMWCC
+  };
+  return values;
+}
+
+inline const char * const *EnumNamescovarianceOrdering() {
+  static const char * const names[6] = {
+    "LTM",
+    "UTM",
+    "FULL",
+    "LTMWCC",
+    "UTMWCC",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamecovarianceOrdering(covarianceOrdering e) {
+  if (::flatbuffers::IsOutRange(e, covarianceOrdering_LTM, covarianceOrdering_UTMWCC)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamescovarianceOrdering()[index];
 }
 
 struct Header FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -2484,6 +2534,105 @@ inline ::flatbuffers::Offset<Maneuver> CreateManeuverDirect(
       DC_PA_STOP_ANGLE);
 }
 
+/// A parameter of the dynamical model that an orbit solution carries with the state: its value at the solution
+/// epoch and whether the orbit determination solved for it (a held value is a catalog value).
+struct OCMDynamicParameter FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef OCMDynamicParameterBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_VALUE = 6,
+    VT_UNITS = 8,
+    VT_SOLVED_FOR = 10
+  };
+  /// Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
+  /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
+  /// are the producer's, as in USER_DEFINED_PARAMETERS.
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Value at the solution epoch, in UNITS.
+  double VALUE() const {
+    return GetField<double>(VT_VALUE, 0.0);
+  }
+  /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
+  /// m/s**2 for IN_TRACK_ACCELERATION.
+  const ::flatbuffers::String *UNITS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_UNITS);
+  }
+  /// True when the orbit determination solved for the parameter, false when VALUE was held.
+  bool SOLVED_FOR() const {
+    return GetField<uint8_t>(VT_SOLVED_FOR, 0) != 0;
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyField<double>(verifier, VT_VALUE, 8) &&
+           VerifyOffset(verifier, VT_UNITS) &&
+           verifier.VerifyString(UNITS()) &&
+           VerifyField<uint8_t>(verifier, VT_SOLVED_FOR, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct OCMDynamicParameterBuilder {
+  typedef OCMDynamicParameter Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(OCMDynamicParameter::VT_NAME, NAME);
+  }
+  void add_VALUE(double VALUE) {
+    fbb_.AddElement<double>(OCMDynamicParameter::VT_VALUE, VALUE, 0.0);
+  }
+  void add_UNITS(::flatbuffers::Offset<::flatbuffers::String> UNITS) {
+    fbb_.AddOffset(OCMDynamicParameter::VT_UNITS, UNITS);
+  }
+  void add_SOLVED_FOR(bool SOLVED_FOR) {
+    fbb_.AddElement<uint8_t>(OCMDynamicParameter::VT_SOLVED_FOR, static_cast<uint8_t>(SOLVED_FOR), 0);
+  }
+  explicit OCMDynamicParameterBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<OCMDynamicParameter> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<OCMDynamicParameter>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<OCMDynamicParameter> CreateOCMDynamicParameter(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    double VALUE = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> UNITS = 0,
+    bool SOLVED_FOR = false) {
+  OCMDynamicParameterBuilder builder_(_fbb);
+  builder_.add_VALUE(VALUE);
+  builder_.add_UNITS(UNITS);
+  builder_.add_NAME(NAME);
+  builder_.add_SOLVED_FOR(SOLVED_FOR);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<OCMDynamicParameter> CreateOCMDynamicParameterDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *NAME = nullptr,
+    double VALUE = 0.0,
+    const char *UNITS = nullptr,
+    bool SOLVED_FOR = false) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto UNITS__ = UNITS ? _fbb.CreateString(UNITS) : 0;
+  return CreateOCMDynamicParameter(
+      _fbb,
+      NAME__,
+      VALUE,
+      UNITS__,
+      SOLVED_FOR);
+}
+
 struct OrbitDetermination FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef OrbitDeterminationBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -2511,7 +2660,8 @@ struct OrbitDetermination FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_OD_BATCH_BASELINE_ID = 46,
     VT_OD_BATCH_BASELINE_RMS = 48,
     VT_SEDR = 50,
-    VT_WEIGHTED_RMS = 52
+    VT_WEIGHTED_RMS = 52,
+    VT_OD_DYNAMIC_PARAMETERS = 54
   };
   /// Unique identifier for the orbit determination.
   const ::flatbuffers::String *OD_ID() const {
@@ -2617,6 +2767,12 @@ struct OrbitDetermination FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   double WEIGHTED_RMS() const {
     return GetField<double>(VT_WEIGHTED_RMS, 0.0);
   }
+  /// Dynamical-model parameters of the solution with their values, solved for or held. An
+  /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+  /// COV_PARAMETERS names in the covariance are entries of this list.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<OCMDynamicParameter>> *OD_DYNAMIC_PARAMETERS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OCMDynamicParameter>> *>(VT_OD_DYNAMIC_PARAMETERS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2665,6 +2821,9 @@ struct OrbitDetermination FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            VerifyField<double>(verifier, VT_OD_BATCH_BASELINE_RMS, 8) &&
            VerifyField<double>(verifier, VT_SEDR, 8) &&
            VerifyField<double>(verifier, VT_WEIGHTED_RMS, 8) &&
+           VerifyOffset(verifier, VT_OD_DYNAMIC_PARAMETERS) &&
+           verifier.VerifyVector(OD_DYNAMIC_PARAMETERS()) &&
+           verifier.VerifyVectorOfTables(OD_DYNAMIC_PARAMETERS()) &&
            verifier.EndTable();
   }
 };
@@ -2748,6 +2907,9 @@ struct OrbitDeterminationBuilder {
   void add_WEIGHTED_RMS(double WEIGHTED_RMS) {
     fbb_.AddElement<double>(OrbitDetermination::VT_WEIGHTED_RMS, WEIGHTED_RMS, 0.0);
   }
+  void add_OD_DYNAMIC_PARAMETERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OCMDynamicParameter>>> OD_DYNAMIC_PARAMETERS) {
+    fbb_.AddOffset(OrbitDetermination::VT_OD_DYNAMIC_PARAMETERS, OD_DYNAMIC_PARAMETERS);
+  }
   explicit OrbitDeterminationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2785,12 +2947,14 @@ inline ::flatbuffers::Offset<OrbitDetermination> CreateOrbitDetermination(
     ::flatbuffers::Offset<::flatbuffers::String> OD_BATCH_BASELINE_ID = 0,
     double OD_BATCH_BASELINE_RMS = 0.0,
     double SEDR = 0.0,
-    double WEIGHTED_RMS = 0.0) {
+    double WEIGHTED_RMS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OCMDynamicParameter>>> OD_DYNAMIC_PARAMETERS = 0) {
   OrbitDeterminationBuilder builder_(_fbb);
   builder_.add_WEIGHTED_RMS(WEIGHTED_RMS);
   builder_.add_SEDR(SEDR);
   builder_.add_OD_BATCH_BASELINE_RMS(OD_BATCH_BASELINE_RMS);
   builder_.add_OD_RESIDUAL_RMS(OD_RESIDUAL_RMS);
+  builder_.add_OD_DYNAMIC_PARAMETERS(OD_DYNAMIC_PARAMETERS);
   builder_.add_OD_BATCH_BASELINE_ID(OD_BATCH_BASELINE_ID);
   builder_.add_OD_RESIDUAL_EPOCHS(OD_RESIDUAL_EPOCHS);
   builder_.add_OD_RESIDUALS_SERIES(OD_RESIDUALS_SERIES);
@@ -2841,7 +3005,8 @@ inline ::flatbuffers::Offset<OrbitDetermination> CreateOrbitDeterminationDirect(
     const char *OD_BATCH_BASELINE_ID = nullptr,
     double OD_BATCH_BASELINE_RMS = 0.0,
     double SEDR = 0.0,
-    double WEIGHTED_RMS = 0.0) {
+    double WEIGHTED_RMS = 0.0,
+    const std::vector<::flatbuffers::Offset<OCMDynamicParameter>> *OD_DYNAMIC_PARAMETERS = nullptr) {
   auto OD_ID__ = OD_ID ? _fbb.CreateString(OD_ID) : 0;
   auto OD_PREV_ID__ = OD_PREV_ID ? _fbb.CreateString(OD_PREV_ID) : 0;
   auto OD_ALGORITHM__ = OD_ALGORITHM ? _fbb.CreateString(OD_ALGORITHM) : 0;
@@ -2860,6 +3025,7 @@ inline ::flatbuffers::Offset<OrbitDetermination> CreateOrbitDeterminationDirect(
   auto OD_RESIDUALS_SERIES__ = OD_RESIDUALS_SERIES ? _fbb.CreateVector<double>(*OD_RESIDUALS_SERIES) : 0;
   auto OD_RESIDUAL_EPOCHS__ = OD_RESIDUAL_EPOCHS ? _fbb.CreateVector<double>(*OD_RESIDUAL_EPOCHS) : 0;
   auto OD_BATCH_BASELINE_ID__ = OD_BATCH_BASELINE_ID ? _fbb.CreateString(OD_BATCH_BASELINE_ID) : 0;
+  auto OD_DYNAMIC_PARAMETERS__ = OD_DYNAMIC_PARAMETERS ? _fbb.CreateVector<::flatbuffers::Offset<OCMDynamicParameter>>(*OD_DYNAMIC_PARAMETERS) : 0;
   return CreateOrbitDetermination(
       _fbb,
       OD_ID__,
@@ -2886,7 +3052,8 @@ inline ::flatbuffers::Offset<OrbitDetermination> CreateOrbitDeterminationDirect(
       OD_BATCH_BASELINE_ID__,
       OD_BATCH_BASELINE_RMS,
       SEDR,
-      WEIGHTED_RMS);
+      WEIGHTED_RMS,
+      OD_DYNAMIC_PARAMETERS__);
 }
 
 struct UserDefinedParameters FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -2984,7 +3151,12 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ORB_AVERAGING = 44,
     VT_COV_CALIBRATION = 46,
     VT_COV_CALIBRATION_REFERENCE = 48,
-    VT_STATE_EPOCHS = 50
+    VT_STATE_EPOCHS = 50,
+    VT_COV_TYPE = 52,
+    VT_COV_ORDERING = 54,
+    VT_COV_SIZE = 56,
+    VT_COV_PARAMETERS = 58,
+    VT_COV_UNITS = 60
   };
   /// Header section of the OCM.
   const Header *HEADER() const {
@@ -3025,8 +3197,11 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<double> *STATE_DATA() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_STATE_DATA);
   }
-  /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-  /// Time alignment matches STATE_DATA epochs.
+  /// Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+  /// COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+  /// has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+  /// state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+  /// epoch, the lower triangle of the 6x6 position and velocity covariance.
   const ::flatbuffers::Vector<double> *COVARIANCE_DATA() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COVARIANCE_DATA);
   }
@@ -3107,6 +3282,32 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *STATE_EPOCHS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_STATE_EPOCHS);
   }
+  /// Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+  /// (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+  /// TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+  const ::flatbuffers::String *COV_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_TYPE);
+  }
+  /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+  covarianceOrdering COV_ORDERING() const {
+    return static_cast<covarianceOrdering>(GetField<int8_t>(VT_COV_ORDERING, 0));
+  }
+  /// Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+  /// COV_PARAMETERS names.
+  uint8_t COV_SIZE() const {
+    return GetField<uint8_t>(VT_COV_SIZE, 6);
+  }
+  /// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
+  /// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
+  /// matrix reaches). A row the orbit determination did not solve for is zero.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COV_PARAMETERS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COV_PARAMETERS);
+  }
+  /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
+  /// dimensionless one.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COV_UNITS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COV_UNITS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -3158,6 +3359,16 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_STATE_EPOCHS) &&
            verifier.VerifyVector(STATE_EPOCHS()) &&
            verifier.VerifyVectorOfStrings(STATE_EPOCHS()) &&
+           VerifyOffset(verifier, VT_COV_TYPE) &&
+           verifier.VerifyString(COV_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_COV_ORDERING, 1) &&
+           VerifyField<uint8_t>(verifier, VT_COV_SIZE, 1) &&
+           VerifyOffset(verifier, VT_COV_PARAMETERS) &&
+           verifier.VerifyVector(COV_PARAMETERS()) &&
+           verifier.VerifyVectorOfStrings(COV_PARAMETERS()) &&
+           VerifyOffset(verifier, VT_COV_UNITS) &&
+           verifier.VerifyVector(COV_UNITS()) &&
+           verifier.VerifyVectorOfStrings(COV_UNITS()) &&
            verifier.EndTable();
   }
 };
@@ -3238,6 +3449,21 @@ struct OCMBuilder {
   void add_STATE_EPOCHS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> STATE_EPOCHS) {
     fbb_.AddOffset(OCM::VT_STATE_EPOCHS, STATE_EPOCHS);
   }
+  void add_COV_TYPE(::flatbuffers::Offset<::flatbuffers::String> COV_TYPE) {
+    fbb_.AddOffset(OCM::VT_COV_TYPE, COV_TYPE);
+  }
+  void add_COV_ORDERING(covarianceOrdering COV_ORDERING) {
+    fbb_.AddElement<int8_t>(OCM::VT_COV_ORDERING, static_cast<int8_t>(COV_ORDERING), 0);
+  }
+  void add_COV_SIZE(uint8_t COV_SIZE) {
+    fbb_.AddElement<uint8_t>(OCM::VT_COV_SIZE, COV_SIZE, 6);
+  }
+  void add_COV_PARAMETERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COV_PARAMETERS) {
+    fbb_.AddOffset(OCM::VT_COV_PARAMETERS, COV_PARAMETERS);
+  }
+  void add_COV_UNITS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COV_UNITS) {
+    fbb_.AddOffset(OCM::VT_COV_UNITS, COV_UNITS);
+  }
   explicit OCMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -3274,9 +3500,17 @@ inline ::flatbuffers::Offset<OCM> CreateOCM(
     ::flatbuffers::Offset<::flatbuffers::String> ORB_AVERAGING = 0,
     covarianceCalibration COV_CALIBRATION = covarianceCalibration_Unspecified,
     ::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> STATE_EPOCHS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> STATE_EPOCHS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_TYPE = 0,
+    covarianceOrdering COV_ORDERING = covarianceOrdering_LTM,
+    uint8_t COV_SIZE = 6,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COV_PARAMETERS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COV_UNITS = 0) {
   OCMBuilder builder_(_fbb);
   builder_.add_STATE_STEP_SIZE(STATE_STEP_SIZE);
+  builder_.add_COV_UNITS(COV_UNITS);
+  builder_.add_COV_PARAMETERS(COV_PARAMETERS);
+  builder_.add_COV_TYPE(COV_TYPE);
   builder_.add_STATE_EPOCHS(STATE_EPOCHS);
   builder_.add_COV_CALIBRATION_REFERENCE(COV_CALIBRATION_REFERENCE);
   builder_.add_ORB_AVERAGING(ORB_AVERAGING);
@@ -3297,6 +3531,8 @@ inline ::flatbuffers::Offset<OCM> CreateOCM(
   builder_.add_TRAJ_TYPE_DESCRIPTION(TRAJ_TYPE_DESCRIPTION);
   builder_.add_METADATA(METADATA);
   builder_.add_HEADER(HEADER);
+  builder_.add_COV_SIZE(COV_SIZE);
+  builder_.add_COV_ORDERING(COV_ORDERING);
   builder_.add_COV_CALIBRATION(COV_CALIBRATION);
   builder_.add_STATE_VECTOR_SIZE(STATE_VECTOR_SIZE);
   builder_.add_TRAJ_TYPE(TRAJ_TYPE);
@@ -3328,7 +3564,12 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
     const char *ORB_AVERAGING = nullptr,
     covarianceCalibration COV_CALIBRATION = covarianceCalibration_Unspecified,
     const char *COV_CALIBRATION_REFERENCE = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *STATE_EPOCHS = nullptr) {
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *STATE_EPOCHS = nullptr,
+    const char *COV_TYPE = nullptr,
+    covarianceOrdering COV_ORDERING = covarianceOrdering_LTM,
+    uint8_t COV_SIZE = 6,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COV_PARAMETERS = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COV_UNITS = nullptr) {
   auto TRAJ_TYPE_DESCRIPTION__ = TRAJ_TYPE_DESCRIPTION ? _fbb.CreateString(TRAJ_TYPE_DESCRIPTION) : 0;
   auto STATE_DATA__ = STATE_DATA ? _fbb.CreateVector<double>(*STATE_DATA) : 0;
   auto COVARIANCE_DATA__ = COVARIANCE_DATA ? _fbb.CreateVector<double>(*COVARIANCE_DATA) : 0;
@@ -3341,6 +3582,9 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
   auto ORB_AVERAGING__ = ORB_AVERAGING ? _fbb.CreateString(ORB_AVERAGING) : 0;
   auto COV_CALIBRATION_REFERENCE__ = COV_CALIBRATION_REFERENCE ? _fbb.CreateString(COV_CALIBRATION_REFERENCE) : 0;
   auto STATE_EPOCHS__ = STATE_EPOCHS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*STATE_EPOCHS) : 0;
+  auto COV_TYPE__ = COV_TYPE ? _fbb.CreateString(COV_TYPE) : 0;
+  auto COV_PARAMETERS__ = COV_PARAMETERS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COV_PARAMETERS) : 0;
+  auto COV_UNITS__ = COV_UNITS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COV_UNITS) : 0;
   return CreateOCM(
       _fbb,
       HEADER,
@@ -3366,7 +3610,12 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
       ORB_AVERAGING__,
       COV_CALIBRATION,
       COV_CALIBRATION_REFERENCE__,
-      STATE_EPOCHS__);
+      STATE_EPOCHS__,
+      COV_TYPE__,
+      COV_ORDERING,
+      COV_SIZE,
+      COV_PARAMETERS__,
+      COV_UNITS__);
 }
 
 inline const OCM *GetOCM(const void *buf) {

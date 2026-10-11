@@ -7,7 +7,7 @@ import { perturbationStatus } from './perturbationStatus.js';
 import { propagatorConfig, propagatorConfigT } from './propagatorConfig.js';
 import { uvwSigmas, uvwSigmasT } from './uvwSigmas.js';
 /**
- * Vector Covariance Message
+ * DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
  */
 export declare class VCM implements flatbuffers.IUnpackableObject<VCMT> {
     bb: flatbuffers.ByteBuffer | null;

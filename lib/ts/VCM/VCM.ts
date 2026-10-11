@@ -14,7 +14,7 @@ import { uvwSigmas, uvwSigmasT } from './uvwSigmas.js';
 
 
 /**
- * Vector Covariance Message
+ * DEPRECATED: use $OCM, which carries everything a VCM does. Vector Covariance Message.
  */
 export class VCM implements flatbuffers.IUnpackableObject<VCMT> {
   bb: flatbuffers.ByteBuffer|null = null;

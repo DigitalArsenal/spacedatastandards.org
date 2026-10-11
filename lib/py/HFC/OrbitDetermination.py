@@ -298,8 +298,36 @@ class OrbitDetermination(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Dynamical-model parameters of the solution with their values, solved for or held. An
+    # IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
+    # COV_PARAMETERS names in the covariance are entries of this list.
+    # OrbitDetermination
+    def OD_DYNAMIC_PARAMETERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from OCMDynamicParameter import OCMDynamicParameter
+            obj = OCMDynamicParameter()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OrbitDetermination
+    def OD_DYNAMIC_PARAMETERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OrbitDetermination
+    def OD_DYNAMIC_PARAMETERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        return o == 0
+
 def OrbitDeterminationStart(builder):
-    builder.StartObject(25)
+    builder.StartObject(26)
 
 def Start(builder):
     OrbitDeterminationStart(builder)
@@ -510,12 +538,31 @@ def OrbitDeterminationAddWEIGHTED_RMS(builder, WEIGHTED_RMS):
 def AddWEIGHTED_RMS(builder, WEIGHTED_RMS):
     OrbitDeterminationAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
 
+def OrbitDeterminationAddOD_DYNAMIC_PARAMETERS(builder, OD_DYNAMIC_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(OD_DYNAMIC_PARAMETERS), 0)
+
+def AddOD_DYNAMIC_PARAMETERS(builder, OD_DYNAMIC_PARAMETERS):
+    OrbitDeterminationAddOD_DYNAMIC_PARAMETERS(builder, OD_DYNAMIC_PARAMETERS)
+
+def OrbitDeterminationStartOD_DYNAMIC_PARAMETERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartOD_DYNAMIC_PARAMETERSVector(builder, numElems):
+    return OrbitDeterminationStartOD_DYNAMIC_PARAMETERSVector(builder, numElems)
+
+def OrbitDeterminationCreateOD_DYNAMIC_PARAMETERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOD_DYNAMIC_PARAMETERSVector(builder, data):
+    return OrbitDeterminationCreateOD_DYNAMIC_PARAMETERSVector(builder, data)
+
 def OrbitDeterminationEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return OrbitDeterminationEnd(builder)
 
+import OCMDynamicParameter
 try:
     from typing import List
 except:
@@ -551,6 +598,7 @@ class OrbitDeterminationT(object):
         OD_BATCH_BASELINE_RMS = 0.0,
         SEDR = 0.0,
         WEIGHTED_RMS = 0.0,
+        OD_DYNAMIC_PARAMETERS = None,
     ):
         self.OD_ID = OD_ID  # type: Optional[str]
         self.OD_PREV_ID = OD_PREV_ID  # type: Optional[str]
@@ -577,6 +625,7 @@ class OrbitDeterminationT(object):
         self.OD_BATCH_BASELINE_RMS = OD_BATCH_BASELINE_RMS  # type: float
         self.SEDR = SEDR  # type: float
         self.WEIGHTED_RMS = WEIGHTED_RMS  # type: float
+        self.OD_DYNAMIC_PARAMETERS = OD_DYNAMIC_PARAMETERS  # type: Optional[List[OCMDynamicParameter.OCMDynamicParameterT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -642,6 +691,14 @@ class OrbitDeterminationT(object):
         self.OD_BATCH_BASELINE_RMS = OrbitDetermination.OD_BATCH_BASELINE_RMS()
         self.SEDR = OrbitDetermination.SEDR()
         self.WEIGHTED_RMS = OrbitDetermination.WEIGHTED_RMS()
+        if not OrbitDetermination.OD_DYNAMIC_PARAMETERSIsNone():
+            self.OD_DYNAMIC_PARAMETERS = []
+            for i in range(OrbitDetermination.OD_DYNAMIC_PARAMETERSLength()):
+                if OrbitDetermination.OD_DYNAMIC_PARAMETERS(i) is None:
+                    self.OD_DYNAMIC_PARAMETERS.append(None)
+                else:
+                    oCMDynamicParameter_ = OCMDynamicParameter.OCMDynamicParameterT.InitFromObj(OrbitDetermination.OD_DYNAMIC_PARAMETERS(i))
+                    self.OD_DYNAMIC_PARAMETERS.append(oCMDynamicParameter_)
 
     # OrbitDeterminationT
     def Pack(self, builder):
@@ -705,6 +762,14 @@ class OrbitDeterminationT(object):
                 OD_RESIDUAL_EPOCHS = builder.EndVector()
         if self.OD_BATCH_BASELINE_ID is not None:
             OD_BATCH_BASELINE_ID = builder.CreateString(self.OD_BATCH_BASELINE_ID)
+        if self.OD_DYNAMIC_PARAMETERS is not None:
+            OD_DYNAMIC_PARAMETERSlist = []
+            for i in range(len(self.OD_DYNAMIC_PARAMETERS)):
+                OD_DYNAMIC_PARAMETERSlist.append(self.OD_DYNAMIC_PARAMETERS[i].Pack(builder))
+            OrbitDeterminationStartOD_DYNAMIC_PARAMETERSVector(builder, len(self.OD_DYNAMIC_PARAMETERS))
+            for i in reversed(range(len(self.OD_DYNAMIC_PARAMETERS))):
+                builder.PrependUOffsetTRelative(OD_DYNAMIC_PARAMETERSlist[i])
+            OD_DYNAMIC_PARAMETERS = builder.EndVector()
         OrbitDeterminationStart(builder)
         if self.OD_ID is not None:
             OrbitDeterminationAddOD_ID(builder, OD_ID)
@@ -749,5 +814,7 @@ class OrbitDeterminationT(object):
         OrbitDeterminationAddOD_BATCH_BASELINE_RMS(builder, self.OD_BATCH_BASELINE_RMS)
         OrbitDeterminationAddSEDR(builder, self.SEDR)
         OrbitDeterminationAddWEIGHTED_RMS(builder, self.WEIGHTED_RMS)
+        if self.OD_DYNAMIC_PARAMETERS is not None:
+            OrbitDeterminationAddOD_DYNAMIC_PARAMETERS(builder, OD_DYNAMIC_PARAMETERS)
         OrbitDetermination = OrbitDeterminationEnd(builder)
         return OrbitDetermination
