@@ -1,5 +1,5 @@
-// Hash: 41119da85431e9a18dd1e943e90a052668c13cf8840268356051fedc4890678d
-// Version: 2.0.3
+// Hash: 1c37f690faccf43ab53626283dc07431c57c903cbf4bf4bd96d80fe1ab629e0b
+// Version: 2.0.4
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -53,7 +53,10 @@ table OMM {
   /// Mean Element Theory
   MEAN_ELEMENT_THEORY:meanElementSource = SGP4;
 
-  /// COMMENT (O)
+  /// COMMENT (O): every COMMENT line of the message, in message order, joined by
+  /// a line feed. A message states comments in its header, its metadata and each
+  /// data group; this field holds them all, so a message written from the record
+  /// states them together in its header.
   COMMENT:string;
   /// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
   EPOCH:string;
@@ -125,6 +128,26 @@ table OMM {
   USER_DEFINED_EPOCH_TIMESTAMP: double;
   /// USER_DEFINED_MICROSECONDS [O, units per ICD]
   USER_DEFINED_MICROSECONDS: double;
+
+  /// CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+  /// that states its security classification or handling caveat. Not
+  /// CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+  CLASSIFICATION:string;
+  /// MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+  /// originator makes unique for this message.
+  MESSAGE_ID:string;
+  /// Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+  /// message that has no dedicated field above, in message order.
+  USER_DEFINED_PARAMETERS:[OMMUserDefinedParameter];
+}
+
+/// One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+table OMMUserDefinedParameter {
+  /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  PARAM_NAME:string;
+  /// The value as written, unit-less text
+  PARAM_VALUE:string;
 }
 
 root_type OMM;

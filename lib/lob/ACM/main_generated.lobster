@@ -28,6 +28,18 @@ class attManeuver
 
 class ACM
 
+class ACMAttitudeBlock
+
+class ACMCovarianceBlock
+
+class ACMManeuverBlock
+
+class ACMDetermination
+
+class ACMSensor
+
+class ACMUserDefinedParameter
+
 /// Attitude State Data
 class attitudeState : flatbuffers.handle
     /// Attitude state type
@@ -223,13 +235,17 @@ class attPhysicalProperties : flatbuffers.handle
     /// Product of inertia YZ in kg*m^2
     def IYZ() -> float:
         return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
+    /// COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+    /// joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 32)
 
 def GetRootAsattPhysicalProperties(buf:string): return attPhysicalProperties { buf, flatbuffers.indirect(buf, 0) }
 
 struct attPhysicalPropertiesBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(14)
+        b_.StartObject(15)
         return this
     def add_DRAG_COEFF(DRAG_COEFF:float):
         b_.PrependFloat64Slot(0, DRAG_COEFF, 0.0)
@@ -272,6 +288,9 @@ struct attPhysicalPropertiesBuilder:
         return this
     def add_IYZ(IYZ:float):
         b_.PrependFloat64Slot(13, IYZ, 0.0)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, COMMENT)
         return this
     def end():
         return b_.EndObject()
@@ -419,16 +438,94 @@ class ACM : flatbuffers.handle
     /// Maneuverability status
     def MANEUVERABLE() -> maneuverableFlag:
         return maneuverableFlag(flatbuffers.field_int8(buf_, pos_, 28, 0))
-    /// Additional comments
+    /// COMMENT lines of the message header, metadata and user-defined data
+    /// (CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,
+    /// covariance, maneuver or determination block's own comments stay with it.
     def COMMENT() -> string:
         return flatbuffers.field_string(buf_, pos_, 30)
+    /// CLASSIFICATION of the message: the optional header keyword stating its
+    /// security classification or handling caveat.
+    def CLASSIFICATION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 32)
+    /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+    /// unique for this message.
+    def MESSAGE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 34)
+    /// OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.
+    /// OBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH
+    /// above its EPOCH_TZERO, the epoch every relative time is measured from.
+    def OBJECT_DESIGNATOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 36)
+    /// ORIGINATOR_POC: point of contact at the originator.
+    def ORIGINATOR_POC() -> string:
+        return flatbuffers.field_string(buf_, pos_, 38)
+    /// ORIGINATOR_POSITION: position of the point of contact.
+    def ORIGINATOR_POSITION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 40)
+    /// ORIGINATOR_PHONE: telephone number of the point of contact.
+    def ORIGINATOR_PHONE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 42)
+    /// ORIGINATOR_EMAIL: email address of the point of contact.
+    def ORIGINATOR_EMAIL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 44)
+    /// ORIGINATOR_ADDRESS: postal address of the point of contact.
+    def ORIGINATOR_ADDRESS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 46)
+    /// ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.
+    def ODM_MSG_LINK() -> string:
+        return flatbuffers.field_string(buf_, pos_, 48)
+    /// CENTER_NAME: the orbit center, when the message states one.
+    def CENTER_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 50)
+    /// ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.
+    def ACM_DATA_ELEMENTS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 52)
+    /// START_TIME: start of the total time span the message covers.
+    def START_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 54)
+    /// STOP_TIME: end of the total time span the message covers.
+    def STOP_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 56)
+    /// TAIMUTC_AT_TZERO in seconds, NaN when not stated.
+    def TAIMUTC_AT_TZERO() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 58, nan)
+    /// NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.
+    def NEXT_LEAP_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 60)
+    /// NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.
+    def NEXT_LEAP_TAIMUTC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 62, nan)
+    /// Attitude state time histories (ATT_START blocks), in message order.
+    def ATT_BLOCKS(i:int) -> ACMAttitudeBlock:
+        return ACMAttitudeBlock { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 64) + i * 4) }
+    def ATT_BLOCKS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 64)
+    /// Covariance time histories (COV_START blocks), in message order.
+    def COV_BLOCKS(i:int) -> ACMCovarianceBlock:
+        return ACMCovarianceBlock { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 66) + i * 4) }
+    def COV_BLOCKS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 66)
+    /// Maneuver specifications (MAN_START blocks), in message order.
+    def MAN_BLOCKS(i:int) -> ACMManeuverBlock:
+        return ACMManeuverBlock { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 68) + i * 4) }
+    def MAN_BLOCKS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 68)
+    /// The attitude determination data (AD_START block), when the message has them.
+    def DETERMINATION() -> ACMDetermination?:
+        let o = flatbuffers.field_table(buf_, pos_, 70)
+        return if o: ACMDetermination { buf_, o } else: nil
+    /// Every USER_DEFINED parameter of the message, in message order.
+    def USER_DEFINED_PARAMETERS(i:int) -> ACMUserDefinedParameter:
+        return ACMUserDefinedParameter { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 72) + i * 4) }
+    def USER_DEFINED_PARAMETERS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 72)
 
 def GetRootAsACM(buf:string): return ACM { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(14)
+        b_.StartObject(35)
         return this
     def add_CCSDS_ACM_VERS(CCSDS_ACM_VERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, CCSDS_ACM_VERS)
@@ -472,6 +569,69 @@ struct ACMBuilder:
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(13, COMMENT)
         return this
+    def add_CLASSIFICATION(CLASSIFICATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, CLASSIFICATION)
+        return this
+    def add_MESSAGE_ID(MESSAGE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, MESSAGE_ID)
+        return this
+    def add_OBJECT_DESIGNATOR(OBJECT_DESIGNATOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, OBJECT_DESIGNATOR)
+        return this
+    def add_ORIGINATOR_POC(ORIGINATOR_POC:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, ORIGINATOR_POC)
+        return this
+    def add_ORIGINATOR_POSITION(ORIGINATOR_POSITION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, ORIGINATOR_POSITION)
+        return this
+    def add_ORIGINATOR_PHONE(ORIGINATOR_PHONE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, ORIGINATOR_PHONE)
+        return this
+    def add_ORIGINATOR_EMAIL(ORIGINATOR_EMAIL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, ORIGINATOR_EMAIL)
+        return this
+    def add_ORIGINATOR_ADDRESS(ORIGINATOR_ADDRESS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, ORIGINATOR_ADDRESS)
+        return this
+    def add_ODM_MSG_LINK(ODM_MSG_LINK:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(22, ODM_MSG_LINK)
+        return this
+    def add_CENTER_NAME(CENTER_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(23, CENTER_NAME)
+        return this
+    def add_ACM_DATA_ELEMENTS(ACM_DATA_ELEMENTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(24, ACM_DATA_ELEMENTS)
+        return this
+    def add_START_TIME(START_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(25, START_TIME)
+        return this
+    def add_STOP_TIME(STOP_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(26, STOP_TIME)
+        return this
+    def add_TAIMUTC_AT_TZERO(TAIMUTC_AT_TZERO:float):
+        b_.PrependFloat64Slot(27, TAIMUTC_AT_TZERO, nan)
+        return this
+    def add_NEXT_LEAP_EPOCH(NEXT_LEAP_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, NEXT_LEAP_EPOCH)
+        return this
+    def add_NEXT_LEAP_TAIMUTC(NEXT_LEAP_TAIMUTC:float):
+        b_.PrependFloat64Slot(29, NEXT_LEAP_TAIMUTC, nan)
+        return this
+    def add_ATT_BLOCKS(ATT_BLOCKS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(30, ATT_BLOCKS)
+        return this
+    def add_COV_BLOCKS(COV_BLOCKS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(31, COV_BLOCKS)
+        return this
+    def add_MAN_BLOCKS(MAN_BLOCKS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(32, MAN_BLOCKS)
+        return this
+    def add_DETERMINATION(DETERMINATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(33, DETERMINATION)
+        return this
+    def add_USER_DEFINED_PARAMETERS(USER_DEFINED_PARAMETERS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(34, USER_DEFINED_PARAMETERS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -495,3 +655,531 @@ def ACMCreateMANEUVERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
+
+def ACMStartATTBLOCKSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACMCreateATTBLOCKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ACMStartCOVBLOCKSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACMCreateCOVBLOCKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ACMStartMANBLOCKSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACMCreateMANBLOCKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ACMStartUSERDEFINEDPARAMETERSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACMCreateUSERDEFINEDPARAMETERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// One attitude state time history of an ACM (CCSDS 504.0-B-2 Table 5-4): the
+/// block's keywords, then its data lines as TIMES (the first column of each line,
+/// elapsed seconds from EPOCH_TZERO or an epoch, as written) and VALUES (the other
+/// columns, NUMBER_STATES per line, row by row).
+class ACMAttitudeBlock : flatbuffers.handle
+    /// COMMENT lines of this block, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// ATT_ID.
+    def ATT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// ATT_PREV_ID.
+    def ATT_PREV_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// ATT_BASIS: PREDICTED, DETERMINED_GND, DETERMINED_OBC or SIMULATED.
+    def ATT_BASIS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// ATT_BASIS_ID.
+    def ATT_BASIS_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// REF_FRAME_A: the frame the transformation starts from.
+    def REF_FRAME_A() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// REF_FRAME_B: the frame the transformation ends in.
+    def REF_FRAME_B() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// NUMBER_STATES: the data columns on each line (attitude, then rate).
+    def NUMBER_STATES() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 18, 0)
+    /// ATT_TYPE: QUATERNION, EULER_ANGLES, DCM or ANGVEL.
+    def ATT_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    /// EULER_ROT_SEQ, when ATT_TYPE is EULER_ANGLES.
+    def EULER_ROT_SEQ() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// RATE_TYPE: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS, when the lines carry rates.
+    def RATE_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 24)
+    /// The first column of each data line, as written.
+    def TIMES(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 26) + i * 4)
+    def TIMES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 26)
+    /// The other columns of the data lines, NUMBER_STATES per line.
+    def VALUES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 8)
+    def VALUES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
+
+def GetRootAsACMAttitudeBlock(buf:string): return ACMAttitudeBlock { buf, flatbuffers.indirect(buf, 0) }
+
+struct ACMAttitudeBlockBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(13)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_ATT_ID(ATT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, ATT_ID)
+        return this
+    def add_ATT_PREV_ID(ATT_PREV_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, ATT_PREV_ID)
+        return this
+    def add_ATT_BASIS(ATT_BASIS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, ATT_BASIS)
+        return this
+    def add_ATT_BASIS_ID(ATT_BASIS_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, ATT_BASIS_ID)
+        return this
+    def add_REF_FRAME_A(REF_FRAME_A:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, REF_FRAME_A)
+        return this
+    def add_REF_FRAME_B(REF_FRAME_B:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, REF_FRAME_B)
+        return this
+    def add_NUMBER_STATES(NUMBER_STATES:int):
+        b_.PrependUint32Slot(7, NUMBER_STATES, 0)
+        return this
+    def add_ATT_TYPE(ATT_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, ATT_TYPE)
+        return this
+    def add_EULER_ROT_SEQ(EULER_ROT_SEQ:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, EULER_ROT_SEQ)
+        return this
+    def add_RATE_TYPE(RATE_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, RATE_TYPE)
+        return this
+    def add_TIMES(TIMES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, TIMES)
+        return this
+    def add_VALUES(VALUES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, VALUES)
+        return this
+    def end():
+        return b_.EndObject()
+
+def ACMAttitudeBlockStartTIMESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACMAttitudeBlockCreateTIMESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ACMAttitudeBlockStartVALUESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def ACMAttitudeBlockCreateVALUESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// One covariance time history of an ACM (Table 5-6): the diagonal terms of the
+/// covariance on each line, as TIMES and VALUES like ACMAttitudeBlock; every line
+/// has the same number of values.
+class ACMCovarianceBlock : flatbuffers.handle
+    /// COMMENT lines of this block, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// COV_ID.
+    def COV_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// COV_PREV_ID.
+    def COV_PREV_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// COV_BASIS.
+    def COV_BASIS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// COV_BASIS_ID.
+    def COV_BASIS_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// COV_REF_FRAME.
+    def COV_REF_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// COV_TYPE: ANGLE, ANGLE_GYROBIAS, ANGLE_ANGVEL, QUATERNION, QUATERNION_GYROBIAS
+    /// or QUATERNION_ANGVEL.
+    def COV_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// The first column of each data line, as written.
+    def TIMES(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 4)
+    def TIMES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
+    /// The diagonal terms of each line, row by row.
+    def VALUES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 8)
+    def VALUES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
+
+def GetRootAsACMCovarianceBlock(buf:string): return ACMCovarianceBlock { buf, flatbuffers.indirect(buf, 0) }
+
+struct ACMCovarianceBlockBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(9)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_COV_ID(COV_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, COV_ID)
+        return this
+    def add_COV_PREV_ID(COV_PREV_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, COV_PREV_ID)
+        return this
+    def add_COV_BASIS(COV_BASIS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, COV_BASIS)
+        return this
+    def add_COV_BASIS_ID(COV_BASIS_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, COV_BASIS_ID)
+        return this
+    def add_COV_REF_FRAME(COV_REF_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, COV_REF_FRAME)
+        return this
+    def add_COV_TYPE(COV_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, COV_TYPE)
+        return this
+    def add_TIMES(TIMES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, TIMES)
+        return this
+    def add_VALUES(VALUES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, VALUES)
+        return this
+    def end():
+        return b_.EndObject()
+
+def ACMCovarianceBlockStartTIMESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACMCovarianceBlockCreateTIMESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ACMCovarianceBlockStartVALUESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def ACMCovarianceBlockCreateVALUESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// One maneuver specification of an ACM (Table 5-7).
+class ACMManeuverBlock : flatbuffers.handle
+    /// COMMENT lines of this block, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// MAN_ID.
+    def MAN_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// MAN_PREV_ID.
+    def MAN_PREV_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// MAN_PURPOSE: for example MOM_DESAT.
+    def MAN_PURPOSE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// MAN_BEGIN_TIME in seconds from EPOCH_TZERO.
+    def MAN_BEGIN_TIME() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// MAN_END_TIME in seconds from EPOCH_TZERO; NaN when the message states
+    /// MAN_DURATION instead (a message states one of the two).
+    def MAN_END_TIME() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, nan)
+    /// MAN_DURATION in seconds; NaN when the message states MAN_END_TIME instead.
+    def MAN_DURATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, nan)
+    /// ACTUATOR_USED.
+    def ACTUATOR_USED() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    /// TARGET_MOMENTUM: three components in N*m*s; empty when not stated.
+    def TARGET_MOMENTUM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 8)
+    def TARGET_MOMENTUM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
+    /// TARGET_MOM_FRAME.
+    def TARGET_MOM_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// TARGET_ATTITUDE: the target attitude components; empty when not stated.
+    def TARGET_ATTITUDE(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 8)
+    def TARGET_ATTITUDE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
+    /// TARGET_SPINRATE in deg/s, NaN when not stated.
+    def TARGET_SPINRATE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, nan)
+
+def GetRootAsACMManeuverBlock(buf:string): return ACMManeuverBlock { buf, flatbuffers.indirect(buf, 0) }
+
+struct ACMManeuverBlockBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(12)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_MAN_ID(MAN_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, MAN_ID)
+        return this
+    def add_MAN_PREV_ID(MAN_PREV_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, MAN_PREV_ID)
+        return this
+    def add_MAN_PURPOSE(MAN_PURPOSE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, MAN_PURPOSE)
+        return this
+    def add_MAN_BEGIN_TIME(MAN_BEGIN_TIME:float):
+        b_.PrependFloat64Slot(4, MAN_BEGIN_TIME, 0.0)
+        return this
+    def add_MAN_END_TIME(MAN_END_TIME:float):
+        b_.PrependFloat64Slot(5, MAN_END_TIME, nan)
+        return this
+    def add_MAN_DURATION(MAN_DURATION:float):
+        b_.PrependFloat64Slot(6, MAN_DURATION, nan)
+        return this
+    def add_ACTUATOR_USED(ACTUATOR_USED:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, ACTUATOR_USED)
+        return this
+    def add_TARGET_MOMENTUM(TARGET_MOMENTUM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, TARGET_MOMENTUM)
+        return this
+    def add_TARGET_MOM_FRAME(TARGET_MOM_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, TARGET_MOM_FRAME)
+        return this
+    def add_TARGET_ATTITUDE(TARGET_ATTITUDE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, TARGET_ATTITUDE)
+        return this
+    def add_TARGET_SPINRATE(TARGET_SPINRATE:float):
+        b_.PrependFloat64Slot(11, TARGET_SPINRATE, nan)
+        return this
+    def end():
+        return b_.EndObject()
+
+def ACMManeuverBlockStartTARGETMOMENTUMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def ACMManeuverBlockCreateTARGETMOMENTUMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def ACMManeuverBlockStartTARGETATTITUDEVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def ACMManeuverBlockCreateTARGETATTITUDEVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// The attitude determination data of an ACM (Table 5-8).
+class ACMDetermination : flatbuffers.handle
+    /// COMMENT lines of this block, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// AD_ID.
+    def AD_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// AD_PREV_ID.
+    def AD_PREV_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// AD_METHOD: for example EKF, TRIAD or QUEST.
+    def AD_METHOD() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// ATTITUDE_SOURCE.
+    def ATTITUDE_SOURCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// NUMBER_STATES.
+    def NUMBER_STATES() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 14, 0)
+    /// ATTITUDE_STATES: QUATERNION, EULER_ANGLES, DCM or ANGVEL.
+    def ATTITUDE_STATES() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// EULER_ROT_SEQ.
+    def EULER_ROT_SEQ() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    /// COV_TYPE.
+    def COV_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    /// REF_FRAME_A.
+    def REF_FRAME_A() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// REF_FRAME_B.
+    def REF_FRAME_B() -> string:
+        return flatbuffers.field_string(buf_, pos_, 24)
+    /// RATE_STATES: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS.
+    def RATE_STATES() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    /// SIGMA_U in deg/s**1.5, NaN when not stated.
+    def SIGMA_U() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, nan)
+    /// SIGMA_V in deg/s**0.5, NaN when not stated.
+    def SIGMA_V() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, nan)
+    /// RATE_PROCESS_NOISE_STDDEV in deg/s**1.5, NaN when not stated.
+    def RATE_PROCESS_NOISE_STDDEV() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 32, nan)
+    /// The sensors, in message order.
+    def SENSORS(i:int) -> ACMSensor:
+        return ACMSensor { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 34) + i * 4) }
+    def SENSORS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 34)
+
+def GetRootAsACMDetermination(buf:string): return ACMDetermination { buf, flatbuffers.indirect(buf, 0) }
+
+struct ACMDeterminationBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(16)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_AD_ID(AD_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, AD_ID)
+        return this
+    def add_AD_PREV_ID(AD_PREV_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, AD_PREV_ID)
+        return this
+    def add_AD_METHOD(AD_METHOD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, AD_METHOD)
+        return this
+    def add_ATTITUDE_SOURCE(ATTITUDE_SOURCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, ATTITUDE_SOURCE)
+        return this
+    def add_NUMBER_STATES(NUMBER_STATES:int):
+        b_.PrependUint32Slot(5, NUMBER_STATES, 0)
+        return this
+    def add_ATTITUDE_STATES(ATTITUDE_STATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, ATTITUDE_STATES)
+        return this
+    def add_EULER_ROT_SEQ(EULER_ROT_SEQ:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, EULER_ROT_SEQ)
+        return this
+    def add_COV_TYPE(COV_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, COV_TYPE)
+        return this
+    def add_REF_FRAME_A(REF_FRAME_A:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, REF_FRAME_A)
+        return this
+    def add_REF_FRAME_B(REF_FRAME_B:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, REF_FRAME_B)
+        return this
+    def add_RATE_STATES(RATE_STATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, RATE_STATES)
+        return this
+    def add_SIGMA_U(SIGMA_U:float):
+        b_.PrependFloat64Slot(12, SIGMA_U, nan)
+        return this
+    def add_SIGMA_V(SIGMA_V:float):
+        b_.PrependFloat64Slot(13, SIGMA_V, nan)
+        return this
+    def add_RATE_PROCESS_NOISE_STDDEV(RATE_PROCESS_NOISE_STDDEV:float):
+        b_.PrependFloat64Slot(14, RATE_PROCESS_NOISE_STDDEV, nan)
+        return this
+    def add_SENSORS(SENSORS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, SENSORS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def ACMDeterminationStartSENSORSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACMDeterminationCreateSENSORSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// One sensor block of an ACM's attitude determination data.
+class ACMSensor : flatbuffers.handle
+    /// SENSOR_NUMBER; it need not be sequential.
+    def SENSOR_NUMBER() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 4, 0)
+    /// SENSOR_USED: for example AST, DSS or IMU.
+    def SENSOR_USED() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// NUMBER_SENSOR_NOISE_COVARIANCE.
+    def NUMBER_SENSOR_NOISE_COVARIANCE() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    /// SENSOR_NOISE_STDDEV in deg: one value per noise covariance.
+    def SENSOR_NOISE_STDDEV(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 8)
+    def SENSOR_NOISE_STDDEV_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+    /// SENSOR_FREQUENCY in Hz, NaN when not stated.
+    def SENSOR_FREQUENCY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, nan)
+
+def GetRootAsACMSensor(buf:string): return ACMSensor { buf, flatbuffers.indirect(buf, 0) }
+
+struct ACMSensorBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_SENSOR_NUMBER(SENSOR_NUMBER:int):
+        b_.PrependUint32Slot(0, SENSOR_NUMBER, 0)
+        return this
+    def add_SENSOR_USED(SENSOR_USED:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, SENSOR_USED)
+        return this
+    def add_NUMBER_SENSOR_NOISE_COVARIANCE(NUMBER_SENSOR_NOISE_COVARIANCE:int):
+        b_.PrependUint32Slot(2, NUMBER_SENSOR_NOISE_COVARIANCE, 0)
+        return this
+    def add_SENSOR_NOISE_STDDEV(SENSOR_NOISE_STDDEV:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, SENSOR_NOISE_STDDEV)
+        return this
+    def add_SENSOR_FREQUENCY(SENSOR_FREQUENCY:float):
+        b_.PrependFloat64Slot(4, SENSOR_FREQUENCY, nan)
+        return this
+    def end():
+        return b_.EndObject()
+
+def ACMSensorStartSENSORNOISESTDDEVVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def ACMSensorCreateSENSORNOISESTDDEVVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// One USER_DEFINED_x keyword of an ACM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+class ACMUserDefinedParameter : flatbuffers.handle
+    /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+    def PARAM_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// The value as written
+    def PARAM_VALUE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+
+def GetRootAsACMUserDefinedParameter(buf:string): return ACMUserDefinedParameter { buf, flatbuffers.indirect(buf, 0) }
+
+struct ACMUserDefinedParameterBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_PARAM_NAME(PARAM_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, PARAM_NAME)
+        return this
+    def add_PARAM_VALUE(PARAM_VALUE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, PARAM_VALUE)
+        return this
+    def end():
+        return b_.EndObject()

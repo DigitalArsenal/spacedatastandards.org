@@ -65,6 +65,70 @@ public struct APM : IFlatbufferObject
   public double Q2 { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double Q3 { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double QC { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and
+  /// data groups, in message order, joined by a line feed. A state group's own
+  /// comments stay with it.
+  public string COMMENT { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOMMENTBytes() { return __p.__vector_as_span<byte>(24, 1); }
+#else
+  public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(24); }
+#endif
+  public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(24); }
+  /// CLASSIFICATION of the message: the optional header keyword stating its
+  /// security classification or handling caveat.
+  public string CLASSIFICATION { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCLASSIFICATIONBytes() { return __p.__vector_as_span<byte>(26, 1); }
+#else
+  public ArraySegment<byte>? GetCLASSIFICATIONBytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public byte[] GetCLASSIFICATIONArray() { return __p.__vector_as_array<byte>(26); }
+  /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  /// unique for this message.
+  public string MESSAGE_ID { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMESSAGE_IDBytes() { return __p.__vector_as_span<byte>(28, 1); }
+#else
+  public ArraySegment<byte>? GetMESSAGE_IDBytes() { return __p.__vector_as_arraysegment(28); }
+#endif
+  public byte[] GetMESSAGE_IDArray() { return __p.__vector_as_array<byte>(28); }
+  /// CENTER_NAME: the orbit center, when the message states one.
+  public string CENTER_NAME { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCENTER_NAMEBytes() { return __p.__vector_as_span<byte>(30, 1); }
+#else
+  public ArraySegment<byte>? GetCENTER_NAMEBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(30); }
+  /// TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.
+  public string TIME_SYSTEM { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTIME_SYSTEMBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetTIME_SYSTEMBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetTIME_SYSTEMArray() { return __p.__vector_as_array<byte>(32); }
+  /// Quaternion states (QUAT_START block), in message order. Q1..QC above are the
+  /// single frameless quaternion of the earlier form of this record; a message is
+  /// read into and written from these lists.
+  public APMQuaternionState? QUATERNION_STATES(int j) { int o = __p.__offset(34); return o != 0 ? (APMQuaternionState?)(new APMQuaternionState()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int QUATERNION_STATESLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Euler angle states (EULER_START block), in message order.
+  public APMEulerAngleState? EULER_ANGLE_STATES(int j) { int o = __p.__offset(36); return o != 0 ? (APMEulerAngleState?)(new APMEulerAngleState()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int EULER_ANGLE_STATESLength { get { int o = __p.__offset(36); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Angular velocities (ANGVEL_START block), in message order.
+  public APMAngularVelocity? ANGULAR_VELOCITIES(int j) { int o = __p.__offset(38); return o != 0 ? (APMAngularVelocity?)(new APMAngularVelocity()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int ANGULAR_VELOCITIESLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Spin states (SPIN_START block), in message order.
+  public APMSpinState? SPIN_STATES(int j) { int o = __p.__offset(40); return o != 0 ? (APMSpinState?)(new APMSpinState()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SPIN_STATESLength { get { int o = __p.__offset(40); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Inertia tensors (INERTIA_START block), in message order.
+  public APMInertia? INERTIAS(int j) { int o = __p.__offset(42); return o != 0 ? (APMInertia?)(new APMInertia()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int INERTIASLength { get { int o = __p.__offset(42); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Attitude maneuvers (MAN_START block), in message order.
+  public APMManeuver? MANEUVERS(int j) { int o = __p.__offset(44); return o != 0 ? (APMManeuver?)(new APMManeuver()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int MANEUVERSLength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<APM> CreateAPM(FlatBufferBuilder builder,
       StringOffset CCSDS_APM_VERSOffset = default(StringOffset),
@@ -76,12 +140,34 @@ public struct APM : IFlatbufferObject
       double Q1 = 0.0,
       double Q2 = 0.0,
       double Q3 = 0.0,
-      double QC = 0.0) {
-    builder.StartTable(10);
+      double QC = 0.0,
+      StringOffset COMMENTOffset = default(StringOffset),
+      StringOffset CLASSIFICATIONOffset = default(StringOffset),
+      StringOffset MESSAGE_IDOffset = default(StringOffset),
+      StringOffset CENTER_NAMEOffset = default(StringOffset),
+      StringOffset TIME_SYSTEMOffset = default(StringOffset),
+      VectorOffset QUATERNION_STATESOffset = default(VectorOffset),
+      VectorOffset EULER_ANGLE_STATESOffset = default(VectorOffset),
+      VectorOffset ANGULAR_VELOCITIESOffset = default(VectorOffset),
+      VectorOffset SPIN_STATESOffset = default(VectorOffset),
+      VectorOffset INERTIASOffset = default(VectorOffset),
+      VectorOffset MANEUVERSOffset = default(VectorOffset)) {
+    builder.StartTable(21);
     APM.AddQC(builder, QC);
     APM.AddQ3(builder, Q3);
     APM.AddQ2(builder, Q2);
     APM.AddQ1(builder, Q1);
+    APM.AddMANEUVERS(builder, MANEUVERSOffset);
+    APM.AddINERTIAS(builder, INERTIASOffset);
+    APM.AddSPIN_STATES(builder, SPIN_STATESOffset);
+    APM.AddANGULAR_VELOCITIES(builder, ANGULAR_VELOCITIESOffset);
+    APM.AddEULER_ANGLE_STATES(builder, EULER_ANGLE_STATESOffset);
+    APM.AddQUATERNION_STATES(builder, QUATERNION_STATESOffset);
+    APM.AddTIME_SYSTEM(builder, TIME_SYSTEMOffset);
+    APM.AddCENTER_NAME(builder, CENTER_NAMEOffset);
+    APM.AddMESSAGE_ID(builder, MESSAGE_IDOffset);
+    APM.AddCLASSIFICATION(builder, CLASSIFICATIONOffset);
+    APM.AddCOMMENT(builder, COMMENTOffset);
     APM.AddEPOCH(builder, EPOCHOffset);
     APM.AddOBJECT_ID(builder, OBJECT_IDOffset);
     APM.AddOBJECT_NAME(builder, OBJECT_NAMEOffset);
@@ -91,7 +177,7 @@ public struct APM : IFlatbufferObject
     return APM.EndAPM(builder);
   }
 
-  public static void StartAPM(FlatBufferBuilder builder) { builder.StartTable(10); }
+  public static void StartAPM(FlatBufferBuilder builder) { builder.StartTable(21); }
   public static void AddCCSDS_APM_VERS(FlatBufferBuilder builder, StringOffset CCSDS_APM_VERSOffset) { builder.AddOffset(0, CCSDS_APM_VERSOffset.Value, 0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -102,6 +188,47 @@ public struct APM : IFlatbufferObject
   public static void AddQ2(FlatBufferBuilder builder, double Q2) { builder.AddDouble(7, Q2, 0.0); }
   public static void AddQ3(FlatBufferBuilder builder, double Q3) { builder.AddDouble(8, Q3, 0.0); }
   public static void AddQC(FlatBufferBuilder builder, double QC) { builder.AddDouble(9, QC, 0.0); }
+  public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(10, COMMENTOffset.Value, 0); }
+  public static void AddCLASSIFICATION(FlatBufferBuilder builder, StringOffset CLASSIFICATIONOffset) { builder.AddOffset(11, CLASSIFICATIONOffset.Value, 0); }
+  public static void AddMESSAGE_ID(FlatBufferBuilder builder, StringOffset MESSAGE_IDOffset) { builder.AddOffset(12, MESSAGE_IDOffset.Value, 0); }
+  public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(13, CENTER_NAMEOffset.Value, 0); }
+  public static void AddTIME_SYSTEM(FlatBufferBuilder builder, StringOffset TIME_SYSTEMOffset) { builder.AddOffset(14, TIME_SYSTEMOffset.Value, 0); }
+  public static void AddQUATERNION_STATES(FlatBufferBuilder builder, VectorOffset QUATERNION_STATESOffset) { builder.AddOffset(15, QUATERNION_STATESOffset.Value, 0); }
+  public static VectorOffset CreateQUATERNION_STATESVector(FlatBufferBuilder builder, Offset<APMQuaternionState>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateQUATERNION_STATESVectorBlock(FlatBufferBuilder builder, Offset<APMQuaternionState>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateQUATERNION_STATESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<APMQuaternionState>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateQUATERNION_STATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<APMQuaternionState>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartQUATERNION_STATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddEULER_ANGLE_STATES(FlatBufferBuilder builder, VectorOffset EULER_ANGLE_STATESOffset) { builder.AddOffset(16, EULER_ANGLE_STATESOffset.Value, 0); }
+  public static VectorOffset CreateEULER_ANGLE_STATESVector(FlatBufferBuilder builder, Offset<APMEulerAngleState>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateEULER_ANGLE_STATESVectorBlock(FlatBufferBuilder builder, Offset<APMEulerAngleState>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEULER_ANGLE_STATESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<APMEulerAngleState>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEULER_ANGLE_STATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<APMEulerAngleState>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartEULER_ANGLE_STATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddANGULAR_VELOCITIES(FlatBufferBuilder builder, VectorOffset ANGULAR_VELOCITIESOffset) { builder.AddOffset(17, ANGULAR_VELOCITIESOffset.Value, 0); }
+  public static VectorOffset CreateANGULAR_VELOCITIESVector(FlatBufferBuilder builder, Offset<APMAngularVelocity>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateANGULAR_VELOCITIESVectorBlock(FlatBufferBuilder builder, Offset<APMAngularVelocity>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateANGULAR_VELOCITIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<APMAngularVelocity>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateANGULAR_VELOCITIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<APMAngularVelocity>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartANGULAR_VELOCITIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSPIN_STATES(FlatBufferBuilder builder, VectorOffset SPIN_STATESOffset) { builder.AddOffset(18, SPIN_STATESOffset.Value, 0); }
+  public static VectorOffset CreateSPIN_STATESVector(FlatBufferBuilder builder, Offset<APMSpinState>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSPIN_STATESVectorBlock(FlatBufferBuilder builder, Offset<APMSpinState>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPIN_STATESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<APMSpinState>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPIN_STATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<APMSpinState>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSPIN_STATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddINERTIAS(FlatBufferBuilder builder, VectorOffset INERTIASOffset) { builder.AddOffset(19, INERTIASOffset.Value, 0); }
+  public static VectorOffset CreateINERTIASVector(FlatBufferBuilder builder, Offset<APMInertia>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateINERTIASVectorBlock(FlatBufferBuilder builder, Offset<APMInertia>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINERTIASVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<APMInertia>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINERTIASVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<APMInertia>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartINERTIASVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMANEUVERS(FlatBufferBuilder builder, VectorOffset MANEUVERSOffset) { builder.AddOffset(20, MANEUVERSOffset.Value, 0); }
+  public static VectorOffset CreateMANEUVERSVector(FlatBufferBuilder builder, Offset<APMManeuver>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateMANEUVERSVectorBlock(FlatBufferBuilder builder, Offset<APMManeuver>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMANEUVERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<APMManeuver>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMANEUVERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<APMManeuver>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartMANEUVERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<APM> EndAPM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<APM>(o);
@@ -124,6 +251,23 @@ public struct APM : IFlatbufferObject
     _o.Q2 = this.Q2;
     _o.Q3 = this.Q3;
     _o.QC = this.QC;
+    _o.COMMENT = this.COMMENT;
+    _o.CLASSIFICATION = this.CLASSIFICATION;
+    _o.MESSAGE_ID = this.MESSAGE_ID;
+    _o.CENTER_NAME = this.CENTER_NAME;
+    _o.TIME_SYSTEM = this.TIME_SYSTEM;
+    _o.QUATERNION_STATES = new List<APMQuaternionStateT>();
+    for (var _j = 0; _j < this.QUATERNION_STATESLength; ++_j) {_o.QUATERNION_STATES.Add(this.QUATERNION_STATES(_j).HasValue ? this.QUATERNION_STATES(_j).Value.UnPack() : null);}
+    _o.EULER_ANGLE_STATES = new List<APMEulerAngleStateT>();
+    for (var _j = 0; _j < this.EULER_ANGLE_STATESLength; ++_j) {_o.EULER_ANGLE_STATES.Add(this.EULER_ANGLE_STATES(_j).HasValue ? this.EULER_ANGLE_STATES(_j).Value.UnPack() : null);}
+    _o.ANGULAR_VELOCITIES = new List<APMAngularVelocityT>();
+    for (var _j = 0; _j < this.ANGULAR_VELOCITIESLength; ++_j) {_o.ANGULAR_VELOCITIES.Add(this.ANGULAR_VELOCITIES(_j).HasValue ? this.ANGULAR_VELOCITIES(_j).Value.UnPack() : null);}
+    _o.SPIN_STATES = new List<APMSpinStateT>();
+    for (var _j = 0; _j < this.SPIN_STATESLength; ++_j) {_o.SPIN_STATES.Add(this.SPIN_STATES(_j).HasValue ? this.SPIN_STATES(_j).Value.UnPack() : null);}
+    _o.INERTIAS = new List<APMInertiaT>();
+    for (var _j = 0; _j < this.INERTIASLength; ++_j) {_o.INERTIAS.Add(this.INERTIAS(_j).HasValue ? this.INERTIAS(_j).Value.UnPack() : null);}
+    _o.MANEUVERS = new List<APMManeuverT>();
+    for (var _j = 0; _j < this.MANEUVERSLength; ++_j) {_o.MANEUVERS.Add(this.MANEUVERS(_j).HasValue ? this.MANEUVERS(_j).Value.UnPack() : null);}
   }
   public static Offset<APM> Pack(FlatBufferBuilder builder, APMT _o) {
     if (_o == null) return default(Offset<APM>);
@@ -133,6 +277,47 @@ public struct APM : IFlatbufferObject
     var _OBJECT_NAME = _o.OBJECT_NAME == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_NAME);
     var _OBJECT_ID = _o.OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_ID);
     var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
+    var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
+    var _CLASSIFICATION = _o.CLASSIFICATION == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION);
+    var _MESSAGE_ID = _o.MESSAGE_ID == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE_ID);
+    var _CENTER_NAME = _o.CENTER_NAME == null ? default(StringOffset) : builder.CreateString(_o.CENTER_NAME);
+    var _TIME_SYSTEM = _o.TIME_SYSTEM == null ? default(StringOffset) : builder.CreateString(_o.TIME_SYSTEM);
+    var _QUATERNION_STATES = default(VectorOffset);
+    if (_o.QUATERNION_STATES != null) {
+      var __QUATERNION_STATES = new Offset<APMQuaternionState>[_o.QUATERNION_STATES.Count];
+      for (var _j = 0; _j < __QUATERNION_STATES.Length; ++_j) { __QUATERNION_STATES[_j] = APMQuaternionState.Pack(builder, _o.QUATERNION_STATES[_j]); }
+      _QUATERNION_STATES = CreateQUATERNION_STATESVector(builder, __QUATERNION_STATES);
+    }
+    var _EULER_ANGLE_STATES = default(VectorOffset);
+    if (_o.EULER_ANGLE_STATES != null) {
+      var __EULER_ANGLE_STATES = new Offset<APMEulerAngleState>[_o.EULER_ANGLE_STATES.Count];
+      for (var _j = 0; _j < __EULER_ANGLE_STATES.Length; ++_j) { __EULER_ANGLE_STATES[_j] = APMEulerAngleState.Pack(builder, _o.EULER_ANGLE_STATES[_j]); }
+      _EULER_ANGLE_STATES = CreateEULER_ANGLE_STATESVector(builder, __EULER_ANGLE_STATES);
+    }
+    var _ANGULAR_VELOCITIES = default(VectorOffset);
+    if (_o.ANGULAR_VELOCITIES != null) {
+      var __ANGULAR_VELOCITIES = new Offset<APMAngularVelocity>[_o.ANGULAR_VELOCITIES.Count];
+      for (var _j = 0; _j < __ANGULAR_VELOCITIES.Length; ++_j) { __ANGULAR_VELOCITIES[_j] = APMAngularVelocity.Pack(builder, _o.ANGULAR_VELOCITIES[_j]); }
+      _ANGULAR_VELOCITIES = CreateANGULAR_VELOCITIESVector(builder, __ANGULAR_VELOCITIES);
+    }
+    var _SPIN_STATES = default(VectorOffset);
+    if (_o.SPIN_STATES != null) {
+      var __SPIN_STATES = new Offset<APMSpinState>[_o.SPIN_STATES.Count];
+      for (var _j = 0; _j < __SPIN_STATES.Length; ++_j) { __SPIN_STATES[_j] = APMSpinState.Pack(builder, _o.SPIN_STATES[_j]); }
+      _SPIN_STATES = CreateSPIN_STATESVector(builder, __SPIN_STATES);
+    }
+    var _INERTIAS = default(VectorOffset);
+    if (_o.INERTIAS != null) {
+      var __INERTIAS = new Offset<APMInertia>[_o.INERTIAS.Count];
+      for (var _j = 0; _j < __INERTIAS.Length; ++_j) { __INERTIAS[_j] = APMInertia.Pack(builder, _o.INERTIAS[_j]); }
+      _INERTIAS = CreateINERTIASVector(builder, __INERTIAS);
+    }
+    var _MANEUVERS = default(VectorOffset);
+    if (_o.MANEUVERS != null) {
+      var __MANEUVERS = new Offset<APMManeuver>[_o.MANEUVERS.Count];
+      for (var _j = 0; _j < __MANEUVERS.Length; ++_j) { __MANEUVERS[_j] = APMManeuver.Pack(builder, _o.MANEUVERS[_j]); }
+      _MANEUVERS = CreateMANEUVERSVector(builder, __MANEUVERS);
+    }
     return CreateAPM(
       builder,
       _CCSDS_APM_VERS,
@@ -144,7 +329,18 @@ public struct APM : IFlatbufferObject
       _o.Q1,
       _o.Q2,
       _o.Q3,
-      _o.QC);
+      _o.QC,
+      _COMMENT,
+      _CLASSIFICATION,
+      _MESSAGE_ID,
+      _CENTER_NAME,
+      _TIME_SYSTEM,
+      _QUATERNION_STATES,
+      _EULER_ANGLE_STATES,
+      _ANGULAR_VELOCITIES,
+      _SPIN_STATES,
+      _INERTIAS,
+      _MANEUVERS);
   }
 }
 
@@ -160,6 +356,17 @@ public class APMT
   public double Q2 { get; set; }
   public double Q3 { get; set; }
   public double QC { get; set; }
+  public string COMMENT { get; set; }
+  public string CLASSIFICATION { get; set; }
+  public string MESSAGE_ID { get; set; }
+  public string CENTER_NAME { get; set; }
+  public string TIME_SYSTEM { get; set; }
+  public List<APMQuaternionStateT> QUATERNION_STATES { get; set; }
+  public List<APMEulerAngleStateT> EULER_ANGLE_STATES { get; set; }
+  public List<APMAngularVelocityT> ANGULAR_VELOCITIES { get; set; }
+  public List<APMSpinStateT> SPIN_STATES { get; set; }
+  public List<APMInertiaT> INERTIAS { get; set; }
+  public List<APMManeuverT> MANEUVERS { get; set; }
 
   public APMT() {
     this.CCSDS_APM_VERS = null;
@@ -172,6 +379,17 @@ public class APMT
     this.Q2 = 0.0;
     this.Q3 = 0.0;
     this.QC = 0.0;
+    this.COMMENT = null;
+    this.CLASSIFICATION = null;
+    this.MESSAGE_ID = null;
+    this.CENTER_NAME = null;
+    this.TIME_SYSTEM = null;
+    this.QUATERNION_STATES = null;
+    this.EULER_ANGLE_STATES = null;
+    this.ANGULAR_VELOCITIES = null;
+    this.SPIN_STATES = null;
+    this.INERTIAS = null;
+    this.MANEUVERS = null;
   }
   public static APMT DeserializeFromBinary(byte[] fbBuffer) {
     return APM.GetRootAsAPM(new ByteBuffer(fbBuffer)).UnPack();
@@ -199,6 +417,17 @@ static public class APMVerify
       && verifier.VerifyField(tablePos, 18 /*Q2*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 20 /*Q3*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 22 /*QC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 24 /*COMMENT*/, false)
+      && verifier.VerifyString(tablePos, 26 /*CLASSIFICATION*/, false)
+      && verifier.VerifyString(tablePos, 28 /*MESSAGE_ID*/, false)
+      && verifier.VerifyString(tablePos, 30 /*CENTER_NAME*/, false)
+      && verifier.VerifyString(tablePos, 32 /*TIME_SYSTEM*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 34 /*QUATERNION_STATES*/, APMQuaternionStateVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 36 /*EULER_ANGLE_STATES*/, APMEulerAngleStateVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 38 /*ANGULAR_VELOCITIES*/, APMAngularVelocityVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 40 /*SPIN_STATES*/, APMSpinStateVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 42 /*INERTIAS*/, APMInertiaVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 44 /*MANEUVERS*/, APMManeuverVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

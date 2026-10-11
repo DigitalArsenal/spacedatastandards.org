@@ -6,6 +6,7 @@ export * from './Address.js';
 export * from './Band.js';
 export * from './CAT.js';
 export * from './CDM.js';
+export * from './cdmManeuverable.js';
 export * from './CDMObject.js';
 export * from './CelestialFrame.js';
 export * from './CelestialFrameWrapper.js';

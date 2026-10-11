@@ -26,6 +26,20 @@ enum ncdContainerFormat {
   CCSDS_AEM_XML(10),
   CCSDS_TDM_KVN(11),
   CCSDS_TDM_XML(12),
+  CCSDS_OMM_KVN(13),
+  CCSDS_OMM_XML(14),
+  CCSDS_OPM_KVN(15),
+  CCSDS_OPM_XML(16),
+  CCSDS_OCM_KVN(17),
+  CCSDS_OCM_XML(18),
+  CCSDS_CDM_KVN(19),
+  CCSDS_CDM_XML(20),
+  CCSDS_APM_KVN(21),
+  CCSDS_APM_XML(22),
+  CCSDS_ACM_KVN(23),
+  CCSDS_ACM_XML(24),
+  CCSDS_RDM_KVN(25),
+  CCSDS_RDM_XML(26),
   PROVIDER_DEFINED(255);
 
   final int value;
@@ -46,6 +60,20 @@ enum ncdContainerFormat {
       case 10: return ncdContainerFormat.CCSDS_AEM_XML;
       case 11: return ncdContainerFormat.CCSDS_TDM_KVN;
       case 12: return ncdContainerFormat.CCSDS_TDM_XML;
+      case 13: return ncdContainerFormat.CCSDS_OMM_KVN;
+      case 14: return ncdContainerFormat.CCSDS_OMM_XML;
+      case 15: return ncdContainerFormat.CCSDS_OPM_KVN;
+      case 16: return ncdContainerFormat.CCSDS_OPM_XML;
+      case 17: return ncdContainerFormat.CCSDS_OCM_KVN;
+      case 18: return ncdContainerFormat.CCSDS_OCM_XML;
+      case 19: return ncdContainerFormat.CCSDS_CDM_KVN;
+      case 20: return ncdContainerFormat.CCSDS_CDM_XML;
+      case 21: return ncdContainerFormat.CCSDS_APM_KVN;
+      case 22: return ncdContainerFormat.CCSDS_APM_XML;
+      case 23: return ncdContainerFormat.CCSDS_ACM_KVN;
+      case 24: return ncdContainerFormat.CCSDS_ACM_XML;
+      case 25: return ncdContainerFormat.CCSDS_RDM_KVN;
+      case 26: return ncdContainerFormat.CCSDS_RDM_XML;
       case 255: return ncdContainerFormat.PROVIDER_DEFINED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }

@@ -117,6 +117,18 @@ public final class covarianceMatrixLine extends com.google.flatbuffers.Table {
    * Covariance matrix [6,6] km**2/s**2
    */
   public double CZ_DOT_Z_DOT() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.
+   */
+  public String COMMENT() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
+  public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
+   * COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix
+   * is expressed in, when it differs from the block's COV_REFERENCE_FRAME.
+   */
+  public RFM COV_REFERENCE_FRAME() { return COV_REFERENCE_FRAME(new RFM()); }
+  public RFM COV_REFERENCE_FRAME(RFM obj) { int o = __offset(50); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createcovarianceMatrixLine(FlatBufferBuilder builder,
       int EPOCHOffset,
@@ -140,8 +152,10 @@ public final class covarianceMatrixLine extends com.google.flatbuffers.Table {
       double CZ_DOT_Z,
       double CZ_DOT_X_DOT,
       double CZ_DOT_Y_DOT,
-      double CZ_DOT_Z_DOT) {
-    builder.startTable(22);
+      double CZ_DOT_Z_DOT,
+      int COMMENTOffset,
+      int COV_REFERENCE_FRAMEOffset) {
+    builder.startTable(24);
     covarianceMatrixLine.addCzDotZDot(builder, CZ_DOT_Z_DOT);
     covarianceMatrixLine.addCzDotYDot(builder, CZ_DOT_Y_DOT);
     covarianceMatrixLine.addCzDotXDot(builder, CZ_DOT_X_DOT);
@@ -163,11 +177,13 @@ public final class covarianceMatrixLine extends com.google.flatbuffers.Table {
     covarianceMatrixLine.addCyY(builder, CY_Y);
     covarianceMatrixLine.addCyX(builder, CY_X);
     covarianceMatrixLine.addCxX(builder, CX_X);
+    covarianceMatrixLine.addCovReferenceFrame(builder, COV_REFERENCE_FRAMEOffset);
+    covarianceMatrixLine.addComment(builder, COMMENTOffset);
     covarianceMatrixLine.addEpoch(builder, EPOCHOffset);
     return covarianceMatrixLine.endcovarianceMatrixLine(builder);
   }
 
-  public static void startcovarianceMatrixLine(FlatBufferBuilder builder) { builder.startTable(22); }
+  public static void startcovarianceMatrixLine(FlatBufferBuilder builder) { builder.startTable(24); }
   public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(0, EPOCHOffset, 0); }
   public static void addCxX(FlatBufferBuilder builder, double CX_X) { builder.addDouble(1, CX_X, 0.0); }
   public static void addCyX(FlatBufferBuilder builder, double CY_X) { builder.addDouble(2, CY_X, 0.0); }
@@ -190,6 +206,8 @@ public final class covarianceMatrixLine extends com.google.flatbuffers.Table {
   public static void addCzDotXDot(FlatBufferBuilder builder, double CZ_DOT_X_DOT) { builder.addDouble(19, CZ_DOT_X_DOT, 0.0); }
   public static void addCzDotYDot(FlatBufferBuilder builder, double CZ_DOT_Y_DOT) { builder.addDouble(20, CZ_DOT_Y_DOT, 0.0); }
   public static void addCzDotZDot(FlatBufferBuilder builder, double CZ_DOT_Z_DOT) { builder.addDouble(21, CZ_DOT_Z_DOT, 0.0); }
+  public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(22, COMMENTOffset, 0); }
+  public static void addCovReferenceFrame(FlatBufferBuilder builder, int COV_REFERENCE_FRAMEOffset) { builder.addOffset(23, COV_REFERENCE_FRAMEOffset, 0); }
   public static int endcovarianceMatrixLine(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

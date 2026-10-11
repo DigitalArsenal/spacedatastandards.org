@@ -223,6 +223,133 @@ class OPM : Table() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+     * and data groups, in message order, joined by a line feed.
+     */
+    val comment : String?
+        get() {
+            val o = __offset(60)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * CLASSIFICATION of the message: the optional header keyword stating its
+     * security classification or handling caveat.
+     */
+    val classification : String?
+        get() {
+            val o = __offset(62)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val classificationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun classificationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * MESSAGE_ID: the optional header keyword, an identifier the originator makes
+     * unique for this message.
+     */
+    val messageId : String?
+        get() {
+            val o = __offset(64)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val messageIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(64, 1)
+    fun messageIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 64, 1)
+    /**
+     * REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+     */
+    val refFrameEpoch : String?
+        get() {
+            val o = __offset(66)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val refFrameEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(66, 1)
+    fun refFrameEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 66, 1)
+    /**
+     * COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+     * when it is REF_FRAME.
+     */
+    val covRefFrame : String?
+        get() {
+            val o = __offset(68)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val covRefFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(68, 1)
+    fun covRefFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 68, 1)
+    /**
+     * Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+     * CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+     * CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+     * CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+     * Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+     */
+    fun covariance(j: Int) : Double {
+        val o = __offset(70)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val covarianceLength : Int
+        get() {
+            val o = __offset(70); return if (o != 0) __vector_len(o) else 0
+        }
+    val covarianceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(70, 8)
+    fun covarianceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 70, 8)
+    /**
+     * The message's maneuvers, in message order.
+     */
+    fun maneuvers(j: Int) : OPMManeuver? = maneuvers(OPMManeuver(), j)
+    fun maneuvers(obj: OPMManeuver, j: Int) : OPMManeuver? {
+        val o = __offset(72)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val maneuversLength : Int
+        get() {
+            val o = __offset(72); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Every USER_DEFINED_x keyword of the message, in message order.
+     */
+    fun userDefinedParameters(j: Int) : OPMUserDefinedParameter? = userDefinedParameters(OPMUserDefinedParameter(), j)
+    fun userDefinedParameters(obj: OPMUserDefinedParameter, j: Int) : OPMUserDefinedParameter? {
+        val o = __offset(74)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val userDefinedParametersLength : Int
+        get() {
+            val o = __offset(74); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOPM(_bb: ByteBuffer): OPM = getRootAsOPM(_bb, OPM())
@@ -231,8 +358,8 @@ class OPM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OPMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OPM")
-        fun createOPM(builder: FlatBufferBuilder, ccsdsOpmVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, centerNameOffset: Int, refFrameOffset: Int, timeSystemOffset: Int, epochOffset: Int, x: Double, y: Double, z: Double, xDot: Double, yDot: Double, zDot: Double, semiMajorAxis: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, trueAnomaly: Double, meanAnomaly: Double, gm: Double, mass: Double, solarRadArea: Double, solarRadCoeff: Double, dragArea: Double, dragCoeff: Double) : Int {
-            builder.startTable(28)
+        fun createOPM(builder: FlatBufferBuilder, ccsdsOpmVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, centerNameOffset: Int, refFrameOffset: Int, timeSystemOffset: Int, epochOffset: Int, x: Double, y: Double, z: Double, xDot: Double, yDot: Double, zDot: Double, semiMajorAxis: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, trueAnomaly: Double, meanAnomaly: Double, gm: Double, mass: Double, solarRadArea: Double, solarRadCoeff: Double, dragArea: Double, dragCoeff: Double, commentOffset: Int, classificationOffset: Int, messageIdOffset: Int, refFrameEpochOffset: Int, covRefFrameOffset: Int, covarianceOffset: Int, maneuversOffset: Int, userDefinedParametersOffset: Int) : Int {
+            builder.startTable(36)
             addDRAGCOEFF(builder, dragCoeff)
             addDRAGAREA(builder, dragArea)
             addSOLARRADCOEFF(builder, solarRadCoeff)
@@ -252,6 +379,14 @@ class OPM : Table() {
             addZ(builder, z)
             addY(builder, y)
             addX(builder, x)
+            addUSERDEFINEDPARAMETERS(builder, userDefinedParametersOffset)
+            addMANEUVERS(builder, maneuversOffset)
+            addCOVARIANCE(builder, covarianceOffset)
+            addCOVREFFRAME(builder, covRefFrameOffset)
+            addREFFRAMEEPOCH(builder, refFrameEpochOffset)
+            addMESSAGEID(builder, messageIdOffset)
+            addCLASSIFICATION(builder, classificationOffset)
+            addCOMMENT(builder, commentOffset)
             addEPOCH(builder, epochOffset)
             addTIMESYSTEM(builder, timeSystemOffset)
             addREFFRAME(builder, refFrameOffset)
@@ -263,7 +398,7 @@ class OPM : Table() {
             addCCSDSOPMVERS(builder, ccsdsOpmVersOffset)
             return endOPM(builder)
         }
-        fun startOPM(builder: FlatBufferBuilder) = builder.startTable(28)
+        fun startOPM(builder: FlatBufferBuilder) = builder.startTable(36)
         fun addCCSDSOPMVERS(builder: FlatBufferBuilder, ccsdsOpmVers: Int) = builder.addOffset(0, ccsdsOpmVers, 0)
         fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -292,6 +427,38 @@ class OPM : Table() {
         fun addSOLARRADCOEFF(builder: FlatBufferBuilder, solarRadCoeff: Double) = builder.addDouble(25, solarRadCoeff, 0.0)
         fun addDRAGAREA(builder: FlatBufferBuilder, dragArea: Double) = builder.addDouble(26, dragArea, 0.0)
         fun addDRAGCOEFF(builder: FlatBufferBuilder, dragCoeff: Double) = builder.addDouble(27, dragCoeff, 0.0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(28, comment, 0)
+        fun addCLASSIFICATION(builder: FlatBufferBuilder, classification: Int) = builder.addOffset(29, classification, 0)
+        fun addMESSAGEID(builder: FlatBufferBuilder, messageId: Int) = builder.addOffset(30, messageId, 0)
+        fun addREFFRAMEEPOCH(builder: FlatBufferBuilder, refFrameEpoch: Int) = builder.addOffset(31, refFrameEpoch, 0)
+        fun addCOVREFFRAME(builder: FlatBufferBuilder, covRefFrame: Int) = builder.addOffset(32, covRefFrame, 0)
+        fun addCOVARIANCE(builder: FlatBufferBuilder, covariance: Int) = builder.addOffset(33, covariance, 0)
+        fun createCovarianceVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovarianceVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addMANEUVERS(builder: FlatBufferBuilder, maneuvers: Int) = builder.addOffset(34, maneuvers, 0)
+        fun createManeuversVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startManeuversVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addUSERDEFINEDPARAMETERS(builder: FlatBufferBuilder, userDefinedParameters: Int) = builder.addOffset(35, userDefinedParameters, 0)
+        fun createUserDefinedParametersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startUserDefinedParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endOPM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

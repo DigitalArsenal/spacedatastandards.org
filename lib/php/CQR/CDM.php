@@ -7,6 +7,14 @@ use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
 /// Conjunction Data Message
+///
+/// Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+/// SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+/// of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+/// km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+/// MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+/// COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+/// terms) are held as the message states them.
 class CDM extends Table
 {
     /**
@@ -291,22 +299,30 @@ class CDM extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// COMMENT lines of the message header and of its relative metadata and data
+    /// (CCSDS 508.0-B-1), in message order, joined by a line feed.
+    public function getCOMMENT()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCDM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(29);
+        $builder->StartObject(30);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CDM
      */
-    public static function createCDM(FlatBufferBuilder $builder, $CCSDS_CDM_VERS, $CREATION_DATE, $ORIGINATOR, $MESSAGE_FOR, $MESSAGE_ID, $TCA, $MISS_DISTANCE, $RELATIVE_SPEED, $RELATIVE_POSITION_R, $RELATIVE_POSITION_T, $RELATIVE_POSITION_N, $RELATIVE_VELOCITY_R, $RELATIVE_VELOCITY_T, $RELATIVE_VELOCITY_N, $START_SCREEN_PERIOD, $STOP_SCREEN_PERIOD, $SCREEN_VOLUME_FRAME, $SCREEN_VOLUME_SHAPE, $SCREEN_VOLUME_X, $SCREEN_VOLUME_Y, $SCREEN_VOLUME_Z, $SCREEN_ENTRY_TIME, $SCREEN_EXIT_TIME, $COLLISION_PROBABILITY, $COLLISION_PROBABILITY_METHOD, $OBJECT1, $OBJECT2, $OBJECT1_DATASOURCE, $OBJECT2_DATASOURCE)
+    public static function createCDM(FlatBufferBuilder $builder, $CCSDS_CDM_VERS, $CREATION_DATE, $ORIGINATOR, $MESSAGE_FOR, $MESSAGE_ID, $TCA, $MISS_DISTANCE, $RELATIVE_SPEED, $RELATIVE_POSITION_R, $RELATIVE_POSITION_T, $RELATIVE_POSITION_N, $RELATIVE_VELOCITY_R, $RELATIVE_VELOCITY_T, $RELATIVE_VELOCITY_N, $START_SCREEN_PERIOD, $STOP_SCREEN_PERIOD, $SCREEN_VOLUME_FRAME, $SCREEN_VOLUME_SHAPE, $SCREEN_VOLUME_X, $SCREEN_VOLUME_Y, $SCREEN_VOLUME_Z, $SCREEN_ENTRY_TIME, $SCREEN_EXIT_TIME, $COLLISION_PROBABILITY, $COLLISION_PROBABILITY_METHOD, $OBJECT1, $OBJECT2, $OBJECT1_DATASOURCE, $OBJECT2_DATASOURCE, $COMMENT)
     {
-        $builder->startObject(29);
+        $builder->startObject(30);
         self::addCCSDS_CDM_VERS($builder, $CCSDS_CDM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -336,6 +352,7 @@ class CDM extends Table
         self::addOBJECT2($builder, $OBJECT2);
         self::addOBJECT1_DATASOURCE($builder, $OBJECT1_DATASOURCE);
         self::addOBJECT2_DATASOURCE($builder, $OBJECT2_DATASOURCE);
+        self::addCOMMENT($builder, $COMMENT);
         $o = $builder->endObject();
         return $o;
     }
@@ -628,6 +645,16 @@ class CDM extends Table
     public static function addOBJECT2_DATASOURCE(FlatBufferBuilder $builder, $OBJECT2_DATASOURCE)
     {
         $builder->addOffsetX(28, $OBJECT2_DATASOURCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
+    {
+        $builder->addOffsetX(29, $COMMENT, 0);
     }
 
     /**

@@ -51,6 +51,34 @@ const (
 	ncdContainerFormatCCSDS_TDM_KVN                 ncdContainerFormat = 11
 	/// CCSDS Tracking Data Message, XML.
 	ncdContainerFormatCCSDS_TDM_XML                 ncdContainerFormat = 12
+	/// CCSDS Orbit Mean-Elements Message, keyword-value notation.
+	ncdContainerFormatCCSDS_OMM_KVN                 ncdContainerFormat = 13
+	/// CCSDS Orbit Mean-Elements Message, XML.
+	ncdContainerFormatCCSDS_OMM_XML                 ncdContainerFormat = 14
+	/// CCSDS Orbit Parameter Message, keyword-value notation.
+	ncdContainerFormatCCSDS_OPM_KVN                 ncdContainerFormat = 15
+	/// CCSDS Orbit Parameter Message, XML.
+	ncdContainerFormatCCSDS_OPM_XML                 ncdContainerFormat = 16
+	/// CCSDS Orbit Comprehensive Message, keyword-value notation.
+	ncdContainerFormatCCSDS_OCM_KVN                 ncdContainerFormat = 17
+	/// CCSDS Orbit Comprehensive Message, XML.
+	ncdContainerFormatCCSDS_OCM_XML                 ncdContainerFormat = 18
+	/// CCSDS Conjunction Data Message, keyword-value notation.
+	ncdContainerFormatCCSDS_CDM_KVN                 ncdContainerFormat = 19
+	/// CCSDS Conjunction Data Message, XML.
+	ncdContainerFormatCCSDS_CDM_XML                 ncdContainerFormat = 20
+	/// CCSDS Attitude Parameter Message, keyword-value notation.
+	ncdContainerFormatCCSDS_APM_KVN                 ncdContainerFormat = 21
+	/// CCSDS Attitude Parameter Message, XML.
+	ncdContainerFormatCCSDS_APM_XML                 ncdContainerFormat = 22
+	/// CCSDS Attitude Comprehensive Message, keyword-value notation.
+	ncdContainerFormatCCSDS_ACM_KVN                 ncdContainerFormat = 23
+	/// CCSDS Attitude Comprehensive Message, XML.
+	ncdContainerFormatCCSDS_ACM_XML                 ncdContainerFormat = 24
+	/// CCSDS Reentry Data Message, keyword-value notation.
+	ncdContainerFormatCCSDS_RDM_KVN                 ncdContainerFormat = 25
+	/// CCSDS Reentry Data Message, XML.
+	ncdContainerFormatCCSDS_RDM_XML                 ncdContainerFormat = 26
 	/// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
 	/// which; a producer never reuses a neighbouring member instead.
 	ncdContainerFormatPROVIDER_DEFINED              ncdContainerFormat = 255
@@ -70,6 +98,20 @@ var EnumNamesncdContainerFormat = map[ncdContainerFormat]string{
 	ncdContainerFormatCCSDS_AEM_XML:                 "CCSDS_AEM_XML",
 	ncdContainerFormatCCSDS_TDM_KVN:                 "CCSDS_TDM_KVN",
 	ncdContainerFormatCCSDS_TDM_XML:                 "CCSDS_TDM_XML",
+	ncdContainerFormatCCSDS_OMM_KVN:                 "CCSDS_OMM_KVN",
+	ncdContainerFormatCCSDS_OMM_XML:                 "CCSDS_OMM_XML",
+	ncdContainerFormatCCSDS_OPM_KVN:                 "CCSDS_OPM_KVN",
+	ncdContainerFormatCCSDS_OPM_XML:                 "CCSDS_OPM_XML",
+	ncdContainerFormatCCSDS_OCM_KVN:                 "CCSDS_OCM_KVN",
+	ncdContainerFormatCCSDS_OCM_XML:                 "CCSDS_OCM_XML",
+	ncdContainerFormatCCSDS_CDM_KVN:                 "CCSDS_CDM_KVN",
+	ncdContainerFormatCCSDS_CDM_XML:                 "CCSDS_CDM_XML",
+	ncdContainerFormatCCSDS_APM_KVN:                 "CCSDS_APM_KVN",
+	ncdContainerFormatCCSDS_APM_XML:                 "CCSDS_APM_XML",
+	ncdContainerFormatCCSDS_ACM_KVN:                 "CCSDS_ACM_KVN",
+	ncdContainerFormatCCSDS_ACM_XML:                 "CCSDS_ACM_XML",
+	ncdContainerFormatCCSDS_RDM_KVN:                 "CCSDS_RDM_KVN",
+	ncdContainerFormatCCSDS_RDM_XML:                 "CCSDS_RDM_XML",
 	ncdContainerFormatPROVIDER_DEFINED:              "PROVIDER_DEFINED",
 }
 
@@ -87,6 +129,20 @@ var EnumValuesncdContainerFormat = map[string]ncdContainerFormat{
 	"CCSDS_AEM_XML":                 ncdContainerFormatCCSDS_AEM_XML,
 	"CCSDS_TDM_KVN":                 ncdContainerFormatCCSDS_TDM_KVN,
 	"CCSDS_TDM_XML":                 ncdContainerFormatCCSDS_TDM_XML,
+	"CCSDS_OMM_KVN":                 ncdContainerFormatCCSDS_OMM_KVN,
+	"CCSDS_OMM_XML":                 ncdContainerFormatCCSDS_OMM_XML,
+	"CCSDS_OPM_KVN":                 ncdContainerFormatCCSDS_OPM_KVN,
+	"CCSDS_OPM_XML":                 ncdContainerFormatCCSDS_OPM_XML,
+	"CCSDS_OCM_KVN":                 ncdContainerFormatCCSDS_OCM_KVN,
+	"CCSDS_OCM_XML":                 ncdContainerFormatCCSDS_OCM_XML,
+	"CCSDS_CDM_KVN":                 ncdContainerFormatCCSDS_CDM_KVN,
+	"CCSDS_CDM_XML":                 ncdContainerFormatCCSDS_CDM_XML,
+	"CCSDS_APM_KVN":                 ncdContainerFormatCCSDS_APM_KVN,
+	"CCSDS_APM_XML":                 ncdContainerFormatCCSDS_APM_XML,
+	"CCSDS_ACM_KVN":                 ncdContainerFormatCCSDS_ACM_KVN,
+	"CCSDS_ACM_XML":                 ncdContainerFormatCCSDS_ACM_XML,
+	"CCSDS_RDM_KVN":                 ncdContainerFormatCCSDS_RDM_KVN,
+	"CCSDS_RDM_XML":                 ncdContainerFormatCCSDS_RDM_XML,
 	"PROVIDER_DEFINED":              ncdContainerFormatPROVIDER_DEFINED,
 }
 

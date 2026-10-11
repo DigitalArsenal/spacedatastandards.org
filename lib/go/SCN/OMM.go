@@ -225,7 +225,10 @@ func (rcv *OMM) MutateMeanElementTheory(n meanElementSource) bool {
 	return rcv.MutateMEAN_ELEMENT_THEORY(n)
 }
 
-/// COMMENT (O)
+/// COMMENT (O): every COMMENT line of the message, in message order, joined by
+/// a line feed. A message states comments in its header, its metadata and each
+/// data group; this field holds them all, so a message written from the record
+/// states them together in its header.
 func (rcv *OMM) COMMENT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -238,7 +241,10 @@ func (rcv *OMM) Comment() []byte {
 	return rcv.COMMENT()
 }
 
-/// COMMENT (O)
+/// COMMENT (O): every COMMENT line of the message, in message order, joined by
+/// a line feed. A message states comments in its header, its metadata and each
+/// data group; this field holds them all, so a message written from the record
+/// states them together in its header.
 /// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
 func (rcv *OMM) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
@@ -876,8 +882,77 @@ func (rcv *OMM) MutateUserDefinedMicroseconds(n float64) bool {
 	return rcv.MutateUSER_DEFINED_MICROSECONDS(n)
 }
 
+/// CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+/// that states its security classification or handling caveat. Not
+/// CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+func (rcv *OMM) CLASSIFICATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OMM) Classification() []byte {
+	return rcv.CLASSIFICATION()
+}
+
+/// CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+/// that states its security classification or handling caveat. Not
+/// CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+/// MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+/// originator makes unique for this message.
+func (rcv *OMM) MESSAGE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OMM) MessageId() []byte {
+	return rcv.MESSAGE_ID()
+}
+
+/// MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+/// originator makes unique for this message.
+/// Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+/// message that has no dedicated field above, in message order.
+func (rcv *OMM) USER_DEFINED_PARAMETERS(obj *OMMUserDefinedParameter, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(OMMUserDefinedParameter)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *OMM) UserDefinedParameters(obj *OMMUserDefinedParameter, j int) bool {
+	return rcv.USER_DEFINED_PARAMETERS(obj, j)
+}
+
+func (rcv *OMM) USER_DEFINED_PARAMETERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OMM) UserDefinedParametersLength() int {
+	return rcv.USER_DEFINED_PARAMETERSLength()
+}
+
+/// Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+/// message that has no dedicated field above, in message order.
 func OMMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(40)
+	builder.StartObject(43)
 }
 func OMMAddCCSDS_OMM_VERS(builder *flatbuffers.Builder, CCSDS_OMM_VERS float64) {
 	builder.PrependFloat64Slot(0, CCSDS_OMM_VERS, 0.0)
@@ -1124,6 +1199,30 @@ func OMMAddUSER_DEFINED_MICROSECONDS(builder *flatbuffers.Builder, USER_DEFINED_
 }
 func OMMAddUserDefinedMicroseconds(builder *flatbuffers.Builder, USER_DEFINED_MICROSECONDS float64) {
 	OMMAddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS)
+}
+func OMMAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(40, flatbuffers.UOffsetT(CLASSIFICATION), 0)
+}
+func OMMAddClassification(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	OMMAddCLASSIFICATION(builder, CLASSIFICATION)
+}
+func OMMAddMESSAGE_ID(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(MESSAGE_ID), 0)
+}
+func OMMAddMessageId(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	OMMAddMESSAGE_ID(builder, MESSAGE_ID)
+}
+func OMMAddUSER_DEFINED_PARAMETERS(builder *flatbuffers.Builder, USER_DEFINED_PARAMETERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(USER_DEFINED_PARAMETERS), 0)
+}
+func OMMAddUserDefinedParameters(builder *flatbuffers.Builder, USER_DEFINED_PARAMETERS flatbuffers.UOffsetT) {
+	OMMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
+}
+func OMMStartUSER_DEFINED_PARAMETERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OMMStartUserDefinedParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OMMStartUSER_DEFINED_PARAMETERSVector(builder, numElems)
 }
 func OMMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

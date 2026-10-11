@@ -277,7 +277,8 @@ class RDM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Additional comments
+    # COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+    # data groups, in message order, joined by a line feed.
     # RDM
     def COMMENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
@@ -285,8 +286,698 @@ class RDM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # The fields below, with the earlier ones that say so, are the keywords of
+    # CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+    # NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+    # NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+    # WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+    # REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+    # SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+    # not keywords of the message.
+    # MESSAGE_ID: an identifier the originator makes unique for this message.
+    # RDM
+    def MESSAGE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+    # RDM
+    def CATALOG_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+    # RDM
+    def OBJECT_DESIGNATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # OBJECT_OWNER.
+    # RDM
+    def OBJECT_OWNER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # OBJECT_OPERATOR.
+    # RDM
+    def OBJECT_OPERATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+    # RDM
+    def CONTROLLED_REENTRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # CENTER_NAME: the body being re-entered.
+    # RDM
+    def CENTER_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EPOCH_TZERO: the epoch the message's relative times are measured from.
+    # RDM
+    def EPOCH_TZERO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # REF_FRAME: the frame of the state vector.
+    # RDM
+    def REF_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # REF_FRAME_EPOCH.
+    # RDM
+    def REF_FRAME_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EPHEMERIS_NAME.
+    # RDM
+    def EPHEMERIS_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # GRAVITY_MODEL.
+    # RDM
+    def GRAVITY_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ATMOSPHERIC_MODEL.
+    # RDM
+    def ATMOSPHERIC_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SOLAR_FLUX_PREDICTION.
+    # RDM
+    def SOLAR_FLUX_PREDICTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # N_BODY_PERTURBATIONS.
+    # RDM
+    def N_BODY_PERTURBATIONS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+    # RDM
+    def SOLAR_RAD_PRESSURE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EARTH_TIDES: a model name.
+    # RDM
+    def EARTH_TIDES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # INTRACK_THRUST: YES or NO.
+    # RDM
+    def INTRACK_THRUST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # DRAG_PARAMETERS_SOURCE.
+    # RDM
+    def DRAG_PARAMETERS_SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+    # RDM
+    def DRAG_PARAMETERS_ALTITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+    # RDM
+    def REENTRY_UNCERTAINTY_METHOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+    # RDM
+    def REENTRY_DISINTEGRATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+    # RDM
+    def IMPACT_UNCERTAINTY_METHOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # PREVIOUS_MESSAGE_ID.
+    # RDM
+    def PREVIOUS_MESSAGE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # NEXT_MESSAGE_EPOCH.
+    # RDM
+    def NEXT_MESSAGE_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ORBIT_LIFETIME in days.
+    # RDM
+    def ORBIT_LIFETIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+    # RDM
+    def ORBIT_LIFETIME_WINDOW_START(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+    # RDM
+    def ORBIT_LIFETIME_WINDOW_END(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # REENTRY_WINDOW_START.
+    # RDM
+    def REENTRY_WINDOW_START(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # REENTRY_WINDOW_END.
+    # RDM
+    def REENTRY_WINDOW_END(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+    # RDM
+    def ORBIT_LIFETIME_CONFIDENCE_LEVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # PROBABILITY_OF_IMPACT, NaN when not stated.
+    # RDM
+    def PROBABILITY_OF_IMPACT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # PROBABILITY_OF_BURN_UP, NaN when not stated.
+    # RDM
+    def PROBABILITY_OF_BURN_UP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # PROBABILITY_OF_BREAK_UP, NaN when not stated.
+    # RDM
+    def PROBABILITY_OF_BREAK_UP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+    # RDM
+    def PROBABILITY_OF_LAND_IMPACT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # PROBABILITY_OF_CASUALTY, NaN when not stated.
+    # RDM
+    def PROBABILITY_OF_CASUALTY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # NOMINAL_IMPACT_EPOCH.
+    # RDM
+    def NOMINAL_IMPACT_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # IMPACT_WINDOW_START.
+    # RDM
+    def IMPACT_WINDOW_START(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # IMPACT_WINDOW_END.
+    # RDM
+    def IMPACT_WINDOW_END(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # IMPACT_REF_FRAME.
+    # RDM
+    def IMPACT_REF_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+    # RDM
+    def NOMINAL_IMPACT_LON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(138))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+    # RDM
+    def NOMINAL_IMPACT_LAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(140))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+    # RDM
+    def NOMINAL_IMPACT_ALT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+    # RDM
+    def IMPACT_1_CONFIDENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(144))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_1_START_LON in degrees, NaN when not stated.
+    # RDM
+    def IMPACT_1_START_LON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(146))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_1_START_LAT in degrees, NaN when not stated.
+    # RDM
+    def IMPACT_1_START_LAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(148))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_1_STOP_LON in degrees, NaN when not stated.
+    # RDM
+    def IMPACT_1_STOP_LON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+    # RDM
+    def IMPACT_1_STOP_LAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(152))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+    # RDM
+    def IMPACT_1_CROSS_TRACK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(154))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+    # RDM
+    def IMPACT_2_CONFIDENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(156))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_2_START_LON in degrees, NaN when not stated.
+    # RDM
+    def IMPACT_2_START_LON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(158))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_2_START_LAT in degrees, NaN when not stated.
+    # RDM
+    def IMPACT_2_START_LAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(160))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_2_STOP_LON in degrees, NaN when not stated.
+    # RDM
+    def IMPACT_2_STOP_LON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(162))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+    # RDM
+    def IMPACT_2_STOP_LAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(164))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+    # RDM
+    def IMPACT_2_CROSS_TRACK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(166))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+    # RDM
+    def IMPACT_3_CONFIDENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(168))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_3_START_LON in degrees, NaN when not stated.
+    # RDM
+    def IMPACT_3_START_LON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(170))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_3_START_LAT in degrees, NaN when not stated.
+    # RDM
+    def IMPACT_3_START_LAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(172))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_3_STOP_LON in degrees, NaN when not stated.
+    # RDM
+    def IMPACT_3_STOP_LON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(174))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+    # RDM
+    def IMPACT_3_STOP_LAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(176))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+    # RDM
+    def IMPACT_3_CROSS_TRACK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(178))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # COV_REF_FRAME: the frame of COVARIANCE.
+    # RDM
+    def COV_REF_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(180))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+    # triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+    # CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+    # CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+    # CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+    # RDM
+    def COVARIANCE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(182))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # RDM
+    def COVARIANCEAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(182))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # RDM
+    def COVARIANCELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(182))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RDM
+    def COVARIANCEIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(182))
+        return o == 0
+
+    # WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+    # RDM
+    def DRY_MASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(184))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # HAZARDOUS_SUBSTANCES.
+    # RDM
+    def HAZARDOUS_SUBSTANCES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(186))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SOLAR_RAD_COEFF, NaN when not stated.
+    # RDM
+    def SOLAR_RAD_COEFF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(188))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # DRAG_COEFF, NaN when not stated.
+    # RDM
+    def DRAG_COEFF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(190))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # RCS in m**2, NaN when not stated.
+    # RDM
+    def RCS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(192))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # THRUST_ACCELERATION in m/s**2, NaN when not stated.
+    # RDM
+    def THRUST_ACCELERATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(194))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # TIME_LASTOB_START.
+    # RDM
+    def TIME_LASTOB_START(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(196))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # TIME_LASTOB_END.
+    # RDM
+    def TIME_LASTOB_END(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(198))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # RECOMMENDED_OD_SPAN in days, NaN when not stated.
+    # RDM
+    def RECOMMENDED_OD_SPAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(200))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # ACTUAL_OD_SPAN in days, NaN when not stated.
+    # RDM
+    def ACTUAL_OD_SPAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(202))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # OBS_AVAILABLE.
+    # RDM
+    def OBS_AVAILABLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(204))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # OBS_USED.
+    # RDM
+    def OBS_USED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(206))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # TRACKS_AVAILABLE.
+    # RDM
+    def TRACKS_AVAILABLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(208))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # TRACKS_USED.
+    # RDM
+    def TRACKS_USED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(210))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # RESIDUALS_ACCEPTED in percent, NaN when not stated.
+    # RDM
+    def RESIDUALS_ACCEPTED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(212))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # WEIGHTED_RMS, NaN when not stated.
+    # RDM
+    def WEIGHTED_RMS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(214))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Every USER_DEFINED keyword of the message, in message order.
+    # RDM
+    def USER_DEFINED_PARAMETERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(216))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from RDMUserDefinedParameter import RDMUserDefinedParameter
+            obj = RDMUserDefinedParameter()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # RDM
+    def USER_DEFINED_PARAMETERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(216))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RDM
+    def USER_DEFINED_PARAMETERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(216))
+        return o == 0
+
 def RDMStart(builder):
-    builder.StartObject(27)
+    builder.StartObject(107)
 
 def Start(builder):
     RDMStart(builder)
@@ -477,12 +1168,521 @@ def RDMAddCOMMENT(builder, COMMENT):
 def AddCOMMENT(builder, COMMENT):
     RDMAddCOMMENT(builder, COMMENT)
 
+def RDMAddMESSAGE_ID(builder, MESSAGE_ID):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_ID), 0)
+
+def AddMESSAGE_ID(builder, MESSAGE_ID):
+    RDMAddMESSAGE_ID(builder, MESSAGE_ID)
+
+def RDMAddCATALOG_NAME(builder, CATALOG_NAME):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(CATALOG_NAME), 0)
+
+def AddCATALOG_NAME(builder, CATALOG_NAME):
+    RDMAddCATALOG_NAME(builder, CATALOG_NAME)
+
+def RDMAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_DESIGNATOR), 0)
+
+def AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    RDMAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+
+def RDMAddOBJECT_OWNER(builder, OBJECT_OWNER):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_OWNER), 0)
+
+def AddOBJECT_OWNER(builder, OBJECT_OWNER):
+    RDMAddOBJECT_OWNER(builder, OBJECT_OWNER)
+
+def RDMAddOBJECT_OPERATOR(builder, OBJECT_OPERATOR):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_OPERATOR), 0)
+
+def AddOBJECT_OPERATOR(builder, OBJECT_OPERATOR):
+    RDMAddOBJECT_OPERATOR(builder, OBJECT_OPERATOR)
+
+def RDMAddCONTROLLED_REENTRY(builder, CONTROLLED_REENTRY):
+    builder.PrependInt8Slot(32, CONTROLLED_REENTRY, 0)
+
+def AddCONTROLLED_REENTRY(builder, CONTROLLED_REENTRY):
+    RDMAddCONTROLLED_REENTRY(builder, CONTROLLED_REENTRY)
+
+def RDMAddCENTER_NAME(builder, CENTER_NAME):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
+
+def AddCENTER_NAME(builder, CENTER_NAME):
+    RDMAddCENTER_NAME(builder, CENTER_NAME)
+
+def RDMAddEPOCH_TZERO(builder, EPOCH_TZERO):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH_TZERO), 0)
+
+def AddEPOCH_TZERO(builder, EPOCH_TZERO):
+    RDMAddEPOCH_TZERO(builder, EPOCH_TZERO)
+
+def RDMAddREF_FRAME(builder, REF_FRAME):
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(REF_FRAME), 0)
+
+def AddREF_FRAME(builder, REF_FRAME):
+    RDMAddREF_FRAME(builder, REF_FRAME)
+
+def RDMAddREF_FRAME_EPOCH(builder, REF_FRAME_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(REF_FRAME_EPOCH), 0)
+
+def AddREF_FRAME_EPOCH(builder, REF_FRAME_EPOCH):
+    RDMAddREF_FRAME_EPOCH(builder, REF_FRAME_EPOCH)
+
+def RDMAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME):
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_NAME), 0)
+
+def AddEPHEMERIS_NAME(builder, EPHEMERIS_NAME):
+    RDMAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME)
+
+def RDMAddGRAVITY_MODEL(builder, GRAVITY_MODEL):
+    builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(GRAVITY_MODEL), 0)
+
+def AddGRAVITY_MODEL(builder, GRAVITY_MODEL):
+    RDMAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
+
+def RDMAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
+    builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERIC_MODEL), 0)
+
+def AddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
+    RDMAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
+
+def RDMAddSOLAR_FLUX_PREDICTION(builder, SOLAR_FLUX_PREDICTION):
+    builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(SOLAR_FLUX_PREDICTION), 0)
+
+def AddSOLAR_FLUX_PREDICTION(builder, SOLAR_FLUX_PREDICTION):
+    RDMAddSOLAR_FLUX_PREDICTION(builder, SOLAR_FLUX_PREDICTION)
+
+def RDMAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS):
+    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(N_BODY_PERTURBATIONS), 0)
+
+def AddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS):
+    RDMAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS)
+
+def RDMAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE):
+    builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(SOLAR_RAD_PRESSURE), 0)
+
+def AddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE):
+    RDMAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
+
+def RDMAddEARTH_TIDES(builder, EARTH_TIDES):
+    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(EARTH_TIDES), 0)
+
+def AddEARTH_TIDES(builder, EARTH_TIDES):
+    RDMAddEARTH_TIDES(builder, EARTH_TIDES)
+
+def RDMAddINTRACK_THRUST(builder, INTRACK_THRUST):
+    builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(INTRACK_THRUST), 0)
+
+def AddINTRACK_THRUST(builder, INTRACK_THRUST):
+    RDMAddINTRACK_THRUST(builder, INTRACK_THRUST)
+
+def RDMAddDRAG_PARAMETERS_SOURCE(builder, DRAG_PARAMETERS_SOURCE):
+    builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(DRAG_PARAMETERS_SOURCE), 0)
+
+def AddDRAG_PARAMETERS_SOURCE(builder, DRAG_PARAMETERS_SOURCE):
+    RDMAddDRAG_PARAMETERS_SOURCE(builder, DRAG_PARAMETERS_SOURCE)
+
+def RDMAddDRAG_PARAMETERS_ALTITUDE(builder, DRAG_PARAMETERS_ALTITUDE):
+    builder.PrependFloat64Slot(46, DRAG_PARAMETERS_ALTITUDE, float('nan'))
+
+def AddDRAG_PARAMETERS_ALTITUDE(builder, DRAG_PARAMETERS_ALTITUDE):
+    RDMAddDRAG_PARAMETERS_ALTITUDE(builder, DRAG_PARAMETERS_ALTITUDE)
+
+def RDMAddREENTRY_UNCERTAINTY_METHOD(builder, REENTRY_UNCERTAINTY_METHOD):
+    builder.PrependUOffsetTRelativeSlot(47, flatbuffers.number_types.UOffsetTFlags.py_type(REENTRY_UNCERTAINTY_METHOD), 0)
+
+def AddREENTRY_UNCERTAINTY_METHOD(builder, REENTRY_UNCERTAINTY_METHOD):
+    RDMAddREENTRY_UNCERTAINTY_METHOD(builder, REENTRY_UNCERTAINTY_METHOD)
+
+def RDMAddREENTRY_DISINTEGRATION(builder, REENTRY_DISINTEGRATION):
+    builder.PrependUOffsetTRelativeSlot(48, flatbuffers.number_types.UOffsetTFlags.py_type(REENTRY_DISINTEGRATION), 0)
+
+def AddREENTRY_DISINTEGRATION(builder, REENTRY_DISINTEGRATION):
+    RDMAddREENTRY_DISINTEGRATION(builder, REENTRY_DISINTEGRATION)
+
+def RDMAddIMPACT_UNCERTAINTY_METHOD(builder, IMPACT_UNCERTAINTY_METHOD):
+    builder.PrependUOffsetTRelativeSlot(49, flatbuffers.number_types.UOffsetTFlags.py_type(IMPACT_UNCERTAINTY_METHOD), 0)
+
+def AddIMPACT_UNCERTAINTY_METHOD(builder, IMPACT_UNCERTAINTY_METHOD):
+    RDMAddIMPACT_UNCERTAINTY_METHOD(builder, IMPACT_UNCERTAINTY_METHOD)
+
+def RDMAddPREVIOUS_MESSAGE_ID(builder, PREVIOUS_MESSAGE_ID):
+    builder.PrependUOffsetTRelativeSlot(50, flatbuffers.number_types.UOffsetTFlags.py_type(PREVIOUS_MESSAGE_ID), 0)
+
+def AddPREVIOUS_MESSAGE_ID(builder, PREVIOUS_MESSAGE_ID):
+    RDMAddPREVIOUS_MESSAGE_ID(builder, PREVIOUS_MESSAGE_ID)
+
+def RDMAddNEXT_MESSAGE_EPOCH(builder, NEXT_MESSAGE_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(NEXT_MESSAGE_EPOCH), 0)
+
+def AddNEXT_MESSAGE_EPOCH(builder, NEXT_MESSAGE_EPOCH):
+    RDMAddNEXT_MESSAGE_EPOCH(builder, NEXT_MESSAGE_EPOCH)
+
+def RDMAddORBIT_LIFETIME(builder, ORBIT_LIFETIME):
+    builder.PrependFloat64Slot(52, ORBIT_LIFETIME, 0.0)
+
+def AddORBIT_LIFETIME(builder, ORBIT_LIFETIME):
+    RDMAddORBIT_LIFETIME(builder, ORBIT_LIFETIME)
+
+def RDMAddORBIT_LIFETIME_WINDOW_START(builder, ORBIT_LIFETIME_WINDOW_START):
+    builder.PrependFloat64Slot(53, ORBIT_LIFETIME_WINDOW_START, float('nan'))
+
+def AddORBIT_LIFETIME_WINDOW_START(builder, ORBIT_LIFETIME_WINDOW_START):
+    RDMAddORBIT_LIFETIME_WINDOW_START(builder, ORBIT_LIFETIME_WINDOW_START)
+
+def RDMAddORBIT_LIFETIME_WINDOW_END(builder, ORBIT_LIFETIME_WINDOW_END):
+    builder.PrependFloat64Slot(54, ORBIT_LIFETIME_WINDOW_END, float('nan'))
+
+def AddORBIT_LIFETIME_WINDOW_END(builder, ORBIT_LIFETIME_WINDOW_END):
+    RDMAddORBIT_LIFETIME_WINDOW_END(builder, ORBIT_LIFETIME_WINDOW_END)
+
+def RDMAddREENTRY_WINDOW_START(builder, REENTRY_WINDOW_START):
+    builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(REENTRY_WINDOW_START), 0)
+
+def AddREENTRY_WINDOW_START(builder, REENTRY_WINDOW_START):
+    RDMAddREENTRY_WINDOW_START(builder, REENTRY_WINDOW_START)
+
+def RDMAddREENTRY_WINDOW_END(builder, REENTRY_WINDOW_END):
+    builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(REENTRY_WINDOW_END), 0)
+
+def AddREENTRY_WINDOW_END(builder, REENTRY_WINDOW_END):
+    RDMAddREENTRY_WINDOW_END(builder, REENTRY_WINDOW_END)
+
+def RDMAddORBIT_LIFETIME_CONFIDENCE_LEVEL(builder, ORBIT_LIFETIME_CONFIDENCE_LEVEL):
+    builder.PrependFloat64Slot(57, ORBIT_LIFETIME_CONFIDENCE_LEVEL, float('nan'))
+
+def AddORBIT_LIFETIME_CONFIDENCE_LEVEL(builder, ORBIT_LIFETIME_CONFIDENCE_LEVEL):
+    RDMAddORBIT_LIFETIME_CONFIDENCE_LEVEL(builder, ORBIT_LIFETIME_CONFIDENCE_LEVEL)
+
+def RDMAddPROBABILITY_OF_IMPACT(builder, PROBABILITY_OF_IMPACT):
+    builder.PrependFloat64Slot(58, PROBABILITY_OF_IMPACT, float('nan'))
+
+def AddPROBABILITY_OF_IMPACT(builder, PROBABILITY_OF_IMPACT):
+    RDMAddPROBABILITY_OF_IMPACT(builder, PROBABILITY_OF_IMPACT)
+
+def RDMAddPROBABILITY_OF_BURN_UP(builder, PROBABILITY_OF_BURN_UP):
+    builder.PrependFloat64Slot(59, PROBABILITY_OF_BURN_UP, float('nan'))
+
+def AddPROBABILITY_OF_BURN_UP(builder, PROBABILITY_OF_BURN_UP):
+    RDMAddPROBABILITY_OF_BURN_UP(builder, PROBABILITY_OF_BURN_UP)
+
+def RDMAddPROBABILITY_OF_BREAK_UP(builder, PROBABILITY_OF_BREAK_UP):
+    builder.PrependFloat64Slot(60, PROBABILITY_OF_BREAK_UP, float('nan'))
+
+def AddPROBABILITY_OF_BREAK_UP(builder, PROBABILITY_OF_BREAK_UP):
+    RDMAddPROBABILITY_OF_BREAK_UP(builder, PROBABILITY_OF_BREAK_UP)
+
+def RDMAddPROBABILITY_OF_LAND_IMPACT(builder, PROBABILITY_OF_LAND_IMPACT):
+    builder.PrependFloat64Slot(61, PROBABILITY_OF_LAND_IMPACT, float('nan'))
+
+def AddPROBABILITY_OF_LAND_IMPACT(builder, PROBABILITY_OF_LAND_IMPACT):
+    RDMAddPROBABILITY_OF_LAND_IMPACT(builder, PROBABILITY_OF_LAND_IMPACT)
+
+def RDMAddPROBABILITY_OF_CASUALTY(builder, PROBABILITY_OF_CASUALTY):
+    builder.PrependFloat64Slot(62, PROBABILITY_OF_CASUALTY, float('nan'))
+
+def AddPROBABILITY_OF_CASUALTY(builder, PROBABILITY_OF_CASUALTY):
+    RDMAddPROBABILITY_OF_CASUALTY(builder, PROBABILITY_OF_CASUALTY)
+
+def RDMAddNOMINAL_IMPACT_EPOCH(builder, NOMINAL_IMPACT_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(63, flatbuffers.number_types.UOffsetTFlags.py_type(NOMINAL_IMPACT_EPOCH), 0)
+
+def AddNOMINAL_IMPACT_EPOCH(builder, NOMINAL_IMPACT_EPOCH):
+    RDMAddNOMINAL_IMPACT_EPOCH(builder, NOMINAL_IMPACT_EPOCH)
+
+def RDMAddIMPACT_WINDOW_START(builder, IMPACT_WINDOW_START):
+    builder.PrependUOffsetTRelativeSlot(64, flatbuffers.number_types.UOffsetTFlags.py_type(IMPACT_WINDOW_START), 0)
+
+def AddIMPACT_WINDOW_START(builder, IMPACT_WINDOW_START):
+    RDMAddIMPACT_WINDOW_START(builder, IMPACT_WINDOW_START)
+
+def RDMAddIMPACT_WINDOW_END(builder, IMPACT_WINDOW_END):
+    builder.PrependUOffsetTRelativeSlot(65, flatbuffers.number_types.UOffsetTFlags.py_type(IMPACT_WINDOW_END), 0)
+
+def AddIMPACT_WINDOW_END(builder, IMPACT_WINDOW_END):
+    RDMAddIMPACT_WINDOW_END(builder, IMPACT_WINDOW_END)
+
+def RDMAddIMPACT_REF_FRAME(builder, IMPACT_REF_FRAME):
+    builder.PrependUOffsetTRelativeSlot(66, flatbuffers.number_types.UOffsetTFlags.py_type(IMPACT_REF_FRAME), 0)
+
+def AddIMPACT_REF_FRAME(builder, IMPACT_REF_FRAME):
+    RDMAddIMPACT_REF_FRAME(builder, IMPACT_REF_FRAME)
+
+def RDMAddNOMINAL_IMPACT_LON(builder, NOMINAL_IMPACT_LON):
+    builder.PrependFloat64Slot(67, NOMINAL_IMPACT_LON, float('nan'))
+
+def AddNOMINAL_IMPACT_LON(builder, NOMINAL_IMPACT_LON):
+    RDMAddNOMINAL_IMPACT_LON(builder, NOMINAL_IMPACT_LON)
+
+def RDMAddNOMINAL_IMPACT_LAT(builder, NOMINAL_IMPACT_LAT):
+    builder.PrependFloat64Slot(68, NOMINAL_IMPACT_LAT, float('nan'))
+
+def AddNOMINAL_IMPACT_LAT(builder, NOMINAL_IMPACT_LAT):
+    RDMAddNOMINAL_IMPACT_LAT(builder, NOMINAL_IMPACT_LAT)
+
+def RDMAddNOMINAL_IMPACT_ALT(builder, NOMINAL_IMPACT_ALT):
+    builder.PrependFloat64Slot(69, NOMINAL_IMPACT_ALT, float('nan'))
+
+def AddNOMINAL_IMPACT_ALT(builder, NOMINAL_IMPACT_ALT):
+    RDMAddNOMINAL_IMPACT_ALT(builder, NOMINAL_IMPACT_ALT)
+
+def RDMAddIMPACT_1_CONFIDENCE(builder, IMPACT_1_CONFIDENCE):
+    builder.PrependFloat64Slot(70, IMPACT_1_CONFIDENCE, float('nan'))
+
+def AddIMPACT_1_CONFIDENCE(builder, IMPACT_1_CONFIDENCE):
+    RDMAddIMPACT_1_CONFIDENCE(builder, IMPACT_1_CONFIDENCE)
+
+def RDMAddIMPACT_1_START_LON(builder, IMPACT_1_START_LON):
+    builder.PrependFloat64Slot(71, IMPACT_1_START_LON, float('nan'))
+
+def AddIMPACT_1_START_LON(builder, IMPACT_1_START_LON):
+    RDMAddIMPACT_1_START_LON(builder, IMPACT_1_START_LON)
+
+def RDMAddIMPACT_1_START_LAT(builder, IMPACT_1_START_LAT):
+    builder.PrependFloat64Slot(72, IMPACT_1_START_LAT, float('nan'))
+
+def AddIMPACT_1_START_LAT(builder, IMPACT_1_START_LAT):
+    RDMAddIMPACT_1_START_LAT(builder, IMPACT_1_START_LAT)
+
+def RDMAddIMPACT_1_STOP_LON(builder, IMPACT_1_STOP_LON):
+    builder.PrependFloat64Slot(73, IMPACT_1_STOP_LON, float('nan'))
+
+def AddIMPACT_1_STOP_LON(builder, IMPACT_1_STOP_LON):
+    RDMAddIMPACT_1_STOP_LON(builder, IMPACT_1_STOP_LON)
+
+def RDMAddIMPACT_1_STOP_LAT(builder, IMPACT_1_STOP_LAT):
+    builder.PrependFloat64Slot(74, IMPACT_1_STOP_LAT, float('nan'))
+
+def AddIMPACT_1_STOP_LAT(builder, IMPACT_1_STOP_LAT):
+    RDMAddIMPACT_1_STOP_LAT(builder, IMPACT_1_STOP_LAT)
+
+def RDMAddIMPACT_1_CROSS_TRACK(builder, IMPACT_1_CROSS_TRACK):
+    builder.PrependFloat64Slot(75, IMPACT_1_CROSS_TRACK, float('nan'))
+
+def AddIMPACT_1_CROSS_TRACK(builder, IMPACT_1_CROSS_TRACK):
+    RDMAddIMPACT_1_CROSS_TRACK(builder, IMPACT_1_CROSS_TRACK)
+
+def RDMAddIMPACT_2_CONFIDENCE(builder, IMPACT_2_CONFIDENCE):
+    builder.PrependFloat64Slot(76, IMPACT_2_CONFIDENCE, float('nan'))
+
+def AddIMPACT_2_CONFIDENCE(builder, IMPACT_2_CONFIDENCE):
+    RDMAddIMPACT_2_CONFIDENCE(builder, IMPACT_2_CONFIDENCE)
+
+def RDMAddIMPACT_2_START_LON(builder, IMPACT_2_START_LON):
+    builder.PrependFloat64Slot(77, IMPACT_2_START_LON, float('nan'))
+
+def AddIMPACT_2_START_LON(builder, IMPACT_2_START_LON):
+    RDMAddIMPACT_2_START_LON(builder, IMPACT_2_START_LON)
+
+def RDMAddIMPACT_2_START_LAT(builder, IMPACT_2_START_LAT):
+    builder.PrependFloat64Slot(78, IMPACT_2_START_LAT, float('nan'))
+
+def AddIMPACT_2_START_LAT(builder, IMPACT_2_START_LAT):
+    RDMAddIMPACT_2_START_LAT(builder, IMPACT_2_START_LAT)
+
+def RDMAddIMPACT_2_STOP_LON(builder, IMPACT_2_STOP_LON):
+    builder.PrependFloat64Slot(79, IMPACT_2_STOP_LON, float('nan'))
+
+def AddIMPACT_2_STOP_LON(builder, IMPACT_2_STOP_LON):
+    RDMAddIMPACT_2_STOP_LON(builder, IMPACT_2_STOP_LON)
+
+def RDMAddIMPACT_2_STOP_LAT(builder, IMPACT_2_STOP_LAT):
+    builder.PrependFloat64Slot(80, IMPACT_2_STOP_LAT, float('nan'))
+
+def AddIMPACT_2_STOP_LAT(builder, IMPACT_2_STOP_LAT):
+    RDMAddIMPACT_2_STOP_LAT(builder, IMPACT_2_STOP_LAT)
+
+def RDMAddIMPACT_2_CROSS_TRACK(builder, IMPACT_2_CROSS_TRACK):
+    builder.PrependFloat64Slot(81, IMPACT_2_CROSS_TRACK, float('nan'))
+
+def AddIMPACT_2_CROSS_TRACK(builder, IMPACT_2_CROSS_TRACK):
+    RDMAddIMPACT_2_CROSS_TRACK(builder, IMPACT_2_CROSS_TRACK)
+
+def RDMAddIMPACT_3_CONFIDENCE(builder, IMPACT_3_CONFIDENCE):
+    builder.PrependFloat64Slot(82, IMPACT_3_CONFIDENCE, float('nan'))
+
+def AddIMPACT_3_CONFIDENCE(builder, IMPACT_3_CONFIDENCE):
+    RDMAddIMPACT_3_CONFIDENCE(builder, IMPACT_3_CONFIDENCE)
+
+def RDMAddIMPACT_3_START_LON(builder, IMPACT_3_START_LON):
+    builder.PrependFloat64Slot(83, IMPACT_3_START_LON, float('nan'))
+
+def AddIMPACT_3_START_LON(builder, IMPACT_3_START_LON):
+    RDMAddIMPACT_3_START_LON(builder, IMPACT_3_START_LON)
+
+def RDMAddIMPACT_3_START_LAT(builder, IMPACT_3_START_LAT):
+    builder.PrependFloat64Slot(84, IMPACT_3_START_LAT, float('nan'))
+
+def AddIMPACT_3_START_LAT(builder, IMPACT_3_START_LAT):
+    RDMAddIMPACT_3_START_LAT(builder, IMPACT_3_START_LAT)
+
+def RDMAddIMPACT_3_STOP_LON(builder, IMPACT_3_STOP_LON):
+    builder.PrependFloat64Slot(85, IMPACT_3_STOP_LON, float('nan'))
+
+def AddIMPACT_3_STOP_LON(builder, IMPACT_3_STOP_LON):
+    RDMAddIMPACT_3_STOP_LON(builder, IMPACT_3_STOP_LON)
+
+def RDMAddIMPACT_3_STOP_LAT(builder, IMPACT_3_STOP_LAT):
+    builder.PrependFloat64Slot(86, IMPACT_3_STOP_LAT, float('nan'))
+
+def AddIMPACT_3_STOP_LAT(builder, IMPACT_3_STOP_LAT):
+    RDMAddIMPACT_3_STOP_LAT(builder, IMPACT_3_STOP_LAT)
+
+def RDMAddIMPACT_3_CROSS_TRACK(builder, IMPACT_3_CROSS_TRACK):
+    builder.PrependFloat64Slot(87, IMPACT_3_CROSS_TRACK, float('nan'))
+
+def AddIMPACT_3_CROSS_TRACK(builder, IMPACT_3_CROSS_TRACK):
+    RDMAddIMPACT_3_CROSS_TRACK(builder, IMPACT_3_CROSS_TRACK)
+
+def RDMAddCOV_REF_FRAME(builder, COV_REF_FRAME):
+    builder.PrependUOffsetTRelativeSlot(88, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REF_FRAME), 0)
+
+def AddCOV_REF_FRAME(builder, COV_REF_FRAME):
+    RDMAddCOV_REF_FRAME(builder, COV_REF_FRAME)
+
+def RDMAddCOVARIANCE(builder, COVARIANCE):
+    builder.PrependUOffsetTRelativeSlot(89, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE), 0)
+
+def AddCOVARIANCE(builder, COVARIANCE):
+    RDMAddCOVARIANCE(builder, COVARIANCE)
+
+def RDMStartCOVARIANCEVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartCOVARIANCEVector(builder, numElems):
+    return RDMStartCOVARIANCEVector(builder, numElems)
+
+def RDMCreateCOVARIANCEVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOVARIANCEVector(builder, data):
+    return RDMCreateCOVARIANCEVector(builder, data)
+
+def RDMAddDRY_MASS(builder, DRY_MASS):
+    builder.PrependFloat64Slot(90, DRY_MASS, float('nan'))
+
+def AddDRY_MASS(builder, DRY_MASS):
+    RDMAddDRY_MASS(builder, DRY_MASS)
+
+def RDMAddHAZARDOUS_SUBSTANCES(builder, HAZARDOUS_SUBSTANCES):
+    builder.PrependUOffsetTRelativeSlot(91, flatbuffers.number_types.UOffsetTFlags.py_type(HAZARDOUS_SUBSTANCES), 0)
+
+def AddHAZARDOUS_SUBSTANCES(builder, HAZARDOUS_SUBSTANCES):
+    RDMAddHAZARDOUS_SUBSTANCES(builder, HAZARDOUS_SUBSTANCES)
+
+def RDMAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF):
+    builder.PrependFloat64Slot(92, SOLAR_RAD_COEFF, float('nan'))
+
+def AddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF):
+    RDMAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF)
+
+def RDMAddDRAG_COEFF(builder, DRAG_COEFF):
+    builder.PrependFloat64Slot(93, DRAG_COEFF, float('nan'))
+
+def AddDRAG_COEFF(builder, DRAG_COEFF):
+    RDMAddDRAG_COEFF(builder, DRAG_COEFF)
+
+def RDMAddRCS(builder, RCS):
+    builder.PrependFloat64Slot(94, RCS, float('nan'))
+
+def AddRCS(builder, RCS):
+    RDMAddRCS(builder, RCS)
+
+def RDMAddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION):
+    builder.PrependFloat64Slot(95, THRUST_ACCELERATION, float('nan'))
+
+def AddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION):
+    RDMAddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION)
+
+def RDMAddTIME_LASTOB_START(builder, TIME_LASTOB_START):
+    builder.PrependUOffsetTRelativeSlot(96, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_LASTOB_START), 0)
+
+def AddTIME_LASTOB_START(builder, TIME_LASTOB_START):
+    RDMAddTIME_LASTOB_START(builder, TIME_LASTOB_START)
+
+def RDMAddTIME_LASTOB_END(builder, TIME_LASTOB_END):
+    builder.PrependUOffsetTRelativeSlot(97, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_LASTOB_END), 0)
+
+def AddTIME_LASTOB_END(builder, TIME_LASTOB_END):
+    RDMAddTIME_LASTOB_END(builder, TIME_LASTOB_END)
+
+def RDMAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN):
+    builder.PrependFloat64Slot(98, RECOMMENDED_OD_SPAN, float('nan'))
+
+def AddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN):
+    RDMAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN)
+
+def RDMAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN):
+    builder.PrependFloat64Slot(99, ACTUAL_OD_SPAN, float('nan'))
+
+def AddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN):
+    RDMAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN)
+
+def RDMAddOBS_AVAILABLE(builder, OBS_AVAILABLE):
+    builder.PrependUint32Slot(100, OBS_AVAILABLE, 0)
+
+def AddOBS_AVAILABLE(builder, OBS_AVAILABLE):
+    RDMAddOBS_AVAILABLE(builder, OBS_AVAILABLE)
+
+def RDMAddOBS_USED(builder, OBS_USED):
+    builder.PrependUint32Slot(101, OBS_USED, 0)
+
+def AddOBS_USED(builder, OBS_USED):
+    RDMAddOBS_USED(builder, OBS_USED)
+
+def RDMAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE):
+    builder.PrependUint32Slot(102, TRACKS_AVAILABLE, 0)
+
+def AddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE):
+    RDMAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE)
+
+def RDMAddTRACKS_USED(builder, TRACKS_USED):
+    builder.PrependUint32Slot(103, TRACKS_USED, 0)
+
+def AddTRACKS_USED(builder, TRACKS_USED):
+    RDMAddTRACKS_USED(builder, TRACKS_USED)
+
+def RDMAddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED):
+    builder.PrependFloat64Slot(104, RESIDUALS_ACCEPTED, float('nan'))
+
+def AddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED):
+    RDMAddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED)
+
+def RDMAddWEIGHTED_RMS(builder, WEIGHTED_RMS):
+    builder.PrependFloat64Slot(105, WEIGHTED_RMS, float('nan'))
+
+def AddWEIGHTED_RMS(builder, WEIGHTED_RMS):
+    RDMAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
+
+def RDMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(106, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_PARAMETERS), 0)
+
+def AddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
+    RDMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
+
+def RDMStartUSER_DEFINED_PARAMETERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartUSER_DEFINED_PARAMETERSVector(builder, numElems):
+    return RDMStartUSER_DEFINED_PARAMETERSVector(builder, numElems)
+
+def RDMCreateUSER_DEFINED_PARAMETERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUSER_DEFINED_PARAMETERSVector(builder, data):
+    return RDMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
+
 def RDMEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return RDMEnd(builder)
 
+import RDMUserDefinedParameter
 import reentryImpact
 import reentryStateVector
 import survivingDebris
@@ -523,6 +1723,86 @@ class RDMT(object):
         NUM_FRAGMENTS = 0,
         SURVIVING_MASS = 0.0,
         COMMENT = None,
+        MESSAGE_ID = None,
+        CATALOG_NAME = None,
+        OBJECT_DESIGNATOR = None,
+        OBJECT_OWNER = None,
+        OBJECT_OPERATOR = None,
+        CONTROLLED_REENTRY = 0,
+        CENTER_NAME = None,
+        EPOCH_TZERO = None,
+        REF_FRAME = None,
+        REF_FRAME_EPOCH = None,
+        EPHEMERIS_NAME = None,
+        GRAVITY_MODEL = None,
+        ATMOSPHERIC_MODEL = None,
+        SOLAR_FLUX_PREDICTION = None,
+        N_BODY_PERTURBATIONS = None,
+        SOLAR_RAD_PRESSURE = None,
+        EARTH_TIDES = None,
+        INTRACK_THRUST = None,
+        DRAG_PARAMETERS_SOURCE = None,
+        DRAG_PARAMETERS_ALTITUDE = float('nan'),
+        REENTRY_UNCERTAINTY_METHOD = None,
+        REENTRY_DISINTEGRATION = None,
+        IMPACT_UNCERTAINTY_METHOD = None,
+        PREVIOUS_MESSAGE_ID = None,
+        NEXT_MESSAGE_EPOCH = None,
+        ORBIT_LIFETIME = 0.0,
+        ORBIT_LIFETIME_WINDOW_START = float('nan'),
+        ORBIT_LIFETIME_WINDOW_END = float('nan'),
+        REENTRY_WINDOW_START = None,
+        REENTRY_WINDOW_END = None,
+        ORBIT_LIFETIME_CONFIDENCE_LEVEL = float('nan'),
+        PROBABILITY_OF_IMPACT = float('nan'),
+        PROBABILITY_OF_BURN_UP = float('nan'),
+        PROBABILITY_OF_BREAK_UP = float('nan'),
+        PROBABILITY_OF_LAND_IMPACT = float('nan'),
+        PROBABILITY_OF_CASUALTY = float('nan'),
+        NOMINAL_IMPACT_EPOCH = None,
+        IMPACT_WINDOW_START = None,
+        IMPACT_WINDOW_END = None,
+        IMPACT_REF_FRAME = None,
+        NOMINAL_IMPACT_LON = float('nan'),
+        NOMINAL_IMPACT_LAT = float('nan'),
+        NOMINAL_IMPACT_ALT = float('nan'),
+        IMPACT_1_CONFIDENCE = float('nan'),
+        IMPACT_1_START_LON = float('nan'),
+        IMPACT_1_START_LAT = float('nan'),
+        IMPACT_1_STOP_LON = float('nan'),
+        IMPACT_1_STOP_LAT = float('nan'),
+        IMPACT_1_CROSS_TRACK = float('nan'),
+        IMPACT_2_CONFIDENCE = float('nan'),
+        IMPACT_2_START_LON = float('nan'),
+        IMPACT_2_START_LAT = float('nan'),
+        IMPACT_2_STOP_LON = float('nan'),
+        IMPACT_2_STOP_LAT = float('nan'),
+        IMPACT_2_CROSS_TRACK = float('nan'),
+        IMPACT_3_CONFIDENCE = float('nan'),
+        IMPACT_3_START_LON = float('nan'),
+        IMPACT_3_START_LAT = float('nan'),
+        IMPACT_3_STOP_LON = float('nan'),
+        IMPACT_3_STOP_LAT = float('nan'),
+        IMPACT_3_CROSS_TRACK = float('nan'),
+        COV_REF_FRAME = None,
+        COVARIANCE = None,
+        DRY_MASS = float('nan'),
+        HAZARDOUS_SUBSTANCES = None,
+        SOLAR_RAD_COEFF = float('nan'),
+        DRAG_COEFF = float('nan'),
+        RCS = float('nan'),
+        THRUST_ACCELERATION = float('nan'),
+        TIME_LASTOB_START = None,
+        TIME_LASTOB_END = None,
+        RECOMMENDED_OD_SPAN = float('nan'),
+        ACTUAL_OD_SPAN = float('nan'),
+        OBS_AVAILABLE = 0,
+        OBS_USED = 0,
+        TRACKS_AVAILABLE = 0,
+        TRACKS_USED = 0,
+        RESIDUALS_ACCEPTED = float('nan'),
+        WEIGHTED_RMS = float('nan'),
+        USER_DEFINED_PARAMETERS = None,
     ):
         self.CCSDS_RDM_VERS = CCSDS_RDM_VERS  # type: Optional[str]
         self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
@@ -551,6 +1831,86 @@ class RDMT(object):
         self.NUM_FRAGMENTS = NUM_FRAGMENTS  # type: int
         self.SURVIVING_MASS = SURVIVING_MASS  # type: float
         self.COMMENT = COMMENT  # type: Optional[str]
+        self.MESSAGE_ID = MESSAGE_ID  # type: Optional[str]
+        self.CATALOG_NAME = CATALOG_NAME  # type: Optional[str]
+        self.OBJECT_DESIGNATOR = OBJECT_DESIGNATOR  # type: Optional[str]
+        self.OBJECT_OWNER = OBJECT_OWNER  # type: Optional[str]
+        self.OBJECT_OPERATOR = OBJECT_OPERATOR  # type: Optional[str]
+        self.CONTROLLED_REENTRY = CONTROLLED_REENTRY  # type: int
+        self.CENTER_NAME = CENTER_NAME  # type: Optional[str]
+        self.EPOCH_TZERO = EPOCH_TZERO  # type: Optional[str]
+        self.REF_FRAME = REF_FRAME  # type: Optional[str]
+        self.REF_FRAME_EPOCH = REF_FRAME_EPOCH  # type: Optional[str]
+        self.EPHEMERIS_NAME = EPHEMERIS_NAME  # type: Optional[str]
+        self.GRAVITY_MODEL = GRAVITY_MODEL  # type: Optional[str]
+        self.ATMOSPHERIC_MODEL = ATMOSPHERIC_MODEL  # type: Optional[str]
+        self.SOLAR_FLUX_PREDICTION = SOLAR_FLUX_PREDICTION  # type: Optional[str]
+        self.N_BODY_PERTURBATIONS = N_BODY_PERTURBATIONS  # type: Optional[str]
+        self.SOLAR_RAD_PRESSURE = SOLAR_RAD_PRESSURE  # type: Optional[str]
+        self.EARTH_TIDES = EARTH_TIDES  # type: Optional[str]
+        self.INTRACK_THRUST = INTRACK_THRUST  # type: Optional[str]
+        self.DRAG_PARAMETERS_SOURCE = DRAG_PARAMETERS_SOURCE  # type: Optional[str]
+        self.DRAG_PARAMETERS_ALTITUDE = DRAG_PARAMETERS_ALTITUDE  # type: float
+        self.REENTRY_UNCERTAINTY_METHOD = REENTRY_UNCERTAINTY_METHOD  # type: Optional[str]
+        self.REENTRY_DISINTEGRATION = REENTRY_DISINTEGRATION  # type: Optional[str]
+        self.IMPACT_UNCERTAINTY_METHOD = IMPACT_UNCERTAINTY_METHOD  # type: Optional[str]
+        self.PREVIOUS_MESSAGE_ID = PREVIOUS_MESSAGE_ID  # type: Optional[str]
+        self.NEXT_MESSAGE_EPOCH = NEXT_MESSAGE_EPOCH  # type: Optional[str]
+        self.ORBIT_LIFETIME = ORBIT_LIFETIME  # type: float
+        self.ORBIT_LIFETIME_WINDOW_START = ORBIT_LIFETIME_WINDOW_START  # type: float
+        self.ORBIT_LIFETIME_WINDOW_END = ORBIT_LIFETIME_WINDOW_END  # type: float
+        self.REENTRY_WINDOW_START = REENTRY_WINDOW_START  # type: Optional[str]
+        self.REENTRY_WINDOW_END = REENTRY_WINDOW_END  # type: Optional[str]
+        self.ORBIT_LIFETIME_CONFIDENCE_LEVEL = ORBIT_LIFETIME_CONFIDENCE_LEVEL  # type: float
+        self.PROBABILITY_OF_IMPACT = PROBABILITY_OF_IMPACT  # type: float
+        self.PROBABILITY_OF_BURN_UP = PROBABILITY_OF_BURN_UP  # type: float
+        self.PROBABILITY_OF_BREAK_UP = PROBABILITY_OF_BREAK_UP  # type: float
+        self.PROBABILITY_OF_LAND_IMPACT = PROBABILITY_OF_LAND_IMPACT  # type: float
+        self.PROBABILITY_OF_CASUALTY = PROBABILITY_OF_CASUALTY  # type: float
+        self.NOMINAL_IMPACT_EPOCH = NOMINAL_IMPACT_EPOCH  # type: Optional[str]
+        self.IMPACT_WINDOW_START = IMPACT_WINDOW_START  # type: Optional[str]
+        self.IMPACT_WINDOW_END = IMPACT_WINDOW_END  # type: Optional[str]
+        self.IMPACT_REF_FRAME = IMPACT_REF_FRAME  # type: Optional[str]
+        self.NOMINAL_IMPACT_LON = NOMINAL_IMPACT_LON  # type: float
+        self.NOMINAL_IMPACT_LAT = NOMINAL_IMPACT_LAT  # type: float
+        self.NOMINAL_IMPACT_ALT = NOMINAL_IMPACT_ALT  # type: float
+        self.IMPACT_1_CONFIDENCE = IMPACT_1_CONFIDENCE  # type: float
+        self.IMPACT_1_START_LON = IMPACT_1_START_LON  # type: float
+        self.IMPACT_1_START_LAT = IMPACT_1_START_LAT  # type: float
+        self.IMPACT_1_STOP_LON = IMPACT_1_STOP_LON  # type: float
+        self.IMPACT_1_STOP_LAT = IMPACT_1_STOP_LAT  # type: float
+        self.IMPACT_1_CROSS_TRACK = IMPACT_1_CROSS_TRACK  # type: float
+        self.IMPACT_2_CONFIDENCE = IMPACT_2_CONFIDENCE  # type: float
+        self.IMPACT_2_START_LON = IMPACT_2_START_LON  # type: float
+        self.IMPACT_2_START_LAT = IMPACT_2_START_LAT  # type: float
+        self.IMPACT_2_STOP_LON = IMPACT_2_STOP_LON  # type: float
+        self.IMPACT_2_STOP_LAT = IMPACT_2_STOP_LAT  # type: float
+        self.IMPACT_2_CROSS_TRACK = IMPACT_2_CROSS_TRACK  # type: float
+        self.IMPACT_3_CONFIDENCE = IMPACT_3_CONFIDENCE  # type: float
+        self.IMPACT_3_START_LON = IMPACT_3_START_LON  # type: float
+        self.IMPACT_3_START_LAT = IMPACT_3_START_LAT  # type: float
+        self.IMPACT_3_STOP_LON = IMPACT_3_STOP_LON  # type: float
+        self.IMPACT_3_STOP_LAT = IMPACT_3_STOP_LAT  # type: float
+        self.IMPACT_3_CROSS_TRACK = IMPACT_3_CROSS_TRACK  # type: float
+        self.COV_REF_FRAME = COV_REF_FRAME  # type: Optional[str]
+        self.COVARIANCE = COVARIANCE  # type: Optional[List[float]]
+        self.DRY_MASS = DRY_MASS  # type: float
+        self.HAZARDOUS_SUBSTANCES = HAZARDOUS_SUBSTANCES  # type: Optional[str]
+        self.SOLAR_RAD_COEFF = SOLAR_RAD_COEFF  # type: float
+        self.DRAG_COEFF = DRAG_COEFF  # type: float
+        self.RCS = RCS  # type: float
+        self.THRUST_ACCELERATION = THRUST_ACCELERATION  # type: float
+        self.TIME_LASTOB_START = TIME_LASTOB_START  # type: Optional[str]
+        self.TIME_LASTOB_END = TIME_LASTOB_END  # type: Optional[str]
+        self.RECOMMENDED_OD_SPAN = RECOMMENDED_OD_SPAN  # type: float
+        self.ACTUAL_OD_SPAN = ACTUAL_OD_SPAN  # type: float
+        self.OBS_AVAILABLE = OBS_AVAILABLE  # type: int
+        self.OBS_USED = OBS_USED  # type: int
+        self.TRACKS_AVAILABLE = TRACKS_AVAILABLE  # type: int
+        self.TRACKS_USED = TRACKS_USED  # type: int
+        self.RESIDUALS_ACCEPTED = RESIDUALS_ACCEPTED  # type: float
+        self.WEIGHTED_RMS = WEIGHTED_RMS  # type: float
+        self.USER_DEFINED_PARAMETERS = USER_DEFINED_PARAMETERS  # type: Optional[List[RDMUserDefinedParameter.RDMUserDefinedParameterT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -615,6 +1975,99 @@ class RDMT(object):
         self.NUM_FRAGMENTS = RDM.NUM_FRAGMENTS()
         self.SURVIVING_MASS = RDM.SURVIVING_MASS()
         self.COMMENT = RDM.COMMENT()
+        self.MESSAGE_ID = RDM.MESSAGE_ID()
+        self.CATALOG_NAME = RDM.CATALOG_NAME()
+        self.OBJECT_DESIGNATOR = RDM.OBJECT_DESIGNATOR()
+        self.OBJECT_OWNER = RDM.OBJECT_OWNER()
+        self.OBJECT_OPERATOR = RDM.OBJECT_OPERATOR()
+        self.CONTROLLED_REENTRY = RDM.CONTROLLED_REENTRY()
+        self.CENTER_NAME = RDM.CENTER_NAME()
+        self.EPOCH_TZERO = RDM.EPOCH_TZERO()
+        self.REF_FRAME = RDM.REF_FRAME()
+        self.REF_FRAME_EPOCH = RDM.REF_FRAME_EPOCH()
+        self.EPHEMERIS_NAME = RDM.EPHEMERIS_NAME()
+        self.GRAVITY_MODEL = RDM.GRAVITY_MODEL()
+        self.ATMOSPHERIC_MODEL = RDM.ATMOSPHERIC_MODEL()
+        self.SOLAR_FLUX_PREDICTION = RDM.SOLAR_FLUX_PREDICTION()
+        self.N_BODY_PERTURBATIONS = RDM.N_BODY_PERTURBATIONS()
+        self.SOLAR_RAD_PRESSURE = RDM.SOLAR_RAD_PRESSURE()
+        self.EARTH_TIDES = RDM.EARTH_TIDES()
+        self.INTRACK_THRUST = RDM.INTRACK_THRUST()
+        self.DRAG_PARAMETERS_SOURCE = RDM.DRAG_PARAMETERS_SOURCE()
+        self.DRAG_PARAMETERS_ALTITUDE = RDM.DRAG_PARAMETERS_ALTITUDE()
+        self.REENTRY_UNCERTAINTY_METHOD = RDM.REENTRY_UNCERTAINTY_METHOD()
+        self.REENTRY_DISINTEGRATION = RDM.REENTRY_DISINTEGRATION()
+        self.IMPACT_UNCERTAINTY_METHOD = RDM.IMPACT_UNCERTAINTY_METHOD()
+        self.PREVIOUS_MESSAGE_ID = RDM.PREVIOUS_MESSAGE_ID()
+        self.NEXT_MESSAGE_EPOCH = RDM.NEXT_MESSAGE_EPOCH()
+        self.ORBIT_LIFETIME = RDM.ORBIT_LIFETIME()
+        self.ORBIT_LIFETIME_WINDOW_START = RDM.ORBIT_LIFETIME_WINDOW_START()
+        self.ORBIT_LIFETIME_WINDOW_END = RDM.ORBIT_LIFETIME_WINDOW_END()
+        self.REENTRY_WINDOW_START = RDM.REENTRY_WINDOW_START()
+        self.REENTRY_WINDOW_END = RDM.REENTRY_WINDOW_END()
+        self.ORBIT_LIFETIME_CONFIDENCE_LEVEL = RDM.ORBIT_LIFETIME_CONFIDENCE_LEVEL()
+        self.PROBABILITY_OF_IMPACT = RDM.PROBABILITY_OF_IMPACT()
+        self.PROBABILITY_OF_BURN_UP = RDM.PROBABILITY_OF_BURN_UP()
+        self.PROBABILITY_OF_BREAK_UP = RDM.PROBABILITY_OF_BREAK_UP()
+        self.PROBABILITY_OF_LAND_IMPACT = RDM.PROBABILITY_OF_LAND_IMPACT()
+        self.PROBABILITY_OF_CASUALTY = RDM.PROBABILITY_OF_CASUALTY()
+        self.NOMINAL_IMPACT_EPOCH = RDM.NOMINAL_IMPACT_EPOCH()
+        self.IMPACT_WINDOW_START = RDM.IMPACT_WINDOW_START()
+        self.IMPACT_WINDOW_END = RDM.IMPACT_WINDOW_END()
+        self.IMPACT_REF_FRAME = RDM.IMPACT_REF_FRAME()
+        self.NOMINAL_IMPACT_LON = RDM.NOMINAL_IMPACT_LON()
+        self.NOMINAL_IMPACT_LAT = RDM.NOMINAL_IMPACT_LAT()
+        self.NOMINAL_IMPACT_ALT = RDM.NOMINAL_IMPACT_ALT()
+        self.IMPACT_1_CONFIDENCE = RDM.IMPACT_1_CONFIDENCE()
+        self.IMPACT_1_START_LON = RDM.IMPACT_1_START_LON()
+        self.IMPACT_1_START_LAT = RDM.IMPACT_1_START_LAT()
+        self.IMPACT_1_STOP_LON = RDM.IMPACT_1_STOP_LON()
+        self.IMPACT_1_STOP_LAT = RDM.IMPACT_1_STOP_LAT()
+        self.IMPACT_1_CROSS_TRACK = RDM.IMPACT_1_CROSS_TRACK()
+        self.IMPACT_2_CONFIDENCE = RDM.IMPACT_2_CONFIDENCE()
+        self.IMPACT_2_START_LON = RDM.IMPACT_2_START_LON()
+        self.IMPACT_2_START_LAT = RDM.IMPACT_2_START_LAT()
+        self.IMPACT_2_STOP_LON = RDM.IMPACT_2_STOP_LON()
+        self.IMPACT_2_STOP_LAT = RDM.IMPACT_2_STOP_LAT()
+        self.IMPACT_2_CROSS_TRACK = RDM.IMPACT_2_CROSS_TRACK()
+        self.IMPACT_3_CONFIDENCE = RDM.IMPACT_3_CONFIDENCE()
+        self.IMPACT_3_START_LON = RDM.IMPACT_3_START_LON()
+        self.IMPACT_3_START_LAT = RDM.IMPACT_3_START_LAT()
+        self.IMPACT_3_STOP_LON = RDM.IMPACT_3_STOP_LON()
+        self.IMPACT_3_STOP_LAT = RDM.IMPACT_3_STOP_LAT()
+        self.IMPACT_3_CROSS_TRACK = RDM.IMPACT_3_CROSS_TRACK()
+        self.COV_REF_FRAME = RDM.COV_REF_FRAME()
+        if not RDM.COVARIANCEIsNone():
+            if np is None:
+                self.COVARIANCE = []
+                for i in range(RDM.COVARIANCELength()):
+                    self.COVARIANCE.append(RDM.COVARIANCE(i))
+            else:
+                self.COVARIANCE = RDM.COVARIANCEAsNumpy()
+        self.DRY_MASS = RDM.DRY_MASS()
+        self.HAZARDOUS_SUBSTANCES = RDM.HAZARDOUS_SUBSTANCES()
+        self.SOLAR_RAD_COEFF = RDM.SOLAR_RAD_COEFF()
+        self.DRAG_COEFF = RDM.DRAG_COEFF()
+        self.RCS = RDM.RCS()
+        self.THRUST_ACCELERATION = RDM.THRUST_ACCELERATION()
+        self.TIME_LASTOB_START = RDM.TIME_LASTOB_START()
+        self.TIME_LASTOB_END = RDM.TIME_LASTOB_END()
+        self.RECOMMENDED_OD_SPAN = RDM.RECOMMENDED_OD_SPAN()
+        self.ACTUAL_OD_SPAN = RDM.ACTUAL_OD_SPAN()
+        self.OBS_AVAILABLE = RDM.OBS_AVAILABLE()
+        self.OBS_USED = RDM.OBS_USED()
+        self.TRACKS_AVAILABLE = RDM.TRACKS_AVAILABLE()
+        self.TRACKS_USED = RDM.TRACKS_USED()
+        self.RESIDUALS_ACCEPTED = RDM.RESIDUALS_ACCEPTED()
+        self.WEIGHTED_RMS = RDM.WEIGHTED_RMS()
+        if not RDM.USER_DEFINED_PARAMETERSIsNone():
+            self.USER_DEFINED_PARAMETERS = []
+            for i in range(RDM.USER_DEFINED_PARAMETERSLength()):
+                if RDM.USER_DEFINED_PARAMETERS(i) is None:
+                    self.USER_DEFINED_PARAMETERS.append(None)
+                else:
+                    rDMUserDefinedParameter_ = RDMUserDefinedParameter.RDMUserDefinedParameterT.InitFromObj(RDM.USER_DEFINED_PARAMETERS(i))
+                    self.USER_DEFINED_PARAMETERS.append(rDMUserDefinedParameter_)
 
     # RDMT
     def Pack(self, builder):
@@ -656,6 +2109,88 @@ class RDMT(object):
             SURVIVING_DEBRIS = builder.EndVector()
         if self.COMMENT is not None:
             COMMENT = builder.CreateString(self.COMMENT)
+        if self.MESSAGE_ID is not None:
+            MESSAGE_ID = builder.CreateString(self.MESSAGE_ID)
+        if self.CATALOG_NAME is not None:
+            CATALOG_NAME = builder.CreateString(self.CATALOG_NAME)
+        if self.OBJECT_DESIGNATOR is not None:
+            OBJECT_DESIGNATOR = builder.CreateString(self.OBJECT_DESIGNATOR)
+        if self.OBJECT_OWNER is not None:
+            OBJECT_OWNER = builder.CreateString(self.OBJECT_OWNER)
+        if self.OBJECT_OPERATOR is not None:
+            OBJECT_OPERATOR = builder.CreateString(self.OBJECT_OPERATOR)
+        if self.CENTER_NAME is not None:
+            CENTER_NAME = builder.CreateString(self.CENTER_NAME)
+        if self.EPOCH_TZERO is not None:
+            EPOCH_TZERO = builder.CreateString(self.EPOCH_TZERO)
+        if self.REF_FRAME is not None:
+            REF_FRAME = builder.CreateString(self.REF_FRAME)
+        if self.REF_FRAME_EPOCH is not None:
+            REF_FRAME_EPOCH = builder.CreateString(self.REF_FRAME_EPOCH)
+        if self.EPHEMERIS_NAME is not None:
+            EPHEMERIS_NAME = builder.CreateString(self.EPHEMERIS_NAME)
+        if self.GRAVITY_MODEL is not None:
+            GRAVITY_MODEL = builder.CreateString(self.GRAVITY_MODEL)
+        if self.ATMOSPHERIC_MODEL is not None:
+            ATMOSPHERIC_MODEL = builder.CreateString(self.ATMOSPHERIC_MODEL)
+        if self.SOLAR_FLUX_PREDICTION is not None:
+            SOLAR_FLUX_PREDICTION = builder.CreateString(self.SOLAR_FLUX_PREDICTION)
+        if self.N_BODY_PERTURBATIONS is not None:
+            N_BODY_PERTURBATIONS = builder.CreateString(self.N_BODY_PERTURBATIONS)
+        if self.SOLAR_RAD_PRESSURE is not None:
+            SOLAR_RAD_PRESSURE = builder.CreateString(self.SOLAR_RAD_PRESSURE)
+        if self.EARTH_TIDES is not None:
+            EARTH_TIDES = builder.CreateString(self.EARTH_TIDES)
+        if self.INTRACK_THRUST is not None:
+            INTRACK_THRUST = builder.CreateString(self.INTRACK_THRUST)
+        if self.DRAG_PARAMETERS_SOURCE is not None:
+            DRAG_PARAMETERS_SOURCE = builder.CreateString(self.DRAG_PARAMETERS_SOURCE)
+        if self.REENTRY_UNCERTAINTY_METHOD is not None:
+            REENTRY_UNCERTAINTY_METHOD = builder.CreateString(self.REENTRY_UNCERTAINTY_METHOD)
+        if self.REENTRY_DISINTEGRATION is not None:
+            REENTRY_DISINTEGRATION = builder.CreateString(self.REENTRY_DISINTEGRATION)
+        if self.IMPACT_UNCERTAINTY_METHOD is not None:
+            IMPACT_UNCERTAINTY_METHOD = builder.CreateString(self.IMPACT_UNCERTAINTY_METHOD)
+        if self.PREVIOUS_MESSAGE_ID is not None:
+            PREVIOUS_MESSAGE_ID = builder.CreateString(self.PREVIOUS_MESSAGE_ID)
+        if self.NEXT_MESSAGE_EPOCH is not None:
+            NEXT_MESSAGE_EPOCH = builder.CreateString(self.NEXT_MESSAGE_EPOCH)
+        if self.REENTRY_WINDOW_START is not None:
+            REENTRY_WINDOW_START = builder.CreateString(self.REENTRY_WINDOW_START)
+        if self.REENTRY_WINDOW_END is not None:
+            REENTRY_WINDOW_END = builder.CreateString(self.REENTRY_WINDOW_END)
+        if self.NOMINAL_IMPACT_EPOCH is not None:
+            NOMINAL_IMPACT_EPOCH = builder.CreateString(self.NOMINAL_IMPACT_EPOCH)
+        if self.IMPACT_WINDOW_START is not None:
+            IMPACT_WINDOW_START = builder.CreateString(self.IMPACT_WINDOW_START)
+        if self.IMPACT_WINDOW_END is not None:
+            IMPACT_WINDOW_END = builder.CreateString(self.IMPACT_WINDOW_END)
+        if self.IMPACT_REF_FRAME is not None:
+            IMPACT_REF_FRAME = builder.CreateString(self.IMPACT_REF_FRAME)
+        if self.COV_REF_FRAME is not None:
+            COV_REF_FRAME = builder.CreateString(self.COV_REF_FRAME)
+        if self.COVARIANCE is not None:
+            if np is not None and type(self.COVARIANCE) is np.ndarray:
+                COVARIANCE = builder.CreateNumpyVector(self.COVARIANCE)
+            else:
+                RDMStartCOVARIANCEVector(builder, len(self.COVARIANCE))
+                for i in reversed(range(len(self.COVARIANCE))):
+                    builder.PrependFloat64(self.COVARIANCE[i])
+                COVARIANCE = builder.EndVector()
+        if self.HAZARDOUS_SUBSTANCES is not None:
+            HAZARDOUS_SUBSTANCES = builder.CreateString(self.HAZARDOUS_SUBSTANCES)
+        if self.TIME_LASTOB_START is not None:
+            TIME_LASTOB_START = builder.CreateString(self.TIME_LASTOB_START)
+        if self.TIME_LASTOB_END is not None:
+            TIME_LASTOB_END = builder.CreateString(self.TIME_LASTOB_END)
+        if self.USER_DEFINED_PARAMETERS is not None:
+            USER_DEFINED_PARAMETERSlist = []
+            for i in range(len(self.USER_DEFINED_PARAMETERS)):
+                USER_DEFINED_PARAMETERSlist.append(self.USER_DEFINED_PARAMETERS[i].Pack(builder))
+            RDMStartUSER_DEFINED_PARAMETERSVector(builder, len(self.USER_DEFINED_PARAMETERS))
+            for i in reversed(range(len(self.USER_DEFINED_PARAMETERS))):
+                builder.PrependUOffsetTRelative(USER_DEFINED_PARAMETERSlist[i])
+            USER_DEFINED_PARAMETERS = builder.EndVector()
         RDMStart(builder)
         if self.CCSDS_RDM_VERS is not None:
             RDMAddCCSDS_RDM_VERS(builder, CCSDS_RDM_VERS)
@@ -697,5 +2232,120 @@ class RDMT(object):
         RDMAddSURVIVING_MASS(builder, self.SURVIVING_MASS)
         if self.COMMENT is not None:
             RDMAddCOMMENT(builder, COMMENT)
+        if self.MESSAGE_ID is not None:
+            RDMAddMESSAGE_ID(builder, MESSAGE_ID)
+        if self.CATALOG_NAME is not None:
+            RDMAddCATALOG_NAME(builder, CATALOG_NAME)
+        if self.OBJECT_DESIGNATOR is not None:
+            RDMAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+        if self.OBJECT_OWNER is not None:
+            RDMAddOBJECT_OWNER(builder, OBJECT_OWNER)
+        if self.OBJECT_OPERATOR is not None:
+            RDMAddOBJECT_OPERATOR(builder, OBJECT_OPERATOR)
+        RDMAddCONTROLLED_REENTRY(builder, self.CONTROLLED_REENTRY)
+        if self.CENTER_NAME is not None:
+            RDMAddCENTER_NAME(builder, CENTER_NAME)
+        if self.EPOCH_TZERO is not None:
+            RDMAddEPOCH_TZERO(builder, EPOCH_TZERO)
+        if self.REF_FRAME is not None:
+            RDMAddREF_FRAME(builder, REF_FRAME)
+        if self.REF_FRAME_EPOCH is not None:
+            RDMAddREF_FRAME_EPOCH(builder, REF_FRAME_EPOCH)
+        if self.EPHEMERIS_NAME is not None:
+            RDMAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME)
+        if self.GRAVITY_MODEL is not None:
+            RDMAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
+        if self.ATMOSPHERIC_MODEL is not None:
+            RDMAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
+        if self.SOLAR_FLUX_PREDICTION is not None:
+            RDMAddSOLAR_FLUX_PREDICTION(builder, SOLAR_FLUX_PREDICTION)
+        if self.N_BODY_PERTURBATIONS is not None:
+            RDMAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS)
+        if self.SOLAR_RAD_PRESSURE is not None:
+            RDMAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
+        if self.EARTH_TIDES is not None:
+            RDMAddEARTH_TIDES(builder, EARTH_TIDES)
+        if self.INTRACK_THRUST is not None:
+            RDMAddINTRACK_THRUST(builder, INTRACK_THRUST)
+        if self.DRAG_PARAMETERS_SOURCE is not None:
+            RDMAddDRAG_PARAMETERS_SOURCE(builder, DRAG_PARAMETERS_SOURCE)
+        RDMAddDRAG_PARAMETERS_ALTITUDE(builder, self.DRAG_PARAMETERS_ALTITUDE)
+        if self.REENTRY_UNCERTAINTY_METHOD is not None:
+            RDMAddREENTRY_UNCERTAINTY_METHOD(builder, REENTRY_UNCERTAINTY_METHOD)
+        if self.REENTRY_DISINTEGRATION is not None:
+            RDMAddREENTRY_DISINTEGRATION(builder, REENTRY_DISINTEGRATION)
+        if self.IMPACT_UNCERTAINTY_METHOD is not None:
+            RDMAddIMPACT_UNCERTAINTY_METHOD(builder, IMPACT_UNCERTAINTY_METHOD)
+        if self.PREVIOUS_MESSAGE_ID is not None:
+            RDMAddPREVIOUS_MESSAGE_ID(builder, PREVIOUS_MESSAGE_ID)
+        if self.NEXT_MESSAGE_EPOCH is not None:
+            RDMAddNEXT_MESSAGE_EPOCH(builder, NEXT_MESSAGE_EPOCH)
+        RDMAddORBIT_LIFETIME(builder, self.ORBIT_LIFETIME)
+        RDMAddORBIT_LIFETIME_WINDOW_START(builder, self.ORBIT_LIFETIME_WINDOW_START)
+        RDMAddORBIT_LIFETIME_WINDOW_END(builder, self.ORBIT_LIFETIME_WINDOW_END)
+        if self.REENTRY_WINDOW_START is not None:
+            RDMAddREENTRY_WINDOW_START(builder, REENTRY_WINDOW_START)
+        if self.REENTRY_WINDOW_END is not None:
+            RDMAddREENTRY_WINDOW_END(builder, REENTRY_WINDOW_END)
+        RDMAddORBIT_LIFETIME_CONFIDENCE_LEVEL(builder, self.ORBIT_LIFETIME_CONFIDENCE_LEVEL)
+        RDMAddPROBABILITY_OF_IMPACT(builder, self.PROBABILITY_OF_IMPACT)
+        RDMAddPROBABILITY_OF_BURN_UP(builder, self.PROBABILITY_OF_BURN_UP)
+        RDMAddPROBABILITY_OF_BREAK_UP(builder, self.PROBABILITY_OF_BREAK_UP)
+        RDMAddPROBABILITY_OF_LAND_IMPACT(builder, self.PROBABILITY_OF_LAND_IMPACT)
+        RDMAddPROBABILITY_OF_CASUALTY(builder, self.PROBABILITY_OF_CASUALTY)
+        if self.NOMINAL_IMPACT_EPOCH is not None:
+            RDMAddNOMINAL_IMPACT_EPOCH(builder, NOMINAL_IMPACT_EPOCH)
+        if self.IMPACT_WINDOW_START is not None:
+            RDMAddIMPACT_WINDOW_START(builder, IMPACT_WINDOW_START)
+        if self.IMPACT_WINDOW_END is not None:
+            RDMAddIMPACT_WINDOW_END(builder, IMPACT_WINDOW_END)
+        if self.IMPACT_REF_FRAME is not None:
+            RDMAddIMPACT_REF_FRAME(builder, IMPACT_REF_FRAME)
+        RDMAddNOMINAL_IMPACT_LON(builder, self.NOMINAL_IMPACT_LON)
+        RDMAddNOMINAL_IMPACT_LAT(builder, self.NOMINAL_IMPACT_LAT)
+        RDMAddNOMINAL_IMPACT_ALT(builder, self.NOMINAL_IMPACT_ALT)
+        RDMAddIMPACT_1_CONFIDENCE(builder, self.IMPACT_1_CONFIDENCE)
+        RDMAddIMPACT_1_START_LON(builder, self.IMPACT_1_START_LON)
+        RDMAddIMPACT_1_START_LAT(builder, self.IMPACT_1_START_LAT)
+        RDMAddIMPACT_1_STOP_LON(builder, self.IMPACT_1_STOP_LON)
+        RDMAddIMPACT_1_STOP_LAT(builder, self.IMPACT_1_STOP_LAT)
+        RDMAddIMPACT_1_CROSS_TRACK(builder, self.IMPACT_1_CROSS_TRACK)
+        RDMAddIMPACT_2_CONFIDENCE(builder, self.IMPACT_2_CONFIDENCE)
+        RDMAddIMPACT_2_START_LON(builder, self.IMPACT_2_START_LON)
+        RDMAddIMPACT_2_START_LAT(builder, self.IMPACT_2_START_LAT)
+        RDMAddIMPACT_2_STOP_LON(builder, self.IMPACT_2_STOP_LON)
+        RDMAddIMPACT_2_STOP_LAT(builder, self.IMPACT_2_STOP_LAT)
+        RDMAddIMPACT_2_CROSS_TRACK(builder, self.IMPACT_2_CROSS_TRACK)
+        RDMAddIMPACT_3_CONFIDENCE(builder, self.IMPACT_3_CONFIDENCE)
+        RDMAddIMPACT_3_START_LON(builder, self.IMPACT_3_START_LON)
+        RDMAddIMPACT_3_START_LAT(builder, self.IMPACT_3_START_LAT)
+        RDMAddIMPACT_3_STOP_LON(builder, self.IMPACT_3_STOP_LON)
+        RDMAddIMPACT_3_STOP_LAT(builder, self.IMPACT_3_STOP_LAT)
+        RDMAddIMPACT_3_CROSS_TRACK(builder, self.IMPACT_3_CROSS_TRACK)
+        if self.COV_REF_FRAME is not None:
+            RDMAddCOV_REF_FRAME(builder, COV_REF_FRAME)
+        if self.COVARIANCE is not None:
+            RDMAddCOVARIANCE(builder, COVARIANCE)
+        RDMAddDRY_MASS(builder, self.DRY_MASS)
+        if self.HAZARDOUS_SUBSTANCES is not None:
+            RDMAddHAZARDOUS_SUBSTANCES(builder, HAZARDOUS_SUBSTANCES)
+        RDMAddSOLAR_RAD_COEFF(builder, self.SOLAR_RAD_COEFF)
+        RDMAddDRAG_COEFF(builder, self.DRAG_COEFF)
+        RDMAddRCS(builder, self.RCS)
+        RDMAddTHRUST_ACCELERATION(builder, self.THRUST_ACCELERATION)
+        if self.TIME_LASTOB_START is not None:
+            RDMAddTIME_LASTOB_START(builder, TIME_LASTOB_START)
+        if self.TIME_LASTOB_END is not None:
+            RDMAddTIME_LASTOB_END(builder, TIME_LASTOB_END)
+        RDMAddRECOMMENDED_OD_SPAN(builder, self.RECOMMENDED_OD_SPAN)
+        RDMAddACTUAL_OD_SPAN(builder, self.ACTUAL_OD_SPAN)
+        RDMAddOBS_AVAILABLE(builder, self.OBS_AVAILABLE)
+        RDMAddOBS_USED(builder, self.OBS_USED)
+        RDMAddTRACKS_AVAILABLE(builder, self.TRACKS_AVAILABLE)
+        RDMAddTRACKS_USED(builder, self.TRACKS_USED)
+        RDMAddRESIDUALS_ACCEPTED(builder, self.RESIDUALS_ACCEPTED)
+        RDMAddWEIGHTED_RMS(builder, self.WEIGHTED_RMS)
+        if self.USER_DEFINED_PARAMETERS is not None:
+            RDMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
         RDM = RDMEnd(builder)
         return RDM

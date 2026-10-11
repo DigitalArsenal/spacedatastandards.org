@@ -151,7 +151,10 @@ class OMM : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     /**
-     * COMMENT (O)
+     * COMMENT (O): every COMMENT line of the message, in message order, joined by
+     * a line feed. A message states comments in its header, its metadata and each
+     * data group; this field holds them all, so a message written from the record
+     * states them together in its header.
      */
     val comment : String?
         get() {
@@ -441,6 +444,54 @@ class OMM : Table() {
             val o = __offset(82)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+     * that states its security classification or handling caveat. Not
+     * CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+     */
+    val classification : String?
+        get() {
+            val o = __offset(84)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val classificationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(84, 1)
+    fun classificationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 84, 1)
+    /**
+     * MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+     * originator makes unique for this message.
+     */
+    val messageId : String?
+        get() {
+            val o = __offset(86)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val messageIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(86, 1)
+    fun messageIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 86, 1)
+    /**
+     * Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+     * message that has no dedicated field above, in message order.
+     */
+    fun userDefinedParameters(j: Int) : OMMUserDefinedParameter? = userDefinedParameters(OMMUserDefinedParameter(), j)
+    fun userDefinedParameters(obj: OMMUserDefinedParameter, j: Int) : OMMUserDefinedParameter? {
+        val o = __offset(88)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val userDefinedParametersLength : Int
+        get() {
+            val o = __offset(88); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOMM(_bb: ByteBuffer): OMM = getRootAsOMM(_bb, OMM())
@@ -449,8 +500,8 @@ class OMM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OMMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OMM")
-        fun createOMM(builder: FlatBufferBuilder, ccsdsOmmVers: Double, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, timeSystem: Byte, meanElementTheory: Byte, commentOffset: Int, epochOffset: Int, semiMajorAxis: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, gm: Double, mass: Double, solarRadArea: Double, solarRadCoeff: Double, dragArea: Double, dragCoeff: Double, ephemerisType: Byte, classificationTypeOffset: Int, noradCatId: UInt, elementSetNo: UInt, revAtEpoch: Double, bstar: Double, meanMotionDot: Double, meanMotionDdot: Double, covReferenceFrameOffset: Int, covarianceOffset: Int, userDefinedBip0044Type: UInt, userDefinedObjectDesignatorOffset: Int, userDefinedEarthModelOffset: Int, userDefinedEpochTimestamp: Double, userDefinedMicroseconds: Double) : Int {
-            builder.startTable(40)
+        fun createOMM(builder: FlatBufferBuilder, ccsdsOmmVers: Double, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, timeSystem: Byte, meanElementTheory: Byte, commentOffset: Int, epochOffset: Int, semiMajorAxis: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, gm: Double, mass: Double, solarRadArea: Double, solarRadCoeff: Double, dragArea: Double, dragCoeff: Double, ephemerisType: Byte, classificationTypeOffset: Int, noradCatId: UInt, elementSetNo: UInt, revAtEpoch: Double, bstar: Double, meanMotionDot: Double, meanMotionDdot: Double, covReferenceFrameOffset: Int, covarianceOffset: Int, userDefinedBip0044Type: UInt, userDefinedObjectDesignatorOffset: Int, userDefinedEarthModelOffset: Int, userDefinedEpochTimestamp: Double, userDefinedMicroseconds: Double, classificationOffset: Int, messageIdOffset: Int, userDefinedParametersOffset: Int) : Int {
+            builder.startTable(43)
             addUSERDEFINEDMICROSECONDS(builder, userDefinedMicroseconds)
             addUSERDEFINEDEPOCHTIMESTAMP(builder, userDefinedEpochTimestamp)
             addMEANMOTIONDDOT(builder, meanMotionDdot)
@@ -471,6 +522,9 @@ class OMM : Table() {
             addMEANMOTION(builder, meanMotion)
             addSEMIMAJORAXIS(builder, semiMajorAxis)
             addCCSDSOMMVERS(builder, ccsdsOmmVers)
+            addUSERDEFINEDPARAMETERS(builder, userDefinedParametersOffset)
+            addMESSAGEID(builder, messageIdOffset)
+            addCLASSIFICATION(builder, classificationOffset)
             addUSERDEFINEDEARTHMODEL(builder, userDefinedEarthModelOffset)
             addUSERDEFINEDOBJECTDESIGNATOR(builder, userDefinedObjectDesignatorOffset)
             addUSERDEFINEDBIP0044TYPE(builder, userDefinedBip0044Type)
@@ -493,7 +547,7 @@ class OMM : Table() {
             addTIMESYSTEM(builder, timeSystem)
             return endOMM(builder)
         }
-        fun startOMM(builder: FlatBufferBuilder) = builder.startTable(40)
+        fun startOMM(builder: FlatBufferBuilder) = builder.startTable(43)
         fun addCCSDSOMMVERS(builder: FlatBufferBuilder, ccsdsOmmVers: Double) = builder.addDouble(0, ccsdsOmmVers, 0.0)
         fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -542,6 +596,17 @@ class OMM : Table() {
         fun addUSERDEFINEDEARTHMODEL(builder: FlatBufferBuilder, userDefinedEarthModel: Int) = builder.addOffset(37, userDefinedEarthModel, 0)
         fun addUSERDEFINEDEPOCHTIMESTAMP(builder: FlatBufferBuilder, userDefinedEpochTimestamp: Double) = builder.addDouble(38, userDefinedEpochTimestamp, 0.0)
         fun addUSERDEFINEDMICROSECONDS(builder: FlatBufferBuilder, userDefinedMicroseconds: Double) = builder.addDouble(39, userDefinedMicroseconds, 0.0)
+        fun addCLASSIFICATION(builder: FlatBufferBuilder, classification: Int) = builder.addOffset(40, classification, 0)
+        fun addMESSAGEID(builder: FlatBufferBuilder, messageId: Int) = builder.addOffset(41, messageId, 0)
+        fun addUSERDEFINEDPARAMETERS(builder: FlatBufferBuilder, userDefinedParameters: Int) = builder.addOffset(42, userDefinedParameters, 0)
+        fun createUserDefinedParametersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startUserDefinedParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endOMM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

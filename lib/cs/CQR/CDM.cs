@@ -7,6 +7,14 @@ using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
 /// Conjunction Data Message
+///
+/// Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+/// SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+/// of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+/// km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+/// MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+/// COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+/// terms) are held as the message states them.
 public struct CDM : IFlatbufferObject
 {
   private Table __p;
@@ -137,6 +145,15 @@ public struct CDM : IFlatbufferObject
   public PNM? OBJECT1_DATASOURCE { get { int o = __p.__offset(58); return o != 0 ? (PNM?)(new PNM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Data Source for the positional information for Object 2
   public PNM? OBJECT2_DATASOURCE { get { int o = __p.__offset(60); return o != 0 ? (PNM?)(new PNM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// COMMENT lines of the message header and of its relative metadata and data
+  /// (CCSDS 508.0-B-1), in message order, joined by a line feed.
+  public string COMMENT { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOMMENTBytes() { return __p.__vector_as_span<byte>(62, 1); }
+#else
+  public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(62); }
+#endif
+  public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(62); }
 
   public static Offset<CDM> CreateCDM(FlatBufferBuilder builder,
       double CCSDS_CDM_VERS = 0.0,
@@ -167,8 +184,9 @@ public struct CDM : IFlatbufferObject
       Offset<CDMObject> OBJECT1Offset = default(Offset<CDMObject>),
       Offset<CDMObject> OBJECT2Offset = default(Offset<CDMObject>),
       Offset<PNM> OBJECT1_DATASOURCEOffset = default(Offset<PNM>),
-      Offset<PNM> OBJECT2_DATASOURCEOffset = default(Offset<PNM>)) {
-    builder.StartTable(29);
+      Offset<PNM> OBJECT2_DATASOURCEOffset = default(Offset<PNM>),
+      StringOffset COMMENTOffset = default(StringOffset)) {
+    builder.StartTable(30);
     CDM.AddCOLLISION_PROBABILITY(builder, COLLISION_PROBABILITY);
     CDM.AddSCREEN_VOLUME_Z(builder, SCREEN_VOLUME_Z);
     CDM.AddSCREEN_VOLUME_Y(builder, SCREEN_VOLUME_Y);
@@ -182,6 +200,7 @@ public struct CDM : IFlatbufferObject
     CDM.AddRELATIVE_SPEED(builder, RELATIVE_SPEED);
     CDM.AddMISS_DISTANCE(builder, MISS_DISTANCE);
     CDM.AddCCSDS_CDM_VERS(builder, CCSDS_CDM_VERS);
+    CDM.AddCOMMENT(builder, COMMENTOffset);
     CDM.AddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCEOffset);
     CDM.AddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCEOffset);
     CDM.AddOBJECT2(builder, OBJECT2Offset);
@@ -201,7 +220,7 @@ public struct CDM : IFlatbufferObject
     return CDM.EndCDM(builder);
   }
 
-  public static void StartCDM(FlatBufferBuilder builder) { builder.StartTable(29); }
+  public static void StartCDM(FlatBufferBuilder builder) { builder.StartTable(30); }
   public static void AddCCSDS_CDM_VERS(FlatBufferBuilder builder, double CCSDS_CDM_VERS) { builder.AddDouble(0, CCSDS_CDM_VERS, 0.0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -231,6 +250,7 @@ public struct CDM : IFlatbufferObject
   public static void AddOBJECT2(FlatBufferBuilder builder, Offset<CDMObject> OBJECT2Offset) { builder.AddOffset(26, OBJECT2Offset.Value, 0); }
   public static void AddOBJECT1_DATASOURCE(FlatBufferBuilder builder, Offset<PNM> OBJECT1_DATASOURCEOffset) { builder.AddOffset(27, OBJECT1_DATASOURCEOffset.Value, 0); }
   public static void AddOBJECT2_DATASOURCE(FlatBufferBuilder builder, Offset<PNM> OBJECT2_DATASOURCEOffset) { builder.AddOffset(28, OBJECT2_DATASOURCEOffset.Value, 0); }
+  public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(29, COMMENTOffset.Value, 0); }
   public static Offset<CDM> EndCDM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CDM>(o);
@@ -272,6 +292,7 @@ public struct CDM : IFlatbufferObject
     _o.OBJECT2 = this.OBJECT2.HasValue ? this.OBJECT2.Value.UnPack() : null;
     _o.OBJECT1_DATASOURCE = this.OBJECT1_DATASOURCE.HasValue ? this.OBJECT1_DATASOURCE.Value.UnPack() : null;
     _o.OBJECT2_DATASOURCE = this.OBJECT2_DATASOURCE.HasValue ? this.OBJECT2_DATASOURCE.Value.UnPack() : null;
+    _o.COMMENT = this.COMMENT;
   }
   public static Offset<CDM> Pack(FlatBufferBuilder builder, CDMT _o) {
     if (_o == null) return default(Offset<CDM>);
@@ -290,6 +311,7 @@ public struct CDM : IFlatbufferObject
     var _OBJECT2 = _o.OBJECT2 == null ? default(Offset<CDMObject>) : CDMObject.Pack(builder, _o.OBJECT2);
     var _OBJECT1_DATASOURCE = _o.OBJECT1_DATASOURCE == null ? default(Offset<PNM>) : PNM.Pack(builder, _o.OBJECT1_DATASOURCE);
     var _OBJECT2_DATASOURCE = _o.OBJECT2_DATASOURCE == null ? default(Offset<PNM>) : PNM.Pack(builder, _o.OBJECT2_DATASOURCE);
+    var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
     return CreateCDM(
       builder,
       _o.CCSDS_CDM_VERS,
@@ -320,7 +342,8 @@ public struct CDM : IFlatbufferObject
       _OBJECT1,
       _OBJECT2,
       _OBJECT1_DATASOURCE,
-      _OBJECT2_DATASOURCE);
+      _OBJECT2_DATASOURCE,
+      _COMMENT);
   }
 }
 
@@ -355,6 +378,7 @@ public class CDMT
   public CDMObjectT OBJECT2 { get; set; }
   public PNMT OBJECT1_DATASOURCE { get; set; }
   public PNMT OBJECT2_DATASOURCE { get; set; }
+  public string COMMENT { get; set; }
 
   public CDMT() {
     this.CCSDS_CDM_VERS = 0.0;
@@ -386,6 +410,7 @@ public class CDMT
     this.OBJECT2 = null;
     this.OBJECT1_DATASOURCE = null;
     this.OBJECT2_DATASOURCE = null;
+    this.COMMENT = null;
   }
   public static CDMT DeserializeFromBinary(byte[] fbBuffer) {
     return CDM.GetRootAsCDM(new ByteBuffer(fbBuffer)).UnPack();
@@ -432,6 +457,7 @@ static public class CDMVerify
       && verifier.VerifyTable(tablePos, 56 /*OBJECT2*/, CDMObjectVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 58 /*OBJECT1_DATASOURCE*/, PNMVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 60 /*OBJECT2_DATASOURCE*/, PNMVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 62 /*COMMENT*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

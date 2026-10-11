@@ -83,7 +83,10 @@ public final class OMM extends com.google.flatbuffers.Table {
    */
   public byte MEAN_ELEMENT_THEORY() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * COMMENT (O)
+   * COMMENT (O): every COMMENT line of the message, in message order, joined by
+   * a line feed. A message states comments in its header, its metadata and each
+   * data group; this field holds them all, so a message written from the record
+   * states them together in its header.
    */
   public String COMMENT() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
@@ -226,6 +229,30 @@ public final class OMM extends com.google.flatbuffers.Table {
    * USER_DEFINED_MICROSECONDS [O, units per ICD]
    */
   public double USER_DEFINED_MICROSECONDS() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+   * that states its security classification or handling caveat. Not
+   * CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+   */
+  public String CLASSIFICATION() { int o = __offset(84); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CLASSIFICATIONAsByteBuffer() { return __vector_as_bytebuffer(84, 1); }
+  public ByteBuffer CLASSIFICATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 84, 1); }
+  /**
+   * MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+   * originator makes unique for this message.
+   */
+  public String MESSAGE_ID() { int o = __offset(86); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MESSAGE_IDAsByteBuffer() { return __vector_as_bytebuffer(86, 1); }
+  public ByteBuffer MESSAGE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 86, 1); }
+  /**
+   * Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+   * message that has no dedicated field above, in message order.
+   */
+  public OMMUserDefinedParameter USER_DEFINED_PARAMETERS(int j) { return USER_DEFINED_PARAMETERS(new OMMUserDefinedParameter(), j); }
+  public OMMUserDefinedParameter USER_DEFINED_PARAMETERS(OMMUserDefinedParameter obj, int j) { int o = __offset(88); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int USER_DEFINED_PARAMETERSLength() { int o = __offset(88); return o != 0 ? __vector_len(o) : 0; }
+  public OMMUserDefinedParameter.Vector userDefinedParametersVector() { return userDefinedParametersVector(new OMMUserDefinedParameter.Vector()); }
+  public OMMUserDefinedParameter.Vector userDefinedParametersVector(OMMUserDefinedParameter.Vector obj) { int o = __offset(88); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createOMM(FlatBufferBuilder builder,
       double CCSDS_OMM_VERS,
@@ -267,8 +294,11 @@ public final class OMM extends com.google.flatbuffers.Table {
       int USER_DEFINED_OBJECT_DESIGNATOROffset,
       int USER_DEFINED_EARTH_MODELOffset,
       double USER_DEFINED_EPOCH_TIMESTAMP,
-      double USER_DEFINED_MICROSECONDS) {
-    builder.startTable(40);
+      double USER_DEFINED_MICROSECONDS,
+      int CLASSIFICATIONOffset,
+      int MESSAGE_IDOffset,
+      int USER_DEFINED_PARAMETERSOffset) {
+    builder.startTable(43);
     OMM.addUserDefinedMicroseconds(builder, USER_DEFINED_MICROSECONDS);
     OMM.addUserDefinedEpochTimestamp(builder, USER_DEFINED_EPOCH_TIMESTAMP);
     OMM.addMeanMotionDdot(builder, MEAN_MOTION_DDOT);
@@ -289,6 +319,9 @@ public final class OMM extends com.google.flatbuffers.Table {
     OMM.addMeanMotion(builder, MEAN_MOTION);
     OMM.addSemiMajorAxis(builder, SEMI_MAJOR_AXIS);
     OMM.addCcsdsOmmVers(builder, CCSDS_OMM_VERS);
+    OMM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERSOffset);
+    OMM.addMessageId(builder, MESSAGE_IDOffset);
+    OMM.addClassification(builder, CLASSIFICATIONOffset);
     OMM.addUserDefinedEarthModel(builder, USER_DEFINED_EARTH_MODELOffset);
     OMM.addUserDefinedObjectDesignator(builder, USER_DEFINED_OBJECT_DESIGNATOROffset);
     OMM.addUserDefinedBip0044Type(builder, USER_DEFINED_BIP_0044_TYPE);
@@ -312,7 +345,7 @@ public final class OMM extends com.google.flatbuffers.Table {
     return OMM.endOMM(builder);
   }
 
-  public static void startOMM(FlatBufferBuilder builder) { builder.startTable(40); }
+  public static void startOMM(FlatBufferBuilder builder) { builder.startTable(43); }
   public static void addCcsdsOmmVers(FlatBufferBuilder builder, double CCSDS_OMM_VERS) { builder.addDouble(0, CCSDS_OMM_VERS, 0.0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -355,6 +388,11 @@ public final class OMM extends com.google.flatbuffers.Table {
   public static void addUserDefinedEarthModel(FlatBufferBuilder builder, int USER_DEFINED_EARTH_MODELOffset) { builder.addOffset(37, USER_DEFINED_EARTH_MODELOffset, 0); }
   public static void addUserDefinedEpochTimestamp(FlatBufferBuilder builder, double USER_DEFINED_EPOCH_TIMESTAMP) { builder.addDouble(38, USER_DEFINED_EPOCH_TIMESTAMP, 0.0); }
   public static void addUserDefinedMicroseconds(FlatBufferBuilder builder, double USER_DEFINED_MICROSECONDS) { builder.addDouble(39, USER_DEFINED_MICROSECONDS, 0.0); }
+  public static void addClassification(FlatBufferBuilder builder, int CLASSIFICATIONOffset) { builder.addOffset(40, CLASSIFICATIONOffset, 0); }
+  public static void addMessageId(FlatBufferBuilder builder, int MESSAGE_IDOffset) { builder.addOffset(41, MESSAGE_IDOffset, 0); }
+  public static void addUserDefinedParameters(FlatBufferBuilder builder, int USER_DEFINED_PARAMETERSOffset) { builder.addOffset(42, USER_DEFINED_PARAMETERSOffset, 0); }
+  public static int createUserDefinedParametersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startUserDefinedParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endOMM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

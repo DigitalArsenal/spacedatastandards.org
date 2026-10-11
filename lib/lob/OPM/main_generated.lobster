@@ -3,6 +3,10 @@ import flatbuffers
 
 class OPM
 
+class OPMManeuver
+
+class OPMUserDefinedParameter
+
 /// Orbit Parameter Message
 class OPM : flatbuffers.handle
     def CCSDS_OPM_VERS() -> string:
@@ -61,13 +65,51 @@ class OPM : flatbuffers.handle
         return flatbuffers.field_float64(buf_, pos_, 56, 0.0)
     def DRAG_COEFF() -> float:
         return flatbuffers.field_float64(buf_, pos_, 58, 0.0)
+    /// COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+    /// and data groups, in message order, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 60)
+    /// CLASSIFICATION of the message: the optional header keyword stating its
+    /// security classification or handling caveat.
+    def CLASSIFICATION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 62)
+    /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+    /// unique for this message.
+    def MESSAGE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 64)
+    /// REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+    def REF_FRAME_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 66)
+    /// COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+    /// when it is REF_FRAME.
+    def COV_REF_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 68)
+    /// Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+    /// CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+    /// CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+    /// CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+    /// Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+    def COVARIANCE(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 70) + i * 8)
+    def COVARIANCE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 70)
+    /// The message's maneuvers, in message order.
+    def MANEUVERS(i:int) -> OPMManeuver:
+        return OPMManeuver { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 72) + i * 4) }
+    def MANEUVERS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 72)
+    /// Every USER_DEFINED_x keyword of the message, in message order.
+    def USER_DEFINED_PARAMETERS(i:int) -> OPMUserDefinedParameter:
+        return OPMUserDefinedParameter { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 74) + i * 4) }
+    def USER_DEFINED_PARAMETERS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 74)
 
 def GetRootAsOPM(buf:string): return OPM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OPMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(28)
+        b_.StartObject(36)
         return this
     def add_CCSDS_OPM_VERS(CCSDS_OPM_VERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, CCSDS_OPM_VERS)
@@ -152,6 +194,138 @@ struct OPMBuilder:
         return this
     def add_DRAG_COEFF(DRAG_COEFF:float):
         b_.PrependFloat64Slot(27, DRAG_COEFF, 0.0)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, COMMENT)
+        return this
+    def add_CLASSIFICATION(CLASSIFICATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(29, CLASSIFICATION)
+        return this
+    def add_MESSAGE_ID(MESSAGE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(30, MESSAGE_ID)
+        return this
+    def add_REF_FRAME_EPOCH(REF_FRAME_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(31, REF_FRAME_EPOCH)
+        return this
+    def add_COV_REF_FRAME(COV_REF_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(32, COV_REF_FRAME)
+        return this
+    def add_COVARIANCE(COVARIANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(33, COVARIANCE)
+        return this
+    def add_MANEUVERS(MANEUVERS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(34, MANEUVERS)
+        return this
+    def add_USER_DEFINED_PARAMETERS(USER_DEFINED_PARAMETERS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(35, USER_DEFINED_PARAMETERS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def OPMStartCOVARIANCEVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OPMCreateCOVARIANCEVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OPMStartMANEUVERSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OPMCreateMANEUVERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def OPMStartUSERDEFINEDPARAMETERSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OPMCreateUSERDEFINEDPARAMETERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// One maneuver of an OPM (CCSDS 502.0-B-3 Table 3-7).
+class OPMManeuver : flatbuffers.handle
+    /// COMMENT lines of this maneuver, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// MAN_EPOCH_IGNITION: epoch of ignition.
+    def MAN_EPOCH_IGNITION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// MAN_DURATION: duration of the burn in seconds; zero for an impulsive maneuver.
+    def MAN_DURATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// MAN_DELTA_MASS: mass change during the maneuver in kg, negative or zero.
+    def MAN_DELTA_MASS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// MAN_REF_FRAME: frame of MAN_DV_1..3 (for example RTN, TNW, or REF_FRAME's).
+    def MAN_REF_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// MAN_DV_1: first component of the velocity increment in km/s.
+    def MAN_DV_1() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// MAN_DV_2: second component of the velocity increment in km/s.
+    def MAN_DV_2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// MAN_DV_3: third component of the velocity increment in km/s.
+    def MAN_DV_3() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+
+def GetRootAsOPMManeuver(buf:string): return OPMManeuver { buf, flatbuffers.indirect(buf, 0) }
+
+struct OPMManeuverBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(8)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_MAN_EPOCH_IGNITION(MAN_EPOCH_IGNITION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, MAN_EPOCH_IGNITION)
+        return this
+    def add_MAN_DURATION(MAN_DURATION:float):
+        b_.PrependFloat64Slot(2, MAN_DURATION, 0.0)
+        return this
+    def add_MAN_DELTA_MASS(MAN_DELTA_MASS:float):
+        b_.PrependFloat64Slot(3, MAN_DELTA_MASS, 0.0)
+        return this
+    def add_MAN_REF_FRAME(MAN_REF_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, MAN_REF_FRAME)
+        return this
+    def add_MAN_DV_1(MAN_DV_1:float):
+        b_.PrependFloat64Slot(5, MAN_DV_1, 0.0)
+        return this
+    def add_MAN_DV_2(MAN_DV_2:float):
+        b_.PrependFloat64Slot(6, MAN_DV_2, 0.0)
+        return this
+    def add_MAN_DV_3(MAN_DV_3:float):
+        b_.PrependFloat64Slot(7, MAN_DV_3, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// One USER_DEFINED_x keyword of an OPM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+class OPMUserDefinedParameter : flatbuffers.handle
+    /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+    def PARAM_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// The value as written
+    def PARAM_VALUE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+
+def GetRootAsOPMUserDefinedParameter(buf:string): return OPMUserDefinedParameter { buf, flatbuffers.indirect(buf, 0) }
+
+struct OPMUserDefinedParameterBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_PARAM_NAME(PARAM_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, PARAM_NAME)
+        return this
+    def add_PARAM_VALUE(PARAM_VALUE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, PARAM_VALUE)
         return this
     def end():
         return b_.EndObject()

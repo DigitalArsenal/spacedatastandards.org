@@ -12,6 +12,14 @@ import { screeningVolumeShape } from './screeningVolumeShape.js';
 
 /**
  * Conjunction Data Message
+ *
+ * Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+ * SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+ * of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+ * km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+ * MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+ * COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+ * terms) are held as the message states them.
  */
 export class CDM implements flatbuffers.IUnpackableObject<CDMT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -287,8 +295,19 @@ OBJECT2_DATASOURCE(obj?:PNM):PNM|null {
   return offset ? (obj || new PNM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * COMMENT lines of the message header and of its relative metadata and data
+ * (CCSDS 508.0-B-1), in message order, joined by a line feed.
+ */
+COMMENT():string|null
+COMMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COMMENT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startCDM(builder:flatbuffers.Builder) {
-  builder.startObject(29);
+  builder.startObject(30);
 }
 
 static addCcsdsCdmVers(builder:flatbuffers.Builder, CCSDS_CDM_VERS:number) {
@@ -407,6 +426,10 @@ static addObject2Datasource(builder:flatbuffers.Builder, OBJECT2_DATASOURCEOffse
   builder.addFieldOffset(28, OBJECT2_DATASOURCEOffset, 0);
 }
 
+static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, COMMENTOffset, 0);
+}
+
 static endCDM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -451,7 +474,8 @@ unpack(): CDMT {
     (this.OBJECT1() !== null ? this.OBJECT1()!.unpack() : null),
     (this.OBJECT2() !== null ? this.OBJECT2()!.unpack() : null),
     (this.OBJECT1_DATASOURCE() !== null ? this.OBJECT1_DATASOURCE()!.unpack() : null),
-    (this.OBJECT2_DATASOURCE() !== null ? this.OBJECT2_DATASOURCE()!.unpack() : null)
+    (this.OBJECT2_DATASOURCE() !== null ? this.OBJECT2_DATASOURCE()!.unpack() : null),
+    this.COMMENT()
   );
 }
 
@@ -486,6 +510,7 @@ unpackTo(_o: CDMT): void {
   _o.OBJECT2 = (this.OBJECT2() !== null ? this.OBJECT2()!.unpack() : null);
   _o.OBJECT1_DATASOURCE = (this.OBJECT1_DATASOURCE() !== null ? this.OBJECT1_DATASOURCE()!.unpack() : null);
   _o.OBJECT2_DATASOURCE = (this.OBJECT2_DATASOURCE() !== null ? this.OBJECT2_DATASOURCE()!.unpack() : null);
+  _o.COMMENT = this.COMMENT();
 }
 }
 
@@ -519,7 +544,8 @@ constructor(
   public OBJECT1: CDMObjectT|null = null,
   public OBJECT2: CDMObjectT|null = null,
   public OBJECT1_DATASOURCE: PNMT|null = null,
-  public OBJECT2_DATASOURCE: PNMT|null = null
+  public OBJECT2_DATASOURCE: PNMT|null = null,
+  public COMMENT: string|Uint8Array|null = null
 ){}
 
 
@@ -539,6 +565,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OBJECT2 = (this.OBJECT2 !== null ? this.OBJECT2!.pack(builder) : 0);
   const OBJECT1_DATASOURCE = (this.OBJECT1_DATASOURCE !== null ? this.OBJECT1_DATASOURCE!.pack(builder) : 0);
   const OBJECT2_DATASOURCE = (this.OBJECT2_DATASOURCE !== null ? this.OBJECT2_DATASOURCE!.pack(builder) : 0);
+  const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
 
   CDM.startCDM(builder);
   CDM.addCcsdsCdmVers(builder, this.CCSDS_CDM_VERS);
@@ -570,6 +597,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CDM.addObject2(builder, OBJECT2);
   CDM.addObject1Datasource(builder, OBJECT1_DATASOURCE);
   CDM.addObject2Datasource(builder, OBJECT2_DATASOURCE);
+  CDM.addComment(builder, COMMENT);
 
   return CDM.endCDM(builder);
 }

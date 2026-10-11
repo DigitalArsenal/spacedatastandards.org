@@ -10,7 +10,7 @@ pub const ENUM_MAX_NCD_CONTAINER_FORMAT: u8 = 255;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_NCD_CONTAINER_FORMAT: [ncdContainerFormat; 14] = [
+pub const ENUM_VALUES_NCD_CONTAINER_FORMAT: [ncdContainerFormat; 28] = [
     ncdContainerFormat::UNSPECIFIED,
     ncdContainerFormat::SPK_DAF,
     ncdContainerFormat::SP3_C,
@@ -24,6 +24,20 @@ pub const ENUM_VALUES_NCD_CONTAINER_FORMAT: [ncdContainerFormat; 14] = [
     ncdContainerFormat::CCSDS_AEM_XML,
     ncdContainerFormat::CCSDS_TDM_KVN,
     ncdContainerFormat::CCSDS_TDM_XML,
+    ncdContainerFormat::CCSDS_OMM_KVN,
+    ncdContainerFormat::CCSDS_OMM_XML,
+    ncdContainerFormat::CCSDS_OPM_KVN,
+    ncdContainerFormat::CCSDS_OPM_XML,
+    ncdContainerFormat::CCSDS_OCM_KVN,
+    ncdContainerFormat::CCSDS_OCM_XML,
+    ncdContainerFormat::CCSDS_CDM_KVN,
+    ncdContainerFormat::CCSDS_CDM_XML,
+    ncdContainerFormat::CCSDS_APM_KVN,
+    ncdContainerFormat::CCSDS_APM_XML,
+    ncdContainerFormat::CCSDS_ACM_KVN,
+    ncdContainerFormat::CCSDS_ACM_XML,
+    ncdContainerFormat::CCSDS_RDM_KVN,
+    ncdContainerFormat::CCSDS_RDM_XML,
     ncdContainerFormat::PROVIDER_DEFINED,
 ];
 
@@ -77,6 +91,34 @@ impl ncdContainerFormat {
     pub const CCSDS_TDM_KVN: Self = Self(11);
     /// CCSDS Tracking Data Message, XML.
     pub const CCSDS_TDM_XML: Self = Self(12);
+    /// CCSDS Orbit Mean-Elements Message, keyword-value notation.
+    pub const CCSDS_OMM_KVN: Self = Self(13);
+    /// CCSDS Orbit Mean-Elements Message, XML.
+    pub const CCSDS_OMM_XML: Self = Self(14);
+    /// CCSDS Orbit Parameter Message, keyword-value notation.
+    pub const CCSDS_OPM_KVN: Self = Self(15);
+    /// CCSDS Orbit Parameter Message, XML.
+    pub const CCSDS_OPM_XML: Self = Self(16);
+    /// CCSDS Orbit Comprehensive Message, keyword-value notation.
+    pub const CCSDS_OCM_KVN: Self = Self(17);
+    /// CCSDS Orbit Comprehensive Message, XML.
+    pub const CCSDS_OCM_XML: Self = Self(18);
+    /// CCSDS Conjunction Data Message, keyword-value notation.
+    pub const CCSDS_CDM_KVN: Self = Self(19);
+    /// CCSDS Conjunction Data Message, XML.
+    pub const CCSDS_CDM_XML: Self = Self(20);
+    /// CCSDS Attitude Parameter Message, keyword-value notation.
+    pub const CCSDS_APM_KVN: Self = Self(21);
+    /// CCSDS Attitude Parameter Message, XML.
+    pub const CCSDS_APM_XML: Self = Self(22);
+    /// CCSDS Attitude Comprehensive Message, keyword-value notation.
+    pub const CCSDS_ACM_KVN: Self = Self(23);
+    /// CCSDS Attitude Comprehensive Message, XML.
+    pub const CCSDS_ACM_XML: Self = Self(24);
+    /// CCSDS Reentry Data Message, keyword-value notation.
+    pub const CCSDS_RDM_KVN: Self = Self(25);
+    /// CCSDS Reentry Data Message, XML.
+    pub const CCSDS_RDM_XML: Self = Self(26);
     /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
     /// which; a producer never reuses a neighbouring member instead.
     pub const PROVIDER_DEFINED: Self = Self(255);
@@ -97,6 +139,20 @@ impl ncdContainerFormat {
         Self::CCSDS_AEM_XML,
         Self::CCSDS_TDM_KVN,
         Self::CCSDS_TDM_XML,
+        Self::CCSDS_OMM_KVN,
+        Self::CCSDS_OMM_XML,
+        Self::CCSDS_OPM_KVN,
+        Self::CCSDS_OPM_XML,
+        Self::CCSDS_OCM_KVN,
+        Self::CCSDS_OCM_XML,
+        Self::CCSDS_CDM_KVN,
+        Self::CCSDS_CDM_XML,
+        Self::CCSDS_APM_KVN,
+        Self::CCSDS_APM_XML,
+        Self::CCSDS_ACM_KVN,
+        Self::CCSDS_ACM_XML,
+        Self::CCSDS_RDM_KVN,
+        Self::CCSDS_RDM_XML,
         Self::PROVIDER_DEFINED,
     ];
 
@@ -116,6 +172,20 @@ impl ncdContainerFormat {
             Self::CCSDS_AEM_XML => Some("CCSDS_AEM_XML"),
             Self::CCSDS_TDM_KVN => Some("CCSDS_TDM_KVN"),
             Self::CCSDS_TDM_XML => Some("CCSDS_TDM_XML"),
+            Self::CCSDS_OMM_KVN => Some("CCSDS_OMM_KVN"),
+            Self::CCSDS_OMM_XML => Some("CCSDS_OMM_XML"),
+            Self::CCSDS_OPM_KVN => Some("CCSDS_OPM_KVN"),
+            Self::CCSDS_OPM_XML => Some("CCSDS_OPM_XML"),
+            Self::CCSDS_OCM_KVN => Some("CCSDS_OCM_KVN"),
+            Self::CCSDS_OCM_XML => Some("CCSDS_OCM_XML"),
+            Self::CCSDS_CDM_KVN => Some("CCSDS_CDM_KVN"),
+            Self::CCSDS_CDM_XML => Some("CCSDS_CDM_XML"),
+            Self::CCSDS_APM_KVN => Some("CCSDS_APM_KVN"),
+            Self::CCSDS_APM_XML => Some("CCSDS_APM_XML"),
+            Self::CCSDS_ACM_KVN => Some("CCSDS_ACM_KVN"),
+            Self::CCSDS_ACM_XML => Some("CCSDS_ACM_XML"),
+            Self::CCSDS_RDM_KVN => Some("CCSDS_RDM_KVN"),
+            Self::CCSDS_RDM_XML => Some("CCSDS_RDM_XML"),
             Self::PROVIDER_DEFINED => Some("PROVIDER_DEFINED"),
             _ => None,
         }

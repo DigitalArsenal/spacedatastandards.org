@@ -6,6 +6,7 @@ export * from './ephemerisFormat.js';
 export * from './meanElementSource.js';
 export * from './MET.js';
 export * from './OMM.js';
+export * from './OMMUserDefinedParameter.js';
 export * from './OrbitFrame.js';
 export * from './OrbitFrameWrapper.js';
 export * from './RFM.js';

@@ -6,6 +6,14 @@ enum reentryDisposition:
     reentryDisposition_UNCONTROLLED = 1
     reentryDisposition_SEMI_CONTROLLED = 2
 
+/// CONTROLLED_REENTRY of an RDM (CCSDS 508.1-B-1): whether the re-entry is
+/// controlled. UNSPECIFIED is the zero value: the record does not state it.
+enum rdmControlledReentry:
+    rdmControlledReentry_UNSPECIFIED = 0
+    rdmControlledReentry_YES = 1
+    rdmControlledReentry_NO = 2
+    rdmControlledReentry_UNKNOWN = 3
+
 enum reentryReason:
     reentryReason_NATURAL_DECAY = 0
     reentryReason_COMMANDED_DEORBIT = 1
@@ -21,6 +29,8 @@ class reentryImpact
 class survivingDebris
 
 class RDM
+
+class RDMUserDefinedParameter
 
 /// Reentry State Vector
 class reentryStateVector : flatbuffers.handle
@@ -266,16 +276,273 @@ class RDM : flatbuffers.handle
     /// Total surviving mass in kg
     def SURVIVING_MASS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 54, 0.0)
-    /// Additional comments
+    /// COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+    /// data groups, in message order, joined by a line feed.
     def COMMENT() -> string:
         return flatbuffers.field_string(buf_, pos_, 56)
+    /// The fields below, with the earlier ones that say so, are the keywords of
+    /// CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+    /// NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+    /// NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+    /// WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+    /// REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+    /// SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+    /// not keywords of the message.
+    /// MESSAGE_ID: an identifier the originator makes unique for this message.
+    def MESSAGE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 58)
+    /// CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+    def CATALOG_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 60)
+    /// OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+    def OBJECT_DESIGNATOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 62)
+    /// OBJECT_OWNER.
+    def OBJECT_OWNER() -> string:
+        return flatbuffers.field_string(buf_, pos_, 64)
+    /// OBJECT_OPERATOR.
+    def OBJECT_OPERATOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 66)
+    /// CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+    def CONTROLLED_REENTRY() -> rdmControlledReentry:
+        return rdmControlledReentry(flatbuffers.field_int8(buf_, pos_, 68, 0))
+    /// CENTER_NAME: the body being re-entered.
+    def CENTER_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 70)
+    /// EPOCH_TZERO: the epoch the message's relative times are measured from.
+    def EPOCH_TZERO() -> string:
+        return flatbuffers.field_string(buf_, pos_, 72)
+    /// REF_FRAME: the frame of the state vector.
+    def REF_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 74)
+    /// REF_FRAME_EPOCH.
+    def REF_FRAME_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 76)
+    /// EPHEMERIS_NAME.
+    def EPHEMERIS_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 78)
+    /// GRAVITY_MODEL.
+    def GRAVITY_MODEL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 80)
+    /// ATMOSPHERIC_MODEL.
+    def ATMOSPHERIC_MODEL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 82)
+    /// SOLAR_FLUX_PREDICTION.
+    def SOLAR_FLUX_PREDICTION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 84)
+    /// N_BODY_PERTURBATIONS.
+    def N_BODY_PERTURBATIONS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 86)
+    /// SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+    def SOLAR_RAD_PRESSURE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 88)
+    /// EARTH_TIDES: a model name.
+    def EARTH_TIDES() -> string:
+        return flatbuffers.field_string(buf_, pos_, 90)
+    /// INTRACK_THRUST: YES or NO.
+    def INTRACK_THRUST() -> string:
+        return flatbuffers.field_string(buf_, pos_, 92)
+    /// DRAG_PARAMETERS_SOURCE.
+    def DRAG_PARAMETERS_SOURCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 94)
+    /// DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+    def DRAG_PARAMETERS_ALTITUDE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 96, nan)
+    /// REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+    def REENTRY_UNCERTAINTY_METHOD() -> string:
+        return flatbuffers.field_string(buf_, pos_, 98)
+    /// REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+    def REENTRY_DISINTEGRATION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 100)
+    /// IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+    def IMPACT_UNCERTAINTY_METHOD() -> string:
+        return flatbuffers.field_string(buf_, pos_, 102)
+    /// PREVIOUS_MESSAGE_ID.
+    def PREVIOUS_MESSAGE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 104)
+    /// NEXT_MESSAGE_EPOCH.
+    def NEXT_MESSAGE_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 106)
+    /// ORBIT_LIFETIME in days.
+    def ORBIT_LIFETIME() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 108, 0.0)
+    /// ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+    def ORBIT_LIFETIME_WINDOW_START() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 110, nan)
+    /// ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+    def ORBIT_LIFETIME_WINDOW_END() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 112, nan)
+    /// REENTRY_WINDOW_START.
+    def REENTRY_WINDOW_START() -> string:
+        return flatbuffers.field_string(buf_, pos_, 114)
+    /// REENTRY_WINDOW_END.
+    def REENTRY_WINDOW_END() -> string:
+        return flatbuffers.field_string(buf_, pos_, 116)
+    /// ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+    def ORBIT_LIFETIME_CONFIDENCE_LEVEL() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 118, nan)
+    /// PROBABILITY_OF_IMPACT, NaN when not stated.
+    def PROBABILITY_OF_IMPACT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 120, nan)
+    /// PROBABILITY_OF_BURN_UP, NaN when not stated.
+    def PROBABILITY_OF_BURN_UP() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 122, nan)
+    /// PROBABILITY_OF_BREAK_UP, NaN when not stated.
+    def PROBABILITY_OF_BREAK_UP() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 124, nan)
+    /// PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+    def PROBABILITY_OF_LAND_IMPACT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 126, nan)
+    /// PROBABILITY_OF_CASUALTY, NaN when not stated.
+    def PROBABILITY_OF_CASUALTY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 128, nan)
+    /// NOMINAL_IMPACT_EPOCH.
+    def NOMINAL_IMPACT_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 130)
+    /// IMPACT_WINDOW_START.
+    def IMPACT_WINDOW_START() -> string:
+        return flatbuffers.field_string(buf_, pos_, 132)
+    /// IMPACT_WINDOW_END.
+    def IMPACT_WINDOW_END() -> string:
+        return flatbuffers.field_string(buf_, pos_, 134)
+    /// IMPACT_REF_FRAME.
+    def IMPACT_REF_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 136)
+    /// NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+    def NOMINAL_IMPACT_LON() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 138, nan)
+    /// NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+    def NOMINAL_IMPACT_LAT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 140, nan)
+    /// NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+    def NOMINAL_IMPACT_ALT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 142, nan)
+    /// IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+    def IMPACT_1_CONFIDENCE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 144, nan)
+    /// IMPACT_1_START_LON in degrees, NaN when not stated.
+    def IMPACT_1_START_LON() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 146, nan)
+    /// IMPACT_1_START_LAT in degrees, NaN when not stated.
+    def IMPACT_1_START_LAT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 148, nan)
+    /// IMPACT_1_STOP_LON in degrees, NaN when not stated.
+    def IMPACT_1_STOP_LON() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 150, nan)
+    /// IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+    def IMPACT_1_STOP_LAT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 152, nan)
+    /// IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+    def IMPACT_1_CROSS_TRACK() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 154, nan)
+    /// IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+    def IMPACT_2_CONFIDENCE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 156, nan)
+    /// IMPACT_2_START_LON in degrees, NaN when not stated.
+    def IMPACT_2_START_LON() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 158, nan)
+    /// IMPACT_2_START_LAT in degrees, NaN when not stated.
+    def IMPACT_2_START_LAT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 160, nan)
+    /// IMPACT_2_STOP_LON in degrees, NaN when not stated.
+    def IMPACT_2_STOP_LON() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 162, nan)
+    /// IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+    def IMPACT_2_STOP_LAT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 164, nan)
+    /// IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+    def IMPACT_2_CROSS_TRACK() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 166, nan)
+    /// IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+    def IMPACT_3_CONFIDENCE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 168, nan)
+    /// IMPACT_3_START_LON in degrees, NaN when not stated.
+    def IMPACT_3_START_LON() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 170, nan)
+    /// IMPACT_3_START_LAT in degrees, NaN when not stated.
+    def IMPACT_3_START_LAT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 172, nan)
+    /// IMPACT_3_STOP_LON in degrees, NaN when not stated.
+    def IMPACT_3_STOP_LON() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 174, nan)
+    /// IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+    def IMPACT_3_STOP_LAT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 176, nan)
+    /// IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+    def IMPACT_3_CROSS_TRACK() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 178, nan)
+    /// COV_REF_FRAME: the frame of COVARIANCE.
+    def COV_REF_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 180)
+    /// Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+    /// triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+    /// CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+    /// CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+    /// CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+    def COVARIANCE(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 182) + i * 8)
+    def COVARIANCE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 182)
+    /// WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+    def DRY_MASS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 184, nan)
+    /// HAZARDOUS_SUBSTANCES.
+    def HAZARDOUS_SUBSTANCES() -> string:
+        return flatbuffers.field_string(buf_, pos_, 186)
+    /// SOLAR_RAD_COEFF, NaN when not stated.
+    def SOLAR_RAD_COEFF() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 188, nan)
+    /// DRAG_COEFF, NaN when not stated.
+    def DRAG_COEFF() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 190, nan)
+    /// RCS in m**2, NaN when not stated.
+    def RCS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 192, nan)
+    /// THRUST_ACCELERATION in m/s**2, NaN when not stated.
+    def THRUST_ACCELERATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 194, nan)
+    /// TIME_LASTOB_START.
+    def TIME_LASTOB_START() -> string:
+        return flatbuffers.field_string(buf_, pos_, 196)
+    /// TIME_LASTOB_END.
+    def TIME_LASTOB_END() -> string:
+        return flatbuffers.field_string(buf_, pos_, 198)
+    /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+    def RECOMMENDED_OD_SPAN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 200, nan)
+    /// ACTUAL_OD_SPAN in days, NaN when not stated.
+    def ACTUAL_OD_SPAN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 202, nan)
+    /// OBS_AVAILABLE.
+    def OBS_AVAILABLE() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 204, 0)
+    /// OBS_USED.
+    def OBS_USED() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 206, 0)
+    /// TRACKS_AVAILABLE.
+    def TRACKS_AVAILABLE() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 208, 0)
+    /// TRACKS_USED.
+    def TRACKS_USED() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 210, 0)
+    /// RESIDUALS_ACCEPTED in percent, NaN when not stated.
+    def RESIDUALS_ACCEPTED() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 212, nan)
+    /// WEIGHTED_RMS, NaN when not stated.
+    def WEIGHTED_RMS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 214, nan)
+    /// Every USER_DEFINED keyword of the message, in message order.
+    def USER_DEFINED_PARAMETERS(i:int) -> RDMUserDefinedParameter:
+        return RDMUserDefinedParameter { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 216) + i * 4) }
+    def USER_DEFINED_PARAMETERS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 216)
 
 def GetRootAsRDM(buf:string): return RDM { buf, flatbuffers.indirect(buf, 0) }
 
 struct RDMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(27)
+        b_.StartObject(107)
         return this
     def add_CCSDS_RDM_VERS(CCSDS_RDM_VERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, CCSDS_RDM_VERS)
@@ -358,6 +625,246 @@ struct RDMBuilder:
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(26, COMMENT)
         return this
+    def add_MESSAGE_ID(MESSAGE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(27, MESSAGE_ID)
+        return this
+    def add_CATALOG_NAME(CATALOG_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, CATALOG_NAME)
+        return this
+    def add_OBJECT_DESIGNATOR(OBJECT_DESIGNATOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(29, OBJECT_DESIGNATOR)
+        return this
+    def add_OBJECT_OWNER(OBJECT_OWNER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(30, OBJECT_OWNER)
+        return this
+    def add_OBJECT_OPERATOR(OBJECT_OPERATOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(31, OBJECT_OPERATOR)
+        return this
+    def add_CONTROLLED_REENTRY(CONTROLLED_REENTRY:rdmControlledReentry):
+        b_.PrependInt8Slot(32, CONTROLLED_REENTRY, 0)
+        return this
+    def add_CENTER_NAME(CENTER_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(33, CENTER_NAME)
+        return this
+    def add_EPOCH_TZERO(EPOCH_TZERO:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(34, EPOCH_TZERO)
+        return this
+    def add_REF_FRAME(REF_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(35, REF_FRAME)
+        return this
+    def add_REF_FRAME_EPOCH(REF_FRAME_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(36, REF_FRAME_EPOCH)
+        return this
+    def add_EPHEMERIS_NAME(EPHEMERIS_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(37, EPHEMERIS_NAME)
+        return this
+    def add_GRAVITY_MODEL(GRAVITY_MODEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(38, GRAVITY_MODEL)
+        return this
+    def add_ATMOSPHERIC_MODEL(ATMOSPHERIC_MODEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(39, ATMOSPHERIC_MODEL)
+        return this
+    def add_SOLAR_FLUX_PREDICTION(SOLAR_FLUX_PREDICTION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(40, SOLAR_FLUX_PREDICTION)
+        return this
+    def add_N_BODY_PERTURBATIONS(N_BODY_PERTURBATIONS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(41, N_BODY_PERTURBATIONS)
+        return this
+    def add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(42, SOLAR_RAD_PRESSURE)
+        return this
+    def add_EARTH_TIDES(EARTH_TIDES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(43, EARTH_TIDES)
+        return this
+    def add_INTRACK_THRUST(INTRACK_THRUST:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(44, INTRACK_THRUST)
+        return this
+    def add_DRAG_PARAMETERS_SOURCE(DRAG_PARAMETERS_SOURCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(45, DRAG_PARAMETERS_SOURCE)
+        return this
+    def add_DRAG_PARAMETERS_ALTITUDE(DRAG_PARAMETERS_ALTITUDE:float):
+        b_.PrependFloat64Slot(46, DRAG_PARAMETERS_ALTITUDE, nan)
+        return this
+    def add_REENTRY_UNCERTAINTY_METHOD(REENTRY_UNCERTAINTY_METHOD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(47, REENTRY_UNCERTAINTY_METHOD)
+        return this
+    def add_REENTRY_DISINTEGRATION(REENTRY_DISINTEGRATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(48, REENTRY_DISINTEGRATION)
+        return this
+    def add_IMPACT_UNCERTAINTY_METHOD(IMPACT_UNCERTAINTY_METHOD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(49, IMPACT_UNCERTAINTY_METHOD)
+        return this
+    def add_PREVIOUS_MESSAGE_ID(PREVIOUS_MESSAGE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(50, PREVIOUS_MESSAGE_ID)
+        return this
+    def add_NEXT_MESSAGE_EPOCH(NEXT_MESSAGE_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(51, NEXT_MESSAGE_EPOCH)
+        return this
+    def add_ORBIT_LIFETIME(ORBIT_LIFETIME:float):
+        b_.PrependFloat64Slot(52, ORBIT_LIFETIME, 0.0)
+        return this
+    def add_ORBIT_LIFETIME_WINDOW_START(ORBIT_LIFETIME_WINDOW_START:float):
+        b_.PrependFloat64Slot(53, ORBIT_LIFETIME_WINDOW_START, nan)
+        return this
+    def add_ORBIT_LIFETIME_WINDOW_END(ORBIT_LIFETIME_WINDOW_END:float):
+        b_.PrependFloat64Slot(54, ORBIT_LIFETIME_WINDOW_END, nan)
+        return this
+    def add_REENTRY_WINDOW_START(REENTRY_WINDOW_START:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(55, REENTRY_WINDOW_START)
+        return this
+    def add_REENTRY_WINDOW_END(REENTRY_WINDOW_END:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(56, REENTRY_WINDOW_END)
+        return this
+    def add_ORBIT_LIFETIME_CONFIDENCE_LEVEL(ORBIT_LIFETIME_CONFIDENCE_LEVEL:float):
+        b_.PrependFloat64Slot(57, ORBIT_LIFETIME_CONFIDENCE_LEVEL, nan)
+        return this
+    def add_PROBABILITY_OF_IMPACT(PROBABILITY_OF_IMPACT:float):
+        b_.PrependFloat64Slot(58, PROBABILITY_OF_IMPACT, nan)
+        return this
+    def add_PROBABILITY_OF_BURN_UP(PROBABILITY_OF_BURN_UP:float):
+        b_.PrependFloat64Slot(59, PROBABILITY_OF_BURN_UP, nan)
+        return this
+    def add_PROBABILITY_OF_BREAK_UP(PROBABILITY_OF_BREAK_UP:float):
+        b_.PrependFloat64Slot(60, PROBABILITY_OF_BREAK_UP, nan)
+        return this
+    def add_PROBABILITY_OF_LAND_IMPACT(PROBABILITY_OF_LAND_IMPACT:float):
+        b_.PrependFloat64Slot(61, PROBABILITY_OF_LAND_IMPACT, nan)
+        return this
+    def add_PROBABILITY_OF_CASUALTY(PROBABILITY_OF_CASUALTY:float):
+        b_.PrependFloat64Slot(62, PROBABILITY_OF_CASUALTY, nan)
+        return this
+    def add_NOMINAL_IMPACT_EPOCH(NOMINAL_IMPACT_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(63, NOMINAL_IMPACT_EPOCH)
+        return this
+    def add_IMPACT_WINDOW_START(IMPACT_WINDOW_START:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(64, IMPACT_WINDOW_START)
+        return this
+    def add_IMPACT_WINDOW_END(IMPACT_WINDOW_END:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(65, IMPACT_WINDOW_END)
+        return this
+    def add_IMPACT_REF_FRAME(IMPACT_REF_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(66, IMPACT_REF_FRAME)
+        return this
+    def add_NOMINAL_IMPACT_LON(NOMINAL_IMPACT_LON:float):
+        b_.PrependFloat64Slot(67, NOMINAL_IMPACT_LON, nan)
+        return this
+    def add_NOMINAL_IMPACT_LAT(NOMINAL_IMPACT_LAT:float):
+        b_.PrependFloat64Slot(68, NOMINAL_IMPACT_LAT, nan)
+        return this
+    def add_NOMINAL_IMPACT_ALT(NOMINAL_IMPACT_ALT:float):
+        b_.PrependFloat64Slot(69, NOMINAL_IMPACT_ALT, nan)
+        return this
+    def add_IMPACT_1_CONFIDENCE(IMPACT_1_CONFIDENCE:float):
+        b_.PrependFloat64Slot(70, IMPACT_1_CONFIDENCE, nan)
+        return this
+    def add_IMPACT_1_START_LON(IMPACT_1_START_LON:float):
+        b_.PrependFloat64Slot(71, IMPACT_1_START_LON, nan)
+        return this
+    def add_IMPACT_1_START_LAT(IMPACT_1_START_LAT:float):
+        b_.PrependFloat64Slot(72, IMPACT_1_START_LAT, nan)
+        return this
+    def add_IMPACT_1_STOP_LON(IMPACT_1_STOP_LON:float):
+        b_.PrependFloat64Slot(73, IMPACT_1_STOP_LON, nan)
+        return this
+    def add_IMPACT_1_STOP_LAT(IMPACT_1_STOP_LAT:float):
+        b_.PrependFloat64Slot(74, IMPACT_1_STOP_LAT, nan)
+        return this
+    def add_IMPACT_1_CROSS_TRACK(IMPACT_1_CROSS_TRACK:float):
+        b_.PrependFloat64Slot(75, IMPACT_1_CROSS_TRACK, nan)
+        return this
+    def add_IMPACT_2_CONFIDENCE(IMPACT_2_CONFIDENCE:float):
+        b_.PrependFloat64Slot(76, IMPACT_2_CONFIDENCE, nan)
+        return this
+    def add_IMPACT_2_START_LON(IMPACT_2_START_LON:float):
+        b_.PrependFloat64Slot(77, IMPACT_2_START_LON, nan)
+        return this
+    def add_IMPACT_2_START_LAT(IMPACT_2_START_LAT:float):
+        b_.PrependFloat64Slot(78, IMPACT_2_START_LAT, nan)
+        return this
+    def add_IMPACT_2_STOP_LON(IMPACT_2_STOP_LON:float):
+        b_.PrependFloat64Slot(79, IMPACT_2_STOP_LON, nan)
+        return this
+    def add_IMPACT_2_STOP_LAT(IMPACT_2_STOP_LAT:float):
+        b_.PrependFloat64Slot(80, IMPACT_2_STOP_LAT, nan)
+        return this
+    def add_IMPACT_2_CROSS_TRACK(IMPACT_2_CROSS_TRACK:float):
+        b_.PrependFloat64Slot(81, IMPACT_2_CROSS_TRACK, nan)
+        return this
+    def add_IMPACT_3_CONFIDENCE(IMPACT_3_CONFIDENCE:float):
+        b_.PrependFloat64Slot(82, IMPACT_3_CONFIDENCE, nan)
+        return this
+    def add_IMPACT_3_START_LON(IMPACT_3_START_LON:float):
+        b_.PrependFloat64Slot(83, IMPACT_3_START_LON, nan)
+        return this
+    def add_IMPACT_3_START_LAT(IMPACT_3_START_LAT:float):
+        b_.PrependFloat64Slot(84, IMPACT_3_START_LAT, nan)
+        return this
+    def add_IMPACT_3_STOP_LON(IMPACT_3_STOP_LON:float):
+        b_.PrependFloat64Slot(85, IMPACT_3_STOP_LON, nan)
+        return this
+    def add_IMPACT_3_STOP_LAT(IMPACT_3_STOP_LAT:float):
+        b_.PrependFloat64Slot(86, IMPACT_3_STOP_LAT, nan)
+        return this
+    def add_IMPACT_3_CROSS_TRACK(IMPACT_3_CROSS_TRACK:float):
+        b_.PrependFloat64Slot(87, IMPACT_3_CROSS_TRACK, nan)
+        return this
+    def add_COV_REF_FRAME(COV_REF_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(88, COV_REF_FRAME)
+        return this
+    def add_COVARIANCE(COVARIANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(89, COVARIANCE)
+        return this
+    def add_DRY_MASS(DRY_MASS:float):
+        b_.PrependFloat64Slot(90, DRY_MASS, nan)
+        return this
+    def add_HAZARDOUS_SUBSTANCES(HAZARDOUS_SUBSTANCES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(91, HAZARDOUS_SUBSTANCES)
+        return this
+    def add_SOLAR_RAD_COEFF(SOLAR_RAD_COEFF:float):
+        b_.PrependFloat64Slot(92, SOLAR_RAD_COEFF, nan)
+        return this
+    def add_DRAG_COEFF(DRAG_COEFF:float):
+        b_.PrependFloat64Slot(93, DRAG_COEFF, nan)
+        return this
+    def add_RCS(RCS:float):
+        b_.PrependFloat64Slot(94, RCS, nan)
+        return this
+    def add_THRUST_ACCELERATION(THRUST_ACCELERATION:float):
+        b_.PrependFloat64Slot(95, THRUST_ACCELERATION, nan)
+        return this
+    def add_TIME_LASTOB_START(TIME_LASTOB_START:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(96, TIME_LASTOB_START)
+        return this
+    def add_TIME_LASTOB_END(TIME_LASTOB_END:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(97, TIME_LASTOB_END)
+        return this
+    def add_RECOMMENDED_OD_SPAN(RECOMMENDED_OD_SPAN:float):
+        b_.PrependFloat64Slot(98, RECOMMENDED_OD_SPAN, nan)
+        return this
+    def add_ACTUAL_OD_SPAN(ACTUAL_OD_SPAN:float):
+        b_.PrependFloat64Slot(99, ACTUAL_OD_SPAN, nan)
+        return this
+    def add_OBS_AVAILABLE(OBS_AVAILABLE:int):
+        b_.PrependUint32Slot(100, OBS_AVAILABLE, 0)
+        return this
+    def add_OBS_USED(OBS_USED:int):
+        b_.PrependUint32Slot(101, OBS_USED, 0)
+        return this
+    def add_TRACKS_AVAILABLE(TRACKS_AVAILABLE:int):
+        b_.PrependUint32Slot(102, TRACKS_AVAILABLE, 0)
+        return this
+    def add_TRACKS_USED(TRACKS_USED:int):
+        b_.PrependUint32Slot(103, TRACKS_USED, 0)
+        return this
+    def add_RESIDUALS_ACCEPTED(RESIDUALS_ACCEPTED:float):
+        b_.PrependFloat64Slot(104, RESIDUALS_ACCEPTED, nan)
+        return this
+    def add_WEIGHTED_RMS(WEIGHTED_RMS:float):
+        b_.PrependFloat64Slot(105, WEIGHTED_RMS, nan)
+        return this
+    def add_USER_DEFINED_PARAMETERS(USER_DEFINED_PARAMETERS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(106, USER_DEFINED_PARAMETERS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -374,3 +881,43 @@ def RDMCreateSURVIVINGDEBRISVector(b_:flatbuffers.builder, v_:[flatbuffers.offse
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
+
+def RDMStartCOVARIANCEVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def RDMCreateCOVARIANCEVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def RDMStartUSERDEFINEDPARAMETERSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def RDMCreateUSERDEFINEDPARAMETERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+class RDMUserDefinedParameter : flatbuffers.handle
+    /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+    def PARAM_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// The value as written
+    def PARAM_VALUE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+
+def GetRootAsRDMUserDefinedParameter(buf:string): return RDMUserDefinedParameter { buf, flatbuffers.indirect(buf, 0) }
+
+struct RDMUserDefinedParameterBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_PARAM_NAME(PARAM_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, PARAM_NAME)
+        return this
+    def add_PARAM_VALUE(PARAM_VALUE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, PARAM_VALUE)
+        return this
+    def end():
+        return b_.EndObject()

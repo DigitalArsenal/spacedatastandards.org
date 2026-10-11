@@ -102,6 +102,111 @@ impl<'a> ::flatbuffers::Verifiable for reentryDisposition {
 impl ::flatbuffers::SimpleToVerifyInSlice for reentryDisposition {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RDM_CONTROLLED_REENTRY: i8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RDM_CONTROLLED_REENTRY: i8 = 3;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RDM_CONTROLLED_REENTRY: [rdmControlledReentry; 4] = [
+    rdmControlledReentry::UNSPECIFIED,
+    rdmControlledReentry::YES,
+    rdmControlledReentry::NO,
+    rdmControlledReentry::UNKNOWN,
+];
+
+/// CONTROLLED_REENTRY of an RDM (CCSDS 508.1-B-1): whether the re-entry is
+/// controlled. UNSPECIFIED is the zero value: the record does not state it.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct rdmControlledReentry(pub i8);
+
+#[allow(non_upper_case_globals)]
+impl rdmControlledReentry {
+    pub const UNSPECIFIED: Self = Self(0);
+    pub const YES: Self = Self(1);
+    pub const NO: Self = Self(2);
+    pub const UNKNOWN: Self = Self(3);
+
+    pub const ENUM_MIN: i8 = 0;
+    pub const ENUM_MAX: i8 = 3;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::YES,
+        Self::NO,
+        Self::UNKNOWN,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::YES => Some("YES"),
+            Self::NO => Some("NO"),
+            Self::UNKNOWN => Some("UNKNOWN"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for rdmControlledReentry {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for rdmControlledReentry {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for rdmControlledReentry {
+    type Output = rdmControlledReentry;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for rdmControlledReentry {
+    type Scalar = i8;
+
+    #[inline]
+    fn to_little_endian(self) -> i8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: i8) -> Self {
+        let b = i8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for rdmControlledReentry {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        i8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for rdmControlledReentry {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_REENTRY_REASON: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -1133,6 +1238,86 @@ impl<'a> RDM<'a> {
     pub const VT_NUM_FRAGMENTS: ::flatbuffers::VOffsetT = 52;
     pub const VT_SURVIVING_MASS: ::flatbuffers::VOffsetT = 54;
     pub const VT_COMMENT: ::flatbuffers::VOffsetT = 56;
+    pub const VT_MESSAGE_ID: ::flatbuffers::VOffsetT = 58;
+    pub const VT_CATALOG_NAME: ::flatbuffers::VOffsetT = 60;
+    pub const VT_OBJECT_DESIGNATOR: ::flatbuffers::VOffsetT = 62;
+    pub const VT_OBJECT_OWNER: ::flatbuffers::VOffsetT = 64;
+    pub const VT_OBJECT_OPERATOR: ::flatbuffers::VOffsetT = 66;
+    pub const VT_CONTROLLED_REENTRY: ::flatbuffers::VOffsetT = 68;
+    pub const VT_CENTER_NAME: ::flatbuffers::VOffsetT = 70;
+    pub const VT_EPOCH_TZERO: ::flatbuffers::VOffsetT = 72;
+    pub const VT_REF_FRAME: ::flatbuffers::VOffsetT = 74;
+    pub const VT_REF_FRAME_EPOCH: ::flatbuffers::VOffsetT = 76;
+    pub const VT_EPHEMERIS_NAME: ::flatbuffers::VOffsetT = 78;
+    pub const VT_GRAVITY_MODEL: ::flatbuffers::VOffsetT = 80;
+    pub const VT_ATMOSPHERIC_MODEL: ::flatbuffers::VOffsetT = 82;
+    pub const VT_SOLAR_FLUX_PREDICTION: ::flatbuffers::VOffsetT = 84;
+    pub const VT_N_BODY_PERTURBATIONS: ::flatbuffers::VOffsetT = 86;
+    pub const VT_SOLAR_RAD_PRESSURE: ::flatbuffers::VOffsetT = 88;
+    pub const VT_EARTH_TIDES: ::flatbuffers::VOffsetT = 90;
+    pub const VT_INTRACK_THRUST: ::flatbuffers::VOffsetT = 92;
+    pub const VT_DRAG_PARAMETERS_SOURCE: ::flatbuffers::VOffsetT = 94;
+    pub const VT_DRAG_PARAMETERS_ALTITUDE: ::flatbuffers::VOffsetT = 96;
+    pub const VT_REENTRY_UNCERTAINTY_METHOD: ::flatbuffers::VOffsetT = 98;
+    pub const VT_REENTRY_DISINTEGRATION: ::flatbuffers::VOffsetT = 100;
+    pub const VT_IMPACT_UNCERTAINTY_METHOD: ::flatbuffers::VOffsetT = 102;
+    pub const VT_PREVIOUS_MESSAGE_ID: ::flatbuffers::VOffsetT = 104;
+    pub const VT_NEXT_MESSAGE_EPOCH: ::flatbuffers::VOffsetT = 106;
+    pub const VT_ORBIT_LIFETIME: ::flatbuffers::VOffsetT = 108;
+    pub const VT_ORBIT_LIFETIME_WINDOW_START: ::flatbuffers::VOffsetT = 110;
+    pub const VT_ORBIT_LIFETIME_WINDOW_END: ::flatbuffers::VOffsetT = 112;
+    pub const VT_REENTRY_WINDOW_START: ::flatbuffers::VOffsetT = 114;
+    pub const VT_REENTRY_WINDOW_END: ::flatbuffers::VOffsetT = 116;
+    pub const VT_ORBIT_LIFETIME_CONFIDENCE_LEVEL: ::flatbuffers::VOffsetT = 118;
+    pub const VT_PROBABILITY_OF_IMPACT: ::flatbuffers::VOffsetT = 120;
+    pub const VT_PROBABILITY_OF_BURN_UP: ::flatbuffers::VOffsetT = 122;
+    pub const VT_PROBABILITY_OF_BREAK_UP: ::flatbuffers::VOffsetT = 124;
+    pub const VT_PROBABILITY_OF_LAND_IMPACT: ::flatbuffers::VOffsetT = 126;
+    pub const VT_PROBABILITY_OF_CASUALTY: ::flatbuffers::VOffsetT = 128;
+    pub const VT_NOMINAL_IMPACT_EPOCH: ::flatbuffers::VOffsetT = 130;
+    pub const VT_IMPACT_WINDOW_START: ::flatbuffers::VOffsetT = 132;
+    pub const VT_IMPACT_WINDOW_END: ::flatbuffers::VOffsetT = 134;
+    pub const VT_IMPACT_REF_FRAME: ::flatbuffers::VOffsetT = 136;
+    pub const VT_NOMINAL_IMPACT_LON: ::flatbuffers::VOffsetT = 138;
+    pub const VT_NOMINAL_IMPACT_LAT: ::flatbuffers::VOffsetT = 140;
+    pub const VT_NOMINAL_IMPACT_ALT: ::flatbuffers::VOffsetT = 142;
+    pub const VT_IMPACT_1_CONFIDENCE: ::flatbuffers::VOffsetT = 144;
+    pub const VT_IMPACT_1_START_LON: ::flatbuffers::VOffsetT = 146;
+    pub const VT_IMPACT_1_START_LAT: ::flatbuffers::VOffsetT = 148;
+    pub const VT_IMPACT_1_STOP_LON: ::flatbuffers::VOffsetT = 150;
+    pub const VT_IMPACT_1_STOP_LAT: ::flatbuffers::VOffsetT = 152;
+    pub const VT_IMPACT_1_CROSS_TRACK: ::flatbuffers::VOffsetT = 154;
+    pub const VT_IMPACT_2_CONFIDENCE: ::flatbuffers::VOffsetT = 156;
+    pub const VT_IMPACT_2_START_LON: ::flatbuffers::VOffsetT = 158;
+    pub const VT_IMPACT_2_START_LAT: ::flatbuffers::VOffsetT = 160;
+    pub const VT_IMPACT_2_STOP_LON: ::flatbuffers::VOffsetT = 162;
+    pub const VT_IMPACT_2_STOP_LAT: ::flatbuffers::VOffsetT = 164;
+    pub const VT_IMPACT_2_CROSS_TRACK: ::flatbuffers::VOffsetT = 166;
+    pub const VT_IMPACT_3_CONFIDENCE: ::flatbuffers::VOffsetT = 168;
+    pub const VT_IMPACT_3_START_LON: ::flatbuffers::VOffsetT = 170;
+    pub const VT_IMPACT_3_START_LAT: ::flatbuffers::VOffsetT = 172;
+    pub const VT_IMPACT_3_STOP_LON: ::flatbuffers::VOffsetT = 174;
+    pub const VT_IMPACT_3_STOP_LAT: ::flatbuffers::VOffsetT = 176;
+    pub const VT_IMPACT_3_CROSS_TRACK: ::flatbuffers::VOffsetT = 178;
+    pub const VT_COV_REF_FRAME: ::flatbuffers::VOffsetT = 180;
+    pub const VT_COVARIANCE: ::flatbuffers::VOffsetT = 182;
+    pub const VT_DRY_MASS: ::flatbuffers::VOffsetT = 184;
+    pub const VT_HAZARDOUS_SUBSTANCES: ::flatbuffers::VOffsetT = 186;
+    pub const VT_SOLAR_RAD_COEFF: ::flatbuffers::VOffsetT = 188;
+    pub const VT_DRAG_COEFF: ::flatbuffers::VOffsetT = 190;
+    pub const VT_RCS: ::flatbuffers::VOffsetT = 192;
+    pub const VT_THRUST_ACCELERATION: ::flatbuffers::VOffsetT = 194;
+    pub const VT_TIME_LASTOB_START: ::flatbuffers::VOffsetT = 196;
+    pub const VT_TIME_LASTOB_END: ::flatbuffers::VOffsetT = 198;
+    pub const VT_RECOMMENDED_OD_SPAN: ::flatbuffers::VOffsetT = 200;
+    pub const VT_ACTUAL_OD_SPAN: ::flatbuffers::VOffsetT = 202;
+    pub const VT_OBS_AVAILABLE: ::flatbuffers::VOffsetT = 204;
+    pub const VT_OBS_USED: ::flatbuffers::VOffsetT = 206;
+    pub const VT_TRACKS_AVAILABLE: ::flatbuffers::VOffsetT = 208;
+    pub const VT_TRACKS_USED: ::flatbuffers::VOffsetT = 210;
+    pub const VT_RESIDUALS_ACCEPTED: ::flatbuffers::VOffsetT = 212;
+    pub const VT_WEIGHTED_RMS: ::flatbuffers::VOffsetT = 214;
+    pub const VT_USER_DEFINED_PARAMETERS: ::flatbuffers::VOffsetT = 216;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1145,6 +1330,46 @@ impl<'a> RDM<'a> {
         args: &'args RDMArgs<'args>
     ) -> ::flatbuffers::WIPOffset<RDM<'bldr>> {
         let mut builder = RDMBuilder::new(_fbb);
+        builder.add_WEIGHTED_RMS(args.WEIGHTED_RMS);
+        builder.add_RESIDUALS_ACCEPTED(args.RESIDUALS_ACCEPTED);
+        builder.add_ACTUAL_OD_SPAN(args.ACTUAL_OD_SPAN);
+        builder.add_RECOMMENDED_OD_SPAN(args.RECOMMENDED_OD_SPAN);
+        builder.add_THRUST_ACCELERATION(args.THRUST_ACCELERATION);
+        builder.add_RCS(args.RCS);
+        builder.add_DRAG_COEFF(args.DRAG_COEFF);
+        builder.add_SOLAR_RAD_COEFF(args.SOLAR_RAD_COEFF);
+        builder.add_DRY_MASS(args.DRY_MASS);
+        builder.add_IMPACT_3_CROSS_TRACK(args.IMPACT_3_CROSS_TRACK);
+        builder.add_IMPACT_3_STOP_LAT(args.IMPACT_3_STOP_LAT);
+        builder.add_IMPACT_3_STOP_LON(args.IMPACT_3_STOP_LON);
+        builder.add_IMPACT_3_START_LAT(args.IMPACT_3_START_LAT);
+        builder.add_IMPACT_3_START_LON(args.IMPACT_3_START_LON);
+        builder.add_IMPACT_3_CONFIDENCE(args.IMPACT_3_CONFIDENCE);
+        builder.add_IMPACT_2_CROSS_TRACK(args.IMPACT_2_CROSS_TRACK);
+        builder.add_IMPACT_2_STOP_LAT(args.IMPACT_2_STOP_LAT);
+        builder.add_IMPACT_2_STOP_LON(args.IMPACT_2_STOP_LON);
+        builder.add_IMPACT_2_START_LAT(args.IMPACT_2_START_LAT);
+        builder.add_IMPACT_2_START_LON(args.IMPACT_2_START_LON);
+        builder.add_IMPACT_2_CONFIDENCE(args.IMPACT_2_CONFIDENCE);
+        builder.add_IMPACT_1_CROSS_TRACK(args.IMPACT_1_CROSS_TRACK);
+        builder.add_IMPACT_1_STOP_LAT(args.IMPACT_1_STOP_LAT);
+        builder.add_IMPACT_1_STOP_LON(args.IMPACT_1_STOP_LON);
+        builder.add_IMPACT_1_START_LAT(args.IMPACT_1_START_LAT);
+        builder.add_IMPACT_1_START_LON(args.IMPACT_1_START_LON);
+        builder.add_IMPACT_1_CONFIDENCE(args.IMPACT_1_CONFIDENCE);
+        builder.add_NOMINAL_IMPACT_ALT(args.NOMINAL_IMPACT_ALT);
+        builder.add_NOMINAL_IMPACT_LAT(args.NOMINAL_IMPACT_LAT);
+        builder.add_NOMINAL_IMPACT_LON(args.NOMINAL_IMPACT_LON);
+        builder.add_PROBABILITY_OF_CASUALTY(args.PROBABILITY_OF_CASUALTY);
+        builder.add_PROBABILITY_OF_LAND_IMPACT(args.PROBABILITY_OF_LAND_IMPACT);
+        builder.add_PROBABILITY_OF_BREAK_UP(args.PROBABILITY_OF_BREAK_UP);
+        builder.add_PROBABILITY_OF_BURN_UP(args.PROBABILITY_OF_BURN_UP);
+        builder.add_PROBABILITY_OF_IMPACT(args.PROBABILITY_OF_IMPACT);
+        builder.add_ORBIT_LIFETIME_CONFIDENCE_LEVEL(args.ORBIT_LIFETIME_CONFIDENCE_LEVEL);
+        builder.add_ORBIT_LIFETIME_WINDOW_END(args.ORBIT_LIFETIME_WINDOW_END);
+        builder.add_ORBIT_LIFETIME_WINDOW_START(args.ORBIT_LIFETIME_WINDOW_START);
+        builder.add_ORBIT_LIFETIME(args.ORBIT_LIFETIME);
+        builder.add_DRAG_PARAMETERS_ALTITUDE(args.DRAG_PARAMETERS_ALTITUDE);
         builder.add_SURVIVING_MASS(args.SURVIVING_MASS);
         builder.add_CASUALTY_EXPECTATION(args.CASUALTY_EXPECTATION);
         builder.add_DRAG_AREA(args.DRAG_AREA);
@@ -1155,6 +1380,45 @@ impl<'a> RDM<'a> {
         builder.add_REENTRY_LONGITUDE(args.REENTRY_LONGITUDE);
         builder.add_REENTRY_LATITUDE(args.REENTRY_LATITUDE);
         builder.add_REENTRY_EPOCH_UNC(args.REENTRY_EPOCH_UNC);
+        if let Some(x) = args.USER_DEFINED_PARAMETERS { builder.add_USER_DEFINED_PARAMETERS(x); }
+        builder.add_TRACKS_USED(args.TRACKS_USED);
+        builder.add_TRACKS_AVAILABLE(args.TRACKS_AVAILABLE);
+        builder.add_OBS_USED(args.OBS_USED);
+        builder.add_OBS_AVAILABLE(args.OBS_AVAILABLE);
+        if let Some(x) = args.TIME_LASTOB_END { builder.add_TIME_LASTOB_END(x); }
+        if let Some(x) = args.TIME_LASTOB_START { builder.add_TIME_LASTOB_START(x); }
+        if let Some(x) = args.HAZARDOUS_SUBSTANCES { builder.add_HAZARDOUS_SUBSTANCES(x); }
+        if let Some(x) = args.COVARIANCE { builder.add_COVARIANCE(x); }
+        if let Some(x) = args.COV_REF_FRAME { builder.add_COV_REF_FRAME(x); }
+        if let Some(x) = args.IMPACT_REF_FRAME { builder.add_IMPACT_REF_FRAME(x); }
+        if let Some(x) = args.IMPACT_WINDOW_END { builder.add_IMPACT_WINDOW_END(x); }
+        if let Some(x) = args.IMPACT_WINDOW_START { builder.add_IMPACT_WINDOW_START(x); }
+        if let Some(x) = args.NOMINAL_IMPACT_EPOCH { builder.add_NOMINAL_IMPACT_EPOCH(x); }
+        if let Some(x) = args.REENTRY_WINDOW_END { builder.add_REENTRY_WINDOW_END(x); }
+        if let Some(x) = args.REENTRY_WINDOW_START { builder.add_REENTRY_WINDOW_START(x); }
+        if let Some(x) = args.NEXT_MESSAGE_EPOCH { builder.add_NEXT_MESSAGE_EPOCH(x); }
+        if let Some(x) = args.PREVIOUS_MESSAGE_ID { builder.add_PREVIOUS_MESSAGE_ID(x); }
+        if let Some(x) = args.IMPACT_UNCERTAINTY_METHOD { builder.add_IMPACT_UNCERTAINTY_METHOD(x); }
+        if let Some(x) = args.REENTRY_DISINTEGRATION { builder.add_REENTRY_DISINTEGRATION(x); }
+        if let Some(x) = args.REENTRY_UNCERTAINTY_METHOD { builder.add_REENTRY_UNCERTAINTY_METHOD(x); }
+        if let Some(x) = args.DRAG_PARAMETERS_SOURCE { builder.add_DRAG_PARAMETERS_SOURCE(x); }
+        if let Some(x) = args.INTRACK_THRUST { builder.add_INTRACK_THRUST(x); }
+        if let Some(x) = args.EARTH_TIDES { builder.add_EARTH_TIDES(x); }
+        if let Some(x) = args.SOLAR_RAD_PRESSURE { builder.add_SOLAR_RAD_PRESSURE(x); }
+        if let Some(x) = args.N_BODY_PERTURBATIONS { builder.add_N_BODY_PERTURBATIONS(x); }
+        if let Some(x) = args.SOLAR_FLUX_PREDICTION { builder.add_SOLAR_FLUX_PREDICTION(x); }
+        if let Some(x) = args.ATMOSPHERIC_MODEL { builder.add_ATMOSPHERIC_MODEL(x); }
+        if let Some(x) = args.GRAVITY_MODEL { builder.add_GRAVITY_MODEL(x); }
+        if let Some(x) = args.EPHEMERIS_NAME { builder.add_EPHEMERIS_NAME(x); }
+        if let Some(x) = args.REF_FRAME_EPOCH { builder.add_REF_FRAME_EPOCH(x); }
+        if let Some(x) = args.REF_FRAME { builder.add_REF_FRAME(x); }
+        if let Some(x) = args.EPOCH_TZERO { builder.add_EPOCH_TZERO(x); }
+        if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
+        if let Some(x) = args.OBJECT_OPERATOR { builder.add_OBJECT_OPERATOR(x); }
+        if let Some(x) = args.OBJECT_OWNER { builder.add_OBJECT_OWNER(x); }
+        if let Some(x) = args.OBJECT_DESIGNATOR { builder.add_OBJECT_DESIGNATOR(x); }
+        if let Some(x) = args.CATALOG_NAME { builder.add_CATALOG_NAME(x); }
+        if let Some(x) = args.MESSAGE_ID { builder.add_MESSAGE_ID(x); }
         if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
         builder.add_NUM_FRAGMENTS(args.NUM_FRAGMENTS);
         if let Some(x) = args.SURVIVING_DEBRIS { builder.add_SURVIVING_DEBRIS(x); }
@@ -1170,6 +1434,7 @@ impl<'a> RDM<'a> {
         if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
         if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
         if let Some(x) = args.CCSDS_RDM_VERS { builder.add_CCSDS_RDM_VERS(x); }
+        builder.add_CONTROLLED_REENTRY(args.CONTROLLED_REENTRY);
         builder.add_REASON(args.REASON);
         builder.add_DISPOSITION(args.DISPOSITION);
         builder.finish()
@@ -1229,6 +1494,156 @@ impl<'a> RDM<'a> {
         let COMMENT = self.COMMENT().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let MESSAGE_ID = self.MESSAGE_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let CATALOG_NAME = self.CATALOG_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let OBJECT_OWNER = self.OBJECT_OWNER().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let OBJECT_OPERATOR = self.OBJECT_OPERATOR().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let CONTROLLED_REENTRY = self.CONTROLLED_REENTRY();
+        let CENTER_NAME = self.CENTER_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let EPOCH_TZERO = self.EPOCH_TZERO().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let REF_FRAME = self.REF_FRAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let REF_FRAME_EPOCH = self.REF_FRAME_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let EPHEMERIS_NAME = self.EPHEMERIS_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let GRAVITY_MODEL = self.GRAVITY_MODEL().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let ATMOSPHERIC_MODEL = self.ATMOSPHERIC_MODEL().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SOLAR_FLUX_PREDICTION = self.SOLAR_FLUX_PREDICTION().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let N_BODY_PERTURBATIONS = self.N_BODY_PERTURBATIONS().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SOLAR_RAD_PRESSURE = self.SOLAR_RAD_PRESSURE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let EARTH_TIDES = self.EARTH_TIDES().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let INTRACK_THRUST = self.INTRACK_THRUST().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DRAG_PARAMETERS_SOURCE = self.DRAG_PARAMETERS_SOURCE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DRAG_PARAMETERS_ALTITUDE = self.DRAG_PARAMETERS_ALTITUDE();
+        let REENTRY_UNCERTAINTY_METHOD = self.REENTRY_UNCERTAINTY_METHOD().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let REENTRY_DISINTEGRATION = self.REENTRY_DISINTEGRATION().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let IMPACT_UNCERTAINTY_METHOD = self.IMPACT_UNCERTAINTY_METHOD().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let PREVIOUS_MESSAGE_ID = self.PREVIOUS_MESSAGE_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let NEXT_MESSAGE_EPOCH = self.NEXT_MESSAGE_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let ORBIT_LIFETIME = self.ORBIT_LIFETIME();
+        let ORBIT_LIFETIME_WINDOW_START = self.ORBIT_LIFETIME_WINDOW_START();
+        let ORBIT_LIFETIME_WINDOW_END = self.ORBIT_LIFETIME_WINDOW_END();
+        let REENTRY_WINDOW_START = self.REENTRY_WINDOW_START().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let REENTRY_WINDOW_END = self.REENTRY_WINDOW_END().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let ORBIT_LIFETIME_CONFIDENCE_LEVEL = self.ORBIT_LIFETIME_CONFIDENCE_LEVEL();
+        let PROBABILITY_OF_IMPACT = self.PROBABILITY_OF_IMPACT();
+        let PROBABILITY_OF_BURN_UP = self.PROBABILITY_OF_BURN_UP();
+        let PROBABILITY_OF_BREAK_UP = self.PROBABILITY_OF_BREAK_UP();
+        let PROBABILITY_OF_LAND_IMPACT = self.PROBABILITY_OF_LAND_IMPACT();
+        let PROBABILITY_OF_CASUALTY = self.PROBABILITY_OF_CASUALTY();
+        let NOMINAL_IMPACT_EPOCH = self.NOMINAL_IMPACT_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let IMPACT_WINDOW_START = self.IMPACT_WINDOW_START().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let IMPACT_WINDOW_END = self.IMPACT_WINDOW_END().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let IMPACT_REF_FRAME = self.IMPACT_REF_FRAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let NOMINAL_IMPACT_LON = self.NOMINAL_IMPACT_LON();
+        let NOMINAL_IMPACT_LAT = self.NOMINAL_IMPACT_LAT();
+        let NOMINAL_IMPACT_ALT = self.NOMINAL_IMPACT_ALT();
+        let IMPACT_1_CONFIDENCE = self.IMPACT_1_CONFIDENCE();
+        let IMPACT_1_START_LON = self.IMPACT_1_START_LON();
+        let IMPACT_1_START_LAT = self.IMPACT_1_START_LAT();
+        let IMPACT_1_STOP_LON = self.IMPACT_1_STOP_LON();
+        let IMPACT_1_STOP_LAT = self.IMPACT_1_STOP_LAT();
+        let IMPACT_1_CROSS_TRACK = self.IMPACT_1_CROSS_TRACK();
+        let IMPACT_2_CONFIDENCE = self.IMPACT_2_CONFIDENCE();
+        let IMPACT_2_START_LON = self.IMPACT_2_START_LON();
+        let IMPACT_2_START_LAT = self.IMPACT_2_START_LAT();
+        let IMPACT_2_STOP_LON = self.IMPACT_2_STOP_LON();
+        let IMPACT_2_STOP_LAT = self.IMPACT_2_STOP_LAT();
+        let IMPACT_2_CROSS_TRACK = self.IMPACT_2_CROSS_TRACK();
+        let IMPACT_3_CONFIDENCE = self.IMPACT_3_CONFIDENCE();
+        let IMPACT_3_START_LON = self.IMPACT_3_START_LON();
+        let IMPACT_3_START_LAT = self.IMPACT_3_START_LAT();
+        let IMPACT_3_STOP_LON = self.IMPACT_3_STOP_LON();
+        let IMPACT_3_STOP_LAT = self.IMPACT_3_STOP_LAT();
+        let IMPACT_3_CROSS_TRACK = self.IMPACT_3_CROSS_TRACK();
+        let COV_REF_FRAME = self.COV_REF_FRAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COVARIANCE = self.COVARIANCE().map(|x| {
+            x.into_iter().collect()
+        });
+        let DRY_MASS = self.DRY_MASS();
+        let HAZARDOUS_SUBSTANCES = self.HAZARDOUS_SUBSTANCES().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SOLAR_RAD_COEFF = self.SOLAR_RAD_COEFF();
+        let DRAG_COEFF = self.DRAG_COEFF();
+        let RCS = self.RCS();
+        let THRUST_ACCELERATION = self.THRUST_ACCELERATION();
+        let TIME_LASTOB_START = self.TIME_LASTOB_START().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let TIME_LASTOB_END = self.TIME_LASTOB_END().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let RECOMMENDED_OD_SPAN = self.RECOMMENDED_OD_SPAN();
+        let ACTUAL_OD_SPAN = self.ACTUAL_OD_SPAN();
+        let OBS_AVAILABLE = self.OBS_AVAILABLE();
+        let OBS_USED = self.OBS_USED();
+        let TRACKS_AVAILABLE = self.TRACKS_AVAILABLE();
+        let TRACKS_USED = self.TRACKS_USED();
+        let RESIDUALS_ACCEPTED = self.RESIDUALS_ACCEPTED();
+        let WEIGHTED_RMS = self.WEIGHTED_RMS();
+        let USER_DEFINED_PARAMETERS = self.USER_DEFINED_PARAMETERS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         RDMT {
             CCSDS_RDM_VERS,
             CREATION_DATE,
@@ -1257,6 +1672,86 @@ impl<'a> RDM<'a> {
             NUM_FRAGMENTS,
             SURVIVING_MASS,
             COMMENT,
+            MESSAGE_ID,
+            CATALOG_NAME,
+            OBJECT_DESIGNATOR,
+            OBJECT_OWNER,
+            OBJECT_OPERATOR,
+            CONTROLLED_REENTRY,
+            CENTER_NAME,
+            EPOCH_TZERO,
+            REF_FRAME,
+            REF_FRAME_EPOCH,
+            EPHEMERIS_NAME,
+            GRAVITY_MODEL,
+            ATMOSPHERIC_MODEL,
+            SOLAR_FLUX_PREDICTION,
+            N_BODY_PERTURBATIONS,
+            SOLAR_RAD_PRESSURE,
+            EARTH_TIDES,
+            INTRACK_THRUST,
+            DRAG_PARAMETERS_SOURCE,
+            DRAG_PARAMETERS_ALTITUDE,
+            REENTRY_UNCERTAINTY_METHOD,
+            REENTRY_DISINTEGRATION,
+            IMPACT_UNCERTAINTY_METHOD,
+            PREVIOUS_MESSAGE_ID,
+            NEXT_MESSAGE_EPOCH,
+            ORBIT_LIFETIME,
+            ORBIT_LIFETIME_WINDOW_START,
+            ORBIT_LIFETIME_WINDOW_END,
+            REENTRY_WINDOW_START,
+            REENTRY_WINDOW_END,
+            ORBIT_LIFETIME_CONFIDENCE_LEVEL,
+            PROBABILITY_OF_IMPACT,
+            PROBABILITY_OF_BURN_UP,
+            PROBABILITY_OF_BREAK_UP,
+            PROBABILITY_OF_LAND_IMPACT,
+            PROBABILITY_OF_CASUALTY,
+            NOMINAL_IMPACT_EPOCH,
+            IMPACT_WINDOW_START,
+            IMPACT_WINDOW_END,
+            IMPACT_REF_FRAME,
+            NOMINAL_IMPACT_LON,
+            NOMINAL_IMPACT_LAT,
+            NOMINAL_IMPACT_ALT,
+            IMPACT_1_CONFIDENCE,
+            IMPACT_1_START_LON,
+            IMPACT_1_START_LAT,
+            IMPACT_1_STOP_LON,
+            IMPACT_1_STOP_LAT,
+            IMPACT_1_CROSS_TRACK,
+            IMPACT_2_CONFIDENCE,
+            IMPACT_2_START_LON,
+            IMPACT_2_START_LAT,
+            IMPACT_2_STOP_LON,
+            IMPACT_2_STOP_LAT,
+            IMPACT_2_CROSS_TRACK,
+            IMPACT_3_CONFIDENCE,
+            IMPACT_3_START_LON,
+            IMPACT_3_START_LAT,
+            IMPACT_3_STOP_LON,
+            IMPACT_3_STOP_LAT,
+            IMPACT_3_CROSS_TRACK,
+            COV_REF_FRAME,
+            COVARIANCE,
+            DRY_MASS,
+            HAZARDOUS_SUBSTANCES,
+            SOLAR_RAD_COEFF,
+            DRAG_COEFF,
+            RCS,
+            THRUST_ACCELERATION,
+            TIME_LASTOB_START,
+            TIME_LASTOB_END,
+            RECOMMENDED_OD_SPAN,
+            ACTUAL_OD_SPAN,
+            OBS_AVAILABLE,
+            OBS_USED,
+            TRACKS_AVAILABLE,
+            TRACKS_USED,
+            RESIDUALS_ACCEPTED,
+            WEIGHTED_RMS,
+            USER_DEFINED_PARAMETERS,
         }
     }
 
@@ -1494,13 +1989,746 @@ impl<'a> RDM<'a> {
         unsafe { self._tab.get::<f64>(RDM::VT_SURVIVING_MASS, Some(0.0)).unwrap()}
     }
 
-    /// Additional comments
+    /// COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+    /// data groups, in message order, joined by a line feed.
     #[inline]
     pub fn COMMENT(&self) -> Option<&'a str> {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_COMMENT, None)}
+    }
+
+    /// The fields below, with the earlier ones that say so, are the keywords of
+    /// CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+    /// NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+    /// NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+    /// WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+    /// REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+    /// SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+    /// not keywords of the message.
+    /// MESSAGE_ID: an identifier the originator makes unique for this message.
+    #[inline]
+    pub fn MESSAGE_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_MESSAGE_ID, None)}
+    }
+
+    /// CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+    #[inline]
+    pub fn CATALOG_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_CATALOG_NAME, None)}
+    }
+
+    /// OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+    #[inline]
+    pub fn OBJECT_DESIGNATOR(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_OBJECT_DESIGNATOR, None)}
+    }
+
+    /// OBJECT_OWNER.
+    #[inline]
+    pub fn OBJECT_OWNER(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_OBJECT_OWNER, None)}
+    }
+
+    /// OBJECT_OPERATOR.
+    #[inline]
+    pub fn OBJECT_OPERATOR(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_OBJECT_OPERATOR, None)}
+    }
+
+    /// CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+    #[inline]
+    pub fn CONTROLLED_REENTRY(&self) -> rdmControlledReentry {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<rdmControlledReentry>(RDM::VT_CONTROLLED_REENTRY, Some(rdmControlledReentry::UNSPECIFIED)).unwrap()}
+    }
+
+    /// CENTER_NAME: the body being re-entered.
+    #[inline]
+    pub fn CENTER_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_CENTER_NAME, None)}
+    }
+
+    /// EPOCH_TZERO: the epoch the message's relative times are measured from.
+    #[inline]
+    pub fn EPOCH_TZERO(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_EPOCH_TZERO, None)}
+    }
+
+    /// REF_FRAME: the frame of the state vector.
+    #[inline]
+    pub fn REF_FRAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_REF_FRAME, None)}
+    }
+
+    /// REF_FRAME_EPOCH.
+    #[inline]
+    pub fn REF_FRAME_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_REF_FRAME_EPOCH, None)}
+    }
+
+    /// EPHEMERIS_NAME.
+    #[inline]
+    pub fn EPHEMERIS_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_EPHEMERIS_NAME, None)}
+    }
+
+    /// GRAVITY_MODEL.
+    #[inline]
+    pub fn GRAVITY_MODEL(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_GRAVITY_MODEL, None)}
+    }
+
+    /// ATMOSPHERIC_MODEL.
+    #[inline]
+    pub fn ATMOSPHERIC_MODEL(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_ATMOSPHERIC_MODEL, None)}
+    }
+
+    /// SOLAR_FLUX_PREDICTION.
+    #[inline]
+    pub fn SOLAR_FLUX_PREDICTION(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_SOLAR_FLUX_PREDICTION, None)}
+    }
+
+    /// N_BODY_PERTURBATIONS.
+    #[inline]
+    pub fn N_BODY_PERTURBATIONS(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_N_BODY_PERTURBATIONS, None)}
+    }
+
+    /// SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+    #[inline]
+    pub fn SOLAR_RAD_PRESSURE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_SOLAR_RAD_PRESSURE, None)}
+    }
+
+    /// EARTH_TIDES: a model name.
+    #[inline]
+    pub fn EARTH_TIDES(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_EARTH_TIDES, None)}
+    }
+
+    /// INTRACK_THRUST: YES or NO.
+    #[inline]
+    pub fn INTRACK_THRUST(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_INTRACK_THRUST, None)}
+    }
+
+    /// DRAG_PARAMETERS_SOURCE.
+    #[inline]
+    pub fn DRAG_PARAMETERS_SOURCE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_DRAG_PARAMETERS_SOURCE, None)}
+    }
+
+    /// DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+    #[inline]
+    pub fn DRAG_PARAMETERS_ALTITUDE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_DRAG_PARAMETERS_ALTITUDE, Some(f64::NAN)).unwrap()}
+    }
+
+    /// REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+    #[inline]
+    pub fn REENTRY_UNCERTAINTY_METHOD(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_REENTRY_UNCERTAINTY_METHOD, None)}
+    }
+
+    /// REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+    #[inline]
+    pub fn REENTRY_DISINTEGRATION(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_REENTRY_DISINTEGRATION, None)}
+    }
+
+    /// IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+    #[inline]
+    pub fn IMPACT_UNCERTAINTY_METHOD(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_IMPACT_UNCERTAINTY_METHOD, None)}
+    }
+
+    /// PREVIOUS_MESSAGE_ID.
+    #[inline]
+    pub fn PREVIOUS_MESSAGE_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_PREVIOUS_MESSAGE_ID, None)}
+    }
+
+    /// NEXT_MESSAGE_EPOCH.
+    #[inline]
+    pub fn NEXT_MESSAGE_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_NEXT_MESSAGE_EPOCH, None)}
+    }
+
+    /// ORBIT_LIFETIME in days.
+    #[inline]
+    pub fn ORBIT_LIFETIME(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_ORBIT_LIFETIME, Some(0.0)).unwrap()}
+    }
+
+    /// ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+    #[inline]
+    pub fn ORBIT_LIFETIME_WINDOW_START(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_ORBIT_LIFETIME_WINDOW_START, Some(f64::NAN)).unwrap()}
+    }
+
+    /// ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+    #[inline]
+    pub fn ORBIT_LIFETIME_WINDOW_END(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_ORBIT_LIFETIME_WINDOW_END, Some(f64::NAN)).unwrap()}
+    }
+
+    /// REENTRY_WINDOW_START.
+    #[inline]
+    pub fn REENTRY_WINDOW_START(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_REENTRY_WINDOW_START, None)}
+    }
+
+    /// REENTRY_WINDOW_END.
+    #[inline]
+    pub fn REENTRY_WINDOW_END(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_REENTRY_WINDOW_END, None)}
+    }
+
+    /// ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+    #[inline]
+    pub fn ORBIT_LIFETIME_CONFIDENCE_LEVEL(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_ORBIT_LIFETIME_CONFIDENCE_LEVEL, Some(f64::NAN)).unwrap()}
+    }
+
+    /// PROBABILITY_OF_IMPACT, NaN when not stated.
+    #[inline]
+    pub fn PROBABILITY_OF_IMPACT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_PROBABILITY_OF_IMPACT, Some(f64::NAN)).unwrap()}
+    }
+
+    /// PROBABILITY_OF_BURN_UP, NaN when not stated.
+    #[inline]
+    pub fn PROBABILITY_OF_BURN_UP(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_PROBABILITY_OF_BURN_UP, Some(f64::NAN)).unwrap()}
+    }
+
+    /// PROBABILITY_OF_BREAK_UP, NaN when not stated.
+    #[inline]
+    pub fn PROBABILITY_OF_BREAK_UP(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_PROBABILITY_OF_BREAK_UP, Some(f64::NAN)).unwrap()}
+    }
+
+    /// PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+    #[inline]
+    pub fn PROBABILITY_OF_LAND_IMPACT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_PROBABILITY_OF_LAND_IMPACT, Some(f64::NAN)).unwrap()}
+    }
+
+    /// PROBABILITY_OF_CASUALTY, NaN when not stated.
+    #[inline]
+    pub fn PROBABILITY_OF_CASUALTY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_PROBABILITY_OF_CASUALTY, Some(f64::NAN)).unwrap()}
+    }
+
+    /// NOMINAL_IMPACT_EPOCH.
+    #[inline]
+    pub fn NOMINAL_IMPACT_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_NOMINAL_IMPACT_EPOCH, None)}
+    }
+
+    /// IMPACT_WINDOW_START.
+    #[inline]
+    pub fn IMPACT_WINDOW_START(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_IMPACT_WINDOW_START, None)}
+    }
+
+    /// IMPACT_WINDOW_END.
+    #[inline]
+    pub fn IMPACT_WINDOW_END(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_IMPACT_WINDOW_END, None)}
+    }
+
+    /// IMPACT_REF_FRAME.
+    #[inline]
+    pub fn IMPACT_REF_FRAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_IMPACT_REF_FRAME, None)}
+    }
+
+    /// NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+    #[inline]
+    pub fn NOMINAL_IMPACT_LON(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_NOMINAL_IMPACT_LON, Some(f64::NAN)).unwrap()}
+    }
+
+    /// NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+    #[inline]
+    pub fn NOMINAL_IMPACT_LAT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_NOMINAL_IMPACT_LAT, Some(f64::NAN)).unwrap()}
+    }
+
+    /// NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+    #[inline]
+    pub fn NOMINAL_IMPACT_ALT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_NOMINAL_IMPACT_ALT, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_1_CONFIDENCE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_1_CONFIDENCE, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_1_START_LON in degrees, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_1_START_LON(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_1_START_LON, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_1_START_LAT in degrees, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_1_START_LAT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_1_START_LAT, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_1_STOP_LON in degrees, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_1_STOP_LON(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_1_STOP_LON, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_1_STOP_LAT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_1_STOP_LAT, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_1_CROSS_TRACK(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_1_CROSS_TRACK, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_2_CONFIDENCE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_2_CONFIDENCE, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_2_START_LON in degrees, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_2_START_LON(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_2_START_LON, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_2_START_LAT in degrees, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_2_START_LAT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_2_START_LAT, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_2_STOP_LON in degrees, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_2_STOP_LON(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_2_STOP_LON, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_2_STOP_LAT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_2_STOP_LAT, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_2_CROSS_TRACK(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_2_CROSS_TRACK, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_3_CONFIDENCE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_3_CONFIDENCE, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_3_START_LON in degrees, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_3_START_LON(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_3_START_LON, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_3_START_LAT in degrees, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_3_START_LAT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_3_START_LAT, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_3_STOP_LON in degrees, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_3_STOP_LON(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_3_STOP_LON, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_3_STOP_LAT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_3_STOP_LAT, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+    #[inline]
+    pub fn IMPACT_3_CROSS_TRACK(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_IMPACT_3_CROSS_TRACK, Some(f64::NAN)).unwrap()}
+    }
+
+    /// COV_REF_FRAME: the frame of COVARIANCE.
+    #[inline]
+    pub fn COV_REF_FRAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_COV_REF_FRAME, None)}
+    }
+
+    /// Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+    /// triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+    /// CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+    /// CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+    /// CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+    #[inline]
+    pub fn COVARIANCE(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RDM::VT_COVARIANCE, None)}
+    }
+
+    /// WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+    #[inline]
+    pub fn DRY_MASS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_DRY_MASS, Some(f64::NAN)).unwrap()}
+    }
+
+    /// HAZARDOUS_SUBSTANCES.
+    #[inline]
+    pub fn HAZARDOUS_SUBSTANCES(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_HAZARDOUS_SUBSTANCES, None)}
+    }
+
+    /// SOLAR_RAD_COEFF, NaN when not stated.
+    #[inline]
+    pub fn SOLAR_RAD_COEFF(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_SOLAR_RAD_COEFF, Some(f64::NAN)).unwrap()}
+    }
+
+    /// DRAG_COEFF, NaN when not stated.
+    #[inline]
+    pub fn DRAG_COEFF(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_DRAG_COEFF, Some(f64::NAN)).unwrap()}
+    }
+
+    /// RCS in m**2, NaN when not stated.
+    #[inline]
+    pub fn RCS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_RCS, Some(f64::NAN)).unwrap()}
+    }
+
+    /// THRUST_ACCELERATION in m/s**2, NaN when not stated.
+    #[inline]
+    pub fn THRUST_ACCELERATION(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_THRUST_ACCELERATION, Some(f64::NAN)).unwrap()}
+    }
+
+    /// TIME_LASTOB_START.
+    #[inline]
+    pub fn TIME_LASTOB_START(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_TIME_LASTOB_START, None)}
+    }
+
+    /// TIME_LASTOB_END.
+    #[inline]
+    pub fn TIME_LASTOB_END(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDM::VT_TIME_LASTOB_END, None)}
+    }
+
+    /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+    #[inline]
+    pub fn RECOMMENDED_OD_SPAN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_RECOMMENDED_OD_SPAN, Some(f64::NAN)).unwrap()}
+    }
+
+    /// ACTUAL_OD_SPAN in days, NaN when not stated.
+    #[inline]
+    pub fn ACTUAL_OD_SPAN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_ACTUAL_OD_SPAN, Some(f64::NAN)).unwrap()}
+    }
+
+    /// OBS_AVAILABLE.
+    #[inline]
+    pub fn OBS_AVAILABLE(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(RDM::VT_OBS_AVAILABLE, Some(0)).unwrap()}
+    }
+
+    /// OBS_USED.
+    #[inline]
+    pub fn OBS_USED(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(RDM::VT_OBS_USED, Some(0)).unwrap()}
+    }
+
+    /// TRACKS_AVAILABLE.
+    #[inline]
+    pub fn TRACKS_AVAILABLE(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(RDM::VT_TRACKS_AVAILABLE, Some(0)).unwrap()}
+    }
+
+    /// TRACKS_USED.
+    #[inline]
+    pub fn TRACKS_USED(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(RDM::VT_TRACKS_USED, Some(0)).unwrap()}
+    }
+
+    /// RESIDUALS_ACCEPTED in percent, NaN when not stated.
+    #[inline]
+    pub fn RESIDUALS_ACCEPTED(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_RESIDUALS_ACCEPTED, Some(f64::NAN)).unwrap()}
+    }
+
+    /// WEIGHTED_RMS, NaN when not stated.
+    #[inline]
+    pub fn WEIGHTED_RMS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RDM::VT_WEIGHTED_RMS, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Every USER_DEFINED keyword of the message, in message order.
+    #[inline]
+    pub fn USER_DEFINED_PARAMETERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RDMUserDefinedParameter<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RDMUserDefinedParameter>>>>(RDM::VT_USER_DEFINED_PARAMETERS, None)}
     }
 }
 
@@ -1537,6 +2765,86 @@ impl ::flatbuffers::Verifiable for RDM<'_> {
             .visit_field::<u32>("NUM_FRAGMENTS", Self::VT_NUM_FRAGMENTS, false)?
             .visit_field::<f64>("SURVIVING_MASS", Self::VT_SURVIVING_MASS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_ID", Self::VT_MESSAGE_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CATALOG_NAME", Self::VT_CATALOG_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_DESIGNATOR", Self::VT_OBJECT_DESIGNATOR, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_OWNER", Self::VT_OBJECT_OWNER, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_OPERATOR", Self::VT_OBJECT_OPERATOR, false)?
+            .visit_field::<rdmControlledReentry>("CONTROLLED_REENTRY", Self::VT_CONTROLLED_REENTRY, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH_TZERO", Self::VT_EPOCH_TZERO, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REF_FRAME", Self::VT_REF_FRAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REF_FRAME_EPOCH", Self::VT_REF_FRAME_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_NAME", Self::VT_EPHEMERIS_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GRAVITY_MODEL", Self::VT_GRAVITY_MODEL, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ATMOSPHERIC_MODEL", Self::VT_ATMOSPHERIC_MODEL, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOLAR_FLUX_PREDICTION", Self::VT_SOLAR_FLUX_PREDICTION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("N_BODY_PERTURBATIONS", Self::VT_N_BODY_PERTURBATIONS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOLAR_RAD_PRESSURE", Self::VT_SOLAR_RAD_PRESSURE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EARTH_TIDES", Self::VT_EARTH_TIDES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INTRACK_THRUST", Self::VT_INTRACK_THRUST, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DRAG_PARAMETERS_SOURCE", Self::VT_DRAG_PARAMETERS_SOURCE, false)?
+            .visit_field::<f64>("DRAG_PARAMETERS_ALTITUDE", Self::VT_DRAG_PARAMETERS_ALTITUDE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REENTRY_UNCERTAINTY_METHOD", Self::VT_REENTRY_UNCERTAINTY_METHOD, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REENTRY_DISINTEGRATION", Self::VT_REENTRY_DISINTEGRATION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("IMPACT_UNCERTAINTY_METHOD", Self::VT_IMPACT_UNCERTAINTY_METHOD, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PREVIOUS_MESSAGE_ID", Self::VT_PREVIOUS_MESSAGE_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NEXT_MESSAGE_EPOCH", Self::VT_NEXT_MESSAGE_EPOCH, false)?
+            .visit_field::<f64>("ORBIT_LIFETIME", Self::VT_ORBIT_LIFETIME, false)?
+            .visit_field::<f64>("ORBIT_LIFETIME_WINDOW_START", Self::VT_ORBIT_LIFETIME_WINDOW_START, false)?
+            .visit_field::<f64>("ORBIT_LIFETIME_WINDOW_END", Self::VT_ORBIT_LIFETIME_WINDOW_END, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REENTRY_WINDOW_START", Self::VT_REENTRY_WINDOW_START, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REENTRY_WINDOW_END", Self::VT_REENTRY_WINDOW_END, false)?
+            .visit_field::<f64>("ORBIT_LIFETIME_CONFIDENCE_LEVEL", Self::VT_ORBIT_LIFETIME_CONFIDENCE_LEVEL, false)?
+            .visit_field::<f64>("PROBABILITY_OF_IMPACT", Self::VT_PROBABILITY_OF_IMPACT, false)?
+            .visit_field::<f64>("PROBABILITY_OF_BURN_UP", Self::VT_PROBABILITY_OF_BURN_UP, false)?
+            .visit_field::<f64>("PROBABILITY_OF_BREAK_UP", Self::VT_PROBABILITY_OF_BREAK_UP, false)?
+            .visit_field::<f64>("PROBABILITY_OF_LAND_IMPACT", Self::VT_PROBABILITY_OF_LAND_IMPACT, false)?
+            .visit_field::<f64>("PROBABILITY_OF_CASUALTY", Self::VT_PROBABILITY_OF_CASUALTY, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NOMINAL_IMPACT_EPOCH", Self::VT_NOMINAL_IMPACT_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("IMPACT_WINDOW_START", Self::VT_IMPACT_WINDOW_START, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("IMPACT_WINDOW_END", Self::VT_IMPACT_WINDOW_END, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("IMPACT_REF_FRAME", Self::VT_IMPACT_REF_FRAME, false)?
+            .visit_field::<f64>("NOMINAL_IMPACT_LON", Self::VT_NOMINAL_IMPACT_LON, false)?
+            .visit_field::<f64>("NOMINAL_IMPACT_LAT", Self::VT_NOMINAL_IMPACT_LAT, false)?
+            .visit_field::<f64>("NOMINAL_IMPACT_ALT", Self::VT_NOMINAL_IMPACT_ALT, false)?
+            .visit_field::<f64>("IMPACT_1_CONFIDENCE", Self::VT_IMPACT_1_CONFIDENCE, false)?
+            .visit_field::<f64>("IMPACT_1_START_LON", Self::VT_IMPACT_1_START_LON, false)?
+            .visit_field::<f64>("IMPACT_1_START_LAT", Self::VT_IMPACT_1_START_LAT, false)?
+            .visit_field::<f64>("IMPACT_1_STOP_LON", Self::VT_IMPACT_1_STOP_LON, false)?
+            .visit_field::<f64>("IMPACT_1_STOP_LAT", Self::VT_IMPACT_1_STOP_LAT, false)?
+            .visit_field::<f64>("IMPACT_1_CROSS_TRACK", Self::VT_IMPACT_1_CROSS_TRACK, false)?
+            .visit_field::<f64>("IMPACT_2_CONFIDENCE", Self::VT_IMPACT_2_CONFIDENCE, false)?
+            .visit_field::<f64>("IMPACT_2_START_LON", Self::VT_IMPACT_2_START_LON, false)?
+            .visit_field::<f64>("IMPACT_2_START_LAT", Self::VT_IMPACT_2_START_LAT, false)?
+            .visit_field::<f64>("IMPACT_2_STOP_LON", Self::VT_IMPACT_2_STOP_LON, false)?
+            .visit_field::<f64>("IMPACT_2_STOP_LAT", Self::VT_IMPACT_2_STOP_LAT, false)?
+            .visit_field::<f64>("IMPACT_2_CROSS_TRACK", Self::VT_IMPACT_2_CROSS_TRACK, false)?
+            .visit_field::<f64>("IMPACT_3_CONFIDENCE", Self::VT_IMPACT_3_CONFIDENCE, false)?
+            .visit_field::<f64>("IMPACT_3_START_LON", Self::VT_IMPACT_3_START_LON, false)?
+            .visit_field::<f64>("IMPACT_3_START_LAT", Self::VT_IMPACT_3_START_LAT, false)?
+            .visit_field::<f64>("IMPACT_3_STOP_LON", Self::VT_IMPACT_3_STOP_LON, false)?
+            .visit_field::<f64>("IMPACT_3_STOP_LAT", Self::VT_IMPACT_3_STOP_LAT, false)?
+            .visit_field::<f64>("IMPACT_3_CROSS_TRACK", Self::VT_IMPACT_3_CROSS_TRACK, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_REF_FRAME", Self::VT_COV_REF_FRAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COVARIANCE", Self::VT_COVARIANCE, false)?
+            .visit_field::<f64>("DRY_MASS", Self::VT_DRY_MASS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("HAZARDOUS_SUBSTANCES", Self::VT_HAZARDOUS_SUBSTANCES, false)?
+            .visit_field::<f64>("SOLAR_RAD_COEFF", Self::VT_SOLAR_RAD_COEFF, false)?
+            .visit_field::<f64>("DRAG_COEFF", Self::VT_DRAG_COEFF, false)?
+            .visit_field::<f64>("RCS", Self::VT_RCS, false)?
+            .visit_field::<f64>("THRUST_ACCELERATION", Self::VT_THRUST_ACCELERATION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TIME_LASTOB_START", Self::VT_TIME_LASTOB_START, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TIME_LASTOB_END", Self::VT_TIME_LASTOB_END, false)?
+            .visit_field::<f64>("RECOMMENDED_OD_SPAN", Self::VT_RECOMMENDED_OD_SPAN, false)?
+            .visit_field::<f64>("ACTUAL_OD_SPAN", Self::VT_ACTUAL_OD_SPAN, false)?
+            .visit_field::<u32>("OBS_AVAILABLE", Self::VT_OBS_AVAILABLE, false)?
+            .visit_field::<u32>("OBS_USED", Self::VT_OBS_USED, false)?
+            .visit_field::<u32>("TRACKS_AVAILABLE", Self::VT_TRACKS_AVAILABLE, false)?
+            .visit_field::<u32>("TRACKS_USED", Self::VT_TRACKS_USED, false)?
+            .visit_field::<f64>("RESIDUALS_ACCEPTED", Self::VT_RESIDUALS_ACCEPTED, false)?
+            .visit_field::<f64>("WEIGHTED_RMS", Self::VT_WEIGHTED_RMS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<RDMUserDefinedParameter>>>>("USER_DEFINED_PARAMETERS", Self::VT_USER_DEFINED_PARAMETERS, false)?
             .finish();
         Ok(())
     }
@@ -1570,6 +2878,86 @@ pub struct RDMArgs<'a> {
     pub NUM_FRAGMENTS: u32,
     pub SURVIVING_MASS: f64,
     pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CATALOG_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_DESIGNATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_OWNER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_OPERATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONTROLLED_REENTRY: rdmControlledReentry,
+    pub CENTER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH_TZERO: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REF_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REF_FRAME_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPHEMERIS_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GRAVITY_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ATMOSPHERIC_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOLAR_FLUX_PREDICTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub N_BODY_PERTURBATIONS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOLAR_RAD_PRESSURE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EARTH_TIDES: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTRACK_THRUST: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DRAG_PARAMETERS_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DRAG_PARAMETERS_ALTITUDE: f64,
+    pub REENTRY_UNCERTAINTY_METHOD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REENTRY_DISINTEGRATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub IMPACT_UNCERTAINTY_METHOD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PREVIOUS_MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NEXT_MESSAGE_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORBIT_LIFETIME: f64,
+    pub ORBIT_LIFETIME_WINDOW_START: f64,
+    pub ORBIT_LIFETIME_WINDOW_END: f64,
+    pub REENTRY_WINDOW_START: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REENTRY_WINDOW_END: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORBIT_LIFETIME_CONFIDENCE_LEVEL: f64,
+    pub PROBABILITY_OF_IMPACT: f64,
+    pub PROBABILITY_OF_BURN_UP: f64,
+    pub PROBABILITY_OF_BREAK_UP: f64,
+    pub PROBABILITY_OF_LAND_IMPACT: f64,
+    pub PROBABILITY_OF_CASUALTY: f64,
+    pub NOMINAL_IMPACT_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub IMPACT_WINDOW_START: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub IMPACT_WINDOW_END: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub IMPACT_REF_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NOMINAL_IMPACT_LON: f64,
+    pub NOMINAL_IMPACT_LAT: f64,
+    pub NOMINAL_IMPACT_ALT: f64,
+    pub IMPACT_1_CONFIDENCE: f64,
+    pub IMPACT_1_START_LON: f64,
+    pub IMPACT_1_START_LAT: f64,
+    pub IMPACT_1_STOP_LON: f64,
+    pub IMPACT_1_STOP_LAT: f64,
+    pub IMPACT_1_CROSS_TRACK: f64,
+    pub IMPACT_2_CONFIDENCE: f64,
+    pub IMPACT_2_START_LON: f64,
+    pub IMPACT_2_START_LAT: f64,
+    pub IMPACT_2_STOP_LON: f64,
+    pub IMPACT_2_STOP_LAT: f64,
+    pub IMPACT_2_CROSS_TRACK: f64,
+    pub IMPACT_3_CONFIDENCE: f64,
+    pub IMPACT_3_START_LON: f64,
+    pub IMPACT_3_START_LAT: f64,
+    pub IMPACT_3_STOP_LON: f64,
+    pub IMPACT_3_STOP_LAT: f64,
+    pub IMPACT_3_CROSS_TRACK: f64,
+    pub COV_REF_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COVARIANCE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub DRY_MASS: f64,
+    pub HAZARDOUS_SUBSTANCES: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOLAR_RAD_COEFF: f64,
+    pub DRAG_COEFF: f64,
+    pub RCS: f64,
+    pub THRUST_ACCELERATION: f64,
+    pub TIME_LASTOB_START: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TIME_LASTOB_END: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RECOMMENDED_OD_SPAN: f64,
+    pub ACTUAL_OD_SPAN: f64,
+    pub OBS_AVAILABLE: u32,
+    pub OBS_USED: u32,
+    pub TRACKS_AVAILABLE: u32,
+    pub TRACKS_USED: u32,
+    pub RESIDUALS_ACCEPTED: f64,
+    pub WEIGHTED_RMS: f64,
+    pub USER_DEFINED_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RDMUserDefinedParameter<'a>>>>>,
 }
 
 impl<'a> Default for RDMArgs<'a> {
@@ -1603,6 +2991,86 @@ impl<'a> Default for RDMArgs<'a> {
             NUM_FRAGMENTS: 0,
             SURVIVING_MASS: 0.0,
             COMMENT: None,
+            MESSAGE_ID: None,
+            CATALOG_NAME: None,
+            OBJECT_DESIGNATOR: None,
+            OBJECT_OWNER: None,
+            OBJECT_OPERATOR: None,
+            CONTROLLED_REENTRY: rdmControlledReentry::UNSPECIFIED,
+            CENTER_NAME: None,
+            EPOCH_TZERO: None,
+            REF_FRAME: None,
+            REF_FRAME_EPOCH: None,
+            EPHEMERIS_NAME: None,
+            GRAVITY_MODEL: None,
+            ATMOSPHERIC_MODEL: None,
+            SOLAR_FLUX_PREDICTION: None,
+            N_BODY_PERTURBATIONS: None,
+            SOLAR_RAD_PRESSURE: None,
+            EARTH_TIDES: None,
+            INTRACK_THRUST: None,
+            DRAG_PARAMETERS_SOURCE: None,
+            DRAG_PARAMETERS_ALTITUDE: f64::NAN,
+            REENTRY_UNCERTAINTY_METHOD: None,
+            REENTRY_DISINTEGRATION: None,
+            IMPACT_UNCERTAINTY_METHOD: None,
+            PREVIOUS_MESSAGE_ID: None,
+            NEXT_MESSAGE_EPOCH: None,
+            ORBIT_LIFETIME: 0.0,
+            ORBIT_LIFETIME_WINDOW_START: f64::NAN,
+            ORBIT_LIFETIME_WINDOW_END: f64::NAN,
+            REENTRY_WINDOW_START: None,
+            REENTRY_WINDOW_END: None,
+            ORBIT_LIFETIME_CONFIDENCE_LEVEL: f64::NAN,
+            PROBABILITY_OF_IMPACT: f64::NAN,
+            PROBABILITY_OF_BURN_UP: f64::NAN,
+            PROBABILITY_OF_BREAK_UP: f64::NAN,
+            PROBABILITY_OF_LAND_IMPACT: f64::NAN,
+            PROBABILITY_OF_CASUALTY: f64::NAN,
+            NOMINAL_IMPACT_EPOCH: None,
+            IMPACT_WINDOW_START: None,
+            IMPACT_WINDOW_END: None,
+            IMPACT_REF_FRAME: None,
+            NOMINAL_IMPACT_LON: f64::NAN,
+            NOMINAL_IMPACT_LAT: f64::NAN,
+            NOMINAL_IMPACT_ALT: f64::NAN,
+            IMPACT_1_CONFIDENCE: f64::NAN,
+            IMPACT_1_START_LON: f64::NAN,
+            IMPACT_1_START_LAT: f64::NAN,
+            IMPACT_1_STOP_LON: f64::NAN,
+            IMPACT_1_STOP_LAT: f64::NAN,
+            IMPACT_1_CROSS_TRACK: f64::NAN,
+            IMPACT_2_CONFIDENCE: f64::NAN,
+            IMPACT_2_START_LON: f64::NAN,
+            IMPACT_2_START_LAT: f64::NAN,
+            IMPACT_2_STOP_LON: f64::NAN,
+            IMPACT_2_STOP_LAT: f64::NAN,
+            IMPACT_2_CROSS_TRACK: f64::NAN,
+            IMPACT_3_CONFIDENCE: f64::NAN,
+            IMPACT_3_START_LON: f64::NAN,
+            IMPACT_3_START_LAT: f64::NAN,
+            IMPACT_3_STOP_LON: f64::NAN,
+            IMPACT_3_STOP_LAT: f64::NAN,
+            IMPACT_3_CROSS_TRACK: f64::NAN,
+            COV_REF_FRAME: None,
+            COVARIANCE: None,
+            DRY_MASS: f64::NAN,
+            HAZARDOUS_SUBSTANCES: None,
+            SOLAR_RAD_COEFF: f64::NAN,
+            DRAG_COEFF: f64::NAN,
+            RCS: f64::NAN,
+            THRUST_ACCELERATION: f64::NAN,
+            TIME_LASTOB_START: None,
+            TIME_LASTOB_END: None,
+            RECOMMENDED_OD_SPAN: f64::NAN,
+            ACTUAL_OD_SPAN: f64::NAN,
+            OBS_AVAILABLE: 0,
+            OBS_USED: 0,
+            TRACKS_AVAILABLE: 0,
+            TRACKS_USED: 0,
+            RESIDUALS_ACCEPTED: f64::NAN,
+            WEIGHTED_RMS: f64::NAN,
+            USER_DEFINED_PARAMETERS: None,
         }
     }
 }
@@ -1749,6 +3217,406 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RDMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_MESSAGE_ID(&mut self, MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_MESSAGE_ID, MESSAGE_ID);
+    }
+
+    #[inline]
+    pub fn add_CATALOG_NAME(&mut self, CATALOG_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_CATALOG_NAME, CATALOG_NAME);
+    }
+
+    #[inline]
+    pub fn add_OBJECT_DESIGNATOR(&mut self, OBJECT_DESIGNATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
+    }
+
+    #[inline]
+    pub fn add_OBJECT_OWNER(&mut self, OBJECT_OWNER: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_OBJECT_OWNER, OBJECT_OWNER);
+    }
+
+    #[inline]
+    pub fn add_OBJECT_OPERATOR(&mut self, OBJECT_OPERATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_OBJECT_OPERATOR, OBJECT_OPERATOR);
+    }
+
+    #[inline]
+    pub fn add_CONTROLLED_REENTRY(&mut self, CONTROLLED_REENTRY: rdmControlledReentry) {
+        self.fbb_.push_slot::<rdmControlledReentry>(RDM::VT_CONTROLLED_REENTRY, CONTROLLED_REENTRY, rdmControlledReentry::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_CENTER_NAME(&mut self, CENTER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_CENTER_NAME, CENTER_NAME);
+    }
+
+    #[inline]
+    pub fn add_EPOCH_TZERO(&mut self, EPOCH_TZERO: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_EPOCH_TZERO, EPOCH_TZERO);
+    }
+
+    #[inline]
+    pub fn add_REF_FRAME(&mut self, REF_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_REF_FRAME, REF_FRAME);
+    }
+
+    #[inline]
+    pub fn add_REF_FRAME_EPOCH(&mut self, REF_FRAME_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_REF_FRAME_EPOCH, REF_FRAME_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_EPHEMERIS_NAME(&mut self, EPHEMERIS_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_EPHEMERIS_NAME, EPHEMERIS_NAME);
+    }
+
+    #[inline]
+    pub fn add_GRAVITY_MODEL(&mut self, GRAVITY_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_GRAVITY_MODEL, GRAVITY_MODEL);
+    }
+
+    #[inline]
+    pub fn add_ATMOSPHERIC_MODEL(&mut self, ATMOSPHERIC_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_ATMOSPHERIC_MODEL, ATMOSPHERIC_MODEL);
+    }
+
+    #[inline]
+    pub fn add_SOLAR_FLUX_PREDICTION(&mut self, SOLAR_FLUX_PREDICTION: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_SOLAR_FLUX_PREDICTION, SOLAR_FLUX_PREDICTION);
+    }
+
+    #[inline]
+    pub fn add_N_BODY_PERTURBATIONS(&mut self, N_BODY_PERTURBATIONS: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_N_BODY_PERTURBATIONS, N_BODY_PERTURBATIONS);
+    }
+
+    #[inline]
+    pub fn add_SOLAR_RAD_PRESSURE(&mut self, SOLAR_RAD_PRESSURE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_SOLAR_RAD_PRESSURE, SOLAR_RAD_PRESSURE);
+    }
+
+    #[inline]
+    pub fn add_EARTH_TIDES(&mut self, EARTH_TIDES: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_EARTH_TIDES, EARTH_TIDES);
+    }
+
+    #[inline]
+    pub fn add_INTRACK_THRUST(&mut self, INTRACK_THRUST: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_INTRACK_THRUST, INTRACK_THRUST);
+    }
+
+    #[inline]
+    pub fn add_DRAG_PARAMETERS_SOURCE(&mut self, DRAG_PARAMETERS_SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_DRAG_PARAMETERS_SOURCE, DRAG_PARAMETERS_SOURCE);
+    }
+
+    #[inline]
+    pub fn add_DRAG_PARAMETERS_ALTITUDE(&mut self, DRAG_PARAMETERS_ALTITUDE: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_DRAG_PARAMETERS_ALTITUDE, DRAG_PARAMETERS_ALTITUDE, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_REENTRY_UNCERTAINTY_METHOD(&mut self, REENTRY_UNCERTAINTY_METHOD: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_REENTRY_UNCERTAINTY_METHOD, REENTRY_UNCERTAINTY_METHOD);
+    }
+
+    #[inline]
+    pub fn add_REENTRY_DISINTEGRATION(&mut self, REENTRY_DISINTEGRATION: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_REENTRY_DISINTEGRATION, REENTRY_DISINTEGRATION);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_UNCERTAINTY_METHOD(&mut self, IMPACT_UNCERTAINTY_METHOD: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_IMPACT_UNCERTAINTY_METHOD, IMPACT_UNCERTAINTY_METHOD);
+    }
+
+    #[inline]
+    pub fn add_PREVIOUS_MESSAGE_ID(&mut self, PREVIOUS_MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_PREVIOUS_MESSAGE_ID, PREVIOUS_MESSAGE_ID);
+    }
+
+    #[inline]
+    pub fn add_NEXT_MESSAGE_EPOCH(&mut self, NEXT_MESSAGE_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_NEXT_MESSAGE_EPOCH, NEXT_MESSAGE_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_ORBIT_LIFETIME(&mut self, ORBIT_LIFETIME: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_ORBIT_LIFETIME, ORBIT_LIFETIME, 0.0);
+    }
+
+    #[inline]
+    pub fn add_ORBIT_LIFETIME_WINDOW_START(&mut self, ORBIT_LIFETIME_WINDOW_START: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_ORBIT_LIFETIME_WINDOW_START, ORBIT_LIFETIME_WINDOW_START, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ORBIT_LIFETIME_WINDOW_END(&mut self, ORBIT_LIFETIME_WINDOW_END: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_ORBIT_LIFETIME_WINDOW_END, ORBIT_LIFETIME_WINDOW_END, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_REENTRY_WINDOW_START(&mut self, REENTRY_WINDOW_START: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_REENTRY_WINDOW_START, REENTRY_WINDOW_START);
+    }
+
+    #[inline]
+    pub fn add_REENTRY_WINDOW_END(&mut self, REENTRY_WINDOW_END: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_REENTRY_WINDOW_END, REENTRY_WINDOW_END);
+    }
+
+    #[inline]
+    pub fn add_ORBIT_LIFETIME_CONFIDENCE_LEVEL(&mut self, ORBIT_LIFETIME_CONFIDENCE_LEVEL: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_ORBIT_LIFETIME_CONFIDENCE_LEVEL, ORBIT_LIFETIME_CONFIDENCE_LEVEL, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_PROBABILITY_OF_IMPACT(&mut self, PROBABILITY_OF_IMPACT: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_PROBABILITY_OF_IMPACT, PROBABILITY_OF_IMPACT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_PROBABILITY_OF_BURN_UP(&mut self, PROBABILITY_OF_BURN_UP: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_PROBABILITY_OF_BURN_UP, PROBABILITY_OF_BURN_UP, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_PROBABILITY_OF_BREAK_UP(&mut self, PROBABILITY_OF_BREAK_UP: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_PROBABILITY_OF_BREAK_UP, PROBABILITY_OF_BREAK_UP, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_PROBABILITY_OF_LAND_IMPACT(&mut self, PROBABILITY_OF_LAND_IMPACT: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_PROBABILITY_OF_LAND_IMPACT, PROBABILITY_OF_LAND_IMPACT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_PROBABILITY_OF_CASUALTY(&mut self, PROBABILITY_OF_CASUALTY: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_PROBABILITY_OF_CASUALTY, PROBABILITY_OF_CASUALTY, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_NOMINAL_IMPACT_EPOCH(&mut self, NOMINAL_IMPACT_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_NOMINAL_IMPACT_EPOCH, NOMINAL_IMPACT_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_WINDOW_START(&mut self, IMPACT_WINDOW_START: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_IMPACT_WINDOW_START, IMPACT_WINDOW_START);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_WINDOW_END(&mut self, IMPACT_WINDOW_END: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_IMPACT_WINDOW_END, IMPACT_WINDOW_END);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_REF_FRAME(&mut self, IMPACT_REF_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_IMPACT_REF_FRAME, IMPACT_REF_FRAME);
+    }
+
+    #[inline]
+    pub fn add_NOMINAL_IMPACT_LON(&mut self, NOMINAL_IMPACT_LON: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_NOMINAL_IMPACT_LON, NOMINAL_IMPACT_LON, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_NOMINAL_IMPACT_LAT(&mut self, NOMINAL_IMPACT_LAT: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_NOMINAL_IMPACT_LAT, NOMINAL_IMPACT_LAT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_NOMINAL_IMPACT_ALT(&mut self, NOMINAL_IMPACT_ALT: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_NOMINAL_IMPACT_ALT, NOMINAL_IMPACT_ALT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_1_CONFIDENCE(&mut self, IMPACT_1_CONFIDENCE: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_1_CONFIDENCE, IMPACT_1_CONFIDENCE, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_1_START_LON(&mut self, IMPACT_1_START_LON: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_1_START_LON, IMPACT_1_START_LON, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_1_START_LAT(&mut self, IMPACT_1_START_LAT: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_1_START_LAT, IMPACT_1_START_LAT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_1_STOP_LON(&mut self, IMPACT_1_STOP_LON: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_1_STOP_LON, IMPACT_1_STOP_LON, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_1_STOP_LAT(&mut self, IMPACT_1_STOP_LAT: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_1_STOP_LAT, IMPACT_1_STOP_LAT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_1_CROSS_TRACK(&mut self, IMPACT_1_CROSS_TRACK: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_1_CROSS_TRACK, IMPACT_1_CROSS_TRACK, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_2_CONFIDENCE(&mut self, IMPACT_2_CONFIDENCE: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_2_CONFIDENCE, IMPACT_2_CONFIDENCE, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_2_START_LON(&mut self, IMPACT_2_START_LON: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_2_START_LON, IMPACT_2_START_LON, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_2_START_LAT(&mut self, IMPACT_2_START_LAT: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_2_START_LAT, IMPACT_2_START_LAT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_2_STOP_LON(&mut self, IMPACT_2_STOP_LON: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_2_STOP_LON, IMPACT_2_STOP_LON, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_2_STOP_LAT(&mut self, IMPACT_2_STOP_LAT: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_2_STOP_LAT, IMPACT_2_STOP_LAT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_2_CROSS_TRACK(&mut self, IMPACT_2_CROSS_TRACK: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_2_CROSS_TRACK, IMPACT_2_CROSS_TRACK, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_3_CONFIDENCE(&mut self, IMPACT_3_CONFIDENCE: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_3_CONFIDENCE, IMPACT_3_CONFIDENCE, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_3_START_LON(&mut self, IMPACT_3_START_LON: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_3_START_LON, IMPACT_3_START_LON, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_3_START_LAT(&mut self, IMPACT_3_START_LAT: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_3_START_LAT, IMPACT_3_START_LAT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_3_STOP_LON(&mut self, IMPACT_3_STOP_LON: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_3_STOP_LON, IMPACT_3_STOP_LON, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_3_STOP_LAT(&mut self, IMPACT_3_STOP_LAT: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_3_STOP_LAT, IMPACT_3_STOP_LAT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IMPACT_3_CROSS_TRACK(&mut self, IMPACT_3_CROSS_TRACK: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_IMPACT_3_CROSS_TRACK, IMPACT_3_CROSS_TRACK, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_COV_REF_FRAME(&mut self, COV_REF_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_COV_REF_FRAME, COV_REF_FRAME);
+    }
+
+    #[inline]
+    pub fn add_COVARIANCE(&mut self, COVARIANCE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_COVARIANCE, COVARIANCE);
+    }
+
+    #[inline]
+    pub fn add_DRY_MASS(&mut self, DRY_MASS: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_DRY_MASS, DRY_MASS, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_HAZARDOUS_SUBSTANCES(&mut self, HAZARDOUS_SUBSTANCES: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_HAZARDOUS_SUBSTANCES, HAZARDOUS_SUBSTANCES);
+    }
+
+    #[inline]
+    pub fn add_SOLAR_RAD_COEFF(&mut self, SOLAR_RAD_COEFF: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_SOLAR_RAD_COEFF, SOLAR_RAD_COEFF, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_DRAG_COEFF(&mut self, DRAG_COEFF: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_DRAG_COEFF, DRAG_COEFF, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_RCS(&mut self, RCS: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_RCS, RCS, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_THRUST_ACCELERATION(&mut self, THRUST_ACCELERATION: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_THRUST_ACCELERATION, THRUST_ACCELERATION, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_TIME_LASTOB_START(&mut self, TIME_LASTOB_START: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_TIME_LASTOB_START, TIME_LASTOB_START);
+    }
+
+    #[inline]
+    pub fn add_TIME_LASTOB_END(&mut self, TIME_LASTOB_END: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_TIME_LASTOB_END, TIME_LASTOB_END);
+    }
+
+    #[inline]
+    pub fn add_RECOMMENDED_OD_SPAN(&mut self, RECOMMENDED_OD_SPAN: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_RECOMMENDED_OD_SPAN, RECOMMENDED_OD_SPAN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ACTUAL_OD_SPAN(&mut self, ACTUAL_OD_SPAN: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_ACTUAL_OD_SPAN, ACTUAL_OD_SPAN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_OBS_AVAILABLE(&mut self, OBS_AVAILABLE: u32) {
+        self.fbb_.push_slot::<u32>(RDM::VT_OBS_AVAILABLE, OBS_AVAILABLE, 0);
+    }
+
+    #[inline]
+    pub fn add_OBS_USED(&mut self, OBS_USED: u32) {
+        self.fbb_.push_slot::<u32>(RDM::VT_OBS_USED, OBS_USED, 0);
+    }
+
+    #[inline]
+    pub fn add_TRACKS_AVAILABLE(&mut self, TRACKS_AVAILABLE: u32) {
+        self.fbb_.push_slot::<u32>(RDM::VT_TRACKS_AVAILABLE, TRACKS_AVAILABLE, 0);
+    }
+
+    #[inline]
+    pub fn add_TRACKS_USED(&mut self, TRACKS_USED: u32) {
+        self.fbb_.push_slot::<u32>(RDM::VT_TRACKS_USED, TRACKS_USED, 0);
+    }
+
+    #[inline]
+    pub fn add_RESIDUALS_ACCEPTED(&mut self, RESIDUALS_ACCEPTED: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_RESIDUALS_ACCEPTED, RESIDUALS_ACCEPTED, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_WEIGHTED_RMS(&mut self, WEIGHTED_RMS: f64) {
+        self.fbb_.push_slot::<f64>(RDM::VT_WEIGHTED_RMS, WEIGHTED_RMS, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_USER_DEFINED_PARAMETERS(&mut self, USER_DEFINED_PARAMETERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<RDMUserDefinedParameter<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDM::VT_USER_DEFINED_PARAMETERS, USER_DEFINED_PARAMETERS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RDMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         RDMBuilder {
@@ -1794,6 +3662,86 @@ impl ::core::fmt::Debug for RDM<'_> {
         ds.field("NUM_FRAGMENTS", &self.NUM_FRAGMENTS());
         ds.field("SURVIVING_MASS", &self.SURVIVING_MASS());
         ds.field("COMMENT", &self.COMMENT());
+        ds.field("MESSAGE_ID", &self.MESSAGE_ID());
+        ds.field("CATALOG_NAME", &self.CATALOG_NAME());
+        ds.field("OBJECT_DESIGNATOR", &self.OBJECT_DESIGNATOR());
+        ds.field("OBJECT_OWNER", &self.OBJECT_OWNER());
+        ds.field("OBJECT_OPERATOR", &self.OBJECT_OPERATOR());
+        ds.field("CONTROLLED_REENTRY", &self.CONTROLLED_REENTRY());
+        ds.field("CENTER_NAME", &self.CENTER_NAME());
+        ds.field("EPOCH_TZERO", &self.EPOCH_TZERO());
+        ds.field("REF_FRAME", &self.REF_FRAME());
+        ds.field("REF_FRAME_EPOCH", &self.REF_FRAME_EPOCH());
+        ds.field("EPHEMERIS_NAME", &self.EPHEMERIS_NAME());
+        ds.field("GRAVITY_MODEL", &self.GRAVITY_MODEL());
+        ds.field("ATMOSPHERIC_MODEL", &self.ATMOSPHERIC_MODEL());
+        ds.field("SOLAR_FLUX_PREDICTION", &self.SOLAR_FLUX_PREDICTION());
+        ds.field("N_BODY_PERTURBATIONS", &self.N_BODY_PERTURBATIONS());
+        ds.field("SOLAR_RAD_PRESSURE", &self.SOLAR_RAD_PRESSURE());
+        ds.field("EARTH_TIDES", &self.EARTH_TIDES());
+        ds.field("INTRACK_THRUST", &self.INTRACK_THRUST());
+        ds.field("DRAG_PARAMETERS_SOURCE", &self.DRAG_PARAMETERS_SOURCE());
+        ds.field("DRAG_PARAMETERS_ALTITUDE", &self.DRAG_PARAMETERS_ALTITUDE());
+        ds.field("REENTRY_UNCERTAINTY_METHOD", &self.REENTRY_UNCERTAINTY_METHOD());
+        ds.field("REENTRY_DISINTEGRATION", &self.REENTRY_DISINTEGRATION());
+        ds.field("IMPACT_UNCERTAINTY_METHOD", &self.IMPACT_UNCERTAINTY_METHOD());
+        ds.field("PREVIOUS_MESSAGE_ID", &self.PREVIOUS_MESSAGE_ID());
+        ds.field("NEXT_MESSAGE_EPOCH", &self.NEXT_MESSAGE_EPOCH());
+        ds.field("ORBIT_LIFETIME", &self.ORBIT_LIFETIME());
+        ds.field("ORBIT_LIFETIME_WINDOW_START", &self.ORBIT_LIFETIME_WINDOW_START());
+        ds.field("ORBIT_LIFETIME_WINDOW_END", &self.ORBIT_LIFETIME_WINDOW_END());
+        ds.field("REENTRY_WINDOW_START", &self.REENTRY_WINDOW_START());
+        ds.field("REENTRY_WINDOW_END", &self.REENTRY_WINDOW_END());
+        ds.field("ORBIT_LIFETIME_CONFIDENCE_LEVEL", &self.ORBIT_LIFETIME_CONFIDENCE_LEVEL());
+        ds.field("PROBABILITY_OF_IMPACT", &self.PROBABILITY_OF_IMPACT());
+        ds.field("PROBABILITY_OF_BURN_UP", &self.PROBABILITY_OF_BURN_UP());
+        ds.field("PROBABILITY_OF_BREAK_UP", &self.PROBABILITY_OF_BREAK_UP());
+        ds.field("PROBABILITY_OF_LAND_IMPACT", &self.PROBABILITY_OF_LAND_IMPACT());
+        ds.field("PROBABILITY_OF_CASUALTY", &self.PROBABILITY_OF_CASUALTY());
+        ds.field("NOMINAL_IMPACT_EPOCH", &self.NOMINAL_IMPACT_EPOCH());
+        ds.field("IMPACT_WINDOW_START", &self.IMPACT_WINDOW_START());
+        ds.field("IMPACT_WINDOW_END", &self.IMPACT_WINDOW_END());
+        ds.field("IMPACT_REF_FRAME", &self.IMPACT_REF_FRAME());
+        ds.field("NOMINAL_IMPACT_LON", &self.NOMINAL_IMPACT_LON());
+        ds.field("NOMINAL_IMPACT_LAT", &self.NOMINAL_IMPACT_LAT());
+        ds.field("NOMINAL_IMPACT_ALT", &self.NOMINAL_IMPACT_ALT());
+        ds.field("IMPACT_1_CONFIDENCE", &self.IMPACT_1_CONFIDENCE());
+        ds.field("IMPACT_1_START_LON", &self.IMPACT_1_START_LON());
+        ds.field("IMPACT_1_START_LAT", &self.IMPACT_1_START_LAT());
+        ds.field("IMPACT_1_STOP_LON", &self.IMPACT_1_STOP_LON());
+        ds.field("IMPACT_1_STOP_LAT", &self.IMPACT_1_STOP_LAT());
+        ds.field("IMPACT_1_CROSS_TRACK", &self.IMPACT_1_CROSS_TRACK());
+        ds.field("IMPACT_2_CONFIDENCE", &self.IMPACT_2_CONFIDENCE());
+        ds.field("IMPACT_2_START_LON", &self.IMPACT_2_START_LON());
+        ds.field("IMPACT_2_START_LAT", &self.IMPACT_2_START_LAT());
+        ds.field("IMPACT_2_STOP_LON", &self.IMPACT_2_STOP_LON());
+        ds.field("IMPACT_2_STOP_LAT", &self.IMPACT_2_STOP_LAT());
+        ds.field("IMPACT_2_CROSS_TRACK", &self.IMPACT_2_CROSS_TRACK());
+        ds.field("IMPACT_3_CONFIDENCE", &self.IMPACT_3_CONFIDENCE());
+        ds.field("IMPACT_3_START_LON", &self.IMPACT_3_START_LON());
+        ds.field("IMPACT_3_START_LAT", &self.IMPACT_3_START_LAT());
+        ds.field("IMPACT_3_STOP_LON", &self.IMPACT_3_STOP_LON());
+        ds.field("IMPACT_3_STOP_LAT", &self.IMPACT_3_STOP_LAT());
+        ds.field("IMPACT_3_CROSS_TRACK", &self.IMPACT_3_CROSS_TRACK());
+        ds.field("COV_REF_FRAME", &self.COV_REF_FRAME());
+        ds.field("COVARIANCE", &self.COVARIANCE());
+        ds.field("DRY_MASS", &self.DRY_MASS());
+        ds.field("HAZARDOUS_SUBSTANCES", &self.HAZARDOUS_SUBSTANCES());
+        ds.field("SOLAR_RAD_COEFF", &self.SOLAR_RAD_COEFF());
+        ds.field("DRAG_COEFF", &self.DRAG_COEFF());
+        ds.field("RCS", &self.RCS());
+        ds.field("THRUST_ACCELERATION", &self.THRUST_ACCELERATION());
+        ds.field("TIME_LASTOB_START", &self.TIME_LASTOB_START());
+        ds.field("TIME_LASTOB_END", &self.TIME_LASTOB_END());
+        ds.field("RECOMMENDED_OD_SPAN", &self.RECOMMENDED_OD_SPAN());
+        ds.field("ACTUAL_OD_SPAN", &self.ACTUAL_OD_SPAN());
+        ds.field("OBS_AVAILABLE", &self.OBS_AVAILABLE());
+        ds.field("OBS_USED", &self.OBS_USED());
+        ds.field("TRACKS_AVAILABLE", &self.TRACKS_AVAILABLE());
+        ds.field("TRACKS_USED", &self.TRACKS_USED());
+        ds.field("RESIDUALS_ACCEPTED", &self.RESIDUALS_ACCEPTED());
+        ds.field("WEIGHTED_RMS", &self.WEIGHTED_RMS());
+        ds.field("USER_DEFINED_PARAMETERS", &self.USER_DEFINED_PARAMETERS());
         ds.finish()
     }
 }
@@ -1828,6 +3776,86 @@ pub struct RDMT {
     pub NUM_FRAGMENTS: u32,
     pub SURVIVING_MASS: f64,
     pub COMMENT: Option<alloc::string::String>,
+    pub MESSAGE_ID: Option<alloc::string::String>,
+    pub CATALOG_NAME: Option<alloc::string::String>,
+    pub OBJECT_DESIGNATOR: Option<alloc::string::String>,
+    pub OBJECT_OWNER: Option<alloc::string::String>,
+    pub OBJECT_OPERATOR: Option<alloc::string::String>,
+    pub CONTROLLED_REENTRY: rdmControlledReentry,
+    pub CENTER_NAME: Option<alloc::string::String>,
+    pub EPOCH_TZERO: Option<alloc::string::String>,
+    pub REF_FRAME: Option<alloc::string::String>,
+    pub REF_FRAME_EPOCH: Option<alloc::string::String>,
+    pub EPHEMERIS_NAME: Option<alloc::string::String>,
+    pub GRAVITY_MODEL: Option<alloc::string::String>,
+    pub ATMOSPHERIC_MODEL: Option<alloc::string::String>,
+    pub SOLAR_FLUX_PREDICTION: Option<alloc::string::String>,
+    pub N_BODY_PERTURBATIONS: Option<alloc::string::String>,
+    pub SOLAR_RAD_PRESSURE: Option<alloc::string::String>,
+    pub EARTH_TIDES: Option<alloc::string::String>,
+    pub INTRACK_THRUST: Option<alloc::string::String>,
+    pub DRAG_PARAMETERS_SOURCE: Option<alloc::string::String>,
+    pub DRAG_PARAMETERS_ALTITUDE: f64,
+    pub REENTRY_UNCERTAINTY_METHOD: Option<alloc::string::String>,
+    pub REENTRY_DISINTEGRATION: Option<alloc::string::String>,
+    pub IMPACT_UNCERTAINTY_METHOD: Option<alloc::string::String>,
+    pub PREVIOUS_MESSAGE_ID: Option<alloc::string::String>,
+    pub NEXT_MESSAGE_EPOCH: Option<alloc::string::String>,
+    pub ORBIT_LIFETIME: f64,
+    pub ORBIT_LIFETIME_WINDOW_START: f64,
+    pub ORBIT_LIFETIME_WINDOW_END: f64,
+    pub REENTRY_WINDOW_START: Option<alloc::string::String>,
+    pub REENTRY_WINDOW_END: Option<alloc::string::String>,
+    pub ORBIT_LIFETIME_CONFIDENCE_LEVEL: f64,
+    pub PROBABILITY_OF_IMPACT: f64,
+    pub PROBABILITY_OF_BURN_UP: f64,
+    pub PROBABILITY_OF_BREAK_UP: f64,
+    pub PROBABILITY_OF_LAND_IMPACT: f64,
+    pub PROBABILITY_OF_CASUALTY: f64,
+    pub NOMINAL_IMPACT_EPOCH: Option<alloc::string::String>,
+    pub IMPACT_WINDOW_START: Option<alloc::string::String>,
+    pub IMPACT_WINDOW_END: Option<alloc::string::String>,
+    pub IMPACT_REF_FRAME: Option<alloc::string::String>,
+    pub NOMINAL_IMPACT_LON: f64,
+    pub NOMINAL_IMPACT_LAT: f64,
+    pub NOMINAL_IMPACT_ALT: f64,
+    pub IMPACT_1_CONFIDENCE: f64,
+    pub IMPACT_1_START_LON: f64,
+    pub IMPACT_1_START_LAT: f64,
+    pub IMPACT_1_STOP_LON: f64,
+    pub IMPACT_1_STOP_LAT: f64,
+    pub IMPACT_1_CROSS_TRACK: f64,
+    pub IMPACT_2_CONFIDENCE: f64,
+    pub IMPACT_2_START_LON: f64,
+    pub IMPACT_2_START_LAT: f64,
+    pub IMPACT_2_STOP_LON: f64,
+    pub IMPACT_2_STOP_LAT: f64,
+    pub IMPACT_2_CROSS_TRACK: f64,
+    pub IMPACT_3_CONFIDENCE: f64,
+    pub IMPACT_3_START_LON: f64,
+    pub IMPACT_3_START_LAT: f64,
+    pub IMPACT_3_STOP_LON: f64,
+    pub IMPACT_3_STOP_LAT: f64,
+    pub IMPACT_3_CROSS_TRACK: f64,
+    pub COV_REF_FRAME: Option<alloc::string::String>,
+    pub COVARIANCE: Option<alloc::vec::Vec<f64>>,
+    pub DRY_MASS: f64,
+    pub HAZARDOUS_SUBSTANCES: Option<alloc::string::String>,
+    pub SOLAR_RAD_COEFF: f64,
+    pub DRAG_COEFF: f64,
+    pub RCS: f64,
+    pub THRUST_ACCELERATION: f64,
+    pub TIME_LASTOB_START: Option<alloc::string::String>,
+    pub TIME_LASTOB_END: Option<alloc::string::String>,
+    pub RECOMMENDED_OD_SPAN: f64,
+    pub ACTUAL_OD_SPAN: f64,
+    pub OBS_AVAILABLE: u32,
+    pub OBS_USED: u32,
+    pub TRACKS_AVAILABLE: u32,
+    pub TRACKS_USED: u32,
+    pub RESIDUALS_ACCEPTED: f64,
+    pub WEIGHTED_RMS: f64,
+    pub USER_DEFINED_PARAMETERS: Option<alloc::vec::Vec<RDMUserDefinedParameterT>>,
 }
 
 impl Default for RDMT {
@@ -1860,6 +3888,86 @@ impl Default for RDMT {
             NUM_FRAGMENTS: 0,
             SURVIVING_MASS: 0.0,
             COMMENT: None,
+            MESSAGE_ID: None,
+            CATALOG_NAME: None,
+            OBJECT_DESIGNATOR: None,
+            OBJECT_OWNER: None,
+            OBJECT_OPERATOR: None,
+            CONTROLLED_REENTRY: rdmControlledReentry::UNSPECIFIED,
+            CENTER_NAME: None,
+            EPOCH_TZERO: None,
+            REF_FRAME: None,
+            REF_FRAME_EPOCH: None,
+            EPHEMERIS_NAME: None,
+            GRAVITY_MODEL: None,
+            ATMOSPHERIC_MODEL: None,
+            SOLAR_FLUX_PREDICTION: None,
+            N_BODY_PERTURBATIONS: None,
+            SOLAR_RAD_PRESSURE: None,
+            EARTH_TIDES: None,
+            INTRACK_THRUST: None,
+            DRAG_PARAMETERS_SOURCE: None,
+            DRAG_PARAMETERS_ALTITUDE: f64::NAN,
+            REENTRY_UNCERTAINTY_METHOD: None,
+            REENTRY_DISINTEGRATION: None,
+            IMPACT_UNCERTAINTY_METHOD: None,
+            PREVIOUS_MESSAGE_ID: None,
+            NEXT_MESSAGE_EPOCH: None,
+            ORBIT_LIFETIME: 0.0,
+            ORBIT_LIFETIME_WINDOW_START: f64::NAN,
+            ORBIT_LIFETIME_WINDOW_END: f64::NAN,
+            REENTRY_WINDOW_START: None,
+            REENTRY_WINDOW_END: None,
+            ORBIT_LIFETIME_CONFIDENCE_LEVEL: f64::NAN,
+            PROBABILITY_OF_IMPACT: f64::NAN,
+            PROBABILITY_OF_BURN_UP: f64::NAN,
+            PROBABILITY_OF_BREAK_UP: f64::NAN,
+            PROBABILITY_OF_LAND_IMPACT: f64::NAN,
+            PROBABILITY_OF_CASUALTY: f64::NAN,
+            NOMINAL_IMPACT_EPOCH: None,
+            IMPACT_WINDOW_START: None,
+            IMPACT_WINDOW_END: None,
+            IMPACT_REF_FRAME: None,
+            NOMINAL_IMPACT_LON: f64::NAN,
+            NOMINAL_IMPACT_LAT: f64::NAN,
+            NOMINAL_IMPACT_ALT: f64::NAN,
+            IMPACT_1_CONFIDENCE: f64::NAN,
+            IMPACT_1_START_LON: f64::NAN,
+            IMPACT_1_START_LAT: f64::NAN,
+            IMPACT_1_STOP_LON: f64::NAN,
+            IMPACT_1_STOP_LAT: f64::NAN,
+            IMPACT_1_CROSS_TRACK: f64::NAN,
+            IMPACT_2_CONFIDENCE: f64::NAN,
+            IMPACT_2_START_LON: f64::NAN,
+            IMPACT_2_START_LAT: f64::NAN,
+            IMPACT_2_STOP_LON: f64::NAN,
+            IMPACT_2_STOP_LAT: f64::NAN,
+            IMPACT_2_CROSS_TRACK: f64::NAN,
+            IMPACT_3_CONFIDENCE: f64::NAN,
+            IMPACT_3_START_LON: f64::NAN,
+            IMPACT_3_START_LAT: f64::NAN,
+            IMPACT_3_STOP_LON: f64::NAN,
+            IMPACT_3_STOP_LAT: f64::NAN,
+            IMPACT_3_CROSS_TRACK: f64::NAN,
+            COV_REF_FRAME: None,
+            COVARIANCE: None,
+            DRY_MASS: f64::NAN,
+            HAZARDOUS_SUBSTANCES: None,
+            SOLAR_RAD_COEFF: f64::NAN,
+            DRAG_COEFF: f64::NAN,
+            RCS: f64::NAN,
+            THRUST_ACCELERATION: f64::NAN,
+            TIME_LASTOB_START: None,
+            TIME_LASTOB_END: None,
+            RECOMMENDED_OD_SPAN: f64::NAN,
+            ACTUAL_OD_SPAN: f64::NAN,
+            OBS_AVAILABLE: 0,
+            OBS_USED: 0,
+            TRACKS_AVAILABLE: 0,
+            TRACKS_USED: 0,
+            RESIDUALS_ACCEPTED: f64::NAN,
+            WEIGHTED_RMS: f64::NAN,
+            USER_DEFINED_PARAMETERS: None,
         }
     }
 }
@@ -1922,6 +4030,156 @@ impl RDMT {
         let COMMENT = self.COMMENT.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let MESSAGE_ID = self.MESSAGE_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let CATALOG_NAME = self.CATALOG_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let OBJECT_OWNER = self.OBJECT_OWNER.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let OBJECT_OPERATOR = self.OBJECT_OPERATOR.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let CONTROLLED_REENTRY = self.CONTROLLED_REENTRY;
+        let CENTER_NAME = self.CENTER_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let EPOCH_TZERO = self.EPOCH_TZERO.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let REF_FRAME = self.REF_FRAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let REF_FRAME_EPOCH = self.REF_FRAME_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let EPHEMERIS_NAME = self.EPHEMERIS_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let GRAVITY_MODEL = self.GRAVITY_MODEL.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let ATMOSPHERIC_MODEL = self.ATMOSPHERIC_MODEL.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SOLAR_FLUX_PREDICTION = self.SOLAR_FLUX_PREDICTION.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let N_BODY_PERTURBATIONS = self.N_BODY_PERTURBATIONS.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SOLAR_RAD_PRESSURE = self.SOLAR_RAD_PRESSURE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let EARTH_TIDES = self.EARTH_TIDES.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let INTRACK_THRUST = self.INTRACK_THRUST.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DRAG_PARAMETERS_SOURCE = self.DRAG_PARAMETERS_SOURCE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DRAG_PARAMETERS_ALTITUDE = self.DRAG_PARAMETERS_ALTITUDE;
+        let REENTRY_UNCERTAINTY_METHOD = self.REENTRY_UNCERTAINTY_METHOD.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let REENTRY_DISINTEGRATION = self.REENTRY_DISINTEGRATION.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let IMPACT_UNCERTAINTY_METHOD = self.IMPACT_UNCERTAINTY_METHOD.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let PREVIOUS_MESSAGE_ID = self.PREVIOUS_MESSAGE_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let NEXT_MESSAGE_EPOCH = self.NEXT_MESSAGE_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let ORBIT_LIFETIME = self.ORBIT_LIFETIME;
+        let ORBIT_LIFETIME_WINDOW_START = self.ORBIT_LIFETIME_WINDOW_START;
+        let ORBIT_LIFETIME_WINDOW_END = self.ORBIT_LIFETIME_WINDOW_END;
+        let REENTRY_WINDOW_START = self.REENTRY_WINDOW_START.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let REENTRY_WINDOW_END = self.REENTRY_WINDOW_END.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let ORBIT_LIFETIME_CONFIDENCE_LEVEL = self.ORBIT_LIFETIME_CONFIDENCE_LEVEL;
+        let PROBABILITY_OF_IMPACT = self.PROBABILITY_OF_IMPACT;
+        let PROBABILITY_OF_BURN_UP = self.PROBABILITY_OF_BURN_UP;
+        let PROBABILITY_OF_BREAK_UP = self.PROBABILITY_OF_BREAK_UP;
+        let PROBABILITY_OF_LAND_IMPACT = self.PROBABILITY_OF_LAND_IMPACT;
+        let PROBABILITY_OF_CASUALTY = self.PROBABILITY_OF_CASUALTY;
+        let NOMINAL_IMPACT_EPOCH = self.NOMINAL_IMPACT_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let IMPACT_WINDOW_START = self.IMPACT_WINDOW_START.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let IMPACT_WINDOW_END = self.IMPACT_WINDOW_END.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let IMPACT_REF_FRAME = self.IMPACT_REF_FRAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let NOMINAL_IMPACT_LON = self.NOMINAL_IMPACT_LON;
+        let NOMINAL_IMPACT_LAT = self.NOMINAL_IMPACT_LAT;
+        let NOMINAL_IMPACT_ALT = self.NOMINAL_IMPACT_ALT;
+        let IMPACT_1_CONFIDENCE = self.IMPACT_1_CONFIDENCE;
+        let IMPACT_1_START_LON = self.IMPACT_1_START_LON;
+        let IMPACT_1_START_LAT = self.IMPACT_1_START_LAT;
+        let IMPACT_1_STOP_LON = self.IMPACT_1_STOP_LON;
+        let IMPACT_1_STOP_LAT = self.IMPACT_1_STOP_LAT;
+        let IMPACT_1_CROSS_TRACK = self.IMPACT_1_CROSS_TRACK;
+        let IMPACT_2_CONFIDENCE = self.IMPACT_2_CONFIDENCE;
+        let IMPACT_2_START_LON = self.IMPACT_2_START_LON;
+        let IMPACT_2_START_LAT = self.IMPACT_2_START_LAT;
+        let IMPACT_2_STOP_LON = self.IMPACT_2_STOP_LON;
+        let IMPACT_2_STOP_LAT = self.IMPACT_2_STOP_LAT;
+        let IMPACT_2_CROSS_TRACK = self.IMPACT_2_CROSS_TRACK;
+        let IMPACT_3_CONFIDENCE = self.IMPACT_3_CONFIDENCE;
+        let IMPACT_3_START_LON = self.IMPACT_3_START_LON;
+        let IMPACT_3_START_LAT = self.IMPACT_3_START_LAT;
+        let IMPACT_3_STOP_LON = self.IMPACT_3_STOP_LON;
+        let IMPACT_3_STOP_LAT = self.IMPACT_3_STOP_LAT;
+        let IMPACT_3_CROSS_TRACK = self.IMPACT_3_CROSS_TRACK;
+        let COV_REF_FRAME = self.COV_REF_FRAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COVARIANCE = self.COVARIANCE.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let DRY_MASS = self.DRY_MASS;
+        let HAZARDOUS_SUBSTANCES = self.HAZARDOUS_SUBSTANCES.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SOLAR_RAD_COEFF = self.SOLAR_RAD_COEFF;
+        let DRAG_COEFF = self.DRAG_COEFF;
+        let RCS = self.RCS;
+        let THRUST_ACCELERATION = self.THRUST_ACCELERATION;
+        let TIME_LASTOB_START = self.TIME_LASTOB_START.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let TIME_LASTOB_END = self.TIME_LASTOB_END.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let RECOMMENDED_OD_SPAN = self.RECOMMENDED_OD_SPAN;
+        let ACTUAL_OD_SPAN = self.ACTUAL_OD_SPAN;
+        let OBS_AVAILABLE = self.OBS_AVAILABLE;
+        let OBS_USED = self.OBS_USED;
+        let TRACKS_AVAILABLE = self.TRACKS_AVAILABLE;
+        let TRACKS_USED = self.TRACKS_USED;
+        let RESIDUALS_ACCEPTED = self.RESIDUALS_ACCEPTED;
+        let WEIGHTED_RMS = self.WEIGHTED_RMS;
+        let USER_DEFINED_PARAMETERS = self.USER_DEFINED_PARAMETERS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
         RDM::create(_fbb, &RDMArgs{
             CCSDS_RDM_VERS,
             CREATION_DATE,
@@ -1950,6 +4208,259 @@ impl RDMT {
             NUM_FRAGMENTS,
             SURVIVING_MASS,
             COMMENT,
+            MESSAGE_ID,
+            CATALOG_NAME,
+            OBJECT_DESIGNATOR,
+            OBJECT_OWNER,
+            OBJECT_OPERATOR,
+            CONTROLLED_REENTRY,
+            CENTER_NAME,
+            EPOCH_TZERO,
+            REF_FRAME,
+            REF_FRAME_EPOCH,
+            EPHEMERIS_NAME,
+            GRAVITY_MODEL,
+            ATMOSPHERIC_MODEL,
+            SOLAR_FLUX_PREDICTION,
+            N_BODY_PERTURBATIONS,
+            SOLAR_RAD_PRESSURE,
+            EARTH_TIDES,
+            INTRACK_THRUST,
+            DRAG_PARAMETERS_SOURCE,
+            DRAG_PARAMETERS_ALTITUDE,
+            REENTRY_UNCERTAINTY_METHOD,
+            REENTRY_DISINTEGRATION,
+            IMPACT_UNCERTAINTY_METHOD,
+            PREVIOUS_MESSAGE_ID,
+            NEXT_MESSAGE_EPOCH,
+            ORBIT_LIFETIME,
+            ORBIT_LIFETIME_WINDOW_START,
+            ORBIT_LIFETIME_WINDOW_END,
+            REENTRY_WINDOW_START,
+            REENTRY_WINDOW_END,
+            ORBIT_LIFETIME_CONFIDENCE_LEVEL,
+            PROBABILITY_OF_IMPACT,
+            PROBABILITY_OF_BURN_UP,
+            PROBABILITY_OF_BREAK_UP,
+            PROBABILITY_OF_LAND_IMPACT,
+            PROBABILITY_OF_CASUALTY,
+            NOMINAL_IMPACT_EPOCH,
+            IMPACT_WINDOW_START,
+            IMPACT_WINDOW_END,
+            IMPACT_REF_FRAME,
+            NOMINAL_IMPACT_LON,
+            NOMINAL_IMPACT_LAT,
+            NOMINAL_IMPACT_ALT,
+            IMPACT_1_CONFIDENCE,
+            IMPACT_1_START_LON,
+            IMPACT_1_START_LAT,
+            IMPACT_1_STOP_LON,
+            IMPACT_1_STOP_LAT,
+            IMPACT_1_CROSS_TRACK,
+            IMPACT_2_CONFIDENCE,
+            IMPACT_2_START_LON,
+            IMPACT_2_START_LAT,
+            IMPACT_2_STOP_LON,
+            IMPACT_2_STOP_LAT,
+            IMPACT_2_CROSS_TRACK,
+            IMPACT_3_CONFIDENCE,
+            IMPACT_3_START_LON,
+            IMPACT_3_START_LAT,
+            IMPACT_3_STOP_LON,
+            IMPACT_3_STOP_LAT,
+            IMPACT_3_CROSS_TRACK,
+            COV_REF_FRAME,
+            COVARIANCE,
+            DRY_MASS,
+            HAZARDOUS_SUBSTANCES,
+            SOLAR_RAD_COEFF,
+            DRAG_COEFF,
+            RCS,
+            THRUST_ACCELERATION,
+            TIME_LASTOB_START,
+            TIME_LASTOB_END,
+            RECOMMENDED_OD_SPAN,
+            ACTUAL_OD_SPAN,
+            OBS_AVAILABLE,
+            OBS_USED,
+            TRACKS_AVAILABLE,
+            TRACKS_USED,
+            RESIDUALS_ACCEPTED,
+            WEIGHTED_RMS,
+            USER_DEFINED_PARAMETERS,
+        })
+    }
+}
+
+pub enum RDMUserDefinedParameterOffset {}
+
+/// One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+#[derive(Copy, Clone, PartialEq)]
+pub struct RDMUserDefinedParameter<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for RDMUserDefinedParameter<'a> {
+    type Inner = RDMUserDefinedParameter<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> RDMUserDefinedParameter<'a> {
+    pub const VT_PARAM_NAME: ::flatbuffers::VOffsetT = 4;
+    pub const VT_PARAM_VALUE: ::flatbuffers::VOffsetT = 6;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        RDMUserDefinedParameter { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args RDMUserDefinedParameterArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<RDMUserDefinedParameter<'bldr>> {
+        let mut builder = RDMUserDefinedParameterBuilder::new(_fbb);
+        if let Some(x) = args.PARAM_VALUE { builder.add_PARAM_VALUE(x); }
+        if let Some(x) = args.PARAM_NAME { builder.add_PARAM_NAME(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> RDMUserDefinedParameterT {
+        let PARAM_NAME = self.PARAM_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let PARAM_VALUE = self.PARAM_VALUE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        RDMUserDefinedParameterT {
+            PARAM_NAME,
+            PARAM_VALUE,
+        }
+    }
+
+    /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+    #[inline]
+    pub fn PARAM_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDMUserDefinedParameter::VT_PARAM_NAME, None)}
+    }
+
+    /// The value as written
+    #[inline]
+    pub fn PARAM_VALUE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RDMUserDefinedParameter::VT_PARAM_VALUE, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for RDMUserDefinedParameter<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARAM_NAME", Self::VT_PARAM_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARAM_VALUE", Self::VT_PARAM_VALUE, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct RDMUserDefinedParameterArgs<'a> {
+    pub PARAM_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PARAM_VALUE: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+
+impl<'a> Default for RDMUserDefinedParameterArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        RDMUserDefinedParameterArgs {
+            PARAM_NAME: None,
+            PARAM_VALUE: None,
+        }
+    }
+}
+
+pub struct RDMUserDefinedParameterBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RDMUserDefinedParameterBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_PARAM_NAME(&mut self, PARAM_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDMUserDefinedParameter::VT_PARAM_NAME, PARAM_NAME);
+    }
+
+    #[inline]
+    pub fn add_PARAM_VALUE(&mut self, PARAM_VALUE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RDMUserDefinedParameter::VT_PARAM_VALUE, PARAM_VALUE);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RDMUserDefinedParameterBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        RDMUserDefinedParameterBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<RDMUserDefinedParameter<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for RDMUserDefinedParameter<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("RDMUserDefinedParameter");
+        ds.field("PARAM_NAME", &self.PARAM_NAME());
+        ds.field("PARAM_VALUE", &self.PARAM_VALUE());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct RDMUserDefinedParameterT {
+    pub PARAM_NAME: Option<alloc::string::String>,
+    pub PARAM_VALUE: Option<alloc::string::String>,
+}
+
+impl Default for RDMUserDefinedParameterT {
+    fn default() -> Self {
+        Self {
+            PARAM_NAME: None,
+            PARAM_VALUE: None,
+        }
+    }
+}
+
+impl RDMUserDefinedParameterT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<RDMUserDefinedParameter<'b>> {
+        let PARAM_NAME = self.PARAM_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let PARAM_VALUE = self.PARAM_VALUE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        RDMUserDefinedParameter::create(_fbb, &RDMUserDefinedParameterArgs{
+            PARAM_NAME,
+            PARAM_VALUE,
         })
     }
 }

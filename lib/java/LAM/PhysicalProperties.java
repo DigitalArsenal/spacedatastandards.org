@@ -115,6 +115,148 @@ public final class PhysicalProperties extends com.google.flatbuffers.Table {
    * Uncertainty in the solar radiation pressure coefficient.
    */
   public double SRP_UNCERTAINTY() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+   */
+  public String MANUFACTURER() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MANUFACTURERAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer MANUFACTURERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * BUS_MODEL: the object's bus model.
+   */
+  public String BUS_MODEL() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BUS_MODELAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
+  public ByteBuffer BUS_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
+   * DOCKED_WITH: comma-separated names of the objects it is docked with.
+   */
+  public String DOCKED_WITH() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DOCKED_WITHAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
+  public ByteBuffer DOCKED_WITHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
+  /**
+   * INITIAL_WET_MASS in kg, NaN when not stated.
+   */
+  public double INITIAL_WET_MASS() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+   */
+  public String OEB_PARENT_FRAME() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OEB_PARENT_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
+  public ByteBuffer OEB_PARENT_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
+  /**
+   * OEB_PARENT_FRAME_EPOCH.
+   */
+  public String OEB_PARENT_FRAME_EPOCH() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OEB_PARENT_FRAME_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer OEB_PARENT_FRAME_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * AREA_MIN_FOR_PC in m**2, NaN when not stated.
+   */
+  public double AREA_MIN_FOR_PC() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * AREA_MAX_FOR_PC in m**2, NaN when not stated.
+   */
+  public double AREA_MAX_FOR_PC() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * AREA_TYP_FOR_PC in m**2, NaN when not stated.
+   */
+  public double AREA_TYP_FOR_PC() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * RCS in m**2, NaN when not stated.
+   */
+  public double RCS() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * RCS_MIN in m**2, NaN when not stated.
+   */
+  public double RCS_MIN() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * RCS_MAX in m**2, NaN when not stated.
+   */
+  public double RCS_MAX() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+   */
+  public double VM_ABSOLUTE() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+   */
+  public double VM_APPARENT_MIN() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * VM_APPARENT: apparent visual magnitude, NaN when not stated.
+   */
+  public double VM_APPARENT() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+   */
+  public double VM_APPARENT_MAX() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * REFLECTANCE: typical reflectivity, NaN when not stated.
+   */
+  public double REFLECTANCE() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * ATT_CONTROL_MODE.
+   */
+  public String ATT_CONTROL_MODE() { int o = __offset(80); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ATT_CONTROL_MODEAsByteBuffer() { return __vector_as_bytebuffer(80, 1); }
+  public ByteBuffer ATT_CONTROL_MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 80, 1); }
+  /**
+   * ATT_ACTUATOR_TYPE.
+   */
+  public String ATT_ACTUATOR_TYPE() { int o = __offset(82); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ATT_ACTUATOR_TYPEAsByteBuffer() { return __vector_as_bytebuffer(82, 1); }
+  public ByteBuffer ATT_ACTUATOR_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 82, 1); }
+  /**
+   * ATT_KNOWLEDGE in degrees, NaN when not stated.
+   */
+  public double ATT_KNOWLEDGE() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * ATT_CONTROL in degrees, NaN when not stated.
+   */
+  public double ATT_CONTROL() { int o = __offset(86); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * ATT_POINTING in degrees, NaN when not stated.
+   */
+  public double ATT_POINTING() { int o = __offset(88); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+   */
+  public double AVG_MANEUVER_FREQ() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * MAX_THRUST in N, NaN when not stated.
+   */
+  public double MAX_THRUST() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+   */
+  public double DV_BOL() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * DV_REMAINING in km/s, NaN when not stated.
+   */
+  public double DV_REMAINING() { int o = __offset(96); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IXX in kg*m**2, NaN when not stated.
+   */
+  public double IXX() { int o = __offset(98); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IYY in kg*m**2, NaN when not stated.
+   */
+  public double IYY() { int o = __offset(100); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IZZ in kg*m**2, NaN when not stated.
+   */
+  public double IZZ() { int o = __offset(102); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IXY in kg*m**2, NaN when not stated.
+   */
+  public double IXY() { int o = __offset(104); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IXZ in kg*m**2, NaN when not stated.
+   */
+  public double IXZ() { int o = __offset(106); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IYZ in kg*m**2, NaN when not stated.
+   */
+  public double IYZ() { int o = __offset(108); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
 
   public static int createPhysicalProperties(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -137,8 +279,65 @@ public final class PhysicalProperties extends com.google.flatbuffers.Table {
       double DRAG_UNCERTAINTY,
       double SRP_CONST_AREA,
       double SOLAR_RAD_COEFF,
-      double SRP_UNCERTAINTY) {
-    builder.startTable(21);
+      double SRP_UNCERTAINTY,
+      int MANUFACTUREROffset,
+      int BUS_MODELOffset,
+      int DOCKED_WITHOffset,
+      double INITIAL_WET_MASS,
+      int OEB_PARENT_FRAMEOffset,
+      int OEB_PARENT_FRAME_EPOCHOffset,
+      double AREA_MIN_FOR_PC,
+      double AREA_MAX_FOR_PC,
+      double AREA_TYP_FOR_PC,
+      double RCS,
+      double RCS_MIN,
+      double RCS_MAX,
+      double VM_ABSOLUTE,
+      double VM_APPARENT_MIN,
+      double VM_APPARENT,
+      double VM_APPARENT_MAX,
+      double REFLECTANCE,
+      int ATT_CONTROL_MODEOffset,
+      int ATT_ACTUATOR_TYPEOffset,
+      double ATT_KNOWLEDGE,
+      double ATT_CONTROL,
+      double ATT_POINTING,
+      double AVG_MANEUVER_FREQ,
+      double MAX_THRUST,
+      double DV_BOL,
+      double DV_REMAINING,
+      double IXX,
+      double IYY,
+      double IZZ,
+      double IXY,
+      double IXZ,
+      double IYZ) {
+    builder.startTable(53);
+    PhysicalProperties.addIyz(builder, IYZ);
+    PhysicalProperties.addIxz(builder, IXZ);
+    PhysicalProperties.addIxy(builder, IXY);
+    PhysicalProperties.addIzz(builder, IZZ);
+    PhysicalProperties.addIyy(builder, IYY);
+    PhysicalProperties.addIxx(builder, IXX);
+    PhysicalProperties.addDvRemaining(builder, DV_REMAINING);
+    PhysicalProperties.addDvBol(builder, DV_BOL);
+    PhysicalProperties.addMaxThrust(builder, MAX_THRUST);
+    PhysicalProperties.addAvgManeuverFreq(builder, AVG_MANEUVER_FREQ);
+    PhysicalProperties.addAttPointing(builder, ATT_POINTING);
+    PhysicalProperties.addAttControl(builder, ATT_CONTROL);
+    PhysicalProperties.addAttKnowledge(builder, ATT_KNOWLEDGE);
+    PhysicalProperties.addReflectance(builder, REFLECTANCE);
+    PhysicalProperties.addVmApparentMax(builder, VM_APPARENT_MAX);
+    PhysicalProperties.addVmApparent(builder, VM_APPARENT);
+    PhysicalProperties.addVmApparentMin(builder, VM_APPARENT_MIN);
+    PhysicalProperties.addVmAbsolute(builder, VM_ABSOLUTE);
+    PhysicalProperties.addRcsMax(builder, RCS_MAX);
+    PhysicalProperties.addRcsMin(builder, RCS_MIN);
+    PhysicalProperties.addRcs(builder, RCS);
+    PhysicalProperties.addAreaTypForPc(builder, AREA_TYP_FOR_PC);
+    PhysicalProperties.addAreaMaxForPc(builder, AREA_MAX_FOR_PC);
+    PhysicalProperties.addAreaMinForPc(builder, AREA_MIN_FOR_PC);
+    PhysicalProperties.addInitialWetMass(builder, INITIAL_WET_MASS);
     PhysicalProperties.addSrpUncertainty(builder, SRP_UNCERTAINTY);
     PhysicalProperties.addSolarRadCoeff(builder, SOLAR_RAD_COEFF);
     PhysicalProperties.addSrpConstArea(builder, SRP_CONST_AREA);
@@ -157,13 +356,20 @@ public final class PhysicalProperties extends com.google.flatbuffers.Table {
     PhysicalProperties.addOebQ1(builder, OEB_Q1);
     PhysicalProperties.addDryMass(builder, DRY_MASS);
     PhysicalProperties.addWetMass(builder, WET_MASS);
+    PhysicalProperties.addAttActuatorType(builder, ATT_ACTUATOR_TYPEOffset);
+    PhysicalProperties.addAttControlMode(builder, ATT_CONTROL_MODEOffset);
+    PhysicalProperties.addOebParentFrameEpoch(builder, OEB_PARENT_FRAME_EPOCHOffset);
+    PhysicalProperties.addOebParentFrame(builder, OEB_PARENT_FRAMEOffset);
+    PhysicalProperties.addDockedWith(builder, DOCKED_WITHOffset);
+    PhysicalProperties.addBusModel(builder, BUS_MODELOffset);
+    PhysicalProperties.addManufacturer(builder, MANUFACTUREROffset);
     PhysicalProperties.addAreaUnits(builder, AREA_UNITSOffset);
     PhysicalProperties.addMassUnits(builder, MASS_UNITSOffset);
     PhysicalProperties.addComment(builder, COMMENTOffset);
     return PhysicalProperties.endPhysicalProperties(builder);
   }
 
-  public static void startPhysicalProperties(FlatBufferBuilder builder) { builder.startTable(21); }
+  public static void startPhysicalProperties(FlatBufferBuilder builder) { builder.startTable(53); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static int createCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCommentVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
@@ -187,6 +393,38 @@ public final class PhysicalProperties extends com.google.flatbuffers.Table {
   public static void addSrpConstArea(FlatBufferBuilder builder, double SRP_CONST_AREA) { builder.addDouble(18, SRP_CONST_AREA, 0.0); }
   public static void addSolarRadCoeff(FlatBufferBuilder builder, double SOLAR_RAD_COEFF) { builder.addDouble(19, SOLAR_RAD_COEFF, 0.0); }
   public static void addSrpUncertainty(FlatBufferBuilder builder, double SRP_UNCERTAINTY) { builder.addDouble(20, SRP_UNCERTAINTY, 0.0); }
+  public static void addManufacturer(FlatBufferBuilder builder, int MANUFACTUREROffset) { builder.addOffset(21, MANUFACTUREROffset, 0); }
+  public static void addBusModel(FlatBufferBuilder builder, int BUS_MODELOffset) { builder.addOffset(22, BUS_MODELOffset, 0); }
+  public static void addDockedWith(FlatBufferBuilder builder, int DOCKED_WITHOffset) { builder.addOffset(23, DOCKED_WITHOffset, 0); }
+  public static void addInitialWetMass(FlatBufferBuilder builder, double INITIAL_WET_MASS) { builder.addDouble(24, INITIAL_WET_MASS, Double.NaN); }
+  public static void addOebParentFrame(FlatBufferBuilder builder, int OEB_PARENT_FRAMEOffset) { builder.addOffset(25, OEB_PARENT_FRAMEOffset, 0); }
+  public static void addOebParentFrameEpoch(FlatBufferBuilder builder, int OEB_PARENT_FRAME_EPOCHOffset) { builder.addOffset(26, OEB_PARENT_FRAME_EPOCHOffset, 0); }
+  public static void addAreaMinForPc(FlatBufferBuilder builder, double AREA_MIN_FOR_PC) { builder.addDouble(27, AREA_MIN_FOR_PC, Double.NaN); }
+  public static void addAreaMaxForPc(FlatBufferBuilder builder, double AREA_MAX_FOR_PC) { builder.addDouble(28, AREA_MAX_FOR_PC, Double.NaN); }
+  public static void addAreaTypForPc(FlatBufferBuilder builder, double AREA_TYP_FOR_PC) { builder.addDouble(29, AREA_TYP_FOR_PC, Double.NaN); }
+  public static void addRcs(FlatBufferBuilder builder, double RCS) { builder.addDouble(30, RCS, Double.NaN); }
+  public static void addRcsMin(FlatBufferBuilder builder, double RCS_MIN) { builder.addDouble(31, RCS_MIN, Double.NaN); }
+  public static void addRcsMax(FlatBufferBuilder builder, double RCS_MAX) { builder.addDouble(32, RCS_MAX, Double.NaN); }
+  public static void addVmAbsolute(FlatBufferBuilder builder, double VM_ABSOLUTE) { builder.addDouble(33, VM_ABSOLUTE, Double.NaN); }
+  public static void addVmApparentMin(FlatBufferBuilder builder, double VM_APPARENT_MIN) { builder.addDouble(34, VM_APPARENT_MIN, Double.NaN); }
+  public static void addVmApparent(FlatBufferBuilder builder, double VM_APPARENT) { builder.addDouble(35, VM_APPARENT, Double.NaN); }
+  public static void addVmApparentMax(FlatBufferBuilder builder, double VM_APPARENT_MAX) { builder.addDouble(36, VM_APPARENT_MAX, Double.NaN); }
+  public static void addReflectance(FlatBufferBuilder builder, double REFLECTANCE) { builder.addDouble(37, REFLECTANCE, Double.NaN); }
+  public static void addAttControlMode(FlatBufferBuilder builder, int ATT_CONTROL_MODEOffset) { builder.addOffset(38, ATT_CONTROL_MODEOffset, 0); }
+  public static void addAttActuatorType(FlatBufferBuilder builder, int ATT_ACTUATOR_TYPEOffset) { builder.addOffset(39, ATT_ACTUATOR_TYPEOffset, 0); }
+  public static void addAttKnowledge(FlatBufferBuilder builder, double ATT_KNOWLEDGE) { builder.addDouble(40, ATT_KNOWLEDGE, Double.NaN); }
+  public static void addAttControl(FlatBufferBuilder builder, double ATT_CONTROL) { builder.addDouble(41, ATT_CONTROL, Double.NaN); }
+  public static void addAttPointing(FlatBufferBuilder builder, double ATT_POINTING) { builder.addDouble(42, ATT_POINTING, Double.NaN); }
+  public static void addAvgManeuverFreq(FlatBufferBuilder builder, double AVG_MANEUVER_FREQ) { builder.addDouble(43, AVG_MANEUVER_FREQ, Double.NaN); }
+  public static void addMaxThrust(FlatBufferBuilder builder, double MAX_THRUST) { builder.addDouble(44, MAX_THRUST, Double.NaN); }
+  public static void addDvBol(FlatBufferBuilder builder, double DV_BOL) { builder.addDouble(45, DV_BOL, Double.NaN); }
+  public static void addDvRemaining(FlatBufferBuilder builder, double DV_REMAINING) { builder.addDouble(46, DV_REMAINING, Double.NaN); }
+  public static void addIxx(FlatBufferBuilder builder, double IXX) { builder.addDouble(47, IXX, Double.NaN); }
+  public static void addIyy(FlatBufferBuilder builder, double IYY) { builder.addDouble(48, IYY, Double.NaN); }
+  public static void addIzz(FlatBufferBuilder builder, double IZZ) { builder.addDouble(49, IZZ, Double.NaN); }
+  public static void addIxy(FlatBufferBuilder builder, double IXY) { builder.addDouble(50, IXY, Double.NaN); }
+  public static void addIxz(FlatBufferBuilder builder, double IXZ) { builder.addDouble(51, IXZ, Double.NaN); }
+  public static void addIyz(FlatBufferBuilder builder, double IYZ) { builder.addDouble(52, IYZ, Double.NaN); }
   public static int endPhysicalProperties(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

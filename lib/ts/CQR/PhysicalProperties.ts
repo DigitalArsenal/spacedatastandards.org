@@ -203,8 +203,278 @@ SRP_UNCERTAINTY():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+ */
+MANUFACTURER():string|null
+MANUFACTURER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MANUFACTURER(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * BUS_MODEL: the object's bus model.
+ */
+BUS_MODEL():string|null
+BUS_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+BUS_MODEL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * DOCKED_WITH: comma-separated names of the objects it is docked with.
+ */
+DOCKED_WITH():string|null
+DOCKED_WITH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DOCKED_WITH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * INITIAL_WET_MASS in kg, NaN when not stated.
+ */
+INITIAL_WET_MASS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+ */
+OEB_PARENT_FRAME():string|null
+OEB_PARENT_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OEB_PARENT_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * OEB_PARENT_FRAME_EPOCH.
+ */
+OEB_PARENT_FRAME_EPOCH():string|null
+OEB_PARENT_FRAME_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OEB_PARENT_FRAME_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * AREA_MIN_FOR_PC in m**2, NaN when not stated.
+ */
+AREA_MIN_FOR_PC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * AREA_MAX_FOR_PC in m**2, NaN when not stated.
+ */
+AREA_MAX_FOR_PC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * AREA_TYP_FOR_PC in m**2, NaN when not stated.
+ */
+AREA_TYP_FOR_PC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * RCS in m**2, NaN when not stated.
+ */
+RCS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * RCS_MIN in m**2, NaN when not stated.
+ */
+RCS_MIN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * RCS_MAX in m**2, NaN when not stated.
+ */
+RCS_MAX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+ */
+VM_ABSOLUTE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+ */
+VM_APPARENT_MIN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * VM_APPARENT: apparent visual magnitude, NaN when not stated.
+ */
+VM_APPARENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+ */
+VM_APPARENT_MAX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * REFLECTANCE: typical reflectivity, NaN when not stated.
+ */
+REFLECTANCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * ATT_CONTROL_MODE.
+ */
+ATT_CONTROL_MODE():string|null
+ATT_CONTROL_MODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ATT_CONTROL_MODE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * ATT_ACTUATOR_TYPE.
+ */
+ATT_ACTUATOR_TYPE():string|null
+ATT_ACTUATOR_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ATT_ACTUATOR_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * ATT_KNOWLEDGE in degrees, NaN when not stated.
+ */
+ATT_KNOWLEDGE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * ATT_CONTROL in degrees, NaN when not stated.
+ */
+ATT_CONTROL():number {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * ATT_POINTING in degrees, NaN when not stated.
+ */
+ATT_POINTING():number {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+ */
+AVG_MANEUVER_FREQ():number {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * MAX_THRUST in N, NaN when not stated.
+ */
+MAX_THRUST():number {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+ */
+DV_BOL():number {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * DV_REMAINING in km/s, NaN when not stated.
+ */
+DV_REMAINING():number {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IXX in kg*m**2, NaN when not stated.
+ */
+IXX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IYY in kg*m**2, NaN when not stated.
+ */
+IYY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IZZ in kg*m**2, NaN when not stated.
+ */
+IZZ():number {
+  const offset = this.bb!.__offset(this.bb_pos, 102);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IXY in kg*m**2, NaN when not stated.
+ */
+IXY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IXZ in kg*m**2, NaN when not stated.
+ */
+IXZ():number {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IYZ in kg*m**2, NaN when not stated.
+ */
+IYZ():number {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
 static startPhysicalProperties(builder:flatbuffers.Builder) {
-  builder.startObject(21);
+  builder.startObject(53);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -303,12 +573,140 @@ static addSrpUncertainty(builder:flatbuffers.Builder, SRP_UNCERTAINTY:number) {
   builder.addFieldFloat64(20, SRP_UNCERTAINTY, 0.0);
 }
 
+static addManufacturer(builder:flatbuffers.Builder, MANUFACTUREROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, MANUFACTUREROffset, 0);
+}
+
+static addBusModel(builder:flatbuffers.Builder, BUS_MODELOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, BUS_MODELOffset, 0);
+}
+
+static addDockedWith(builder:flatbuffers.Builder, DOCKED_WITHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(23, DOCKED_WITHOffset, 0);
+}
+
+static addInitialWetMass(builder:flatbuffers.Builder, INITIAL_WET_MASS:number) {
+  builder.addFieldFloat64(24, INITIAL_WET_MASS, NaN);
+}
+
+static addOebParentFrame(builder:flatbuffers.Builder, OEB_PARENT_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(25, OEB_PARENT_FRAMEOffset, 0);
+}
+
+static addOebParentFrameEpoch(builder:flatbuffers.Builder, OEB_PARENT_FRAME_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, OEB_PARENT_FRAME_EPOCHOffset, 0);
+}
+
+static addAreaMinForPc(builder:flatbuffers.Builder, AREA_MIN_FOR_PC:number) {
+  builder.addFieldFloat64(27, AREA_MIN_FOR_PC, NaN);
+}
+
+static addAreaMaxForPc(builder:flatbuffers.Builder, AREA_MAX_FOR_PC:number) {
+  builder.addFieldFloat64(28, AREA_MAX_FOR_PC, NaN);
+}
+
+static addAreaTypForPc(builder:flatbuffers.Builder, AREA_TYP_FOR_PC:number) {
+  builder.addFieldFloat64(29, AREA_TYP_FOR_PC, NaN);
+}
+
+static addRcs(builder:flatbuffers.Builder, RCS:number) {
+  builder.addFieldFloat64(30, RCS, NaN);
+}
+
+static addRcsMin(builder:flatbuffers.Builder, RCS_MIN:number) {
+  builder.addFieldFloat64(31, RCS_MIN, NaN);
+}
+
+static addRcsMax(builder:flatbuffers.Builder, RCS_MAX:number) {
+  builder.addFieldFloat64(32, RCS_MAX, NaN);
+}
+
+static addVmAbsolute(builder:flatbuffers.Builder, VM_ABSOLUTE:number) {
+  builder.addFieldFloat64(33, VM_ABSOLUTE, NaN);
+}
+
+static addVmApparentMin(builder:flatbuffers.Builder, VM_APPARENT_MIN:number) {
+  builder.addFieldFloat64(34, VM_APPARENT_MIN, NaN);
+}
+
+static addVmApparent(builder:flatbuffers.Builder, VM_APPARENT:number) {
+  builder.addFieldFloat64(35, VM_APPARENT, NaN);
+}
+
+static addVmApparentMax(builder:flatbuffers.Builder, VM_APPARENT_MAX:number) {
+  builder.addFieldFloat64(36, VM_APPARENT_MAX, NaN);
+}
+
+static addReflectance(builder:flatbuffers.Builder, REFLECTANCE:number) {
+  builder.addFieldFloat64(37, REFLECTANCE, NaN);
+}
+
+static addAttControlMode(builder:flatbuffers.Builder, ATT_CONTROL_MODEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(38, ATT_CONTROL_MODEOffset, 0);
+}
+
+static addAttActuatorType(builder:flatbuffers.Builder, ATT_ACTUATOR_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(39, ATT_ACTUATOR_TYPEOffset, 0);
+}
+
+static addAttKnowledge(builder:flatbuffers.Builder, ATT_KNOWLEDGE:number) {
+  builder.addFieldFloat64(40, ATT_KNOWLEDGE, NaN);
+}
+
+static addAttControl(builder:flatbuffers.Builder, ATT_CONTROL:number) {
+  builder.addFieldFloat64(41, ATT_CONTROL, NaN);
+}
+
+static addAttPointing(builder:flatbuffers.Builder, ATT_POINTING:number) {
+  builder.addFieldFloat64(42, ATT_POINTING, NaN);
+}
+
+static addAvgManeuverFreq(builder:flatbuffers.Builder, AVG_MANEUVER_FREQ:number) {
+  builder.addFieldFloat64(43, AVG_MANEUVER_FREQ, NaN);
+}
+
+static addMaxThrust(builder:flatbuffers.Builder, MAX_THRUST:number) {
+  builder.addFieldFloat64(44, MAX_THRUST, NaN);
+}
+
+static addDvBol(builder:flatbuffers.Builder, DV_BOL:number) {
+  builder.addFieldFloat64(45, DV_BOL, NaN);
+}
+
+static addDvRemaining(builder:flatbuffers.Builder, DV_REMAINING:number) {
+  builder.addFieldFloat64(46, DV_REMAINING, NaN);
+}
+
+static addIxx(builder:flatbuffers.Builder, IXX:number) {
+  builder.addFieldFloat64(47, IXX, NaN);
+}
+
+static addIyy(builder:flatbuffers.Builder, IYY:number) {
+  builder.addFieldFloat64(48, IYY, NaN);
+}
+
+static addIzz(builder:flatbuffers.Builder, IZZ:number) {
+  builder.addFieldFloat64(49, IZZ, NaN);
+}
+
+static addIxy(builder:flatbuffers.Builder, IXY:number) {
+  builder.addFieldFloat64(50, IXY, NaN);
+}
+
+static addIxz(builder:flatbuffers.Builder, IXZ:number) {
+  builder.addFieldFloat64(51, IXZ, NaN);
+}
+
+static addIyz(builder:flatbuffers.Builder, IYZ:number) {
+  builder.addFieldFloat64(52, IYZ, NaN);
+}
+
 static endPhysicalProperties(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createPhysicalProperties(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, WET_MASS:number, DRY_MASS:number, MASS_UNITSOffset:flatbuffers.Offset, OEB_Q1:number, OEB_Q2:number, OEB_Q3:number, OEB_QC:number, OEB_MAX:number, OEB_INT:number, OEB_MIN:number, AREA_ALONG_OEB_MAX:number, AREA_ALONG_OEB_INT:number, AREA_ALONG_OEB_MIN:number, AREA_UNITSOffset:flatbuffers.Offset, DRAG_CONST_AREA:number, DRAG_COEFF_NOM:number, DRAG_UNCERTAINTY:number, SRP_CONST_AREA:number, SOLAR_RAD_COEFF:number, SRP_UNCERTAINTY:number):flatbuffers.Offset {
+static createPhysicalProperties(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, WET_MASS:number, DRY_MASS:number, MASS_UNITSOffset:flatbuffers.Offset, OEB_Q1:number, OEB_Q2:number, OEB_Q3:number, OEB_QC:number, OEB_MAX:number, OEB_INT:number, OEB_MIN:number, AREA_ALONG_OEB_MAX:number, AREA_ALONG_OEB_INT:number, AREA_ALONG_OEB_MIN:number, AREA_UNITSOffset:flatbuffers.Offset, DRAG_CONST_AREA:number, DRAG_COEFF_NOM:number, DRAG_UNCERTAINTY:number, SRP_CONST_AREA:number, SOLAR_RAD_COEFF:number, SRP_UNCERTAINTY:number, MANUFACTUREROffset:flatbuffers.Offset, BUS_MODELOffset:flatbuffers.Offset, DOCKED_WITHOffset:flatbuffers.Offset, INITIAL_WET_MASS:number, OEB_PARENT_FRAMEOffset:flatbuffers.Offset, OEB_PARENT_FRAME_EPOCHOffset:flatbuffers.Offset, AREA_MIN_FOR_PC:number, AREA_MAX_FOR_PC:number, AREA_TYP_FOR_PC:number, RCS:number, RCS_MIN:number, RCS_MAX:number, VM_ABSOLUTE:number, VM_APPARENT_MIN:number, VM_APPARENT:number, VM_APPARENT_MAX:number, REFLECTANCE:number, ATT_CONTROL_MODEOffset:flatbuffers.Offset, ATT_ACTUATOR_TYPEOffset:flatbuffers.Offset, ATT_KNOWLEDGE:number, ATT_CONTROL:number, ATT_POINTING:number, AVG_MANEUVER_FREQ:number, MAX_THRUST:number, DV_BOL:number, DV_REMAINING:number, IXX:number, IYY:number, IZZ:number, IXY:number, IXZ:number, IYZ:number):flatbuffers.Offset {
   PhysicalProperties.startPhysicalProperties(builder);
   PhysicalProperties.addComment(builder, COMMENTOffset);
   PhysicalProperties.addWetMass(builder, WET_MASS);
@@ -331,6 +729,38 @@ static createPhysicalProperties(builder:flatbuffers.Builder, COMMENTOffset:flatb
   PhysicalProperties.addSrpConstArea(builder, SRP_CONST_AREA);
   PhysicalProperties.addSolarRadCoeff(builder, SOLAR_RAD_COEFF);
   PhysicalProperties.addSrpUncertainty(builder, SRP_UNCERTAINTY);
+  PhysicalProperties.addManufacturer(builder, MANUFACTUREROffset);
+  PhysicalProperties.addBusModel(builder, BUS_MODELOffset);
+  PhysicalProperties.addDockedWith(builder, DOCKED_WITHOffset);
+  PhysicalProperties.addInitialWetMass(builder, INITIAL_WET_MASS);
+  PhysicalProperties.addOebParentFrame(builder, OEB_PARENT_FRAMEOffset);
+  PhysicalProperties.addOebParentFrameEpoch(builder, OEB_PARENT_FRAME_EPOCHOffset);
+  PhysicalProperties.addAreaMinForPc(builder, AREA_MIN_FOR_PC);
+  PhysicalProperties.addAreaMaxForPc(builder, AREA_MAX_FOR_PC);
+  PhysicalProperties.addAreaTypForPc(builder, AREA_TYP_FOR_PC);
+  PhysicalProperties.addRcs(builder, RCS);
+  PhysicalProperties.addRcsMin(builder, RCS_MIN);
+  PhysicalProperties.addRcsMax(builder, RCS_MAX);
+  PhysicalProperties.addVmAbsolute(builder, VM_ABSOLUTE);
+  PhysicalProperties.addVmApparentMin(builder, VM_APPARENT_MIN);
+  PhysicalProperties.addVmApparent(builder, VM_APPARENT);
+  PhysicalProperties.addVmApparentMax(builder, VM_APPARENT_MAX);
+  PhysicalProperties.addReflectance(builder, REFLECTANCE);
+  PhysicalProperties.addAttControlMode(builder, ATT_CONTROL_MODEOffset);
+  PhysicalProperties.addAttActuatorType(builder, ATT_ACTUATOR_TYPEOffset);
+  PhysicalProperties.addAttKnowledge(builder, ATT_KNOWLEDGE);
+  PhysicalProperties.addAttControl(builder, ATT_CONTROL);
+  PhysicalProperties.addAttPointing(builder, ATT_POINTING);
+  PhysicalProperties.addAvgManeuverFreq(builder, AVG_MANEUVER_FREQ);
+  PhysicalProperties.addMaxThrust(builder, MAX_THRUST);
+  PhysicalProperties.addDvBol(builder, DV_BOL);
+  PhysicalProperties.addDvRemaining(builder, DV_REMAINING);
+  PhysicalProperties.addIxx(builder, IXX);
+  PhysicalProperties.addIyy(builder, IYY);
+  PhysicalProperties.addIzz(builder, IZZ);
+  PhysicalProperties.addIxy(builder, IXY);
+  PhysicalProperties.addIxz(builder, IXZ);
+  PhysicalProperties.addIyz(builder, IYZ);
   return PhysicalProperties.endPhysicalProperties(builder);
 }
 
@@ -356,7 +786,39 @@ unpack(): PhysicalPropertiesT {
     this.DRAG_UNCERTAINTY(),
     this.SRP_CONST_AREA(),
     this.SOLAR_RAD_COEFF(),
-    this.SRP_UNCERTAINTY()
+    this.SRP_UNCERTAINTY(),
+    this.MANUFACTURER(),
+    this.BUS_MODEL(),
+    this.DOCKED_WITH(),
+    this.INITIAL_WET_MASS(),
+    this.OEB_PARENT_FRAME(),
+    this.OEB_PARENT_FRAME_EPOCH(),
+    this.AREA_MIN_FOR_PC(),
+    this.AREA_MAX_FOR_PC(),
+    this.AREA_TYP_FOR_PC(),
+    this.RCS(),
+    this.RCS_MIN(),
+    this.RCS_MAX(),
+    this.VM_ABSOLUTE(),
+    this.VM_APPARENT_MIN(),
+    this.VM_APPARENT(),
+    this.VM_APPARENT_MAX(),
+    this.REFLECTANCE(),
+    this.ATT_CONTROL_MODE(),
+    this.ATT_ACTUATOR_TYPE(),
+    this.ATT_KNOWLEDGE(),
+    this.ATT_CONTROL(),
+    this.ATT_POINTING(),
+    this.AVG_MANEUVER_FREQ(),
+    this.MAX_THRUST(),
+    this.DV_BOL(),
+    this.DV_REMAINING(),
+    this.IXX(),
+    this.IYY(),
+    this.IZZ(),
+    this.IXY(),
+    this.IXZ(),
+    this.IYZ()
   );
 }
 
@@ -383,6 +845,38 @@ unpackTo(_o: PhysicalPropertiesT): void {
   _o.SRP_CONST_AREA = this.SRP_CONST_AREA();
   _o.SOLAR_RAD_COEFF = this.SOLAR_RAD_COEFF();
   _o.SRP_UNCERTAINTY = this.SRP_UNCERTAINTY();
+  _o.MANUFACTURER = this.MANUFACTURER();
+  _o.BUS_MODEL = this.BUS_MODEL();
+  _o.DOCKED_WITH = this.DOCKED_WITH();
+  _o.INITIAL_WET_MASS = this.INITIAL_WET_MASS();
+  _o.OEB_PARENT_FRAME = this.OEB_PARENT_FRAME();
+  _o.OEB_PARENT_FRAME_EPOCH = this.OEB_PARENT_FRAME_EPOCH();
+  _o.AREA_MIN_FOR_PC = this.AREA_MIN_FOR_PC();
+  _o.AREA_MAX_FOR_PC = this.AREA_MAX_FOR_PC();
+  _o.AREA_TYP_FOR_PC = this.AREA_TYP_FOR_PC();
+  _o.RCS = this.RCS();
+  _o.RCS_MIN = this.RCS_MIN();
+  _o.RCS_MAX = this.RCS_MAX();
+  _o.VM_ABSOLUTE = this.VM_ABSOLUTE();
+  _o.VM_APPARENT_MIN = this.VM_APPARENT_MIN();
+  _o.VM_APPARENT = this.VM_APPARENT();
+  _o.VM_APPARENT_MAX = this.VM_APPARENT_MAX();
+  _o.REFLECTANCE = this.REFLECTANCE();
+  _o.ATT_CONTROL_MODE = this.ATT_CONTROL_MODE();
+  _o.ATT_ACTUATOR_TYPE = this.ATT_ACTUATOR_TYPE();
+  _o.ATT_KNOWLEDGE = this.ATT_KNOWLEDGE();
+  _o.ATT_CONTROL = this.ATT_CONTROL();
+  _o.ATT_POINTING = this.ATT_POINTING();
+  _o.AVG_MANEUVER_FREQ = this.AVG_MANEUVER_FREQ();
+  _o.MAX_THRUST = this.MAX_THRUST();
+  _o.DV_BOL = this.DV_BOL();
+  _o.DV_REMAINING = this.DV_REMAINING();
+  _o.IXX = this.IXX();
+  _o.IYY = this.IYY();
+  _o.IZZ = this.IZZ();
+  _o.IXY = this.IXY();
+  _o.IXZ = this.IXZ();
+  _o.IYZ = this.IYZ();
 }
 }
 
@@ -408,7 +902,39 @@ constructor(
   public DRAG_UNCERTAINTY: number = 0.0,
   public SRP_CONST_AREA: number = 0.0,
   public SOLAR_RAD_COEFF: number = 0.0,
-  public SRP_UNCERTAINTY: number = 0.0
+  public SRP_UNCERTAINTY: number = 0.0,
+  public MANUFACTURER: string|Uint8Array|null = null,
+  public BUS_MODEL: string|Uint8Array|null = null,
+  public DOCKED_WITH: string|Uint8Array|null = null,
+  public INITIAL_WET_MASS: number = NaN,
+  public OEB_PARENT_FRAME: string|Uint8Array|null = null,
+  public OEB_PARENT_FRAME_EPOCH: string|Uint8Array|null = null,
+  public AREA_MIN_FOR_PC: number = NaN,
+  public AREA_MAX_FOR_PC: number = NaN,
+  public AREA_TYP_FOR_PC: number = NaN,
+  public RCS: number = NaN,
+  public RCS_MIN: number = NaN,
+  public RCS_MAX: number = NaN,
+  public VM_ABSOLUTE: number = NaN,
+  public VM_APPARENT_MIN: number = NaN,
+  public VM_APPARENT: number = NaN,
+  public VM_APPARENT_MAX: number = NaN,
+  public REFLECTANCE: number = NaN,
+  public ATT_CONTROL_MODE: string|Uint8Array|null = null,
+  public ATT_ACTUATOR_TYPE: string|Uint8Array|null = null,
+  public ATT_KNOWLEDGE: number = NaN,
+  public ATT_CONTROL: number = NaN,
+  public ATT_POINTING: number = NaN,
+  public AVG_MANEUVER_FREQ: number = NaN,
+  public MAX_THRUST: number = NaN,
+  public DV_BOL: number = NaN,
+  public DV_REMAINING: number = NaN,
+  public IXX: number = NaN,
+  public IYY: number = NaN,
+  public IZZ: number = NaN,
+  public IXY: number = NaN,
+  public IXZ: number = NaN,
+  public IYZ: number = NaN
 ){}
 
 
@@ -416,6 +942,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COMMENT = PhysicalProperties.createCommentVector(builder, builder.createObjectOffsetList(this.COMMENT));
   const MASS_UNITS = (this.MASS_UNITS !== null ? builder.createString(this.MASS_UNITS!) : 0);
   const AREA_UNITS = (this.AREA_UNITS !== null ? builder.createString(this.AREA_UNITS!) : 0);
+  const MANUFACTURER = (this.MANUFACTURER !== null ? builder.createString(this.MANUFACTURER!) : 0);
+  const BUS_MODEL = (this.BUS_MODEL !== null ? builder.createString(this.BUS_MODEL!) : 0);
+  const DOCKED_WITH = (this.DOCKED_WITH !== null ? builder.createString(this.DOCKED_WITH!) : 0);
+  const OEB_PARENT_FRAME = (this.OEB_PARENT_FRAME !== null ? builder.createString(this.OEB_PARENT_FRAME!) : 0);
+  const OEB_PARENT_FRAME_EPOCH = (this.OEB_PARENT_FRAME_EPOCH !== null ? builder.createString(this.OEB_PARENT_FRAME_EPOCH!) : 0);
+  const ATT_CONTROL_MODE = (this.ATT_CONTROL_MODE !== null ? builder.createString(this.ATT_CONTROL_MODE!) : 0);
+  const ATT_ACTUATOR_TYPE = (this.ATT_ACTUATOR_TYPE !== null ? builder.createString(this.ATT_ACTUATOR_TYPE!) : 0);
 
   return PhysicalProperties.createPhysicalProperties(builder,
     COMMENT,
@@ -438,7 +971,39 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.DRAG_UNCERTAINTY,
     this.SRP_CONST_AREA,
     this.SOLAR_RAD_COEFF,
-    this.SRP_UNCERTAINTY
+    this.SRP_UNCERTAINTY,
+    MANUFACTURER,
+    BUS_MODEL,
+    DOCKED_WITH,
+    this.INITIAL_WET_MASS,
+    OEB_PARENT_FRAME,
+    OEB_PARENT_FRAME_EPOCH,
+    this.AREA_MIN_FOR_PC,
+    this.AREA_MAX_FOR_PC,
+    this.AREA_TYP_FOR_PC,
+    this.RCS,
+    this.RCS_MIN,
+    this.RCS_MAX,
+    this.VM_ABSOLUTE,
+    this.VM_APPARENT_MIN,
+    this.VM_APPARENT,
+    this.VM_APPARENT_MAX,
+    this.REFLECTANCE,
+    ATT_CONTROL_MODE,
+    ATT_ACTUATOR_TYPE,
+    this.ATT_KNOWLEDGE,
+    this.ATT_CONTROL,
+    this.ATT_POINTING,
+    this.AVG_MANEUVER_FREQ,
+    this.MAX_THRUST,
+    this.DV_BOL,
+    this.DV_REMAINING,
+    this.IXX,
+    this.IYY,
+    this.IZZ,
+    this.IXY,
+    this.IXZ,
+    this.IYZ
   );
 }
 }

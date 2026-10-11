@@ -7,6 +7,14 @@ import (
 )
 
 /// Conjunction Data Message
+///
+/// Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+/// SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+/// of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+/// km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+/// MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+/// COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+/// terms) are held as the message states them.
 type CDM struct {
 	_tab flatbuffers.Table
 }
@@ -597,8 +605,24 @@ func (rcv *CDM) Object2Datasource(obj *PNM) *PNM {
 }
 
 /// Data Source for the positional information for Object 2
+/// COMMENT lines of the message header and of its relative metadata and data
+/// (CCSDS 508.0-B-1), in message order, joined by a line feed.
+func (rcv *CDM) COMMENT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CDM) Comment() []byte {
+	return rcv.COMMENT()
+}
+
+/// COMMENT lines of the message header and of its relative metadata and data
+/// (CCSDS 508.0-B-1), in message order, joined by a line feed.
 func CDMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(29)
+	builder.StartObject(30)
 }
 func CDMAddCCSDS_CDM_VERS(builder *flatbuffers.Builder, CCSDS_CDM_VERS float64) {
 	builder.PrependFloat64Slot(0, CCSDS_CDM_VERS, 0.0)
@@ -773,6 +797,12 @@ func CDMAddOBJECT2_DATASOURCE(builder *flatbuffers.Builder, OBJECT2_DATASOURCE f
 }
 func CDMAddObject2Datasource(builder *flatbuffers.Builder, OBJECT2_DATASOURCE flatbuffers.UOffsetT) {
 	CDMAddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE)
+}
+func CDMAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func CDMAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	CDMAddCOMMENT(builder, COMMENT)
 }
 func CDMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -1,4 +1,6 @@
 export * from './RDM.js';
+export * from './rdmControlledReentry.js';
+export * from './RDMUserDefinedParameter.js';
 export * from './reentryDisposition.js';
 export * from './reentryImpact.js';
 export * from './reentryReason.js';

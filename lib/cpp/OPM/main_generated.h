@@ -16,6 +16,12 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct OPM;
 struct OPMBuilder;
 
+struct OPMManeuver;
+struct OPMManeuverBuilder;
+
+struct OPMUserDefinedParameter;
+struct OPMUserDefinedParameterBuilder;
+
 /// Orbit Parameter Message
 struct OPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef OPMBuilder Builder;
@@ -47,7 +53,15 @@ struct OPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SOLAR_RAD_AREA = 52,
     VT_SOLAR_RAD_COEFF = 54,
     VT_DRAG_AREA = 56,
-    VT_DRAG_COEFF = 58
+    VT_DRAG_COEFF = 58,
+    VT_COMMENT = 60,
+    VT_CLASSIFICATION = 62,
+    VT_MESSAGE_ID = 64,
+    VT_REF_FRAME_EPOCH = 66,
+    VT_COV_REF_FRAME = 68,
+    VT_COVARIANCE = 70,
+    VT_MANEUVERS = 72,
+    VT_USER_DEFINED_PARAMETERS = 74
   };
   const ::flatbuffers::String *CCSDS_OPM_VERS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CCSDS_OPM_VERS);
@@ -133,6 +147,46 @@ struct OPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DRAG_COEFF() const {
     return GetField<double>(VT_DRAG_COEFF, 0.0);
   }
+  /// COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+  /// and data groups, in message order, joined by a line feed.
+  const ::flatbuffers::String *COMMENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
+  }
+  /// CLASSIFICATION of the message: the optional header keyword stating its
+  /// security classification or handling caveat.
+  const ::flatbuffers::String *CLASSIFICATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION);
+  }
+  /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  /// unique for this message.
+  const ::flatbuffers::String *MESSAGE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE_ID);
+  }
+  /// REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+  const ::flatbuffers::String *REF_FRAME_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME_EPOCH);
+  }
+  /// COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+  /// when it is REF_FRAME.
+  const ::flatbuffers::String *COV_REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_REF_FRAME);
+  }
+  /// Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+  /// CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+  /// CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  /// CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+  /// Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+  const ::flatbuffers::Vector<double> *COVARIANCE() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COVARIANCE);
+  }
+  /// The message's maneuvers, in message order.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<OPMManeuver>> *MANEUVERS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OPMManeuver>> *>(VT_MANEUVERS);
+  }
+  /// Every USER_DEFINED_x keyword of the message, in message order.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<OPMUserDefinedParameter>> *USER_DEFINED_PARAMETERS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OPMUserDefinedParameter>> *>(VT_USER_DEFINED_PARAMETERS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -173,6 +227,24 @@ struct OPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_SOLAR_RAD_COEFF, 8) &&
            VerifyField<double>(verifier, VT_DRAG_AREA, 8) &&
            VerifyField<double>(verifier, VT_DRAG_COEFF, 8) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyString(COMMENT()) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION) &&
+           verifier.VerifyString(CLASSIFICATION()) &&
+           VerifyOffset(verifier, VT_MESSAGE_ID) &&
+           verifier.VerifyString(MESSAGE_ID()) &&
+           VerifyOffset(verifier, VT_REF_FRAME_EPOCH) &&
+           verifier.VerifyString(REF_FRAME_EPOCH()) &&
+           VerifyOffset(verifier, VT_COV_REF_FRAME) &&
+           verifier.VerifyString(COV_REF_FRAME()) &&
+           VerifyOffset(verifier, VT_COVARIANCE) &&
+           verifier.VerifyVector(COVARIANCE()) &&
+           VerifyOffset(verifier, VT_MANEUVERS) &&
+           verifier.VerifyVector(MANEUVERS()) &&
+           verifier.VerifyVectorOfTables(MANEUVERS()) &&
+           VerifyOffset(verifier, VT_USER_DEFINED_PARAMETERS) &&
+           verifier.VerifyVector(USER_DEFINED_PARAMETERS()) &&
+           verifier.VerifyVectorOfTables(USER_DEFINED_PARAMETERS()) &&
            verifier.EndTable();
   }
 };
@@ -265,6 +337,30 @@ struct OPMBuilder {
   void add_DRAG_COEFF(double DRAG_COEFF) {
     fbb_.AddElement<double>(OPM::VT_DRAG_COEFF, DRAG_COEFF, 0.0);
   }
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
+    fbb_.AddOffset(OPM::VT_COMMENT, COMMENT);
+  }
+  void add_CLASSIFICATION(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION) {
+    fbb_.AddOffset(OPM::VT_CLASSIFICATION, CLASSIFICATION);
+  }
+  void add_MESSAGE_ID(::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID) {
+    fbb_.AddOffset(OPM::VT_MESSAGE_ID, MESSAGE_ID);
+  }
+  void add_REF_FRAME_EPOCH(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_EPOCH) {
+    fbb_.AddOffset(OPM::VT_REF_FRAME_EPOCH, REF_FRAME_EPOCH);
+  }
+  void add_COV_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> COV_REF_FRAME) {
+    fbb_.AddOffset(OPM::VT_COV_REF_FRAME, COV_REF_FRAME);
+  }
+  void add_COVARIANCE(::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE) {
+    fbb_.AddOffset(OPM::VT_COVARIANCE, COVARIANCE);
+  }
+  void add_MANEUVERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OPMManeuver>>> MANEUVERS) {
+    fbb_.AddOffset(OPM::VT_MANEUVERS, MANEUVERS);
+  }
+  void add_USER_DEFINED_PARAMETERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OPMUserDefinedParameter>>> USER_DEFINED_PARAMETERS) {
+    fbb_.AddOffset(OPM::VT_USER_DEFINED_PARAMETERS, USER_DEFINED_PARAMETERS);
+  }
   explicit OPMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -305,7 +401,15 @@ inline ::flatbuffers::Offset<OPM> CreateOPM(
     double SOLAR_RAD_AREA = 0.0,
     double SOLAR_RAD_COEFF = 0.0,
     double DRAG_AREA = 0.0,
-    double DRAG_COEFF = 0.0) {
+    double DRAG_COEFF = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_REF_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OPMManeuver>>> MANEUVERS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OPMUserDefinedParameter>>> USER_DEFINED_PARAMETERS = 0) {
   OPMBuilder builder_(_fbb);
   builder_.add_DRAG_COEFF(DRAG_COEFF);
   builder_.add_DRAG_AREA(DRAG_AREA);
@@ -326,6 +430,14 @@ inline ::flatbuffers::Offset<OPM> CreateOPM(
   builder_.add_Z(Z);
   builder_.add_Y(Y);
   builder_.add_X(X);
+  builder_.add_USER_DEFINED_PARAMETERS(USER_DEFINED_PARAMETERS);
+  builder_.add_MANEUVERS(MANEUVERS);
+  builder_.add_COVARIANCE(COVARIANCE);
+  builder_.add_COV_REF_FRAME(COV_REF_FRAME);
+  builder_.add_REF_FRAME_EPOCH(REF_FRAME_EPOCH);
+  builder_.add_MESSAGE_ID(MESSAGE_ID);
+  builder_.add_CLASSIFICATION(CLASSIFICATION);
+  builder_.add_COMMENT(COMMENT);
   builder_.add_EPOCH(EPOCH);
   builder_.add_TIME_SYSTEM(TIME_SYSTEM);
   builder_.add_REF_FRAME(REF_FRAME);
@@ -367,7 +479,15 @@ inline ::flatbuffers::Offset<OPM> CreateOPMDirect(
     double SOLAR_RAD_AREA = 0.0,
     double SOLAR_RAD_COEFF = 0.0,
     double DRAG_AREA = 0.0,
-    double DRAG_COEFF = 0.0) {
+    double DRAG_COEFF = 0.0,
+    const char *COMMENT = nullptr,
+    const char *CLASSIFICATION = nullptr,
+    const char *MESSAGE_ID = nullptr,
+    const char *REF_FRAME_EPOCH = nullptr,
+    const char *COV_REF_FRAME = nullptr,
+    const std::vector<double> *COVARIANCE = nullptr,
+    const std::vector<::flatbuffers::Offset<OPMManeuver>> *MANEUVERS = nullptr,
+    const std::vector<::flatbuffers::Offset<OPMUserDefinedParameter>> *USER_DEFINED_PARAMETERS = nullptr) {
   auto CCSDS_OPM_VERS__ = CCSDS_OPM_VERS ? _fbb.CreateString(CCSDS_OPM_VERS) : 0;
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
@@ -377,6 +497,14 @@ inline ::flatbuffers::Offset<OPM> CreateOPMDirect(
   auto REF_FRAME__ = REF_FRAME ? _fbb.CreateString(REF_FRAME) : 0;
   auto TIME_SYSTEM__ = TIME_SYSTEM ? _fbb.CreateString(TIME_SYSTEM) : 0;
   auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
+  auto CLASSIFICATION__ = CLASSIFICATION ? _fbb.CreateString(CLASSIFICATION) : 0;
+  auto MESSAGE_ID__ = MESSAGE_ID ? _fbb.CreateString(MESSAGE_ID) : 0;
+  auto REF_FRAME_EPOCH__ = REF_FRAME_EPOCH ? _fbb.CreateString(REF_FRAME_EPOCH) : 0;
+  auto COV_REF_FRAME__ = COV_REF_FRAME ? _fbb.CreateString(COV_REF_FRAME) : 0;
+  auto COVARIANCE__ = COVARIANCE ? _fbb.CreateVector<double>(*COVARIANCE) : 0;
+  auto MANEUVERS__ = MANEUVERS ? _fbb.CreateVector<::flatbuffers::Offset<OPMManeuver>>(*MANEUVERS) : 0;
+  auto USER_DEFINED_PARAMETERS__ = USER_DEFINED_PARAMETERS ? _fbb.CreateVector<::flatbuffers::Offset<OPMUserDefinedParameter>>(*USER_DEFINED_PARAMETERS) : 0;
   return CreateOPM(
       _fbb,
       CCSDS_OPM_VERS__,
@@ -406,7 +534,234 @@ inline ::flatbuffers::Offset<OPM> CreateOPMDirect(
       SOLAR_RAD_AREA,
       SOLAR_RAD_COEFF,
       DRAG_AREA,
-      DRAG_COEFF);
+      DRAG_COEFF,
+      COMMENT__,
+      CLASSIFICATION__,
+      MESSAGE_ID__,
+      REF_FRAME_EPOCH__,
+      COV_REF_FRAME__,
+      COVARIANCE__,
+      MANEUVERS__,
+      USER_DEFINED_PARAMETERS__);
+}
+
+/// One maneuver of an OPM (CCSDS 502.0-B-3 Table 3-7).
+struct OPMManeuver FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef OPMManeuverBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COMMENT = 4,
+    VT_MAN_EPOCH_IGNITION = 6,
+    VT_MAN_DURATION = 8,
+    VT_MAN_DELTA_MASS = 10,
+    VT_MAN_REF_FRAME = 12,
+    VT_MAN_DV_1 = 14,
+    VT_MAN_DV_2 = 16,
+    VT_MAN_DV_3 = 18
+  };
+  /// COMMENT lines of this maneuver, joined by a line feed.
+  const ::flatbuffers::String *COMMENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
+  }
+  /// MAN_EPOCH_IGNITION: epoch of ignition.
+  const ::flatbuffers::String *MAN_EPOCH_IGNITION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MAN_EPOCH_IGNITION);
+  }
+  /// MAN_DURATION: duration of the burn in seconds; zero for an impulsive maneuver.
+  double MAN_DURATION() const {
+    return GetField<double>(VT_MAN_DURATION, 0.0);
+  }
+  /// MAN_DELTA_MASS: mass change during the maneuver in kg, negative or zero.
+  double MAN_DELTA_MASS() const {
+    return GetField<double>(VT_MAN_DELTA_MASS, 0.0);
+  }
+  /// MAN_REF_FRAME: frame of MAN_DV_1..3 (for example RTN, TNW, or REF_FRAME's).
+  const ::flatbuffers::String *MAN_REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MAN_REF_FRAME);
+  }
+  /// MAN_DV_1: first component of the velocity increment in km/s.
+  double MAN_DV_1() const {
+    return GetField<double>(VT_MAN_DV_1, 0.0);
+  }
+  /// MAN_DV_2: second component of the velocity increment in km/s.
+  double MAN_DV_2() const {
+    return GetField<double>(VT_MAN_DV_2, 0.0);
+  }
+  /// MAN_DV_3: third component of the velocity increment in km/s.
+  double MAN_DV_3() const {
+    return GetField<double>(VT_MAN_DV_3, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyString(COMMENT()) &&
+           VerifyOffset(verifier, VT_MAN_EPOCH_IGNITION) &&
+           verifier.VerifyString(MAN_EPOCH_IGNITION()) &&
+           VerifyField<double>(verifier, VT_MAN_DURATION, 8) &&
+           VerifyField<double>(verifier, VT_MAN_DELTA_MASS, 8) &&
+           VerifyOffset(verifier, VT_MAN_REF_FRAME) &&
+           verifier.VerifyString(MAN_REF_FRAME()) &&
+           VerifyField<double>(verifier, VT_MAN_DV_1, 8) &&
+           VerifyField<double>(verifier, VT_MAN_DV_2, 8) &&
+           VerifyField<double>(verifier, VT_MAN_DV_3, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct OPMManeuverBuilder {
+  typedef OPMManeuver Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
+    fbb_.AddOffset(OPMManeuver::VT_COMMENT, COMMENT);
+  }
+  void add_MAN_EPOCH_IGNITION(::flatbuffers::Offset<::flatbuffers::String> MAN_EPOCH_IGNITION) {
+    fbb_.AddOffset(OPMManeuver::VT_MAN_EPOCH_IGNITION, MAN_EPOCH_IGNITION);
+  }
+  void add_MAN_DURATION(double MAN_DURATION) {
+    fbb_.AddElement<double>(OPMManeuver::VT_MAN_DURATION, MAN_DURATION, 0.0);
+  }
+  void add_MAN_DELTA_MASS(double MAN_DELTA_MASS) {
+    fbb_.AddElement<double>(OPMManeuver::VT_MAN_DELTA_MASS, MAN_DELTA_MASS, 0.0);
+  }
+  void add_MAN_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> MAN_REF_FRAME) {
+    fbb_.AddOffset(OPMManeuver::VT_MAN_REF_FRAME, MAN_REF_FRAME);
+  }
+  void add_MAN_DV_1(double MAN_DV_1) {
+    fbb_.AddElement<double>(OPMManeuver::VT_MAN_DV_1, MAN_DV_1, 0.0);
+  }
+  void add_MAN_DV_2(double MAN_DV_2) {
+    fbb_.AddElement<double>(OPMManeuver::VT_MAN_DV_2, MAN_DV_2, 0.0);
+  }
+  void add_MAN_DV_3(double MAN_DV_3) {
+    fbb_.AddElement<double>(OPMManeuver::VT_MAN_DV_3, MAN_DV_3, 0.0);
+  }
+  explicit OPMManeuverBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<OPMManeuver> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<OPMManeuver>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<OPMManeuver> CreateOPMManeuver(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MAN_EPOCH_IGNITION = 0,
+    double MAN_DURATION = 0.0,
+    double MAN_DELTA_MASS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> MAN_REF_FRAME = 0,
+    double MAN_DV_1 = 0.0,
+    double MAN_DV_2 = 0.0,
+    double MAN_DV_3 = 0.0) {
+  OPMManeuverBuilder builder_(_fbb);
+  builder_.add_MAN_DV_3(MAN_DV_3);
+  builder_.add_MAN_DV_2(MAN_DV_2);
+  builder_.add_MAN_DV_1(MAN_DV_1);
+  builder_.add_MAN_DELTA_MASS(MAN_DELTA_MASS);
+  builder_.add_MAN_DURATION(MAN_DURATION);
+  builder_.add_MAN_REF_FRAME(MAN_REF_FRAME);
+  builder_.add_MAN_EPOCH_IGNITION(MAN_EPOCH_IGNITION);
+  builder_.add_COMMENT(COMMENT);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<OPMManeuver> CreateOPMManeuverDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *COMMENT = nullptr,
+    const char *MAN_EPOCH_IGNITION = nullptr,
+    double MAN_DURATION = 0.0,
+    double MAN_DELTA_MASS = 0.0,
+    const char *MAN_REF_FRAME = nullptr,
+    double MAN_DV_1 = 0.0,
+    double MAN_DV_2 = 0.0,
+    double MAN_DV_3 = 0.0) {
+  auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
+  auto MAN_EPOCH_IGNITION__ = MAN_EPOCH_IGNITION ? _fbb.CreateString(MAN_EPOCH_IGNITION) : 0;
+  auto MAN_REF_FRAME__ = MAN_REF_FRAME ? _fbb.CreateString(MAN_REF_FRAME) : 0;
+  return CreateOPMManeuver(
+      _fbb,
+      COMMENT__,
+      MAN_EPOCH_IGNITION__,
+      MAN_DURATION,
+      MAN_DELTA_MASS,
+      MAN_REF_FRAME__,
+      MAN_DV_1,
+      MAN_DV_2,
+      MAN_DV_3);
+}
+
+/// One USER_DEFINED_x keyword of an OPM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+struct OPMUserDefinedParameter FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef OPMUserDefinedParameterBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PARAM_NAME = 4,
+    VT_PARAM_VALUE = 6
+  };
+  /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  const ::flatbuffers::String *PARAM_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARAM_NAME);
+  }
+  /// The value as written
+  const ::flatbuffers::String *PARAM_VALUE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARAM_VALUE);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_PARAM_NAME) &&
+           verifier.VerifyString(PARAM_NAME()) &&
+           VerifyOffset(verifier, VT_PARAM_VALUE) &&
+           verifier.VerifyString(PARAM_VALUE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct OPMUserDefinedParameterBuilder {
+  typedef OPMUserDefinedParameter Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_PARAM_NAME(::flatbuffers::Offset<::flatbuffers::String> PARAM_NAME) {
+    fbb_.AddOffset(OPMUserDefinedParameter::VT_PARAM_NAME, PARAM_NAME);
+  }
+  void add_PARAM_VALUE(::flatbuffers::Offset<::flatbuffers::String> PARAM_VALUE) {
+    fbb_.AddOffset(OPMUserDefinedParameter::VT_PARAM_VALUE, PARAM_VALUE);
+  }
+  explicit OPMUserDefinedParameterBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<OPMUserDefinedParameter> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<OPMUserDefinedParameter>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<OPMUserDefinedParameter> CreateOPMUserDefinedParameter(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> PARAM_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PARAM_VALUE = 0) {
+  OPMUserDefinedParameterBuilder builder_(_fbb);
+  builder_.add_PARAM_VALUE(PARAM_VALUE);
+  builder_.add_PARAM_NAME(PARAM_NAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<OPMUserDefinedParameter> CreateOPMUserDefinedParameterDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *PARAM_NAME = nullptr,
+    const char *PARAM_VALUE = nullptr) {
+  auto PARAM_NAME__ = PARAM_NAME ? _fbb.CreateString(PARAM_NAME) : 0;
+  auto PARAM_VALUE__ = PARAM_VALUE ? _fbb.CreateString(PARAM_VALUE) : 0;
+  return CreateOPMUserDefinedParameter(
+      _fbb,
+      PARAM_NAME__,
+      PARAM_VALUE__);
 }
 
 inline const OPM *GetOPM(const void *buf) {

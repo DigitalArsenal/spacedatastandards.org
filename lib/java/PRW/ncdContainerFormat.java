@@ -74,6 +74,62 @@ public final class ncdContainerFormat {
    */
   public static final int CCSDS_TDM_XML = 12;
   /**
+   * CCSDS Orbit Mean-Elements Message, keyword-value notation.
+   */
+  public static final int CCSDS_OMM_KVN = 13;
+  /**
+   * CCSDS Orbit Mean-Elements Message, XML.
+   */
+  public static final int CCSDS_OMM_XML = 14;
+  /**
+   * CCSDS Orbit Parameter Message, keyword-value notation.
+   */
+  public static final int CCSDS_OPM_KVN = 15;
+  /**
+   * CCSDS Orbit Parameter Message, XML.
+   */
+  public static final int CCSDS_OPM_XML = 16;
+  /**
+   * CCSDS Orbit Comprehensive Message, keyword-value notation.
+   */
+  public static final int CCSDS_OCM_KVN = 17;
+  /**
+   * CCSDS Orbit Comprehensive Message, XML.
+   */
+  public static final int CCSDS_OCM_XML = 18;
+  /**
+   * CCSDS Conjunction Data Message, keyword-value notation.
+   */
+  public static final int CCSDS_CDM_KVN = 19;
+  /**
+   * CCSDS Conjunction Data Message, XML.
+   */
+  public static final int CCSDS_CDM_XML = 20;
+  /**
+   * CCSDS Attitude Parameter Message, keyword-value notation.
+   */
+  public static final int CCSDS_APM_KVN = 21;
+  /**
+   * CCSDS Attitude Parameter Message, XML.
+   */
+  public static final int CCSDS_APM_XML = 22;
+  /**
+   * CCSDS Attitude Comprehensive Message, keyword-value notation.
+   */
+  public static final int CCSDS_ACM_KVN = 23;
+  /**
+   * CCSDS Attitude Comprehensive Message, XML.
+   */
+  public static final int CCSDS_ACM_XML = 24;
+  /**
+   * CCSDS Reentry Data Message, keyword-value notation.
+   */
+  public static final int CCSDS_RDM_KVN = 25;
+  /**
+   * CCSDS Reentry Data Message, XML.
+   */
+  public static final int CCSDS_RDM_XML = 26;
+  /**
    * A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
    * which; a producer never reuses a neighbouring member instead.
    */

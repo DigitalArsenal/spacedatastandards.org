@@ -168,6 +168,16 @@ public struct OCM : IFlatbufferObject
   /// dimensionless one.
   public string COV_UNITS(int j) { int o = __p.__offset(60); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int COV_UNITSLength { get { int o = __p.__offset(60); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+  /// blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+  /// them above state the first block's CARTPV or CARTPVA states.
+  public OCMTrajectoryBlock? TRAJECTORY_BLOCKS(int j) { int o = __p.__offset(62); return o != 0 ? (OCMTrajectoryBlock?)(new OCMTrajectoryBlock()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int TRAJECTORY_BLOCKSLength { get { int o = __p.__offset(62); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Every covariance time history of the message (COV_START blocks), in message
+  /// order. COVARIANCE_DATA and the fields that go with it above state the first
+  /// block when it is one line.
+  public OCMCovarianceBlock? COVARIANCE_BLOCKS(int j) { int o = __p.__offset(64); return o != 0 ? (OCMCovarianceBlock?)(new OCMCovarianceBlock()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int COVARIANCE_BLOCKSLength { get { int o = __p.__offset(64); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<OCM> CreateOCM(FlatBufferBuilder builder,
       Offset<Header> HEADEROffset = default(Offset<Header>),
@@ -198,9 +208,13 @@ public struct OCM : IFlatbufferObject
       covarianceOrdering COV_ORDERING = covarianceOrdering.LTM,
       byte COV_SIZE = 6,
       VectorOffset COV_PARAMETERSOffset = default(VectorOffset),
-      VectorOffset COV_UNITSOffset = default(VectorOffset)) {
-    builder.StartTable(29);
+      VectorOffset COV_UNITSOffset = default(VectorOffset),
+      VectorOffset TRAJECTORY_BLOCKSOffset = default(VectorOffset),
+      VectorOffset COVARIANCE_BLOCKSOffset = default(VectorOffset)) {
+    builder.StartTable(31);
     OCM.AddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE);
+    OCM.AddCOVARIANCE_BLOCKS(builder, COVARIANCE_BLOCKSOffset);
+    OCM.AddTRAJECTORY_BLOCKS(builder, TRAJECTORY_BLOCKSOffset);
     OCM.AddCOV_UNITS(builder, COV_UNITSOffset);
     OCM.AddCOV_PARAMETERS(builder, COV_PARAMETERSOffset);
     OCM.AddCOV_TYPE(builder, COV_TYPEOffset);
@@ -232,7 +246,7 @@ public struct OCM : IFlatbufferObject
     return OCM.EndOCM(builder);
   }
 
-  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(29); }
+  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(31); }
   public static void AddHEADER(FlatBufferBuilder builder, Offset<Header> HEADEROffset) { builder.AddOffset(0, HEADEROffset.Value, 0); }
   public static void AddMETADATA(FlatBufferBuilder builder, Offset<Metadata> METADATAOffset) { builder.AddOffset(1, METADATAOffset.Value, 0); }
   public static void AddTRAJ_TYPE(FlatBufferBuilder builder, trajectoryType TRAJ_TYPE) { builder.AddSbyte(2, (sbyte)TRAJ_TYPE, 0); }
@@ -307,6 +321,18 @@ public struct OCM : IFlatbufferObject
   public static VectorOffset CreateCOV_UNITSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOV_UNITSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCOV_UNITSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddTRAJECTORY_BLOCKS(FlatBufferBuilder builder, VectorOffset TRAJECTORY_BLOCKSOffset) { builder.AddOffset(29, TRAJECTORY_BLOCKSOffset.Value, 0); }
+  public static VectorOffset CreateTRAJECTORY_BLOCKSVector(FlatBufferBuilder builder, Offset<OCMTrajectoryBlock>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateTRAJECTORY_BLOCKSVectorBlock(FlatBufferBuilder builder, Offset<OCMTrajectoryBlock>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTRAJECTORY_BLOCKSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OCMTrajectoryBlock>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTRAJECTORY_BLOCKSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OCMTrajectoryBlock>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTRAJECTORY_BLOCKSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCOVARIANCE_BLOCKS(FlatBufferBuilder builder, VectorOffset COVARIANCE_BLOCKSOffset) { builder.AddOffset(30, COVARIANCE_BLOCKSOffset.Value, 0); }
+  public static VectorOffset CreateCOVARIANCE_BLOCKSVector(FlatBufferBuilder builder, Offset<OCMCovarianceBlock>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCE_BLOCKSVectorBlock(FlatBufferBuilder builder, Offset<OCMCovarianceBlock>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCE_BLOCKSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OCMCovarianceBlock>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCE_BLOCKSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OCMCovarianceBlock>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOVARIANCE_BLOCKSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<OCM> EndOCM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OCM>(o);
@@ -357,6 +383,10 @@ public struct OCM : IFlatbufferObject
     for (var _j = 0; _j < this.COV_PARAMETERSLength; ++_j) {_o.COV_PARAMETERS.Add(this.COV_PARAMETERS(_j));}
     _o.COV_UNITS = new List<string>();
     for (var _j = 0; _j < this.COV_UNITSLength; ++_j) {_o.COV_UNITS.Add(this.COV_UNITS(_j));}
+    _o.TRAJECTORY_BLOCKS = new List<OCMTrajectoryBlockT>();
+    for (var _j = 0; _j < this.TRAJECTORY_BLOCKSLength; ++_j) {_o.TRAJECTORY_BLOCKS.Add(this.TRAJECTORY_BLOCKS(_j).HasValue ? this.TRAJECTORY_BLOCKS(_j).Value.UnPack() : null);}
+    _o.COVARIANCE_BLOCKS = new List<OCMCovarianceBlockT>();
+    for (var _j = 0; _j < this.COVARIANCE_BLOCKSLength; ++_j) {_o.COVARIANCE_BLOCKS.Add(this.COVARIANCE_BLOCKS(_j).HasValue ? this.COVARIANCE_BLOCKS(_j).Value.UnPack() : null);}
   }
   public static Offset<OCM> Pack(FlatBufferBuilder builder, OCMT _o) {
     if (_o == null) return default(Offset<OCM>);
@@ -425,6 +455,18 @@ public struct OCM : IFlatbufferObject
       for (var _j = 0; _j < __COV_UNITS.Length; ++_j) { __COV_UNITS[_j] = builder.CreateString(_o.COV_UNITS[_j]); }
       _COV_UNITS = CreateCOV_UNITSVector(builder, __COV_UNITS);
     }
+    var _TRAJECTORY_BLOCKS = default(VectorOffset);
+    if (_o.TRAJECTORY_BLOCKS != null) {
+      var __TRAJECTORY_BLOCKS = new Offset<OCMTrajectoryBlock>[_o.TRAJECTORY_BLOCKS.Count];
+      for (var _j = 0; _j < __TRAJECTORY_BLOCKS.Length; ++_j) { __TRAJECTORY_BLOCKS[_j] = OCMTrajectoryBlock.Pack(builder, _o.TRAJECTORY_BLOCKS[_j]); }
+      _TRAJECTORY_BLOCKS = CreateTRAJECTORY_BLOCKSVector(builder, __TRAJECTORY_BLOCKS);
+    }
+    var _COVARIANCE_BLOCKS = default(VectorOffset);
+    if (_o.COVARIANCE_BLOCKS != null) {
+      var __COVARIANCE_BLOCKS = new Offset<OCMCovarianceBlock>[_o.COVARIANCE_BLOCKS.Count];
+      for (var _j = 0; _j < __COVARIANCE_BLOCKS.Length; ++_j) { __COVARIANCE_BLOCKS[_j] = OCMCovarianceBlock.Pack(builder, _o.COVARIANCE_BLOCKS[_j]); }
+      _COVARIANCE_BLOCKS = CreateCOVARIANCE_BLOCKSVector(builder, __COVARIANCE_BLOCKS);
+    }
     return CreateOCM(
       builder,
       _HEADER,
@@ -455,7 +497,9 @@ public struct OCM : IFlatbufferObject
       _o.COV_ORDERING,
       _o.COV_SIZE,
       _COV_PARAMETERS,
-      _COV_UNITS);
+      _COV_UNITS,
+      _TRAJECTORY_BLOCKS,
+      _COVARIANCE_BLOCKS);
   }
 }
 
@@ -490,6 +534,8 @@ public class OCMT
   public byte COV_SIZE { get; set; }
   public List<string> COV_PARAMETERS { get; set; }
   public List<string> COV_UNITS { get; set; }
+  public List<OCMTrajectoryBlockT> TRAJECTORY_BLOCKS { get; set; }
+  public List<OCMCovarianceBlockT> COVARIANCE_BLOCKS { get; set; }
 
   public OCMT() {
     this.HEADER = null;
@@ -521,6 +567,8 @@ public class OCMT
     this.COV_SIZE = 6;
     this.COV_PARAMETERS = null;
     this.COV_UNITS = null;
+    this.TRAJECTORY_BLOCKS = null;
+    this.COVARIANCE_BLOCKS = null;
   }
   public static OCMT DeserializeFromBinary(byte[] fbBuffer) {
     return OCM.GetRootAsOCM(new ByteBuffer(fbBuffer)).UnPack();
@@ -567,6 +615,8 @@ static public class OCMVerify
       && verifier.VerifyField(tablePos, 56 /*COV_SIZE*/, 1 /*byte*/, 1, false)
       && verifier.VerifyVectorOfStrings(tablePos, 58 /*COV_PARAMETERS*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 60 /*COV_UNITS*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 62 /*TRAJECTORY_BLOCKS*/, OCMTrajectoryBlockVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 64 /*COVARIANCE_BLOCKS*/, OCMCovarianceBlockVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

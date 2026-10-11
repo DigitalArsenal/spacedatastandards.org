@@ -7,6 +7,14 @@ from flatbuffers.compat import import_numpy
 np = import_numpy()
 
 # Conjunction Data Message
+#
+# Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+# SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+# of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+# km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+# MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+# COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+# terms) are held as the message states them.
 class CDM(object):
     __slots__ = ['_tab']
 
@@ -281,8 +289,17 @@ class CDM(object):
             return obj
         return None
 
+    # COMMENT lines of the message header and of its relative metadata and data
+    # (CCSDS 508.0-B-1), in message order, joined by a line feed.
+    # CDM
+    def COMMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def CDMStart(builder):
-    builder.StartObject(29)
+    builder.StartObject(30)
 
 def Start(builder):
     CDMStart(builder)
@@ -461,6 +478,12 @@ def CDMAddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE):
 def AddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE):
     CDMAddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE)
 
+def CDMAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    CDMAddCOMMENT(builder, COMMENT)
+
 def CDMEnd(builder):
     return builder.EndObject()
 
@@ -509,6 +532,7 @@ class CDMT(object):
         OBJECT2 = None,
         OBJECT1_DATASOURCE = None,
         OBJECT2_DATASOURCE = None,
+        COMMENT = None,
     ):
         self.CCSDS_CDM_VERS = CCSDS_CDM_VERS  # type: float
         self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
@@ -539,6 +563,7 @@ class CDMT(object):
         self.OBJECT2 = OBJECT2  # type: Optional[CDMObject.CDMObjectT]
         self.OBJECT1_DATASOURCE = OBJECT1_DATASOURCE  # type: Optional[PNM.PNMT]
         self.OBJECT2_DATASOURCE = OBJECT2_DATASOURCE  # type: Optional[PNM.PNMT]
+        self.COMMENT = COMMENT  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -595,6 +620,7 @@ class CDMT(object):
             self.OBJECT1_DATASOURCE = PNM.PNMT.InitFromObj(CDM.OBJECT1_DATASOURCE())
         if CDM.OBJECT2_DATASOURCE() is not None:
             self.OBJECT2_DATASOURCE = PNM.PNMT.InitFromObj(CDM.OBJECT2_DATASOURCE())
+        self.COMMENT = CDM.COMMENT()
 
     # CDMT
     def Pack(self, builder):
@@ -628,6 +654,8 @@ class CDMT(object):
             OBJECT1_DATASOURCE = self.OBJECT1_DATASOURCE.Pack(builder)
         if self.OBJECT2_DATASOURCE is not None:
             OBJECT2_DATASOURCE = self.OBJECT2_DATASOURCE.Pack(builder)
+        if self.COMMENT is not None:
+            COMMENT = builder.CreateString(self.COMMENT)
         CDMStart(builder)
         CDMAddCCSDS_CDM_VERS(builder, self.CCSDS_CDM_VERS)
         if self.CREATION_DATE is not None:
@@ -673,5 +701,7 @@ class CDMT(object):
             CDMAddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCE)
         if self.OBJECT2_DATASOURCE is not None:
             CDMAddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE)
+        if self.COMMENT is not None:
+            CDMAddCOMMENT(builder, COMMENT)
         CDM = CDMEnd(builder)
         return CDM

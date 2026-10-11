@@ -160,11 +160,419 @@ public final class RDM extends com.google.flatbuffers.Table {
    */
   public double SURVIVING_MASS() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Additional comments
+   * COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+   * data groups, in message order, joined by a line feed.
    */
   public String COMMENT() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
   public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * The fields below, with the earlier ones that say so, are the keywords of
+   * CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+   * NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+   * NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+   * WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+   * REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+   * SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+   * not keywords of the message.
+   * MESSAGE_ID: an identifier the originator makes unique for this message.
+   */
+  public String MESSAGE_ID() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MESSAGE_IDAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer MESSAGE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  /**
+   * CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+   */
+  public String CATALOG_NAME() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CATALOG_NAMEAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer CATALOG_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+   */
+  public String OBJECT_DESIGNATOR() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer OBJECT_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * OBJECT_OWNER.
+   */
+  public String OBJECT_OWNER() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_OWNERAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
+  public ByteBuffer OBJECT_OWNERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
+  /**
+   * OBJECT_OPERATOR.
+   */
+  public String OBJECT_OPERATOR() { int o = __offset(66); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_OPERATORAsByteBuffer() { return __vector_as_bytebuffer(66, 1); }
+  public ByteBuffer OBJECT_OPERATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 66, 1); }
+  /**
+   * CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+   */
+  public byte CONTROLLED_REENTRY() { int o = __offset(68); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * CENTER_NAME: the body being re-entered.
+   */
+  public String CENTER_NAME() { int o = __offset(70); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CENTER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(70, 1); }
+  public ByteBuffer CENTER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 1); }
+  /**
+   * EPOCH_TZERO: the epoch the message's relative times are measured from.
+   */
+  public String EPOCH_TZERO() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPOCH_TZEROAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
+  public ByteBuffer EPOCH_TZEROInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
+  /**
+   * REF_FRAME: the frame of the state vector.
+   */
+  public String REF_FRAME() { int o = __offset(74); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REF_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(74, 1); }
+  public ByteBuffer REF_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 1); }
+  /**
+   * REF_FRAME_EPOCH.
+   */
+  public String REF_FRAME_EPOCH() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REF_FRAME_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
+  public ByteBuffer REF_FRAME_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
+  /**
+   * EPHEMERIS_NAME.
+   */
+  public String EPHEMERIS_NAME() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPHEMERIS_NAMEAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
+  public ByteBuffer EPHEMERIS_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
+  /**
+   * GRAVITY_MODEL.
+   */
+  public String GRAVITY_MODEL() { int o = __offset(80); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer GRAVITY_MODELAsByteBuffer() { return __vector_as_bytebuffer(80, 1); }
+  public ByteBuffer GRAVITY_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 80, 1); }
+  /**
+   * ATMOSPHERIC_MODEL.
+   */
+  public String ATMOSPHERIC_MODEL() { int o = __offset(82); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ATMOSPHERIC_MODELAsByteBuffer() { return __vector_as_bytebuffer(82, 1); }
+  public ByteBuffer ATMOSPHERIC_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 82, 1); }
+  /**
+   * SOLAR_FLUX_PREDICTION.
+   */
+  public String SOLAR_FLUX_PREDICTION() { int o = __offset(84); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOLAR_FLUX_PREDICTIONAsByteBuffer() { return __vector_as_bytebuffer(84, 1); }
+  public ByteBuffer SOLAR_FLUX_PREDICTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 84, 1); }
+  /**
+   * N_BODY_PERTURBATIONS.
+   */
+  public String N_BODY_PERTURBATIONS() { int o = __offset(86); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer N_BODY_PERTURBATIONSAsByteBuffer() { return __vector_as_bytebuffer(86, 1); }
+  public ByteBuffer N_BODY_PERTURBATIONSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 86, 1); }
+  /**
+   * SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+   */
+  public String SOLAR_RAD_PRESSURE() { int o = __offset(88); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOLAR_RAD_PRESSUREAsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
+  public ByteBuffer SOLAR_RAD_PRESSUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
+  /**
+   * EARTH_TIDES: a model name.
+   */
+  public String EARTH_TIDES() { int o = __offset(90); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EARTH_TIDESAsByteBuffer() { return __vector_as_bytebuffer(90, 1); }
+  public ByteBuffer EARTH_TIDESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 90, 1); }
+  /**
+   * INTRACK_THRUST: YES or NO.
+   */
+  public String INTRACK_THRUST() { int o = __offset(92); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer INTRACK_THRUSTAsByteBuffer() { return __vector_as_bytebuffer(92, 1); }
+  public ByteBuffer INTRACK_THRUSTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 92, 1); }
+  /**
+   * DRAG_PARAMETERS_SOURCE.
+   */
+  public String DRAG_PARAMETERS_SOURCE() { int o = __offset(94); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DRAG_PARAMETERS_SOURCEAsByteBuffer() { return __vector_as_bytebuffer(94, 1); }
+  public ByteBuffer DRAG_PARAMETERS_SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 94, 1); }
+  /**
+   * DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+   */
+  public double DRAG_PARAMETERS_ALTITUDE() { int o = __offset(96); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+   */
+  public String REENTRY_UNCERTAINTY_METHOD() { int o = __offset(98); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REENTRY_UNCERTAINTY_METHODAsByteBuffer() { return __vector_as_bytebuffer(98, 1); }
+  public ByteBuffer REENTRY_UNCERTAINTY_METHODInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 98, 1); }
+  /**
+   * REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+   */
+  public String REENTRY_DISINTEGRATION() { int o = __offset(100); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REENTRY_DISINTEGRATIONAsByteBuffer() { return __vector_as_bytebuffer(100, 1); }
+  public ByteBuffer REENTRY_DISINTEGRATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 100, 1); }
+  /**
+   * IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+   */
+  public String IMPACT_UNCERTAINTY_METHOD() { int o = __offset(102); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IMPACT_UNCERTAINTY_METHODAsByteBuffer() { return __vector_as_bytebuffer(102, 1); }
+  public ByteBuffer IMPACT_UNCERTAINTY_METHODInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 1); }
+  /**
+   * PREVIOUS_MESSAGE_ID.
+   */
+  public String PREVIOUS_MESSAGE_ID() { int o = __offset(104); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PREVIOUS_MESSAGE_IDAsByteBuffer() { return __vector_as_bytebuffer(104, 1); }
+  public ByteBuffer PREVIOUS_MESSAGE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 104, 1); }
+  /**
+   * NEXT_MESSAGE_EPOCH.
+   */
+  public String NEXT_MESSAGE_EPOCH() { int o = __offset(106); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NEXT_MESSAGE_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(106, 1); }
+  public ByteBuffer NEXT_MESSAGE_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 106, 1); }
+  /**
+   * ORBIT_LIFETIME in days.
+   */
+  public double ORBIT_LIFETIME() { int o = __offset(108); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+   */
+  public double ORBIT_LIFETIME_WINDOW_START() { int o = __offset(110); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+   */
+  public double ORBIT_LIFETIME_WINDOW_END() { int o = __offset(112); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * REENTRY_WINDOW_START.
+   */
+  public String REENTRY_WINDOW_START() { int o = __offset(114); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REENTRY_WINDOW_STARTAsByteBuffer() { return __vector_as_bytebuffer(114, 1); }
+  public ByteBuffer REENTRY_WINDOW_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 114, 1); }
+  /**
+   * REENTRY_WINDOW_END.
+   */
+  public String REENTRY_WINDOW_END() { int o = __offset(116); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REENTRY_WINDOW_ENDAsByteBuffer() { return __vector_as_bytebuffer(116, 1); }
+  public ByteBuffer REENTRY_WINDOW_ENDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 116, 1); }
+  /**
+   * ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+   */
+  public double ORBIT_LIFETIME_CONFIDENCE_LEVEL() { int o = __offset(118); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * PROBABILITY_OF_IMPACT, NaN when not stated.
+   */
+  public double PROBABILITY_OF_IMPACT() { int o = __offset(120); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * PROBABILITY_OF_BURN_UP, NaN when not stated.
+   */
+  public double PROBABILITY_OF_BURN_UP() { int o = __offset(122); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * PROBABILITY_OF_BREAK_UP, NaN when not stated.
+   */
+  public double PROBABILITY_OF_BREAK_UP() { int o = __offset(124); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+   */
+  public double PROBABILITY_OF_LAND_IMPACT() { int o = __offset(126); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * PROBABILITY_OF_CASUALTY, NaN when not stated.
+   */
+  public double PROBABILITY_OF_CASUALTY() { int o = __offset(128); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * NOMINAL_IMPACT_EPOCH.
+   */
+  public String NOMINAL_IMPACT_EPOCH() { int o = __offset(130); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NOMINAL_IMPACT_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(130, 1); }
+  public ByteBuffer NOMINAL_IMPACT_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 130, 1); }
+  /**
+   * IMPACT_WINDOW_START.
+   */
+  public String IMPACT_WINDOW_START() { int o = __offset(132); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IMPACT_WINDOW_STARTAsByteBuffer() { return __vector_as_bytebuffer(132, 1); }
+  public ByteBuffer IMPACT_WINDOW_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 132, 1); }
+  /**
+   * IMPACT_WINDOW_END.
+   */
+  public String IMPACT_WINDOW_END() { int o = __offset(134); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IMPACT_WINDOW_ENDAsByteBuffer() { return __vector_as_bytebuffer(134, 1); }
+  public ByteBuffer IMPACT_WINDOW_ENDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 134, 1); }
+  /**
+   * IMPACT_REF_FRAME.
+   */
+  public String IMPACT_REF_FRAME() { int o = __offset(136); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IMPACT_REF_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(136, 1); }
+  public ByteBuffer IMPACT_REF_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 136, 1); }
+  /**
+   * NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+   */
+  public double NOMINAL_IMPACT_LON() { int o = __offset(138); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+   */
+  public double NOMINAL_IMPACT_LAT() { int o = __offset(140); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+   */
+  public double NOMINAL_IMPACT_ALT() { int o = __offset(142); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+   */
+  public double IMPACT_1_CONFIDENCE() { int o = __offset(144); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_1_START_LON in degrees, NaN when not stated.
+   */
+  public double IMPACT_1_START_LON() { int o = __offset(146); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_1_START_LAT in degrees, NaN when not stated.
+   */
+  public double IMPACT_1_START_LAT() { int o = __offset(148); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_1_STOP_LON in degrees, NaN when not stated.
+   */
+  public double IMPACT_1_STOP_LON() { int o = __offset(150); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+   */
+  public double IMPACT_1_STOP_LAT() { int o = __offset(152); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+   */
+  public double IMPACT_1_CROSS_TRACK() { int o = __offset(154); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+   */
+  public double IMPACT_2_CONFIDENCE() { int o = __offset(156); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_2_START_LON in degrees, NaN when not stated.
+   */
+  public double IMPACT_2_START_LON() { int o = __offset(158); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_2_START_LAT in degrees, NaN when not stated.
+   */
+  public double IMPACT_2_START_LAT() { int o = __offset(160); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_2_STOP_LON in degrees, NaN when not stated.
+   */
+  public double IMPACT_2_STOP_LON() { int o = __offset(162); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+   */
+  public double IMPACT_2_STOP_LAT() { int o = __offset(164); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+   */
+  public double IMPACT_2_CROSS_TRACK() { int o = __offset(166); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+   */
+  public double IMPACT_3_CONFIDENCE() { int o = __offset(168); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_3_START_LON in degrees, NaN when not stated.
+   */
+  public double IMPACT_3_START_LON() { int o = __offset(170); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_3_START_LAT in degrees, NaN when not stated.
+   */
+  public double IMPACT_3_START_LAT() { int o = __offset(172); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_3_STOP_LON in degrees, NaN when not stated.
+   */
+  public double IMPACT_3_STOP_LON() { int o = __offset(174); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+   */
+  public double IMPACT_3_STOP_LAT() { int o = __offset(176); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+   */
+  public double IMPACT_3_CROSS_TRACK() { int o = __offset(178); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * COV_REF_FRAME: the frame of COVARIANCE.
+   */
+  public String COV_REF_FRAME() { int o = __offset(180); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COV_REF_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(180, 1); }
+  public ByteBuffer COV_REF_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 180, 1); }
+  /**
+   * Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+   * triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+   * CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+   * CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+   * CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+   */
+  public double COVARIANCE(int j) { int o = __offset(182); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int COVARIANCELength() { int o = __offset(182); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector covarianceVector() { return covarianceVector(new DoubleVector()); }
+  public DoubleVector covarianceVector(DoubleVector obj) { int o = __offset(182); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer COVARIANCEAsByteBuffer() { return __vector_as_bytebuffer(182, 8); }
+  public ByteBuffer COVARIANCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 182, 8); }
+  /**
+   * WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+   */
+  public double DRY_MASS() { int o = __offset(184); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * HAZARDOUS_SUBSTANCES.
+   */
+  public String HAZARDOUS_SUBSTANCES() { int o = __offset(186); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer HAZARDOUS_SUBSTANCESAsByteBuffer() { return __vector_as_bytebuffer(186, 1); }
+  public ByteBuffer HAZARDOUS_SUBSTANCESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 186, 1); }
+  /**
+   * SOLAR_RAD_COEFF, NaN when not stated.
+   */
+  public double SOLAR_RAD_COEFF() { int o = __offset(188); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * DRAG_COEFF, NaN when not stated.
+   */
+  public double DRAG_COEFF() { int o = __offset(190); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * RCS in m**2, NaN when not stated.
+   */
+  public double RCS() { int o = __offset(192); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * THRUST_ACCELERATION in m/s**2, NaN when not stated.
+   */
+  public double THRUST_ACCELERATION() { int o = __offset(194); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * TIME_LASTOB_START.
+   */
+  public String TIME_LASTOB_START() { int o = __offset(196); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TIME_LASTOB_STARTAsByteBuffer() { return __vector_as_bytebuffer(196, 1); }
+  public ByteBuffer TIME_LASTOB_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 196, 1); }
+  /**
+   * TIME_LASTOB_END.
+   */
+  public String TIME_LASTOB_END() { int o = __offset(198); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TIME_LASTOB_ENDAsByteBuffer() { return __vector_as_bytebuffer(198, 1); }
+  public ByteBuffer TIME_LASTOB_ENDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 198, 1); }
+  /**
+   * RECOMMENDED_OD_SPAN in days, NaN when not stated.
+   */
+  public double RECOMMENDED_OD_SPAN() { int o = __offset(200); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * ACTUAL_OD_SPAN in days, NaN when not stated.
+   */
+  public double ACTUAL_OD_SPAN() { int o = __offset(202); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * OBS_AVAILABLE.
+   */
+  public long OBS_AVAILABLE() { int o = __offset(204); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * OBS_USED.
+   */
+  public long OBS_USED() { int o = __offset(206); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * TRACKS_AVAILABLE.
+   */
+  public long TRACKS_AVAILABLE() { int o = __offset(208); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * TRACKS_USED.
+   */
+  public long TRACKS_USED() { int o = __offset(210); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * RESIDUALS_ACCEPTED in percent, NaN when not stated.
+   */
+  public double RESIDUALS_ACCEPTED() { int o = __offset(212); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * WEIGHTED_RMS, NaN when not stated.
+   */
+  public double WEIGHTED_RMS() { int o = __offset(214); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Every USER_DEFINED keyword of the message, in message order.
+   */
+  public RDMUserDefinedParameter USER_DEFINED_PARAMETERS(int j) { return USER_DEFINED_PARAMETERS(new RDMUserDefinedParameter(), j); }
+  public RDMUserDefinedParameter USER_DEFINED_PARAMETERS(RDMUserDefinedParameter obj, int j) { int o = __offset(216); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int USER_DEFINED_PARAMETERSLength() { int o = __offset(216); return o != 0 ? __vector_len(o) : 0; }
+  public RDMUserDefinedParameter.Vector userDefinedParametersVector() { return userDefinedParametersVector(new RDMUserDefinedParameter.Vector()); }
+  public RDMUserDefinedParameter.Vector userDefinedParametersVector(RDMUserDefinedParameter.Vector obj) { int o = __offset(216); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createRDM(FlatBufferBuilder builder,
       int CCSDS_RDM_VERSOffset,
@@ -193,8 +601,128 @@ public final class RDM extends com.google.flatbuffers.Table {
       double CASUALTY_EXPECTATION,
       long NUM_FRAGMENTS,
       double SURVIVING_MASS,
-      int COMMENTOffset) {
-    builder.startTable(27);
+      int COMMENTOffset,
+      int MESSAGE_IDOffset,
+      int CATALOG_NAMEOffset,
+      int OBJECT_DESIGNATOROffset,
+      int OBJECT_OWNEROffset,
+      int OBJECT_OPERATOROffset,
+      byte CONTROLLED_REENTRY,
+      int CENTER_NAMEOffset,
+      int EPOCH_TZEROOffset,
+      int REF_FRAMEOffset,
+      int REF_FRAME_EPOCHOffset,
+      int EPHEMERIS_NAMEOffset,
+      int GRAVITY_MODELOffset,
+      int ATMOSPHERIC_MODELOffset,
+      int SOLAR_FLUX_PREDICTIONOffset,
+      int N_BODY_PERTURBATIONSOffset,
+      int SOLAR_RAD_PRESSUREOffset,
+      int EARTH_TIDESOffset,
+      int INTRACK_THRUSTOffset,
+      int DRAG_PARAMETERS_SOURCEOffset,
+      double DRAG_PARAMETERS_ALTITUDE,
+      int REENTRY_UNCERTAINTY_METHODOffset,
+      int REENTRY_DISINTEGRATIONOffset,
+      int IMPACT_UNCERTAINTY_METHODOffset,
+      int PREVIOUS_MESSAGE_IDOffset,
+      int NEXT_MESSAGE_EPOCHOffset,
+      double ORBIT_LIFETIME,
+      double ORBIT_LIFETIME_WINDOW_START,
+      double ORBIT_LIFETIME_WINDOW_END,
+      int REENTRY_WINDOW_STARTOffset,
+      int REENTRY_WINDOW_ENDOffset,
+      double ORBIT_LIFETIME_CONFIDENCE_LEVEL,
+      double PROBABILITY_OF_IMPACT,
+      double PROBABILITY_OF_BURN_UP,
+      double PROBABILITY_OF_BREAK_UP,
+      double PROBABILITY_OF_LAND_IMPACT,
+      double PROBABILITY_OF_CASUALTY,
+      int NOMINAL_IMPACT_EPOCHOffset,
+      int IMPACT_WINDOW_STARTOffset,
+      int IMPACT_WINDOW_ENDOffset,
+      int IMPACT_REF_FRAMEOffset,
+      double NOMINAL_IMPACT_LON,
+      double NOMINAL_IMPACT_LAT,
+      double NOMINAL_IMPACT_ALT,
+      double IMPACT_1_CONFIDENCE,
+      double IMPACT_1_START_LON,
+      double IMPACT_1_START_LAT,
+      double IMPACT_1_STOP_LON,
+      double IMPACT_1_STOP_LAT,
+      double IMPACT_1_CROSS_TRACK,
+      double IMPACT_2_CONFIDENCE,
+      double IMPACT_2_START_LON,
+      double IMPACT_2_START_LAT,
+      double IMPACT_2_STOP_LON,
+      double IMPACT_2_STOP_LAT,
+      double IMPACT_2_CROSS_TRACK,
+      double IMPACT_3_CONFIDENCE,
+      double IMPACT_3_START_LON,
+      double IMPACT_3_START_LAT,
+      double IMPACT_3_STOP_LON,
+      double IMPACT_3_STOP_LAT,
+      double IMPACT_3_CROSS_TRACK,
+      int COV_REF_FRAMEOffset,
+      int COVARIANCEOffset,
+      double DRY_MASS,
+      int HAZARDOUS_SUBSTANCESOffset,
+      double SOLAR_RAD_COEFF,
+      double DRAG_COEFF,
+      double RCS,
+      double THRUST_ACCELERATION,
+      int TIME_LASTOB_STARTOffset,
+      int TIME_LASTOB_ENDOffset,
+      double RECOMMENDED_OD_SPAN,
+      double ACTUAL_OD_SPAN,
+      long OBS_AVAILABLE,
+      long OBS_USED,
+      long TRACKS_AVAILABLE,
+      long TRACKS_USED,
+      double RESIDUALS_ACCEPTED,
+      double WEIGHTED_RMS,
+      int USER_DEFINED_PARAMETERSOffset) {
+    builder.startTable(107);
+    RDM.addWeightedRms(builder, WEIGHTED_RMS);
+    RDM.addResidualsAccepted(builder, RESIDUALS_ACCEPTED);
+    RDM.addActualOdSpan(builder, ACTUAL_OD_SPAN);
+    RDM.addRecommendedOdSpan(builder, RECOMMENDED_OD_SPAN);
+    RDM.addThrustAcceleration(builder, THRUST_ACCELERATION);
+    RDM.addRcs(builder, RCS);
+    RDM.addDragCoeff(builder, DRAG_COEFF);
+    RDM.addSolarRadCoeff(builder, SOLAR_RAD_COEFF);
+    RDM.addDryMass(builder, DRY_MASS);
+    RDM.addImpact3CrossTrack(builder, IMPACT_3_CROSS_TRACK);
+    RDM.addImpact3StopLat(builder, IMPACT_3_STOP_LAT);
+    RDM.addImpact3StopLon(builder, IMPACT_3_STOP_LON);
+    RDM.addImpact3StartLat(builder, IMPACT_3_START_LAT);
+    RDM.addImpact3StartLon(builder, IMPACT_3_START_LON);
+    RDM.addImpact3Confidence(builder, IMPACT_3_CONFIDENCE);
+    RDM.addImpact2CrossTrack(builder, IMPACT_2_CROSS_TRACK);
+    RDM.addImpact2StopLat(builder, IMPACT_2_STOP_LAT);
+    RDM.addImpact2StopLon(builder, IMPACT_2_STOP_LON);
+    RDM.addImpact2StartLat(builder, IMPACT_2_START_LAT);
+    RDM.addImpact2StartLon(builder, IMPACT_2_START_LON);
+    RDM.addImpact2Confidence(builder, IMPACT_2_CONFIDENCE);
+    RDM.addImpact1CrossTrack(builder, IMPACT_1_CROSS_TRACK);
+    RDM.addImpact1StopLat(builder, IMPACT_1_STOP_LAT);
+    RDM.addImpact1StopLon(builder, IMPACT_1_STOP_LON);
+    RDM.addImpact1StartLat(builder, IMPACT_1_START_LAT);
+    RDM.addImpact1StartLon(builder, IMPACT_1_START_LON);
+    RDM.addImpact1Confidence(builder, IMPACT_1_CONFIDENCE);
+    RDM.addNominalImpactAlt(builder, NOMINAL_IMPACT_ALT);
+    RDM.addNominalImpactLat(builder, NOMINAL_IMPACT_LAT);
+    RDM.addNominalImpactLon(builder, NOMINAL_IMPACT_LON);
+    RDM.addProbabilityOfCasualty(builder, PROBABILITY_OF_CASUALTY);
+    RDM.addProbabilityOfLandImpact(builder, PROBABILITY_OF_LAND_IMPACT);
+    RDM.addProbabilityOfBreakUp(builder, PROBABILITY_OF_BREAK_UP);
+    RDM.addProbabilityOfBurnUp(builder, PROBABILITY_OF_BURN_UP);
+    RDM.addProbabilityOfImpact(builder, PROBABILITY_OF_IMPACT);
+    RDM.addOrbitLifetimeConfidenceLevel(builder, ORBIT_LIFETIME_CONFIDENCE_LEVEL);
+    RDM.addOrbitLifetimeWindowEnd(builder, ORBIT_LIFETIME_WINDOW_END);
+    RDM.addOrbitLifetimeWindowStart(builder, ORBIT_LIFETIME_WINDOW_START);
+    RDM.addOrbitLifetime(builder, ORBIT_LIFETIME);
+    RDM.addDragParametersAltitude(builder, DRAG_PARAMETERS_ALTITUDE);
     RDM.addSurvivingMass(builder, SURVIVING_MASS);
     RDM.addCasualtyExpectation(builder, CASUALTY_EXPECTATION);
     RDM.addDragArea(builder, DRAG_AREA);
@@ -205,6 +733,45 @@ public final class RDM extends com.google.flatbuffers.Table {
     RDM.addReentryLongitude(builder, REENTRY_LONGITUDE);
     RDM.addReentryLatitude(builder, REENTRY_LATITUDE);
     RDM.addReentryEpochUnc(builder, REENTRY_EPOCH_UNC);
+    RDM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERSOffset);
+    RDM.addTracksUsed(builder, TRACKS_USED);
+    RDM.addTracksAvailable(builder, TRACKS_AVAILABLE);
+    RDM.addObsUsed(builder, OBS_USED);
+    RDM.addObsAvailable(builder, OBS_AVAILABLE);
+    RDM.addTimeLastobEnd(builder, TIME_LASTOB_ENDOffset);
+    RDM.addTimeLastobStart(builder, TIME_LASTOB_STARTOffset);
+    RDM.addHazardousSubstances(builder, HAZARDOUS_SUBSTANCESOffset);
+    RDM.addCovariance(builder, COVARIANCEOffset);
+    RDM.addCovRefFrame(builder, COV_REF_FRAMEOffset);
+    RDM.addImpactRefFrame(builder, IMPACT_REF_FRAMEOffset);
+    RDM.addImpactWindowEnd(builder, IMPACT_WINDOW_ENDOffset);
+    RDM.addImpactWindowStart(builder, IMPACT_WINDOW_STARTOffset);
+    RDM.addNominalImpactEpoch(builder, NOMINAL_IMPACT_EPOCHOffset);
+    RDM.addReentryWindowEnd(builder, REENTRY_WINDOW_ENDOffset);
+    RDM.addReentryWindowStart(builder, REENTRY_WINDOW_STARTOffset);
+    RDM.addNextMessageEpoch(builder, NEXT_MESSAGE_EPOCHOffset);
+    RDM.addPreviousMessageId(builder, PREVIOUS_MESSAGE_IDOffset);
+    RDM.addImpactUncertaintyMethod(builder, IMPACT_UNCERTAINTY_METHODOffset);
+    RDM.addReentryDisintegration(builder, REENTRY_DISINTEGRATIONOffset);
+    RDM.addReentryUncertaintyMethod(builder, REENTRY_UNCERTAINTY_METHODOffset);
+    RDM.addDragParametersSource(builder, DRAG_PARAMETERS_SOURCEOffset);
+    RDM.addIntrackThrust(builder, INTRACK_THRUSTOffset);
+    RDM.addEarthTides(builder, EARTH_TIDESOffset);
+    RDM.addSolarRadPressure(builder, SOLAR_RAD_PRESSUREOffset);
+    RDM.addNBodyPerturbations(builder, N_BODY_PERTURBATIONSOffset);
+    RDM.addSolarFluxPrediction(builder, SOLAR_FLUX_PREDICTIONOffset);
+    RDM.addAtmosphericModel(builder, ATMOSPHERIC_MODELOffset);
+    RDM.addGravityModel(builder, GRAVITY_MODELOffset);
+    RDM.addEphemerisName(builder, EPHEMERIS_NAMEOffset);
+    RDM.addRefFrameEpoch(builder, REF_FRAME_EPOCHOffset);
+    RDM.addRefFrame(builder, REF_FRAMEOffset);
+    RDM.addEpochTzero(builder, EPOCH_TZEROOffset);
+    RDM.addCenterName(builder, CENTER_NAMEOffset);
+    RDM.addObjectOperator(builder, OBJECT_OPERATOROffset);
+    RDM.addObjectOwner(builder, OBJECT_OWNEROffset);
+    RDM.addObjectDesignator(builder, OBJECT_DESIGNATOROffset);
+    RDM.addCatalogName(builder, CATALOG_NAMEOffset);
+    RDM.addMessageId(builder, MESSAGE_IDOffset);
     RDM.addComment(builder, COMMENTOffset);
     RDM.addNumFragments(builder, NUM_FRAGMENTS);
     RDM.addSurvivingDebris(builder, SURVIVING_DEBRISOffset);
@@ -220,12 +787,13 @@ public final class RDM extends com.google.flatbuffers.Table {
     RDM.addOriginator(builder, ORIGINATOROffset);
     RDM.addCreationDate(builder, CREATION_DATEOffset);
     RDM.addCcsdsRdmVers(builder, CCSDS_RDM_VERSOffset);
+    RDM.addControlledReentry(builder, CONTROLLED_REENTRY);
     RDM.addReason(builder, REASON);
     RDM.addDisposition(builder, DISPOSITION);
     return RDM.endRDM(builder);
   }
 
-  public static void startRDM(FlatBufferBuilder builder) { builder.startTable(27); }
+  public static void startRDM(FlatBufferBuilder builder) { builder.startTable(107); }
   public static void addCcsdsRdmVers(FlatBufferBuilder builder, int CCSDS_RDM_VERSOffset) { builder.addOffset(0, CCSDS_RDM_VERSOffset, 0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -257,6 +825,90 @@ public final class RDM extends com.google.flatbuffers.Table {
   public static void addNumFragments(FlatBufferBuilder builder, long NUM_FRAGMENTS) { builder.addInt(24, (int) NUM_FRAGMENTS, (int) 0L); }
   public static void addSurvivingMass(FlatBufferBuilder builder, double SURVIVING_MASS) { builder.addDouble(25, SURVIVING_MASS, 0.0); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(26, COMMENTOffset, 0); }
+  public static void addMessageId(FlatBufferBuilder builder, int MESSAGE_IDOffset) { builder.addOffset(27, MESSAGE_IDOffset, 0); }
+  public static void addCatalogName(FlatBufferBuilder builder, int CATALOG_NAMEOffset) { builder.addOffset(28, CATALOG_NAMEOffset, 0); }
+  public static void addObjectDesignator(FlatBufferBuilder builder, int OBJECT_DESIGNATOROffset) { builder.addOffset(29, OBJECT_DESIGNATOROffset, 0); }
+  public static void addObjectOwner(FlatBufferBuilder builder, int OBJECT_OWNEROffset) { builder.addOffset(30, OBJECT_OWNEROffset, 0); }
+  public static void addObjectOperator(FlatBufferBuilder builder, int OBJECT_OPERATOROffset) { builder.addOffset(31, OBJECT_OPERATOROffset, 0); }
+  public static void addControlledReentry(FlatBufferBuilder builder, byte CONTROLLED_REENTRY) { builder.addByte(32, CONTROLLED_REENTRY, 0); }
+  public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(33, CENTER_NAMEOffset, 0); }
+  public static void addEpochTzero(FlatBufferBuilder builder, int EPOCH_TZEROOffset) { builder.addOffset(34, EPOCH_TZEROOffset, 0); }
+  public static void addRefFrame(FlatBufferBuilder builder, int REF_FRAMEOffset) { builder.addOffset(35, REF_FRAMEOffset, 0); }
+  public static void addRefFrameEpoch(FlatBufferBuilder builder, int REF_FRAME_EPOCHOffset) { builder.addOffset(36, REF_FRAME_EPOCHOffset, 0); }
+  public static void addEphemerisName(FlatBufferBuilder builder, int EPHEMERIS_NAMEOffset) { builder.addOffset(37, EPHEMERIS_NAMEOffset, 0); }
+  public static void addGravityModel(FlatBufferBuilder builder, int GRAVITY_MODELOffset) { builder.addOffset(38, GRAVITY_MODELOffset, 0); }
+  public static void addAtmosphericModel(FlatBufferBuilder builder, int ATMOSPHERIC_MODELOffset) { builder.addOffset(39, ATMOSPHERIC_MODELOffset, 0); }
+  public static void addSolarFluxPrediction(FlatBufferBuilder builder, int SOLAR_FLUX_PREDICTIONOffset) { builder.addOffset(40, SOLAR_FLUX_PREDICTIONOffset, 0); }
+  public static void addNBodyPerturbations(FlatBufferBuilder builder, int N_BODY_PERTURBATIONSOffset) { builder.addOffset(41, N_BODY_PERTURBATIONSOffset, 0); }
+  public static void addSolarRadPressure(FlatBufferBuilder builder, int SOLAR_RAD_PRESSUREOffset) { builder.addOffset(42, SOLAR_RAD_PRESSUREOffset, 0); }
+  public static void addEarthTides(FlatBufferBuilder builder, int EARTH_TIDESOffset) { builder.addOffset(43, EARTH_TIDESOffset, 0); }
+  public static void addIntrackThrust(FlatBufferBuilder builder, int INTRACK_THRUSTOffset) { builder.addOffset(44, INTRACK_THRUSTOffset, 0); }
+  public static void addDragParametersSource(FlatBufferBuilder builder, int DRAG_PARAMETERS_SOURCEOffset) { builder.addOffset(45, DRAG_PARAMETERS_SOURCEOffset, 0); }
+  public static void addDragParametersAltitude(FlatBufferBuilder builder, double DRAG_PARAMETERS_ALTITUDE) { builder.addDouble(46, DRAG_PARAMETERS_ALTITUDE, Double.NaN); }
+  public static void addReentryUncertaintyMethod(FlatBufferBuilder builder, int REENTRY_UNCERTAINTY_METHODOffset) { builder.addOffset(47, REENTRY_UNCERTAINTY_METHODOffset, 0); }
+  public static void addReentryDisintegration(FlatBufferBuilder builder, int REENTRY_DISINTEGRATIONOffset) { builder.addOffset(48, REENTRY_DISINTEGRATIONOffset, 0); }
+  public static void addImpactUncertaintyMethod(FlatBufferBuilder builder, int IMPACT_UNCERTAINTY_METHODOffset) { builder.addOffset(49, IMPACT_UNCERTAINTY_METHODOffset, 0); }
+  public static void addPreviousMessageId(FlatBufferBuilder builder, int PREVIOUS_MESSAGE_IDOffset) { builder.addOffset(50, PREVIOUS_MESSAGE_IDOffset, 0); }
+  public static void addNextMessageEpoch(FlatBufferBuilder builder, int NEXT_MESSAGE_EPOCHOffset) { builder.addOffset(51, NEXT_MESSAGE_EPOCHOffset, 0); }
+  public static void addOrbitLifetime(FlatBufferBuilder builder, double ORBIT_LIFETIME) { builder.addDouble(52, ORBIT_LIFETIME, 0.0); }
+  public static void addOrbitLifetimeWindowStart(FlatBufferBuilder builder, double ORBIT_LIFETIME_WINDOW_START) { builder.addDouble(53, ORBIT_LIFETIME_WINDOW_START, Double.NaN); }
+  public static void addOrbitLifetimeWindowEnd(FlatBufferBuilder builder, double ORBIT_LIFETIME_WINDOW_END) { builder.addDouble(54, ORBIT_LIFETIME_WINDOW_END, Double.NaN); }
+  public static void addReentryWindowStart(FlatBufferBuilder builder, int REENTRY_WINDOW_STARTOffset) { builder.addOffset(55, REENTRY_WINDOW_STARTOffset, 0); }
+  public static void addReentryWindowEnd(FlatBufferBuilder builder, int REENTRY_WINDOW_ENDOffset) { builder.addOffset(56, REENTRY_WINDOW_ENDOffset, 0); }
+  public static void addOrbitLifetimeConfidenceLevel(FlatBufferBuilder builder, double ORBIT_LIFETIME_CONFIDENCE_LEVEL) { builder.addDouble(57, ORBIT_LIFETIME_CONFIDENCE_LEVEL, Double.NaN); }
+  public static void addProbabilityOfImpact(FlatBufferBuilder builder, double PROBABILITY_OF_IMPACT) { builder.addDouble(58, PROBABILITY_OF_IMPACT, Double.NaN); }
+  public static void addProbabilityOfBurnUp(FlatBufferBuilder builder, double PROBABILITY_OF_BURN_UP) { builder.addDouble(59, PROBABILITY_OF_BURN_UP, Double.NaN); }
+  public static void addProbabilityOfBreakUp(FlatBufferBuilder builder, double PROBABILITY_OF_BREAK_UP) { builder.addDouble(60, PROBABILITY_OF_BREAK_UP, Double.NaN); }
+  public static void addProbabilityOfLandImpact(FlatBufferBuilder builder, double PROBABILITY_OF_LAND_IMPACT) { builder.addDouble(61, PROBABILITY_OF_LAND_IMPACT, Double.NaN); }
+  public static void addProbabilityOfCasualty(FlatBufferBuilder builder, double PROBABILITY_OF_CASUALTY) { builder.addDouble(62, PROBABILITY_OF_CASUALTY, Double.NaN); }
+  public static void addNominalImpactEpoch(FlatBufferBuilder builder, int NOMINAL_IMPACT_EPOCHOffset) { builder.addOffset(63, NOMINAL_IMPACT_EPOCHOffset, 0); }
+  public static void addImpactWindowStart(FlatBufferBuilder builder, int IMPACT_WINDOW_STARTOffset) { builder.addOffset(64, IMPACT_WINDOW_STARTOffset, 0); }
+  public static void addImpactWindowEnd(FlatBufferBuilder builder, int IMPACT_WINDOW_ENDOffset) { builder.addOffset(65, IMPACT_WINDOW_ENDOffset, 0); }
+  public static void addImpactRefFrame(FlatBufferBuilder builder, int IMPACT_REF_FRAMEOffset) { builder.addOffset(66, IMPACT_REF_FRAMEOffset, 0); }
+  public static void addNominalImpactLon(FlatBufferBuilder builder, double NOMINAL_IMPACT_LON) { builder.addDouble(67, NOMINAL_IMPACT_LON, Double.NaN); }
+  public static void addNominalImpactLat(FlatBufferBuilder builder, double NOMINAL_IMPACT_LAT) { builder.addDouble(68, NOMINAL_IMPACT_LAT, Double.NaN); }
+  public static void addNominalImpactAlt(FlatBufferBuilder builder, double NOMINAL_IMPACT_ALT) { builder.addDouble(69, NOMINAL_IMPACT_ALT, Double.NaN); }
+  public static void addImpact1Confidence(FlatBufferBuilder builder, double IMPACT_1_CONFIDENCE) { builder.addDouble(70, IMPACT_1_CONFIDENCE, Double.NaN); }
+  public static void addImpact1StartLon(FlatBufferBuilder builder, double IMPACT_1_START_LON) { builder.addDouble(71, IMPACT_1_START_LON, Double.NaN); }
+  public static void addImpact1StartLat(FlatBufferBuilder builder, double IMPACT_1_START_LAT) { builder.addDouble(72, IMPACT_1_START_LAT, Double.NaN); }
+  public static void addImpact1StopLon(FlatBufferBuilder builder, double IMPACT_1_STOP_LON) { builder.addDouble(73, IMPACT_1_STOP_LON, Double.NaN); }
+  public static void addImpact1StopLat(FlatBufferBuilder builder, double IMPACT_1_STOP_LAT) { builder.addDouble(74, IMPACT_1_STOP_LAT, Double.NaN); }
+  public static void addImpact1CrossTrack(FlatBufferBuilder builder, double IMPACT_1_CROSS_TRACK) { builder.addDouble(75, IMPACT_1_CROSS_TRACK, Double.NaN); }
+  public static void addImpact2Confidence(FlatBufferBuilder builder, double IMPACT_2_CONFIDENCE) { builder.addDouble(76, IMPACT_2_CONFIDENCE, Double.NaN); }
+  public static void addImpact2StartLon(FlatBufferBuilder builder, double IMPACT_2_START_LON) { builder.addDouble(77, IMPACT_2_START_LON, Double.NaN); }
+  public static void addImpact2StartLat(FlatBufferBuilder builder, double IMPACT_2_START_LAT) { builder.addDouble(78, IMPACT_2_START_LAT, Double.NaN); }
+  public static void addImpact2StopLon(FlatBufferBuilder builder, double IMPACT_2_STOP_LON) { builder.addDouble(79, IMPACT_2_STOP_LON, Double.NaN); }
+  public static void addImpact2StopLat(FlatBufferBuilder builder, double IMPACT_2_STOP_LAT) { builder.addDouble(80, IMPACT_2_STOP_LAT, Double.NaN); }
+  public static void addImpact2CrossTrack(FlatBufferBuilder builder, double IMPACT_2_CROSS_TRACK) { builder.addDouble(81, IMPACT_2_CROSS_TRACK, Double.NaN); }
+  public static void addImpact3Confidence(FlatBufferBuilder builder, double IMPACT_3_CONFIDENCE) { builder.addDouble(82, IMPACT_3_CONFIDENCE, Double.NaN); }
+  public static void addImpact3StartLon(FlatBufferBuilder builder, double IMPACT_3_START_LON) { builder.addDouble(83, IMPACT_3_START_LON, Double.NaN); }
+  public static void addImpact3StartLat(FlatBufferBuilder builder, double IMPACT_3_START_LAT) { builder.addDouble(84, IMPACT_3_START_LAT, Double.NaN); }
+  public static void addImpact3StopLon(FlatBufferBuilder builder, double IMPACT_3_STOP_LON) { builder.addDouble(85, IMPACT_3_STOP_LON, Double.NaN); }
+  public static void addImpact3StopLat(FlatBufferBuilder builder, double IMPACT_3_STOP_LAT) { builder.addDouble(86, IMPACT_3_STOP_LAT, Double.NaN); }
+  public static void addImpact3CrossTrack(FlatBufferBuilder builder, double IMPACT_3_CROSS_TRACK) { builder.addDouble(87, IMPACT_3_CROSS_TRACK, Double.NaN); }
+  public static void addCovRefFrame(FlatBufferBuilder builder, int COV_REF_FRAMEOffset) { builder.addOffset(88, COV_REF_FRAMEOffset, 0); }
+  public static void addCovariance(FlatBufferBuilder builder, int COVARIANCEOffset) { builder.addOffset(89, COVARIANCEOffset, 0); }
+  public static int createCovarianceVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startCovarianceVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addDryMass(FlatBufferBuilder builder, double DRY_MASS) { builder.addDouble(90, DRY_MASS, Double.NaN); }
+  public static void addHazardousSubstances(FlatBufferBuilder builder, int HAZARDOUS_SUBSTANCESOffset) { builder.addOffset(91, HAZARDOUS_SUBSTANCESOffset, 0); }
+  public static void addSolarRadCoeff(FlatBufferBuilder builder, double SOLAR_RAD_COEFF) { builder.addDouble(92, SOLAR_RAD_COEFF, Double.NaN); }
+  public static void addDragCoeff(FlatBufferBuilder builder, double DRAG_COEFF) { builder.addDouble(93, DRAG_COEFF, Double.NaN); }
+  public static void addRcs(FlatBufferBuilder builder, double RCS) { builder.addDouble(94, RCS, Double.NaN); }
+  public static void addThrustAcceleration(FlatBufferBuilder builder, double THRUST_ACCELERATION) { builder.addDouble(95, THRUST_ACCELERATION, Double.NaN); }
+  public static void addTimeLastobStart(FlatBufferBuilder builder, int TIME_LASTOB_STARTOffset) { builder.addOffset(96, TIME_LASTOB_STARTOffset, 0); }
+  public static void addTimeLastobEnd(FlatBufferBuilder builder, int TIME_LASTOB_ENDOffset) { builder.addOffset(97, TIME_LASTOB_ENDOffset, 0); }
+  public static void addRecommendedOdSpan(FlatBufferBuilder builder, double RECOMMENDED_OD_SPAN) { builder.addDouble(98, RECOMMENDED_OD_SPAN, Double.NaN); }
+  public static void addActualOdSpan(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.addDouble(99, ACTUAL_OD_SPAN, Double.NaN); }
+  public static void addObsAvailable(FlatBufferBuilder builder, long OBS_AVAILABLE) { builder.addInt(100, (int) OBS_AVAILABLE, (int) 0L); }
+  public static void addObsUsed(FlatBufferBuilder builder, long OBS_USED) { builder.addInt(101, (int) OBS_USED, (int) 0L); }
+  public static void addTracksAvailable(FlatBufferBuilder builder, long TRACKS_AVAILABLE) { builder.addInt(102, (int) TRACKS_AVAILABLE, (int) 0L); }
+  public static void addTracksUsed(FlatBufferBuilder builder, long TRACKS_USED) { builder.addInt(103, (int) TRACKS_USED, (int) 0L); }
+  public static void addResidualsAccepted(FlatBufferBuilder builder, double RESIDUALS_ACCEPTED) { builder.addDouble(104, RESIDUALS_ACCEPTED, Double.NaN); }
+  public static void addWeightedRms(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.addDouble(105, WEIGHTED_RMS, Double.NaN); }
+  public static void addUserDefinedParameters(FlatBufferBuilder builder, int USER_DEFINED_PARAMETERSOffset) { builder.addOffset(106, USER_DEFINED_PARAMETERSOffset, 0); }
+  public static int createUserDefinedParametersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startUserDefinedParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endRDM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

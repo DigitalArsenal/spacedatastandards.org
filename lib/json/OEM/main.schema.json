@@ -1202,6 +1202,14 @@
         "CZ_DOT_Z_DOT" : {
                 "type" : "number",
                 "description" : "Covariance matrix [6,6] km**2/s**2"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed."
+              },
+        "COV_REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME."
               }
       },
       "additionalProperties" : false
@@ -1320,6 +1328,14 @@
         "EPHEMERIS_DATA_BLOCK" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ephemerisDataBlock"},
                 "description" : "Array of ephemeris data blocks"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed."
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
               }
       },
       "additionalProperties" : false

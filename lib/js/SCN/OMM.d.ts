@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { OMMUserDefinedParameter, OMMUserDefinedParameterT } from './OMMUserDefinedParameter.js';
 import { RFM, RFMT } from './RFM.js';
 import { ephemerisFormat } from './ephemerisFormat.js';
 import { meanElementSource } from './meanElementSource.js';
@@ -61,7 +62,10 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
      */
     MEAN_ELEMENT_THEORY(): meanElementSource;
     /**
-     * COMMENT (O)
+     * COMMENT (O): every COMMENT line of the message, in message order, joined by
+     * a line feed. A message states comments in its header, its metadata and each
+     * data group; this field holds them all, so a message written from the record
+     * states them together in its header.
      */
     COMMENT(): string | null;
     COMMENT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
@@ -195,6 +199,25 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
      * USER_DEFINED_MICROSECONDS [O, units per ICD]
      */
     USER_DEFINED_MICROSECONDS(): number;
+    /**
+     * CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+     * that states its security classification or handling caveat. Not
+     * CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+     */
+    CLASSIFICATION(): string | null;
+    CLASSIFICATION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+     * originator makes unique for this message.
+     */
+    MESSAGE_ID(): string | null;
+    MESSAGE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+     * message that has no dedicated field above, in message order.
+     */
+    USER_DEFINED_PARAMETERS(index: number, obj?: OMMUserDefinedParameter): OMMUserDefinedParameter | null;
+    userDefinedParametersLength(): number;
     static startOMM(builder: flatbuffers.Builder): void;
     static addCcsdsOmmVers(builder: flatbuffers.Builder, CCSDS_OMM_VERS: number): void;
     static addCreationDate(builder: flatbuffers.Builder, CREATION_DATEOffset: flatbuffers.Offset): void;
@@ -242,6 +265,11 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
     static addUserDefinedEarthModel(builder: flatbuffers.Builder, USER_DEFINED_EARTH_MODELOffset: flatbuffers.Offset): void;
     static addUserDefinedEpochTimestamp(builder: flatbuffers.Builder, USER_DEFINED_EPOCH_TIMESTAMP: number): void;
     static addUserDefinedMicroseconds(builder: flatbuffers.Builder, USER_DEFINED_MICROSECONDS: number): void;
+    static addClassification(builder: flatbuffers.Builder, CLASSIFICATIONOffset: flatbuffers.Offset): void;
+    static addMessageId(builder: flatbuffers.Builder, MESSAGE_IDOffset: flatbuffers.Offset): void;
+    static addUserDefinedParameters(builder: flatbuffers.Builder, USER_DEFINED_PARAMETERSOffset: flatbuffers.Offset): void;
+    static createUserDefinedParametersVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startUserDefinedParametersVector(builder: flatbuffers.Builder, numElems: number): void;
     static endOMM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishOMMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedOMMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -289,7 +317,10 @@ export declare class OMMT implements flatbuffers.IGeneratedObject {
     USER_DEFINED_EARTH_MODEL: string | Uint8Array | null;
     USER_DEFINED_EPOCH_TIMESTAMP: number;
     USER_DEFINED_MICROSECONDS: number;
-    constructor(CCSDS_OMM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, TIME_SYSTEM?: timingStandard, MEAN_ELEMENT_THEORY?: meanElementSource, COMMENT?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SEMI_MAJOR_AXIS?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, GM?: number, MASS?: number, SOLAR_RAD_AREA?: number, SOLAR_RAD_COEFF?: number, DRAG_AREA?: number, DRAG_COEFF?: number, EPHEMERIS_TYPE?: ephemerisFormat, CLASSIFICATION_TYPE?: string | Uint8Array | null, NORAD_CAT_ID?: number, ELEMENT_SET_NO?: number, REV_AT_EPOCH?: number, BSTAR?: number, MEAN_MOTION_DOT?: number, MEAN_MOTION_DDOT?: number, COV_REFERENCE_FRAME?: RFMT | null, COVARIANCE?: (number)[], USER_DEFINED_BIP_0044_TYPE?: number, USER_DEFINED_OBJECT_DESIGNATOR?: string | Uint8Array | null, USER_DEFINED_EARTH_MODEL?: string | Uint8Array | null, USER_DEFINED_EPOCH_TIMESTAMP?: number, USER_DEFINED_MICROSECONDS?: number);
+    CLASSIFICATION: string | Uint8Array | null;
+    MESSAGE_ID: string | Uint8Array | null;
+    USER_DEFINED_PARAMETERS: (OMMUserDefinedParameterT)[];
+    constructor(CCSDS_OMM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, TIME_SYSTEM?: timingStandard, MEAN_ELEMENT_THEORY?: meanElementSource, COMMENT?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SEMI_MAJOR_AXIS?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, GM?: number, MASS?: number, SOLAR_RAD_AREA?: number, SOLAR_RAD_COEFF?: number, DRAG_AREA?: number, DRAG_COEFF?: number, EPHEMERIS_TYPE?: ephemerisFormat, CLASSIFICATION_TYPE?: string | Uint8Array | null, NORAD_CAT_ID?: number, ELEMENT_SET_NO?: number, REV_AT_EPOCH?: number, BSTAR?: number, MEAN_MOTION_DOT?: number, MEAN_MOTION_DDOT?: number, COV_REFERENCE_FRAME?: RFMT | null, COVARIANCE?: (number)[], USER_DEFINED_BIP_0044_TYPE?: number, USER_DEFINED_OBJECT_DESIGNATOR?: string | Uint8Array | null, USER_DEFINED_EARTH_MODEL?: string | Uint8Array | null, USER_DEFINED_EPOCH_TIMESTAMP?: number, USER_DEFINED_MICROSECONDS?: number, CLASSIFICATION?: string | Uint8Array | null, MESSAGE_ID?: string | Uint8Array | null, USER_DEFINED_PARAMETERS?: (OMMUserDefinedParameterT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OMM.d.ts.map

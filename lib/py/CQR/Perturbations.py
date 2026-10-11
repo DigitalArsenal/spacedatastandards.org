@@ -219,8 +219,153 @@ class Perturbations(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+    # above is the model family when the text names one.
+    # Perturbations
+    def ATMOSPHERIC_MODEL_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EQUATORIAL_RADIUS in km, NaN when not stated.
+    # Perturbations
+    def EQUATORIAL_RADIUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+    # Perturbations
+    def CENTRAL_BODY_ROTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # OBLATE_FLATTENING, NaN when not stated.
+    # Perturbations
+    def OBLATE_FLATTENING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # REDUCTION_THEORY.
+    # Perturbations
+    def REDUCTION_THEORY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ALBEDO_GRID_SIZE.
+    # Perturbations
+    def ALBEDO_GRID_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # SHADOW_MODEL.
+    # Perturbations
+    def SHADOW_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SHADOW_BODIES.
+    # Perturbations
+    def SHADOW_BODIES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SW_DATA_SOURCE: the space weather data source.
+    # Perturbations
+    def SW_DATA_SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SW_DATA_EPOCH.
+    # Perturbations
+    def SW_DATA_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SW_INTERP_METHOD.
+    # Perturbations
+    def SW_INTERP_METHOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # FIXED_GEOMAG_DST in nT, NaN when not stated.
+    # Perturbations
+    def FIXED_GEOMAG_DST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # FIXED_M10P7, NaN when not stated.
+    # Perturbations
+    def FIXED_M10P7(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # FIXED_M10P7_MEAN, NaN when not stated.
+    # Perturbations
+    def FIXED_M10P7_MEAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # FIXED_S10P7, NaN when not stated.
+    # Perturbations
+    def FIXED_S10P7(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # FIXED_S10P7_MEAN, NaN when not stated.
+    # Perturbations
+    def FIXED_S10P7_MEAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # FIXED_Y10P7, NaN when not stated.
+    # Perturbations
+    def FIXED_Y10P7(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # FIXED_Y10P7_MEAN, NaN when not stated.
+    # Perturbations
+    def FIXED_Y10P7_MEAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
 def PerturbationsStart(builder):
-    builder.StartObject(20)
+    builder.StartObject(38)
 
 def Start(builder):
     PerturbationsStart(builder)
@@ -369,6 +514,114 @@ def PerturbationsAddFIXED_GEOMAG_AP(builder, FIXED_GEOMAG_AP):
 def AddFIXED_GEOMAG_AP(builder, FIXED_GEOMAG_AP):
     PerturbationsAddFIXED_GEOMAG_AP(builder, FIXED_GEOMAG_AP)
 
+def PerturbationsAddATMOSPHERIC_MODEL_NAME(builder, ATMOSPHERIC_MODEL_NAME):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERIC_MODEL_NAME), 0)
+
+def AddATMOSPHERIC_MODEL_NAME(builder, ATMOSPHERIC_MODEL_NAME):
+    PerturbationsAddATMOSPHERIC_MODEL_NAME(builder, ATMOSPHERIC_MODEL_NAME)
+
+def PerturbationsAddEQUATORIAL_RADIUS(builder, EQUATORIAL_RADIUS):
+    builder.PrependFloat64Slot(21, EQUATORIAL_RADIUS, float('nan'))
+
+def AddEQUATORIAL_RADIUS(builder, EQUATORIAL_RADIUS):
+    PerturbationsAddEQUATORIAL_RADIUS(builder, EQUATORIAL_RADIUS)
+
+def PerturbationsAddCENTRAL_BODY_ROTATION(builder, CENTRAL_BODY_ROTATION):
+    builder.PrependFloat64Slot(22, CENTRAL_BODY_ROTATION, float('nan'))
+
+def AddCENTRAL_BODY_ROTATION(builder, CENTRAL_BODY_ROTATION):
+    PerturbationsAddCENTRAL_BODY_ROTATION(builder, CENTRAL_BODY_ROTATION)
+
+def PerturbationsAddOBLATE_FLATTENING(builder, OBLATE_FLATTENING):
+    builder.PrependFloat64Slot(23, OBLATE_FLATTENING, float('nan'))
+
+def AddOBLATE_FLATTENING(builder, OBLATE_FLATTENING):
+    PerturbationsAddOBLATE_FLATTENING(builder, OBLATE_FLATTENING)
+
+def PerturbationsAddREDUCTION_THEORY(builder, REDUCTION_THEORY):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(REDUCTION_THEORY), 0)
+
+def AddREDUCTION_THEORY(builder, REDUCTION_THEORY):
+    PerturbationsAddREDUCTION_THEORY(builder, REDUCTION_THEORY)
+
+def PerturbationsAddALBEDO_GRID_SIZE(builder, ALBEDO_GRID_SIZE):
+    builder.PrependUint32Slot(25, ALBEDO_GRID_SIZE, 0)
+
+def AddALBEDO_GRID_SIZE(builder, ALBEDO_GRID_SIZE):
+    PerturbationsAddALBEDO_GRID_SIZE(builder, ALBEDO_GRID_SIZE)
+
+def PerturbationsAddSHADOW_MODEL(builder, SHADOW_MODEL):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(SHADOW_MODEL), 0)
+
+def AddSHADOW_MODEL(builder, SHADOW_MODEL):
+    PerturbationsAddSHADOW_MODEL(builder, SHADOW_MODEL)
+
+def PerturbationsAddSHADOW_BODIES(builder, SHADOW_BODIES):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(SHADOW_BODIES), 0)
+
+def AddSHADOW_BODIES(builder, SHADOW_BODIES):
+    PerturbationsAddSHADOW_BODIES(builder, SHADOW_BODIES)
+
+def PerturbationsAddSW_DATA_SOURCE(builder, SW_DATA_SOURCE):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(SW_DATA_SOURCE), 0)
+
+def AddSW_DATA_SOURCE(builder, SW_DATA_SOURCE):
+    PerturbationsAddSW_DATA_SOURCE(builder, SW_DATA_SOURCE)
+
+def PerturbationsAddSW_DATA_EPOCH(builder, SW_DATA_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(SW_DATA_EPOCH), 0)
+
+def AddSW_DATA_EPOCH(builder, SW_DATA_EPOCH):
+    PerturbationsAddSW_DATA_EPOCH(builder, SW_DATA_EPOCH)
+
+def PerturbationsAddSW_INTERP_METHOD(builder, SW_INTERP_METHOD):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(SW_INTERP_METHOD), 0)
+
+def AddSW_INTERP_METHOD(builder, SW_INTERP_METHOD):
+    PerturbationsAddSW_INTERP_METHOD(builder, SW_INTERP_METHOD)
+
+def PerturbationsAddFIXED_GEOMAG_DST(builder, FIXED_GEOMAG_DST):
+    builder.PrependFloat64Slot(31, FIXED_GEOMAG_DST, float('nan'))
+
+def AddFIXED_GEOMAG_DST(builder, FIXED_GEOMAG_DST):
+    PerturbationsAddFIXED_GEOMAG_DST(builder, FIXED_GEOMAG_DST)
+
+def PerturbationsAddFIXED_M10P7(builder, FIXED_M10P7):
+    builder.PrependFloat64Slot(32, FIXED_M10P7, float('nan'))
+
+def AddFIXED_M10P7(builder, FIXED_M10P7):
+    PerturbationsAddFIXED_M10P7(builder, FIXED_M10P7)
+
+def PerturbationsAddFIXED_M10P7_MEAN(builder, FIXED_M10P7_MEAN):
+    builder.PrependFloat64Slot(33, FIXED_M10P7_MEAN, float('nan'))
+
+def AddFIXED_M10P7_MEAN(builder, FIXED_M10P7_MEAN):
+    PerturbationsAddFIXED_M10P7_MEAN(builder, FIXED_M10P7_MEAN)
+
+def PerturbationsAddFIXED_S10P7(builder, FIXED_S10P7):
+    builder.PrependFloat64Slot(34, FIXED_S10P7, float('nan'))
+
+def AddFIXED_S10P7(builder, FIXED_S10P7):
+    PerturbationsAddFIXED_S10P7(builder, FIXED_S10P7)
+
+def PerturbationsAddFIXED_S10P7_MEAN(builder, FIXED_S10P7_MEAN):
+    builder.PrependFloat64Slot(35, FIXED_S10P7_MEAN, float('nan'))
+
+def AddFIXED_S10P7_MEAN(builder, FIXED_S10P7_MEAN):
+    PerturbationsAddFIXED_S10P7_MEAN(builder, FIXED_S10P7_MEAN)
+
+def PerturbationsAddFIXED_Y10P7(builder, FIXED_Y10P7):
+    builder.PrependFloat64Slot(36, FIXED_Y10P7, float('nan'))
+
+def AddFIXED_Y10P7(builder, FIXED_Y10P7):
+    PerturbationsAddFIXED_Y10P7(builder, FIXED_Y10P7)
+
+def PerturbationsAddFIXED_Y10P7_MEAN(builder, FIXED_Y10P7_MEAN):
+    builder.PrependFloat64Slot(37, FIXED_Y10P7_MEAN, float('nan'))
+
+def AddFIXED_Y10P7_MEAN(builder, FIXED_Y10P7_MEAN):
+    PerturbationsAddFIXED_Y10P7_MEAN(builder, FIXED_Y10P7_MEAN)
+
 def PerturbationsEnd(builder):
     return builder.EndObject()
 
@@ -406,6 +659,24 @@ class PerturbationsT(object):
         FIXED_F10P7 = 0.0,
         FIXED_F10P7_MEAN = 0.0,
         FIXED_GEOMAG_AP = 0.0,
+        ATMOSPHERIC_MODEL_NAME = None,
+        EQUATORIAL_RADIUS = float('nan'),
+        CENTRAL_BODY_ROTATION = float('nan'),
+        OBLATE_FLATTENING = float('nan'),
+        REDUCTION_THEORY = None,
+        ALBEDO_GRID_SIZE = 0,
+        SHADOW_MODEL = None,
+        SHADOW_BODIES = None,
+        SW_DATA_SOURCE = None,
+        SW_DATA_EPOCH = None,
+        SW_INTERP_METHOD = None,
+        FIXED_GEOMAG_DST = float('nan'),
+        FIXED_M10P7 = float('nan'),
+        FIXED_M10P7_MEAN = float('nan'),
+        FIXED_S10P7 = float('nan'),
+        FIXED_S10P7_MEAN = float('nan'),
+        FIXED_Y10P7 = float('nan'),
+        FIXED_Y10P7_MEAN = float('nan'),
     ):
         self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
         self.ATMOSPHERIC_MODEL = ATMOSPHERIC_MODEL  # type: Optional[ATM.ATMT]
@@ -427,6 +698,24 @@ class PerturbationsT(object):
         self.FIXED_F10P7 = FIXED_F10P7  # type: float
         self.FIXED_F10P7_MEAN = FIXED_F10P7_MEAN  # type: float
         self.FIXED_GEOMAG_AP = FIXED_GEOMAG_AP  # type: float
+        self.ATMOSPHERIC_MODEL_NAME = ATMOSPHERIC_MODEL_NAME  # type: Optional[str]
+        self.EQUATORIAL_RADIUS = EQUATORIAL_RADIUS  # type: float
+        self.CENTRAL_BODY_ROTATION = CENTRAL_BODY_ROTATION  # type: float
+        self.OBLATE_FLATTENING = OBLATE_FLATTENING  # type: float
+        self.REDUCTION_THEORY = REDUCTION_THEORY  # type: Optional[str]
+        self.ALBEDO_GRID_SIZE = ALBEDO_GRID_SIZE  # type: int
+        self.SHADOW_MODEL = SHADOW_MODEL  # type: Optional[str]
+        self.SHADOW_BODIES = SHADOW_BODIES  # type: Optional[str]
+        self.SW_DATA_SOURCE = SW_DATA_SOURCE  # type: Optional[str]
+        self.SW_DATA_EPOCH = SW_DATA_EPOCH  # type: Optional[str]
+        self.SW_INTERP_METHOD = SW_INTERP_METHOD  # type: Optional[str]
+        self.FIXED_GEOMAG_DST = FIXED_GEOMAG_DST  # type: float
+        self.FIXED_M10P7 = FIXED_M10P7  # type: float
+        self.FIXED_M10P7_MEAN = FIXED_M10P7_MEAN  # type: float
+        self.FIXED_S10P7 = FIXED_S10P7  # type: float
+        self.FIXED_S10P7_MEAN = FIXED_S10P7_MEAN  # type: float
+        self.FIXED_Y10P7 = FIXED_Y10P7  # type: float
+        self.FIXED_Y10P7_MEAN = FIXED_Y10P7_MEAN  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -476,6 +765,24 @@ class PerturbationsT(object):
         self.FIXED_F10P7 = Perturbations.FIXED_F10P7()
         self.FIXED_F10P7_MEAN = Perturbations.FIXED_F10P7_MEAN()
         self.FIXED_GEOMAG_AP = Perturbations.FIXED_GEOMAG_AP()
+        self.ATMOSPHERIC_MODEL_NAME = Perturbations.ATMOSPHERIC_MODEL_NAME()
+        self.EQUATORIAL_RADIUS = Perturbations.EQUATORIAL_RADIUS()
+        self.CENTRAL_BODY_ROTATION = Perturbations.CENTRAL_BODY_ROTATION()
+        self.OBLATE_FLATTENING = Perturbations.OBLATE_FLATTENING()
+        self.REDUCTION_THEORY = Perturbations.REDUCTION_THEORY()
+        self.ALBEDO_GRID_SIZE = Perturbations.ALBEDO_GRID_SIZE()
+        self.SHADOW_MODEL = Perturbations.SHADOW_MODEL()
+        self.SHADOW_BODIES = Perturbations.SHADOW_BODIES()
+        self.SW_DATA_SOURCE = Perturbations.SW_DATA_SOURCE()
+        self.SW_DATA_EPOCH = Perturbations.SW_DATA_EPOCH()
+        self.SW_INTERP_METHOD = Perturbations.SW_INTERP_METHOD()
+        self.FIXED_GEOMAG_DST = Perturbations.FIXED_GEOMAG_DST()
+        self.FIXED_M10P7 = Perturbations.FIXED_M10P7()
+        self.FIXED_M10P7_MEAN = Perturbations.FIXED_M10P7_MEAN()
+        self.FIXED_S10P7 = Perturbations.FIXED_S10P7()
+        self.FIXED_S10P7_MEAN = Perturbations.FIXED_S10P7_MEAN()
+        self.FIXED_Y10P7 = Perturbations.FIXED_Y10P7()
+        self.FIXED_Y10P7_MEAN = Perturbations.FIXED_Y10P7_MEAN()
 
     # PerturbationsT
     def Pack(self, builder):
@@ -517,6 +824,20 @@ class PerturbationsT(object):
             RELATIVITY = builder.CreateString(self.RELATIVITY)
         if self.ATMOSPHERIC_DRAG is not None:
             ATMOSPHERIC_DRAG = builder.CreateString(self.ATMOSPHERIC_DRAG)
+        if self.ATMOSPHERIC_MODEL_NAME is not None:
+            ATMOSPHERIC_MODEL_NAME = builder.CreateString(self.ATMOSPHERIC_MODEL_NAME)
+        if self.REDUCTION_THEORY is not None:
+            REDUCTION_THEORY = builder.CreateString(self.REDUCTION_THEORY)
+        if self.SHADOW_MODEL is not None:
+            SHADOW_MODEL = builder.CreateString(self.SHADOW_MODEL)
+        if self.SHADOW_BODIES is not None:
+            SHADOW_BODIES = builder.CreateString(self.SHADOW_BODIES)
+        if self.SW_DATA_SOURCE is not None:
+            SW_DATA_SOURCE = builder.CreateString(self.SW_DATA_SOURCE)
+        if self.SW_DATA_EPOCH is not None:
+            SW_DATA_EPOCH = builder.CreateString(self.SW_DATA_EPOCH)
+        if self.SW_INTERP_METHOD is not None:
+            SW_INTERP_METHOD = builder.CreateString(self.SW_INTERP_METHOD)
         PerturbationsStart(builder)
         if self.COMMENT is not None:
             PerturbationsAddCOMMENT(builder, COMMENT)
@@ -551,5 +872,30 @@ class PerturbationsT(object):
         PerturbationsAddFIXED_F10P7(builder, self.FIXED_F10P7)
         PerturbationsAddFIXED_F10P7_MEAN(builder, self.FIXED_F10P7_MEAN)
         PerturbationsAddFIXED_GEOMAG_AP(builder, self.FIXED_GEOMAG_AP)
+        if self.ATMOSPHERIC_MODEL_NAME is not None:
+            PerturbationsAddATMOSPHERIC_MODEL_NAME(builder, ATMOSPHERIC_MODEL_NAME)
+        PerturbationsAddEQUATORIAL_RADIUS(builder, self.EQUATORIAL_RADIUS)
+        PerturbationsAddCENTRAL_BODY_ROTATION(builder, self.CENTRAL_BODY_ROTATION)
+        PerturbationsAddOBLATE_FLATTENING(builder, self.OBLATE_FLATTENING)
+        if self.REDUCTION_THEORY is not None:
+            PerturbationsAddREDUCTION_THEORY(builder, REDUCTION_THEORY)
+        PerturbationsAddALBEDO_GRID_SIZE(builder, self.ALBEDO_GRID_SIZE)
+        if self.SHADOW_MODEL is not None:
+            PerturbationsAddSHADOW_MODEL(builder, SHADOW_MODEL)
+        if self.SHADOW_BODIES is not None:
+            PerturbationsAddSHADOW_BODIES(builder, SHADOW_BODIES)
+        if self.SW_DATA_SOURCE is not None:
+            PerturbationsAddSW_DATA_SOURCE(builder, SW_DATA_SOURCE)
+        if self.SW_DATA_EPOCH is not None:
+            PerturbationsAddSW_DATA_EPOCH(builder, SW_DATA_EPOCH)
+        if self.SW_INTERP_METHOD is not None:
+            PerturbationsAddSW_INTERP_METHOD(builder, SW_INTERP_METHOD)
+        PerturbationsAddFIXED_GEOMAG_DST(builder, self.FIXED_GEOMAG_DST)
+        PerturbationsAddFIXED_M10P7(builder, self.FIXED_M10P7)
+        PerturbationsAddFIXED_M10P7_MEAN(builder, self.FIXED_M10P7_MEAN)
+        PerturbationsAddFIXED_S10P7(builder, self.FIXED_S10P7)
+        PerturbationsAddFIXED_S10P7_MEAN(builder, self.FIXED_S10P7_MEAN)
+        PerturbationsAddFIXED_Y10P7(builder, self.FIXED_Y10P7)
+        PerturbationsAddFIXED_Y10P7_MEAN(builder, self.FIXED_Y10P7_MEAN)
         Perturbations = PerturbationsEnd(builder)
         return Perturbations

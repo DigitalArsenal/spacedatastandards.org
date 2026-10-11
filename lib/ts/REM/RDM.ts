@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { RDMUserDefinedParameter, RDMUserDefinedParameterT } from './RDMUserDefinedParameter.js';
+import { rdmControlledReentry } from './rdmControlledReentry.js';
 import { reentryDisposition } from './reentryDisposition.js';
 import { reentryImpact, reentryImpactT } from './reentryImpact.js';
 import { reentryReason } from './reentryReason.js';
@@ -273,7 +275,8 @@ SURVIVING_MASS():number {
 }
 
 /**
- * Additional comments
+ * COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+ * data groups, in message order, joined by a line feed.
  */
 COMMENT():string|null
 COMMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -282,8 +285,741 @@ COMMENT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * The fields below, with the earlier ones that say so, are the keywords of
+ * CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+ * NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+ * NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+ * WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+ * REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+ * SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+ * not keywords of the message.
+ * MESSAGE_ID: an identifier the originator makes unique for this message.
+ */
+MESSAGE_ID():string|null
+MESSAGE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MESSAGE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+ */
+CATALOG_NAME():string|null
+CATALOG_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CATALOG_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+ */
+OBJECT_DESIGNATOR():string|null
+OBJECT_DESIGNATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_DESIGNATOR(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * OBJECT_OWNER.
+ */
+OBJECT_OWNER():string|null
+OBJECT_OWNER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_OWNER(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * OBJECT_OPERATOR.
+ */
+OBJECT_OPERATOR():string|null
+OBJECT_OPERATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_OPERATOR(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+ */
+CONTROLLED_REENTRY():rdmControlledReentry {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : rdmControlledReentry.UNSPECIFIED;
+}
+
+/**
+ * CENTER_NAME: the body being re-entered.
+ */
+CENTER_NAME():string|null
+CENTER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * EPOCH_TZERO: the epoch the message's relative times are measured from.
+ */
+EPOCH_TZERO():string|null
+EPOCH_TZERO(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPOCH_TZERO(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * REF_FRAME: the frame of the state vector.
+ */
+REF_FRAME():string|null
+REF_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REF_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * REF_FRAME_EPOCH.
+ */
+REF_FRAME_EPOCH():string|null
+REF_FRAME_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REF_FRAME_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * EPHEMERIS_NAME.
+ */
+EPHEMERIS_NAME():string|null
+EPHEMERIS_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPHEMERIS_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * GRAVITY_MODEL.
+ */
+GRAVITY_MODEL():string|null
+GRAVITY_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+GRAVITY_MODEL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * ATMOSPHERIC_MODEL.
+ */
+ATMOSPHERIC_MODEL():string|null
+ATMOSPHERIC_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ATMOSPHERIC_MODEL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * SOLAR_FLUX_PREDICTION.
+ */
+SOLAR_FLUX_PREDICTION():string|null
+SOLAR_FLUX_PREDICTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOLAR_FLUX_PREDICTION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * N_BODY_PERTURBATIONS.
+ */
+N_BODY_PERTURBATIONS():string|null
+N_BODY_PERTURBATIONS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+N_BODY_PERTURBATIONS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+ */
+SOLAR_RAD_PRESSURE():string|null
+SOLAR_RAD_PRESSURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOLAR_RAD_PRESSURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * EARTH_TIDES: a model name.
+ */
+EARTH_TIDES():string|null
+EARTH_TIDES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EARTH_TIDES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * INTRACK_THRUST: YES or NO.
+ */
+INTRACK_THRUST():string|null
+INTRACK_THRUST(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+INTRACK_THRUST(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * DRAG_PARAMETERS_SOURCE.
+ */
+DRAG_PARAMETERS_SOURCE():string|null
+DRAG_PARAMETERS_SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DRAG_PARAMETERS_SOURCE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+ */
+DRAG_PARAMETERS_ALTITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+ */
+REENTRY_UNCERTAINTY_METHOD():string|null
+REENTRY_UNCERTAINTY_METHOD(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REENTRY_UNCERTAINTY_METHOD(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+ */
+REENTRY_DISINTEGRATION():string|null
+REENTRY_DISINTEGRATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REENTRY_DISINTEGRATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+ */
+IMPACT_UNCERTAINTY_METHOD():string|null
+IMPACT_UNCERTAINTY_METHOD(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+IMPACT_UNCERTAINTY_METHOD(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 102);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * PREVIOUS_MESSAGE_ID.
+ */
+PREVIOUS_MESSAGE_ID():string|null
+PREVIOUS_MESSAGE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PREVIOUS_MESSAGE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * NEXT_MESSAGE_EPOCH.
+ */
+NEXT_MESSAGE_EPOCH():string|null
+NEXT_MESSAGE_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NEXT_MESSAGE_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * ORBIT_LIFETIME in days.
+ */
+ORBIT_LIFETIME():number {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+ */
+ORBIT_LIFETIME_WINDOW_START():number {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+ */
+ORBIT_LIFETIME_WINDOW_END():number {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * REENTRY_WINDOW_START.
+ */
+REENTRY_WINDOW_START():string|null
+REENTRY_WINDOW_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REENTRY_WINDOW_START(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * REENTRY_WINDOW_END.
+ */
+REENTRY_WINDOW_END():string|null
+REENTRY_WINDOW_END(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REENTRY_WINDOW_END(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+ */
+ORBIT_LIFETIME_CONFIDENCE_LEVEL():number {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * PROBABILITY_OF_IMPACT, NaN when not stated.
+ */
+PROBABILITY_OF_IMPACT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * PROBABILITY_OF_BURN_UP, NaN when not stated.
+ */
+PROBABILITY_OF_BURN_UP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 122);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * PROBABILITY_OF_BREAK_UP, NaN when not stated.
+ */
+PROBABILITY_OF_BREAK_UP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 124);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+ */
+PROBABILITY_OF_LAND_IMPACT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 126);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * PROBABILITY_OF_CASUALTY, NaN when not stated.
+ */
+PROBABILITY_OF_CASUALTY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 128);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * NOMINAL_IMPACT_EPOCH.
+ */
+NOMINAL_IMPACT_EPOCH():string|null
+NOMINAL_IMPACT_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NOMINAL_IMPACT_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 130);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * IMPACT_WINDOW_START.
+ */
+IMPACT_WINDOW_START():string|null
+IMPACT_WINDOW_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+IMPACT_WINDOW_START(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 132);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * IMPACT_WINDOW_END.
+ */
+IMPACT_WINDOW_END():string|null
+IMPACT_WINDOW_END(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+IMPACT_WINDOW_END(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 134);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * IMPACT_REF_FRAME.
+ */
+IMPACT_REF_FRAME():string|null
+IMPACT_REF_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+IMPACT_REF_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 136);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+ */
+NOMINAL_IMPACT_LON():number {
+  const offset = this.bb!.__offset(this.bb_pos, 138);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+ */
+NOMINAL_IMPACT_LAT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 140);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+ */
+NOMINAL_IMPACT_ALT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 142);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+ */
+IMPACT_1_CONFIDENCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 144);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_1_START_LON in degrees, NaN when not stated.
+ */
+IMPACT_1_START_LON():number {
+  const offset = this.bb!.__offset(this.bb_pos, 146);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_1_START_LAT in degrees, NaN when not stated.
+ */
+IMPACT_1_START_LAT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 148);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_1_STOP_LON in degrees, NaN when not stated.
+ */
+IMPACT_1_STOP_LON():number {
+  const offset = this.bb!.__offset(this.bb_pos, 150);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+ */
+IMPACT_1_STOP_LAT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 152);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+ */
+IMPACT_1_CROSS_TRACK():number {
+  const offset = this.bb!.__offset(this.bb_pos, 154);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+ */
+IMPACT_2_CONFIDENCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 156);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_2_START_LON in degrees, NaN when not stated.
+ */
+IMPACT_2_START_LON():number {
+  const offset = this.bb!.__offset(this.bb_pos, 158);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_2_START_LAT in degrees, NaN when not stated.
+ */
+IMPACT_2_START_LAT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 160);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_2_STOP_LON in degrees, NaN when not stated.
+ */
+IMPACT_2_STOP_LON():number {
+  const offset = this.bb!.__offset(this.bb_pos, 162);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+ */
+IMPACT_2_STOP_LAT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 164);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+ */
+IMPACT_2_CROSS_TRACK():number {
+  const offset = this.bb!.__offset(this.bb_pos, 166);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+ */
+IMPACT_3_CONFIDENCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 168);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_3_START_LON in degrees, NaN when not stated.
+ */
+IMPACT_3_START_LON():number {
+  const offset = this.bb!.__offset(this.bb_pos, 170);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_3_START_LAT in degrees, NaN when not stated.
+ */
+IMPACT_3_START_LAT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 172);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_3_STOP_LON in degrees, NaN when not stated.
+ */
+IMPACT_3_STOP_LON():number {
+  const offset = this.bb!.__offset(this.bb_pos, 174);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+ */
+IMPACT_3_STOP_LAT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 176);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+ */
+IMPACT_3_CROSS_TRACK():number {
+  const offset = this.bb!.__offset(this.bb_pos, 178);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * COV_REF_FRAME: the frame of COVARIANCE.
+ */
+COV_REF_FRAME():string|null
+COV_REF_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COV_REF_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 180);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+ * triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+ * CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+ * CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+ * CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+ */
+COVARIANCE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 182);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+covarianceLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 182);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+covarianceArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 182);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+ */
+DRY_MASS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 184);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * HAZARDOUS_SUBSTANCES.
+ */
+HAZARDOUS_SUBSTANCES():string|null
+HAZARDOUS_SUBSTANCES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+HAZARDOUS_SUBSTANCES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 186);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * SOLAR_RAD_COEFF, NaN when not stated.
+ */
+SOLAR_RAD_COEFF():number {
+  const offset = this.bb!.__offset(this.bb_pos, 188);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * DRAG_COEFF, NaN when not stated.
+ */
+DRAG_COEFF():number {
+  const offset = this.bb!.__offset(this.bb_pos, 190);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * RCS in m**2, NaN when not stated.
+ */
+RCS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 192);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * THRUST_ACCELERATION in m/s**2, NaN when not stated.
+ */
+THRUST_ACCELERATION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 194);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * TIME_LASTOB_START.
+ */
+TIME_LASTOB_START():string|null
+TIME_LASTOB_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TIME_LASTOB_START(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 196);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * TIME_LASTOB_END.
+ */
+TIME_LASTOB_END():string|null
+TIME_LASTOB_END(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TIME_LASTOB_END(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 198);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * RECOMMENDED_OD_SPAN in days, NaN when not stated.
+ */
+RECOMMENDED_OD_SPAN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 200);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * ACTUAL_OD_SPAN in days, NaN when not stated.
+ */
+ACTUAL_OD_SPAN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 202);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * OBS_AVAILABLE.
+ */
+OBS_AVAILABLE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 204);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * OBS_USED.
+ */
+OBS_USED():number {
+  const offset = this.bb!.__offset(this.bb_pos, 206);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * TRACKS_AVAILABLE.
+ */
+TRACKS_AVAILABLE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 208);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * TRACKS_USED.
+ */
+TRACKS_USED():number {
+  const offset = this.bb!.__offset(this.bb_pos, 210);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * RESIDUALS_ACCEPTED in percent, NaN when not stated.
+ */
+RESIDUALS_ACCEPTED():number {
+  const offset = this.bb!.__offset(this.bb_pos, 212);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * WEIGHTED_RMS, NaN when not stated.
+ */
+WEIGHTED_RMS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 214);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Every USER_DEFINED keyword of the message, in message order.
+ */
+USER_DEFINED_PARAMETERS(index: number, obj?:RDMUserDefinedParameter):RDMUserDefinedParameter|null {
+  const offset = this.bb!.__offset(this.bb_pos, 216);
+  return offset ? (obj || new RDMUserDefinedParameter()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+userDefinedParametersLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 216);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startRDM(builder:flatbuffers.Builder) {
-  builder.startObject(27);
+  builder.startObject(107);
 }
 
 static addCcsdsRdmVers(builder:flatbuffers.Builder, CCSDS_RDM_VERSOffset:flatbuffers.Offset) {
@@ -418,6 +1154,355 @@ static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset)
   builder.addFieldOffset(26, COMMENTOffset, 0);
 }
 
+static addMessageId(builder:flatbuffers.Builder, MESSAGE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, MESSAGE_IDOffset, 0);
+}
+
+static addCatalogName(builder:flatbuffers.Builder, CATALOG_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, CATALOG_NAMEOffset, 0);
+}
+
+static addObjectDesignator(builder:flatbuffers.Builder, OBJECT_DESIGNATOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, OBJECT_DESIGNATOROffset, 0);
+}
+
+static addObjectOwner(builder:flatbuffers.Builder, OBJECT_OWNEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(30, OBJECT_OWNEROffset, 0);
+}
+
+static addObjectOperator(builder:flatbuffers.Builder, OBJECT_OPERATOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(31, OBJECT_OPERATOROffset, 0);
+}
+
+static addControlledReentry(builder:flatbuffers.Builder, CONTROLLED_REENTRY:rdmControlledReentry) {
+  builder.addFieldInt8(32, CONTROLLED_REENTRY, rdmControlledReentry.UNSPECIFIED);
+}
+
+static addCenterName(builder:flatbuffers.Builder, CENTER_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, CENTER_NAMEOffset, 0);
+}
+
+static addEpochTzero(builder:flatbuffers.Builder, EPOCH_TZEROOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(34, EPOCH_TZEROOffset, 0);
+}
+
+static addRefFrame(builder:flatbuffers.Builder, REF_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(35, REF_FRAMEOffset, 0);
+}
+
+static addRefFrameEpoch(builder:flatbuffers.Builder, REF_FRAME_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(36, REF_FRAME_EPOCHOffset, 0);
+}
+
+static addEphemerisName(builder:flatbuffers.Builder, EPHEMERIS_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(37, EPHEMERIS_NAMEOffset, 0);
+}
+
+static addGravityModel(builder:flatbuffers.Builder, GRAVITY_MODELOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(38, GRAVITY_MODELOffset, 0);
+}
+
+static addAtmosphericModel(builder:flatbuffers.Builder, ATMOSPHERIC_MODELOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(39, ATMOSPHERIC_MODELOffset, 0);
+}
+
+static addSolarFluxPrediction(builder:flatbuffers.Builder, SOLAR_FLUX_PREDICTIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(40, SOLAR_FLUX_PREDICTIONOffset, 0);
+}
+
+static addNBodyPerturbations(builder:flatbuffers.Builder, N_BODY_PERTURBATIONSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(41, N_BODY_PERTURBATIONSOffset, 0);
+}
+
+static addSolarRadPressure(builder:flatbuffers.Builder, SOLAR_RAD_PRESSUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(42, SOLAR_RAD_PRESSUREOffset, 0);
+}
+
+static addEarthTides(builder:flatbuffers.Builder, EARTH_TIDESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(43, EARTH_TIDESOffset, 0);
+}
+
+static addIntrackThrust(builder:flatbuffers.Builder, INTRACK_THRUSTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(44, INTRACK_THRUSTOffset, 0);
+}
+
+static addDragParametersSource(builder:flatbuffers.Builder, DRAG_PARAMETERS_SOURCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(45, DRAG_PARAMETERS_SOURCEOffset, 0);
+}
+
+static addDragParametersAltitude(builder:flatbuffers.Builder, DRAG_PARAMETERS_ALTITUDE:number) {
+  builder.addFieldFloat64(46, DRAG_PARAMETERS_ALTITUDE, NaN);
+}
+
+static addReentryUncertaintyMethod(builder:flatbuffers.Builder, REENTRY_UNCERTAINTY_METHODOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(47, REENTRY_UNCERTAINTY_METHODOffset, 0);
+}
+
+static addReentryDisintegration(builder:flatbuffers.Builder, REENTRY_DISINTEGRATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(48, REENTRY_DISINTEGRATIONOffset, 0);
+}
+
+static addImpactUncertaintyMethod(builder:flatbuffers.Builder, IMPACT_UNCERTAINTY_METHODOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(49, IMPACT_UNCERTAINTY_METHODOffset, 0);
+}
+
+static addPreviousMessageId(builder:flatbuffers.Builder, PREVIOUS_MESSAGE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(50, PREVIOUS_MESSAGE_IDOffset, 0);
+}
+
+static addNextMessageEpoch(builder:flatbuffers.Builder, NEXT_MESSAGE_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(51, NEXT_MESSAGE_EPOCHOffset, 0);
+}
+
+static addOrbitLifetime(builder:flatbuffers.Builder, ORBIT_LIFETIME:number) {
+  builder.addFieldFloat64(52, ORBIT_LIFETIME, 0.0);
+}
+
+static addOrbitLifetimeWindowStart(builder:flatbuffers.Builder, ORBIT_LIFETIME_WINDOW_START:number) {
+  builder.addFieldFloat64(53, ORBIT_LIFETIME_WINDOW_START, NaN);
+}
+
+static addOrbitLifetimeWindowEnd(builder:flatbuffers.Builder, ORBIT_LIFETIME_WINDOW_END:number) {
+  builder.addFieldFloat64(54, ORBIT_LIFETIME_WINDOW_END, NaN);
+}
+
+static addReentryWindowStart(builder:flatbuffers.Builder, REENTRY_WINDOW_STARTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(55, REENTRY_WINDOW_STARTOffset, 0);
+}
+
+static addReentryWindowEnd(builder:flatbuffers.Builder, REENTRY_WINDOW_ENDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(56, REENTRY_WINDOW_ENDOffset, 0);
+}
+
+static addOrbitLifetimeConfidenceLevel(builder:flatbuffers.Builder, ORBIT_LIFETIME_CONFIDENCE_LEVEL:number) {
+  builder.addFieldFloat64(57, ORBIT_LIFETIME_CONFIDENCE_LEVEL, NaN);
+}
+
+static addProbabilityOfImpact(builder:flatbuffers.Builder, PROBABILITY_OF_IMPACT:number) {
+  builder.addFieldFloat64(58, PROBABILITY_OF_IMPACT, NaN);
+}
+
+static addProbabilityOfBurnUp(builder:flatbuffers.Builder, PROBABILITY_OF_BURN_UP:number) {
+  builder.addFieldFloat64(59, PROBABILITY_OF_BURN_UP, NaN);
+}
+
+static addProbabilityOfBreakUp(builder:flatbuffers.Builder, PROBABILITY_OF_BREAK_UP:number) {
+  builder.addFieldFloat64(60, PROBABILITY_OF_BREAK_UP, NaN);
+}
+
+static addProbabilityOfLandImpact(builder:flatbuffers.Builder, PROBABILITY_OF_LAND_IMPACT:number) {
+  builder.addFieldFloat64(61, PROBABILITY_OF_LAND_IMPACT, NaN);
+}
+
+static addProbabilityOfCasualty(builder:flatbuffers.Builder, PROBABILITY_OF_CASUALTY:number) {
+  builder.addFieldFloat64(62, PROBABILITY_OF_CASUALTY, NaN);
+}
+
+static addNominalImpactEpoch(builder:flatbuffers.Builder, NOMINAL_IMPACT_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(63, NOMINAL_IMPACT_EPOCHOffset, 0);
+}
+
+static addImpactWindowStart(builder:flatbuffers.Builder, IMPACT_WINDOW_STARTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(64, IMPACT_WINDOW_STARTOffset, 0);
+}
+
+static addImpactWindowEnd(builder:flatbuffers.Builder, IMPACT_WINDOW_ENDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(65, IMPACT_WINDOW_ENDOffset, 0);
+}
+
+static addImpactRefFrame(builder:flatbuffers.Builder, IMPACT_REF_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(66, IMPACT_REF_FRAMEOffset, 0);
+}
+
+static addNominalImpactLon(builder:flatbuffers.Builder, NOMINAL_IMPACT_LON:number) {
+  builder.addFieldFloat64(67, NOMINAL_IMPACT_LON, NaN);
+}
+
+static addNominalImpactLat(builder:flatbuffers.Builder, NOMINAL_IMPACT_LAT:number) {
+  builder.addFieldFloat64(68, NOMINAL_IMPACT_LAT, NaN);
+}
+
+static addNominalImpactAlt(builder:flatbuffers.Builder, NOMINAL_IMPACT_ALT:number) {
+  builder.addFieldFloat64(69, NOMINAL_IMPACT_ALT, NaN);
+}
+
+static addImpact1Confidence(builder:flatbuffers.Builder, IMPACT_1_CONFIDENCE:number) {
+  builder.addFieldFloat64(70, IMPACT_1_CONFIDENCE, NaN);
+}
+
+static addImpact1StartLon(builder:flatbuffers.Builder, IMPACT_1_START_LON:number) {
+  builder.addFieldFloat64(71, IMPACT_1_START_LON, NaN);
+}
+
+static addImpact1StartLat(builder:flatbuffers.Builder, IMPACT_1_START_LAT:number) {
+  builder.addFieldFloat64(72, IMPACT_1_START_LAT, NaN);
+}
+
+static addImpact1StopLon(builder:flatbuffers.Builder, IMPACT_1_STOP_LON:number) {
+  builder.addFieldFloat64(73, IMPACT_1_STOP_LON, NaN);
+}
+
+static addImpact1StopLat(builder:flatbuffers.Builder, IMPACT_1_STOP_LAT:number) {
+  builder.addFieldFloat64(74, IMPACT_1_STOP_LAT, NaN);
+}
+
+static addImpact1CrossTrack(builder:flatbuffers.Builder, IMPACT_1_CROSS_TRACK:number) {
+  builder.addFieldFloat64(75, IMPACT_1_CROSS_TRACK, NaN);
+}
+
+static addImpact2Confidence(builder:flatbuffers.Builder, IMPACT_2_CONFIDENCE:number) {
+  builder.addFieldFloat64(76, IMPACT_2_CONFIDENCE, NaN);
+}
+
+static addImpact2StartLon(builder:flatbuffers.Builder, IMPACT_2_START_LON:number) {
+  builder.addFieldFloat64(77, IMPACT_2_START_LON, NaN);
+}
+
+static addImpact2StartLat(builder:flatbuffers.Builder, IMPACT_2_START_LAT:number) {
+  builder.addFieldFloat64(78, IMPACT_2_START_LAT, NaN);
+}
+
+static addImpact2StopLon(builder:flatbuffers.Builder, IMPACT_2_STOP_LON:number) {
+  builder.addFieldFloat64(79, IMPACT_2_STOP_LON, NaN);
+}
+
+static addImpact2StopLat(builder:flatbuffers.Builder, IMPACT_2_STOP_LAT:number) {
+  builder.addFieldFloat64(80, IMPACT_2_STOP_LAT, NaN);
+}
+
+static addImpact2CrossTrack(builder:flatbuffers.Builder, IMPACT_2_CROSS_TRACK:number) {
+  builder.addFieldFloat64(81, IMPACT_2_CROSS_TRACK, NaN);
+}
+
+static addImpact3Confidence(builder:flatbuffers.Builder, IMPACT_3_CONFIDENCE:number) {
+  builder.addFieldFloat64(82, IMPACT_3_CONFIDENCE, NaN);
+}
+
+static addImpact3StartLon(builder:flatbuffers.Builder, IMPACT_3_START_LON:number) {
+  builder.addFieldFloat64(83, IMPACT_3_START_LON, NaN);
+}
+
+static addImpact3StartLat(builder:flatbuffers.Builder, IMPACT_3_START_LAT:number) {
+  builder.addFieldFloat64(84, IMPACT_3_START_LAT, NaN);
+}
+
+static addImpact3StopLon(builder:flatbuffers.Builder, IMPACT_3_STOP_LON:number) {
+  builder.addFieldFloat64(85, IMPACT_3_STOP_LON, NaN);
+}
+
+static addImpact3StopLat(builder:flatbuffers.Builder, IMPACT_3_STOP_LAT:number) {
+  builder.addFieldFloat64(86, IMPACT_3_STOP_LAT, NaN);
+}
+
+static addImpact3CrossTrack(builder:flatbuffers.Builder, IMPACT_3_CROSS_TRACK:number) {
+  builder.addFieldFloat64(87, IMPACT_3_CROSS_TRACK, NaN);
+}
+
+static addCovRefFrame(builder:flatbuffers.Builder, COV_REF_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(88, COV_REF_FRAMEOffset, 0);
+}
+
+static addCovariance(builder:flatbuffers.Builder, COVARIANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(89, COVARIANCEOffset, 0);
+}
+
+static createCovarianceVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createCovarianceVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createCovarianceVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovarianceVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addDryMass(builder:flatbuffers.Builder, DRY_MASS:number) {
+  builder.addFieldFloat64(90, DRY_MASS, NaN);
+}
+
+static addHazardousSubstances(builder:flatbuffers.Builder, HAZARDOUS_SUBSTANCESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(91, HAZARDOUS_SUBSTANCESOffset, 0);
+}
+
+static addSolarRadCoeff(builder:flatbuffers.Builder, SOLAR_RAD_COEFF:number) {
+  builder.addFieldFloat64(92, SOLAR_RAD_COEFF, NaN);
+}
+
+static addDragCoeff(builder:flatbuffers.Builder, DRAG_COEFF:number) {
+  builder.addFieldFloat64(93, DRAG_COEFF, NaN);
+}
+
+static addRcs(builder:flatbuffers.Builder, RCS:number) {
+  builder.addFieldFloat64(94, RCS, NaN);
+}
+
+static addThrustAcceleration(builder:flatbuffers.Builder, THRUST_ACCELERATION:number) {
+  builder.addFieldFloat64(95, THRUST_ACCELERATION, NaN);
+}
+
+static addTimeLastobStart(builder:flatbuffers.Builder, TIME_LASTOB_STARTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(96, TIME_LASTOB_STARTOffset, 0);
+}
+
+static addTimeLastobEnd(builder:flatbuffers.Builder, TIME_LASTOB_ENDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(97, TIME_LASTOB_ENDOffset, 0);
+}
+
+static addRecommendedOdSpan(builder:flatbuffers.Builder, RECOMMENDED_OD_SPAN:number) {
+  builder.addFieldFloat64(98, RECOMMENDED_OD_SPAN, NaN);
+}
+
+static addActualOdSpan(builder:flatbuffers.Builder, ACTUAL_OD_SPAN:number) {
+  builder.addFieldFloat64(99, ACTUAL_OD_SPAN, NaN);
+}
+
+static addObsAvailable(builder:flatbuffers.Builder, OBS_AVAILABLE:number) {
+  builder.addFieldInt32(100, OBS_AVAILABLE, 0);
+}
+
+static addObsUsed(builder:flatbuffers.Builder, OBS_USED:number) {
+  builder.addFieldInt32(101, OBS_USED, 0);
+}
+
+static addTracksAvailable(builder:flatbuffers.Builder, TRACKS_AVAILABLE:number) {
+  builder.addFieldInt32(102, TRACKS_AVAILABLE, 0);
+}
+
+static addTracksUsed(builder:flatbuffers.Builder, TRACKS_USED:number) {
+  builder.addFieldInt32(103, TRACKS_USED, 0);
+}
+
+static addResidualsAccepted(builder:flatbuffers.Builder, RESIDUALS_ACCEPTED:number) {
+  builder.addFieldFloat64(104, RESIDUALS_ACCEPTED, NaN);
+}
+
+static addWeightedRms(builder:flatbuffers.Builder, WEIGHTED_RMS:number) {
+  builder.addFieldFloat64(105, WEIGHTED_RMS, NaN);
+}
+
+static addUserDefinedParameters(builder:flatbuffers.Builder, USER_DEFINED_PARAMETERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(106, USER_DEFINED_PARAMETERSOffset, 0);
+}
+
+static createUserDefinedParametersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startUserDefinedParametersVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endRDM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -460,7 +1545,87 @@ unpack(): RDMT {
     this.CASUALTY_EXPECTATION(),
     this.NUM_FRAGMENTS(),
     this.SURVIVING_MASS(),
-    this.COMMENT()
+    this.COMMENT(),
+    this.MESSAGE_ID(),
+    this.CATALOG_NAME(),
+    this.OBJECT_DESIGNATOR(),
+    this.OBJECT_OWNER(),
+    this.OBJECT_OPERATOR(),
+    this.CONTROLLED_REENTRY(),
+    this.CENTER_NAME(),
+    this.EPOCH_TZERO(),
+    this.REF_FRAME(),
+    this.REF_FRAME_EPOCH(),
+    this.EPHEMERIS_NAME(),
+    this.GRAVITY_MODEL(),
+    this.ATMOSPHERIC_MODEL(),
+    this.SOLAR_FLUX_PREDICTION(),
+    this.N_BODY_PERTURBATIONS(),
+    this.SOLAR_RAD_PRESSURE(),
+    this.EARTH_TIDES(),
+    this.INTRACK_THRUST(),
+    this.DRAG_PARAMETERS_SOURCE(),
+    this.DRAG_PARAMETERS_ALTITUDE(),
+    this.REENTRY_UNCERTAINTY_METHOD(),
+    this.REENTRY_DISINTEGRATION(),
+    this.IMPACT_UNCERTAINTY_METHOD(),
+    this.PREVIOUS_MESSAGE_ID(),
+    this.NEXT_MESSAGE_EPOCH(),
+    this.ORBIT_LIFETIME(),
+    this.ORBIT_LIFETIME_WINDOW_START(),
+    this.ORBIT_LIFETIME_WINDOW_END(),
+    this.REENTRY_WINDOW_START(),
+    this.REENTRY_WINDOW_END(),
+    this.ORBIT_LIFETIME_CONFIDENCE_LEVEL(),
+    this.PROBABILITY_OF_IMPACT(),
+    this.PROBABILITY_OF_BURN_UP(),
+    this.PROBABILITY_OF_BREAK_UP(),
+    this.PROBABILITY_OF_LAND_IMPACT(),
+    this.PROBABILITY_OF_CASUALTY(),
+    this.NOMINAL_IMPACT_EPOCH(),
+    this.IMPACT_WINDOW_START(),
+    this.IMPACT_WINDOW_END(),
+    this.IMPACT_REF_FRAME(),
+    this.NOMINAL_IMPACT_LON(),
+    this.NOMINAL_IMPACT_LAT(),
+    this.NOMINAL_IMPACT_ALT(),
+    this.IMPACT_1_CONFIDENCE(),
+    this.IMPACT_1_START_LON(),
+    this.IMPACT_1_START_LAT(),
+    this.IMPACT_1_STOP_LON(),
+    this.IMPACT_1_STOP_LAT(),
+    this.IMPACT_1_CROSS_TRACK(),
+    this.IMPACT_2_CONFIDENCE(),
+    this.IMPACT_2_START_LON(),
+    this.IMPACT_2_START_LAT(),
+    this.IMPACT_2_STOP_LON(),
+    this.IMPACT_2_STOP_LAT(),
+    this.IMPACT_2_CROSS_TRACK(),
+    this.IMPACT_3_CONFIDENCE(),
+    this.IMPACT_3_START_LON(),
+    this.IMPACT_3_START_LAT(),
+    this.IMPACT_3_STOP_LON(),
+    this.IMPACT_3_STOP_LAT(),
+    this.IMPACT_3_CROSS_TRACK(),
+    this.COV_REF_FRAME(),
+    this.bb!.createScalarList<number>(this.COVARIANCE.bind(this), this.covarianceLength()),
+    this.DRY_MASS(),
+    this.HAZARDOUS_SUBSTANCES(),
+    this.SOLAR_RAD_COEFF(),
+    this.DRAG_COEFF(),
+    this.RCS(),
+    this.THRUST_ACCELERATION(),
+    this.TIME_LASTOB_START(),
+    this.TIME_LASTOB_END(),
+    this.RECOMMENDED_OD_SPAN(),
+    this.ACTUAL_OD_SPAN(),
+    this.OBS_AVAILABLE(),
+    this.OBS_USED(),
+    this.TRACKS_AVAILABLE(),
+    this.TRACKS_USED(),
+    this.RESIDUALS_ACCEPTED(),
+    this.WEIGHTED_RMS(),
+    this.bb!.createObjList<RDMUserDefinedParameter, RDMUserDefinedParameterT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength())
   );
 }
 
@@ -493,6 +1658,86 @@ unpackTo(_o: RDMT): void {
   _o.NUM_FRAGMENTS = this.NUM_FRAGMENTS();
   _o.SURVIVING_MASS = this.SURVIVING_MASS();
   _o.COMMENT = this.COMMENT();
+  _o.MESSAGE_ID = this.MESSAGE_ID();
+  _o.CATALOG_NAME = this.CATALOG_NAME();
+  _o.OBJECT_DESIGNATOR = this.OBJECT_DESIGNATOR();
+  _o.OBJECT_OWNER = this.OBJECT_OWNER();
+  _o.OBJECT_OPERATOR = this.OBJECT_OPERATOR();
+  _o.CONTROLLED_REENTRY = this.CONTROLLED_REENTRY();
+  _o.CENTER_NAME = this.CENTER_NAME();
+  _o.EPOCH_TZERO = this.EPOCH_TZERO();
+  _o.REF_FRAME = this.REF_FRAME();
+  _o.REF_FRAME_EPOCH = this.REF_FRAME_EPOCH();
+  _o.EPHEMERIS_NAME = this.EPHEMERIS_NAME();
+  _o.GRAVITY_MODEL = this.GRAVITY_MODEL();
+  _o.ATMOSPHERIC_MODEL = this.ATMOSPHERIC_MODEL();
+  _o.SOLAR_FLUX_PREDICTION = this.SOLAR_FLUX_PREDICTION();
+  _o.N_BODY_PERTURBATIONS = this.N_BODY_PERTURBATIONS();
+  _o.SOLAR_RAD_PRESSURE = this.SOLAR_RAD_PRESSURE();
+  _o.EARTH_TIDES = this.EARTH_TIDES();
+  _o.INTRACK_THRUST = this.INTRACK_THRUST();
+  _o.DRAG_PARAMETERS_SOURCE = this.DRAG_PARAMETERS_SOURCE();
+  _o.DRAG_PARAMETERS_ALTITUDE = this.DRAG_PARAMETERS_ALTITUDE();
+  _o.REENTRY_UNCERTAINTY_METHOD = this.REENTRY_UNCERTAINTY_METHOD();
+  _o.REENTRY_DISINTEGRATION = this.REENTRY_DISINTEGRATION();
+  _o.IMPACT_UNCERTAINTY_METHOD = this.IMPACT_UNCERTAINTY_METHOD();
+  _o.PREVIOUS_MESSAGE_ID = this.PREVIOUS_MESSAGE_ID();
+  _o.NEXT_MESSAGE_EPOCH = this.NEXT_MESSAGE_EPOCH();
+  _o.ORBIT_LIFETIME = this.ORBIT_LIFETIME();
+  _o.ORBIT_LIFETIME_WINDOW_START = this.ORBIT_LIFETIME_WINDOW_START();
+  _o.ORBIT_LIFETIME_WINDOW_END = this.ORBIT_LIFETIME_WINDOW_END();
+  _o.REENTRY_WINDOW_START = this.REENTRY_WINDOW_START();
+  _o.REENTRY_WINDOW_END = this.REENTRY_WINDOW_END();
+  _o.ORBIT_LIFETIME_CONFIDENCE_LEVEL = this.ORBIT_LIFETIME_CONFIDENCE_LEVEL();
+  _o.PROBABILITY_OF_IMPACT = this.PROBABILITY_OF_IMPACT();
+  _o.PROBABILITY_OF_BURN_UP = this.PROBABILITY_OF_BURN_UP();
+  _o.PROBABILITY_OF_BREAK_UP = this.PROBABILITY_OF_BREAK_UP();
+  _o.PROBABILITY_OF_LAND_IMPACT = this.PROBABILITY_OF_LAND_IMPACT();
+  _o.PROBABILITY_OF_CASUALTY = this.PROBABILITY_OF_CASUALTY();
+  _o.NOMINAL_IMPACT_EPOCH = this.NOMINAL_IMPACT_EPOCH();
+  _o.IMPACT_WINDOW_START = this.IMPACT_WINDOW_START();
+  _o.IMPACT_WINDOW_END = this.IMPACT_WINDOW_END();
+  _o.IMPACT_REF_FRAME = this.IMPACT_REF_FRAME();
+  _o.NOMINAL_IMPACT_LON = this.NOMINAL_IMPACT_LON();
+  _o.NOMINAL_IMPACT_LAT = this.NOMINAL_IMPACT_LAT();
+  _o.NOMINAL_IMPACT_ALT = this.NOMINAL_IMPACT_ALT();
+  _o.IMPACT_1_CONFIDENCE = this.IMPACT_1_CONFIDENCE();
+  _o.IMPACT_1_START_LON = this.IMPACT_1_START_LON();
+  _o.IMPACT_1_START_LAT = this.IMPACT_1_START_LAT();
+  _o.IMPACT_1_STOP_LON = this.IMPACT_1_STOP_LON();
+  _o.IMPACT_1_STOP_LAT = this.IMPACT_1_STOP_LAT();
+  _o.IMPACT_1_CROSS_TRACK = this.IMPACT_1_CROSS_TRACK();
+  _o.IMPACT_2_CONFIDENCE = this.IMPACT_2_CONFIDENCE();
+  _o.IMPACT_2_START_LON = this.IMPACT_2_START_LON();
+  _o.IMPACT_2_START_LAT = this.IMPACT_2_START_LAT();
+  _o.IMPACT_2_STOP_LON = this.IMPACT_2_STOP_LON();
+  _o.IMPACT_2_STOP_LAT = this.IMPACT_2_STOP_LAT();
+  _o.IMPACT_2_CROSS_TRACK = this.IMPACT_2_CROSS_TRACK();
+  _o.IMPACT_3_CONFIDENCE = this.IMPACT_3_CONFIDENCE();
+  _o.IMPACT_3_START_LON = this.IMPACT_3_START_LON();
+  _o.IMPACT_3_START_LAT = this.IMPACT_3_START_LAT();
+  _o.IMPACT_3_STOP_LON = this.IMPACT_3_STOP_LON();
+  _o.IMPACT_3_STOP_LAT = this.IMPACT_3_STOP_LAT();
+  _o.IMPACT_3_CROSS_TRACK = this.IMPACT_3_CROSS_TRACK();
+  _o.COV_REF_FRAME = this.COV_REF_FRAME();
+  _o.COVARIANCE = this.bb!.createScalarList<number>(this.COVARIANCE.bind(this), this.covarianceLength());
+  _o.DRY_MASS = this.DRY_MASS();
+  _o.HAZARDOUS_SUBSTANCES = this.HAZARDOUS_SUBSTANCES();
+  _o.SOLAR_RAD_COEFF = this.SOLAR_RAD_COEFF();
+  _o.DRAG_COEFF = this.DRAG_COEFF();
+  _o.RCS = this.RCS();
+  _o.THRUST_ACCELERATION = this.THRUST_ACCELERATION();
+  _o.TIME_LASTOB_START = this.TIME_LASTOB_START();
+  _o.TIME_LASTOB_END = this.TIME_LASTOB_END();
+  _o.RECOMMENDED_OD_SPAN = this.RECOMMENDED_OD_SPAN();
+  _o.ACTUAL_OD_SPAN = this.ACTUAL_OD_SPAN();
+  _o.OBS_AVAILABLE = this.OBS_AVAILABLE();
+  _o.OBS_USED = this.OBS_USED();
+  _o.TRACKS_AVAILABLE = this.TRACKS_AVAILABLE();
+  _o.TRACKS_USED = this.TRACKS_USED();
+  _o.RESIDUALS_ACCEPTED = this.RESIDUALS_ACCEPTED();
+  _o.WEIGHTED_RMS = this.WEIGHTED_RMS();
+  _o.USER_DEFINED_PARAMETERS = this.bb!.createObjList<RDMUserDefinedParameter, RDMUserDefinedParameterT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength());
 }
 }
 
@@ -524,7 +1769,87 @@ constructor(
   public CASUALTY_EXPECTATION: number = 0.0,
   public NUM_FRAGMENTS: number = 0,
   public SURVIVING_MASS: number = 0.0,
-  public COMMENT: string|Uint8Array|null = null
+  public COMMENT: string|Uint8Array|null = null,
+  public MESSAGE_ID: string|Uint8Array|null = null,
+  public CATALOG_NAME: string|Uint8Array|null = null,
+  public OBJECT_DESIGNATOR: string|Uint8Array|null = null,
+  public OBJECT_OWNER: string|Uint8Array|null = null,
+  public OBJECT_OPERATOR: string|Uint8Array|null = null,
+  public CONTROLLED_REENTRY: rdmControlledReentry = rdmControlledReentry.UNSPECIFIED,
+  public CENTER_NAME: string|Uint8Array|null = null,
+  public EPOCH_TZERO: string|Uint8Array|null = null,
+  public REF_FRAME: string|Uint8Array|null = null,
+  public REF_FRAME_EPOCH: string|Uint8Array|null = null,
+  public EPHEMERIS_NAME: string|Uint8Array|null = null,
+  public GRAVITY_MODEL: string|Uint8Array|null = null,
+  public ATMOSPHERIC_MODEL: string|Uint8Array|null = null,
+  public SOLAR_FLUX_PREDICTION: string|Uint8Array|null = null,
+  public N_BODY_PERTURBATIONS: string|Uint8Array|null = null,
+  public SOLAR_RAD_PRESSURE: string|Uint8Array|null = null,
+  public EARTH_TIDES: string|Uint8Array|null = null,
+  public INTRACK_THRUST: string|Uint8Array|null = null,
+  public DRAG_PARAMETERS_SOURCE: string|Uint8Array|null = null,
+  public DRAG_PARAMETERS_ALTITUDE: number = NaN,
+  public REENTRY_UNCERTAINTY_METHOD: string|Uint8Array|null = null,
+  public REENTRY_DISINTEGRATION: string|Uint8Array|null = null,
+  public IMPACT_UNCERTAINTY_METHOD: string|Uint8Array|null = null,
+  public PREVIOUS_MESSAGE_ID: string|Uint8Array|null = null,
+  public NEXT_MESSAGE_EPOCH: string|Uint8Array|null = null,
+  public ORBIT_LIFETIME: number = 0.0,
+  public ORBIT_LIFETIME_WINDOW_START: number = NaN,
+  public ORBIT_LIFETIME_WINDOW_END: number = NaN,
+  public REENTRY_WINDOW_START: string|Uint8Array|null = null,
+  public REENTRY_WINDOW_END: string|Uint8Array|null = null,
+  public ORBIT_LIFETIME_CONFIDENCE_LEVEL: number = NaN,
+  public PROBABILITY_OF_IMPACT: number = NaN,
+  public PROBABILITY_OF_BURN_UP: number = NaN,
+  public PROBABILITY_OF_BREAK_UP: number = NaN,
+  public PROBABILITY_OF_LAND_IMPACT: number = NaN,
+  public PROBABILITY_OF_CASUALTY: number = NaN,
+  public NOMINAL_IMPACT_EPOCH: string|Uint8Array|null = null,
+  public IMPACT_WINDOW_START: string|Uint8Array|null = null,
+  public IMPACT_WINDOW_END: string|Uint8Array|null = null,
+  public IMPACT_REF_FRAME: string|Uint8Array|null = null,
+  public NOMINAL_IMPACT_LON: number = NaN,
+  public NOMINAL_IMPACT_LAT: number = NaN,
+  public NOMINAL_IMPACT_ALT: number = NaN,
+  public IMPACT_1_CONFIDENCE: number = NaN,
+  public IMPACT_1_START_LON: number = NaN,
+  public IMPACT_1_START_LAT: number = NaN,
+  public IMPACT_1_STOP_LON: number = NaN,
+  public IMPACT_1_STOP_LAT: number = NaN,
+  public IMPACT_1_CROSS_TRACK: number = NaN,
+  public IMPACT_2_CONFIDENCE: number = NaN,
+  public IMPACT_2_START_LON: number = NaN,
+  public IMPACT_2_START_LAT: number = NaN,
+  public IMPACT_2_STOP_LON: number = NaN,
+  public IMPACT_2_STOP_LAT: number = NaN,
+  public IMPACT_2_CROSS_TRACK: number = NaN,
+  public IMPACT_3_CONFIDENCE: number = NaN,
+  public IMPACT_3_START_LON: number = NaN,
+  public IMPACT_3_START_LAT: number = NaN,
+  public IMPACT_3_STOP_LON: number = NaN,
+  public IMPACT_3_STOP_LAT: number = NaN,
+  public IMPACT_3_CROSS_TRACK: number = NaN,
+  public COV_REF_FRAME: string|Uint8Array|null = null,
+  public COVARIANCE: (number)[] = [],
+  public DRY_MASS: number = NaN,
+  public HAZARDOUS_SUBSTANCES: string|Uint8Array|null = null,
+  public SOLAR_RAD_COEFF: number = NaN,
+  public DRAG_COEFF: number = NaN,
+  public RCS: number = NaN,
+  public THRUST_ACCELERATION: number = NaN,
+  public TIME_LASTOB_START: string|Uint8Array|null = null,
+  public TIME_LASTOB_END: string|Uint8Array|null = null,
+  public RECOMMENDED_OD_SPAN: number = NaN,
+  public ACTUAL_OD_SPAN: number = NaN,
+  public OBS_AVAILABLE: number = 0,
+  public OBS_USED: number = 0,
+  public TRACKS_AVAILABLE: number = 0,
+  public TRACKS_USED: number = 0,
+  public RESIDUALS_ACCEPTED: number = NaN,
+  public WEIGHTED_RMS: number = NaN,
+  public USER_DEFINED_PARAMETERS: (RDMUserDefinedParameterT)[] = []
 ){}
 
 
@@ -542,6 +1867,41 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const IMPACT_PREDICTIONS = RDM.createImpactPredictionsVector(builder, builder.createObjectOffsetList(this.IMPACT_PREDICTIONS));
   const SURVIVING_DEBRIS = RDM.createSurvivingDebrisVector(builder, builder.createObjectOffsetList(this.SURVIVING_DEBRIS));
   const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
+  const MESSAGE_ID = (this.MESSAGE_ID !== null ? builder.createString(this.MESSAGE_ID!) : 0);
+  const CATALOG_NAME = (this.CATALOG_NAME !== null ? builder.createString(this.CATALOG_NAME!) : 0);
+  const OBJECT_DESIGNATOR = (this.OBJECT_DESIGNATOR !== null ? builder.createString(this.OBJECT_DESIGNATOR!) : 0);
+  const OBJECT_OWNER = (this.OBJECT_OWNER !== null ? builder.createString(this.OBJECT_OWNER!) : 0);
+  const OBJECT_OPERATOR = (this.OBJECT_OPERATOR !== null ? builder.createString(this.OBJECT_OPERATOR!) : 0);
+  const CENTER_NAME = (this.CENTER_NAME !== null ? builder.createString(this.CENTER_NAME!) : 0);
+  const EPOCH_TZERO = (this.EPOCH_TZERO !== null ? builder.createString(this.EPOCH_TZERO!) : 0);
+  const REF_FRAME = (this.REF_FRAME !== null ? builder.createString(this.REF_FRAME!) : 0);
+  const REF_FRAME_EPOCH = (this.REF_FRAME_EPOCH !== null ? builder.createString(this.REF_FRAME_EPOCH!) : 0);
+  const EPHEMERIS_NAME = (this.EPHEMERIS_NAME !== null ? builder.createString(this.EPHEMERIS_NAME!) : 0);
+  const GRAVITY_MODEL = (this.GRAVITY_MODEL !== null ? builder.createString(this.GRAVITY_MODEL!) : 0);
+  const ATMOSPHERIC_MODEL = (this.ATMOSPHERIC_MODEL !== null ? builder.createString(this.ATMOSPHERIC_MODEL!) : 0);
+  const SOLAR_FLUX_PREDICTION = (this.SOLAR_FLUX_PREDICTION !== null ? builder.createString(this.SOLAR_FLUX_PREDICTION!) : 0);
+  const N_BODY_PERTURBATIONS = (this.N_BODY_PERTURBATIONS !== null ? builder.createString(this.N_BODY_PERTURBATIONS!) : 0);
+  const SOLAR_RAD_PRESSURE = (this.SOLAR_RAD_PRESSURE !== null ? builder.createString(this.SOLAR_RAD_PRESSURE!) : 0);
+  const EARTH_TIDES = (this.EARTH_TIDES !== null ? builder.createString(this.EARTH_TIDES!) : 0);
+  const INTRACK_THRUST = (this.INTRACK_THRUST !== null ? builder.createString(this.INTRACK_THRUST!) : 0);
+  const DRAG_PARAMETERS_SOURCE = (this.DRAG_PARAMETERS_SOURCE !== null ? builder.createString(this.DRAG_PARAMETERS_SOURCE!) : 0);
+  const REENTRY_UNCERTAINTY_METHOD = (this.REENTRY_UNCERTAINTY_METHOD !== null ? builder.createString(this.REENTRY_UNCERTAINTY_METHOD!) : 0);
+  const REENTRY_DISINTEGRATION = (this.REENTRY_DISINTEGRATION !== null ? builder.createString(this.REENTRY_DISINTEGRATION!) : 0);
+  const IMPACT_UNCERTAINTY_METHOD = (this.IMPACT_UNCERTAINTY_METHOD !== null ? builder.createString(this.IMPACT_UNCERTAINTY_METHOD!) : 0);
+  const PREVIOUS_MESSAGE_ID = (this.PREVIOUS_MESSAGE_ID !== null ? builder.createString(this.PREVIOUS_MESSAGE_ID!) : 0);
+  const NEXT_MESSAGE_EPOCH = (this.NEXT_MESSAGE_EPOCH !== null ? builder.createString(this.NEXT_MESSAGE_EPOCH!) : 0);
+  const REENTRY_WINDOW_START = (this.REENTRY_WINDOW_START !== null ? builder.createString(this.REENTRY_WINDOW_START!) : 0);
+  const REENTRY_WINDOW_END = (this.REENTRY_WINDOW_END !== null ? builder.createString(this.REENTRY_WINDOW_END!) : 0);
+  const NOMINAL_IMPACT_EPOCH = (this.NOMINAL_IMPACT_EPOCH !== null ? builder.createString(this.NOMINAL_IMPACT_EPOCH!) : 0);
+  const IMPACT_WINDOW_START = (this.IMPACT_WINDOW_START !== null ? builder.createString(this.IMPACT_WINDOW_START!) : 0);
+  const IMPACT_WINDOW_END = (this.IMPACT_WINDOW_END !== null ? builder.createString(this.IMPACT_WINDOW_END!) : 0);
+  const IMPACT_REF_FRAME = (this.IMPACT_REF_FRAME !== null ? builder.createString(this.IMPACT_REF_FRAME!) : 0);
+  const COV_REF_FRAME = (this.COV_REF_FRAME !== null ? builder.createString(this.COV_REF_FRAME!) : 0);
+  const COVARIANCE = RDM.createCovarianceVector(builder, this.COVARIANCE);
+  const HAZARDOUS_SUBSTANCES = (this.HAZARDOUS_SUBSTANCES !== null ? builder.createString(this.HAZARDOUS_SUBSTANCES!) : 0);
+  const TIME_LASTOB_START = (this.TIME_LASTOB_START !== null ? builder.createString(this.TIME_LASTOB_START!) : 0);
+  const TIME_LASTOB_END = (this.TIME_LASTOB_END !== null ? builder.createString(this.TIME_LASTOB_END!) : 0);
+  const USER_DEFINED_PARAMETERS = RDM.createUserDefinedParametersVector(builder, builder.createObjectOffsetList(this.USER_DEFINED_PARAMETERS));
 
   RDM.startRDM(builder);
   RDM.addCcsdsRdmVers(builder, CCSDS_RDM_VERS);
@@ -571,6 +1931,86 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   RDM.addNumFragments(builder, this.NUM_FRAGMENTS);
   RDM.addSurvivingMass(builder, this.SURVIVING_MASS);
   RDM.addComment(builder, COMMENT);
+  RDM.addMessageId(builder, MESSAGE_ID);
+  RDM.addCatalogName(builder, CATALOG_NAME);
+  RDM.addObjectDesignator(builder, OBJECT_DESIGNATOR);
+  RDM.addObjectOwner(builder, OBJECT_OWNER);
+  RDM.addObjectOperator(builder, OBJECT_OPERATOR);
+  RDM.addControlledReentry(builder, this.CONTROLLED_REENTRY);
+  RDM.addCenterName(builder, CENTER_NAME);
+  RDM.addEpochTzero(builder, EPOCH_TZERO);
+  RDM.addRefFrame(builder, REF_FRAME);
+  RDM.addRefFrameEpoch(builder, REF_FRAME_EPOCH);
+  RDM.addEphemerisName(builder, EPHEMERIS_NAME);
+  RDM.addGravityModel(builder, GRAVITY_MODEL);
+  RDM.addAtmosphericModel(builder, ATMOSPHERIC_MODEL);
+  RDM.addSolarFluxPrediction(builder, SOLAR_FLUX_PREDICTION);
+  RDM.addNBodyPerturbations(builder, N_BODY_PERTURBATIONS);
+  RDM.addSolarRadPressure(builder, SOLAR_RAD_PRESSURE);
+  RDM.addEarthTides(builder, EARTH_TIDES);
+  RDM.addIntrackThrust(builder, INTRACK_THRUST);
+  RDM.addDragParametersSource(builder, DRAG_PARAMETERS_SOURCE);
+  RDM.addDragParametersAltitude(builder, this.DRAG_PARAMETERS_ALTITUDE);
+  RDM.addReentryUncertaintyMethod(builder, REENTRY_UNCERTAINTY_METHOD);
+  RDM.addReentryDisintegration(builder, REENTRY_DISINTEGRATION);
+  RDM.addImpactUncertaintyMethod(builder, IMPACT_UNCERTAINTY_METHOD);
+  RDM.addPreviousMessageId(builder, PREVIOUS_MESSAGE_ID);
+  RDM.addNextMessageEpoch(builder, NEXT_MESSAGE_EPOCH);
+  RDM.addOrbitLifetime(builder, this.ORBIT_LIFETIME);
+  RDM.addOrbitLifetimeWindowStart(builder, this.ORBIT_LIFETIME_WINDOW_START);
+  RDM.addOrbitLifetimeWindowEnd(builder, this.ORBIT_LIFETIME_WINDOW_END);
+  RDM.addReentryWindowStart(builder, REENTRY_WINDOW_START);
+  RDM.addReentryWindowEnd(builder, REENTRY_WINDOW_END);
+  RDM.addOrbitLifetimeConfidenceLevel(builder, this.ORBIT_LIFETIME_CONFIDENCE_LEVEL);
+  RDM.addProbabilityOfImpact(builder, this.PROBABILITY_OF_IMPACT);
+  RDM.addProbabilityOfBurnUp(builder, this.PROBABILITY_OF_BURN_UP);
+  RDM.addProbabilityOfBreakUp(builder, this.PROBABILITY_OF_BREAK_UP);
+  RDM.addProbabilityOfLandImpact(builder, this.PROBABILITY_OF_LAND_IMPACT);
+  RDM.addProbabilityOfCasualty(builder, this.PROBABILITY_OF_CASUALTY);
+  RDM.addNominalImpactEpoch(builder, NOMINAL_IMPACT_EPOCH);
+  RDM.addImpactWindowStart(builder, IMPACT_WINDOW_START);
+  RDM.addImpactWindowEnd(builder, IMPACT_WINDOW_END);
+  RDM.addImpactRefFrame(builder, IMPACT_REF_FRAME);
+  RDM.addNominalImpactLon(builder, this.NOMINAL_IMPACT_LON);
+  RDM.addNominalImpactLat(builder, this.NOMINAL_IMPACT_LAT);
+  RDM.addNominalImpactAlt(builder, this.NOMINAL_IMPACT_ALT);
+  RDM.addImpact1Confidence(builder, this.IMPACT_1_CONFIDENCE);
+  RDM.addImpact1StartLon(builder, this.IMPACT_1_START_LON);
+  RDM.addImpact1StartLat(builder, this.IMPACT_1_START_LAT);
+  RDM.addImpact1StopLon(builder, this.IMPACT_1_STOP_LON);
+  RDM.addImpact1StopLat(builder, this.IMPACT_1_STOP_LAT);
+  RDM.addImpact1CrossTrack(builder, this.IMPACT_1_CROSS_TRACK);
+  RDM.addImpact2Confidence(builder, this.IMPACT_2_CONFIDENCE);
+  RDM.addImpact2StartLon(builder, this.IMPACT_2_START_LON);
+  RDM.addImpact2StartLat(builder, this.IMPACT_2_START_LAT);
+  RDM.addImpact2StopLon(builder, this.IMPACT_2_STOP_LON);
+  RDM.addImpact2StopLat(builder, this.IMPACT_2_STOP_LAT);
+  RDM.addImpact2CrossTrack(builder, this.IMPACT_2_CROSS_TRACK);
+  RDM.addImpact3Confidence(builder, this.IMPACT_3_CONFIDENCE);
+  RDM.addImpact3StartLon(builder, this.IMPACT_3_START_LON);
+  RDM.addImpact3StartLat(builder, this.IMPACT_3_START_LAT);
+  RDM.addImpact3StopLon(builder, this.IMPACT_3_STOP_LON);
+  RDM.addImpact3StopLat(builder, this.IMPACT_3_STOP_LAT);
+  RDM.addImpact3CrossTrack(builder, this.IMPACT_3_CROSS_TRACK);
+  RDM.addCovRefFrame(builder, COV_REF_FRAME);
+  RDM.addCovariance(builder, COVARIANCE);
+  RDM.addDryMass(builder, this.DRY_MASS);
+  RDM.addHazardousSubstances(builder, HAZARDOUS_SUBSTANCES);
+  RDM.addSolarRadCoeff(builder, this.SOLAR_RAD_COEFF);
+  RDM.addDragCoeff(builder, this.DRAG_COEFF);
+  RDM.addRcs(builder, this.RCS);
+  RDM.addThrustAcceleration(builder, this.THRUST_ACCELERATION);
+  RDM.addTimeLastobStart(builder, TIME_LASTOB_START);
+  RDM.addTimeLastobEnd(builder, TIME_LASTOB_END);
+  RDM.addRecommendedOdSpan(builder, this.RECOMMENDED_OD_SPAN);
+  RDM.addActualOdSpan(builder, this.ACTUAL_OD_SPAN);
+  RDM.addObsAvailable(builder, this.OBS_AVAILABLE);
+  RDM.addObsUsed(builder, this.OBS_USED);
+  RDM.addTracksAvailable(builder, this.TRACKS_AVAILABLE);
+  RDM.addTracksUsed(builder, this.TRACKS_USED);
+  RDM.addResidualsAccepted(builder, this.RESIDUALS_ACCEPTED);
+  RDM.addWeightedRms(builder, this.WEIGHTED_RMS);
+  RDM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERS);
 
   return RDM.endRDM(builder);
 }

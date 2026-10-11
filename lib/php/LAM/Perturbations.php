@@ -229,22 +229,182 @@ class Perturbations extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+    /// above is the model family when the text names one.
+    public function getATMOSPHERIC_MODEL_NAME()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// EQUATORIAL_RADIUS in km, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getEQUATORIAL_RADIUS()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getCENTRAL_BODY_ROTATION()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// OBLATE_FLATTENING, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getOBLATE_FLATTENING()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// REDUCTION_THEORY.
+    public function getREDUCTION_THEORY()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ALBEDO_GRID_SIZE.
+    /**
+     * @return uint
+     */
+    public function getALBEDO_GRID_SIZE()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// SHADOW_MODEL.
+    public function getSHADOW_MODEL()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// SHADOW_BODIES.
+    public function getSHADOW_BODIES()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// SW_DATA_SOURCE: the space weather data source.
+    public function getSW_DATA_SOURCE()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// SW_DATA_EPOCH.
+    public function getSW_DATA_EPOCH()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// SW_INTERP_METHOD.
+    public function getSW_INTERP_METHOD()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// FIXED_GEOMAG_DST in nT, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getFIXED_GEOMAG_DST()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// FIXED_M10P7, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getFIXED_M10P7()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// FIXED_M10P7_MEAN, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getFIXED_M10P7_MEAN()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// FIXED_S10P7, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getFIXED_S10P7()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// FIXED_S10P7_MEAN, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getFIXED_S10P7_MEAN()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// FIXED_Y10P7, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getFIXED_Y10P7()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// FIXED_Y10P7_MEAN, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getFIXED_Y10P7_MEAN()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPerturbations(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(20);
+        $builder->StartObject(38);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return Perturbations
      */
-    public static function createPerturbations(FlatBufferBuilder $builder, $COMMENT, $ATMOSPHERIC_MODEL, $GRAVITY_MODEL, $GRAVITY_DEGREE, $GRAVITY_ORDER, $GM, $N_BODY_PERTURBATIONS, $OCEAN_TIDES_MODEL, $SOLID_TIDES_MODEL, $ATMOSPHERIC_TIDES_MODEL, $GEOPOTENTIAL_MODEL, $SOLAR_RAD_PRESSURE, $ALBEDO, $THERMAL, $RELATIVITY, $ATMOSPHERIC_DRAG, $FIXED_GEOMAG_KP, $FIXED_F10P7, $FIXED_F10P7_MEAN, $FIXED_GEOMAG_AP)
+    public static function createPerturbations(FlatBufferBuilder $builder, $COMMENT, $ATMOSPHERIC_MODEL, $GRAVITY_MODEL, $GRAVITY_DEGREE, $GRAVITY_ORDER, $GM, $N_BODY_PERTURBATIONS, $OCEAN_TIDES_MODEL, $SOLID_TIDES_MODEL, $ATMOSPHERIC_TIDES_MODEL, $GEOPOTENTIAL_MODEL, $SOLAR_RAD_PRESSURE, $ALBEDO, $THERMAL, $RELATIVITY, $ATMOSPHERIC_DRAG, $FIXED_GEOMAG_KP, $FIXED_F10P7, $FIXED_F10P7_MEAN, $FIXED_GEOMAG_AP, $ATMOSPHERIC_MODEL_NAME, $EQUATORIAL_RADIUS, $CENTRAL_BODY_ROTATION, $OBLATE_FLATTENING, $REDUCTION_THEORY, $ALBEDO_GRID_SIZE, $SHADOW_MODEL, $SHADOW_BODIES, $SW_DATA_SOURCE, $SW_DATA_EPOCH, $SW_INTERP_METHOD, $FIXED_GEOMAG_DST, $FIXED_M10P7, $FIXED_M10P7_MEAN, $FIXED_S10P7, $FIXED_S10P7_MEAN, $FIXED_Y10P7, $FIXED_Y10P7_MEAN)
     {
-        $builder->startObject(20);
+        $builder->startObject(38);
         self::addCOMMENT($builder, $COMMENT);
         self::addATMOSPHERIC_MODEL($builder, $ATMOSPHERIC_MODEL);
         self::addGRAVITY_MODEL($builder, $GRAVITY_MODEL);
@@ -265,6 +425,24 @@ class Perturbations extends Table
         self::addFIXED_F10P7($builder, $FIXED_F10P7);
         self::addFIXED_F10P7_MEAN($builder, $FIXED_F10P7_MEAN);
         self::addFIXED_GEOMAG_AP($builder, $FIXED_GEOMAG_AP);
+        self::addATMOSPHERIC_MODEL_NAME($builder, $ATMOSPHERIC_MODEL_NAME);
+        self::addEQUATORIAL_RADIUS($builder, $EQUATORIAL_RADIUS);
+        self::addCENTRAL_BODY_ROTATION($builder, $CENTRAL_BODY_ROTATION);
+        self::addOBLATE_FLATTENING($builder, $OBLATE_FLATTENING);
+        self::addREDUCTION_THEORY($builder, $REDUCTION_THEORY);
+        self::addALBEDO_GRID_SIZE($builder, $ALBEDO_GRID_SIZE);
+        self::addSHADOW_MODEL($builder, $SHADOW_MODEL);
+        self::addSHADOW_BODIES($builder, $SHADOW_BODIES);
+        self::addSW_DATA_SOURCE($builder, $SW_DATA_SOURCE);
+        self::addSW_DATA_EPOCH($builder, $SW_DATA_EPOCH);
+        self::addSW_INTERP_METHOD($builder, $SW_INTERP_METHOD);
+        self::addFIXED_GEOMAG_DST($builder, $FIXED_GEOMAG_DST);
+        self::addFIXED_M10P7($builder, $FIXED_M10P7);
+        self::addFIXED_M10P7_MEAN($builder, $FIXED_M10P7_MEAN);
+        self::addFIXED_S10P7($builder, $FIXED_S10P7);
+        self::addFIXED_S10P7_MEAN($builder, $FIXED_S10P7_MEAN);
+        self::addFIXED_Y10P7($builder, $FIXED_Y10P7);
+        self::addFIXED_Y10P7_MEAN($builder, $FIXED_Y10P7_MEAN);
         $o = $builder->endObject();
         return $o;
     }
@@ -515,6 +693,186 @@ class Perturbations extends Table
     public static function addFIXED_GEOMAG_AP(FlatBufferBuilder $builder, $FIXED_GEOMAG_AP)
     {
         $builder->addDoubleX(19, $FIXED_GEOMAG_AP, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addATMOSPHERIC_MODEL_NAME(FlatBufferBuilder $builder, $ATMOSPHERIC_MODEL_NAME)
+    {
+        $builder->addOffsetX(20, $ATMOSPHERIC_MODEL_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEQUATORIAL_RADIUS(FlatBufferBuilder $builder, $EQUATORIAL_RADIUS)
+    {
+        $builder->addDoubleX(21, $EQUATORIAL_RADIUS, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCENTRAL_BODY_ROTATION(FlatBufferBuilder $builder, $CENTRAL_BODY_ROTATION)
+    {
+        $builder->addDoubleX(22, $CENTRAL_BODY_ROTATION, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOBLATE_FLATTENING(FlatBufferBuilder $builder, $OBLATE_FLATTENING)
+    {
+        $builder->addDoubleX(23, $OBLATE_FLATTENING, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREDUCTION_THEORY(FlatBufferBuilder $builder, $REDUCTION_THEORY)
+    {
+        $builder->addOffsetX(24, $REDUCTION_THEORY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addALBEDO_GRID_SIZE(FlatBufferBuilder $builder, $ALBEDO_GRID_SIZE)
+    {
+        $builder->addUintX(25, $ALBEDO_GRID_SIZE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSHADOW_MODEL(FlatBufferBuilder $builder, $SHADOW_MODEL)
+    {
+        $builder->addOffsetX(26, $SHADOW_MODEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSHADOW_BODIES(FlatBufferBuilder $builder, $SHADOW_BODIES)
+    {
+        $builder->addOffsetX(27, $SHADOW_BODIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSW_DATA_SOURCE(FlatBufferBuilder $builder, $SW_DATA_SOURCE)
+    {
+        $builder->addOffsetX(28, $SW_DATA_SOURCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSW_DATA_EPOCH(FlatBufferBuilder $builder, $SW_DATA_EPOCH)
+    {
+        $builder->addOffsetX(29, $SW_DATA_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSW_INTERP_METHOD(FlatBufferBuilder $builder, $SW_INTERP_METHOD)
+    {
+        $builder->addOffsetX(30, $SW_INTERP_METHOD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFIXED_GEOMAG_DST(FlatBufferBuilder $builder, $FIXED_GEOMAG_DST)
+    {
+        $builder->addDoubleX(31, $FIXED_GEOMAG_DST, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFIXED_M10P7(FlatBufferBuilder $builder, $FIXED_M10P7)
+    {
+        $builder->addDoubleX(32, $FIXED_M10P7, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFIXED_M10P7_MEAN(FlatBufferBuilder $builder, $FIXED_M10P7_MEAN)
+    {
+        $builder->addDoubleX(33, $FIXED_M10P7_MEAN, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFIXED_S10P7(FlatBufferBuilder $builder, $FIXED_S10P7)
+    {
+        $builder->addDoubleX(34, $FIXED_S10P7, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFIXED_S10P7_MEAN(FlatBufferBuilder $builder, $FIXED_S10P7_MEAN)
+    {
+        $builder->addDoubleX(35, $FIXED_S10P7_MEAN, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFIXED_Y10P7(FlatBufferBuilder $builder, $FIXED_Y10P7)
+    {
+        $builder->addDoubleX(36, $FIXED_Y10P7, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFIXED_Y10P7_MEAN(FlatBufferBuilder $builder, $FIXED_Y10P7_MEAN)
+    {
+        $builder->addDoubleX(37, $FIXED_Y10P7_MEAN, NAN);
     }
 
     /**

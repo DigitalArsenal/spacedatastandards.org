@@ -1,5 +1,5 @@
-// Hash: 8786facdc073384acf17eebb6f7f28c49a88140fe1b5dfdbd645f5b525311716
-// Version: 0.0.2
+// Hash: bb5dabf1092596e1582bdd99d2d0af721692c57f8a672800aa80ab926f273191
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 /// Attitude Parameter Message
 table APM {
@@ -13,6 +13,180 @@ table APM {
   Q2:double;
   Q3:double;
   QC:double;
+
+  /// COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and
+  /// data groups, in message order, joined by a line feed. A state group's own
+  /// comments stay with it.
+  COMMENT:string;
+  /// CLASSIFICATION of the message: the optional header keyword stating its
+  /// security classification or handling caveat.
+  CLASSIFICATION:string;
+  /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  /// unique for this message.
+  MESSAGE_ID:string;
+  /// CENTER_NAME: the orbit center, when the message states one.
+  CENTER_NAME:string;
+  /// TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.
+  TIME_SYSTEM:string;
+  /// Quaternion states (QUAT_START block), in message order. Q1..QC above are the
+  /// single frameless quaternion of the earlier form of this record; a message is
+  /// read into and written from these lists.
+  QUATERNION_STATES:[APMQuaternionState];
+  /// Euler angle states (EULER_START block), in message order.
+  EULER_ANGLE_STATES:[APMEulerAngleState];
+  /// Angular velocities (ANGVEL_START block), in message order.
+  ANGULAR_VELOCITIES:[APMAngularVelocity];
+  /// Spin states (SPIN_START block), in message order.
+  SPIN_STATES:[APMSpinState];
+  /// Inertia tensors (INERTIA_START block), in message order.
+  INERTIAS:[APMInertia];
+  /// Attitude maneuvers (MAN_START block), in message order.
+  MANEUVERS:[APMManeuver];
+}
+
+/// A quaternion state of an APM (CCSDS 504.0-B-2 Table 3-3): rotation from
+/// REF_FRAME_A to REF_FRAME_B. The derivative is NaN when the message states none.
+table APMQuaternionState {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// REF_FRAME_A: the frame the rotation starts from.
+  REF_FRAME_A:string;
+  /// REF_FRAME_B: the frame the rotation ends in.
+  REF_FRAME_B:string;
+  /// Q1 (vector part, x).
+  Q1:double;
+  /// Q2 (vector part, y).
+  Q2:double;
+  /// Q3 (vector part, z).
+  Q3:double;
+  /// QC (scalar part).
+  QC:double;
+  /// Q1_DOT in 1/s, NaN when not stated.
+  Q1_DOT:double = nan;
+  /// Q2_DOT in 1/s, NaN when not stated.
+  Q2_DOT:double = nan;
+  /// Q3_DOT in 1/s, NaN when not stated.
+  Q3_DOT:double = nan;
+  /// QC_DOT in 1/s, NaN when not stated.
+  QC_DOT:double = nan;
+}
+
+/// An Euler angle state of an APM (EULER_START block). Angles in degrees; a rate
+/// is NaN when the message states none.
+table APMEulerAngleState {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// REF_FRAME_A: the frame the rotation starts from.
+  REF_FRAME_A:string;
+  /// REF_FRAME_B: the frame the rotation ends in.
+  REF_FRAME_B:string;
+  /// EULER_ROT_SEQ: the rotation sequence, for example ZXZ.
+  EULER_ROT_SEQ:string;
+  /// ANGLE_1 in degrees.
+  ANGLE_1:double;
+  /// ANGLE_2 in degrees.
+  ANGLE_2:double;
+  /// ANGLE_3 in degrees.
+  ANGLE_3:double;
+  /// ANGLE_1_DOT in deg/s, NaN when not stated.
+  ANGLE_1_DOT:double = nan;
+  /// ANGLE_2_DOT in deg/s, NaN when not stated.
+  ANGLE_2_DOT:double = nan;
+  /// ANGLE_3_DOT in deg/s, NaN when not stated.
+  ANGLE_3_DOT:double = nan;
+}
+
+/// An angular velocity of an APM (ANGVEL_START block), in deg/s.
+table APMAngularVelocity {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// REF_FRAME_A: the frame the rotation starts from.
+  REF_FRAME_A:string;
+  /// REF_FRAME_B: the frame the rotation ends in.
+  REF_FRAME_B:string;
+  /// ANGVEL_FRAME: the frame the components are in.
+  ANGVEL_FRAME:string;
+  /// ANGVEL_X in deg/s.
+  ANGVEL_X:double;
+  /// ANGVEL_Y in deg/s.
+  ANGVEL_Y:double;
+  /// ANGVEL_Z in deg/s.
+  ANGVEL_Z:double;
+}
+
+/// A spin state of an APM (SPIN_START block). The nutation terms come as either of
+/// two groups, nutation angle, period and phase or the momentum direction and the
+/// velocity around it; those not stated are NaN.
+table APMSpinState {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// REF_FRAME_A: the frame the rotation starts from.
+  REF_FRAME_A:string;
+  /// REF_FRAME_B: the frame the rotation ends in.
+  REF_FRAME_B:string;
+  /// SPIN_ALPHA: right ascension of the spin axis in degrees.
+  SPIN_ALPHA:double;
+  /// SPIN_DELTA: declination of the spin axis in degrees.
+  SPIN_DELTA:double;
+  /// SPIN_ANGLE: phase in degrees.
+  SPIN_ANGLE:double;
+  /// SPIN_ANGLE_VEL: angular velocity in deg/s.
+  SPIN_ANGLE_VEL:double;
+  /// NUTATION: nutation angle in degrees, NaN when not stated.
+  NUTATION:double = nan;
+  /// NUTATION_PER: nutation period in seconds, NaN when not stated.
+  NUTATION_PER:double = nan;
+  /// NUTATION_PHASE: nutation phase in degrees, NaN when not stated.
+  NUTATION_PHASE:double = nan;
+  /// MOMENTUM_ALPHA: right ascension of the angular momentum vector in degrees,
+  /// NaN when not stated.
+  MOMENTUM_ALPHA:double = nan;
+  /// MOMENTUM_DELTA: declination of the angular momentum vector in degrees, NaN
+  /// when not stated.
+  MOMENTUM_DELTA:double = nan;
+  /// NUTATION_VEL: angular velocity around the momentum vector in deg/s, NaN when
+  /// not stated.
+  NUTATION_VEL:double = nan;
+}
+
+/// An inertia tensor of an APM (INERTIA_START block), in kg*m**2.
+table APMInertia {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// INERTIA_REF_FRAME: the frame the tensor is in.
+  INERTIA_REF_FRAME:string;
+  /// IXX: moment about X.
+  IXX:double;
+  /// IYY: moment about Y.
+  IYY:double;
+  /// IZZ: moment about Z.
+  IZZ:double;
+  /// IXY: cross product X-Y.
+  IXY:double;
+  /// IXZ: cross product X-Z.
+  IXZ:double;
+  /// IYZ: cross product Y-Z.
+  IYZ:double;
+}
+
+/// An attitude maneuver of an APM (MAN_START block).
+table APMManeuver {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// MAN_EPOCH_START: epoch of the start of the maneuver.
+  MAN_EPOCH_START:string;
+  /// MAN_DURATION in seconds.
+  MAN_DURATION:double;
+  /// MAN_REF_FRAME: the frame the torque is in.
+  MAN_REF_FRAME:string;
+  /// MAN_TOR_X in N*m.
+  MAN_TOR_X:double;
+  /// MAN_TOR_Y in N*m.
+  MAN_TOR_Y:double;
+  /// MAN_TOR_Z in N*m.
+  MAN_TOR_Z:double;
+  /// MAN_DELTA_MASS in kg (negative or zero), NaN when not stated.
+  MAN_DELTA_MASS:double = nan;
 }
 
 root_type APM;

@@ -314,22 +314,233 @@ class OrbitDetermination extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getDAYS_SINCE_FIRST_OBS()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// DAYS_SINCE_LAST_OBS, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getDAYS_SINCE_LAST_OBS()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getRECOMMENDED_OD_SPAN()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// ACTUAL_OD_SPAN in days, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getACTUAL_OD_SPAN()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+    /**
+     * @return uint
+     */
+    public function getOBS_AVAILABLE()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+    /**
+     * @return uint
+     */
+    public function getTRACKS_AVAILABLE()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// MAXIMUM_OBS_GAP in days, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getMAXIMUM_OBS_GAP()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// OD_EPOCH_EIGMAJ in m, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getOD_EPOCH_EIGMAJ()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// OD_EPOCH_EIGINT in m, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getOD_EPOCH_EIGINT()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// OD_EPOCH_EIGMIN in m, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getOD_EPOCH_EIGMIN()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getOD_MAX_PRED_EIGMAJ()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getOD_MIN_PRED_EIGMIN()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// OD_CONFIDENCE in percent, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getOD_CONFIDENCE()
+    {
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// GDOP, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getGDOP()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// SOLVE_N: the number of solved-for states.
+    /**
+     * @return uint
+     */
+    public function getSOLVE_N()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// SOLVE_STATES: the solved-for states, as written.
+    public function getSOLVE_STATES()
+    {
+        $o = $this->__offset(86);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CONSIDER_N: the number of consider parameters.
+    /**
+     * @return uint
+     */
+    public function getCONSIDER_N()
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// CONSIDER_PARAMS: the consider parameters, as written.
+    public function getCONSIDER_PARAMS()
+    {
+        $o = $this->__offset(90);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// SENSORS_N: the number of sensors.
+    /**
+     * @return uint
+     */
+    public function getSENSORS_N()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// SENSORS: the sensors, as written.
+    public function getSENSORS()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getCOMMENT($j)
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOMMENTLength()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOrbitDetermination(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(26);
+        $builder->StartObject(47);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OrbitDetermination
      */
-    public static function createOrbitDetermination(FlatBufferBuilder $builder, $OD_ID, $OD_PREV_ID, $OD_ALGORITHM, $OD_METHOD, $OD_EPOCH, $OD_TIME_TAG, $OD_PROCESS_NOISE, $OD_COV_REDUCTION, $OD_NOISE_MODELS, $OD_OBSERVATIONS_TYPE, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $OD_DATA_WEIGHTING, $OD_CONVERGENCE_CRITERIA, $OD_EST_PARAMETERS, $OD_APRIORI_DATA, $OD_RESIDUALS, $OD_ESTIMATOR, $OD_RESIDUAL_RMS, $OD_RESIDUALS_SERIES, $OD_RESIDUAL_EPOCHS, $OD_BATCH_BASELINE_ID, $OD_BATCH_BASELINE_RMS, $SEDR, $WEIGHTED_RMS, $OD_DYNAMIC_PARAMETERS)
+    public static function createOrbitDetermination(FlatBufferBuilder $builder, $OD_ID, $OD_PREV_ID, $OD_ALGORITHM, $OD_METHOD, $OD_EPOCH, $OD_TIME_TAG, $OD_PROCESS_NOISE, $OD_COV_REDUCTION, $OD_NOISE_MODELS, $OD_OBSERVATIONS_TYPE, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $OD_DATA_WEIGHTING, $OD_CONVERGENCE_CRITERIA, $OD_EST_PARAMETERS, $OD_APRIORI_DATA, $OD_RESIDUALS, $OD_ESTIMATOR, $OD_RESIDUAL_RMS, $OD_RESIDUALS_SERIES, $OD_RESIDUAL_EPOCHS, $OD_BATCH_BASELINE_ID, $OD_BATCH_BASELINE_RMS, $SEDR, $WEIGHTED_RMS, $OD_DYNAMIC_PARAMETERS, $DAYS_SINCE_FIRST_OBS, $DAYS_SINCE_LAST_OBS, $RECOMMENDED_OD_SPAN, $ACTUAL_OD_SPAN, $OBS_AVAILABLE, $TRACKS_AVAILABLE, $MAXIMUM_OBS_GAP, $OD_EPOCH_EIGMAJ, $OD_EPOCH_EIGINT, $OD_EPOCH_EIGMIN, $OD_MAX_PRED_EIGMAJ, $OD_MIN_PRED_EIGMIN, $OD_CONFIDENCE, $GDOP, $SOLVE_N, $SOLVE_STATES, $CONSIDER_N, $CONSIDER_PARAMS, $SENSORS_N, $SENSORS, $COMMENT)
     {
-        $builder->startObject(26);
+        $builder->startObject(47);
         self::addOD_ID($builder, $OD_ID);
         self::addOD_PREV_ID($builder, $OD_PREV_ID);
         self::addOD_ALGORITHM($builder, $OD_ALGORITHM);
@@ -356,6 +567,27 @@ class OrbitDetermination extends Table
         self::addSEDR($builder, $SEDR);
         self::addWEIGHTED_RMS($builder, $WEIGHTED_RMS);
         self::addOD_DYNAMIC_PARAMETERS($builder, $OD_DYNAMIC_PARAMETERS);
+        self::addDAYS_SINCE_FIRST_OBS($builder, $DAYS_SINCE_FIRST_OBS);
+        self::addDAYS_SINCE_LAST_OBS($builder, $DAYS_SINCE_LAST_OBS);
+        self::addRECOMMENDED_OD_SPAN($builder, $RECOMMENDED_OD_SPAN);
+        self::addACTUAL_OD_SPAN($builder, $ACTUAL_OD_SPAN);
+        self::addOBS_AVAILABLE($builder, $OBS_AVAILABLE);
+        self::addTRACKS_AVAILABLE($builder, $TRACKS_AVAILABLE);
+        self::addMAXIMUM_OBS_GAP($builder, $MAXIMUM_OBS_GAP);
+        self::addOD_EPOCH_EIGMAJ($builder, $OD_EPOCH_EIGMAJ);
+        self::addOD_EPOCH_EIGINT($builder, $OD_EPOCH_EIGINT);
+        self::addOD_EPOCH_EIGMIN($builder, $OD_EPOCH_EIGMIN);
+        self::addOD_MAX_PRED_EIGMAJ($builder, $OD_MAX_PRED_EIGMAJ);
+        self::addOD_MIN_PRED_EIGMIN($builder, $OD_MIN_PRED_EIGMIN);
+        self::addOD_CONFIDENCE($builder, $OD_CONFIDENCE);
+        self::addGDOP($builder, $GDOP);
+        self::addSOLVE_N($builder, $SOLVE_N);
+        self::addSOLVE_STATES($builder, $SOLVE_STATES);
+        self::addCONSIDER_N($builder, $CONSIDER_N);
+        self::addCONSIDER_PARAMS($builder, $CONSIDER_PARAMS);
+        self::addSENSORS_N($builder, $SENSORS_N);
+        self::addSENSORS($builder, $SENSORS);
+        self::addCOMMENT($builder, $COMMENT);
         $o = $builder->endObject();
         return $o;
     }
@@ -736,6 +968,240 @@ class OrbitDetermination extends Table
      * @return void
      */
     public static function startOD_DYNAMIC_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDAYS_SINCE_FIRST_OBS(FlatBufferBuilder $builder, $DAYS_SINCE_FIRST_OBS)
+    {
+        $builder->addDoubleX(26, $DAYS_SINCE_FIRST_OBS, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDAYS_SINCE_LAST_OBS(FlatBufferBuilder $builder, $DAYS_SINCE_LAST_OBS)
+    {
+        $builder->addDoubleX(27, $DAYS_SINCE_LAST_OBS, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRECOMMENDED_OD_SPAN(FlatBufferBuilder $builder, $RECOMMENDED_OD_SPAN)
+    {
+        $builder->addDoubleX(28, $RECOMMENDED_OD_SPAN, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addACTUAL_OD_SPAN(FlatBufferBuilder $builder, $ACTUAL_OD_SPAN)
+    {
+        $builder->addDoubleX(29, $ACTUAL_OD_SPAN, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addOBS_AVAILABLE(FlatBufferBuilder $builder, $OBS_AVAILABLE)
+    {
+        $builder->addUintX(30, $OBS_AVAILABLE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addTRACKS_AVAILABLE(FlatBufferBuilder $builder, $TRACKS_AVAILABLE)
+    {
+        $builder->addUintX(31, $TRACKS_AVAILABLE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMAXIMUM_OBS_GAP(FlatBufferBuilder $builder, $MAXIMUM_OBS_GAP)
+    {
+        $builder->addDoubleX(32, $MAXIMUM_OBS_GAP, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOD_EPOCH_EIGMAJ(FlatBufferBuilder $builder, $OD_EPOCH_EIGMAJ)
+    {
+        $builder->addDoubleX(33, $OD_EPOCH_EIGMAJ, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOD_EPOCH_EIGINT(FlatBufferBuilder $builder, $OD_EPOCH_EIGINT)
+    {
+        $builder->addDoubleX(34, $OD_EPOCH_EIGINT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOD_EPOCH_EIGMIN(FlatBufferBuilder $builder, $OD_EPOCH_EIGMIN)
+    {
+        $builder->addDoubleX(35, $OD_EPOCH_EIGMIN, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOD_MAX_PRED_EIGMAJ(FlatBufferBuilder $builder, $OD_MAX_PRED_EIGMAJ)
+    {
+        $builder->addDoubleX(36, $OD_MAX_PRED_EIGMAJ, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOD_MIN_PRED_EIGMIN(FlatBufferBuilder $builder, $OD_MIN_PRED_EIGMIN)
+    {
+        $builder->addDoubleX(37, $OD_MIN_PRED_EIGMIN, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOD_CONFIDENCE(FlatBufferBuilder $builder, $OD_CONFIDENCE)
+    {
+        $builder->addDoubleX(38, $OD_CONFIDENCE, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addGDOP(FlatBufferBuilder $builder, $GDOP)
+    {
+        $builder->addDoubleX(39, $GDOP, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addSOLVE_N(FlatBufferBuilder $builder, $SOLVE_N)
+    {
+        $builder->addUintX(40, $SOLVE_N, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSOLVE_STATES(FlatBufferBuilder $builder, $SOLVE_STATES)
+    {
+        $builder->addOffsetX(41, $SOLVE_STATES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addCONSIDER_N(FlatBufferBuilder $builder, $CONSIDER_N)
+    {
+        $builder->addUintX(42, $CONSIDER_N, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCONSIDER_PARAMS(FlatBufferBuilder $builder, $CONSIDER_PARAMS)
+    {
+        $builder->addOffsetX(43, $CONSIDER_PARAMS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addSENSORS_N(FlatBufferBuilder $builder, $SENSORS_N)
+    {
+        $builder->addUintX(44, $SENSORS_N, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSENSORS(FlatBufferBuilder $builder, $SENSORS)
+    {
+        $builder->addOffsetX(45, $SENSORS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
+    {
+        $builder->addOffsetX(46, $COMMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOMMENTVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOMMENTVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }

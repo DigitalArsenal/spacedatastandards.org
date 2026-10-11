@@ -17,6 +17,20 @@
         "CCSDS_AEM_XML",
         "CCSDS_TDM_KVN",
         "CCSDS_TDM_XML",
+        "CCSDS_OMM_KVN",
+        "CCSDS_OMM_XML",
+        "CCSDS_OPM_KVN",
+        "CCSDS_OPM_XML",
+        "CCSDS_OCM_KVN",
+        "CCSDS_OCM_XML",
+        "CCSDS_CDM_KVN",
+        "CCSDS_CDM_XML",
+        "CCSDS_APM_KVN",
+        "CCSDS_APM_XML",
+        "CCSDS_ACM_KVN",
+        "CCSDS_ACM_XML",
+        "CCSDS_RDM_KVN",
+        "CCSDS_RDM_XML",
         "PROVIDER_DEFINED"
       ],
       "x-flatbuffer-type": "enum",
@@ -72,6 +86,62 @@
         "CCSDS_TDM_XML": {
           "value": 12,
           "description": "CCSDS Tracking Data Message, XML."
+        },
+        "CCSDS_OMM_KVN": {
+          "value": 13,
+          "description": "CCSDS Orbit Mean-Elements Message, keyword-value notation."
+        },
+        "CCSDS_OMM_XML": {
+          "value": 14,
+          "description": "CCSDS Orbit Mean-Elements Message, XML."
+        },
+        "CCSDS_OPM_KVN": {
+          "value": 15,
+          "description": "CCSDS Orbit Parameter Message, keyword-value notation."
+        },
+        "CCSDS_OPM_XML": {
+          "value": 16,
+          "description": "CCSDS Orbit Parameter Message, XML."
+        },
+        "CCSDS_OCM_KVN": {
+          "value": 17,
+          "description": "CCSDS Orbit Comprehensive Message, keyword-value notation."
+        },
+        "CCSDS_OCM_XML": {
+          "value": 18,
+          "description": "CCSDS Orbit Comprehensive Message, XML."
+        },
+        "CCSDS_CDM_KVN": {
+          "value": 19,
+          "description": "CCSDS Conjunction Data Message, keyword-value notation."
+        },
+        "CCSDS_CDM_XML": {
+          "value": 20,
+          "description": "CCSDS Conjunction Data Message, XML."
+        },
+        "CCSDS_APM_KVN": {
+          "value": 21,
+          "description": "CCSDS Attitude Parameter Message, keyword-value notation."
+        },
+        "CCSDS_APM_XML": {
+          "value": 22,
+          "description": "CCSDS Attitude Parameter Message, XML."
+        },
+        "CCSDS_ACM_KVN": {
+          "value": 23,
+          "description": "CCSDS Attitude Comprehensive Message, keyword-value notation."
+        },
+        "CCSDS_ACM_XML": {
+          "value": 24,
+          "description": "CCSDS Attitude Comprehensive Message, XML."
+        },
+        "CCSDS_RDM_KVN": {
+          "value": 25,
+          "description": "CCSDS Reentry Data Message, keyword-value notation."
+        },
+        "CCSDS_RDM_XML": {
+          "value": 26,
+          "description": "CCSDS Reentry Data Message, XML."
         },
         "PROVIDER_DEFINED": {
           "value": 255,
@@ -455,6 +525,62 @@
             "CCSDS_TDM_XML": {
               "value": 12,
               "description": "CCSDS Tracking Data Message, XML."
+            },
+            "CCSDS_OMM_KVN": {
+              "value": 13,
+              "description": "CCSDS Orbit Mean-Elements Message, keyword-value notation."
+            },
+            "CCSDS_OMM_XML": {
+              "value": 14,
+              "description": "CCSDS Orbit Mean-Elements Message, XML."
+            },
+            "CCSDS_OPM_KVN": {
+              "value": 15,
+              "description": "CCSDS Orbit Parameter Message, keyword-value notation."
+            },
+            "CCSDS_OPM_XML": {
+              "value": 16,
+              "description": "CCSDS Orbit Parameter Message, XML."
+            },
+            "CCSDS_OCM_KVN": {
+              "value": 17,
+              "description": "CCSDS Orbit Comprehensive Message, keyword-value notation."
+            },
+            "CCSDS_OCM_XML": {
+              "value": 18,
+              "description": "CCSDS Orbit Comprehensive Message, XML."
+            },
+            "CCSDS_CDM_KVN": {
+              "value": 19,
+              "description": "CCSDS Conjunction Data Message, keyword-value notation."
+            },
+            "CCSDS_CDM_XML": {
+              "value": 20,
+              "description": "CCSDS Conjunction Data Message, XML."
+            },
+            "CCSDS_APM_KVN": {
+              "value": 21,
+              "description": "CCSDS Attitude Parameter Message, keyword-value notation."
+            },
+            "CCSDS_APM_XML": {
+              "value": 22,
+              "description": "CCSDS Attitude Parameter Message, XML."
+            },
+            "CCSDS_ACM_KVN": {
+              "value": 23,
+              "description": "CCSDS Attitude Comprehensive Message, keyword-value notation."
+            },
+            "CCSDS_ACM_XML": {
+              "value": 24,
+              "description": "CCSDS Attitude Comprehensive Message, XML."
+            },
+            "CCSDS_RDM_KVN": {
+              "value": 25,
+              "description": "CCSDS Reentry Data Message, keyword-value notation."
+            },
+            "CCSDS_RDM_XML": {
+              "value": 26,
+              "description": "CCSDS Reentry Data Message, XML."
             },
             "PROVIDER_DEFINED": {
               "value": 255,

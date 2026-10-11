@@ -95,6 +95,10 @@ class OCMDynamicParameter
 
 class OrbitDetermination
 
+class OCMTrajectoryBlock
+
+class OCMCovarianceBlock
+
 class UserDefinedParameters
 
 class OCM
@@ -630,13 +634,109 @@ class PhysicalProperties : flatbuffers.handle
     /// Uncertainty in the solar radiation pressure coefficient.
     def SRP_UNCERTAINTY() -> float:
         return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
+    /// MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+    def MANUFACTURER() -> string:
+        return flatbuffers.field_string(buf_, pos_, 46)
+    /// BUS_MODEL: the object's bus model.
+    def BUS_MODEL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 48)
+    /// DOCKED_WITH: comma-separated names of the objects it is docked with.
+    def DOCKED_WITH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 50)
+    /// INITIAL_WET_MASS in kg, NaN when not stated.
+    def INITIAL_WET_MASS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 52, nan)
+    /// OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+    def OEB_PARENT_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 54)
+    /// OEB_PARENT_FRAME_EPOCH.
+    def OEB_PARENT_FRAME_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 56)
+    /// AREA_MIN_FOR_PC in m**2, NaN when not stated.
+    def AREA_MIN_FOR_PC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 58, nan)
+    /// AREA_MAX_FOR_PC in m**2, NaN when not stated.
+    def AREA_MAX_FOR_PC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 60, nan)
+    /// AREA_TYP_FOR_PC in m**2, NaN when not stated.
+    def AREA_TYP_FOR_PC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 62, nan)
+    /// RCS in m**2, NaN when not stated.
+    def RCS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 64, nan)
+    /// RCS_MIN in m**2, NaN when not stated.
+    def RCS_MIN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 66, nan)
+    /// RCS_MAX in m**2, NaN when not stated.
+    def RCS_MAX() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 68, nan)
+    /// VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+    def VM_ABSOLUTE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 70, nan)
+    /// VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+    def VM_APPARENT_MIN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 72, nan)
+    /// VM_APPARENT: apparent visual magnitude, NaN when not stated.
+    def VM_APPARENT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 74, nan)
+    /// VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+    def VM_APPARENT_MAX() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 76, nan)
+    /// REFLECTANCE: typical reflectivity, NaN when not stated.
+    def REFLECTANCE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 78, nan)
+    /// ATT_CONTROL_MODE.
+    def ATT_CONTROL_MODE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 80)
+    /// ATT_ACTUATOR_TYPE.
+    def ATT_ACTUATOR_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 82)
+    /// ATT_KNOWLEDGE in degrees, NaN when not stated.
+    def ATT_KNOWLEDGE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 84, nan)
+    /// ATT_CONTROL in degrees, NaN when not stated.
+    def ATT_CONTROL() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 86, nan)
+    /// ATT_POINTING in degrees, NaN when not stated.
+    def ATT_POINTING() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 88, nan)
+    /// AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+    def AVG_MANEUVER_FREQ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 90, nan)
+    /// MAX_THRUST in N, NaN when not stated.
+    def MAX_THRUST() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 92, nan)
+    /// DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+    def DV_BOL() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 94, nan)
+    /// DV_REMAINING in km/s, NaN when not stated.
+    def DV_REMAINING() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 96, nan)
+    /// IXX in kg*m**2, NaN when not stated.
+    def IXX() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 98, nan)
+    /// IYY in kg*m**2, NaN when not stated.
+    def IYY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 100, nan)
+    /// IZZ in kg*m**2, NaN when not stated.
+    def IZZ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 102, nan)
+    /// IXY in kg*m**2, NaN when not stated.
+    def IXY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 104, nan)
+    /// IXZ in kg*m**2, NaN when not stated.
+    def IXZ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 106, nan)
+    /// IYZ in kg*m**2, NaN when not stated.
+    def IYZ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 108, nan)
 
 def GetRootAsPhysicalProperties(buf:string): return PhysicalProperties { buf, flatbuffers.indirect(buf, 0) }
 
 struct PhysicalPropertiesBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(21)
+        b_.StartObject(53)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -700,6 +800,102 @@ struct PhysicalPropertiesBuilder:
         return this
     def add_SRP_UNCERTAINTY(SRP_UNCERTAINTY:float):
         b_.PrependFloat64Slot(20, SRP_UNCERTAINTY, 0.0)
+        return this
+    def add_MANUFACTURER(MANUFACTURER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, MANUFACTURER)
+        return this
+    def add_BUS_MODEL(BUS_MODEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(22, BUS_MODEL)
+        return this
+    def add_DOCKED_WITH(DOCKED_WITH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(23, DOCKED_WITH)
+        return this
+    def add_INITIAL_WET_MASS(INITIAL_WET_MASS:float):
+        b_.PrependFloat64Slot(24, INITIAL_WET_MASS, nan)
+        return this
+    def add_OEB_PARENT_FRAME(OEB_PARENT_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(25, OEB_PARENT_FRAME)
+        return this
+    def add_OEB_PARENT_FRAME_EPOCH(OEB_PARENT_FRAME_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(26, OEB_PARENT_FRAME_EPOCH)
+        return this
+    def add_AREA_MIN_FOR_PC(AREA_MIN_FOR_PC:float):
+        b_.PrependFloat64Slot(27, AREA_MIN_FOR_PC, nan)
+        return this
+    def add_AREA_MAX_FOR_PC(AREA_MAX_FOR_PC:float):
+        b_.PrependFloat64Slot(28, AREA_MAX_FOR_PC, nan)
+        return this
+    def add_AREA_TYP_FOR_PC(AREA_TYP_FOR_PC:float):
+        b_.PrependFloat64Slot(29, AREA_TYP_FOR_PC, nan)
+        return this
+    def add_RCS(RCS:float):
+        b_.PrependFloat64Slot(30, RCS, nan)
+        return this
+    def add_RCS_MIN(RCS_MIN:float):
+        b_.PrependFloat64Slot(31, RCS_MIN, nan)
+        return this
+    def add_RCS_MAX(RCS_MAX:float):
+        b_.PrependFloat64Slot(32, RCS_MAX, nan)
+        return this
+    def add_VM_ABSOLUTE(VM_ABSOLUTE:float):
+        b_.PrependFloat64Slot(33, VM_ABSOLUTE, nan)
+        return this
+    def add_VM_APPARENT_MIN(VM_APPARENT_MIN:float):
+        b_.PrependFloat64Slot(34, VM_APPARENT_MIN, nan)
+        return this
+    def add_VM_APPARENT(VM_APPARENT:float):
+        b_.PrependFloat64Slot(35, VM_APPARENT, nan)
+        return this
+    def add_VM_APPARENT_MAX(VM_APPARENT_MAX:float):
+        b_.PrependFloat64Slot(36, VM_APPARENT_MAX, nan)
+        return this
+    def add_REFLECTANCE(REFLECTANCE:float):
+        b_.PrependFloat64Slot(37, REFLECTANCE, nan)
+        return this
+    def add_ATT_CONTROL_MODE(ATT_CONTROL_MODE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(38, ATT_CONTROL_MODE)
+        return this
+    def add_ATT_ACTUATOR_TYPE(ATT_ACTUATOR_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(39, ATT_ACTUATOR_TYPE)
+        return this
+    def add_ATT_KNOWLEDGE(ATT_KNOWLEDGE:float):
+        b_.PrependFloat64Slot(40, ATT_KNOWLEDGE, nan)
+        return this
+    def add_ATT_CONTROL(ATT_CONTROL:float):
+        b_.PrependFloat64Slot(41, ATT_CONTROL, nan)
+        return this
+    def add_ATT_POINTING(ATT_POINTING:float):
+        b_.PrependFloat64Slot(42, ATT_POINTING, nan)
+        return this
+    def add_AVG_MANEUVER_FREQ(AVG_MANEUVER_FREQ:float):
+        b_.PrependFloat64Slot(43, AVG_MANEUVER_FREQ, nan)
+        return this
+    def add_MAX_THRUST(MAX_THRUST:float):
+        b_.PrependFloat64Slot(44, MAX_THRUST, nan)
+        return this
+    def add_DV_BOL(DV_BOL:float):
+        b_.PrependFloat64Slot(45, DV_BOL, nan)
+        return this
+    def add_DV_REMAINING(DV_REMAINING:float):
+        b_.PrependFloat64Slot(46, DV_REMAINING, nan)
+        return this
+    def add_IXX(IXX:float):
+        b_.PrependFloat64Slot(47, IXX, nan)
+        return this
+    def add_IYY(IYY:float):
+        b_.PrependFloat64Slot(48, IYY, nan)
+        return this
+    def add_IZZ(IZZ:float):
+        b_.PrependFloat64Slot(49, IZZ, nan)
+        return this
+    def add_IXY(IXY:float):
+        b_.PrependFloat64Slot(50, IXY, nan)
+        return this
+    def add_IXZ(IXZ:float):
+        b_.PrependFloat64Slot(51, IXZ, nan)
+        return this
+    def add_IYZ(IYZ:float):
+        b_.PrependFloat64Slot(52, IYZ, nan)
         return this
     def end():
         return b_.EndObject()
@@ -778,13 +974,68 @@ class Perturbations : flatbuffers.handle
     /// time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
     def FIXED_GEOMAG_AP() -> float:
         return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
+    /// ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+    /// above is the model family when the text names one.
+    def ATMOSPHERIC_MODEL_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 44)
+    /// EQUATORIAL_RADIUS in km, NaN when not stated.
+    def EQUATORIAL_RADIUS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 46, nan)
+    /// CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+    def CENTRAL_BODY_ROTATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 48, nan)
+    /// OBLATE_FLATTENING, NaN when not stated.
+    def OBLATE_FLATTENING() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 50, nan)
+    /// REDUCTION_THEORY.
+    def REDUCTION_THEORY() -> string:
+        return flatbuffers.field_string(buf_, pos_, 52)
+    /// ALBEDO_GRID_SIZE.
+    def ALBEDO_GRID_SIZE() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 54, 0)
+    /// SHADOW_MODEL.
+    def SHADOW_MODEL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 56)
+    /// SHADOW_BODIES.
+    def SHADOW_BODIES() -> string:
+        return flatbuffers.field_string(buf_, pos_, 58)
+    /// SW_DATA_SOURCE: the space weather data source.
+    def SW_DATA_SOURCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 60)
+    /// SW_DATA_EPOCH.
+    def SW_DATA_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 62)
+    /// SW_INTERP_METHOD.
+    def SW_INTERP_METHOD() -> string:
+        return flatbuffers.field_string(buf_, pos_, 64)
+    /// FIXED_GEOMAG_DST in nT, NaN when not stated.
+    def FIXED_GEOMAG_DST() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 66, nan)
+    /// FIXED_M10P7, NaN when not stated.
+    def FIXED_M10P7() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 68, nan)
+    /// FIXED_M10P7_MEAN, NaN when not stated.
+    def FIXED_M10P7_MEAN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 70, nan)
+    /// FIXED_S10P7, NaN when not stated.
+    def FIXED_S10P7() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 72, nan)
+    /// FIXED_S10P7_MEAN, NaN when not stated.
+    def FIXED_S10P7_MEAN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 74, nan)
+    /// FIXED_Y10P7, NaN when not stated.
+    def FIXED_Y10P7() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 76, nan)
+    /// FIXED_Y10P7_MEAN, NaN when not stated.
+    def FIXED_Y10P7_MEAN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 78, nan)
 
 def GetRootAsPerturbations(buf:string): return Perturbations { buf, flatbuffers.indirect(buf, 0) }
 
 struct PerturbationsBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(20)
+        b_.StartObject(38)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -845,6 +1096,60 @@ struct PerturbationsBuilder:
         return this
     def add_FIXED_GEOMAG_AP(FIXED_GEOMAG_AP:float):
         b_.PrependFloat64Slot(19, FIXED_GEOMAG_AP, 0.0)
+        return this
+    def add_ATMOSPHERIC_MODEL_NAME(ATMOSPHERIC_MODEL_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, ATMOSPHERIC_MODEL_NAME)
+        return this
+    def add_EQUATORIAL_RADIUS(EQUATORIAL_RADIUS:float):
+        b_.PrependFloat64Slot(21, EQUATORIAL_RADIUS, nan)
+        return this
+    def add_CENTRAL_BODY_ROTATION(CENTRAL_BODY_ROTATION:float):
+        b_.PrependFloat64Slot(22, CENTRAL_BODY_ROTATION, nan)
+        return this
+    def add_OBLATE_FLATTENING(OBLATE_FLATTENING:float):
+        b_.PrependFloat64Slot(23, OBLATE_FLATTENING, nan)
+        return this
+    def add_REDUCTION_THEORY(REDUCTION_THEORY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(24, REDUCTION_THEORY)
+        return this
+    def add_ALBEDO_GRID_SIZE(ALBEDO_GRID_SIZE:int):
+        b_.PrependUint32Slot(25, ALBEDO_GRID_SIZE, 0)
+        return this
+    def add_SHADOW_MODEL(SHADOW_MODEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(26, SHADOW_MODEL)
+        return this
+    def add_SHADOW_BODIES(SHADOW_BODIES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(27, SHADOW_BODIES)
+        return this
+    def add_SW_DATA_SOURCE(SW_DATA_SOURCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, SW_DATA_SOURCE)
+        return this
+    def add_SW_DATA_EPOCH(SW_DATA_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(29, SW_DATA_EPOCH)
+        return this
+    def add_SW_INTERP_METHOD(SW_INTERP_METHOD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(30, SW_INTERP_METHOD)
+        return this
+    def add_FIXED_GEOMAG_DST(FIXED_GEOMAG_DST:float):
+        b_.PrependFloat64Slot(31, FIXED_GEOMAG_DST, nan)
+        return this
+    def add_FIXED_M10P7(FIXED_M10P7:float):
+        b_.PrependFloat64Slot(32, FIXED_M10P7, nan)
+        return this
+    def add_FIXED_M10P7_MEAN(FIXED_M10P7_MEAN:float):
+        b_.PrependFloat64Slot(33, FIXED_M10P7_MEAN, nan)
+        return this
+    def add_FIXED_S10P7(FIXED_S10P7:float):
+        b_.PrependFloat64Slot(34, FIXED_S10P7, nan)
+        return this
+    def add_FIXED_S10P7_MEAN(FIXED_S10P7_MEAN:float):
+        b_.PrependFloat64Slot(35, FIXED_S10P7_MEAN, nan)
+        return this
+    def add_FIXED_Y10P7(FIXED_Y10P7:float):
+        b_.PrependFloat64Slot(36, FIXED_Y10P7, nan)
+        return this
+    def add_FIXED_Y10P7_MEAN(FIXED_Y10P7_MEAN:float):
+        b_.PrependFloat64Slot(37, FIXED_Y10P7_MEAN, nan)
         return this
     def end():
         return b_.EndObject()
@@ -1290,13 +1595,78 @@ class OrbitDetermination : flatbuffers.handle
         return OCMDynamicParameter { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 54) + i * 4) }
     def OD_DYNAMIC_PARAMETERS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 54)
+    /// DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+    def DAYS_SINCE_FIRST_OBS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 56, nan)
+    /// DAYS_SINCE_LAST_OBS, NaN when not stated.
+    def DAYS_SINCE_LAST_OBS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 58, nan)
+    /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+    def RECOMMENDED_OD_SPAN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 60, nan)
+    /// ACTUAL_OD_SPAN in days, NaN when not stated.
+    def ACTUAL_OD_SPAN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 62, nan)
+    /// OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+    def OBS_AVAILABLE() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 64, 0)
+    /// TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+    def TRACKS_AVAILABLE() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 66, 0)
+    /// MAXIMUM_OBS_GAP in days, NaN when not stated.
+    def MAXIMUM_OBS_GAP() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 68, nan)
+    /// OD_EPOCH_EIGMAJ in m, NaN when not stated.
+    def OD_EPOCH_EIGMAJ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 70, nan)
+    /// OD_EPOCH_EIGINT in m, NaN when not stated.
+    def OD_EPOCH_EIGINT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 72, nan)
+    /// OD_EPOCH_EIGMIN in m, NaN when not stated.
+    def OD_EPOCH_EIGMIN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 74, nan)
+    /// OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+    def OD_MAX_PRED_EIGMAJ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 76, nan)
+    /// OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+    def OD_MIN_PRED_EIGMIN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 78, nan)
+    /// OD_CONFIDENCE in percent, NaN when not stated.
+    def OD_CONFIDENCE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 80, nan)
+    /// GDOP, NaN when not stated.
+    def GDOP() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 82, nan)
+    /// SOLVE_N: the number of solved-for states.
+    def SOLVE_N() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 84, 0)
+    /// SOLVE_STATES: the solved-for states, as written.
+    def SOLVE_STATES() -> string:
+        return flatbuffers.field_string(buf_, pos_, 86)
+    /// CONSIDER_N: the number of consider parameters.
+    def CONSIDER_N() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 88, 0)
+    /// CONSIDER_PARAMS: the consider parameters, as written.
+    def CONSIDER_PARAMS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 90)
+    /// SENSORS_N: the number of sensors.
+    def SENSORS_N() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 92, 0)
+    /// SENSORS: the sensors, as written.
+    def SENSORS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 94)
+    /// COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+    def COMMENT(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 96) + i * 4)
+    def COMMENT_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 96)
 
 def GetRootAsOrbitDetermination(buf:string): return OrbitDetermination { buf, flatbuffers.indirect(buf, 0) }
 
 struct OrbitDeterminationBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(26)
+        b_.StartObject(47)
         return this
     def add_OD_ID(OD_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, OD_ID)
@@ -1376,6 +1746,69 @@ struct OrbitDeterminationBuilder:
     def add_OD_DYNAMIC_PARAMETERS(OD_DYNAMIC_PARAMETERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(25, OD_DYNAMIC_PARAMETERS)
         return this
+    def add_DAYS_SINCE_FIRST_OBS(DAYS_SINCE_FIRST_OBS:float):
+        b_.PrependFloat64Slot(26, DAYS_SINCE_FIRST_OBS, nan)
+        return this
+    def add_DAYS_SINCE_LAST_OBS(DAYS_SINCE_LAST_OBS:float):
+        b_.PrependFloat64Slot(27, DAYS_SINCE_LAST_OBS, nan)
+        return this
+    def add_RECOMMENDED_OD_SPAN(RECOMMENDED_OD_SPAN:float):
+        b_.PrependFloat64Slot(28, RECOMMENDED_OD_SPAN, nan)
+        return this
+    def add_ACTUAL_OD_SPAN(ACTUAL_OD_SPAN:float):
+        b_.PrependFloat64Slot(29, ACTUAL_OD_SPAN, nan)
+        return this
+    def add_OBS_AVAILABLE(OBS_AVAILABLE:int):
+        b_.PrependUint32Slot(30, OBS_AVAILABLE, 0)
+        return this
+    def add_TRACKS_AVAILABLE(TRACKS_AVAILABLE:int):
+        b_.PrependUint32Slot(31, TRACKS_AVAILABLE, 0)
+        return this
+    def add_MAXIMUM_OBS_GAP(MAXIMUM_OBS_GAP:float):
+        b_.PrependFloat64Slot(32, MAXIMUM_OBS_GAP, nan)
+        return this
+    def add_OD_EPOCH_EIGMAJ(OD_EPOCH_EIGMAJ:float):
+        b_.PrependFloat64Slot(33, OD_EPOCH_EIGMAJ, nan)
+        return this
+    def add_OD_EPOCH_EIGINT(OD_EPOCH_EIGINT:float):
+        b_.PrependFloat64Slot(34, OD_EPOCH_EIGINT, nan)
+        return this
+    def add_OD_EPOCH_EIGMIN(OD_EPOCH_EIGMIN:float):
+        b_.PrependFloat64Slot(35, OD_EPOCH_EIGMIN, nan)
+        return this
+    def add_OD_MAX_PRED_EIGMAJ(OD_MAX_PRED_EIGMAJ:float):
+        b_.PrependFloat64Slot(36, OD_MAX_PRED_EIGMAJ, nan)
+        return this
+    def add_OD_MIN_PRED_EIGMIN(OD_MIN_PRED_EIGMIN:float):
+        b_.PrependFloat64Slot(37, OD_MIN_PRED_EIGMIN, nan)
+        return this
+    def add_OD_CONFIDENCE(OD_CONFIDENCE:float):
+        b_.PrependFloat64Slot(38, OD_CONFIDENCE, nan)
+        return this
+    def add_GDOP(GDOP:float):
+        b_.PrependFloat64Slot(39, GDOP, nan)
+        return this
+    def add_SOLVE_N(SOLVE_N:int):
+        b_.PrependUint32Slot(40, SOLVE_N, 0)
+        return this
+    def add_SOLVE_STATES(SOLVE_STATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(41, SOLVE_STATES)
+        return this
+    def add_CONSIDER_N(CONSIDER_N:int):
+        b_.PrependUint32Slot(42, CONSIDER_N, 0)
+        return this
+    def add_CONSIDER_PARAMS(CONSIDER_PARAMS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(43, CONSIDER_PARAMS)
+        return this
+    def add_SENSORS_N(SENSORS_N:int):
+        b_.PrependUint32Slot(44, SENSORS_N, 0)
+        return this
+    def add_SENSORS(SENSORS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(45, SENSORS)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(46, COMMENT)
+        return this
     def end():
         return b_.EndObject()
 
@@ -1410,6 +1843,273 @@ def OrbitDeterminationCreateODRESIDUALEPOCHSVector(b_:flatbuffers.builder, v_:[f
 def OrbitDeterminationStartODDYNAMICPARAMETERSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def OrbitDeterminationCreateODDYNAMICPARAMETERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def OrbitDeterminationStartCOMMENTVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OrbitDeterminationCreateCOMMENTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):
+/// the block's keywords, and its data lines as written (a time tag, then the
+/// numbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state
+/// the first block's CARTPV or CARTPVA states for the modules that read those.
+class OCMTrajectoryBlock : flatbuffers.handle
+    /// COMMENT lines of this block, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// TRAJ_ID.
+    def TRAJ_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// TRAJ_PREV_ID.
+    def TRAJ_PREV_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// TRAJ_NEXT_ID.
+    def TRAJ_NEXT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.
+    def TRAJ_BASIS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// TRAJ_BASIS_ID.
+    def TRAJ_BASIS_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// INTERPOLATION: the recommended interpolation method.
+    def INTERPOLATION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// INTERPOLATION_DEGREE.
+    def INTERPOLATION_DEGREE() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 18, 0)
+    /// PROPAGATOR.
+    def PROPAGATOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    /// CENTER_NAME.
+    def CENTER_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// TRAJ_REF_FRAME.
+    def TRAJ_REF_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 24)
+    /// TRAJ_FRAME_EPOCH.
+    def TRAJ_FRAME_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    /// USEABLE_START_TIME.
+    def USEABLE_START_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 28)
+    /// USEABLE_STOP_TIME.
+    def USEABLE_STOP_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 30)
+    /// ORB_REVNUM, NaN when not stated.
+    def ORB_REVNUM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 32, nan)
+    /// ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.
+    def ORB_REVNUM_BASIS() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 34, -1)
+    /// TRAJ_TYPE as written, for example CARTPV.
+    def TRAJ_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 36)
+    /// ORB_AVERAGING.
+    def ORB_AVERAGING() -> string:
+        return flatbuffers.field_string(buf_, pos_, 38)
+    /// TRAJ_UNITS.
+    def TRAJ_UNITS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 40)
+    /// The data lines, as written.
+    def LINES(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 42) + i * 4)
+    def LINES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 42)
+
+def GetRootAsOCMTrajectoryBlock(buf:string): return OCMTrajectoryBlock { buf, flatbuffers.indirect(buf, 0) }
+
+struct OCMTrajectoryBlockBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(20)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_TRAJ_ID(TRAJ_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, TRAJ_ID)
+        return this
+    def add_TRAJ_PREV_ID(TRAJ_PREV_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, TRAJ_PREV_ID)
+        return this
+    def add_TRAJ_NEXT_ID(TRAJ_NEXT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, TRAJ_NEXT_ID)
+        return this
+    def add_TRAJ_BASIS(TRAJ_BASIS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, TRAJ_BASIS)
+        return this
+    def add_TRAJ_BASIS_ID(TRAJ_BASIS_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, TRAJ_BASIS_ID)
+        return this
+    def add_INTERPOLATION(INTERPOLATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, INTERPOLATION)
+        return this
+    def add_INTERPOLATION_DEGREE(INTERPOLATION_DEGREE:int):
+        b_.PrependUint32Slot(7, INTERPOLATION_DEGREE, 0)
+        return this
+    def add_PROPAGATOR(PROPAGATOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, PROPAGATOR)
+        return this
+    def add_CENTER_NAME(CENTER_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, CENTER_NAME)
+        return this
+    def add_TRAJ_REF_FRAME(TRAJ_REF_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, TRAJ_REF_FRAME)
+        return this
+    def add_TRAJ_FRAME_EPOCH(TRAJ_FRAME_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, TRAJ_FRAME_EPOCH)
+        return this
+    def add_USEABLE_START_TIME(USEABLE_START_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, USEABLE_START_TIME)
+        return this
+    def add_USEABLE_STOP_TIME(USEABLE_STOP_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, USEABLE_STOP_TIME)
+        return this
+    def add_ORB_REVNUM(ORB_REVNUM:float):
+        b_.PrependFloat64Slot(14, ORB_REVNUM, nan)
+        return this
+    def add_ORB_REVNUM_BASIS(ORB_REVNUM_BASIS:int):
+        b_.PrependInt32Slot(15, ORB_REVNUM_BASIS, -1)
+        return this
+    def add_TRAJ_TYPE(TRAJ_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, TRAJ_TYPE)
+        return this
+    def add_ORB_AVERAGING(ORB_AVERAGING:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, ORB_AVERAGING)
+        return this
+    def add_TRAJ_UNITS(TRAJ_UNITS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, TRAJ_UNITS)
+        return this
+    def add_LINES(LINES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, LINES)
+        return this
+    def end():
+        return b_.EndObject()
+
+def OCMTrajectoryBlockStartLINESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OCMTrajectoryBlockCreateLINESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// One covariance time history of an OCM (Table 6-6): the block's keywords and its
+/// data lines as written (a time tag, then the covariance in COV_ORDERING). The
+/// single-covariance fields of the OCM above state the first block when it is one
+/// line.
+class OCMCovarianceBlock : flatbuffers.handle
+    /// COMMENT lines of this block, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// COV_ID.
+    def COV_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// COV_PREV_ID.
+    def COV_PREV_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// COV_NEXT_ID.
+    def COV_NEXT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.
+    def COV_BASIS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// COV_BASIS_ID.
+    def COV_BASIS_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// COV_REF_FRAME.
+    def COV_REF_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// COV_FRAME_EPOCH.
+    def COV_FRAME_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    /// COV_SCALE_MIN, NaN when not stated.
+    def COV_SCALE_MIN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, nan)
+    /// COV_SCALE_MAX, NaN when not stated.
+    def COV_SCALE_MAX() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, nan)
+    /// COV_CONFIDENCE in percent, NaN when not stated.
+    def COV_CONFIDENCE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, nan)
+    /// COV_TYPE as written, for example CARTPV.
+    def COV_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    /// COV_ORDERING.
+    def COV_ORDERING() -> covarianceOrdering:
+        return covarianceOrdering(flatbuffers.field_int8(buf_, pos_, 28, 0))
+    /// COV_UNITS.
+    def COV_UNITS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 30)
+    /// The data lines, as written.
+    def LINES(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 4)
+    def LINES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 32)
+
+def GetRootAsOCMCovarianceBlock(buf:string): return OCMCovarianceBlock { buf, flatbuffers.indirect(buf, 0) }
+
+struct OCMCovarianceBlockBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(15)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_COV_ID(COV_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, COV_ID)
+        return this
+    def add_COV_PREV_ID(COV_PREV_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, COV_PREV_ID)
+        return this
+    def add_COV_NEXT_ID(COV_NEXT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, COV_NEXT_ID)
+        return this
+    def add_COV_BASIS(COV_BASIS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, COV_BASIS)
+        return this
+    def add_COV_BASIS_ID(COV_BASIS_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, COV_BASIS_ID)
+        return this
+    def add_COV_REF_FRAME(COV_REF_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, COV_REF_FRAME)
+        return this
+    def add_COV_FRAME_EPOCH(COV_FRAME_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, COV_FRAME_EPOCH)
+        return this
+    def add_COV_SCALE_MIN(COV_SCALE_MIN:float):
+        b_.PrependFloat64Slot(8, COV_SCALE_MIN, nan)
+        return this
+    def add_COV_SCALE_MAX(COV_SCALE_MAX:float):
+        b_.PrependFloat64Slot(9, COV_SCALE_MAX, nan)
+        return this
+    def add_COV_CONFIDENCE(COV_CONFIDENCE:float):
+        b_.PrependFloat64Slot(10, COV_CONFIDENCE, nan)
+        return this
+    def add_COV_TYPE(COV_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, COV_TYPE)
+        return this
+    def add_COV_ORDERING(COV_ORDERING:covarianceOrdering):
+        b_.PrependInt8Slot(12, COV_ORDERING, 0)
+        return this
+    def add_COV_UNITS(COV_UNITS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, COV_UNITS)
+        return this
+    def add_LINES(LINES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, LINES)
+        return this
+    def end():
+        return b_.EndObject()
+
+def OCMCovarianceBlockStartLINESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OCMCovarianceBlockCreateLINESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1586,13 +2286,27 @@ class OCM : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 60) + i * 4)
     def COV_UNITS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 60)
+    /// Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+    /// blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+    /// them above state the first block's CARTPV or CARTPVA states.
+    def TRAJECTORY_BLOCKS(i:int) -> OCMTrajectoryBlock:
+        return OCMTrajectoryBlock { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 62) + i * 4) }
+    def TRAJECTORY_BLOCKS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 62)
+    /// Every covariance time history of the message (COV_START blocks), in message
+    /// order. COVARIANCE_DATA and the fields that go with it above state the first
+    /// block when it is one line.
+    def COVARIANCE_BLOCKS(i:int) -> OCMCovarianceBlock:
+        return OCMCovarianceBlock { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 64) + i * 4) }
+    def COVARIANCE_BLOCKS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 64)
 
 def GetRootAsOCM(buf:string): return OCM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OCMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(29)
+        b_.StartObject(31)
         return this
     def add_HEADER(HEADER:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, HEADER)
@@ -1681,6 +2395,12 @@ struct OCMBuilder:
     def add_COV_UNITS(COV_UNITS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(28, COV_UNITS)
         return this
+    def add_TRAJECTORY_BLOCKS(TRAJECTORY_BLOCKS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(29, TRAJECTORY_BLOCKS)
+        return this
+    def add_COVARIANCE_BLOCKS(COVARIANCE_BLOCKS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(30, COVARIANCE_BLOCKS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -1743,6 +2463,20 @@ def OCMCreateCOVPARAMETERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]
 def OCMStartCOVUNITSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def OCMCreateCOVUNITSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def OCMStartTRAJECTORYBLOCKSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OCMCreateTRAJECTORYBLOCKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def OCMStartCOVARIANCEBLOCKSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OCMCreateCOVARIANCEBLOCKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

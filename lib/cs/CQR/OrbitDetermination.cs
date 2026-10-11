@@ -175,6 +175,67 @@ public struct OrbitDetermination : IFlatbufferObject
   /// COV_PARAMETERS names in the covariance are entries of this list.
   public OCMDynamicParameter? OD_DYNAMIC_PARAMETERS(int j) { int o = __p.__offset(54); return o != 0 ? (OCMDynamicParameter?)(new OCMDynamicParameter()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int OD_DYNAMIC_PARAMETERSLength { get { int o = __p.__offset(54); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+  public double DAYS_SINCE_FIRST_OBS { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// DAYS_SINCE_LAST_OBS, NaN when not stated.
+  public double DAYS_SINCE_LAST_OBS { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+  public double RECOMMENDED_OD_SPAN { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// ACTUAL_OD_SPAN in days, NaN when not stated.
+  public double ACTUAL_OD_SPAN { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+  public uint OBS_AVAILABLE { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+  public uint TRACKS_AVAILABLE { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// MAXIMUM_OBS_GAP in days, NaN when not stated.
+  public double MAXIMUM_OBS_GAP { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// OD_EPOCH_EIGMAJ in m, NaN when not stated.
+  public double OD_EPOCH_EIGMAJ { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// OD_EPOCH_EIGINT in m, NaN when not stated.
+  public double OD_EPOCH_EIGINT { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// OD_EPOCH_EIGMIN in m, NaN when not stated.
+  public double OD_EPOCH_EIGMIN { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+  public double OD_MAX_PRED_EIGMAJ { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+  public double OD_MIN_PRED_EIGMIN { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// OD_CONFIDENCE in percent, NaN when not stated.
+  public double OD_CONFIDENCE { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// GDOP, NaN when not stated.
+  public double GDOP { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// SOLVE_N: the number of solved-for states.
+  public uint SOLVE_N { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// SOLVE_STATES: the solved-for states, as written.
+  public string SOLVE_STATES { get { int o = __p.__offset(86); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSOLVE_STATESBytes() { return __p.__vector_as_span<byte>(86, 1); }
+#else
+  public ArraySegment<byte>? GetSOLVE_STATESBytes() { return __p.__vector_as_arraysegment(86); }
+#endif
+  public byte[] GetSOLVE_STATESArray() { return __p.__vector_as_array<byte>(86); }
+  /// CONSIDER_N: the number of consider parameters.
+  public uint CONSIDER_N { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// CONSIDER_PARAMS: the consider parameters, as written.
+  public string CONSIDER_PARAMS { get { int o = __p.__offset(90); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCONSIDER_PARAMSBytes() { return __p.__vector_as_span<byte>(90, 1); }
+#else
+  public ArraySegment<byte>? GetCONSIDER_PARAMSBytes() { return __p.__vector_as_arraysegment(90); }
+#endif
+  public byte[] GetCONSIDER_PARAMSArray() { return __p.__vector_as_array<byte>(90); }
+  /// SENSORS_N: the number of sensors.
+  public uint SENSORS_N { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// SENSORS: the sensors, as written.
+  public string SENSORS { get { int o = __p.__offset(94); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSENSORSBytes() { return __p.__vector_as_span<byte>(94, 1); }
+#else
+  public ArraySegment<byte>? GetSENSORSBytes() { return __p.__vector_as_arraysegment(94); }
+#endif
+  public byte[] GetSENSORSArray() { return __p.__vector_as_array<byte>(94); }
+  /// COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+  public string COMMENT(int j) { int o = __p.__offset(96); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int COMMENTLength { get { int o = __p.__offset(96); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<OrbitDetermination> CreateOrbitDetermination(FlatBufferBuilder builder,
       StringOffset OD_IDOffset = default(StringOffset),
@@ -202,12 +263,54 @@ public struct OrbitDetermination : IFlatbufferObject
       double OD_BATCH_BASELINE_RMS = 0.0,
       double SEDR = 0.0,
       double WEIGHTED_RMS = 0.0,
-      VectorOffset OD_DYNAMIC_PARAMETERSOffset = default(VectorOffset)) {
-    builder.StartTable(26);
+      VectorOffset OD_DYNAMIC_PARAMETERSOffset = default(VectorOffset),
+      double DAYS_SINCE_FIRST_OBS = Double.NaN,
+      double DAYS_SINCE_LAST_OBS = Double.NaN,
+      double RECOMMENDED_OD_SPAN = Double.NaN,
+      double ACTUAL_OD_SPAN = Double.NaN,
+      uint OBS_AVAILABLE = 0,
+      uint TRACKS_AVAILABLE = 0,
+      double MAXIMUM_OBS_GAP = Double.NaN,
+      double OD_EPOCH_EIGMAJ = Double.NaN,
+      double OD_EPOCH_EIGINT = Double.NaN,
+      double OD_EPOCH_EIGMIN = Double.NaN,
+      double OD_MAX_PRED_EIGMAJ = Double.NaN,
+      double OD_MIN_PRED_EIGMIN = Double.NaN,
+      double OD_CONFIDENCE = Double.NaN,
+      double GDOP = Double.NaN,
+      uint SOLVE_N = 0,
+      StringOffset SOLVE_STATESOffset = default(StringOffset),
+      uint CONSIDER_N = 0,
+      StringOffset CONSIDER_PARAMSOffset = default(StringOffset),
+      uint SENSORS_N = 0,
+      StringOffset SENSORSOffset = default(StringOffset),
+      VectorOffset COMMENTOffset = default(VectorOffset)) {
+    builder.StartTable(47);
+    OrbitDetermination.AddGDOP(builder, GDOP);
+    OrbitDetermination.AddOD_CONFIDENCE(builder, OD_CONFIDENCE);
+    OrbitDetermination.AddOD_MIN_PRED_EIGMIN(builder, OD_MIN_PRED_EIGMIN);
+    OrbitDetermination.AddOD_MAX_PRED_EIGMAJ(builder, OD_MAX_PRED_EIGMAJ);
+    OrbitDetermination.AddOD_EPOCH_EIGMIN(builder, OD_EPOCH_EIGMIN);
+    OrbitDetermination.AddOD_EPOCH_EIGINT(builder, OD_EPOCH_EIGINT);
+    OrbitDetermination.AddOD_EPOCH_EIGMAJ(builder, OD_EPOCH_EIGMAJ);
+    OrbitDetermination.AddMAXIMUM_OBS_GAP(builder, MAXIMUM_OBS_GAP);
+    OrbitDetermination.AddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN);
+    OrbitDetermination.AddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN);
+    OrbitDetermination.AddDAYS_SINCE_LAST_OBS(builder, DAYS_SINCE_LAST_OBS);
+    OrbitDetermination.AddDAYS_SINCE_FIRST_OBS(builder, DAYS_SINCE_FIRST_OBS);
     OrbitDetermination.AddWEIGHTED_RMS(builder, WEIGHTED_RMS);
     OrbitDetermination.AddSEDR(builder, SEDR);
     OrbitDetermination.AddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS);
     OrbitDetermination.AddOD_RESIDUAL_RMS(builder, OD_RESIDUAL_RMS);
+    OrbitDetermination.AddCOMMENT(builder, COMMENTOffset);
+    OrbitDetermination.AddSENSORS(builder, SENSORSOffset);
+    OrbitDetermination.AddSENSORS_N(builder, SENSORS_N);
+    OrbitDetermination.AddCONSIDER_PARAMS(builder, CONSIDER_PARAMSOffset);
+    OrbitDetermination.AddCONSIDER_N(builder, CONSIDER_N);
+    OrbitDetermination.AddSOLVE_STATES(builder, SOLVE_STATESOffset);
+    OrbitDetermination.AddSOLVE_N(builder, SOLVE_N);
+    OrbitDetermination.AddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE);
+    OrbitDetermination.AddOBS_AVAILABLE(builder, OBS_AVAILABLE);
     OrbitDetermination.AddOD_DYNAMIC_PARAMETERS(builder, OD_DYNAMIC_PARAMETERSOffset);
     OrbitDetermination.AddOD_BATCH_BASELINE_ID(builder, OD_BATCH_BASELINE_IDOffset);
     OrbitDetermination.AddOD_RESIDUAL_EPOCHS(builder, OD_RESIDUAL_EPOCHSOffset);
@@ -233,7 +336,7 @@ public struct OrbitDetermination : IFlatbufferObject
     return OrbitDetermination.EndOrbitDetermination(builder);
   }
 
-  public static void StartOrbitDetermination(FlatBufferBuilder builder) { builder.StartTable(26); }
+  public static void StartOrbitDetermination(FlatBufferBuilder builder) { builder.StartTable(47); }
   public static void AddOD_ID(FlatBufferBuilder builder, StringOffset OD_IDOffset) { builder.AddOffset(0, OD_IDOffset.Value, 0); }
   public static void AddOD_PREV_ID(FlatBufferBuilder builder, StringOffset OD_PREV_IDOffset) { builder.AddOffset(1, OD_PREV_IDOffset.Value, 0); }
   public static void AddOD_ALGORITHM(FlatBufferBuilder builder, StringOffset OD_ALGORITHMOffset) { builder.AddOffset(2, OD_ALGORITHMOffset.Value, 0); }
@@ -285,6 +388,32 @@ public struct OrbitDetermination : IFlatbufferObject
   public static VectorOffset CreateOD_DYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OCMDynamicParameter>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateOD_DYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OCMDynamicParameter>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartOD_DYNAMIC_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddDAYS_SINCE_FIRST_OBS(FlatBufferBuilder builder, double DAYS_SINCE_FIRST_OBS) { builder.AddDouble(26, DAYS_SINCE_FIRST_OBS, Double.NaN); }
+  public static void AddDAYS_SINCE_LAST_OBS(FlatBufferBuilder builder, double DAYS_SINCE_LAST_OBS) { builder.AddDouble(27, DAYS_SINCE_LAST_OBS, Double.NaN); }
+  public static void AddRECOMMENDED_OD_SPAN(FlatBufferBuilder builder, double RECOMMENDED_OD_SPAN) { builder.AddDouble(28, RECOMMENDED_OD_SPAN, Double.NaN); }
+  public static void AddACTUAL_OD_SPAN(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.AddDouble(29, ACTUAL_OD_SPAN, Double.NaN); }
+  public static void AddOBS_AVAILABLE(FlatBufferBuilder builder, uint OBS_AVAILABLE) { builder.AddUint(30, OBS_AVAILABLE, 0); }
+  public static void AddTRACKS_AVAILABLE(FlatBufferBuilder builder, uint TRACKS_AVAILABLE) { builder.AddUint(31, TRACKS_AVAILABLE, 0); }
+  public static void AddMAXIMUM_OBS_GAP(FlatBufferBuilder builder, double MAXIMUM_OBS_GAP) { builder.AddDouble(32, MAXIMUM_OBS_GAP, Double.NaN); }
+  public static void AddOD_EPOCH_EIGMAJ(FlatBufferBuilder builder, double OD_EPOCH_EIGMAJ) { builder.AddDouble(33, OD_EPOCH_EIGMAJ, Double.NaN); }
+  public static void AddOD_EPOCH_EIGINT(FlatBufferBuilder builder, double OD_EPOCH_EIGINT) { builder.AddDouble(34, OD_EPOCH_EIGINT, Double.NaN); }
+  public static void AddOD_EPOCH_EIGMIN(FlatBufferBuilder builder, double OD_EPOCH_EIGMIN) { builder.AddDouble(35, OD_EPOCH_EIGMIN, Double.NaN); }
+  public static void AddOD_MAX_PRED_EIGMAJ(FlatBufferBuilder builder, double OD_MAX_PRED_EIGMAJ) { builder.AddDouble(36, OD_MAX_PRED_EIGMAJ, Double.NaN); }
+  public static void AddOD_MIN_PRED_EIGMIN(FlatBufferBuilder builder, double OD_MIN_PRED_EIGMIN) { builder.AddDouble(37, OD_MIN_PRED_EIGMIN, Double.NaN); }
+  public static void AddOD_CONFIDENCE(FlatBufferBuilder builder, double OD_CONFIDENCE) { builder.AddDouble(38, OD_CONFIDENCE, Double.NaN); }
+  public static void AddGDOP(FlatBufferBuilder builder, double GDOP) { builder.AddDouble(39, GDOP, Double.NaN); }
+  public static void AddSOLVE_N(FlatBufferBuilder builder, uint SOLVE_N) { builder.AddUint(40, SOLVE_N, 0); }
+  public static void AddSOLVE_STATES(FlatBufferBuilder builder, StringOffset SOLVE_STATESOffset) { builder.AddOffset(41, SOLVE_STATESOffset.Value, 0); }
+  public static void AddCONSIDER_N(FlatBufferBuilder builder, uint CONSIDER_N) { builder.AddUint(42, CONSIDER_N, 0); }
+  public static void AddCONSIDER_PARAMS(FlatBufferBuilder builder, StringOffset CONSIDER_PARAMSOffset) { builder.AddOffset(43, CONSIDER_PARAMSOffset.Value, 0); }
+  public static void AddSENSORS_N(FlatBufferBuilder builder, uint SENSORS_N) { builder.AddUint(44, SENSORS_N, 0); }
+  public static void AddSENSORS(FlatBufferBuilder builder, StringOffset SENSORSOffset) { builder.AddOffset(45, SENSORSOffset.Value, 0); }
+  public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(46, COMMENTOffset.Value, 0); }
+  public static VectorOffset CreateCOMMENTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOMMENTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<OrbitDetermination> EndOrbitDetermination(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OrbitDetermination>(o);
@@ -326,6 +455,28 @@ public struct OrbitDetermination : IFlatbufferObject
     _o.WEIGHTED_RMS = this.WEIGHTED_RMS;
     _o.OD_DYNAMIC_PARAMETERS = new List<OCMDynamicParameterT>();
     for (var _j = 0; _j < this.OD_DYNAMIC_PARAMETERSLength; ++_j) {_o.OD_DYNAMIC_PARAMETERS.Add(this.OD_DYNAMIC_PARAMETERS(_j).HasValue ? this.OD_DYNAMIC_PARAMETERS(_j).Value.UnPack() : null);}
+    _o.DAYS_SINCE_FIRST_OBS = this.DAYS_SINCE_FIRST_OBS;
+    _o.DAYS_SINCE_LAST_OBS = this.DAYS_SINCE_LAST_OBS;
+    _o.RECOMMENDED_OD_SPAN = this.RECOMMENDED_OD_SPAN;
+    _o.ACTUAL_OD_SPAN = this.ACTUAL_OD_SPAN;
+    _o.OBS_AVAILABLE = this.OBS_AVAILABLE;
+    _o.TRACKS_AVAILABLE = this.TRACKS_AVAILABLE;
+    _o.MAXIMUM_OBS_GAP = this.MAXIMUM_OBS_GAP;
+    _o.OD_EPOCH_EIGMAJ = this.OD_EPOCH_EIGMAJ;
+    _o.OD_EPOCH_EIGINT = this.OD_EPOCH_EIGINT;
+    _o.OD_EPOCH_EIGMIN = this.OD_EPOCH_EIGMIN;
+    _o.OD_MAX_PRED_EIGMAJ = this.OD_MAX_PRED_EIGMAJ;
+    _o.OD_MIN_PRED_EIGMIN = this.OD_MIN_PRED_EIGMIN;
+    _o.OD_CONFIDENCE = this.OD_CONFIDENCE;
+    _o.GDOP = this.GDOP;
+    _o.SOLVE_N = this.SOLVE_N;
+    _o.SOLVE_STATES = this.SOLVE_STATES;
+    _o.CONSIDER_N = this.CONSIDER_N;
+    _o.CONSIDER_PARAMS = this.CONSIDER_PARAMS;
+    _o.SENSORS_N = this.SENSORS_N;
+    _o.SENSORS = this.SENSORS;
+    _o.COMMENT = new List<string>();
+    for (var _j = 0; _j < this.COMMENTLength; ++_j) {_o.COMMENT.Add(this.COMMENT(_j));}
   }
   public static Offset<OrbitDetermination> Pack(FlatBufferBuilder builder, OrbitDeterminationT _o) {
     if (_o == null) return default(Offset<OrbitDetermination>);
@@ -371,6 +522,15 @@ public struct OrbitDetermination : IFlatbufferObject
       for (var _j = 0; _j < __OD_DYNAMIC_PARAMETERS.Length; ++_j) { __OD_DYNAMIC_PARAMETERS[_j] = OCMDynamicParameter.Pack(builder, _o.OD_DYNAMIC_PARAMETERS[_j]); }
       _OD_DYNAMIC_PARAMETERS = CreateOD_DYNAMIC_PARAMETERSVector(builder, __OD_DYNAMIC_PARAMETERS);
     }
+    var _SOLVE_STATES = _o.SOLVE_STATES == null ? default(StringOffset) : builder.CreateString(_o.SOLVE_STATES);
+    var _CONSIDER_PARAMS = _o.CONSIDER_PARAMS == null ? default(StringOffset) : builder.CreateString(_o.CONSIDER_PARAMS);
+    var _SENSORS = _o.SENSORS == null ? default(StringOffset) : builder.CreateString(_o.SENSORS);
+    var _COMMENT = default(VectorOffset);
+    if (_o.COMMENT != null) {
+      var __COMMENT = new StringOffset[_o.COMMENT.Count];
+      for (var _j = 0; _j < __COMMENT.Length; ++_j) { __COMMENT[_j] = builder.CreateString(_o.COMMENT[_j]); }
+      _COMMENT = CreateCOMMENTVector(builder, __COMMENT);
+    }
     return CreateOrbitDetermination(
       builder,
       _OD_ID,
@@ -398,7 +558,28 @@ public struct OrbitDetermination : IFlatbufferObject
       _o.OD_BATCH_BASELINE_RMS,
       _o.SEDR,
       _o.WEIGHTED_RMS,
-      _OD_DYNAMIC_PARAMETERS);
+      _OD_DYNAMIC_PARAMETERS,
+      _o.DAYS_SINCE_FIRST_OBS,
+      _o.DAYS_SINCE_LAST_OBS,
+      _o.RECOMMENDED_OD_SPAN,
+      _o.ACTUAL_OD_SPAN,
+      _o.OBS_AVAILABLE,
+      _o.TRACKS_AVAILABLE,
+      _o.MAXIMUM_OBS_GAP,
+      _o.OD_EPOCH_EIGMAJ,
+      _o.OD_EPOCH_EIGINT,
+      _o.OD_EPOCH_EIGMIN,
+      _o.OD_MAX_PRED_EIGMAJ,
+      _o.OD_MIN_PRED_EIGMIN,
+      _o.OD_CONFIDENCE,
+      _o.GDOP,
+      _o.SOLVE_N,
+      _SOLVE_STATES,
+      _o.CONSIDER_N,
+      _CONSIDER_PARAMS,
+      _o.SENSORS_N,
+      _SENSORS,
+      _COMMENT);
   }
 }
 
@@ -430,6 +611,27 @@ public class OrbitDeterminationT
   public double SEDR { get; set; }
   public double WEIGHTED_RMS { get; set; }
   public List<OCMDynamicParameterT> OD_DYNAMIC_PARAMETERS { get; set; }
+  public double DAYS_SINCE_FIRST_OBS { get; set; }
+  public double DAYS_SINCE_LAST_OBS { get; set; }
+  public double RECOMMENDED_OD_SPAN { get; set; }
+  public double ACTUAL_OD_SPAN { get; set; }
+  public uint OBS_AVAILABLE { get; set; }
+  public uint TRACKS_AVAILABLE { get; set; }
+  public double MAXIMUM_OBS_GAP { get; set; }
+  public double OD_EPOCH_EIGMAJ { get; set; }
+  public double OD_EPOCH_EIGINT { get; set; }
+  public double OD_EPOCH_EIGMIN { get; set; }
+  public double OD_MAX_PRED_EIGMAJ { get; set; }
+  public double OD_MIN_PRED_EIGMIN { get; set; }
+  public double OD_CONFIDENCE { get; set; }
+  public double GDOP { get; set; }
+  public uint SOLVE_N { get; set; }
+  public string SOLVE_STATES { get; set; }
+  public uint CONSIDER_N { get; set; }
+  public string CONSIDER_PARAMS { get; set; }
+  public uint SENSORS_N { get; set; }
+  public string SENSORS { get; set; }
+  public List<string> COMMENT { get; set; }
 
   public OrbitDeterminationT() {
     this.OD_ID = null;
@@ -458,6 +660,27 @@ public class OrbitDeterminationT
     this.SEDR = 0.0;
     this.WEIGHTED_RMS = 0.0;
     this.OD_DYNAMIC_PARAMETERS = null;
+    this.DAYS_SINCE_FIRST_OBS = Double.NaN;
+    this.DAYS_SINCE_LAST_OBS = Double.NaN;
+    this.RECOMMENDED_OD_SPAN = Double.NaN;
+    this.ACTUAL_OD_SPAN = Double.NaN;
+    this.OBS_AVAILABLE = 0;
+    this.TRACKS_AVAILABLE = 0;
+    this.MAXIMUM_OBS_GAP = Double.NaN;
+    this.OD_EPOCH_EIGMAJ = Double.NaN;
+    this.OD_EPOCH_EIGINT = Double.NaN;
+    this.OD_EPOCH_EIGMIN = Double.NaN;
+    this.OD_MAX_PRED_EIGMAJ = Double.NaN;
+    this.OD_MIN_PRED_EIGMIN = Double.NaN;
+    this.OD_CONFIDENCE = Double.NaN;
+    this.GDOP = Double.NaN;
+    this.SOLVE_N = 0;
+    this.SOLVE_STATES = null;
+    this.CONSIDER_N = 0;
+    this.CONSIDER_PARAMS = null;
+    this.SENSORS_N = 0;
+    this.SENSORS = null;
+    this.COMMENT = null;
   }
 }
 
@@ -493,6 +716,27 @@ static public class OrbitDeterminationVerify
       && verifier.VerifyField(tablePos, 50 /*SEDR*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 52 /*WEIGHTED_RMS*/, 8 /*double*/, 8, false)
       && verifier.VerifyVectorOfTables(tablePos, 54 /*OD_DYNAMIC_PARAMETERS*/, OCMDynamicParameterVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 56 /*DAYS_SINCE_FIRST_OBS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*DAYS_SINCE_LAST_OBS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 60 /*RECOMMENDED_OD_SPAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 62 /*ACTUAL_OD_SPAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 64 /*OBS_AVAILABLE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 66 /*TRACKS_AVAILABLE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 68 /*MAXIMUM_OBS_GAP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 70 /*OD_EPOCH_EIGMAJ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 72 /*OD_EPOCH_EIGINT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 74 /*OD_EPOCH_EIGMIN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 76 /*OD_MAX_PRED_EIGMAJ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 78 /*OD_MIN_PRED_EIGMIN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 80 /*OD_CONFIDENCE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 82 /*GDOP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 84 /*SOLVE_N*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 86 /*SOLVE_STATES*/, false)
+      && verifier.VerifyField(tablePos, 88 /*CONSIDER_N*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 90 /*CONSIDER_PARAMS*/, false)
+      && verifier.VerifyField(tablePos, 92 /*SENSORS_N*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 94 /*SENSORS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 96 /*COMMENT*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

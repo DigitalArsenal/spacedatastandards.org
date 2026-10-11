@@ -232,6 +232,26 @@ public final class OCM extends com.google.flatbuffers.Table {
   public int COV_UNITSLength() { int o = __offset(60); return o != 0 ? __vector_len(o) : 0; }
   public StringVector covUnitsVector() { return covUnitsVector(new StringVector()); }
   public StringVector covUnitsVector(StringVector obj) { int o = __offset(60); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+   * blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+   * them above state the first block's CARTPV or CARTPVA states.
+   */
+  public OCMTrajectoryBlock TRAJECTORY_BLOCKS(int j) { return TRAJECTORY_BLOCKS(new OCMTrajectoryBlock(), j); }
+  public OCMTrajectoryBlock TRAJECTORY_BLOCKS(OCMTrajectoryBlock obj, int j) { int o = __offset(62); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int TRAJECTORY_BLOCKSLength() { int o = __offset(62); return o != 0 ? __vector_len(o) : 0; }
+  public OCMTrajectoryBlock.Vector trajectoryBlocksVector() { return trajectoryBlocksVector(new OCMTrajectoryBlock.Vector()); }
+  public OCMTrajectoryBlock.Vector trajectoryBlocksVector(OCMTrajectoryBlock.Vector obj) { int o = __offset(62); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Every covariance time history of the message (COV_START blocks), in message
+   * order. COVARIANCE_DATA and the fields that go with it above state the first
+   * block when it is one line.
+   */
+  public OCMCovarianceBlock COVARIANCE_BLOCKS(int j) { return COVARIANCE_BLOCKS(new OCMCovarianceBlock(), j); }
+  public OCMCovarianceBlock COVARIANCE_BLOCKS(OCMCovarianceBlock obj, int j) { int o = __offset(64); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int COVARIANCE_BLOCKSLength() { int o = __offset(64); return o != 0 ? __vector_len(o) : 0; }
+  public OCMCovarianceBlock.Vector covarianceBlocksVector() { return covarianceBlocksVector(new OCMCovarianceBlock.Vector()); }
+  public OCMCovarianceBlock.Vector covarianceBlocksVector(OCMCovarianceBlock.Vector obj) { int o = __offset(64); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createOCM(FlatBufferBuilder builder,
       int HEADEROffset,
@@ -262,9 +282,13 @@ public final class OCM extends com.google.flatbuffers.Table {
       byte COV_ORDERING,
       int COV_SIZE,
       int COV_PARAMETERSOffset,
-      int COV_UNITSOffset) {
-    builder.startTable(29);
+      int COV_UNITSOffset,
+      int TRAJECTORY_BLOCKSOffset,
+      int COVARIANCE_BLOCKSOffset) {
+    builder.startTable(31);
     OCM.addStateStepSize(builder, STATE_STEP_SIZE);
+    OCM.addCovarianceBlocks(builder, COVARIANCE_BLOCKSOffset);
+    OCM.addTrajectoryBlocks(builder, TRAJECTORY_BLOCKSOffset);
     OCM.addCovUnits(builder, COV_UNITSOffset);
     OCM.addCovParameters(builder, COV_PARAMETERSOffset);
     OCM.addCovType(builder, COV_TYPEOffset);
@@ -296,7 +320,7 @@ public final class OCM extends com.google.flatbuffers.Table {
     return OCM.endOCM(builder);
   }
 
-  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(29); }
+  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(31); }
   public static void addHeader(FlatBufferBuilder builder, int HEADEROffset) { builder.addOffset(0, HEADEROffset, 0); }
   public static void addMetadata(FlatBufferBuilder builder, int METADATAOffset) { builder.addOffset(1, METADATAOffset, 0); }
   public static void addTrajType(FlatBufferBuilder builder, byte TRAJ_TYPE) { builder.addByte(2, TRAJ_TYPE, 0); }
@@ -344,6 +368,12 @@ public final class OCM extends com.google.flatbuffers.Table {
   public static void addCovUnits(FlatBufferBuilder builder, int COV_UNITSOffset) { builder.addOffset(28, COV_UNITSOffset, 0); }
   public static int createCovUnitsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCovUnitsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addTrajectoryBlocks(FlatBufferBuilder builder, int TRAJECTORY_BLOCKSOffset) { builder.addOffset(29, TRAJECTORY_BLOCKSOffset, 0); }
+  public static int createTrajectoryBlocksVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startTrajectoryBlocksVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addCovarianceBlocks(FlatBufferBuilder builder, int COVARIANCE_BLOCKSOffset) { builder.addOffset(30, COVARIANCE_BLOCKSOffset, 0); }
+  public static int createCovarianceBlocksVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startCovarianceBlocksVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endOCM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

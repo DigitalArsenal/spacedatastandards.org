@@ -42,6 +42,46 @@ class _reentryDispositionReader extends fb.Reader<reentryDisposition> {
       reentryDisposition.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  CONTROLLED_REENTRY of an RDM (CCSDS 508.1-B-1): whether the re-entry is
+///  controlled. UNSPECIFIED is the zero value: the record does not state it.
+enum rdmControlledReentry {
+  UNSPECIFIED(0),
+  YES(1),
+  NO(2),
+  UNKNOWN(3);
+
+  final int value;
+  const rdmControlledReentry(this.value);
+
+  factory rdmControlledReentry.fromValue(int value) {
+    switch (value) {
+      case 0: return rdmControlledReentry.UNSPECIFIED;
+      case 1: return rdmControlledReentry.YES;
+      case 2: return rdmControlledReentry.NO;
+      case 3: return rdmControlledReentry.UNKNOWN;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static rdmControlledReentry? _createOrNull(int? value) =>
+      value == null ? null : rdmControlledReentry.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<rdmControlledReentry> reader = _rdmControlledReentryReader();
+}
+
+class _rdmControlledReentryReader extends fb.Reader<rdmControlledReentry> {
+  const _rdmControlledReentryReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  rdmControlledReentry read(fb.BufferContext bc, int offset) =>
+      rdmControlledReentry.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 enum reentryReason {
   NATURAL_DECAY(0),
   COMMANDED_DEORBIT(1),
@@ -594,12 +634,263 @@ class RDM {
   ///  Total surviving mass in kg
   double get SURVIVING_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
   double get survivingMass => SURVIVING_MASS;
-  ///  Additional comments
+  ///  COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+  ///  data groups, in message order, joined by a line feed.
   String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  ///  The fields below, with the earlier ones that say so, are the keywords of
+  ///  CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+  ///  NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+  ///  NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+  ///  WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+  ///  REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+  ///  SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+  ///  not keywords of the message.
+  ///  MESSAGE_ID: an identifier the originator makes unique for this message.
+  String? get MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  String? get messageId => MESSAGE_ID;
+  ///  CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+  String? get CATALOG_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get catalogName => CATALOG_NAME;
+  ///  OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+  String? get OBJECT_DESIGNATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  String? get objectDesignator => OBJECT_DESIGNATOR;
+  ///  OBJECT_OWNER.
+  String? get OBJECT_OWNER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
+  String? get objectOwner => OBJECT_OWNER;
+  ///  OBJECT_OPERATOR.
+  String? get OBJECT_OPERATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
+  String? get objectOperator => OBJECT_OPERATOR;
+  ///  CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+  rdmControlledReentry get CONTROLLED_REENTRY => rdmControlledReentry.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 68, 0));
+  rdmControlledReentry get controlledReentry => CONTROLLED_REENTRY;
+  ///  CENTER_NAME: the body being re-entered.
+  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  String? get centerName => CENTER_NAME;
+  ///  EPOCH_TZERO: the epoch the message's relative times are measured from.
+  String? get EPOCH_TZERO => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
+  String? get epochTzero => EPOCH_TZERO;
+  ///  REF_FRAME: the frame of the state vector.
+  String? get REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  String? get refFrame => REF_FRAME;
+  ///  REF_FRAME_EPOCH.
+  String? get REF_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  String? get refFrameEpoch => REF_FRAME_EPOCH;
+  ///  EPHEMERIS_NAME.
+  String? get EPHEMERIS_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  String? get ephemerisName => EPHEMERIS_NAME;
+  ///  GRAVITY_MODEL.
+  String? get GRAVITY_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
+  String? get gravityModel => GRAVITY_MODEL;
+  ///  ATMOSPHERIC_MODEL.
+  String? get ATMOSPHERIC_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  String? get atmosphericModel => ATMOSPHERIC_MODEL;
+  ///  SOLAR_FLUX_PREDICTION.
+  String? get SOLAR_FLUX_PREDICTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 84);
+  String? get solarFluxPrediction => SOLAR_FLUX_PREDICTION;
+  ///  N_BODY_PERTURBATIONS.
+  String? get N_BODY_PERTURBATIONS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 86);
+  String? get nBodyPerturbations => N_BODY_PERTURBATIONS;
+  ///  SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+  String? get SOLAR_RAD_PRESSURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
+  String? get solarRadPressure => SOLAR_RAD_PRESSURE;
+  ///  EARTH_TIDES: a model name.
+  String? get EARTH_TIDES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 90);
+  String? get earthTides => EARTH_TIDES;
+  ///  INTRACK_THRUST: YES or NO.
+  String? get INTRACK_THRUST => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 92);
+  String? get intrackThrust => INTRACK_THRUST;
+  ///  DRAG_PARAMETERS_SOURCE.
+  String? get DRAG_PARAMETERS_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
+  String? get dragParametersSource => DRAG_PARAMETERS_SOURCE;
+  ///  DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+  double get DRAG_PARAMETERS_ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, double.nan);
+  double get dragParametersAltitude => DRAG_PARAMETERS_ALTITUDE;
+  ///  REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+  String? get REENTRY_UNCERTAINTY_METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 98);
+  String? get reentryUncertaintyMethod => REENTRY_UNCERTAINTY_METHOD;
+  ///  REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+  String? get REENTRY_DISINTEGRATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 100);
+  String? get reentryDisintegration => REENTRY_DISINTEGRATION;
+  ///  IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+  String? get IMPACT_UNCERTAINTY_METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 102);
+  String? get impactUncertaintyMethod => IMPACT_UNCERTAINTY_METHOD;
+  ///  PREVIOUS_MESSAGE_ID.
+  String? get PREVIOUS_MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 104);
+  String? get previousMessageId => PREVIOUS_MESSAGE_ID;
+  ///  NEXT_MESSAGE_EPOCH.
+  String? get NEXT_MESSAGE_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 106);
+  String? get nextMessageEpoch => NEXT_MESSAGE_EPOCH;
+  ///  ORBIT_LIFETIME in days.
+  double get ORBIT_LIFETIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 108, 0.0);
+  double get orbitLifetime => ORBIT_LIFETIME;
+  ///  ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+  double get ORBIT_LIFETIME_WINDOW_START => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 110, double.nan);
+  double get orbitLifetimeWindowStart => ORBIT_LIFETIME_WINDOW_START;
+  ///  ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+  double get ORBIT_LIFETIME_WINDOW_END => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 112, double.nan);
+  double get orbitLifetimeWindowEnd => ORBIT_LIFETIME_WINDOW_END;
+  ///  REENTRY_WINDOW_START.
+  String? get REENTRY_WINDOW_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 114);
+  String? get reentryWindowStart => REENTRY_WINDOW_START;
+  ///  REENTRY_WINDOW_END.
+  String? get REENTRY_WINDOW_END => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 116);
+  String? get reentryWindowEnd => REENTRY_WINDOW_END;
+  ///  ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+  double get ORBIT_LIFETIME_CONFIDENCE_LEVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 118, double.nan);
+  double get orbitLifetimeConfidenceLevel => ORBIT_LIFETIME_CONFIDENCE_LEVEL;
+  ///  PROBABILITY_OF_IMPACT, NaN when not stated.
+  double get PROBABILITY_OF_IMPACT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 120, double.nan);
+  double get probabilityOfImpact => PROBABILITY_OF_IMPACT;
+  ///  PROBABILITY_OF_BURN_UP, NaN when not stated.
+  double get PROBABILITY_OF_BURN_UP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 122, double.nan);
+  double get probabilityOfBurnUp => PROBABILITY_OF_BURN_UP;
+  ///  PROBABILITY_OF_BREAK_UP, NaN when not stated.
+  double get PROBABILITY_OF_BREAK_UP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 124, double.nan);
+  double get probabilityOfBreakUp => PROBABILITY_OF_BREAK_UP;
+  ///  PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+  double get PROBABILITY_OF_LAND_IMPACT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 126, double.nan);
+  double get probabilityOfLandImpact => PROBABILITY_OF_LAND_IMPACT;
+  ///  PROBABILITY_OF_CASUALTY, NaN when not stated.
+  double get PROBABILITY_OF_CASUALTY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 128, double.nan);
+  double get probabilityOfCasualty => PROBABILITY_OF_CASUALTY;
+  ///  NOMINAL_IMPACT_EPOCH.
+  String? get NOMINAL_IMPACT_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 130);
+  String? get nominalImpactEpoch => NOMINAL_IMPACT_EPOCH;
+  ///  IMPACT_WINDOW_START.
+  String? get IMPACT_WINDOW_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 132);
+  String? get impactWindowStart => IMPACT_WINDOW_START;
+  ///  IMPACT_WINDOW_END.
+  String? get IMPACT_WINDOW_END => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 134);
+  String? get impactWindowEnd => IMPACT_WINDOW_END;
+  ///  IMPACT_REF_FRAME.
+  String? get IMPACT_REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 136);
+  String? get impactRefFrame => IMPACT_REF_FRAME;
+  ///  NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+  double get NOMINAL_IMPACT_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 138, double.nan);
+  double get nominalImpactLon => NOMINAL_IMPACT_LON;
+  ///  NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+  double get NOMINAL_IMPACT_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 140, double.nan);
+  double get nominalImpactLat => NOMINAL_IMPACT_LAT;
+  ///  NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+  double get NOMINAL_IMPACT_ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 142, double.nan);
+  double get nominalImpactAlt => NOMINAL_IMPACT_ALT;
+  ///  IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+  double get IMPACT_1_CONFIDENCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 144, double.nan);
+  double get impact1Confidence => IMPACT_1_CONFIDENCE;
+  ///  IMPACT_1_START_LON in degrees, NaN when not stated.
+  double get IMPACT_1_START_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 146, double.nan);
+  double get impact1StartLon => IMPACT_1_START_LON;
+  ///  IMPACT_1_START_LAT in degrees, NaN when not stated.
+  double get IMPACT_1_START_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 148, double.nan);
+  double get impact1StartLat => IMPACT_1_START_LAT;
+  ///  IMPACT_1_STOP_LON in degrees, NaN when not stated.
+  double get IMPACT_1_STOP_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 150, double.nan);
+  double get impact1StopLon => IMPACT_1_STOP_LON;
+  ///  IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+  double get IMPACT_1_STOP_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 152, double.nan);
+  double get impact1StopLat => IMPACT_1_STOP_LAT;
+  ///  IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+  double get IMPACT_1_CROSS_TRACK => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 154, double.nan);
+  double get impact1CrossTrack => IMPACT_1_CROSS_TRACK;
+  ///  IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+  double get IMPACT_2_CONFIDENCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 156, double.nan);
+  double get impact2Confidence => IMPACT_2_CONFIDENCE;
+  ///  IMPACT_2_START_LON in degrees, NaN when not stated.
+  double get IMPACT_2_START_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 158, double.nan);
+  double get impact2StartLon => IMPACT_2_START_LON;
+  ///  IMPACT_2_START_LAT in degrees, NaN when not stated.
+  double get IMPACT_2_START_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 160, double.nan);
+  double get impact2StartLat => IMPACT_2_START_LAT;
+  ///  IMPACT_2_STOP_LON in degrees, NaN when not stated.
+  double get IMPACT_2_STOP_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 162, double.nan);
+  double get impact2StopLon => IMPACT_2_STOP_LON;
+  ///  IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+  double get IMPACT_2_STOP_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 164, double.nan);
+  double get impact2StopLat => IMPACT_2_STOP_LAT;
+  ///  IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+  double get IMPACT_2_CROSS_TRACK => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 166, double.nan);
+  double get impact2CrossTrack => IMPACT_2_CROSS_TRACK;
+  ///  IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+  double get IMPACT_3_CONFIDENCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 168, double.nan);
+  double get impact3Confidence => IMPACT_3_CONFIDENCE;
+  ///  IMPACT_3_START_LON in degrees, NaN when not stated.
+  double get IMPACT_3_START_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 170, double.nan);
+  double get impact3StartLon => IMPACT_3_START_LON;
+  ///  IMPACT_3_START_LAT in degrees, NaN when not stated.
+  double get IMPACT_3_START_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 172, double.nan);
+  double get impact3StartLat => IMPACT_3_START_LAT;
+  ///  IMPACT_3_STOP_LON in degrees, NaN when not stated.
+  double get IMPACT_3_STOP_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 174, double.nan);
+  double get impact3StopLon => IMPACT_3_STOP_LON;
+  ///  IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+  double get IMPACT_3_STOP_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 176, double.nan);
+  double get impact3StopLat => IMPACT_3_STOP_LAT;
+  ///  IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+  double get IMPACT_3_CROSS_TRACK => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 178, double.nan);
+  double get impact3CrossTrack => IMPACT_3_CROSS_TRACK;
+  ///  COV_REF_FRAME: the frame of COVARIANCE.
+  String? get COV_REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 180);
+  String? get covRefFrame => COV_REF_FRAME;
+  ///  Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+  ///  triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+  ///  CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+  ///  CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+  ///  CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+  List<double>? get COVARIANCE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 182);
+  ///  WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+  double get DRY_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 184, double.nan);
+  double get dryMass => DRY_MASS;
+  ///  HAZARDOUS_SUBSTANCES.
+  String? get HAZARDOUS_SUBSTANCES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 186);
+  String? get hazardousSubstances => HAZARDOUS_SUBSTANCES;
+  ///  SOLAR_RAD_COEFF, NaN when not stated.
+  double get SOLAR_RAD_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 188, double.nan);
+  double get solarRadCoeff => SOLAR_RAD_COEFF;
+  ///  DRAG_COEFF, NaN when not stated.
+  double get DRAG_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 190, double.nan);
+  double get dragCoeff => DRAG_COEFF;
+  ///  RCS in m**2, NaN when not stated.
+  double get RCS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 192, double.nan);
+  ///  THRUST_ACCELERATION in m/s**2, NaN when not stated.
+  double get THRUST_ACCELERATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 194, double.nan);
+  double get thrustAcceleration => THRUST_ACCELERATION;
+  ///  TIME_LASTOB_START.
+  String? get TIME_LASTOB_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 196);
+  String? get timeLastobStart => TIME_LASTOB_START;
+  ///  TIME_LASTOB_END.
+  String? get TIME_LASTOB_END => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 198);
+  String? get timeLastobEnd => TIME_LASTOB_END;
+  ///  RECOMMENDED_OD_SPAN in days, NaN when not stated.
+  double get RECOMMENDED_OD_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 200, double.nan);
+  double get recommendedOdSpan => RECOMMENDED_OD_SPAN;
+  ///  ACTUAL_OD_SPAN in days, NaN when not stated.
+  double get ACTUAL_OD_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 202, double.nan);
+  double get actualOdSpan => ACTUAL_OD_SPAN;
+  ///  OBS_AVAILABLE.
+  int get OBS_AVAILABLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 204, 0);
+  int get obsAvailable => OBS_AVAILABLE;
+  ///  OBS_USED.
+  int get OBS_USED => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 206, 0);
+  int get obsUsed => OBS_USED;
+  ///  TRACKS_AVAILABLE.
+  int get TRACKS_AVAILABLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 208, 0);
+  int get tracksAvailable => TRACKS_AVAILABLE;
+  ///  TRACKS_USED.
+  int get TRACKS_USED => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 210, 0);
+  int get tracksUsed => TRACKS_USED;
+  ///  RESIDUALS_ACCEPTED in percent, NaN when not stated.
+  double get RESIDUALS_ACCEPTED => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 212, double.nan);
+  double get residualsAccepted => RESIDUALS_ACCEPTED;
+  ///  WEIGHTED_RMS, NaN when not stated.
+  double get WEIGHTED_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 214, double.nan);
+  double get weightedRms => WEIGHTED_RMS;
+  ///  Every USER_DEFINED keyword of the message, in message order.
+  List<RDMUserDefinedParameter>? get USER_DEFINED_PARAMETERS => const fb.ListReader<RDMUserDefinedParameter>(RDMUserDefinedParameter.reader).vTableGetNullable(_bc, _bcOffset, 216);
+  List<RDMUserDefinedParameter>? get userDefinedParameters => USER_DEFINED_PARAMETERS;
 
   @override
   String toString() {
-    return 'RDM{ccsdsRdmVers: ${ccsdsRdmVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, objectId: ${objectId}, noradCatId: ${noradCatId}, objectType: ${objectType}, DISPOSITION: ${DISPOSITION}, REASON: ${REASON}, reentryEpoch: ${reentryEpoch}, reentryEpochUnc: ${reentryEpochUnc}, reentryLatitude: ${reentryLatitude}, reentryLongitude: ${reentryLongitude}, reentryAltitude: ${reentryAltitude}, timeSystem: ${timeSystem}, prevPredictionEpoch: ${prevPredictionEpoch}, ballisticCoeff: ${ballisticCoeff}, MASS: ${MASS}, solarRadArea: ${solarRadArea}, dragArea: ${dragArea}, initialState: ${initialState}, impactPredictions: ${impactPredictions}, survivingDebris: ${survivingDebris}, casualtyExpectation: ${casualtyExpectation}, numFragments: ${numFragments}, survivingMass: ${survivingMass}, COMMENT: ${COMMENT}}';
+    return 'RDM{ccsdsRdmVers: ${ccsdsRdmVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, objectId: ${objectId}, noradCatId: ${noradCatId}, objectType: ${objectType}, DISPOSITION: ${DISPOSITION}, REASON: ${REASON}, reentryEpoch: ${reentryEpoch}, reentryEpochUnc: ${reentryEpochUnc}, reentryLatitude: ${reentryLatitude}, reentryLongitude: ${reentryLongitude}, reentryAltitude: ${reentryAltitude}, timeSystem: ${timeSystem}, prevPredictionEpoch: ${prevPredictionEpoch}, ballisticCoeff: ${ballisticCoeff}, MASS: ${MASS}, solarRadArea: ${solarRadArea}, dragArea: ${dragArea}, initialState: ${initialState}, impactPredictions: ${impactPredictions}, survivingDebris: ${survivingDebris}, casualtyExpectation: ${casualtyExpectation}, numFragments: ${numFragments}, survivingMass: ${survivingMass}, COMMENT: ${COMMENT}, messageId: ${messageId}, catalogName: ${catalogName}, objectDesignator: ${objectDesignator}, objectOwner: ${objectOwner}, objectOperator: ${objectOperator}, controlledReentry: ${controlledReentry}, centerName: ${centerName}, epochTzero: ${epochTzero}, refFrame: ${refFrame}, refFrameEpoch: ${refFrameEpoch}, ephemerisName: ${ephemerisName}, gravityModel: ${gravityModel}, atmosphericModel: ${atmosphericModel}, solarFluxPrediction: ${solarFluxPrediction}, nBodyPerturbations: ${nBodyPerturbations}, solarRadPressure: ${solarRadPressure}, earthTides: ${earthTides}, intrackThrust: ${intrackThrust}, dragParametersSource: ${dragParametersSource}, dragParametersAltitude: ${dragParametersAltitude}, reentryUncertaintyMethod: ${reentryUncertaintyMethod}, reentryDisintegration: ${reentryDisintegration}, impactUncertaintyMethod: ${impactUncertaintyMethod}, previousMessageId: ${previousMessageId}, nextMessageEpoch: ${nextMessageEpoch}, orbitLifetime: ${orbitLifetime}, orbitLifetimeWindowStart: ${orbitLifetimeWindowStart}, orbitLifetimeWindowEnd: ${orbitLifetimeWindowEnd}, reentryWindowStart: ${reentryWindowStart}, reentryWindowEnd: ${reentryWindowEnd}, orbitLifetimeConfidenceLevel: ${orbitLifetimeConfidenceLevel}, probabilityOfImpact: ${probabilityOfImpact}, probabilityOfBurnUp: ${probabilityOfBurnUp}, probabilityOfBreakUp: ${probabilityOfBreakUp}, probabilityOfLandImpact: ${probabilityOfLandImpact}, probabilityOfCasualty: ${probabilityOfCasualty}, nominalImpactEpoch: ${nominalImpactEpoch}, impactWindowStart: ${impactWindowStart}, impactWindowEnd: ${impactWindowEnd}, impactRefFrame: ${impactRefFrame}, nominalImpactLon: ${nominalImpactLon}, nominalImpactLat: ${nominalImpactLat}, nominalImpactAlt: ${nominalImpactAlt}, impact1Confidence: ${impact1Confidence}, impact1StartLon: ${impact1StartLon}, impact1StartLat: ${impact1StartLat}, impact1StopLon: ${impact1StopLon}, impact1StopLat: ${impact1StopLat}, impact1CrossTrack: ${impact1CrossTrack}, impact2Confidence: ${impact2Confidence}, impact2StartLon: ${impact2StartLon}, impact2StartLat: ${impact2StartLat}, impact2StopLon: ${impact2StopLon}, impact2StopLat: ${impact2StopLat}, impact2CrossTrack: ${impact2CrossTrack}, impact3Confidence: ${impact3Confidence}, impact3StartLon: ${impact3StartLon}, impact3StartLat: ${impact3StartLat}, impact3StopLon: ${impact3StopLon}, impact3StopLat: ${impact3StopLat}, impact3CrossTrack: ${impact3CrossTrack}, covRefFrame: ${covRefFrame}, COVARIANCE: ${COVARIANCE}, dryMass: ${dryMass}, hazardousSubstances: ${hazardousSubstances}, solarRadCoeff: ${solarRadCoeff}, dragCoeff: ${dragCoeff}, RCS: ${RCS}, thrustAcceleration: ${thrustAcceleration}, timeLastobStart: ${timeLastobStart}, timeLastobEnd: ${timeLastobEnd}, recommendedOdSpan: ${recommendedOdSpan}, actualOdSpan: ${actualOdSpan}, obsAvailable: ${obsAvailable}, obsUsed: ${obsUsed}, tracksAvailable: ${tracksAvailable}, tracksUsed: ${tracksUsed}, residualsAccepted: ${residualsAccepted}, weightedRms: ${weightedRms}, userDefinedParameters: ${userDefinedParameters}}';
   }
 }
 
@@ -617,7 +908,7 @@ class RDMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(27);
+    fbBuilder.startTable(107);
   }
 
   int addCcsdsRdmVersOffset(int? offset) {
@@ -728,6 +1019,326 @@ class RDMBuilder {
     fbBuilder.addOffset(26, offset);
     return fbBuilder.offset;
   }
+  int addMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addCatalogNameOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectDesignatorOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectOwnerOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectOperatorOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addControlledReentry(rdmControlledReentry? CONTROLLED_REENTRY) {
+    fbBuilder.addInt8(32, CONTROLLED_REENTRY?.value);
+    return fbBuilder.offset;
+  }
+  int addCenterNameOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochTzeroOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addRefFrameEpochOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisNameOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addGravityModelOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addAtmosphericModelOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addSolarFluxPredictionOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
+  int addNBodyPerturbationsOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addSolarRadPressureOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addEarthTidesOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addIntrackThrustOffset(int? offset) {
+    fbBuilder.addOffset(44, offset);
+    return fbBuilder.offset;
+  }
+  int addDragParametersSourceOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addDragParametersAltitude(double? DRAG_PARAMETERS_ALTITUDE) {
+    fbBuilder.addFloat64(46, DRAG_PARAMETERS_ALTITUDE);
+    return fbBuilder.offset;
+  }
+  int addReentryUncertaintyMethodOffset(int? offset) {
+    fbBuilder.addOffset(47, offset);
+    return fbBuilder.offset;
+  }
+  int addReentryDisintegrationOffset(int? offset) {
+    fbBuilder.addOffset(48, offset);
+    return fbBuilder.offset;
+  }
+  int addImpactUncertaintyMethodOffset(int? offset) {
+    fbBuilder.addOffset(49, offset);
+    return fbBuilder.offset;
+  }
+  int addPreviousMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(50, offset);
+    return fbBuilder.offset;
+  }
+  int addNextMessageEpochOffset(int? offset) {
+    fbBuilder.addOffset(51, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbitLifetime(double? ORBIT_LIFETIME) {
+    fbBuilder.addFloat64(52, ORBIT_LIFETIME);
+    return fbBuilder.offset;
+  }
+  int addOrbitLifetimeWindowStart(double? ORBIT_LIFETIME_WINDOW_START) {
+    fbBuilder.addFloat64(53, ORBIT_LIFETIME_WINDOW_START);
+    return fbBuilder.offset;
+  }
+  int addOrbitLifetimeWindowEnd(double? ORBIT_LIFETIME_WINDOW_END) {
+    fbBuilder.addFloat64(54, ORBIT_LIFETIME_WINDOW_END);
+    return fbBuilder.offset;
+  }
+  int addReentryWindowStartOffset(int? offset) {
+    fbBuilder.addOffset(55, offset);
+    return fbBuilder.offset;
+  }
+  int addReentryWindowEndOffset(int? offset) {
+    fbBuilder.addOffset(56, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbitLifetimeConfidenceLevel(double? ORBIT_LIFETIME_CONFIDENCE_LEVEL) {
+    fbBuilder.addFloat64(57, ORBIT_LIFETIME_CONFIDENCE_LEVEL);
+    return fbBuilder.offset;
+  }
+  int addProbabilityOfImpact(double? PROBABILITY_OF_IMPACT) {
+    fbBuilder.addFloat64(58, PROBABILITY_OF_IMPACT);
+    return fbBuilder.offset;
+  }
+  int addProbabilityOfBurnUp(double? PROBABILITY_OF_BURN_UP) {
+    fbBuilder.addFloat64(59, PROBABILITY_OF_BURN_UP);
+    return fbBuilder.offset;
+  }
+  int addProbabilityOfBreakUp(double? PROBABILITY_OF_BREAK_UP) {
+    fbBuilder.addFloat64(60, PROBABILITY_OF_BREAK_UP);
+    return fbBuilder.offset;
+  }
+  int addProbabilityOfLandImpact(double? PROBABILITY_OF_LAND_IMPACT) {
+    fbBuilder.addFloat64(61, PROBABILITY_OF_LAND_IMPACT);
+    return fbBuilder.offset;
+  }
+  int addProbabilityOfCasualty(double? PROBABILITY_OF_CASUALTY) {
+    fbBuilder.addFloat64(62, PROBABILITY_OF_CASUALTY);
+    return fbBuilder.offset;
+  }
+  int addNominalImpactEpochOffset(int? offset) {
+    fbBuilder.addOffset(63, offset);
+    return fbBuilder.offset;
+  }
+  int addImpactWindowStartOffset(int? offset) {
+    fbBuilder.addOffset(64, offset);
+    return fbBuilder.offset;
+  }
+  int addImpactWindowEndOffset(int? offset) {
+    fbBuilder.addOffset(65, offset);
+    return fbBuilder.offset;
+  }
+  int addImpactRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(66, offset);
+    return fbBuilder.offset;
+  }
+  int addNominalImpactLon(double? NOMINAL_IMPACT_LON) {
+    fbBuilder.addFloat64(67, NOMINAL_IMPACT_LON);
+    return fbBuilder.offset;
+  }
+  int addNominalImpactLat(double? NOMINAL_IMPACT_LAT) {
+    fbBuilder.addFloat64(68, NOMINAL_IMPACT_LAT);
+    return fbBuilder.offset;
+  }
+  int addNominalImpactAlt(double? NOMINAL_IMPACT_ALT) {
+    fbBuilder.addFloat64(69, NOMINAL_IMPACT_ALT);
+    return fbBuilder.offset;
+  }
+  int addImpact1Confidence(double? IMPACT_1_CONFIDENCE) {
+    fbBuilder.addFloat64(70, IMPACT_1_CONFIDENCE);
+    return fbBuilder.offset;
+  }
+  int addImpact1StartLon(double? IMPACT_1_START_LON) {
+    fbBuilder.addFloat64(71, IMPACT_1_START_LON);
+    return fbBuilder.offset;
+  }
+  int addImpact1StartLat(double? IMPACT_1_START_LAT) {
+    fbBuilder.addFloat64(72, IMPACT_1_START_LAT);
+    return fbBuilder.offset;
+  }
+  int addImpact1StopLon(double? IMPACT_1_STOP_LON) {
+    fbBuilder.addFloat64(73, IMPACT_1_STOP_LON);
+    return fbBuilder.offset;
+  }
+  int addImpact1StopLat(double? IMPACT_1_STOP_LAT) {
+    fbBuilder.addFloat64(74, IMPACT_1_STOP_LAT);
+    return fbBuilder.offset;
+  }
+  int addImpact1CrossTrack(double? IMPACT_1_CROSS_TRACK) {
+    fbBuilder.addFloat64(75, IMPACT_1_CROSS_TRACK);
+    return fbBuilder.offset;
+  }
+  int addImpact2Confidence(double? IMPACT_2_CONFIDENCE) {
+    fbBuilder.addFloat64(76, IMPACT_2_CONFIDENCE);
+    return fbBuilder.offset;
+  }
+  int addImpact2StartLon(double? IMPACT_2_START_LON) {
+    fbBuilder.addFloat64(77, IMPACT_2_START_LON);
+    return fbBuilder.offset;
+  }
+  int addImpact2StartLat(double? IMPACT_2_START_LAT) {
+    fbBuilder.addFloat64(78, IMPACT_2_START_LAT);
+    return fbBuilder.offset;
+  }
+  int addImpact2StopLon(double? IMPACT_2_STOP_LON) {
+    fbBuilder.addFloat64(79, IMPACT_2_STOP_LON);
+    return fbBuilder.offset;
+  }
+  int addImpact2StopLat(double? IMPACT_2_STOP_LAT) {
+    fbBuilder.addFloat64(80, IMPACT_2_STOP_LAT);
+    return fbBuilder.offset;
+  }
+  int addImpact2CrossTrack(double? IMPACT_2_CROSS_TRACK) {
+    fbBuilder.addFloat64(81, IMPACT_2_CROSS_TRACK);
+    return fbBuilder.offset;
+  }
+  int addImpact3Confidence(double? IMPACT_3_CONFIDENCE) {
+    fbBuilder.addFloat64(82, IMPACT_3_CONFIDENCE);
+    return fbBuilder.offset;
+  }
+  int addImpact3StartLon(double? IMPACT_3_START_LON) {
+    fbBuilder.addFloat64(83, IMPACT_3_START_LON);
+    return fbBuilder.offset;
+  }
+  int addImpact3StartLat(double? IMPACT_3_START_LAT) {
+    fbBuilder.addFloat64(84, IMPACT_3_START_LAT);
+    return fbBuilder.offset;
+  }
+  int addImpact3StopLon(double? IMPACT_3_STOP_LON) {
+    fbBuilder.addFloat64(85, IMPACT_3_STOP_LON);
+    return fbBuilder.offset;
+  }
+  int addImpact3StopLat(double? IMPACT_3_STOP_LAT) {
+    fbBuilder.addFloat64(86, IMPACT_3_STOP_LAT);
+    return fbBuilder.offset;
+  }
+  int addImpact3CrossTrack(double? IMPACT_3_CROSS_TRACK) {
+    fbBuilder.addFloat64(87, IMPACT_3_CROSS_TRACK);
+    return fbBuilder.offset;
+  }
+  int addCovRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(88, offset);
+    return fbBuilder.offset;
+  }
+  int addCovarianceOffset(int? offset) {
+    fbBuilder.addOffset(89, offset);
+    return fbBuilder.offset;
+  }
+  int addDryMass(double? DRY_MASS) {
+    fbBuilder.addFloat64(90, DRY_MASS);
+    return fbBuilder.offset;
+  }
+  int addHazardousSubstancesOffset(int? offset) {
+    fbBuilder.addOffset(91, offset);
+    return fbBuilder.offset;
+  }
+  int addSolarRadCoeff(double? SOLAR_RAD_COEFF) {
+    fbBuilder.addFloat64(92, SOLAR_RAD_COEFF);
+    return fbBuilder.offset;
+  }
+  int addDragCoeff(double? DRAG_COEFF) {
+    fbBuilder.addFloat64(93, DRAG_COEFF);
+    return fbBuilder.offset;
+  }
+  int addRcs(double? RCS) {
+    fbBuilder.addFloat64(94, RCS);
+    return fbBuilder.offset;
+  }
+  int addThrustAcceleration(double? THRUST_ACCELERATION) {
+    fbBuilder.addFloat64(95, THRUST_ACCELERATION);
+    return fbBuilder.offset;
+  }
+  int addTimeLastobStartOffset(int? offset) {
+    fbBuilder.addOffset(96, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeLastobEndOffset(int? offset) {
+    fbBuilder.addOffset(97, offset);
+    return fbBuilder.offset;
+  }
+  int addRecommendedOdSpan(double? RECOMMENDED_OD_SPAN) {
+    fbBuilder.addFloat64(98, RECOMMENDED_OD_SPAN);
+    return fbBuilder.offset;
+  }
+  int addActualOdSpan(double? ACTUAL_OD_SPAN) {
+    fbBuilder.addFloat64(99, ACTUAL_OD_SPAN);
+    return fbBuilder.offset;
+  }
+  int addObsAvailable(int? OBS_AVAILABLE) {
+    fbBuilder.addUint32(100, OBS_AVAILABLE);
+    return fbBuilder.offset;
+  }
+  int addObsUsed(int? OBS_USED) {
+    fbBuilder.addUint32(101, OBS_USED);
+    return fbBuilder.offset;
+  }
+  int addTracksAvailable(int? TRACKS_AVAILABLE) {
+    fbBuilder.addUint32(102, TRACKS_AVAILABLE);
+    return fbBuilder.offset;
+  }
+  int addTracksUsed(int? TRACKS_USED) {
+    fbBuilder.addUint32(103, TRACKS_USED);
+    return fbBuilder.offset;
+  }
+  int addResidualsAccepted(double? RESIDUALS_ACCEPTED) {
+    fbBuilder.addFloat64(104, RESIDUALS_ACCEPTED);
+    return fbBuilder.offset;
+  }
+  int addWeightedRms(double? WEIGHTED_RMS) {
+    fbBuilder.addFloat64(105, WEIGHTED_RMS);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedParametersOffset(int? offset) {
+    fbBuilder.addOffset(106, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -762,6 +1373,86 @@ class RDMObjectBuilder extends fb.ObjectBuilder {
   final int? _NUM_FRAGMENTS;
   final double? _SURVIVING_MASS;
   final String? _COMMENT;
+  final String? _MESSAGE_ID;
+  final String? _CATALOG_NAME;
+  final String? _OBJECT_DESIGNATOR;
+  final String? _OBJECT_OWNER;
+  final String? _OBJECT_OPERATOR;
+  final rdmControlledReentry? _CONTROLLED_REENTRY;
+  final String? _CENTER_NAME;
+  final String? _EPOCH_TZERO;
+  final String? _REF_FRAME;
+  final String? _REF_FRAME_EPOCH;
+  final String? _EPHEMERIS_NAME;
+  final String? _GRAVITY_MODEL;
+  final String? _ATMOSPHERIC_MODEL;
+  final String? _SOLAR_FLUX_PREDICTION;
+  final String? _N_BODY_PERTURBATIONS;
+  final String? _SOLAR_RAD_PRESSURE;
+  final String? _EARTH_TIDES;
+  final String? _INTRACK_THRUST;
+  final String? _DRAG_PARAMETERS_SOURCE;
+  final double? _DRAG_PARAMETERS_ALTITUDE;
+  final String? _REENTRY_UNCERTAINTY_METHOD;
+  final String? _REENTRY_DISINTEGRATION;
+  final String? _IMPACT_UNCERTAINTY_METHOD;
+  final String? _PREVIOUS_MESSAGE_ID;
+  final String? _NEXT_MESSAGE_EPOCH;
+  final double? _ORBIT_LIFETIME;
+  final double? _ORBIT_LIFETIME_WINDOW_START;
+  final double? _ORBIT_LIFETIME_WINDOW_END;
+  final String? _REENTRY_WINDOW_START;
+  final String? _REENTRY_WINDOW_END;
+  final double? _ORBIT_LIFETIME_CONFIDENCE_LEVEL;
+  final double? _PROBABILITY_OF_IMPACT;
+  final double? _PROBABILITY_OF_BURN_UP;
+  final double? _PROBABILITY_OF_BREAK_UP;
+  final double? _PROBABILITY_OF_LAND_IMPACT;
+  final double? _PROBABILITY_OF_CASUALTY;
+  final String? _NOMINAL_IMPACT_EPOCH;
+  final String? _IMPACT_WINDOW_START;
+  final String? _IMPACT_WINDOW_END;
+  final String? _IMPACT_REF_FRAME;
+  final double? _NOMINAL_IMPACT_LON;
+  final double? _NOMINAL_IMPACT_LAT;
+  final double? _NOMINAL_IMPACT_ALT;
+  final double? _IMPACT_1_CONFIDENCE;
+  final double? _IMPACT_1_START_LON;
+  final double? _IMPACT_1_START_LAT;
+  final double? _IMPACT_1_STOP_LON;
+  final double? _IMPACT_1_STOP_LAT;
+  final double? _IMPACT_1_CROSS_TRACK;
+  final double? _IMPACT_2_CONFIDENCE;
+  final double? _IMPACT_2_START_LON;
+  final double? _IMPACT_2_START_LAT;
+  final double? _IMPACT_2_STOP_LON;
+  final double? _IMPACT_2_STOP_LAT;
+  final double? _IMPACT_2_CROSS_TRACK;
+  final double? _IMPACT_3_CONFIDENCE;
+  final double? _IMPACT_3_START_LON;
+  final double? _IMPACT_3_START_LAT;
+  final double? _IMPACT_3_STOP_LON;
+  final double? _IMPACT_3_STOP_LAT;
+  final double? _IMPACT_3_CROSS_TRACK;
+  final String? _COV_REF_FRAME;
+  final List<double>? _COVARIANCE;
+  final double? _DRY_MASS;
+  final String? _HAZARDOUS_SUBSTANCES;
+  final double? _SOLAR_RAD_COEFF;
+  final double? _DRAG_COEFF;
+  final double? _RCS;
+  final double? _THRUST_ACCELERATION;
+  final String? _TIME_LASTOB_START;
+  final String? _TIME_LASTOB_END;
+  final double? _RECOMMENDED_OD_SPAN;
+  final double? _ACTUAL_OD_SPAN;
+  final int? _OBS_AVAILABLE;
+  final int? _OBS_USED;
+  final int? _TRACKS_AVAILABLE;
+  final int? _TRACKS_USED;
+  final double? _RESIDUALS_ACCEPTED;
+  final double? _WEIGHTED_RMS;
+  final List<RDMUserDefinedParameterObjectBuilder>? _USER_DEFINED_PARAMETERS;
 
   RDMObjectBuilder({
     String? CCSDS_RDM_VERS,
@@ -813,6 +1504,164 @@ class RDMObjectBuilder extends fb.ObjectBuilder {
     double? SURVIVING_MASS,
     double? survivingMass,
     String? COMMENT,
+    String? MESSAGE_ID,
+    String? messageId,
+    String? CATALOG_NAME,
+    String? catalogName,
+    String? OBJECT_DESIGNATOR,
+    String? objectDesignator,
+    String? OBJECT_OWNER,
+    String? objectOwner,
+    String? OBJECT_OPERATOR,
+    String? objectOperator,
+    rdmControlledReentry? CONTROLLED_REENTRY,
+    rdmControlledReentry? controlledReentry,
+    String? CENTER_NAME,
+    String? centerName,
+    String? EPOCH_TZERO,
+    String? epochTzero,
+    String? REF_FRAME,
+    String? refFrame,
+    String? REF_FRAME_EPOCH,
+    String? refFrameEpoch,
+    String? EPHEMERIS_NAME,
+    String? ephemerisName,
+    String? GRAVITY_MODEL,
+    String? gravityModel,
+    String? ATMOSPHERIC_MODEL,
+    String? atmosphericModel,
+    String? SOLAR_FLUX_PREDICTION,
+    String? solarFluxPrediction,
+    String? N_BODY_PERTURBATIONS,
+    String? nBodyPerturbations,
+    String? SOLAR_RAD_PRESSURE,
+    String? solarRadPressure,
+    String? EARTH_TIDES,
+    String? earthTides,
+    String? INTRACK_THRUST,
+    String? intrackThrust,
+    String? DRAG_PARAMETERS_SOURCE,
+    String? dragParametersSource,
+    double? DRAG_PARAMETERS_ALTITUDE,
+    double? dragParametersAltitude,
+    String? REENTRY_UNCERTAINTY_METHOD,
+    String? reentryUncertaintyMethod,
+    String? REENTRY_DISINTEGRATION,
+    String? reentryDisintegration,
+    String? IMPACT_UNCERTAINTY_METHOD,
+    String? impactUncertaintyMethod,
+    String? PREVIOUS_MESSAGE_ID,
+    String? previousMessageId,
+    String? NEXT_MESSAGE_EPOCH,
+    String? nextMessageEpoch,
+    double? ORBIT_LIFETIME,
+    double? orbitLifetime,
+    double? ORBIT_LIFETIME_WINDOW_START,
+    double? orbitLifetimeWindowStart,
+    double? ORBIT_LIFETIME_WINDOW_END,
+    double? orbitLifetimeWindowEnd,
+    String? REENTRY_WINDOW_START,
+    String? reentryWindowStart,
+    String? REENTRY_WINDOW_END,
+    String? reentryWindowEnd,
+    double? ORBIT_LIFETIME_CONFIDENCE_LEVEL,
+    double? orbitLifetimeConfidenceLevel,
+    double? PROBABILITY_OF_IMPACT,
+    double? probabilityOfImpact,
+    double? PROBABILITY_OF_BURN_UP,
+    double? probabilityOfBurnUp,
+    double? PROBABILITY_OF_BREAK_UP,
+    double? probabilityOfBreakUp,
+    double? PROBABILITY_OF_LAND_IMPACT,
+    double? probabilityOfLandImpact,
+    double? PROBABILITY_OF_CASUALTY,
+    double? probabilityOfCasualty,
+    String? NOMINAL_IMPACT_EPOCH,
+    String? nominalImpactEpoch,
+    String? IMPACT_WINDOW_START,
+    String? impactWindowStart,
+    String? IMPACT_WINDOW_END,
+    String? impactWindowEnd,
+    String? IMPACT_REF_FRAME,
+    String? impactRefFrame,
+    double? NOMINAL_IMPACT_LON,
+    double? nominalImpactLon,
+    double? NOMINAL_IMPACT_LAT,
+    double? nominalImpactLat,
+    double? NOMINAL_IMPACT_ALT,
+    double? nominalImpactAlt,
+    double? IMPACT_1_CONFIDENCE,
+    double? impact1Confidence,
+    double? IMPACT_1_START_LON,
+    double? impact1StartLon,
+    double? IMPACT_1_START_LAT,
+    double? impact1StartLat,
+    double? IMPACT_1_STOP_LON,
+    double? impact1StopLon,
+    double? IMPACT_1_STOP_LAT,
+    double? impact1StopLat,
+    double? IMPACT_1_CROSS_TRACK,
+    double? impact1CrossTrack,
+    double? IMPACT_2_CONFIDENCE,
+    double? impact2Confidence,
+    double? IMPACT_2_START_LON,
+    double? impact2StartLon,
+    double? IMPACT_2_START_LAT,
+    double? impact2StartLat,
+    double? IMPACT_2_STOP_LON,
+    double? impact2StopLon,
+    double? IMPACT_2_STOP_LAT,
+    double? impact2StopLat,
+    double? IMPACT_2_CROSS_TRACK,
+    double? impact2CrossTrack,
+    double? IMPACT_3_CONFIDENCE,
+    double? impact3Confidence,
+    double? IMPACT_3_START_LON,
+    double? impact3StartLon,
+    double? IMPACT_3_START_LAT,
+    double? impact3StartLat,
+    double? IMPACT_3_STOP_LON,
+    double? impact3StopLon,
+    double? IMPACT_3_STOP_LAT,
+    double? impact3StopLat,
+    double? IMPACT_3_CROSS_TRACK,
+    double? impact3CrossTrack,
+    String? COV_REF_FRAME,
+    String? covRefFrame,
+    List<double>? COVARIANCE,
+    double? DRY_MASS,
+    double? dryMass,
+    String? HAZARDOUS_SUBSTANCES,
+    String? hazardousSubstances,
+    double? SOLAR_RAD_COEFF,
+    double? solarRadCoeff,
+    double? DRAG_COEFF,
+    double? dragCoeff,
+    double? RCS,
+    double? THRUST_ACCELERATION,
+    double? thrustAcceleration,
+    String? TIME_LASTOB_START,
+    String? timeLastobStart,
+    String? TIME_LASTOB_END,
+    String? timeLastobEnd,
+    double? RECOMMENDED_OD_SPAN,
+    double? recommendedOdSpan,
+    double? ACTUAL_OD_SPAN,
+    double? actualOdSpan,
+    int? OBS_AVAILABLE,
+    int? obsAvailable,
+    int? OBS_USED,
+    int? obsUsed,
+    int? TRACKS_AVAILABLE,
+    int? tracksAvailable,
+    int? TRACKS_USED,
+    int? tracksUsed,
+    double? RESIDUALS_ACCEPTED,
+    double? residualsAccepted,
+    double? WEIGHTED_RMS,
+    double? weightedRms,
+    List<RDMUserDefinedParameterObjectBuilder>? USER_DEFINED_PARAMETERS,
+    List<RDMUserDefinedParameterObjectBuilder>? userDefinedParameters,
   })
       : _CCSDS_RDM_VERS = ccsdsRdmVers ?? CCSDS_RDM_VERS,
         _CREATION_DATE = creationDate ?? CREATION_DATE,
@@ -840,7 +1689,87 @@ class RDMObjectBuilder extends fb.ObjectBuilder {
         _CASUALTY_EXPECTATION = casualtyExpectation ?? CASUALTY_EXPECTATION,
         _NUM_FRAGMENTS = numFragments ?? NUM_FRAGMENTS,
         _SURVIVING_MASS = survivingMass ?? SURVIVING_MASS,
-        _COMMENT = COMMENT;
+        _COMMENT = COMMENT,
+        _MESSAGE_ID = messageId ?? MESSAGE_ID,
+        _CATALOG_NAME = catalogName ?? CATALOG_NAME,
+        _OBJECT_DESIGNATOR = objectDesignator ?? OBJECT_DESIGNATOR,
+        _OBJECT_OWNER = objectOwner ?? OBJECT_OWNER,
+        _OBJECT_OPERATOR = objectOperator ?? OBJECT_OPERATOR,
+        _CONTROLLED_REENTRY = controlledReentry ?? CONTROLLED_REENTRY,
+        _CENTER_NAME = centerName ?? CENTER_NAME,
+        _EPOCH_TZERO = epochTzero ?? EPOCH_TZERO,
+        _REF_FRAME = refFrame ?? REF_FRAME,
+        _REF_FRAME_EPOCH = refFrameEpoch ?? REF_FRAME_EPOCH,
+        _EPHEMERIS_NAME = ephemerisName ?? EPHEMERIS_NAME,
+        _GRAVITY_MODEL = gravityModel ?? GRAVITY_MODEL,
+        _ATMOSPHERIC_MODEL = atmosphericModel ?? ATMOSPHERIC_MODEL,
+        _SOLAR_FLUX_PREDICTION = solarFluxPrediction ?? SOLAR_FLUX_PREDICTION,
+        _N_BODY_PERTURBATIONS = nBodyPerturbations ?? N_BODY_PERTURBATIONS,
+        _SOLAR_RAD_PRESSURE = solarRadPressure ?? SOLAR_RAD_PRESSURE,
+        _EARTH_TIDES = earthTides ?? EARTH_TIDES,
+        _INTRACK_THRUST = intrackThrust ?? INTRACK_THRUST,
+        _DRAG_PARAMETERS_SOURCE = dragParametersSource ?? DRAG_PARAMETERS_SOURCE,
+        _DRAG_PARAMETERS_ALTITUDE = dragParametersAltitude ?? DRAG_PARAMETERS_ALTITUDE,
+        _REENTRY_UNCERTAINTY_METHOD = reentryUncertaintyMethod ?? REENTRY_UNCERTAINTY_METHOD,
+        _REENTRY_DISINTEGRATION = reentryDisintegration ?? REENTRY_DISINTEGRATION,
+        _IMPACT_UNCERTAINTY_METHOD = impactUncertaintyMethod ?? IMPACT_UNCERTAINTY_METHOD,
+        _PREVIOUS_MESSAGE_ID = previousMessageId ?? PREVIOUS_MESSAGE_ID,
+        _NEXT_MESSAGE_EPOCH = nextMessageEpoch ?? NEXT_MESSAGE_EPOCH,
+        _ORBIT_LIFETIME = orbitLifetime ?? ORBIT_LIFETIME,
+        _ORBIT_LIFETIME_WINDOW_START = orbitLifetimeWindowStart ?? ORBIT_LIFETIME_WINDOW_START,
+        _ORBIT_LIFETIME_WINDOW_END = orbitLifetimeWindowEnd ?? ORBIT_LIFETIME_WINDOW_END,
+        _REENTRY_WINDOW_START = reentryWindowStart ?? REENTRY_WINDOW_START,
+        _REENTRY_WINDOW_END = reentryWindowEnd ?? REENTRY_WINDOW_END,
+        _ORBIT_LIFETIME_CONFIDENCE_LEVEL = orbitLifetimeConfidenceLevel ?? ORBIT_LIFETIME_CONFIDENCE_LEVEL,
+        _PROBABILITY_OF_IMPACT = probabilityOfImpact ?? PROBABILITY_OF_IMPACT,
+        _PROBABILITY_OF_BURN_UP = probabilityOfBurnUp ?? PROBABILITY_OF_BURN_UP,
+        _PROBABILITY_OF_BREAK_UP = probabilityOfBreakUp ?? PROBABILITY_OF_BREAK_UP,
+        _PROBABILITY_OF_LAND_IMPACT = probabilityOfLandImpact ?? PROBABILITY_OF_LAND_IMPACT,
+        _PROBABILITY_OF_CASUALTY = probabilityOfCasualty ?? PROBABILITY_OF_CASUALTY,
+        _NOMINAL_IMPACT_EPOCH = nominalImpactEpoch ?? NOMINAL_IMPACT_EPOCH,
+        _IMPACT_WINDOW_START = impactWindowStart ?? IMPACT_WINDOW_START,
+        _IMPACT_WINDOW_END = impactWindowEnd ?? IMPACT_WINDOW_END,
+        _IMPACT_REF_FRAME = impactRefFrame ?? IMPACT_REF_FRAME,
+        _NOMINAL_IMPACT_LON = nominalImpactLon ?? NOMINAL_IMPACT_LON,
+        _NOMINAL_IMPACT_LAT = nominalImpactLat ?? NOMINAL_IMPACT_LAT,
+        _NOMINAL_IMPACT_ALT = nominalImpactAlt ?? NOMINAL_IMPACT_ALT,
+        _IMPACT_1_CONFIDENCE = impact1Confidence ?? IMPACT_1_CONFIDENCE,
+        _IMPACT_1_START_LON = impact1StartLon ?? IMPACT_1_START_LON,
+        _IMPACT_1_START_LAT = impact1StartLat ?? IMPACT_1_START_LAT,
+        _IMPACT_1_STOP_LON = impact1StopLon ?? IMPACT_1_STOP_LON,
+        _IMPACT_1_STOP_LAT = impact1StopLat ?? IMPACT_1_STOP_LAT,
+        _IMPACT_1_CROSS_TRACK = impact1CrossTrack ?? IMPACT_1_CROSS_TRACK,
+        _IMPACT_2_CONFIDENCE = impact2Confidence ?? IMPACT_2_CONFIDENCE,
+        _IMPACT_2_START_LON = impact2StartLon ?? IMPACT_2_START_LON,
+        _IMPACT_2_START_LAT = impact2StartLat ?? IMPACT_2_START_LAT,
+        _IMPACT_2_STOP_LON = impact2StopLon ?? IMPACT_2_STOP_LON,
+        _IMPACT_2_STOP_LAT = impact2StopLat ?? IMPACT_2_STOP_LAT,
+        _IMPACT_2_CROSS_TRACK = impact2CrossTrack ?? IMPACT_2_CROSS_TRACK,
+        _IMPACT_3_CONFIDENCE = impact3Confidence ?? IMPACT_3_CONFIDENCE,
+        _IMPACT_3_START_LON = impact3StartLon ?? IMPACT_3_START_LON,
+        _IMPACT_3_START_LAT = impact3StartLat ?? IMPACT_3_START_LAT,
+        _IMPACT_3_STOP_LON = impact3StopLon ?? IMPACT_3_STOP_LON,
+        _IMPACT_3_STOP_LAT = impact3StopLat ?? IMPACT_3_STOP_LAT,
+        _IMPACT_3_CROSS_TRACK = impact3CrossTrack ?? IMPACT_3_CROSS_TRACK,
+        _COV_REF_FRAME = covRefFrame ?? COV_REF_FRAME,
+        _COVARIANCE = COVARIANCE,
+        _DRY_MASS = dryMass ?? DRY_MASS,
+        _HAZARDOUS_SUBSTANCES = hazardousSubstances ?? HAZARDOUS_SUBSTANCES,
+        _SOLAR_RAD_COEFF = solarRadCoeff ?? SOLAR_RAD_COEFF,
+        _DRAG_COEFF = dragCoeff ?? DRAG_COEFF,
+        _RCS = RCS,
+        _THRUST_ACCELERATION = thrustAcceleration ?? THRUST_ACCELERATION,
+        _TIME_LASTOB_START = timeLastobStart ?? TIME_LASTOB_START,
+        _TIME_LASTOB_END = timeLastobEnd ?? TIME_LASTOB_END,
+        _RECOMMENDED_OD_SPAN = recommendedOdSpan ?? RECOMMENDED_OD_SPAN,
+        _ACTUAL_OD_SPAN = actualOdSpan ?? ACTUAL_OD_SPAN,
+        _OBS_AVAILABLE = obsAvailable ?? OBS_AVAILABLE,
+        _OBS_USED = obsUsed ?? OBS_USED,
+        _TRACKS_AVAILABLE = tracksAvailable ?? TRACKS_AVAILABLE,
+        _TRACKS_USED = tracksUsed ?? TRACKS_USED,
+        _RESIDUALS_ACCEPTED = residualsAccepted ?? RESIDUALS_ACCEPTED,
+        _WEIGHTED_RMS = weightedRms ?? WEIGHTED_RMS,
+        _USER_DEFINED_PARAMETERS = userDefinedParameters ?? USER_DEFINED_PARAMETERS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -870,7 +1799,77 @@ class RDMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_SURVIVING_DEBRIS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? COMMENTOffset = _COMMENT == null ? null
         : fbBuilder.writeString(_COMMENT!);
-    fbBuilder.startTable(27);
+    final int? MESSAGE_IDOffset = _MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_MESSAGE_ID!);
+    final int? CATALOG_NAMEOffset = _CATALOG_NAME == null ? null
+        : fbBuilder.writeString(_CATALOG_NAME!);
+    final int? OBJECT_DESIGNATOROffset = _OBJECT_DESIGNATOR == null ? null
+        : fbBuilder.writeString(_OBJECT_DESIGNATOR!);
+    final int? OBJECT_OWNEROffset = _OBJECT_OWNER == null ? null
+        : fbBuilder.writeString(_OBJECT_OWNER!);
+    final int? OBJECT_OPERATOROffset = _OBJECT_OPERATOR == null ? null
+        : fbBuilder.writeString(_OBJECT_OPERATOR!);
+    final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
+        : fbBuilder.writeString(_CENTER_NAME!);
+    final int? EPOCH_TZEROOffset = _EPOCH_TZERO == null ? null
+        : fbBuilder.writeString(_EPOCH_TZERO!);
+    final int? REF_FRAMEOffset = _REF_FRAME == null ? null
+        : fbBuilder.writeString(_REF_FRAME!);
+    final int? REF_FRAME_EPOCHOffset = _REF_FRAME_EPOCH == null ? null
+        : fbBuilder.writeString(_REF_FRAME_EPOCH!);
+    final int? EPHEMERIS_NAMEOffset = _EPHEMERIS_NAME == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_NAME!);
+    final int? GRAVITY_MODELOffset = _GRAVITY_MODEL == null ? null
+        : fbBuilder.writeString(_GRAVITY_MODEL!);
+    final int? ATMOSPHERIC_MODELOffset = _ATMOSPHERIC_MODEL == null ? null
+        : fbBuilder.writeString(_ATMOSPHERIC_MODEL!);
+    final int? SOLAR_FLUX_PREDICTIONOffset = _SOLAR_FLUX_PREDICTION == null ? null
+        : fbBuilder.writeString(_SOLAR_FLUX_PREDICTION!);
+    final int? N_BODY_PERTURBATIONSOffset = _N_BODY_PERTURBATIONS == null ? null
+        : fbBuilder.writeString(_N_BODY_PERTURBATIONS!);
+    final int? SOLAR_RAD_PRESSUREOffset = _SOLAR_RAD_PRESSURE == null ? null
+        : fbBuilder.writeString(_SOLAR_RAD_PRESSURE!);
+    final int? EARTH_TIDESOffset = _EARTH_TIDES == null ? null
+        : fbBuilder.writeString(_EARTH_TIDES!);
+    final int? INTRACK_THRUSTOffset = _INTRACK_THRUST == null ? null
+        : fbBuilder.writeString(_INTRACK_THRUST!);
+    final int? DRAG_PARAMETERS_SOURCEOffset = _DRAG_PARAMETERS_SOURCE == null ? null
+        : fbBuilder.writeString(_DRAG_PARAMETERS_SOURCE!);
+    final int? REENTRY_UNCERTAINTY_METHODOffset = _REENTRY_UNCERTAINTY_METHOD == null ? null
+        : fbBuilder.writeString(_REENTRY_UNCERTAINTY_METHOD!);
+    final int? REENTRY_DISINTEGRATIONOffset = _REENTRY_DISINTEGRATION == null ? null
+        : fbBuilder.writeString(_REENTRY_DISINTEGRATION!);
+    final int? IMPACT_UNCERTAINTY_METHODOffset = _IMPACT_UNCERTAINTY_METHOD == null ? null
+        : fbBuilder.writeString(_IMPACT_UNCERTAINTY_METHOD!);
+    final int? PREVIOUS_MESSAGE_IDOffset = _PREVIOUS_MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_PREVIOUS_MESSAGE_ID!);
+    final int? NEXT_MESSAGE_EPOCHOffset = _NEXT_MESSAGE_EPOCH == null ? null
+        : fbBuilder.writeString(_NEXT_MESSAGE_EPOCH!);
+    final int? REENTRY_WINDOW_STARTOffset = _REENTRY_WINDOW_START == null ? null
+        : fbBuilder.writeString(_REENTRY_WINDOW_START!);
+    final int? REENTRY_WINDOW_ENDOffset = _REENTRY_WINDOW_END == null ? null
+        : fbBuilder.writeString(_REENTRY_WINDOW_END!);
+    final int? NOMINAL_IMPACT_EPOCHOffset = _NOMINAL_IMPACT_EPOCH == null ? null
+        : fbBuilder.writeString(_NOMINAL_IMPACT_EPOCH!);
+    final int? IMPACT_WINDOW_STARTOffset = _IMPACT_WINDOW_START == null ? null
+        : fbBuilder.writeString(_IMPACT_WINDOW_START!);
+    final int? IMPACT_WINDOW_ENDOffset = _IMPACT_WINDOW_END == null ? null
+        : fbBuilder.writeString(_IMPACT_WINDOW_END!);
+    final int? IMPACT_REF_FRAMEOffset = _IMPACT_REF_FRAME == null ? null
+        : fbBuilder.writeString(_IMPACT_REF_FRAME!);
+    final int? COV_REF_FRAMEOffset = _COV_REF_FRAME == null ? null
+        : fbBuilder.writeString(_COV_REF_FRAME!);
+    final int? COVARIANCEOffset = _COVARIANCE == null ? null
+        : fbBuilder.writeListFloat64(_COVARIANCE!);
+    final int? HAZARDOUS_SUBSTANCESOffset = _HAZARDOUS_SUBSTANCES == null ? null
+        : fbBuilder.writeString(_HAZARDOUS_SUBSTANCES!);
+    final int? TIME_LASTOB_STARTOffset = _TIME_LASTOB_START == null ? null
+        : fbBuilder.writeString(_TIME_LASTOB_START!);
+    final int? TIME_LASTOB_ENDOffset = _TIME_LASTOB_END == null ? null
+        : fbBuilder.writeString(_TIME_LASTOB_END!);
+    final int? USER_DEFINED_PARAMETERSOffset = _USER_DEFINED_PARAMETERS == null ? null
+        : fbBuilder.writeList(_USER_DEFINED_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(107);
     fbBuilder.addOffset(0, CCSDS_RDM_VERSOffset);
     fbBuilder.addOffset(1, CREATION_DATEOffset);
     fbBuilder.addOffset(2, ORIGINATOROffset);
@@ -898,6 +1897,178 @@ class RDMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint32(24, _NUM_FRAGMENTS);
     fbBuilder.addFloat64(25, _SURVIVING_MASS);
     fbBuilder.addOffset(26, COMMENTOffset);
+    fbBuilder.addOffset(27, MESSAGE_IDOffset);
+    fbBuilder.addOffset(28, CATALOG_NAMEOffset);
+    fbBuilder.addOffset(29, OBJECT_DESIGNATOROffset);
+    fbBuilder.addOffset(30, OBJECT_OWNEROffset);
+    fbBuilder.addOffset(31, OBJECT_OPERATOROffset);
+    fbBuilder.addInt8(32, _CONTROLLED_REENTRY?.value);
+    fbBuilder.addOffset(33, CENTER_NAMEOffset);
+    fbBuilder.addOffset(34, EPOCH_TZEROOffset);
+    fbBuilder.addOffset(35, REF_FRAMEOffset);
+    fbBuilder.addOffset(36, REF_FRAME_EPOCHOffset);
+    fbBuilder.addOffset(37, EPHEMERIS_NAMEOffset);
+    fbBuilder.addOffset(38, GRAVITY_MODELOffset);
+    fbBuilder.addOffset(39, ATMOSPHERIC_MODELOffset);
+    fbBuilder.addOffset(40, SOLAR_FLUX_PREDICTIONOffset);
+    fbBuilder.addOffset(41, N_BODY_PERTURBATIONSOffset);
+    fbBuilder.addOffset(42, SOLAR_RAD_PRESSUREOffset);
+    fbBuilder.addOffset(43, EARTH_TIDESOffset);
+    fbBuilder.addOffset(44, INTRACK_THRUSTOffset);
+    fbBuilder.addOffset(45, DRAG_PARAMETERS_SOURCEOffset);
+    fbBuilder.addFloat64(46, _DRAG_PARAMETERS_ALTITUDE);
+    fbBuilder.addOffset(47, REENTRY_UNCERTAINTY_METHODOffset);
+    fbBuilder.addOffset(48, REENTRY_DISINTEGRATIONOffset);
+    fbBuilder.addOffset(49, IMPACT_UNCERTAINTY_METHODOffset);
+    fbBuilder.addOffset(50, PREVIOUS_MESSAGE_IDOffset);
+    fbBuilder.addOffset(51, NEXT_MESSAGE_EPOCHOffset);
+    fbBuilder.addFloat64(52, _ORBIT_LIFETIME);
+    fbBuilder.addFloat64(53, _ORBIT_LIFETIME_WINDOW_START);
+    fbBuilder.addFloat64(54, _ORBIT_LIFETIME_WINDOW_END);
+    fbBuilder.addOffset(55, REENTRY_WINDOW_STARTOffset);
+    fbBuilder.addOffset(56, REENTRY_WINDOW_ENDOffset);
+    fbBuilder.addFloat64(57, _ORBIT_LIFETIME_CONFIDENCE_LEVEL);
+    fbBuilder.addFloat64(58, _PROBABILITY_OF_IMPACT);
+    fbBuilder.addFloat64(59, _PROBABILITY_OF_BURN_UP);
+    fbBuilder.addFloat64(60, _PROBABILITY_OF_BREAK_UP);
+    fbBuilder.addFloat64(61, _PROBABILITY_OF_LAND_IMPACT);
+    fbBuilder.addFloat64(62, _PROBABILITY_OF_CASUALTY);
+    fbBuilder.addOffset(63, NOMINAL_IMPACT_EPOCHOffset);
+    fbBuilder.addOffset(64, IMPACT_WINDOW_STARTOffset);
+    fbBuilder.addOffset(65, IMPACT_WINDOW_ENDOffset);
+    fbBuilder.addOffset(66, IMPACT_REF_FRAMEOffset);
+    fbBuilder.addFloat64(67, _NOMINAL_IMPACT_LON);
+    fbBuilder.addFloat64(68, _NOMINAL_IMPACT_LAT);
+    fbBuilder.addFloat64(69, _NOMINAL_IMPACT_ALT);
+    fbBuilder.addFloat64(70, _IMPACT_1_CONFIDENCE);
+    fbBuilder.addFloat64(71, _IMPACT_1_START_LON);
+    fbBuilder.addFloat64(72, _IMPACT_1_START_LAT);
+    fbBuilder.addFloat64(73, _IMPACT_1_STOP_LON);
+    fbBuilder.addFloat64(74, _IMPACT_1_STOP_LAT);
+    fbBuilder.addFloat64(75, _IMPACT_1_CROSS_TRACK);
+    fbBuilder.addFloat64(76, _IMPACT_2_CONFIDENCE);
+    fbBuilder.addFloat64(77, _IMPACT_2_START_LON);
+    fbBuilder.addFloat64(78, _IMPACT_2_START_LAT);
+    fbBuilder.addFloat64(79, _IMPACT_2_STOP_LON);
+    fbBuilder.addFloat64(80, _IMPACT_2_STOP_LAT);
+    fbBuilder.addFloat64(81, _IMPACT_2_CROSS_TRACK);
+    fbBuilder.addFloat64(82, _IMPACT_3_CONFIDENCE);
+    fbBuilder.addFloat64(83, _IMPACT_3_START_LON);
+    fbBuilder.addFloat64(84, _IMPACT_3_START_LAT);
+    fbBuilder.addFloat64(85, _IMPACT_3_STOP_LON);
+    fbBuilder.addFloat64(86, _IMPACT_3_STOP_LAT);
+    fbBuilder.addFloat64(87, _IMPACT_3_CROSS_TRACK);
+    fbBuilder.addOffset(88, COV_REF_FRAMEOffset);
+    fbBuilder.addOffset(89, COVARIANCEOffset);
+    fbBuilder.addFloat64(90, _DRY_MASS);
+    fbBuilder.addOffset(91, HAZARDOUS_SUBSTANCESOffset);
+    fbBuilder.addFloat64(92, _SOLAR_RAD_COEFF);
+    fbBuilder.addFloat64(93, _DRAG_COEFF);
+    fbBuilder.addFloat64(94, _RCS);
+    fbBuilder.addFloat64(95, _THRUST_ACCELERATION);
+    fbBuilder.addOffset(96, TIME_LASTOB_STARTOffset);
+    fbBuilder.addOffset(97, TIME_LASTOB_ENDOffset);
+    fbBuilder.addFloat64(98, _RECOMMENDED_OD_SPAN);
+    fbBuilder.addFloat64(99, _ACTUAL_OD_SPAN);
+    fbBuilder.addUint32(100, _OBS_AVAILABLE);
+    fbBuilder.addUint32(101, _OBS_USED);
+    fbBuilder.addUint32(102, _TRACKS_AVAILABLE);
+    fbBuilder.addUint32(103, _TRACKS_USED);
+    fbBuilder.addFloat64(104, _RESIDUALS_ACCEPTED);
+    fbBuilder.addFloat64(105, _WEIGHTED_RMS);
+    fbBuilder.addOffset(106, USER_DEFINED_PARAMETERSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML
+///  form: the parameter name (the x) and the value as written.
+class RDMUserDefinedParameter {
+  RDMUserDefinedParameter._(this._bc, this._bcOffset);
+  factory RDMUserDefinedParameter(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RDMUserDefinedParameter> reader = _RDMUserDefinedParameterReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  String? get PARAM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get paramName => PARAM_NAME;
+  ///  The value as written
+  String? get PARAM_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get paramValue => PARAM_VALUE;
+
+  @override
+  String toString() {
+    return 'RDMUserDefinedParameter{paramName: ${paramName}, paramValue: ${paramValue}}';
+  }
+}
+
+class _RDMUserDefinedParameterReader extends fb.TableReader<RDMUserDefinedParameter> {
+  const _RDMUserDefinedParameterReader();
+
+  @override
+  RDMUserDefinedParameter createObject(fb.BufferContext bc, int offset) =>
+    RDMUserDefinedParameter._(bc, offset);
+}
+
+class RDMUserDefinedParameterBuilder {
+  RDMUserDefinedParameterBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addParamNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addParamValueOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RDMUserDefinedParameterObjectBuilder extends fb.ObjectBuilder {
+  final String? _PARAM_NAME;
+  final String? _PARAM_VALUE;
+
+  RDMUserDefinedParameterObjectBuilder({
+    String? PARAM_NAME,
+    String? paramName,
+    String? PARAM_VALUE,
+    String? paramValue,
+  })
+      : _PARAM_NAME = paramName ?? PARAM_NAME,
+        _PARAM_VALUE = paramValue ?? PARAM_VALUE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PARAM_NAMEOffset = _PARAM_NAME == null ? null
+        : fbBuilder.writeString(_PARAM_NAME!);
+    final int? PARAM_VALUEOffset = _PARAM_VALUE == null ? null
+        : fbBuilder.writeString(_PARAM_VALUE!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, PARAM_NAMEOffset);
+    fbBuilder.addOffset(1, PARAM_VALUEOffset);
     return fbBuilder.endTable();
   }
 

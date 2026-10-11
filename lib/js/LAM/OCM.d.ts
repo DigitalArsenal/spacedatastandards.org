@@ -2,6 +2,8 @@ import * as flatbuffers from 'flatbuffers';
 import { Header, HeaderT } from './Header.js';
 import { Maneuver, ManeuverT } from './Maneuver.js';
 import { Metadata, MetadataT } from './Metadata.js';
+import { OCMCovarianceBlock, OCMCovarianceBlockT } from './OCMCovarianceBlock.js';
+import { OCMTrajectoryBlock, OCMTrajectoryBlockT } from './OCMTrajectoryBlock.js';
 import { OrbitDetermination, OrbitDeterminationT } from './OrbitDetermination.js';
 import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalElementRecord.js';
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
@@ -192,6 +194,20 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
     COV_UNITS(index: number): string;
     COV_UNITS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     covUnitsLength(): number;
+    /**
+     * Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+     * blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+     * them above state the first block's CARTPV or CARTPVA states.
+     */
+    TRAJECTORY_BLOCKS(index: number, obj?: OCMTrajectoryBlock): OCMTrajectoryBlock | null;
+    trajectoryBlocksLength(): number;
+    /**
+     * Every covariance time history of the message (COV_START blocks), in message
+     * order. COVARIANCE_DATA and the fields that go with it above state the first
+     * block when it is one line.
+     */
+    COVARIANCE_BLOCKS(index: number, obj?: OCMCovarianceBlock): OCMCovarianceBlock | null;
+    covarianceBlocksLength(): number;
     static startOCM(builder: flatbuffers.Builder): void;
     static addHeader(builder: flatbuffers.Builder, HEADEROffset: flatbuffers.Offset): void;
     static addMetadata(builder: flatbuffers.Builder, METADATAOffset: flatbuffers.Offset): void;
@@ -248,6 +264,12 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
     static addCovUnits(builder: flatbuffers.Builder, COV_UNITSOffset: flatbuffers.Offset): void;
     static createCovUnitsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startCovUnitsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addTrajectoryBlocks(builder: flatbuffers.Builder, TRAJECTORY_BLOCKSOffset: flatbuffers.Offset): void;
+    static createTrajectoryBlocksVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startTrajectoryBlocksVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCovarianceBlocks(builder: flatbuffers.Builder, COVARIANCE_BLOCKSOffset: flatbuffers.Offset): void;
+    static createCovarianceBlocksVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startCovarianceBlocksVector(builder: flatbuffers.Builder, numElems: number): void;
     static endOCM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishOCMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedOCMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -284,7 +306,9 @@ export declare class OCMT implements flatbuffers.IGeneratedObject {
     COV_SIZE: number;
     COV_PARAMETERS: (string)[];
     COV_UNITS: (string)[];
-    constructor(HEADER?: HeaderT | null, METADATA?: MetadataT | null, TRAJ_TYPE?: trajectoryType, TRAJ_TYPE_DESCRIPTION?: string | Uint8Array | null, STATE_STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], COVARIANCE_DATA?: (number)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], POLYNOMIAL_OE_RECORDS?: (PPEOrbitalElementRecordT)[], PHYSICAL_PROPERTIES?: PhysicalPropertiesT | null, MANEUVER_DATA?: (ManeuverT)[], PERTURBATIONS?: PerturbationsT | null, ORBIT_DETERMINATION?: OrbitDeterminationT | null, USER_DEFINED_PARAMETERS?: (UserDefinedParametersT)[], CENTER_NAME?: string | Uint8Array | null, TRAJ_REF_FRAME?: RFMT | null, TRAJ_FRAME_EPOCH?: string | Uint8Array | null, COV_REF_FRAME?: RFMT | null, ORB_REVNUM?: number, ORB_AVERAGING?: string | Uint8Array | null, COV_CALIBRATION?: covarianceCalibration, COV_CALIBRATION_REFERENCE?: string | Uint8Array | null, STATE_EPOCHS?: (string)[], COV_TYPE?: string | Uint8Array | null, COV_ORDERING?: covarianceOrdering, COV_SIZE?: number, COV_PARAMETERS?: (string)[], COV_UNITS?: (string)[]);
+    TRAJECTORY_BLOCKS: (OCMTrajectoryBlockT)[];
+    COVARIANCE_BLOCKS: (OCMCovarianceBlockT)[];
+    constructor(HEADER?: HeaderT | null, METADATA?: MetadataT | null, TRAJ_TYPE?: trajectoryType, TRAJ_TYPE_DESCRIPTION?: string | Uint8Array | null, STATE_STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], COVARIANCE_DATA?: (number)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], POLYNOMIAL_OE_RECORDS?: (PPEOrbitalElementRecordT)[], PHYSICAL_PROPERTIES?: PhysicalPropertiesT | null, MANEUVER_DATA?: (ManeuverT)[], PERTURBATIONS?: PerturbationsT | null, ORBIT_DETERMINATION?: OrbitDeterminationT | null, USER_DEFINED_PARAMETERS?: (UserDefinedParametersT)[], CENTER_NAME?: string | Uint8Array | null, TRAJ_REF_FRAME?: RFMT | null, TRAJ_FRAME_EPOCH?: string | Uint8Array | null, COV_REF_FRAME?: RFMT | null, ORB_REVNUM?: number, ORB_AVERAGING?: string | Uint8Array | null, COV_CALIBRATION?: covarianceCalibration, COV_CALIBRATION_REFERENCE?: string | Uint8Array | null, STATE_EPOCHS?: (string)[], COV_TYPE?: string | Uint8Array | null, COV_ORDERING?: covarianceOrdering, COV_SIZE?: number, COV_PARAMETERS?: (string)[], COV_UNITS?: (string)[], TRAJECTORY_BLOCKS?: (OCMTrajectoryBlockT)[], COVARIANCE_BLOCKS?: (OCMCovarianceBlockT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OCM.d.ts.map

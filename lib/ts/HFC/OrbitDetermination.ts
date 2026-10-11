@@ -307,8 +307,189 @@ odDynamicParametersLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+ */
+DAYS_SINCE_FIRST_OBS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * DAYS_SINCE_LAST_OBS, NaN when not stated.
+ */
+DAYS_SINCE_LAST_OBS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * RECOMMENDED_OD_SPAN in days, NaN when not stated.
+ */
+RECOMMENDED_OD_SPAN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * ACTUAL_OD_SPAN in days, NaN when not stated.
+ */
+ACTUAL_OD_SPAN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+ */
+OBS_AVAILABLE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+ */
+TRACKS_AVAILABLE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * MAXIMUM_OBS_GAP in days, NaN when not stated.
+ */
+MAXIMUM_OBS_GAP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * OD_EPOCH_EIGMAJ in m, NaN when not stated.
+ */
+OD_EPOCH_EIGMAJ():number {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * OD_EPOCH_EIGINT in m, NaN when not stated.
+ */
+OD_EPOCH_EIGINT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * OD_EPOCH_EIGMIN in m, NaN when not stated.
+ */
+OD_EPOCH_EIGMIN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+ */
+OD_MAX_PRED_EIGMAJ():number {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+ */
+OD_MIN_PRED_EIGMIN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * OD_CONFIDENCE in percent, NaN when not stated.
+ */
+OD_CONFIDENCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * GDOP, NaN when not stated.
+ */
+GDOP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * SOLVE_N: the number of solved-for states.
+ */
+SOLVE_N():number {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * SOLVE_STATES: the solved-for states, as written.
+ */
+SOLVE_STATES():string|null
+SOLVE_STATES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOLVE_STATES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * CONSIDER_N: the number of consider parameters.
+ */
+CONSIDER_N():number {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * CONSIDER_PARAMS: the consider parameters, as written.
+ */
+CONSIDER_PARAMS():string|null
+CONSIDER_PARAMS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CONSIDER_PARAMS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * SENSORS_N: the number of sensors.
+ */
+SENSORS_N():number {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * SENSORS: the sensors, as written.
+ */
+SENSORS():string|null
+SENSORS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SENSORS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+ */
+COMMENT(index: number):string
+COMMENT(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+COMMENT(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+commentLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startOrbitDetermination(builder:flatbuffers.Builder) {
-  builder.startObject(26);
+  builder.startObject(47);
 }
 
 static addOdId(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset) {
@@ -485,12 +666,108 @@ static startOdDynamicParametersVector(builder:flatbuffers.Builder, numElems:numb
   builder.startVector(4, numElems, 4);
 }
 
+static addDaysSinceFirstObs(builder:flatbuffers.Builder, DAYS_SINCE_FIRST_OBS:number) {
+  builder.addFieldFloat64(26, DAYS_SINCE_FIRST_OBS, NaN);
+}
+
+static addDaysSinceLastObs(builder:flatbuffers.Builder, DAYS_SINCE_LAST_OBS:number) {
+  builder.addFieldFloat64(27, DAYS_SINCE_LAST_OBS, NaN);
+}
+
+static addRecommendedOdSpan(builder:flatbuffers.Builder, RECOMMENDED_OD_SPAN:number) {
+  builder.addFieldFloat64(28, RECOMMENDED_OD_SPAN, NaN);
+}
+
+static addActualOdSpan(builder:flatbuffers.Builder, ACTUAL_OD_SPAN:number) {
+  builder.addFieldFloat64(29, ACTUAL_OD_SPAN, NaN);
+}
+
+static addObsAvailable(builder:flatbuffers.Builder, OBS_AVAILABLE:number) {
+  builder.addFieldInt32(30, OBS_AVAILABLE, 0);
+}
+
+static addTracksAvailable(builder:flatbuffers.Builder, TRACKS_AVAILABLE:number) {
+  builder.addFieldInt32(31, TRACKS_AVAILABLE, 0);
+}
+
+static addMaximumObsGap(builder:flatbuffers.Builder, MAXIMUM_OBS_GAP:number) {
+  builder.addFieldFloat64(32, MAXIMUM_OBS_GAP, NaN);
+}
+
+static addOdEpochEigmaj(builder:flatbuffers.Builder, OD_EPOCH_EIGMAJ:number) {
+  builder.addFieldFloat64(33, OD_EPOCH_EIGMAJ, NaN);
+}
+
+static addOdEpochEigint(builder:flatbuffers.Builder, OD_EPOCH_EIGINT:number) {
+  builder.addFieldFloat64(34, OD_EPOCH_EIGINT, NaN);
+}
+
+static addOdEpochEigmin(builder:flatbuffers.Builder, OD_EPOCH_EIGMIN:number) {
+  builder.addFieldFloat64(35, OD_EPOCH_EIGMIN, NaN);
+}
+
+static addOdMaxPredEigmaj(builder:flatbuffers.Builder, OD_MAX_PRED_EIGMAJ:number) {
+  builder.addFieldFloat64(36, OD_MAX_PRED_EIGMAJ, NaN);
+}
+
+static addOdMinPredEigmin(builder:flatbuffers.Builder, OD_MIN_PRED_EIGMIN:number) {
+  builder.addFieldFloat64(37, OD_MIN_PRED_EIGMIN, NaN);
+}
+
+static addOdConfidence(builder:flatbuffers.Builder, OD_CONFIDENCE:number) {
+  builder.addFieldFloat64(38, OD_CONFIDENCE, NaN);
+}
+
+static addGdop(builder:flatbuffers.Builder, GDOP:number) {
+  builder.addFieldFloat64(39, GDOP, NaN);
+}
+
+static addSolveN(builder:flatbuffers.Builder, SOLVE_N:number) {
+  builder.addFieldInt32(40, SOLVE_N, 0);
+}
+
+static addSolveStates(builder:flatbuffers.Builder, SOLVE_STATESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(41, SOLVE_STATESOffset, 0);
+}
+
+static addConsiderN(builder:flatbuffers.Builder, CONSIDER_N:number) {
+  builder.addFieldInt32(42, CONSIDER_N, 0);
+}
+
+static addConsiderParams(builder:flatbuffers.Builder, CONSIDER_PARAMSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(43, CONSIDER_PARAMSOffset, 0);
+}
+
+static addSensorsN(builder:flatbuffers.Builder, SENSORS_N:number) {
+  builder.addFieldInt32(44, SENSORS_N, 0);
+}
+
+static addSensors(builder:flatbuffers.Builder, SENSORSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(45, SENSORSOffset, 0);
+}
+
+static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(46, COMMENTOffset, 0);
+}
+
+static createCommentVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCommentVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endOrbitDetermination(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset, OD_PREV_IDOffset:flatbuffers.Offset, OD_ALGORITHMOffset:flatbuffers.Offset, OD_METHODOffset:flatbuffers.Offset, OD_EPOCHOffset:flatbuffers.Offset, OD_TIME_TAGOffset:flatbuffers.Offset, OD_PROCESS_NOISEOffset:flatbuffers.Offset, OD_COV_REDUCTIONOffset:flatbuffers.Offset, OD_NOISE_MODELSOffset:flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset:flatbuffers.Offset, OD_OBSERVATIONS_USED:number, OD_TRACKS_USED:number, OD_DATA_WEIGHTINGOffset:flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset:flatbuffers.Offset, OD_EST_PARAMETERSOffset:flatbuffers.Offset, OD_APRIORI_DATAOffset:flatbuffers.Offset, OD_RESIDUALSOffset:flatbuffers.Offset, OD_ESTIMATOR:estimatorCategory, OD_RESIDUAL_RMS:number, OD_RESIDUALS_SERIESOffset:flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset:flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset:flatbuffers.Offset, OD_BATCH_BASELINE_RMS:number, SEDR:number, WEIGHTED_RMS:number, OD_DYNAMIC_PARAMETERSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset, OD_PREV_IDOffset:flatbuffers.Offset, OD_ALGORITHMOffset:flatbuffers.Offset, OD_METHODOffset:flatbuffers.Offset, OD_EPOCHOffset:flatbuffers.Offset, OD_TIME_TAGOffset:flatbuffers.Offset, OD_PROCESS_NOISEOffset:flatbuffers.Offset, OD_COV_REDUCTIONOffset:flatbuffers.Offset, OD_NOISE_MODELSOffset:flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset:flatbuffers.Offset, OD_OBSERVATIONS_USED:number, OD_TRACKS_USED:number, OD_DATA_WEIGHTINGOffset:flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset:flatbuffers.Offset, OD_EST_PARAMETERSOffset:flatbuffers.Offset, OD_APRIORI_DATAOffset:flatbuffers.Offset, OD_RESIDUALSOffset:flatbuffers.Offset, OD_ESTIMATOR:estimatorCategory, OD_RESIDUAL_RMS:number, OD_RESIDUALS_SERIESOffset:flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset:flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset:flatbuffers.Offset, OD_BATCH_BASELINE_RMS:number, SEDR:number, WEIGHTED_RMS:number, OD_DYNAMIC_PARAMETERSOffset:flatbuffers.Offset, DAYS_SINCE_FIRST_OBS:number, DAYS_SINCE_LAST_OBS:number, RECOMMENDED_OD_SPAN:number, ACTUAL_OD_SPAN:number, OBS_AVAILABLE:number, TRACKS_AVAILABLE:number, MAXIMUM_OBS_GAP:number, OD_EPOCH_EIGMAJ:number, OD_EPOCH_EIGINT:number, OD_EPOCH_EIGMIN:number, OD_MAX_PRED_EIGMAJ:number, OD_MIN_PRED_EIGMIN:number, OD_CONFIDENCE:number, GDOP:number, SOLVE_N:number, SOLVE_STATESOffset:flatbuffers.Offset, CONSIDER_N:number, CONSIDER_PARAMSOffset:flatbuffers.Offset, SENSORS_N:number, SENSORSOffset:flatbuffers.Offset, COMMENTOffset:flatbuffers.Offset):flatbuffers.Offset {
   OrbitDetermination.startOrbitDetermination(builder);
   OrbitDetermination.addOdId(builder, OD_IDOffset);
   OrbitDetermination.addOdPrevId(builder, OD_PREV_IDOffset);
@@ -518,6 +795,27 @@ static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuf
   OrbitDetermination.addSedr(builder, SEDR);
   OrbitDetermination.addWeightedRms(builder, WEIGHTED_RMS);
   OrbitDetermination.addOdDynamicParameters(builder, OD_DYNAMIC_PARAMETERSOffset);
+  OrbitDetermination.addDaysSinceFirstObs(builder, DAYS_SINCE_FIRST_OBS);
+  OrbitDetermination.addDaysSinceLastObs(builder, DAYS_SINCE_LAST_OBS);
+  OrbitDetermination.addRecommendedOdSpan(builder, RECOMMENDED_OD_SPAN);
+  OrbitDetermination.addActualOdSpan(builder, ACTUAL_OD_SPAN);
+  OrbitDetermination.addObsAvailable(builder, OBS_AVAILABLE);
+  OrbitDetermination.addTracksAvailable(builder, TRACKS_AVAILABLE);
+  OrbitDetermination.addMaximumObsGap(builder, MAXIMUM_OBS_GAP);
+  OrbitDetermination.addOdEpochEigmaj(builder, OD_EPOCH_EIGMAJ);
+  OrbitDetermination.addOdEpochEigint(builder, OD_EPOCH_EIGINT);
+  OrbitDetermination.addOdEpochEigmin(builder, OD_EPOCH_EIGMIN);
+  OrbitDetermination.addOdMaxPredEigmaj(builder, OD_MAX_PRED_EIGMAJ);
+  OrbitDetermination.addOdMinPredEigmin(builder, OD_MIN_PRED_EIGMIN);
+  OrbitDetermination.addOdConfidence(builder, OD_CONFIDENCE);
+  OrbitDetermination.addGdop(builder, GDOP);
+  OrbitDetermination.addSolveN(builder, SOLVE_N);
+  OrbitDetermination.addSolveStates(builder, SOLVE_STATESOffset);
+  OrbitDetermination.addConsiderN(builder, CONSIDER_N);
+  OrbitDetermination.addConsiderParams(builder, CONSIDER_PARAMSOffset);
+  OrbitDetermination.addSensorsN(builder, SENSORS_N);
+  OrbitDetermination.addSensors(builder, SENSORSOffset);
+  OrbitDetermination.addComment(builder, COMMENTOffset);
   return OrbitDetermination.endOrbitDetermination(builder);
 }
 
@@ -548,7 +846,28 @@ unpack(): OrbitDeterminationT {
     this.OD_BATCH_BASELINE_RMS(),
     this.SEDR(),
     this.WEIGHTED_RMS(),
-    this.bb!.createObjList<OCMDynamicParameter, OCMDynamicParameterT>(this.OD_DYNAMIC_PARAMETERS.bind(this), this.odDynamicParametersLength())
+    this.bb!.createObjList<OCMDynamicParameter, OCMDynamicParameterT>(this.OD_DYNAMIC_PARAMETERS.bind(this), this.odDynamicParametersLength()),
+    this.DAYS_SINCE_FIRST_OBS(),
+    this.DAYS_SINCE_LAST_OBS(),
+    this.RECOMMENDED_OD_SPAN(),
+    this.ACTUAL_OD_SPAN(),
+    this.OBS_AVAILABLE(),
+    this.TRACKS_AVAILABLE(),
+    this.MAXIMUM_OBS_GAP(),
+    this.OD_EPOCH_EIGMAJ(),
+    this.OD_EPOCH_EIGINT(),
+    this.OD_EPOCH_EIGMIN(),
+    this.OD_MAX_PRED_EIGMAJ(),
+    this.OD_MIN_PRED_EIGMIN(),
+    this.OD_CONFIDENCE(),
+    this.GDOP(),
+    this.SOLVE_N(),
+    this.SOLVE_STATES(),
+    this.CONSIDER_N(),
+    this.CONSIDER_PARAMS(),
+    this.SENSORS_N(),
+    this.SENSORS(),
+    this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength())
   );
 }
 
@@ -580,6 +899,27 @@ unpackTo(_o: OrbitDeterminationT): void {
   _o.SEDR = this.SEDR();
   _o.WEIGHTED_RMS = this.WEIGHTED_RMS();
   _o.OD_DYNAMIC_PARAMETERS = this.bb!.createObjList<OCMDynamicParameter, OCMDynamicParameterT>(this.OD_DYNAMIC_PARAMETERS.bind(this), this.odDynamicParametersLength());
+  _o.DAYS_SINCE_FIRST_OBS = this.DAYS_SINCE_FIRST_OBS();
+  _o.DAYS_SINCE_LAST_OBS = this.DAYS_SINCE_LAST_OBS();
+  _o.RECOMMENDED_OD_SPAN = this.RECOMMENDED_OD_SPAN();
+  _o.ACTUAL_OD_SPAN = this.ACTUAL_OD_SPAN();
+  _o.OBS_AVAILABLE = this.OBS_AVAILABLE();
+  _o.TRACKS_AVAILABLE = this.TRACKS_AVAILABLE();
+  _o.MAXIMUM_OBS_GAP = this.MAXIMUM_OBS_GAP();
+  _o.OD_EPOCH_EIGMAJ = this.OD_EPOCH_EIGMAJ();
+  _o.OD_EPOCH_EIGINT = this.OD_EPOCH_EIGINT();
+  _o.OD_EPOCH_EIGMIN = this.OD_EPOCH_EIGMIN();
+  _o.OD_MAX_PRED_EIGMAJ = this.OD_MAX_PRED_EIGMAJ();
+  _o.OD_MIN_PRED_EIGMIN = this.OD_MIN_PRED_EIGMIN();
+  _o.OD_CONFIDENCE = this.OD_CONFIDENCE();
+  _o.GDOP = this.GDOP();
+  _o.SOLVE_N = this.SOLVE_N();
+  _o.SOLVE_STATES = this.SOLVE_STATES();
+  _o.CONSIDER_N = this.CONSIDER_N();
+  _o.CONSIDER_PARAMS = this.CONSIDER_PARAMS();
+  _o.SENSORS_N = this.SENSORS_N();
+  _o.SENSORS = this.SENSORS();
+  _o.COMMENT = this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength());
 }
 }
 
@@ -610,7 +950,28 @@ constructor(
   public OD_BATCH_BASELINE_RMS: number = 0.0,
   public SEDR: number = 0.0,
   public WEIGHTED_RMS: number = 0.0,
-  public OD_DYNAMIC_PARAMETERS: (OCMDynamicParameterT)[] = []
+  public OD_DYNAMIC_PARAMETERS: (OCMDynamicParameterT)[] = [],
+  public DAYS_SINCE_FIRST_OBS: number = NaN,
+  public DAYS_SINCE_LAST_OBS: number = NaN,
+  public RECOMMENDED_OD_SPAN: number = NaN,
+  public ACTUAL_OD_SPAN: number = NaN,
+  public OBS_AVAILABLE: number = 0,
+  public TRACKS_AVAILABLE: number = 0,
+  public MAXIMUM_OBS_GAP: number = NaN,
+  public OD_EPOCH_EIGMAJ: number = NaN,
+  public OD_EPOCH_EIGINT: number = NaN,
+  public OD_EPOCH_EIGMIN: number = NaN,
+  public OD_MAX_PRED_EIGMAJ: number = NaN,
+  public OD_MIN_PRED_EIGMIN: number = NaN,
+  public OD_CONFIDENCE: number = NaN,
+  public GDOP: number = NaN,
+  public SOLVE_N: number = 0,
+  public SOLVE_STATES: string|Uint8Array|null = null,
+  public CONSIDER_N: number = 0,
+  public CONSIDER_PARAMS: string|Uint8Array|null = null,
+  public SENSORS_N: number = 0,
+  public SENSORS: string|Uint8Array|null = null,
+  public COMMENT: (string)[] = []
 ){}
 
 
@@ -634,6 +995,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OD_RESIDUAL_EPOCHS = OrbitDetermination.createOdResidualEpochsVector(builder, this.OD_RESIDUAL_EPOCHS);
   const OD_BATCH_BASELINE_ID = (this.OD_BATCH_BASELINE_ID !== null ? builder.createString(this.OD_BATCH_BASELINE_ID!) : 0);
   const OD_DYNAMIC_PARAMETERS = OrbitDetermination.createOdDynamicParametersVector(builder, builder.createObjectOffsetList(this.OD_DYNAMIC_PARAMETERS));
+  const SOLVE_STATES = (this.SOLVE_STATES !== null ? builder.createString(this.SOLVE_STATES!) : 0);
+  const CONSIDER_PARAMS = (this.CONSIDER_PARAMS !== null ? builder.createString(this.CONSIDER_PARAMS!) : 0);
+  const SENSORS = (this.SENSORS !== null ? builder.createString(this.SENSORS!) : 0);
+  const COMMENT = OrbitDetermination.createCommentVector(builder, builder.createObjectOffsetList(this.COMMENT));
 
   return OrbitDetermination.createOrbitDetermination(builder,
     OD_ID,
@@ -661,7 +1026,28 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.OD_BATCH_BASELINE_RMS,
     this.SEDR,
     this.WEIGHTED_RMS,
-    OD_DYNAMIC_PARAMETERS
+    OD_DYNAMIC_PARAMETERS,
+    this.DAYS_SINCE_FIRST_OBS,
+    this.DAYS_SINCE_LAST_OBS,
+    this.RECOMMENDED_OD_SPAN,
+    this.ACTUAL_OD_SPAN,
+    this.OBS_AVAILABLE,
+    this.TRACKS_AVAILABLE,
+    this.MAXIMUM_OBS_GAP,
+    this.OD_EPOCH_EIGMAJ,
+    this.OD_EPOCH_EIGINT,
+    this.OD_EPOCH_EIGMIN,
+    this.OD_MAX_PRED_EIGMAJ,
+    this.OD_MIN_PRED_EIGMIN,
+    this.OD_CONFIDENCE,
+    this.GDOP,
+    this.SOLVE_N,
+    SOLVE_STATES,
+    this.CONSIDER_N,
+    CONSIDER_PARAMS,
+    this.SENSORS_N,
+    SENSORS,
+    COMMENT
   );
 }
 }

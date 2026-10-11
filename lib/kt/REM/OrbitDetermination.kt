@@ -364,6 +364,199 @@ class OrbitDetermination : Table() {
         get() {
             val o = __offset(54); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+     */
+    val daysSinceFirstObs : Double
+        get() {
+            val o = __offset(56)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * DAYS_SINCE_LAST_OBS, NaN when not stated.
+     */
+    val daysSinceLastObs : Double
+        get() {
+            val o = __offset(58)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * RECOMMENDED_OD_SPAN in days, NaN when not stated.
+     */
+    val recommendedOdSpan : Double
+        get() {
+            val o = __offset(60)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * ACTUAL_OD_SPAN in days, NaN when not stated.
+     */
+    val actualOdSpan : Double
+        get() {
+            val o = __offset(62)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+     */
+    val obsAvailable : UInt
+        get() {
+            val o = __offset(64)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+     */
+    val tracksAvailable : UInt
+        get() {
+            val o = __offset(66)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * MAXIMUM_OBS_GAP in days, NaN when not stated.
+     */
+    val maximumObsGap : Double
+        get() {
+            val o = __offset(68)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * OD_EPOCH_EIGMAJ in m, NaN when not stated.
+     */
+    val odEpochEigmaj : Double
+        get() {
+            val o = __offset(70)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * OD_EPOCH_EIGINT in m, NaN when not stated.
+     */
+    val odEpochEigint : Double
+        get() {
+            val o = __offset(72)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * OD_EPOCH_EIGMIN in m, NaN when not stated.
+     */
+    val odEpochEigmin : Double
+        get() {
+            val o = __offset(74)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+     */
+    val odMaxPredEigmaj : Double
+        get() {
+            val o = __offset(76)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+     */
+    val odMinPredEigmin : Double
+        get() {
+            val o = __offset(78)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * OD_CONFIDENCE in percent, NaN when not stated.
+     */
+    val odConfidence : Double
+        get() {
+            val o = __offset(80)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * GDOP, NaN when not stated.
+     */
+    val gdop : Double
+        get() {
+            val o = __offset(82)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * SOLVE_N: the number of solved-for states.
+     */
+    val solveN : UInt
+        get() {
+            val o = __offset(84)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * SOLVE_STATES: the solved-for states, as written.
+     */
+    val solveStates : String?
+        get() {
+            val o = __offset(86)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val solveStatesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(86, 1)
+    fun solveStatesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 86, 1)
+    /**
+     * CONSIDER_N: the number of consider parameters.
+     */
+    val considerN : UInt
+        get() {
+            val o = __offset(88)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * CONSIDER_PARAMS: the consider parameters, as written.
+     */
+    val considerParams : String?
+        get() {
+            val o = __offset(90)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val considerParamsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(90, 1)
+    fun considerParamsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 90, 1)
+    /**
+     * SENSORS_N: the number of sensors.
+     */
+    val sensorsN : UInt
+        get() {
+            val o = __offset(92)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * SENSORS: the sensors, as written.
+     */
+    val sensors : String?
+        get() {
+            val o = __offset(94)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val sensorsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(94, 1)
+    fun sensorsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 94, 1)
+    /**
+     * COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+     */
+    fun comment(j: Int) : String? {
+        val o = __offset(96)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val commentLength : Int
+        get() {
+            val o = __offset(96); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOrbitDetermination(_bb: ByteBuffer): OrbitDetermination = getRootAsOrbitDetermination(_bb, OrbitDetermination())
@@ -371,12 +564,33 @@ class OrbitDetermination : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createOrbitDetermination(builder: FlatBufferBuilder, odIdOffset: Int, odPrevIdOffset: Int, odAlgorithmOffset: Int, odMethodOffset: Int, odEpochOffset: Int, odTimeTagOffset: Int, odProcessNoiseOffset: Int, odCovReductionOffset: Int, odNoiseModelsOffset: Int, odObservationsTypeOffset: Int, odObservationsUsed: Int, odTracksUsed: Int, odDataWeightingOffset: Int, odConvergenceCriteriaOffset: Int, odEstParametersOffset: Int, odAprioriDataOffset: Int, odResidualsOffset: Int, odEstimator: Byte, odResidualRms: Double, odResidualsSeriesOffset: Int, odResidualEpochsOffset: Int, odBatchBaselineIdOffset: Int, odBatchBaselineRms: Double, sedr: Double, weightedRms: Double, odDynamicParametersOffset: Int) : Int {
-            builder.startTable(26)
+        fun createOrbitDetermination(builder: FlatBufferBuilder, odIdOffset: Int, odPrevIdOffset: Int, odAlgorithmOffset: Int, odMethodOffset: Int, odEpochOffset: Int, odTimeTagOffset: Int, odProcessNoiseOffset: Int, odCovReductionOffset: Int, odNoiseModelsOffset: Int, odObservationsTypeOffset: Int, odObservationsUsed: Int, odTracksUsed: Int, odDataWeightingOffset: Int, odConvergenceCriteriaOffset: Int, odEstParametersOffset: Int, odAprioriDataOffset: Int, odResidualsOffset: Int, odEstimator: Byte, odResidualRms: Double, odResidualsSeriesOffset: Int, odResidualEpochsOffset: Int, odBatchBaselineIdOffset: Int, odBatchBaselineRms: Double, sedr: Double, weightedRms: Double, odDynamicParametersOffset: Int, daysSinceFirstObs: Double, daysSinceLastObs: Double, recommendedOdSpan: Double, actualOdSpan: Double, obsAvailable: UInt, tracksAvailable: UInt, maximumObsGap: Double, odEpochEigmaj: Double, odEpochEigint: Double, odEpochEigmin: Double, odMaxPredEigmaj: Double, odMinPredEigmin: Double, odConfidence: Double, gdop: Double, solveN: UInt, solveStatesOffset: Int, considerN: UInt, considerParamsOffset: Int, sensorsN: UInt, sensorsOffset: Int, commentOffset: Int) : Int {
+            builder.startTable(47)
+            addGDOP(builder, gdop)
+            addODCONFIDENCE(builder, odConfidence)
+            addODMINPREDEIGMIN(builder, odMinPredEigmin)
+            addODMAXPREDEIGMAJ(builder, odMaxPredEigmaj)
+            addODEPOCHEIGMIN(builder, odEpochEigmin)
+            addODEPOCHEIGINT(builder, odEpochEigint)
+            addODEPOCHEIGMAJ(builder, odEpochEigmaj)
+            addMAXIMUMOBSGAP(builder, maximumObsGap)
+            addACTUALODSPAN(builder, actualOdSpan)
+            addRECOMMENDEDODSPAN(builder, recommendedOdSpan)
+            addDAYSSINCELASTOBS(builder, daysSinceLastObs)
+            addDAYSSINCEFIRSTOBS(builder, daysSinceFirstObs)
             addWEIGHTEDRMS(builder, weightedRms)
             addSEDR(builder, sedr)
             addODBATCHBASELINERMS(builder, odBatchBaselineRms)
             addODRESIDUALRMS(builder, odResidualRms)
+            addCOMMENT(builder, commentOffset)
+            addSENSORS(builder, sensorsOffset)
+            addSENSORSN(builder, sensorsN)
+            addCONSIDERPARAMS(builder, considerParamsOffset)
+            addCONSIDERN(builder, considerN)
+            addSOLVESTATES(builder, solveStatesOffset)
+            addSOLVEN(builder, solveN)
+            addTRACKSAVAILABLE(builder, tracksAvailable)
+            addOBSAVAILABLE(builder, obsAvailable)
             addODDYNAMICPARAMETERS(builder, odDynamicParametersOffset)
             addODBATCHBASELINEID(builder, odBatchBaselineIdOffset)
             addODRESIDUALEPOCHS(builder, odResidualEpochsOffset)
@@ -401,7 +615,7 @@ class OrbitDetermination : Table() {
             addODESTIMATOR(builder, odEstimator)
             return endOrbitDetermination(builder)
         }
-        fun startOrbitDetermination(builder: FlatBufferBuilder) = builder.startTable(26)
+        fun startOrbitDetermination(builder: FlatBufferBuilder) = builder.startTable(47)
         fun addODID(builder: FlatBufferBuilder, odId: Int) = builder.addOffset(0, odId, 0)
         fun addODPREVID(builder: FlatBufferBuilder, odPrevId: Int) = builder.addOffset(1, odPrevId, 0)
         fun addODALGORITHM(builder: FlatBufferBuilder, odAlgorithm: Int) = builder.addOffset(2, odAlgorithm, 0)
@@ -468,6 +682,35 @@ class OrbitDetermination : Table() {
             return builder.endVector()
         }
         fun startOdDynamicParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addDAYSSINCEFIRSTOBS(builder: FlatBufferBuilder, daysSinceFirstObs: Double) = builder.addDouble(26, daysSinceFirstObs, Double.NaN)
+        fun addDAYSSINCELASTOBS(builder: FlatBufferBuilder, daysSinceLastObs: Double) = builder.addDouble(27, daysSinceLastObs, Double.NaN)
+        fun addRECOMMENDEDODSPAN(builder: FlatBufferBuilder, recommendedOdSpan: Double) = builder.addDouble(28, recommendedOdSpan, Double.NaN)
+        fun addACTUALODSPAN(builder: FlatBufferBuilder, actualOdSpan: Double) = builder.addDouble(29, actualOdSpan, Double.NaN)
+        fun addOBSAVAILABLE(builder: FlatBufferBuilder, obsAvailable: UInt) = builder.addInt(30, obsAvailable.toInt(), 0)
+        fun addTRACKSAVAILABLE(builder: FlatBufferBuilder, tracksAvailable: UInt) = builder.addInt(31, tracksAvailable.toInt(), 0)
+        fun addMAXIMUMOBSGAP(builder: FlatBufferBuilder, maximumObsGap: Double) = builder.addDouble(32, maximumObsGap, Double.NaN)
+        fun addODEPOCHEIGMAJ(builder: FlatBufferBuilder, odEpochEigmaj: Double) = builder.addDouble(33, odEpochEigmaj, Double.NaN)
+        fun addODEPOCHEIGINT(builder: FlatBufferBuilder, odEpochEigint: Double) = builder.addDouble(34, odEpochEigint, Double.NaN)
+        fun addODEPOCHEIGMIN(builder: FlatBufferBuilder, odEpochEigmin: Double) = builder.addDouble(35, odEpochEigmin, Double.NaN)
+        fun addODMAXPREDEIGMAJ(builder: FlatBufferBuilder, odMaxPredEigmaj: Double) = builder.addDouble(36, odMaxPredEigmaj, Double.NaN)
+        fun addODMINPREDEIGMIN(builder: FlatBufferBuilder, odMinPredEigmin: Double) = builder.addDouble(37, odMinPredEigmin, Double.NaN)
+        fun addODCONFIDENCE(builder: FlatBufferBuilder, odConfidence: Double) = builder.addDouble(38, odConfidence, Double.NaN)
+        fun addGDOP(builder: FlatBufferBuilder, gdop: Double) = builder.addDouble(39, gdop, Double.NaN)
+        fun addSOLVEN(builder: FlatBufferBuilder, solveN: UInt) = builder.addInt(40, solveN.toInt(), 0)
+        fun addSOLVESTATES(builder: FlatBufferBuilder, solveStates: Int) = builder.addOffset(41, solveStates, 0)
+        fun addCONSIDERN(builder: FlatBufferBuilder, considerN: UInt) = builder.addInt(42, considerN.toInt(), 0)
+        fun addCONSIDERPARAMS(builder: FlatBufferBuilder, considerParams: Int) = builder.addOffset(43, considerParams, 0)
+        fun addSENSORSN(builder: FlatBufferBuilder, sensorsN: UInt) = builder.addInt(44, sensorsN.toInt(), 0)
+        fun addSENSORS(builder: FlatBufferBuilder, sensors: Int) = builder.addOffset(45, sensors, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(46, comment, 0)
+        fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCommentVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endOrbitDetermination(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

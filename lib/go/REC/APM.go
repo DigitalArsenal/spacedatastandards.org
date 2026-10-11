@@ -182,8 +182,288 @@ func (rcv *APM) MutateQc(n float64) bool {
 	return rcv.MutateQC(n)
 }
 
+/// COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and
+/// data groups, in message order, joined by a line feed. A state group's own
+/// comments stay with it.
+func (rcv *APM) COMMENT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *APM) Comment() []byte {
+	return rcv.COMMENT()
+}
+
+/// COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and
+/// data groups, in message order, joined by a line feed. A state group's own
+/// comments stay with it.
+/// CLASSIFICATION of the message: the optional header keyword stating its
+/// security classification or handling caveat.
+func (rcv *APM) CLASSIFICATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *APM) Classification() []byte {
+	return rcv.CLASSIFICATION()
+}
+
+/// CLASSIFICATION of the message: the optional header keyword stating its
+/// security classification or handling caveat.
+/// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+/// unique for this message.
+func (rcv *APM) MESSAGE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *APM) MessageId() []byte {
+	return rcv.MESSAGE_ID()
+}
+
+/// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+/// unique for this message.
+/// CENTER_NAME: the orbit center, when the message states one.
+func (rcv *APM) CENTER_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *APM) CenterName() []byte {
+	return rcv.CENTER_NAME()
+}
+
+/// CENTER_NAME: the orbit center, when the message states one.
+/// TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.
+func (rcv *APM) TIME_SYSTEM() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *APM) TimeSystem() []byte {
+	return rcv.TIME_SYSTEM()
+}
+
+/// TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.
+/// Quaternion states (QUAT_START block), in message order. Q1..QC above are the
+/// single frameless quaternion of the earlier form of this record; a message is
+/// read into and written from these lists.
+func (rcv *APM) QUATERNION_STATES(obj *APMQuaternionState, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(APMQuaternionState)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *APM) QuaternionStates(obj *APMQuaternionState, j int) bool {
+	return rcv.QUATERNION_STATES(obj, j)
+}
+
+func (rcv *APM) QUATERNION_STATESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *APM) QuaternionStatesLength() int {
+	return rcv.QUATERNION_STATESLength()
+}
+
+/// Quaternion states (QUAT_START block), in message order. Q1..QC above are the
+/// single frameless quaternion of the earlier form of this record; a message is
+/// read into and written from these lists.
+/// Euler angle states (EULER_START block), in message order.
+func (rcv *APM) EULER_ANGLE_STATES(obj *APMEulerAngleState, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(APMEulerAngleState)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *APM) EulerAngleStates(obj *APMEulerAngleState, j int) bool {
+	return rcv.EULER_ANGLE_STATES(obj, j)
+}
+
+func (rcv *APM) EULER_ANGLE_STATESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *APM) EulerAngleStatesLength() int {
+	return rcv.EULER_ANGLE_STATESLength()
+}
+
+/// Euler angle states (EULER_START block), in message order.
+/// Angular velocities (ANGVEL_START block), in message order.
+func (rcv *APM) ANGULAR_VELOCITIES(obj *APMAngularVelocity, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(APMAngularVelocity)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *APM) AngularVelocities(obj *APMAngularVelocity, j int) bool {
+	return rcv.ANGULAR_VELOCITIES(obj, j)
+}
+
+func (rcv *APM) ANGULAR_VELOCITIESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *APM) AngularVelocitiesLength() int {
+	return rcv.ANGULAR_VELOCITIESLength()
+}
+
+/// Angular velocities (ANGVEL_START block), in message order.
+/// Spin states (SPIN_START block), in message order.
+func (rcv *APM) SPIN_STATES(obj *APMSpinState, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(APMSpinState)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *APM) SpinStates(obj *APMSpinState, j int) bool {
+	return rcv.SPIN_STATES(obj, j)
+}
+
+func (rcv *APM) SPIN_STATESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *APM) SpinStatesLength() int {
+	return rcv.SPIN_STATESLength()
+}
+
+/// Spin states (SPIN_START block), in message order.
+/// Inertia tensors (INERTIA_START block), in message order.
+func (rcv *APM) INERTIAS(obj *APMInertia, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(APMInertia)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *APM) Inertias(obj *APMInertia, j int) bool {
+	return rcv.INERTIAS(obj, j)
+}
+
+func (rcv *APM) INERTIASLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *APM) InertiasLength() int {
+	return rcv.INERTIASLength()
+}
+
+/// Inertia tensors (INERTIA_START block), in message order.
+/// Attitude maneuvers (MAN_START block), in message order.
+func (rcv *APM) MANEUVERS(obj *APMManeuver, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(APMManeuver)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *APM) Maneuvers(obj *APMManeuver, j int) bool {
+	return rcv.MANEUVERS(obj, j)
+}
+
+func (rcv *APM) MANEUVERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *APM) ManeuversLength() int {
+	return rcv.MANEUVERSLength()
+}
+
+/// Attitude maneuvers (MAN_START block), in message order.
 func APMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(21)
 }
 func APMAddCCSDS_APM_VERS(builder *flatbuffers.Builder, CCSDS_APM_VERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CCSDS_APM_VERS), 0)
@@ -235,6 +515,108 @@ func APMAddQC(builder *flatbuffers.Builder, QC float64) {
 }
 func APMAddQc(builder *flatbuffers.Builder, QC float64) {
 	APMAddQC(builder, QC)
+}
+func APMAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func APMAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	APMAddCOMMENT(builder, COMMENT)
+}
+func APMAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(CLASSIFICATION), 0)
+}
+func APMAddClassification(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	APMAddCLASSIFICATION(builder, CLASSIFICATION)
+}
+func APMAddMESSAGE_ID(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(MESSAGE_ID), 0)
+}
+func APMAddMessageId(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	APMAddMESSAGE_ID(builder, MESSAGE_ID)
+}
+func APMAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(CENTER_NAME), 0)
+}
+func APMAddCenterName(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	APMAddCENTER_NAME(builder, CENTER_NAME)
+}
+func APMAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(TIME_SYSTEM), 0)
+}
+func APMAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
+	APMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+}
+func APMAddQUATERNION_STATES(builder *flatbuffers.Builder, QUATERNION_STATES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(QUATERNION_STATES), 0)
+}
+func APMAddQuaternionStates(builder *flatbuffers.Builder, QUATERNION_STATES flatbuffers.UOffsetT) {
+	APMAddQUATERNION_STATES(builder, QUATERNION_STATES)
+}
+func APMStartQUATERNION_STATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func APMStartQuaternionStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return APMStartQUATERNION_STATESVector(builder, numElems)
+}
+func APMAddEULER_ANGLE_STATES(builder *flatbuffers.Builder, EULER_ANGLE_STATES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(EULER_ANGLE_STATES), 0)
+}
+func APMAddEulerAngleStates(builder *flatbuffers.Builder, EULER_ANGLE_STATES flatbuffers.UOffsetT) {
+	APMAddEULER_ANGLE_STATES(builder, EULER_ANGLE_STATES)
+}
+func APMStartEULER_ANGLE_STATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func APMStartEulerAngleStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return APMStartEULER_ANGLE_STATESVector(builder, numElems)
+}
+func APMAddANGULAR_VELOCITIES(builder *flatbuffers.Builder, ANGULAR_VELOCITIES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(ANGULAR_VELOCITIES), 0)
+}
+func APMAddAngularVelocities(builder *flatbuffers.Builder, ANGULAR_VELOCITIES flatbuffers.UOffsetT) {
+	APMAddANGULAR_VELOCITIES(builder, ANGULAR_VELOCITIES)
+}
+func APMStartANGULAR_VELOCITIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func APMStartAngularVelocitiesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return APMStartANGULAR_VELOCITIESVector(builder, numElems)
+}
+func APMAddSPIN_STATES(builder *flatbuffers.Builder, SPIN_STATES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(SPIN_STATES), 0)
+}
+func APMAddSpinStates(builder *flatbuffers.Builder, SPIN_STATES flatbuffers.UOffsetT) {
+	APMAddSPIN_STATES(builder, SPIN_STATES)
+}
+func APMStartSPIN_STATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func APMStartSpinStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return APMStartSPIN_STATESVector(builder, numElems)
+}
+func APMAddINERTIAS(builder *flatbuffers.Builder, INERTIAS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(INERTIAS), 0)
+}
+func APMAddInertias(builder *flatbuffers.Builder, INERTIAS flatbuffers.UOffsetT) {
+	APMAddINERTIAS(builder, INERTIAS)
+}
+func APMStartINERTIASVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func APMStartInertiasVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return APMStartINERTIASVector(builder, numElems)
+}
+func APMAddMANEUVERS(builder *flatbuffers.Builder, MANEUVERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(MANEUVERS), 0)
+}
+func APMAddManeuvers(builder *flatbuffers.Builder, MANEUVERS flatbuffers.UOffsetT) {
+	APMAddMANEUVERS(builder, MANEUVERS)
+}
+func APMStartMANEUVERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func APMStartManeuversVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return APMStartMANEUVERSVector(builder, numElems)
 }
 func APMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

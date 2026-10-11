@@ -76,7 +76,10 @@ public struct OMM : IFlatbufferObject
   public timingStandard TIME_SYSTEM { get { int o = __p.__offset(20); return o != 0 ? (timingStandard)__p.bb.GetSbyte(o + __p.bb_pos) : timingStandard.UTC; } }
   /// Mean Element Theory
   public meanElementSource MEAN_ELEMENT_THEORY { get { int o = __p.__offset(22); return o != 0 ? (meanElementSource)__p.bb.GetSbyte(o + __p.bb_pos) : meanElementSource.SGP4; } }
-  /// COMMENT (O)
+  /// COMMENT (O): every COMMENT line of the message, in message order, joined by
+  /// a line feed. A message states comments in its header, its metadata and each
+  /// data group; this field holds them all, so a message written from the record
+  /// states them together in its header.
   public string COMMENT { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCOMMENTBytes() { return __p.__vector_as_span<byte>(24, 1); }
@@ -181,6 +184,29 @@ public struct OMM : IFlatbufferObject
   public double USER_DEFINED_EPOCH_TIMESTAMP { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// USER_DEFINED_MICROSECONDS [O, units per ICD]
   public double USER_DEFINED_MICROSECONDS { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+  /// that states its security classification or handling caveat. Not
+  /// CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+  public string CLASSIFICATION { get { int o = __p.__offset(84); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCLASSIFICATIONBytes() { return __p.__vector_as_span<byte>(84, 1); }
+#else
+  public ArraySegment<byte>? GetCLASSIFICATIONBytes() { return __p.__vector_as_arraysegment(84); }
+#endif
+  public byte[] GetCLASSIFICATIONArray() { return __p.__vector_as_array<byte>(84); }
+  /// MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+  /// originator makes unique for this message.
+  public string MESSAGE_ID { get { int o = __p.__offset(86); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMESSAGE_IDBytes() { return __p.__vector_as_span<byte>(86, 1); }
+#else
+  public ArraySegment<byte>? GetMESSAGE_IDBytes() { return __p.__vector_as_arraysegment(86); }
+#endif
+  public byte[] GetMESSAGE_IDArray() { return __p.__vector_as_array<byte>(86); }
+  /// Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+  /// message that has no dedicated field above, in message order.
+  public OMMUserDefinedParameter? USER_DEFINED_PARAMETERS(int j) { int o = __p.__offset(88); return o != 0 ? (OMMUserDefinedParameter?)(new OMMUserDefinedParameter()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int USER_DEFINED_PARAMETERSLength { get { int o = __p.__offset(88); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<OMM> CreateOMM(FlatBufferBuilder builder,
       double CCSDS_OMM_VERS = 0.0,
@@ -222,8 +248,11 @@ public struct OMM : IFlatbufferObject
       StringOffset USER_DEFINED_OBJECT_DESIGNATOROffset = default(StringOffset),
       StringOffset USER_DEFINED_EARTH_MODELOffset = default(StringOffset),
       double USER_DEFINED_EPOCH_TIMESTAMP = 0.0,
-      double USER_DEFINED_MICROSECONDS = 0.0) {
-    builder.StartTable(40);
+      double USER_DEFINED_MICROSECONDS = 0.0,
+      StringOffset CLASSIFICATIONOffset = default(StringOffset),
+      StringOffset MESSAGE_IDOffset = default(StringOffset),
+      VectorOffset USER_DEFINED_PARAMETERSOffset = default(VectorOffset)) {
+    builder.StartTable(43);
     OMM.AddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS);
     OMM.AddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP);
     OMM.AddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT);
@@ -244,6 +273,9 @@ public struct OMM : IFlatbufferObject
     OMM.AddMEAN_MOTION(builder, MEAN_MOTION);
     OMM.AddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS);
     OMM.AddCCSDS_OMM_VERS(builder, CCSDS_OMM_VERS);
+    OMM.AddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERSOffset);
+    OMM.AddMESSAGE_ID(builder, MESSAGE_IDOffset);
+    OMM.AddCLASSIFICATION(builder, CLASSIFICATIONOffset);
     OMM.AddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODELOffset);
     OMM.AddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOROffset);
     OMM.AddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE);
@@ -267,7 +299,7 @@ public struct OMM : IFlatbufferObject
     return OMM.EndOMM(builder);
   }
 
-  public static void StartOMM(FlatBufferBuilder builder) { builder.StartTable(40); }
+  public static void StartOMM(FlatBufferBuilder builder) { builder.StartTable(43); }
   public static void AddCCSDS_OMM_VERS(FlatBufferBuilder builder, double CCSDS_OMM_VERS) { builder.AddDouble(0, CCSDS_OMM_VERS, 0.0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -313,6 +345,14 @@ public struct OMM : IFlatbufferObject
   public static void AddUSER_DEFINED_EARTH_MODEL(FlatBufferBuilder builder, StringOffset USER_DEFINED_EARTH_MODELOffset) { builder.AddOffset(37, USER_DEFINED_EARTH_MODELOffset.Value, 0); }
   public static void AddUSER_DEFINED_EPOCH_TIMESTAMP(FlatBufferBuilder builder, double USER_DEFINED_EPOCH_TIMESTAMP) { builder.AddDouble(38, USER_DEFINED_EPOCH_TIMESTAMP, 0.0); }
   public static void AddUSER_DEFINED_MICROSECONDS(FlatBufferBuilder builder, double USER_DEFINED_MICROSECONDS) { builder.AddDouble(39, USER_DEFINED_MICROSECONDS, 0.0); }
+  public static void AddCLASSIFICATION(FlatBufferBuilder builder, StringOffset CLASSIFICATIONOffset) { builder.AddOffset(40, CLASSIFICATIONOffset.Value, 0); }
+  public static void AddMESSAGE_ID(FlatBufferBuilder builder, StringOffset MESSAGE_IDOffset) { builder.AddOffset(41, MESSAGE_IDOffset.Value, 0); }
+  public static void AddUSER_DEFINED_PARAMETERS(FlatBufferBuilder builder, VectorOffset USER_DEFINED_PARAMETERSOffset) { builder.AddOffset(42, USER_DEFINED_PARAMETERSOffset.Value, 0); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder builder, Offset<OMMUserDefinedParameter>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, Offset<OMMUserDefinedParameter>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OMMUserDefinedParameter>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OMMUserDefinedParameter>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<OMM> EndOMM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OMM>(o);
@@ -366,6 +406,10 @@ public struct OMM : IFlatbufferObject
     _o.USER_DEFINED_EARTH_MODEL = this.USER_DEFINED_EARTH_MODEL;
     _o.USER_DEFINED_EPOCH_TIMESTAMP = this.USER_DEFINED_EPOCH_TIMESTAMP;
     _o.USER_DEFINED_MICROSECONDS = this.USER_DEFINED_MICROSECONDS;
+    _o.CLASSIFICATION = this.CLASSIFICATION;
+    _o.MESSAGE_ID = this.MESSAGE_ID;
+    _o.USER_DEFINED_PARAMETERS = new List<OMMUserDefinedParameterT>();
+    for (var _j = 0; _j < this.USER_DEFINED_PARAMETERSLength; ++_j) {_o.USER_DEFINED_PARAMETERS.Add(this.USER_DEFINED_PARAMETERS(_j).HasValue ? this.USER_DEFINED_PARAMETERS(_j).Value.UnPack() : null);}
   }
   public static Offset<OMM> Pack(FlatBufferBuilder builder, OMMT _o) {
     if (_o == null) return default(Offset<OMM>);
@@ -387,6 +431,14 @@ public struct OMM : IFlatbufferObject
     }
     var _USER_DEFINED_OBJECT_DESIGNATOR = _o.USER_DEFINED_OBJECT_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.USER_DEFINED_OBJECT_DESIGNATOR);
     var _USER_DEFINED_EARTH_MODEL = _o.USER_DEFINED_EARTH_MODEL == null ? default(StringOffset) : builder.CreateString(_o.USER_DEFINED_EARTH_MODEL);
+    var _CLASSIFICATION = _o.CLASSIFICATION == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION);
+    var _MESSAGE_ID = _o.MESSAGE_ID == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE_ID);
+    var _USER_DEFINED_PARAMETERS = default(VectorOffset);
+    if (_o.USER_DEFINED_PARAMETERS != null) {
+      var __USER_DEFINED_PARAMETERS = new Offset<OMMUserDefinedParameter>[_o.USER_DEFINED_PARAMETERS.Count];
+      for (var _j = 0; _j < __USER_DEFINED_PARAMETERS.Length; ++_j) { __USER_DEFINED_PARAMETERS[_j] = OMMUserDefinedParameter.Pack(builder, _o.USER_DEFINED_PARAMETERS[_j]); }
+      _USER_DEFINED_PARAMETERS = CreateUSER_DEFINED_PARAMETERSVector(builder, __USER_DEFINED_PARAMETERS);
+    }
     return CreateOMM(
       builder,
       _o.CCSDS_OMM_VERS,
@@ -428,7 +480,10 @@ public struct OMM : IFlatbufferObject
       _USER_DEFINED_OBJECT_DESIGNATOR,
       _USER_DEFINED_EARTH_MODEL,
       _o.USER_DEFINED_EPOCH_TIMESTAMP,
-      _o.USER_DEFINED_MICROSECONDS);
+      _o.USER_DEFINED_MICROSECONDS,
+      _CLASSIFICATION,
+      _MESSAGE_ID,
+      _USER_DEFINED_PARAMETERS);
   }
 }
 
@@ -474,6 +529,9 @@ public class OMMT
   public string USER_DEFINED_EARTH_MODEL { get; set; }
   public double USER_DEFINED_EPOCH_TIMESTAMP { get; set; }
   public double USER_DEFINED_MICROSECONDS { get; set; }
+  public string CLASSIFICATION { get; set; }
+  public string MESSAGE_ID { get; set; }
+  public List<OMMUserDefinedParameterT> USER_DEFINED_PARAMETERS { get; set; }
 
   public OMMT() {
     this.CCSDS_OMM_VERS = 0.0;
@@ -516,6 +574,9 @@ public class OMMT
     this.USER_DEFINED_EARTH_MODEL = null;
     this.USER_DEFINED_EPOCH_TIMESTAMP = 0.0;
     this.USER_DEFINED_MICROSECONDS = 0.0;
+    this.CLASSIFICATION = null;
+    this.MESSAGE_ID = null;
+    this.USER_DEFINED_PARAMETERS = null;
   }
   public static OMMT DeserializeFromBinary(byte[] fbBuffer) {
     return OMM.GetRootAsOMM(new ByteBuffer(fbBuffer)).UnPack();
@@ -573,6 +634,9 @@ static public class OMMVerify
       && verifier.VerifyString(tablePos, 78 /*USER_DEFINED_EARTH_MODEL*/, false)
       && verifier.VerifyField(tablePos, 80 /*USER_DEFINED_EPOCH_TIMESTAMP*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 82 /*USER_DEFINED_MICROSECONDS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 84 /*CLASSIFICATION*/, false)
+      && verifier.VerifyString(tablePos, 86 /*MESSAGE_ID*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 88 /*USER_DEFINED_PARAMETERS*/, OMMUserDefinedParameterVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

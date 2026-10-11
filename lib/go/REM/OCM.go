@@ -786,8 +786,82 @@ func (rcv *OCM) CovUnitsLength() int {
 
 /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
 /// dimensionless one.
+/// Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+/// blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+/// them above state the first block's CARTPV or CARTPVA states.
+func (rcv *OCM) TRAJECTORY_BLOCKS(obj *OCMTrajectoryBlock, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(OCMTrajectoryBlock)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *OCM) TrajectoryBlocks(obj *OCMTrajectoryBlock, j int) bool {
+	return rcv.TRAJECTORY_BLOCKS(obj, j)
+}
+
+func (rcv *OCM) TRAJECTORY_BLOCKSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OCM) TrajectoryBlocksLength() int {
+	return rcv.TRAJECTORY_BLOCKSLength()
+}
+
+/// Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+/// blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+/// them above state the first block's CARTPV or CARTPVA states.
+/// Every covariance time history of the message (COV_START blocks), in message
+/// order. COVARIANCE_DATA and the fields that go with it above state the first
+/// block when it is one line.
+func (rcv *OCM) COVARIANCE_BLOCKS(obj *OCMCovarianceBlock, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(OCMCovarianceBlock)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *OCM) CovarianceBlocks(obj *OCMCovarianceBlock, j int) bool {
+	return rcv.COVARIANCE_BLOCKS(obj, j)
+}
+
+func (rcv *OCM) COVARIANCE_BLOCKSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OCM) CovarianceBlocksLength() int {
+	return rcv.COVARIANCE_BLOCKSLength()
+}
+
+/// Every covariance time history of the message (COV_START blocks), in message
+/// order. COVARIANCE_DATA and the fields that go with it above state the first
+/// block when it is one line.
 func OCMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(29)
+	builder.StartObject(31)
 }
 func OCMAddHEADER(builder *flatbuffers.Builder, HEADER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(HEADER), 0)
@@ -1016,6 +1090,30 @@ func OCMStartCOV_UNITSVector(builder *flatbuffers.Builder, numElems int) flatbuf
 }
 func OCMStartCovUnitsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return OCMStartCOV_UNITSVector(builder, numElems)
+}
+func OCMAddTRAJECTORY_BLOCKS(builder *flatbuffers.Builder, TRAJECTORY_BLOCKS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(TRAJECTORY_BLOCKS), 0)
+}
+func OCMAddTrajectoryBlocks(builder *flatbuffers.Builder, TRAJECTORY_BLOCKS flatbuffers.UOffsetT) {
+	OCMAddTRAJECTORY_BLOCKS(builder, TRAJECTORY_BLOCKS)
+}
+func OCMStartTRAJECTORY_BLOCKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OCMStartTrajectoryBlocksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OCMStartTRAJECTORY_BLOCKSVector(builder, numElems)
+}
+func OCMAddCOVARIANCE_BLOCKS(builder *flatbuffers.Builder, COVARIANCE_BLOCKS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(COVARIANCE_BLOCKS), 0)
+}
+func OCMAddCovarianceBlocks(builder *flatbuffers.Builder, COVARIANCE_BLOCKS flatbuffers.UOffsetT) {
+	OCMAddCOVARIANCE_BLOCKS(builder, COVARIANCE_BLOCKS)
+}
+func OCMStartCOVARIANCE_BLOCKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OCMStartCovarianceBlocksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OCMStartCOVARIANCE_BLOCKSVector(builder, numElems)
 }
 func OCMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

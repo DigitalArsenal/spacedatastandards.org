@@ -140,6 +140,95 @@ export declare class OrbitDetermination implements flatbuffers.IUnpackableObject
      */
     OD_DYNAMIC_PARAMETERS(index: number, obj?: OCMDynamicParameter): OCMDynamicParameter | null;
     odDynamicParametersLength(): number;
+    /**
+     * DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+     */
+    DAYS_SINCE_FIRST_OBS(): number;
+    /**
+     * DAYS_SINCE_LAST_OBS, NaN when not stated.
+     */
+    DAYS_SINCE_LAST_OBS(): number;
+    /**
+     * RECOMMENDED_OD_SPAN in days, NaN when not stated.
+     */
+    RECOMMENDED_OD_SPAN(): number;
+    /**
+     * ACTUAL_OD_SPAN in days, NaN when not stated.
+     */
+    ACTUAL_OD_SPAN(): number;
+    /**
+     * OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+     */
+    OBS_AVAILABLE(): number;
+    /**
+     * TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+     */
+    TRACKS_AVAILABLE(): number;
+    /**
+     * MAXIMUM_OBS_GAP in days, NaN when not stated.
+     */
+    MAXIMUM_OBS_GAP(): number;
+    /**
+     * OD_EPOCH_EIGMAJ in m, NaN when not stated.
+     */
+    OD_EPOCH_EIGMAJ(): number;
+    /**
+     * OD_EPOCH_EIGINT in m, NaN when not stated.
+     */
+    OD_EPOCH_EIGINT(): number;
+    /**
+     * OD_EPOCH_EIGMIN in m, NaN when not stated.
+     */
+    OD_EPOCH_EIGMIN(): number;
+    /**
+     * OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+     */
+    OD_MAX_PRED_EIGMAJ(): number;
+    /**
+     * OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+     */
+    OD_MIN_PRED_EIGMIN(): number;
+    /**
+     * OD_CONFIDENCE in percent, NaN when not stated.
+     */
+    OD_CONFIDENCE(): number;
+    /**
+     * GDOP, NaN when not stated.
+     */
+    GDOP(): number;
+    /**
+     * SOLVE_N: the number of solved-for states.
+     */
+    SOLVE_N(): number;
+    /**
+     * SOLVE_STATES: the solved-for states, as written.
+     */
+    SOLVE_STATES(): string | null;
+    SOLVE_STATES(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * CONSIDER_N: the number of consider parameters.
+     */
+    CONSIDER_N(): number;
+    /**
+     * CONSIDER_PARAMS: the consider parameters, as written.
+     */
+    CONSIDER_PARAMS(): string | null;
+    CONSIDER_PARAMS(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * SENSORS_N: the number of sensors.
+     */
+    SENSORS_N(): number;
+    /**
+     * SENSORS: the sensors, as written.
+     */
+    SENSORS(): string | null;
+    SENSORS(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+     */
+    COMMENT(index: number): string;
+    COMMENT(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    commentLength(): number;
     static startOrbitDetermination(builder: flatbuffers.Builder): void;
     static addOdId(builder: flatbuffers.Builder, OD_IDOffset: flatbuffers.Offset): void;
     static addOdPrevId(builder: flatbuffers.Builder, OD_PREV_IDOffset: flatbuffers.Offset): void;
@@ -185,8 +274,31 @@ export declare class OrbitDetermination implements flatbuffers.IUnpackableObject
     static addOdDynamicParameters(builder: flatbuffers.Builder, OD_DYNAMIC_PARAMETERSOffset: flatbuffers.Offset): void;
     static createOdDynamicParametersVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startOdDynamicParametersVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addDaysSinceFirstObs(builder: flatbuffers.Builder, DAYS_SINCE_FIRST_OBS: number): void;
+    static addDaysSinceLastObs(builder: flatbuffers.Builder, DAYS_SINCE_LAST_OBS: number): void;
+    static addRecommendedOdSpan(builder: flatbuffers.Builder, RECOMMENDED_OD_SPAN: number): void;
+    static addActualOdSpan(builder: flatbuffers.Builder, ACTUAL_OD_SPAN: number): void;
+    static addObsAvailable(builder: flatbuffers.Builder, OBS_AVAILABLE: number): void;
+    static addTracksAvailable(builder: flatbuffers.Builder, TRACKS_AVAILABLE: number): void;
+    static addMaximumObsGap(builder: flatbuffers.Builder, MAXIMUM_OBS_GAP: number): void;
+    static addOdEpochEigmaj(builder: flatbuffers.Builder, OD_EPOCH_EIGMAJ: number): void;
+    static addOdEpochEigint(builder: flatbuffers.Builder, OD_EPOCH_EIGINT: number): void;
+    static addOdEpochEigmin(builder: flatbuffers.Builder, OD_EPOCH_EIGMIN: number): void;
+    static addOdMaxPredEigmaj(builder: flatbuffers.Builder, OD_MAX_PRED_EIGMAJ: number): void;
+    static addOdMinPredEigmin(builder: flatbuffers.Builder, OD_MIN_PRED_EIGMIN: number): void;
+    static addOdConfidence(builder: flatbuffers.Builder, OD_CONFIDENCE: number): void;
+    static addGdop(builder: flatbuffers.Builder, GDOP: number): void;
+    static addSolveN(builder: flatbuffers.Builder, SOLVE_N: number): void;
+    static addSolveStates(builder: flatbuffers.Builder, SOLVE_STATESOffset: flatbuffers.Offset): void;
+    static addConsiderN(builder: flatbuffers.Builder, CONSIDER_N: number): void;
+    static addConsiderParams(builder: flatbuffers.Builder, CONSIDER_PARAMSOffset: flatbuffers.Offset): void;
+    static addSensorsN(builder: flatbuffers.Builder, SENSORS_N: number): void;
+    static addSensors(builder: flatbuffers.Builder, SENSORSOffset: flatbuffers.Offset): void;
+    static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
+    static createCommentVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startCommentVector(builder: flatbuffers.Builder, numElems: number): void;
     static endOrbitDetermination(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createOrbitDetermination(builder: flatbuffers.Builder, OD_IDOffset: flatbuffers.Offset, OD_PREV_IDOffset: flatbuffers.Offset, OD_ALGORITHMOffset: flatbuffers.Offset, OD_METHODOffset: flatbuffers.Offset, OD_EPOCHOffset: flatbuffers.Offset, OD_TIME_TAGOffset: flatbuffers.Offset, OD_PROCESS_NOISEOffset: flatbuffers.Offset, OD_COV_REDUCTIONOffset: flatbuffers.Offset, OD_NOISE_MODELSOffset: flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset: flatbuffers.Offset, OD_OBSERVATIONS_USED: number, OD_TRACKS_USED: number, OD_DATA_WEIGHTINGOffset: flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset: flatbuffers.Offset, OD_EST_PARAMETERSOffset: flatbuffers.Offset, OD_APRIORI_DATAOffset: flatbuffers.Offset, OD_RESIDUALSOffset: flatbuffers.Offset, OD_ESTIMATOR: estimatorCategory, OD_RESIDUAL_RMS: number, OD_RESIDUALS_SERIESOffset: flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset: flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset: flatbuffers.Offset, OD_BATCH_BASELINE_RMS: number, SEDR: number, WEIGHTED_RMS: number, OD_DYNAMIC_PARAMETERSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createOrbitDetermination(builder: flatbuffers.Builder, OD_IDOffset: flatbuffers.Offset, OD_PREV_IDOffset: flatbuffers.Offset, OD_ALGORITHMOffset: flatbuffers.Offset, OD_METHODOffset: flatbuffers.Offset, OD_EPOCHOffset: flatbuffers.Offset, OD_TIME_TAGOffset: flatbuffers.Offset, OD_PROCESS_NOISEOffset: flatbuffers.Offset, OD_COV_REDUCTIONOffset: flatbuffers.Offset, OD_NOISE_MODELSOffset: flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset: flatbuffers.Offset, OD_OBSERVATIONS_USED: number, OD_TRACKS_USED: number, OD_DATA_WEIGHTINGOffset: flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset: flatbuffers.Offset, OD_EST_PARAMETERSOffset: flatbuffers.Offset, OD_APRIORI_DATAOffset: flatbuffers.Offset, OD_RESIDUALSOffset: flatbuffers.Offset, OD_ESTIMATOR: estimatorCategory, OD_RESIDUAL_RMS: number, OD_RESIDUALS_SERIESOffset: flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset: flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset: flatbuffers.Offset, OD_BATCH_BASELINE_RMS: number, SEDR: number, WEIGHTED_RMS: number, OD_DYNAMIC_PARAMETERSOffset: flatbuffers.Offset, DAYS_SINCE_FIRST_OBS: number, DAYS_SINCE_LAST_OBS: number, RECOMMENDED_OD_SPAN: number, ACTUAL_OD_SPAN: number, OBS_AVAILABLE: number, TRACKS_AVAILABLE: number, MAXIMUM_OBS_GAP: number, OD_EPOCH_EIGMAJ: number, OD_EPOCH_EIGINT: number, OD_EPOCH_EIGMIN: number, OD_MAX_PRED_EIGMAJ: number, OD_MIN_PRED_EIGMIN: number, OD_CONFIDENCE: number, GDOP: number, SOLVE_N: number, SOLVE_STATESOffset: flatbuffers.Offset, CONSIDER_N: number, CONSIDER_PARAMSOffset: flatbuffers.Offset, SENSORS_N: number, SENSORSOffset: flatbuffers.Offset, COMMENTOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): OrbitDeterminationT;
     unpackTo(_o: OrbitDeterminationT): void;
 }
@@ -217,7 +329,28 @@ export declare class OrbitDeterminationT implements flatbuffers.IGeneratedObject
     SEDR: number;
     WEIGHTED_RMS: number;
     OD_DYNAMIC_PARAMETERS: (OCMDynamicParameterT)[];
-    constructor(OD_ID?: string | Uint8Array | null, OD_PREV_ID?: string | Uint8Array | null, OD_ALGORITHM?: string | Uint8Array | null, OD_METHOD?: string | Uint8Array | null, OD_EPOCH?: string | Uint8Array | null, OD_TIME_TAG?: string | Uint8Array | null, OD_PROCESS_NOISE?: string | Uint8Array | null, OD_COV_REDUCTION?: string | Uint8Array | null, OD_NOISE_MODELS?: string | Uint8Array | null, OD_OBSERVATIONS_TYPE?: (string)[], OD_OBSERVATIONS_USED?: number, OD_TRACKS_USED?: number, OD_DATA_WEIGHTING?: string | Uint8Array | null, OD_CONVERGENCE_CRITERIA?: string | Uint8Array | null, OD_EST_PARAMETERS?: (string)[], OD_APRIORI_DATA?: string | Uint8Array | null, OD_RESIDUALS?: string | Uint8Array | null, OD_ESTIMATOR?: estimatorCategory, OD_RESIDUAL_RMS?: number, OD_RESIDUALS_SERIES?: (number)[], OD_RESIDUAL_EPOCHS?: (number)[], OD_BATCH_BASELINE_ID?: string | Uint8Array | null, OD_BATCH_BASELINE_RMS?: number, SEDR?: number, WEIGHTED_RMS?: number, OD_DYNAMIC_PARAMETERS?: (OCMDynamicParameterT)[]);
+    DAYS_SINCE_FIRST_OBS: number;
+    DAYS_SINCE_LAST_OBS: number;
+    RECOMMENDED_OD_SPAN: number;
+    ACTUAL_OD_SPAN: number;
+    OBS_AVAILABLE: number;
+    TRACKS_AVAILABLE: number;
+    MAXIMUM_OBS_GAP: number;
+    OD_EPOCH_EIGMAJ: number;
+    OD_EPOCH_EIGINT: number;
+    OD_EPOCH_EIGMIN: number;
+    OD_MAX_PRED_EIGMAJ: number;
+    OD_MIN_PRED_EIGMIN: number;
+    OD_CONFIDENCE: number;
+    GDOP: number;
+    SOLVE_N: number;
+    SOLVE_STATES: string | Uint8Array | null;
+    CONSIDER_N: number;
+    CONSIDER_PARAMS: string | Uint8Array | null;
+    SENSORS_N: number;
+    SENSORS: string | Uint8Array | null;
+    COMMENT: (string)[];
+    constructor(OD_ID?: string | Uint8Array | null, OD_PREV_ID?: string | Uint8Array | null, OD_ALGORITHM?: string | Uint8Array | null, OD_METHOD?: string | Uint8Array | null, OD_EPOCH?: string | Uint8Array | null, OD_TIME_TAG?: string | Uint8Array | null, OD_PROCESS_NOISE?: string | Uint8Array | null, OD_COV_REDUCTION?: string | Uint8Array | null, OD_NOISE_MODELS?: string | Uint8Array | null, OD_OBSERVATIONS_TYPE?: (string)[], OD_OBSERVATIONS_USED?: number, OD_TRACKS_USED?: number, OD_DATA_WEIGHTING?: string | Uint8Array | null, OD_CONVERGENCE_CRITERIA?: string | Uint8Array | null, OD_EST_PARAMETERS?: (string)[], OD_APRIORI_DATA?: string | Uint8Array | null, OD_RESIDUALS?: string | Uint8Array | null, OD_ESTIMATOR?: estimatorCategory, OD_RESIDUAL_RMS?: number, OD_RESIDUALS_SERIES?: (number)[], OD_RESIDUAL_EPOCHS?: (number)[], OD_BATCH_BASELINE_ID?: string | Uint8Array | null, OD_BATCH_BASELINE_RMS?: number, SEDR?: number, WEIGHTED_RMS?: number, OD_DYNAMIC_PARAMETERS?: (OCMDynamicParameterT)[], DAYS_SINCE_FIRST_OBS?: number, DAYS_SINCE_LAST_OBS?: number, RECOMMENDED_OD_SPAN?: number, ACTUAL_OD_SPAN?: number, OBS_AVAILABLE?: number, TRACKS_AVAILABLE?: number, MAXIMUM_OBS_GAP?: number, OD_EPOCH_EIGMAJ?: number, OD_EPOCH_EIGINT?: number, OD_EPOCH_EIGMIN?: number, OD_MAX_PRED_EIGMAJ?: number, OD_MIN_PRED_EIGMIN?: number, OD_CONFIDENCE?: number, GDOP?: number, SOLVE_N?: number, SOLVE_STATES?: string | Uint8Array | null, CONSIDER_N?: number, CONSIDER_PARAMS?: string | Uint8Array | null, SENSORS_N?: number, SENSORS?: string | Uint8Array | null, COMMENT?: (string)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OrbitDetermination.d.ts.map

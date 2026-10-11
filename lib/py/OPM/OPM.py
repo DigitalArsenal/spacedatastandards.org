@@ -225,8 +225,136 @@ class OPM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+    # and data groups, in message order, joined by a line feed.
+    # OPM
+    def COMMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CLASSIFICATION of the message: the optional header keyword stating its
+    # security classification or handling caveat.
+    # OPM
+    def CLASSIFICATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # MESSAGE_ID: the optional header keyword, an identifier the originator makes
+    # unique for this message.
+    # OPM
+    def MESSAGE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+    # OPM
+    def REF_FRAME_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+    # when it is REF_FRAME.
+    # OPM
+    def COV_REF_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+    # CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+    # CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+    # CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+    # Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+    # OPM
+    def COVARIANCE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # OPM
+    def COVARIANCEAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # OPM
+    def COVARIANCELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OPM
+    def COVARIANCEIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        return o == 0
+
+    # The message's maneuvers, in message order.
+    # OPM
+    def MANEUVERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from OPMManeuver import OPMManeuver
+            obj = OPMManeuver()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OPM
+    def MANEUVERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OPM
+    def MANEUVERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        return o == 0
+
+    # Every USER_DEFINED_x keyword of the message, in message order.
+    # OPM
+    def USER_DEFINED_PARAMETERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from OPMUserDefinedParameter import OPMUserDefinedParameter
+            obj = OPMUserDefinedParameter()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OPM
+    def USER_DEFINED_PARAMETERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OPM
+    def USER_DEFINED_PARAMETERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        return o == 0
+
 def OPMStart(builder):
-    builder.StartObject(28)
+    builder.StartObject(36)
 
 def Start(builder):
     OPMStart(builder)
@@ -399,12 +527,106 @@ def OPMAddDRAG_COEFF(builder, DRAG_COEFF):
 def AddDRAG_COEFF(builder, DRAG_COEFF):
     OPMAddDRAG_COEFF(builder, DRAG_COEFF)
 
+def OPMAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    OPMAddCOMMENT(builder, COMMENT)
+
+def OPMAddCLASSIFICATION(builder, CLASSIFICATION):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
+def AddCLASSIFICATION(builder, CLASSIFICATION):
+    OPMAddCLASSIFICATION(builder, CLASSIFICATION)
+
+def OPMAddMESSAGE_ID(builder, MESSAGE_ID):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_ID), 0)
+
+def AddMESSAGE_ID(builder, MESSAGE_ID):
+    OPMAddMESSAGE_ID(builder, MESSAGE_ID)
+
+def OPMAddREF_FRAME_EPOCH(builder, REF_FRAME_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(REF_FRAME_EPOCH), 0)
+
+def AddREF_FRAME_EPOCH(builder, REF_FRAME_EPOCH):
+    OPMAddREF_FRAME_EPOCH(builder, REF_FRAME_EPOCH)
+
+def OPMAddCOV_REF_FRAME(builder, COV_REF_FRAME):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REF_FRAME), 0)
+
+def AddCOV_REF_FRAME(builder, COV_REF_FRAME):
+    OPMAddCOV_REF_FRAME(builder, COV_REF_FRAME)
+
+def OPMAddCOVARIANCE(builder, COVARIANCE):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE), 0)
+
+def AddCOVARIANCE(builder, COVARIANCE):
+    OPMAddCOVARIANCE(builder, COVARIANCE)
+
+def OPMStartCOVARIANCEVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartCOVARIANCEVector(builder, numElems):
+    return OPMStartCOVARIANCEVector(builder, numElems)
+
+def OPMCreateCOVARIANCEVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOVARIANCEVector(builder, data):
+    return OPMCreateCOVARIANCEVector(builder, data)
+
+def OPMAddMANEUVERS(builder, MANEUVERS):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVERS), 0)
+
+def AddMANEUVERS(builder, MANEUVERS):
+    OPMAddMANEUVERS(builder, MANEUVERS)
+
+def OPMStartMANEUVERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMANEUVERSVector(builder, numElems):
+    return OPMStartMANEUVERSVector(builder, numElems)
+
+def OPMCreateMANEUVERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMANEUVERSVector(builder, data):
+    return OPMCreateMANEUVERSVector(builder, data)
+
+def OPMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_PARAMETERS), 0)
+
+def AddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
+    OPMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
+
+def OPMStartUSER_DEFINED_PARAMETERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartUSER_DEFINED_PARAMETERSVector(builder, numElems):
+    return OPMStartUSER_DEFINED_PARAMETERSVector(builder, numElems)
+
+def OPMCreateUSER_DEFINED_PARAMETERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUSER_DEFINED_PARAMETERSVector(builder, data):
+    return OPMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
+
 def OPMEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return OPMEnd(builder)
 
+import OPMManeuver
+import OPMUserDefinedParameter
+try:
+    from typing import List
+except:
+    pass
 
 class OPMT(object):
 
@@ -439,6 +661,14 @@ class OPMT(object):
         SOLAR_RAD_COEFF = 0.0,
         DRAG_AREA = 0.0,
         DRAG_COEFF = 0.0,
+        COMMENT = None,
+        CLASSIFICATION = None,
+        MESSAGE_ID = None,
+        REF_FRAME_EPOCH = None,
+        COV_REF_FRAME = None,
+        COVARIANCE = None,
+        MANEUVERS = None,
+        USER_DEFINED_PARAMETERS = None,
     ):
         self.CCSDS_OPM_VERS = CCSDS_OPM_VERS  # type: Optional[str]
         self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
@@ -468,6 +698,14 @@ class OPMT(object):
         self.SOLAR_RAD_COEFF = SOLAR_RAD_COEFF  # type: float
         self.DRAG_AREA = DRAG_AREA  # type: float
         self.DRAG_COEFF = DRAG_COEFF  # type: float
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
+        self.MESSAGE_ID = MESSAGE_ID  # type: Optional[str]
+        self.REF_FRAME_EPOCH = REF_FRAME_EPOCH  # type: Optional[str]
+        self.COV_REF_FRAME = COV_REF_FRAME  # type: Optional[str]
+        self.COVARIANCE = COVARIANCE  # type: Optional[List[float]]
+        self.MANEUVERS = MANEUVERS  # type: Optional[List[OPMManeuver.OPMManeuverT]]
+        self.USER_DEFINED_PARAMETERS = USER_DEFINED_PARAMETERS  # type: Optional[List[OPMUserDefinedParameter.OPMUserDefinedParameterT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -518,6 +756,34 @@ class OPMT(object):
         self.SOLAR_RAD_COEFF = OPM.SOLAR_RAD_COEFF()
         self.DRAG_AREA = OPM.DRAG_AREA()
         self.DRAG_COEFF = OPM.DRAG_COEFF()
+        self.COMMENT = OPM.COMMENT()
+        self.CLASSIFICATION = OPM.CLASSIFICATION()
+        self.MESSAGE_ID = OPM.MESSAGE_ID()
+        self.REF_FRAME_EPOCH = OPM.REF_FRAME_EPOCH()
+        self.COV_REF_FRAME = OPM.COV_REF_FRAME()
+        if not OPM.COVARIANCEIsNone():
+            if np is None:
+                self.COVARIANCE = []
+                for i in range(OPM.COVARIANCELength()):
+                    self.COVARIANCE.append(OPM.COVARIANCE(i))
+            else:
+                self.COVARIANCE = OPM.COVARIANCEAsNumpy()
+        if not OPM.MANEUVERSIsNone():
+            self.MANEUVERS = []
+            for i in range(OPM.MANEUVERSLength()):
+                if OPM.MANEUVERS(i) is None:
+                    self.MANEUVERS.append(None)
+                else:
+                    oPMManeuver_ = OPMManeuver.OPMManeuverT.InitFromObj(OPM.MANEUVERS(i))
+                    self.MANEUVERS.append(oPMManeuver_)
+        if not OPM.USER_DEFINED_PARAMETERSIsNone():
+            self.USER_DEFINED_PARAMETERS = []
+            for i in range(OPM.USER_DEFINED_PARAMETERSLength()):
+                if OPM.USER_DEFINED_PARAMETERS(i) is None:
+                    self.USER_DEFINED_PARAMETERS.append(None)
+                else:
+                    oPMUserDefinedParameter_ = OPMUserDefinedParameter.OPMUserDefinedParameterT.InitFromObj(OPM.USER_DEFINED_PARAMETERS(i))
+                    self.USER_DEFINED_PARAMETERS.append(oPMUserDefinedParameter_)
 
     # OPMT
     def Pack(self, builder):
@@ -539,6 +805,40 @@ class OPMT(object):
             TIME_SYSTEM = builder.CreateString(self.TIME_SYSTEM)
         if self.EPOCH is not None:
             EPOCH = builder.CreateString(self.EPOCH)
+        if self.COMMENT is not None:
+            COMMENT = builder.CreateString(self.COMMENT)
+        if self.CLASSIFICATION is not None:
+            CLASSIFICATION = builder.CreateString(self.CLASSIFICATION)
+        if self.MESSAGE_ID is not None:
+            MESSAGE_ID = builder.CreateString(self.MESSAGE_ID)
+        if self.REF_FRAME_EPOCH is not None:
+            REF_FRAME_EPOCH = builder.CreateString(self.REF_FRAME_EPOCH)
+        if self.COV_REF_FRAME is not None:
+            COV_REF_FRAME = builder.CreateString(self.COV_REF_FRAME)
+        if self.COVARIANCE is not None:
+            if np is not None and type(self.COVARIANCE) is np.ndarray:
+                COVARIANCE = builder.CreateNumpyVector(self.COVARIANCE)
+            else:
+                OPMStartCOVARIANCEVector(builder, len(self.COVARIANCE))
+                for i in reversed(range(len(self.COVARIANCE))):
+                    builder.PrependFloat64(self.COVARIANCE[i])
+                COVARIANCE = builder.EndVector()
+        if self.MANEUVERS is not None:
+            MANEUVERSlist = []
+            for i in range(len(self.MANEUVERS)):
+                MANEUVERSlist.append(self.MANEUVERS[i].Pack(builder))
+            OPMStartMANEUVERSVector(builder, len(self.MANEUVERS))
+            for i in reversed(range(len(self.MANEUVERS))):
+                builder.PrependUOffsetTRelative(MANEUVERSlist[i])
+            MANEUVERS = builder.EndVector()
+        if self.USER_DEFINED_PARAMETERS is not None:
+            USER_DEFINED_PARAMETERSlist = []
+            for i in range(len(self.USER_DEFINED_PARAMETERS)):
+                USER_DEFINED_PARAMETERSlist.append(self.USER_DEFINED_PARAMETERS[i].Pack(builder))
+            OPMStartUSER_DEFINED_PARAMETERSVector(builder, len(self.USER_DEFINED_PARAMETERS))
+            for i in reversed(range(len(self.USER_DEFINED_PARAMETERS))):
+                builder.PrependUOffsetTRelative(USER_DEFINED_PARAMETERSlist[i])
+            USER_DEFINED_PARAMETERS = builder.EndVector()
         OPMStart(builder)
         if self.CCSDS_OPM_VERS is not None:
             OPMAddCCSDS_OPM_VERS(builder, CCSDS_OPM_VERS)
@@ -577,5 +877,21 @@ class OPMT(object):
         OPMAddSOLAR_RAD_COEFF(builder, self.SOLAR_RAD_COEFF)
         OPMAddDRAG_AREA(builder, self.DRAG_AREA)
         OPMAddDRAG_COEFF(builder, self.DRAG_COEFF)
+        if self.COMMENT is not None:
+            OPMAddCOMMENT(builder, COMMENT)
+        if self.CLASSIFICATION is not None:
+            OPMAddCLASSIFICATION(builder, CLASSIFICATION)
+        if self.MESSAGE_ID is not None:
+            OPMAddMESSAGE_ID(builder, MESSAGE_ID)
+        if self.REF_FRAME_EPOCH is not None:
+            OPMAddREF_FRAME_EPOCH(builder, REF_FRAME_EPOCH)
+        if self.COV_REF_FRAME is not None:
+            OPMAddCOV_REF_FRAME(builder, COV_REF_FRAME)
+        if self.COVARIANCE is not None:
+            OPMAddCOVARIANCE(builder, COVARIANCE)
+        if self.MANEUVERS is not None:
+            OPMAddMANEUVERS(builder, MANEUVERS)
+        if self.USER_DEFINED_PARAMETERS is not None:
+            OPMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
         OPM = OPMEnd(builder)
         return OPM

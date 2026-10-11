@@ -692,6 +692,8 @@ impl<'a> covarianceMatrixLine<'a> {
     pub const VT_CZ_DOT_X_DOT: ::flatbuffers::VOffsetT = 42;
     pub const VT_CZ_DOT_Y_DOT: ::flatbuffers::VOffsetT = 44;
     pub const VT_CZ_DOT_Z_DOT: ::flatbuffers::VOffsetT = 46;
+    pub const VT_COMMENT: ::flatbuffers::VOffsetT = 48;
+    pub const VT_COV_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 50;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -725,6 +727,8 @@ impl<'a> covarianceMatrixLine<'a> {
         builder.add_CY_Y(args.CY_Y);
         builder.add_CY_X(args.CY_X);
         builder.add_CX_X(args.CX_X);
+        if let Some(x) = args.COV_REFERENCE_FRAME { builder.add_COV_REFERENCE_FRAME(x); }
+        if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
         if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
         builder.finish()
     }
@@ -754,6 +758,12 @@ impl<'a> covarianceMatrixLine<'a> {
         let CZ_DOT_X_DOT = self.CZ_DOT_X_DOT();
         let CZ_DOT_Y_DOT = self.CZ_DOT_Y_DOT();
         let CZ_DOT_Z_DOT = self.CZ_DOT_Z_DOT();
+        let COMMENT = self.COMMENT().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         covarianceMatrixLineT {
             EPOCH,
             CX_X,
@@ -777,6 +787,8 @@ impl<'a> covarianceMatrixLine<'a> {
             CZ_DOT_X_DOT,
             CZ_DOT_Y_DOT,
             CZ_DOT_Z_DOT,
+            COMMENT,
+            COV_REFERENCE_FRAME,
         }
     }
 
@@ -977,6 +989,25 @@ impl<'a> covarianceMatrixLine<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(covarianceMatrixLine::VT_CZ_DOT_Z_DOT, Some(0.0)).unwrap()}
     }
+
+    /// COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.
+    #[inline]
+    pub fn COMMENT(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(covarianceMatrixLine::VT_COMMENT, None)}
+    }
+
+    /// COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix
+    /// is expressed in, when it differs from the block's COV_REFERENCE_FRAME.
+    #[inline]
+    pub fn COV_REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(covarianceMatrixLine::VT_COV_REFERENCE_FRAME, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for covarianceMatrixLine<'_> {
@@ -1007,6 +1038,8 @@ impl ::flatbuffers::Verifiable for covarianceMatrixLine<'_> {
             .visit_field::<f64>("CZ_DOT_X_DOT", Self::VT_CZ_DOT_X_DOT, false)?
             .visit_field::<f64>("CZ_DOT_Y_DOT", Self::VT_CZ_DOT_Y_DOT, false)?
             .visit_field::<f64>("CZ_DOT_Z_DOT", Self::VT_CZ_DOT_Z_DOT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("COV_REFERENCE_FRAME", Self::VT_COV_REFERENCE_FRAME, false)?
             .finish();
         Ok(())
     }
@@ -1035,6 +1068,8 @@ pub struct covarianceMatrixLineArgs<'a> {
     pub CZ_DOT_X_DOT: f64,
     pub CZ_DOT_Y_DOT: f64,
     pub CZ_DOT_Z_DOT: f64,
+    pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
 }
 
 impl<'a> Default for covarianceMatrixLineArgs<'a> {
@@ -1063,6 +1098,8 @@ impl<'a> Default for covarianceMatrixLineArgs<'a> {
             CZ_DOT_X_DOT: 0.0,
             CZ_DOT_Y_DOT: 0.0,
             CZ_DOT_Z_DOT: 0.0,
+            COMMENT: None,
+            COV_REFERENCE_FRAME: None,
         }
     }
 }
@@ -1184,6 +1221,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> covarianceMatrixLineBuilder<'
     }
 
     #[inline]
+    pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(covarianceMatrixLine::VT_COMMENT, COMMENT);
+    }
+
+    #[inline]
+    pub fn add_COV_REFERENCE_FRAME(&mut self, COV_REFERENCE_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(covarianceMatrixLine::VT_COV_REFERENCE_FRAME, COV_REFERENCE_FRAME);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> covarianceMatrixLineBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         covarianceMatrixLineBuilder {
@@ -1224,6 +1271,8 @@ impl ::core::fmt::Debug for covarianceMatrixLine<'_> {
         ds.field("CZ_DOT_X_DOT", &self.CZ_DOT_X_DOT());
         ds.field("CZ_DOT_Y_DOT", &self.CZ_DOT_Y_DOT());
         ds.field("CZ_DOT_Z_DOT", &self.CZ_DOT_Z_DOT());
+        ds.field("COMMENT", &self.COMMENT());
+        ds.field("COV_REFERENCE_FRAME", &self.COV_REFERENCE_FRAME());
         ds.finish()
     }
 }
@@ -1253,6 +1302,8 @@ pub struct covarianceMatrixLineT {
     pub CZ_DOT_X_DOT: f64,
     pub CZ_DOT_Y_DOT: f64,
     pub CZ_DOT_Z_DOT: f64,
+    pub COMMENT: Option<alloc::string::String>,
+    pub COV_REFERENCE_FRAME: Option<alloc::boxed::Box<RFMT>>,
 }
 
 impl Default for covarianceMatrixLineT {
@@ -1280,6 +1331,8 @@ impl Default for covarianceMatrixLineT {
             CZ_DOT_X_DOT: 0.0,
             CZ_DOT_Y_DOT: 0.0,
             CZ_DOT_Z_DOT: 0.0,
+            COMMENT: None,
+            COV_REFERENCE_FRAME: None,
         }
     }
 }
@@ -1313,6 +1366,12 @@ impl covarianceMatrixLineT {
         let CZ_DOT_X_DOT = self.CZ_DOT_X_DOT;
         let CZ_DOT_Y_DOT = self.CZ_DOT_Y_DOT;
         let CZ_DOT_Z_DOT = self.CZ_DOT_Z_DOT;
+        let COMMENT = self.COMMENT.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         covarianceMatrixLine::create(_fbb, &covarianceMatrixLineArgs{
             EPOCH,
             CX_X,
@@ -1336,6 +1395,8 @@ impl covarianceMatrixLineT {
             CZ_DOT_X_DOT,
             CZ_DOT_Y_DOT,
             CZ_DOT_Z_DOT,
+            COMMENT,
+            COV_REFERENCE_FRAME,
         })
     }
 }
@@ -2101,6 +2162,8 @@ impl<'a> OEM<'a> {
     pub const VT_CREATION_DATE: ::flatbuffers::VOffsetT = 8;
     pub const VT_ORIGINATOR: ::flatbuffers::VOffsetT = 10;
     pub const VT_EPHEMERIS_DATA_BLOCK: ::flatbuffers::VOffsetT = 12;
+    pub const VT_COMMENT: ::flatbuffers::VOffsetT = 14;
+    pub const VT_MESSAGE_ID: ::flatbuffers::VOffsetT = 16;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2114,6 +2177,8 @@ impl<'a> OEM<'a> {
     ) -> ::flatbuffers::WIPOffset<OEM<'bldr>> {
         let mut builder = OEMBuilder::new(_fbb);
         builder.add_CCSDS_OEM_VERS(args.CCSDS_OEM_VERS);
+        if let Some(x) = args.MESSAGE_ID { builder.add_MESSAGE_ID(x); }
+        if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
         if let Some(x) = args.EPHEMERIS_DATA_BLOCK { builder.add_EPHEMERIS_DATA_BLOCK(x); }
         if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
         if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
@@ -2135,12 +2200,20 @@ impl<'a> OEM<'a> {
         let EPHEMERIS_DATA_BLOCK = self.EPHEMERIS_DATA_BLOCK().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let COMMENT = self.COMMENT().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MESSAGE_ID = self.MESSAGE_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         OEMT {
             CLASSIFICATION,
             CCSDS_OEM_VERS,
             CREATION_DATE,
             ORIGINATOR,
             EPHEMERIS_DATA_BLOCK,
+            COMMENT,
+            MESSAGE_ID,
         }
     }
 
@@ -2189,6 +2262,25 @@ impl<'a> OEM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ephemerisDataBlock>>>>(OEM::VT_EPHEMERIS_DATA_BLOCK, None)}
     }
+
+    /// COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.
+    #[inline]
+    pub fn COMMENT(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OEM::VT_COMMENT, None)}
+    }
+
+    /// MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator
+    /// makes unique for this message.
+    #[inline]
+    pub fn MESSAGE_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OEM::VT_MESSAGE_ID, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OEM<'_> {
@@ -2202,6 +2294,8 @@ impl ::flatbuffers::Verifiable for OEM<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATION_DATE", Self::VT_CREATION_DATE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR", Self::VT_ORIGINATOR, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ephemerisDataBlock>>>>("EPHEMERIS_DATA_BLOCK", Self::VT_EPHEMERIS_DATA_BLOCK, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_ID", Self::VT_MESSAGE_ID, false)?
             .finish();
         Ok(())
     }
@@ -2213,6 +2307,8 @@ pub struct OEMArgs<'a> {
     pub CREATION_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ORIGINATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub EPHEMERIS_DATA_BLOCK: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ephemerisDataBlock<'a>>>>>,
+    pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for OEMArgs<'a> {
@@ -2224,6 +2320,8 @@ impl<'a> Default for OEMArgs<'a> {
             CREATION_DATE: None,
             ORIGINATOR: None,
             EPHEMERIS_DATA_BLOCK: None,
+            COMMENT: None,
+            MESSAGE_ID: None,
         }
     }
 }
@@ -2260,6 +2358,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OEMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OEM::VT_COMMENT, COMMENT);
+    }
+
+    #[inline]
+    pub fn add_MESSAGE_ID(&mut self, MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OEM::VT_MESSAGE_ID, MESSAGE_ID);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OEMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OEMBuilder {
@@ -2283,6 +2391,8 @@ impl ::core::fmt::Debug for OEM<'_> {
         ds.field("CREATION_DATE", &self.CREATION_DATE());
         ds.field("ORIGINATOR", &self.ORIGINATOR());
         ds.field("EPHEMERIS_DATA_BLOCK", &self.EPHEMERIS_DATA_BLOCK());
+        ds.field("COMMENT", &self.COMMENT());
+        ds.field("MESSAGE_ID", &self.MESSAGE_ID());
         ds.finish()
     }
 }
@@ -2295,6 +2405,8 @@ pub struct OEMT {
     pub CREATION_DATE: Option<alloc::string::String>,
     pub ORIGINATOR: Option<alloc::string::String>,
     pub EPHEMERIS_DATA_BLOCK: Option<alloc::vec::Vec<ephemerisDataBlockT>>,
+    pub COMMENT: Option<alloc::string::String>,
+    pub MESSAGE_ID: Option<alloc::string::String>,
 }
 
 impl Default for OEMT {
@@ -2305,6 +2417,8 @@ impl Default for OEMT {
             CREATION_DATE: None,
             ORIGINATOR: None,
             EPHEMERIS_DATA_BLOCK: None,
+            COMMENT: None,
+            MESSAGE_ID: None,
         }
     }
 }
@@ -2327,12 +2441,20 @@ impl OEMT {
         let EPHEMERIS_DATA_BLOCK = self.EPHEMERIS_DATA_BLOCK.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let COMMENT = self.COMMENT.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MESSAGE_ID = self.MESSAGE_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         OEM::create(_fbb, &OEMArgs{
             CLASSIFICATION,
             CCSDS_OEM_VERS,
             CREATION_DATE,
             ORIGINATOR,
             EPHEMERIS_DATA_BLOCK,
+            COMMENT,
+            MESSAGE_ID,
         })
     }
 }

@@ -209,8 +209,264 @@ class PhysicalProperties(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+    # PhysicalProperties
+    def MANUFACTURER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # BUS_MODEL: the object's bus model.
+    # PhysicalProperties
+    def BUS_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # DOCKED_WITH: comma-separated names of the objects it is docked with.
+    # PhysicalProperties
+    def DOCKED_WITH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # INITIAL_WET_MASS in kg, NaN when not stated.
+    # PhysicalProperties
+    def INITIAL_WET_MASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+    # PhysicalProperties
+    def OEB_PARENT_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # OEB_PARENT_FRAME_EPOCH.
+    # PhysicalProperties
+    def OEB_PARENT_FRAME_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # AREA_MIN_FOR_PC in m**2, NaN when not stated.
+    # PhysicalProperties
+    def AREA_MIN_FOR_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # AREA_MAX_FOR_PC in m**2, NaN when not stated.
+    # PhysicalProperties
+    def AREA_MAX_FOR_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # AREA_TYP_FOR_PC in m**2, NaN when not stated.
+    # PhysicalProperties
+    def AREA_TYP_FOR_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # RCS in m**2, NaN when not stated.
+    # PhysicalProperties
+    def RCS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # RCS_MIN in m**2, NaN when not stated.
+    # PhysicalProperties
+    def RCS_MIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # RCS_MAX in m**2, NaN when not stated.
+    # PhysicalProperties
+    def RCS_MAX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+    # PhysicalProperties
+    def VM_ABSOLUTE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+    # PhysicalProperties
+    def VM_APPARENT_MIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # VM_APPARENT: apparent visual magnitude, NaN when not stated.
+    # PhysicalProperties
+    def VM_APPARENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+    # PhysicalProperties
+    def VM_APPARENT_MAX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # REFLECTANCE: typical reflectivity, NaN when not stated.
+    # PhysicalProperties
+    def REFLECTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # ATT_CONTROL_MODE.
+    # PhysicalProperties
+    def ATT_CONTROL_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ATT_ACTUATOR_TYPE.
+    # PhysicalProperties
+    def ATT_ACTUATOR_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ATT_KNOWLEDGE in degrees, NaN when not stated.
+    # PhysicalProperties
+    def ATT_KNOWLEDGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # ATT_CONTROL in degrees, NaN when not stated.
+    # PhysicalProperties
+    def ATT_CONTROL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # ATT_POINTING in degrees, NaN when not stated.
+    # PhysicalProperties
+    def ATT_POINTING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+    # PhysicalProperties
+    def AVG_MANEUVER_FREQ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # MAX_THRUST in N, NaN when not stated.
+    # PhysicalProperties
+    def MAX_THRUST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+    # PhysicalProperties
+    def DV_BOL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # DV_REMAINING in km/s, NaN when not stated.
+    # PhysicalProperties
+    def DV_REMAINING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IXX in kg*m**2, NaN when not stated.
+    # PhysicalProperties
+    def IXX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IYY in kg*m**2, NaN when not stated.
+    # PhysicalProperties
+    def IYY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IZZ in kg*m**2, NaN when not stated.
+    # PhysicalProperties
+    def IZZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IXY in kg*m**2, NaN when not stated.
+    # PhysicalProperties
+    def IXY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IXZ in kg*m**2, NaN when not stated.
+    # PhysicalProperties
+    def IXZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # IYZ in kg*m**2, NaN when not stated.
+    # PhysicalProperties
+    def IYZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
 def PhysicalPropertiesStart(builder):
-    builder.StartObject(21)
+    builder.StartObject(53)
 
 def Start(builder):
     PhysicalPropertiesStart(builder)
@@ -353,6 +609,198 @@ def PhysicalPropertiesAddSRP_UNCERTAINTY(builder, SRP_UNCERTAINTY):
 def AddSRP_UNCERTAINTY(builder, SRP_UNCERTAINTY):
     PhysicalPropertiesAddSRP_UNCERTAINTY(builder, SRP_UNCERTAINTY)
 
+def PhysicalPropertiesAddMANUFACTURER(builder, MANUFACTURER):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(MANUFACTURER), 0)
+
+def AddMANUFACTURER(builder, MANUFACTURER):
+    PhysicalPropertiesAddMANUFACTURER(builder, MANUFACTURER)
+
+def PhysicalPropertiesAddBUS_MODEL(builder, BUS_MODEL):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(BUS_MODEL), 0)
+
+def AddBUS_MODEL(builder, BUS_MODEL):
+    PhysicalPropertiesAddBUS_MODEL(builder, BUS_MODEL)
+
+def PhysicalPropertiesAddDOCKED_WITH(builder, DOCKED_WITH):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(DOCKED_WITH), 0)
+
+def AddDOCKED_WITH(builder, DOCKED_WITH):
+    PhysicalPropertiesAddDOCKED_WITH(builder, DOCKED_WITH)
+
+def PhysicalPropertiesAddINITIAL_WET_MASS(builder, INITIAL_WET_MASS):
+    builder.PrependFloat64Slot(24, INITIAL_WET_MASS, float('nan'))
+
+def AddINITIAL_WET_MASS(builder, INITIAL_WET_MASS):
+    PhysicalPropertiesAddINITIAL_WET_MASS(builder, INITIAL_WET_MASS)
+
+def PhysicalPropertiesAddOEB_PARENT_FRAME(builder, OEB_PARENT_FRAME):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(OEB_PARENT_FRAME), 0)
+
+def AddOEB_PARENT_FRAME(builder, OEB_PARENT_FRAME):
+    PhysicalPropertiesAddOEB_PARENT_FRAME(builder, OEB_PARENT_FRAME)
+
+def PhysicalPropertiesAddOEB_PARENT_FRAME_EPOCH(builder, OEB_PARENT_FRAME_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(OEB_PARENT_FRAME_EPOCH), 0)
+
+def AddOEB_PARENT_FRAME_EPOCH(builder, OEB_PARENT_FRAME_EPOCH):
+    PhysicalPropertiesAddOEB_PARENT_FRAME_EPOCH(builder, OEB_PARENT_FRAME_EPOCH)
+
+def PhysicalPropertiesAddAREA_MIN_FOR_PC(builder, AREA_MIN_FOR_PC):
+    builder.PrependFloat64Slot(27, AREA_MIN_FOR_PC, float('nan'))
+
+def AddAREA_MIN_FOR_PC(builder, AREA_MIN_FOR_PC):
+    PhysicalPropertiesAddAREA_MIN_FOR_PC(builder, AREA_MIN_FOR_PC)
+
+def PhysicalPropertiesAddAREA_MAX_FOR_PC(builder, AREA_MAX_FOR_PC):
+    builder.PrependFloat64Slot(28, AREA_MAX_FOR_PC, float('nan'))
+
+def AddAREA_MAX_FOR_PC(builder, AREA_MAX_FOR_PC):
+    PhysicalPropertiesAddAREA_MAX_FOR_PC(builder, AREA_MAX_FOR_PC)
+
+def PhysicalPropertiesAddAREA_TYP_FOR_PC(builder, AREA_TYP_FOR_PC):
+    builder.PrependFloat64Slot(29, AREA_TYP_FOR_PC, float('nan'))
+
+def AddAREA_TYP_FOR_PC(builder, AREA_TYP_FOR_PC):
+    PhysicalPropertiesAddAREA_TYP_FOR_PC(builder, AREA_TYP_FOR_PC)
+
+def PhysicalPropertiesAddRCS(builder, RCS):
+    builder.PrependFloat64Slot(30, RCS, float('nan'))
+
+def AddRCS(builder, RCS):
+    PhysicalPropertiesAddRCS(builder, RCS)
+
+def PhysicalPropertiesAddRCS_MIN(builder, RCS_MIN):
+    builder.PrependFloat64Slot(31, RCS_MIN, float('nan'))
+
+def AddRCS_MIN(builder, RCS_MIN):
+    PhysicalPropertiesAddRCS_MIN(builder, RCS_MIN)
+
+def PhysicalPropertiesAddRCS_MAX(builder, RCS_MAX):
+    builder.PrependFloat64Slot(32, RCS_MAX, float('nan'))
+
+def AddRCS_MAX(builder, RCS_MAX):
+    PhysicalPropertiesAddRCS_MAX(builder, RCS_MAX)
+
+def PhysicalPropertiesAddVM_ABSOLUTE(builder, VM_ABSOLUTE):
+    builder.PrependFloat64Slot(33, VM_ABSOLUTE, float('nan'))
+
+def AddVM_ABSOLUTE(builder, VM_ABSOLUTE):
+    PhysicalPropertiesAddVM_ABSOLUTE(builder, VM_ABSOLUTE)
+
+def PhysicalPropertiesAddVM_APPARENT_MIN(builder, VM_APPARENT_MIN):
+    builder.PrependFloat64Slot(34, VM_APPARENT_MIN, float('nan'))
+
+def AddVM_APPARENT_MIN(builder, VM_APPARENT_MIN):
+    PhysicalPropertiesAddVM_APPARENT_MIN(builder, VM_APPARENT_MIN)
+
+def PhysicalPropertiesAddVM_APPARENT(builder, VM_APPARENT):
+    builder.PrependFloat64Slot(35, VM_APPARENT, float('nan'))
+
+def AddVM_APPARENT(builder, VM_APPARENT):
+    PhysicalPropertiesAddVM_APPARENT(builder, VM_APPARENT)
+
+def PhysicalPropertiesAddVM_APPARENT_MAX(builder, VM_APPARENT_MAX):
+    builder.PrependFloat64Slot(36, VM_APPARENT_MAX, float('nan'))
+
+def AddVM_APPARENT_MAX(builder, VM_APPARENT_MAX):
+    PhysicalPropertiesAddVM_APPARENT_MAX(builder, VM_APPARENT_MAX)
+
+def PhysicalPropertiesAddREFLECTANCE(builder, REFLECTANCE):
+    builder.PrependFloat64Slot(37, REFLECTANCE, float('nan'))
+
+def AddREFLECTANCE(builder, REFLECTANCE):
+    PhysicalPropertiesAddREFLECTANCE(builder, REFLECTANCE)
+
+def PhysicalPropertiesAddATT_CONTROL_MODE(builder, ATT_CONTROL_MODE):
+    builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(ATT_CONTROL_MODE), 0)
+
+def AddATT_CONTROL_MODE(builder, ATT_CONTROL_MODE):
+    PhysicalPropertiesAddATT_CONTROL_MODE(builder, ATT_CONTROL_MODE)
+
+def PhysicalPropertiesAddATT_ACTUATOR_TYPE(builder, ATT_ACTUATOR_TYPE):
+    builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(ATT_ACTUATOR_TYPE), 0)
+
+def AddATT_ACTUATOR_TYPE(builder, ATT_ACTUATOR_TYPE):
+    PhysicalPropertiesAddATT_ACTUATOR_TYPE(builder, ATT_ACTUATOR_TYPE)
+
+def PhysicalPropertiesAddATT_KNOWLEDGE(builder, ATT_KNOWLEDGE):
+    builder.PrependFloat64Slot(40, ATT_KNOWLEDGE, float('nan'))
+
+def AddATT_KNOWLEDGE(builder, ATT_KNOWLEDGE):
+    PhysicalPropertiesAddATT_KNOWLEDGE(builder, ATT_KNOWLEDGE)
+
+def PhysicalPropertiesAddATT_CONTROL(builder, ATT_CONTROL):
+    builder.PrependFloat64Slot(41, ATT_CONTROL, float('nan'))
+
+def AddATT_CONTROL(builder, ATT_CONTROL):
+    PhysicalPropertiesAddATT_CONTROL(builder, ATT_CONTROL)
+
+def PhysicalPropertiesAddATT_POINTING(builder, ATT_POINTING):
+    builder.PrependFloat64Slot(42, ATT_POINTING, float('nan'))
+
+def AddATT_POINTING(builder, ATT_POINTING):
+    PhysicalPropertiesAddATT_POINTING(builder, ATT_POINTING)
+
+def PhysicalPropertiesAddAVG_MANEUVER_FREQ(builder, AVG_MANEUVER_FREQ):
+    builder.PrependFloat64Slot(43, AVG_MANEUVER_FREQ, float('nan'))
+
+def AddAVG_MANEUVER_FREQ(builder, AVG_MANEUVER_FREQ):
+    PhysicalPropertiesAddAVG_MANEUVER_FREQ(builder, AVG_MANEUVER_FREQ)
+
+def PhysicalPropertiesAddMAX_THRUST(builder, MAX_THRUST):
+    builder.PrependFloat64Slot(44, MAX_THRUST, float('nan'))
+
+def AddMAX_THRUST(builder, MAX_THRUST):
+    PhysicalPropertiesAddMAX_THRUST(builder, MAX_THRUST)
+
+def PhysicalPropertiesAddDV_BOL(builder, DV_BOL):
+    builder.PrependFloat64Slot(45, DV_BOL, float('nan'))
+
+def AddDV_BOL(builder, DV_BOL):
+    PhysicalPropertiesAddDV_BOL(builder, DV_BOL)
+
+def PhysicalPropertiesAddDV_REMAINING(builder, DV_REMAINING):
+    builder.PrependFloat64Slot(46, DV_REMAINING, float('nan'))
+
+def AddDV_REMAINING(builder, DV_REMAINING):
+    PhysicalPropertiesAddDV_REMAINING(builder, DV_REMAINING)
+
+def PhysicalPropertiesAddIXX(builder, IXX):
+    builder.PrependFloat64Slot(47, IXX, float('nan'))
+
+def AddIXX(builder, IXX):
+    PhysicalPropertiesAddIXX(builder, IXX)
+
+def PhysicalPropertiesAddIYY(builder, IYY):
+    builder.PrependFloat64Slot(48, IYY, float('nan'))
+
+def AddIYY(builder, IYY):
+    PhysicalPropertiesAddIYY(builder, IYY)
+
+def PhysicalPropertiesAddIZZ(builder, IZZ):
+    builder.PrependFloat64Slot(49, IZZ, float('nan'))
+
+def AddIZZ(builder, IZZ):
+    PhysicalPropertiesAddIZZ(builder, IZZ)
+
+def PhysicalPropertiesAddIXY(builder, IXY):
+    builder.PrependFloat64Slot(50, IXY, float('nan'))
+
+def AddIXY(builder, IXY):
+    PhysicalPropertiesAddIXY(builder, IXY)
+
+def PhysicalPropertiesAddIXZ(builder, IXZ):
+    builder.PrependFloat64Slot(51, IXZ, float('nan'))
+
+def AddIXZ(builder, IXZ):
+    PhysicalPropertiesAddIXZ(builder, IXZ)
+
+def PhysicalPropertiesAddIYZ(builder, IYZ):
+    builder.PrependFloat64Slot(52, IYZ, float('nan'))
+
+def AddIYZ(builder, IYZ):
+    PhysicalPropertiesAddIYZ(builder, IYZ)
+
 def PhysicalPropertiesEnd(builder):
     return builder.EndObject()
 
@@ -390,6 +838,38 @@ class PhysicalPropertiesT(object):
         SRP_CONST_AREA = 0.0,
         SOLAR_RAD_COEFF = 0.0,
         SRP_UNCERTAINTY = 0.0,
+        MANUFACTURER = None,
+        BUS_MODEL = None,
+        DOCKED_WITH = None,
+        INITIAL_WET_MASS = float('nan'),
+        OEB_PARENT_FRAME = None,
+        OEB_PARENT_FRAME_EPOCH = None,
+        AREA_MIN_FOR_PC = float('nan'),
+        AREA_MAX_FOR_PC = float('nan'),
+        AREA_TYP_FOR_PC = float('nan'),
+        RCS = float('nan'),
+        RCS_MIN = float('nan'),
+        RCS_MAX = float('nan'),
+        VM_ABSOLUTE = float('nan'),
+        VM_APPARENT_MIN = float('nan'),
+        VM_APPARENT = float('nan'),
+        VM_APPARENT_MAX = float('nan'),
+        REFLECTANCE = float('nan'),
+        ATT_CONTROL_MODE = None,
+        ATT_ACTUATOR_TYPE = None,
+        ATT_KNOWLEDGE = float('nan'),
+        ATT_CONTROL = float('nan'),
+        ATT_POINTING = float('nan'),
+        AVG_MANEUVER_FREQ = float('nan'),
+        MAX_THRUST = float('nan'),
+        DV_BOL = float('nan'),
+        DV_REMAINING = float('nan'),
+        IXX = float('nan'),
+        IYY = float('nan'),
+        IZZ = float('nan'),
+        IXY = float('nan'),
+        IXZ = float('nan'),
+        IYZ = float('nan'),
     ):
         self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
         self.WET_MASS = WET_MASS  # type: float
@@ -412,6 +892,38 @@ class PhysicalPropertiesT(object):
         self.SRP_CONST_AREA = SRP_CONST_AREA  # type: float
         self.SOLAR_RAD_COEFF = SOLAR_RAD_COEFF  # type: float
         self.SRP_UNCERTAINTY = SRP_UNCERTAINTY  # type: float
+        self.MANUFACTURER = MANUFACTURER  # type: Optional[str]
+        self.BUS_MODEL = BUS_MODEL  # type: Optional[str]
+        self.DOCKED_WITH = DOCKED_WITH  # type: Optional[str]
+        self.INITIAL_WET_MASS = INITIAL_WET_MASS  # type: float
+        self.OEB_PARENT_FRAME = OEB_PARENT_FRAME  # type: Optional[str]
+        self.OEB_PARENT_FRAME_EPOCH = OEB_PARENT_FRAME_EPOCH  # type: Optional[str]
+        self.AREA_MIN_FOR_PC = AREA_MIN_FOR_PC  # type: float
+        self.AREA_MAX_FOR_PC = AREA_MAX_FOR_PC  # type: float
+        self.AREA_TYP_FOR_PC = AREA_TYP_FOR_PC  # type: float
+        self.RCS = RCS  # type: float
+        self.RCS_MIN = RCS_MIN  # type: float
+        self.RCS_MAX = RCS_MAX  # type: float
+        self.VM_ABSOLUTE = VM_ABSOLUTE  # type: float
+        self.VM_APPARENT_MIN = VM_APPARENT_MIN  # type: float
+        self.VM_APPARENT = VM_APPARENT  # type: float
+        self.VM_APPARENT_MAX = VM_APPARENT_MAX  # type: float
+        self.REFLECTANCE = REFLECTANCE  # type: float
+        self.ATT_CONTROL_MODE = ATT_CONTROL_MODE  # type: Optional[str]
+        self.ATT_ACTUATOR_TYPE = ATT_ACTUATOR_TYPE  # type: Optional[str]
+        self.ATT_KNOWLEDGE = ATT_KNOWLEDGE  # type: float
+        self.ATT_CONTROL = ATT_CONTROL  # type: float
+        self.ATT_POINTING = ATT_POINTING  # type: float
+        self.AVG_MANEUVER_FREQ = AVG_MANEUVER_FREQ  # type: float
+        self.MAX_THRUST = MAX_THRUST  # type: float
+        self.DV_BOL = DV_BOL  # type: float
+        self.DV_REMAINING = DV_REMAINING  # type: float
+        self.IXX = IXX  # type: float
+        self.IYY = IYY  # type: float
+        self.IZZ = IZZ  # type: float
+        self.IXY = IXY  # type: float
+        self.IXZ = IXZ  # type: float
+        self.IYZ = IYZ  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -458,6 +970,38 @@ class PhysicalPropertiesT(object):
         self.SRP_CONST_AREA = PhysicalProperties.SRP_CONST_AREA()
         self.SOLAR_RAD_COEFF = PhysicalProperties.SOLAR_RAD_COEFF()
         self.SRP_UNCERTAINTY = PhysicalProperties.SRP_UNCERTAINTY()
+        self.MANUFACTURER = PhysicalProperties.MANUFACTURER()
+        self.BUS_MODEL = PhysicalProperties.BUS_MODEL()
+        self.DOCKED_WITH = PhysicalProperties.DOCKED_WITH()
+        self.INITIAL_WET_MASS = PhysicalProperties.INITIAL_WET_MASS()
+        self.OEB_PARENT_FRAME = PhysicalProperties.OEB_PARENT_FRAME()
+        self.OEB_PARENT_FRAME_EPOCH = PhysicalProperties.OEB_PARENT_FRAME_EPOCH()
+        self.AREA_MIN_FOR_PC = PhysicalProperties.AREA_MIN_FOR_PC()
+        self.AREA_MAX_FOR_PC = PhysicalProperties.AREA_MAX_FOR_PC()
+        self.AREA_TYP_FOR_PC = PhysicalProperties.AREA_TYP_FOR_PC()
+        self.RCS = PhysicalProperties.RCS()
+        self.RCS_MIN = PhysicalProperties.RCS_MIN()
+        self.RCS_MAX = PhysicalProperties.RCS_MAX()
+        self.VM_ABSOLUTE = PhysicalProperties.VM_ABSOLUTE()
+        self.VM_APPARENT_MIN = PhysicalProperties.VM_APPARENT_MIN()
+        self.VM_APPARENT = PhysicalProperties.VM_APPARENT()
+        self.VM_APPARENT_MAX = PhysicalProperties.VM_APPARENT_MAX()
+        self.REFLECTANCE = PhysicalProperties.REFLECTANCE()
+        self.ATT_CONTROL_MODE = PhysicalProperties.ATT_CONTROL_MODE()
+        self.ATT_ACTUATOR_TYPE = PhysicalProperties.ATT_ACTUATOR_TYPE()
+        self.ATT_KNOWLEDGE = PhysicalProperties.ATT_KNOWLEDGE()
+        self.ATT_CONTROL = PhysicalProperties.ATT_CONTROL()
+        self.ATT_POINTING = PhysicalProperties.ATT_POINTING()
+        self.AVG_MANEUVER_FREQ = PhysicalProperties.AVG_MANEUVER_FREQ()
+        self.MAX_THRUST = PhysicalProperties.MAX_THRUST()
+        self.DV_BOL = PhysicalProperties.DV_BOL()
+        self.DV_REMAINING = PhysicalProperties.DV_REMAINING()
+        self.IXX = PhysicalProperties.IXX()
+        self.IYY = PhysicalProperties.IYY()
+        self.IZZ = PhysicalProperties.IZZ()
+        self.IXY = PhysicalProperties.IXY()
+        self.IXZ = PhysicalProperties.IXZ()
+        self.IYZ = PhysicalProperties.IYZ()
 
     # PhysicalPropertiesT
     def Pack(self, builder):
@@ -473,6 +1017,20 @@ class PhysicalPropertiesT(object):
             MASS_UNITS = builder.CreateString(self.MASS_UNITS)
         if self.AREA_UNITS is not None:
             AREA_UNITS = builder.CreateString(self.AREA_UNITS)
+        if self.MANUFACTURER is not None:
+            MANUFACTURER = builder.CreateString(self.MANUFACTURER)
+        if self.BUS_MODEL is not None:
+            BUS_MODEL = builder.CreateString(self.BUS_MODEL)
+        if self.DOCKED_WITH is not None:
+            DOCKED_WITH = builder.CreateString(self.DOCKED_WITH)
+        if self.OEB_PARENT_FRAME is not None:
+            OEB_PARENT_FRAME = builder.CreateString(self.OEB_PARENT_FRAME)
+        if self.OEB_PARENT_FRAME_EPOCH is not None:
+            OEB_PARENT_FRAME_EPOCH = builder.CreateString(self.OEB_PARENT_FRAME_EPOCH)
+        if self.ATT_CONTROL_MODE is not None:
+            ATT_CONTROL_MODE = builder.CreateString(self.ATT_CONTROL_MODE)
+        if self.ATT_ACTUATOR_TYPE is not None:
+            ATT_ACTUATOR_TYPE = builder.CreateString(self.ATT_ACTUATOR_TYPE)
         PhysicalPropertiesStart(builder)
         if self.COMMENT is not None:
             PhysicalPropertiesAddCOMMENT(builder, COMMENT)
@@ -498,5 +1056,44 @@ class PhysicalPropertiesT(object):
         PhysicalPropertiesAddSRP_CONST_AREA(builder, self.SRP_CONST_AREA)
         PhysicalPropertiesAddSOLAR_RAD_COEFF(builder, self.SOLAR_RAD_COEFF)
         PhysicalPropertiesAddSRP_UNCERTAINTY(builder, self.SRP_UNCERTAINTY)
+        if self.MANUFACTURER is not None:
+            PhysicalPropertiesAddMANUFACTURER(builder, MANUFACTURER)
+        if self.BUS_MODEL is not None:
+            PhysicalPropertiesAddBUS_MODEL(builder, BUS_MODEL)
+        if self.DOCKED_WITH is not None:
+            PhysicalPropertiesAddDOCKED_WITH(builder, DOCKED_WITH)
+        PhysicalPropertiesAddINITIAL_WET_MASS(builder, self.INITIAL_WET_MASS)
+        if self.OEB_PARENT_FRAME is not None:
+            PhysicalPropertiesAddOEB_PARENT_FRAME(builder, OEB_PARENT_FRAME)
+        if self.OEB_PARENT_FRAME_EPOCH is not None:
+            PhysicalPropertiesAddOEB_PARENT_FRAME_EPOCH(builder, OEB_PARENT_FRAME_EPOCH)
+        PhysicalPropertiesAddAREA_MIN_FOR_PC(builder, self.AREA_MIN_FOR_PC)
+        PhysicalPropertiesAddAREA_MAX_FOR_PC(builder, self.AREA_MAX_FOR_PC)
+        PhysicalPropertiesAddAREA_TYP_FOR_PC(builder, self.AREA_TYP_FOR_PC)
+        PhysicalPropertiesAddRCS(builder, self.RCS)
+        PhysicalPropertiesAddRCS_MIN(builder, self.RCS_MIN)
+        PhysicalPropertiesAddRCS_MAX(builder, self.RCS_MAX)
+        PhysicalPropertiesAddVM_ABSOLUTE(builder, self.VM_ABSOLUTE)
+        PhysicalPropertiesAddVM_APPARENT_MIN(builder, self.VM_APPARENT_MIN)
+        PhysicalPropertiesAddVM_APPARENT(builder, self.VM_APPARENT)
+        PhysicalPropertiesAddVM_APPARENT_MAX(builder, self.VM_APPARENT_MAX)
+        PhysicalPropertiesAddREFLECTANCE(builder, self.REFLECTANCE)
+        if self.ATT_CONTROL_MODE is not None:
+            PhysicalPropertiesAddATT_CONTROL_MODE(builder, ATT_CONTROL_MODE)
+        if self.ATT_ACTUATOR_TYPE is not None:
+            PhysicalPropertiesAddATT_ACTUATOR_TYPE(builder, ATT_ACTUATOR_TYPE)
+        PhysicalPropertiesAddATT_KNOWLEDGE(builder, self.ATT_KNOWLEDGE)
+        PhysicalPropertiesAddATT_CONTROL(builder, self.ATT_CONTROL)
+        PhysicalPropertiesAddATT_POINTING(builder, self.ATT_POINTING)
+        PhysicalPropertiesAddAVG_MANEUVER_FREQ(builder, self.AVG_MANEUVER_FREQ)
+        PhysicalPropertiesAddMAX_THRUST(builder, self.MAX_THRUST)
+        PhysicalPropertiesAddDV_BOL(builder, self.DV_BOL)
+        PhysicalPropertiesAddDV_REMAINING(builder, self.DV_REMAINING)
+        PhysicalPropertiesAddIXX(builder, self.IXX)
+        PhysicalPropertiesAddIYY(builder, self.IYY)
+        PhysicalPropertiesAddIZZ(builder, self.IZZ)
+        PhysicalPropertiesAddIXY(builder, self.IXY)
+        PhysicalPropertiesAddIXZ(builder, self.IXZ)
+        PhysicalPropertiesAddIYZ(builder, self.IYZ)
         PhysicalProperties = PhysicalPropertiesEnd(builder)
         return PhysicalProperties

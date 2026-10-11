@@ -74,6 +74,62 @@ class ncdContainerFormat private constructor() {
          */
         const val CCSDS_TDM_XML: UByte = 12u
         /**
+         * CCSDS Orbit Mean-Elements Message, keyword-value notation.
+         */
+        const val CCSDS_OMM_KVN: UByte = 13u
+        /**
+         * CCSDS Orbit Mean-Elements Message, XML.
+         */
+        const val CCSDS_OMM_XML: UByte = 14u
+        /**
+         * CCSDS Orbit Parameter Message, keyword-value notation.
+         */
+        const val CCSDS_OPM_KVN: UByte = 15u
+        /**
+         * CCSDS Orbit Parameter Message, XML.
+         */
+        const val CCSDS_OPM_XML: UByte = 16u
+        /**
+         * CCSDS Orbit Comprehensive Message, keyword-value notation.
+         */
+        const val CCSDS_OCM_KVN: UByte = 17u
+        /**
+         * CCSDS Orbit Comprehensive Message, XML.
+         */
+        const val CCSDS_OCM_XML: UByte = 18u
+        /**
+         * CCSDS Conjunction Data Message, keyword-value notation.
+         */
+        const val CCSDS_CDM_KVN: UByte = 19u
+        /**
+         * CCSDS Conjunction Data Message, XML.
+         */
+        const val CCSDS_CDM_XML: UByte = 20u
+        /**
+         * CCSDS Attitude Parameter Message, keyword-value notation.
+         */
+        const val CCSDS_APM_KVN: UByte = 21u
+        /**
+         * CCSDS Attitude Parameter Message, XML.
+         */
+        const val CCSDS_APM_XML: UByte = 22u
+        /**
+         * CCSDS Attitude Comprehensive Message, keyword-value notation.
+         */
+        const val CCSDS_ACM_KVN: UByte = 23u
+        /**
+         * CCSDS Attitude Comprehensive Message, XML.
+         */
+        const val CCSDS_ACM_XML: UByte = 24u
+        /**
+         * CCSDS Reentry Data Message, keyword-value notation.
+         */
+        const val CCSDS_RDM_KVN: UByte = 25u
+        /**
+         * CCSDS Reentry Data Message, XML.
+         */
+        const val CCSDS_RDM_XML: UByte = 26u
+        /**
          * A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
          * which; a producer never reuses a neighbouring member instead.
          */

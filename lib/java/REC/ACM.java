@@ -110,11 +110,146 @@ public final class ACM extends com.google.flatbuffers.Table {
    */
   public byte MANEUVERABLE() { int o = __offset(28); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * Additional comments
+   * COMMENT lines of the message header, metadata and user-defined data
+   * (CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,
+   * covariance, maneuver or determination block's own comments stay with it.
    */
   public String COMMENT() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
   public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * CLASSIFICATION of the message: the optional header keyword stating its
+   * security classification or handling caveat.
+   */
+  public String CLASSIFICATION() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CLASSIFICATIONAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer CLASSIFICATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * MESSAGE_ID: the optional header keyword, an identifier the originator makes
+   * unique for this message.
+   */
+  public String MESSAGE_ID() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MESSAGE_IDAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer MESSAGE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.
+   * OBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH
+   * above its EPOCH_TZERO, the epoch every relative time is measured from.
+   */
+  public String OBJECT_DESIGNATOR() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer OBJECT_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * ORIGINATOR_POC: point of contact at the originator.
+   */
+  public String ORIGINATOR_POC() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIGINATOR_POCAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer ORIGINATOR_POCInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * ORIGINATOR_POSITION: position of the point of contact.
+   */
+  public String ORIGINATOR_POSITION() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIGINATOR_POSITIONAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer ORIGINATOR_POSITIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * ORIGINATOR_PHONE: telephone number of the point of contact.
+   */
+  public String ORIGINATOR_PHONE() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIGINATOR_PHONEAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer ORIGINATOR_PHONEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * ORIGINATOR_EMAIL: email address of the point of contact.
+   */
+  public String ORIGINATOR_EMAIL() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIGINATOR_EMAILAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer ORIGINATOR_EMAILInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  /**
+   * ORIGINATOR_ADDRESS: postal address of the point of contact.
+   */
+  public String ORIGINATOR_ADDRESS() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIGINATOR_ADDRESSAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer ORIGINATOR_ADDRESSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.
+   */
+  public String ODM_MSG_LINK() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ODM_MSG_LINKAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
+  public ByteBuffer ODM_MSG_LINKInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
+   * CENTER_NAME: the orbit center, when the message states one.
+   */
+  public String CENTER_NAME() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CENTER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
+  public ByteBuffer CENTER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
+  /**
+   * ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.
+   */
+  public String ACM_DATA_ELEMENTS() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ACM_DATA_ELEMENTSAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
+  public ByteBuffer ACM_DATA_ELEMENTSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
+  /**
+   * START_TIME: start of the total time span the message covers.
+   */
+  public String START_TIME() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
+  public ByteBuffer START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
+  /**
+   * STOP_TIME: end of the total time span the message covers.
+   */
+  public String STOP_TIME() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer STOP_TIMEAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer STOP_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * TAIMUTC_AT_TZERO in seconds, NaN when not stated.
+   */
+  public double TAIMUTC_AT_TZERO() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.
+   */
+  public String NEXT_LEAP_EPOCH() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NEXT_LEAP_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer NEXT_LEAP_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.
+   */
+  public double NEXT_LEAP_TAIMUTC() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Attitude state time histories (ATT_START blocks), in message order.
+   */
+  public ACMAttitudeBlock ATT_BLOCKS(int j) { return ATT_BLOCKS(new ACMAttitudeBlock(), j); }
+  public ACMAttitudeBlock ATT_BLOCKS(ACMAttitudeBlock obj, int j) { int o = __offset(64); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int ATT_BLOCKSLength() { int o = __offset(64); return o != 0 ? __vector_len(o) : 0; }
+  public ACMAttitudeBlock.Vector attBlocksVector() { return attBlocksVector(new ACMAttitudeBlock.Vector()); }
+  public ACMAttitudeBlock.Vector attBlocksVector(ACMAttitudeBlock.Vector obj) { int o = __offset(64); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Covariance time histories (COV_START blocks), in message order.
+   */
+  public ACMCovarianceBlock COV_BLOCKS(int j) { return COV_BLOCKS(new ACMCovarianceBlock(), j); }
+  public ACMCovarianceBlock COV_BLOCKS(ACMCovarianceBlock obj, int j) { int o = __offset(66); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int COV_BLOCKSLength() { int o = __offset(66); return o != 0 ? __vector_len(o) : 0; }
+  public ACMCovarianceBlock.Vector covBlocksVector() { return covBlocksVector(new ACMCovarianceBlock.Vector()); }
+  public ACMCovarianceBlock.Vector covBlocksVector(ACMCovarianceBlock.Vector obj) { int o = __offset(66); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Maneuver specifications (MAN_START blocks), in message order.
+   */
+  public ACMManeuverBlock MAN_BLOCKS(int j) { return MAN_BLOCKS(new ACMManeuverBlock(), j); }
+  public ACMManeuverBlock MAN_BLOCKS(ACMManeuverBlock obj, int j) { int o = __offset(68); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int MAN_BLOCKSLength() { int o = __offset(68); return o != 0 ? __vector_len(o) : 0; }
+  public ACMManeuverBlock.Vector manBlocksVector() { return manBlocksVector(new ACMManeuverBlock.Vector()); }
+  public ACMManeuverBlock.Vector manBlocksVector(ACMManeuverBlock.Vector obj) { int o = __offset(68); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * The attitude determination data (AD_START block), when the message has them.
+   */
+  public ACMDetermination DETERMINATION() { return DETERMINATION(new ACMDetermination()); }
+  public ACMDetermination DETERMINATION(ACMDetermination obj) { int o = __offset(70); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Every USER_DEFINED parameter of the message, in message order.
+   */
+  public ACMUserDefinedParameter USER_DEFINED_PARAMETERS(int j) { return USER_DEFINED_PARAMETERS(new ACMUserDefinedParameter(), j); }
+  public ACMUserDefinedParameter USER_DEFINED_PARAMETERS(ACMUserDefinedParameter obj, int j) { int o = __offset(72); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int USER_DEFINED_PARAMETERSLength() { int o = __offset(72); return o != 0 ? __vector_len(o) : 0; }
+  public ACMUserDefinedParameter.Vector userDefinedParametersVector() { return userDefinedParametersVector(new ACMUserDefinedParameter.Vector()); }
+  public ACMUserDefinedParameter.Vector userDefinedParametersVector(ACMUserDefinedParameter.Vector obj) { int o = __offset(72); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createACM(FlatBufferBuilder builder,
       int CCSDS_ACM_VERSOffset,
@@ -130,8 +265,50 @@ public final class ACM extends com.google.flatbuffers.Table {
       int COV_DATAOffset,
       int MANEUVERSOffset,
       byte MANEUVERABLE,
-      int COMMENTOffset) {
-    builder.startTable(14);
+      int COMMENTOffset,
+      int CLASSIFICATIONOffset,
+      int MESSAGE_IDOffset,
+      int OBJECT_DESIGNATOROffset,
+      int ORIGINATOR_POCOffset,
+      int ORIGINATOR_POSITIONOffset,
+      int ORIGINATOR_PHONEOffset,
+      int ORIGINATOR_EMAILOffset,
+      int ORIGINATOR_ADDRESSOffset,
+      int ODM_MSG_LINKOffset,
+      int CENTER_NAMEOffset,
+      int ACM_DATA_ELEMENTSOffset,
+      int START_TIMEOffset,
+      int STOP_TIMEOffset,
+      double TAIMUTC_AT_TZERO,
+      int NEXT_LEAP_EPOCHOffset,
+      double NEXT_LEAP_TAIMUTC,
+      int ATT_BLOCKSOffset,
+      int COV_BLOCKSOffset,
+      int MAN_BLOCKSOffset,
+      int DETERMINATIONOffset,
+      int USER_DEFINED_PARAMETERSOffset) {
+    builder.startTable(35);
+    ACM.addNextLeapTaimutc(builder, NEXT_LEAP_TAIMUTC);
+    ACM.addTaimutcAtTzero(builder, TAIMUTC_AT_TZERO);
+    ACM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERSOffset);
+    ACM.addDetermination(builder, DETERMINATIONOffset);
+    ACM.addManBlocks(builder, MAN_BLOCKSOffset);
+    ACM.addCovBlocks(builder, COV_BLOCKSOffset);
+    ACM.addAttBlocks(builder, ATT_BLOCKSOffset);
+    ACM.addNextLeapEpoch(builder, NEXT_LEAP_EPOCHOffset);
+    ACM.addStopTime(builder, STOP_TIMEOffset);
+    ACM.addStartTime(builder, START_TIMEOffset);
+    ACM.addAcmDataElements(builder, ACM_DATA_ELEMENTSOffset);
+    ACM.addCenterName(builder, CENTER_NAMEOffset);
+    ACM.addOdmMsgLink(builder, ODM_MSG_LINKOffset);
+    ACM.addOriginatorAddress(builder, ORIGINATOR_ADDRESSOffset);
+    ACM.addOriginatorEmail(builder, ORIGINATOR_EMAILOffset);
+    ACM.addOriginatorPhone(builder, ORIGINATOR_PHONEOffset);
+    ACM.addOriginatorPosition(builder, ORIGINATOR_POSITIONOffset);
+    ACM.addOriginatorPoc(builder, ORIGINATOR_POCOffset);
+    ACM.addObjectDesignator(builder, OBJECT_DESIGNATOROffset);
+    ACM.addMessageId(builder, MESSAGE_IDOffset);
+    ACM.addClassification(builder, CLASSIFICATIONOffset);
     ACM.addComment(builder, COMMENTOffset);
     ACM.addManeuvers(builder, MANEUVERSOffset);
     ACM.addCovData(builder, COV_DATAOffset);
@@ -149,7 +326,7 @@ public final class ACM extends com.google.flatbuffers.Table {
     return ACM.endACM(builder);
   }
 
-  public static void startACM(FlatBufferBuilder builder) { builder.startTable(14); }
+  public static void startACM(FlatBufferBuilder builder) { builder.startTable(35); }
   public static void addCcsdsAcmVers(FlatBufferBuilder builder, int CCSDS_ACM_VERSOffset) { builder.addOffset(0, CCSDS_ACM_VERSOffset, 0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -170,6 +347,35 @@ public final class ACM extends com.google.flatbuffers.Table {
   public static void startManeuversVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addManeuverable(FlatBufferBuilder builder, byte MANEUVERABLE) { builder.addByte(12, MANEUVERABLE, 0); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(13, COMMENTOffset, 0); }
+  public static void addClassification(FlatBufferBuilder builder, int CLASSIFICATIONOffset) { builder.addOffset(14, CLASSIFICATIONOffset, 0); }
+  public static void addMessageId(FlatBufferBuilder builder, int MESSAGE_IDOffset) { builder.addOffset(15, MESSAGE_IDOffset, 0); }
+  public static void addObjectDesignator(FlatBufferBuilder builder, int OBJECT_DESIGNATOROffset) { builder.addOffset(16, OBJECT_DESIGNATOROffset, 0); }
+  public static void addOriginatorPoc(FlatBufferBuilder builder, int ORIGINATOR_POCOffset) { builder.addOffset(17, ORIGINATOR_POCOffset, 0); }
+  public static void addOriginatorPosition(FlatBufferBuilder builder, int ORIGINATOR_POSITIONOffset) { builder.addOffset(18, ORIGINATOR_POSITIONOffset, 0); }
+  public static void addOriginatorPhone(FlatBufferBuilder builder, int ORIGINATOR_PHONEOffset) { builder.addOffset(19, ORIGINATOR_PHONEOffset, 0); }
+  public static void addOriginatorEmail(FlatBufferBuilder builder, int ORIGINATOR_EMAILOffset) { builder.addOffset(20, ORIGINATOR_EMAILOffset, 0); }
+  public static void addOriginatorAddress(FlatBufferBuilder builder, int ORIGINATOR_ADDRESSOffset) { builder.addOffset(21, ORIGINATOR_ADDRESSOffset, 0); }
+  public static void addOdmMsgLink(FlatBufferBuilder builder, int ODM_MSG_LINKOffset) { builder.addOffset(22, ODM_MSG_LINKOffset, 0); }
+  public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(23, CENTER_NAMEOffset, 0); }
+  public static void addAcmDataElements(FlatBufferBuilder builder, int ACM_DATA_ELEMENTSOffset) { builder.addOffset(24, ACM_DATA_ELEMENTSOffset, 0); }
+  public static void addStartTime(FlatBufferBuilder builder, int START_TIMEOffset) { builder.addOffset(25, START_TIMEOffset, 0); }
+  public static void addStopTime(FlatBufferBuilder builder, int STOP_TIMEOffset) { builder.addOffset(26, STOP_TIMEOffset, 0); }
+  public static void addTaimutcAtTzero(FlatBufferBuilder builder, double TAIMUTC_AT_TZERO) { builder.addDouble(27, TAIMUTC_AT_TZERO, Double.NaN); }
+  public static void addNextLeapEpoch(FlatBufferBuilder builder, int NEXT_LEAP_EPOCHOffset) { builder.addOffset(28, NEXT_LEAP_EPOCHOffset, 0); }
+  public static void addNextLeapTaimutc(FlatBufferBuilder builder, double NEXT_LEAP_TAIMUTC) { builder.addDouble(29, NEXT_LEAP_TAIMUTC, Double.NaN); }
+  public static void addAttBlocks(FlatBufferBuilder builder, int ATT_BLOCKSOffset) { builder.addOffset(30, ATT_BLOCKSOffset, 0); }
+  public static int createAttBlocksVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startAttBlocksVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addCovBlocks(FlatBufferBuilder builder, int COV_BLOCKSOffset) { builder.addOffset(31, COV_BLOCKSOffset, 0); }
+  public static int createCovBlocksVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startCovBlocksVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addManBlocks(FlatBufferBuilder builder, int MAN_BLOCKSOffset) { builder.addOffset(32, MAN_BLOCKSOffset, 0); }
+  public static int createManBlocksVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startManBlocksVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addDetermination(FlatBufferBuilder builder, int DETERMINATIONOffset) { builder.addOffset(33, DETERMINATIONOffset, 0); }
+  public static void addUserDefinedParameters(FlatBufferBuilder builder, int USER_DEFINED_PARAMETERSOffset) { builder.addOffset(34, USER_DEFINED_PARAMETERSOffset, 0); }
+  public static int createUserDefinedParametersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startUserDefinedParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endACM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

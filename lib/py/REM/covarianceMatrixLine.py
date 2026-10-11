@@ -205,8 +205,29 @@ class covarianceMatrixLine(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.
+    # covarianceMatrixLine
+    def COMMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix
+    # is expressed in, when it differs from the block's COV_REFERENCE_FRAME.
+    # covarianceMatrixLine
+    def COV_REFERENCE_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def covarianceMatrixLineStart(builder):
-    builder.StartObject(22)
+    builder.StartObject(24)
 
 def Start(builder):
     covarianceMatrixLineStart(builder)
@@ -343,12 +364,29 @@ def covarianceMatrixLineAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT):
 def AddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT):
     covarianceMatrixLineAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT)
 
+def covarianceMatrixLineAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    covarianceMatrixLineAddCOMMENT(builder, COMMENT)
+
+def covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REFERENCE_FRAME), 0)
+
+def AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME):
+    covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
+
 def covarianceMatrixLineEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return covarianceMatrixLineEnd(builder)
 
+import RFM
+try:
+    from typing import Optional
+except:
+    pass
 
 class covarianceMatrixLineT(object):
 
@@ -377,6 +415,8 @@ class covarianceMatrixLineT(object):
         CZ_DOT_X_DOT = 0.0,
         CZ_DOT_Y_DOT = 0.0,
         CZ_DOT_Z_DOT = 0.0,
+        COMMENT = None,
+        COV_REFERENCE_FRAME = None,
     ):
         self.EPOCH = EPOCH  # type: Optional[str]
         self.CX_X = CX_X  # type: float
@@ -400,6 +440,8 @@ class covarianceMatrixLineT(object):
         self.CZ_DOT_X_DOT = CZ_DOT_X_DOT  # type: float
         self.CZ_DOT_Y_DOT = CZ_DOT_Y_DOT  # type: float
         self.CZ_DOT_Z_DOT = CZ_DOT_Z_DOT  # type: float
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.COV_REFERENCE_FRAME = COV_REFERENCE_FRAME  # type: Optional[RFM.RFMT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -444,11 +486,18 @@ class covarianceMatrixLineT(object):
         self.CZ_DOT_X_DOT = covarianceMatrixLine.CZ_DOT_X_DOT()
         self.CZ_DOT_Y_DOT = covarianceMatrixLine.CZ_DOT_Y_DOT()
         self.CZ_DOT_Z_DOT = covarianceMatrixLine.CZ_DOT_Z_DOT()
+        self.COMMENT = covarianceMatrixLine.COMMENT()
+        if covarianceMatrixLine.COV_REFERENCE_FRAME() is not None:
+            self.COV_REFERENCE_FRAME = RFM.RFMT.InitFromObj(covarianceMatrixLine.COV_REFERENCE_FRAME())
 
     # covarianceMatrixLineT
     def Pack(self, builder):
         if self.EPOCH is not None:
             EPOCH = builder.CreateString(self.EPOCH)
+        if self.COMMENT is not None:
+            COMMENT = builder.CreateString(self.COMMENT)
+        if self.COV_REFERENCE_FRAME is not None:
+            COV_REFERENCE_FRAME = self.COV_REFERENCE_FRAME.Pack(builder)
         covarianceMatrixLineStart(builder)
         if self.EPOCH is not None:
             covarianceMatrixLineAddEPOCH(builder, EPOCH)
@@ -473,5 +522,9 @@ class covarianceMatrixLineT(object):
         covarianceMatrixLineAddCZ_DOT_X_DOT(builder, self.CZ_DOT_X_DOT)
         covarianceMatrixLineAddCZ_DOT_Y_DOT(builder, self.CZ_DOT_Y_DOT)
         covarianceMatrixLineAddCZ_DOT_Z_DOT(builder, self.CZ_DOT_Z_DOT)
+        if self.COMMENT is not None:
+            covarianceMatrixLineAddCOMMENT(builder, COMMENT)
+        if self.COV_REFERENCE_FRAME is not None:
+            covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
         covarianceMatrixLine = covarianceMatrixLineEnd(builder)
         return covarianceMatrixLine

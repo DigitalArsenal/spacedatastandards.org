@@ -155,7 +155,7 @@
     },
     "ncdContainerFormat" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "SPK_DAF", "SP3_C", "SP3_D", "CODE_500", "SCENARIO_EPOCH_EPHEMERIS_TEXT", "SCENARIO_EPOCH_ATTITUDE_TEXT", "CCSDS_OEM_KVN", "CCSDS_OEM_XML", "CCSDS_AEM_KVN", "CCSDS_AEM_XML", "CCSDS_TDM_KVN", "CCSDS_TDM_XML", "PROVIDER_DEFINED"]
+      "enum": ["UNSPECIFIED", "SPK_DAF", "SP3_C", "SP3_D", "CODE_500", "SCENARIO_EPOCH_EPHEMERIS_TEXT", "SCENARIO_EPOCH_ATTITUDE_TEXT", "CCSDS_OEM_KVN", "CCSDS_OEM_XML", "CCSDS_AEM_KVN", "CCSDS_AEM_XML", "CCSDS_TDM_KVN", "CCSDS_TDM_XML", "CCSDS_OMM_KVN", "CCSDS_OMM_XML", "CCSDS_OPM_KVN", "CCSDS_OPM_XML", "CCSDS_OCM_KVN", "CCSDS_OCM_XML", "CCSDS_CDM_KVN", "CCSDS_CDM_XML", "CCSDS_APM_KVN", "CCSDS_APM_XML", "CCSDS_ACM_KVN", "CCSDS_ACM_XML", "CCSDS_RDM_KVN", "CCSDS_RDM_XML", "PROVIDER_DEFINED"]
     },
     "DataType" : {
       "type" : "string",
@@ -304,6 +304,10 @@
     "covarianceAlgorithm" : {
       "type" : "string",
       "enum": ["CALCULATED", "DEFAULT"]
+    },
+    "cdmManeuverable" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "YES", "NO", "NOT_APPLICABLE"]
     },
     "cqrProbabilityAlgorithm" : {
       "type" : "string",
@@ -3846,7 +3850,7 @@
               },
         "COMMENT" : {
                 "type" : "string",
-                "description" : "COMMENT (O)"
+                "description" : "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header."
               },
         "EPOCH" : {
                 "type" : "string",
@@ -3963,6 +3967,33 @@
         "USER_DEFINED_MICROSECONDS" : {
                 "type" : "number",
                 "description" : "USER_DEFINED_MICROSECONDS [O, units per ICD]"
+              },
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S."
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message."
+              },
+        "USER_DEFINED_PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OMMUserDefinedParameter"},
+                "description" : "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OMMUserDefinedParameter" : {
+      "type" : "object",
+      "description" : "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+      "properties" : {
+        "PARAM_NAME" : {
+                "type" : "string",
+                "description" : "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+              },
+        "PARAM_VALUE" : {
+                "type" : "string",
+                "description" : "The value as written, unit-less text"
               }
       },
       "additionalProperties" : false
@@ -4141,6 +4172,14 @@
         "CZ_DOT_Z_DOT" : {
                 "type" : "number",
                 "description" : "Covariance matrix [6,6] km**2/s**2"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed."
+              },
+        "COV_REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME."
               }
       },
       "additionalProperties" : false
@@ -4259,6 +4298,14 @@
         "EPHEMERIS_DATA_BLOCK" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ephemerisDataBlock"},
                 "description" : "Array of ephemeris data blocks"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed."
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
               }
       },
       "additionalProperties" : false
@@ -4638,6 +4685,134 @@
         "SRP_UNCERTAINTY" : {
                 "type" : "number",
                 "description" : "Uncertainty in the solar radiation pressure coefficient."
+              },
+        "MANUFACTURER" : {
+                "type" : "string",
+                "description" : "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer."
+              },
+        "BUS_MODEL" : {
+                "type" : "string",
+                "description" : "BUS_MODEL: the object's bus model."
+              },
+        "DOCKED_WITH" : {
+                "type" : "string",
+                "description" : "DOCKED_WITH: comma-separated names of the objects it is docked with."
+              },
+        "INITIAL_WET_MASS" : {
+                "type" : "number",
+                "description" : "INITIAL_WET_MASS in kg, NaN when not stated."
+              },
+        "OEB_PARENT_FRAME" : {
+                "type" : "string",
+                "description" : "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in."
+              },
+        "OEB_PARENT_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "OEB_PARENT_FRAME_EPOCH."
+              },
+        "AREA_MIN_FOR_PC" : {
+                "type" : "number",
+                "description" : "AREA_MIN_FOR_PC in m**2, NaN when not stated."
+              },
+        "AREA_MAX_FOR_PC" : {
+                "type" : "number",
+                "description" : "AREA_MAX_FOR_PC in m**2, NaN when not stated."
+              },
+        "AREA_TYP_FOR_PC" : {
+                "type" : "number",
+                "description" : "AREA_TYP_FOR_PC in m**2, NaN when not stated."
+              },
+        "RCS" : {
+                "type" : "number",
+                "description" : "RCS in m**2, NaN when not stated."
+              },
+        "RCS_MIN" : {
+                "type" : "number",
+                "description" : "RCS_MIN in m**2, NaN when not stated."
+              },
+        "RCS_MAX" : {
+                "type" : "number",
+                "description" : "RCS_MAX in m**2, NaN when not stated."
+              },
+        "VM_ABSOLUTE" : {
+                "type" : "number",
+                "description" : "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated."
+              },
+        "VM_APPARENT_MIN" : {
+                "type" : "number",
+                "description" : "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated."
+              },
+        "VM_APPARENT" : {
+                "type" : "number",
+                "description" : "VM_APPARENT: apparent visual magnitude, NaN when not stated."
+              },
+        "VM_APPARENT_MAX" : {
+                "type" : "number",
+                "description" : "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated."
+              },
+        "REFLECTANCE" : {
+                "type" : "number",
+                "description" : "REFLECTANCE: typical reflectivity, NaN when not stated."
+              },
+        "ATT_CONTROL_MODE" : {
+                "type" : "string",
+                "description" : "ATT_CONTROL_MODE."
+              },
+        "ATT_ACTUATOR_TYPE" : {
+                "type" : "string",
+                "description" : "ATT_ACTUATOR_TYPE."
+              },
+        "ATT_KNOWLEDGE" : {
+                "type" : "number",
+                "description" : "ATT_KNOWLEDGE in degrees, NaN when not stated."
+              },
+        "ATT_CONTROL" : {
+                "type" : "number",
+                "description" : "ATT_CONTROL in degrees, NaN when not stated."
+              },
+        "ATT_POINTING" : {
+                "type" : "number",
+                "description" : "ATT_POINTING in degrees, NaN when not stated."
+              },
+        "AVG_MANEUVER_FREQ" : {
+                "type" : "number",
+                "description" : "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated."
+              },
+        "MAX_THRUST" : {
+                "type" : "number",
+                "description" : "MAX_THRUST in N, NaN when not stated."
+              },
+        "DV_BOL" : {
+                "type" : "number",
+                "description" : "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated."
+              },
+        "DV_REMAINING" : {
+                "type" : "number",
+                "description" : "DV_REMAINING in km/s, NaN when not stated."
+              },
+        "IXX" : {
+                "type" : "number",
+                "description" : "IXX in kg*m**2, NaN when not stated."
+              },
+        "IYY" : {
+                "type" : "number",
+                "description" : "IYY in kg*m**2, NaN when not stated."
+              },
+        "IZZ" : {
+                "type" : "number",
+                "description" : "IZZ in kg*m**2, NaN when not stated."
+              },
+        "IXY" : {
+                "type" : "number",
+                "description" : "IXY in kg*m**2, NaN when not stated."
+              },
+        "IXZ" : {
+                "type" : "number",
+                "description" : "IXZ in kg*m**2, NaN when not stated."
+              },
+        "IYZ" : {
+                "type" : "number",
+                "description" : "IYZ in kg*m**2, NaN when not stated."
               }
       },
       "additionalProperties" : false
@@ -4724,6 +4899,78 @@
         "FIXED_GEOMAG_AP" : {
                 "type" : "number",
                 "description" : "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP)."
+              },
+        "ATMOSPHERIC_MODEL_NAME" : {
+                "type" : "string",
+                "description" : "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one."
+              },
+        "EQUATORIAL_RADIUS" : {
+                "type" : "number",
+                "description" : "EQUATORIAL_RADIUS in km, NaN when not stated."
+              },
+        "CENTRAL_BODY_ROTATION" : {
+                "type" : "number",
+                "description" : "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated."
+              },
+        "OBLATE_FLATTENING" : {
+                "type" : "number",
+                "description" : "OBLATE_FLATTENING, NaN when not stated."
+              },
+        "REDUCTION_THEORY" : {
+                "type" : "string",
+                "description" : "REDUCTION_THEORY."
+              },
+        "ALBEDO_GRID_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "ALBEDO_GRID_SIZE."
+              },
+        "SHADOW_MODEL" : {
+                "type" : "string",
+                "description" : "SHADOW_MODEL."
+              },
+        "SHADOW_BODIES" : {
+                "type" : "string",
+                "description" : "SHADOW_BODIES."
+              },
+        "SW_DATA_SOURCE" : {
+                "type" : "string",
+                "description" : "SW_DATA_SOURCE: the space weather data source."
+              },
+        "SW_DATA_EPOCH" : {
+                "type" : "string",
+                "description" : "SW_DATA_EPOCH."
+              },
+        "SW_INTERP_METHOD" : {
+                "type" : "string",
+                "description" : "SW_INTERP_METHOD."
+              },
+        "FIXED_GEOMAG_DST" : {
+                "type" : "number",
+                "description" : "FIXED_GEOMAG_DST in nT, NaN when not stated."
+              },
+        "FIXED_M10P7" : {
+                "type" : "number",
+                "description" : "FIXED_M10P7, NaN when not stated."
+              },
+        "FIXED_M10P7_MEAN" : {
+                "type" : "number",
+                "description" : "FIXED_M10P7_MEAN, NaN when not stated."
+              },
+        "FIXED_S10P7" : {
+                "type" : "number",
+                "description" : "FIXED_S10P7, NaN when not stated."
+              },
+        "FIXED_S10P7_MEAN" : {
+                "type" : "number",
+                "description" : "FIXED_S10P7_MEAN, NaN when not stated."
+              },
+        "FIXED_Y10P7" : {
+                "type" : "number",
+                "description" : "FIXED_Y10P7, NaN when not stated."
+              },
+        "FIXED_Y10P7_MEAN" : {
+                "type" : "number",
+                "description" : "FIXED_Y10P7_MEAN, NaN when not stated."
               }
       },
       "additionalProperties" : false
@@ -5006,6 +5253,244 @@
         "OD_DYNAMIC_PARAMETERS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/OCMDynamicParameter"},
                 "description" : "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+              },
+        "DAYS_SINCE_FIRST_OBS" : {
+                "type" : "number",
+                "description" : "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated."
+              },
+        "DAYS_SINCE_LAST_OBS" : {
+                "type" : "number",
+                "description" : "DAYS_SINCE_LAST_OBS, NaN when not stated."
+              },
+        "RECOMMENDED_OD_SPAN" : {
+                "type" : "number",
+                "description" : "RECOMMENDED_OD_SPAN in days, NaN when not stated."
+              },
+        "ACTUAL_OD_SPAN" : {
+                "type" : "number",
+                "description" : "ACTUAL_OD_SPAN in days, NaN when not stated."
+              },
+        "OBS_AVAILABLE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED."
+              },
+        "TRACKS_AVAILABLE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED."
+              },
+        "MAXIMUM_OBS_GAP" : {
+                "type" : "number",
+                "description" : "MAXIMUM_OBS_GAP in days, NaN when not stated."
+              },
+        "OD_EPOCH_EIGMAJ" : {
+                "type" : "number",
+                "description" : "OD_EPOCH_EIGMAJ in m, NaN when not stated."
+              },
+        "OD_EPOCH_EIGINT" : {
+                "type" : "number",
+                "description" : "OD_EPOCH_EIGINT in m, NaN when not stated."
+              },
+        "OD_EPOCH_EIGMIN" : {
+                "type" : "number",
+                "description" : "OD_EPOCH_EIGMIN in m, NaN when not stated."
+              },
+        "OD_MAX_PRED_EIGMAJ" : {
+                "type" : "number",
+                "description" : "OD_MAX_PRED_EIGMAJ in m, NaN when not stated."
+              },
+        "OD_MIN_PRED_EIGMIN" : {
+                "type" : "number",
+                "description" : "OD_MIN_PRED_EIGMIN in m, NaN when not stated."
+              },
+        "OD_CONFIDENCE" : {
+                "type" : "number",
+                "description" : "OD_CONFIDENCE in percent, NaN when not stated."
+              },
+        "GDOP" : {
+                "type" : "number",
+                "description" : "GDOP, NaN when not stated."
+              },
+        "SOLVE_N" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "SOLVE_N: the number of solved-for states."
+              },
+        "SOLVE_STATES" : {
+                "type" : "string",
+                "description" : "SOLVE_STATES: the solved-for states, as written."
+              },
+        "CONSIDER_N" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "CONSIDER_N: the number of consider parameters."
+              },
+        "CONSIDER_PARAMS" : {
+                "type" : "string",
+                "description" : "CONSIDER_PARAMS: the consider parameters, as written."
+              },
+        "SENSORS_N" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "SENSORS_N: the number of sensors."
+              },
+        "SENSORS" : {
+                "type" : "string",
+                "description" : "SENSORS: the sensors, as written."
+              },
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OCMTrajectoryBlock" : {
+      "type" : "object",
+      "description" : "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of this block, joined by a line feed."
+              },
+        "TRAJ_ID" : {
+                "type" : "string",
+                "description" : "TRAJ_ID."
+              },
+        "TRAJ_PREV_ID" : {
+                "type" : "string",
+                "description" : "TRAJ_PREV_ID."
+              },
+        "TRAJ_NEXT_ID" : {
+                "type" : "string",
+                "description" : "TRAJ_NEXT_ID."
+              },
+        "TRAJ_BASIS" : {
+                "type" : "string",
+                "description" : "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER."
+              },
+        "TRAJ_BASIS_ID" : {
+                "type" : "string",
+                "description" : "TRAJ_BASIS_ID."
+              },
+        "INTERPOLATION" : {
+                "type" : "string",
+                "description" : "INTERPOLATION: the recommended interpolation method."
+              },
+        "INTERPOLATION_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "INTERPOLATION_DEGREE."
+              },
+        "PROPAGATOR" : {
+                "type" : "string",
+                "description" : "PROPAGATOR."
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "CENTER_NAME."
+              },
+        "TRAJ_REF_FRAME" : {
+                "type" : "string",
+                "description" : "TRAJ_REF_FRAME."
+              },
+        "TRAJ_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "TRAJ_FRAME_EPOCH."
+              },
+        "USEABLE_START_TIME" : {
+                "type" : "string",
+                "description" : "USEABLE_START_TIME."
+              },
+        "USEABLE_STOP_TIME" : {
+                "type" : "string",
+                "description" : "USEABLE_STOP_TIME."
+              },
+        "ORB_REVNUM" : {
+                "type" : "number",
+                "description" : "ORB_REVNUM, NaN when not stated."
+              },
+        "ORB_REVNUM_BASIS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated."
+              },
+        "TRAJ_TYPE" : {
+                "type" : "string",
+                "description" : "TRAJ_TYPE as written, for example CARTPV."
+              },
+        "ORB_AVERAGING" : {
+                "type" : "string",
+                "description" : "ORB_AVERAGING."
+              },
+        "TRAJ_UNITS" : {
+                "type" : "string",
+                "description" : "TRAJ_UNITS."
+              },
+        "LINES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The data lines, as written."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OCMCovarianceBlock" : {
+      "type" : "object",
+      "description" : "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of this block, joined by a line feed."
+              },
+        "COV_ID" : {
+                "type" : "string",
+                "description" : "COV_ID."
+              },
+        "COV_PREV_ID" : {
+                "type" : "string",
+                "description" : "COV_PREV_ID."
+              },
+        "COV_NEXT_ID" : {
+                "type" : "string",
+                "description" : "COV_NEXT_ID."
+              },
+        "COV_BASIS" : {
+                "type" : "string",
+                "description" : "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER."
+              },
+        "COV_BASIS_ID" : {
+                "type" : "string",
+                "description" : "COV_BASIS_ID."
+              },
+        "COV_REF_FRAME" : {
+                "type" : "string",
+                "description" : "COV_REF_FRAME."
+              },
+        "COV_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "COV_FRAME_EPOCH."
+              },
+        "COV_SCALE_MIN" : {
+                "type" : "number",
+                "description" : "COV_SCALE_MIN, NaN when not stated."
+              },
+        "COV_SCALE_MAX" : {
+                "type" : "number",
+                "description" : "COV_SCALE_MAX, NaN when not stated."
+              },
+        "COV_CONFIDENCE" : {
+                "type" : "number",
+                "description" : "COV_CONFIDENCE in percent, NaN when not stated."
+              },
+        "COV_TYPE" : {
+                "type" : "string",
+                "description" : "COV_TYPE as written, for example CARTPV."
+              },
+        "COV_ORDERING" : {
+                "$ref" : "#/definitions/covarianceOrdering",
+                "description" : "COV_ORDERING."
+              },
+        "COV_UNITS" : {
+                "type" : "string",
+                "description" : "COV_UNITS."
+              },
+        "LINES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The data lines, as written."
               }
       },
       "additionalProperties" : false
@@ -5143,6 +5628,14 @@
         "COV_UNITS" : {
                 "type" : "array", "items" : {"type" : "string"},
                 "description" : "Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), \"n/a\" for a\ndimensionless one."
+              },
+        "TRAJECTORY_BLOCKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OCMTrajectoryBlock"},
+                "description" : "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states."
+              },
+        "COVARIANCE_BLOCKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OCMCovarianceBlock"},
+                "description" : "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
               }
       },
       "additionalProperties" : false
@@ -5586,13 +6079,29 @@
         "COVARIANCE" : {
                 "type" : "array", "items" : {"type" : "number"},
                 "description" : "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]"
+              },
+        "OBJECT_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,\nas written. A numeric designator is also OBJECT.NORAD_CAT_ID."
+              },
+        "CATALOG_NAME" : {
+                "type" : "string",
+                "description" : "CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in."
+              },
+        "MANEUVERABLE" : {
+                "$ref" : "#/definitions/cdmManeuverable",
+                "description" : "MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the\nsame fact as a flag, true for YES."
+              },
+        "CD_AREA_OVER_MASS" : {
+                "type" : "number",
+                "description" : "CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg."
               }
       },
       "additionalProperties" : false
     },
     "CDM" : {
       "type" : "object",
-      "description" : "Conjunction Data Message",
+      "description" : "Conjunction Data Message\n\nUnits of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,\nSCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part\nof each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and\nkm**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives\nMISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of\nCOVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust\nterms) are held as the message states them.",
       "properties" : {
         "CCSDS_CDM_VERS" : {
                 "type" : "number",
@@ -5709,6 +6218,10 @@
         "OBJECT2_DATASOURCE" : {
                 "$ref" : "#/definitions/PNM",
                 "description" : "Data Source for the positional information for Object 2"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of the message header and of its relative metadata and data\n(CCSDS 508.0-B-1), in message order, joined by a line feed."
               }
       },
       "additionalProperties" : false

@@ -400,6 +400,52 @@ class CDMObject : Table() {
         }
     val covarianceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(76, 8)
     fun covarianceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 76, 8)
+    /**
+     * OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+     * as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+     */
+    val objectDesignator : String?
+        get() {
+            val o = __offset(78)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val objectDesignatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(78, 1)
+    fun objectDesignatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 78, 1)
+    /**
+     * CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+     */
+    val catalogName : String?
+        get() {
+            val o = __offset(80)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val catalogNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(80, 1)
+    fun catalogNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 80, 1)
+    /**
+     * MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+     * same fact as a flag, true for YES.
+     */
+    val maneuverable : Byte
+        get() {
+            val o = __offset(82)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+     */
+    val cdAreaOverMass : Double
+        get() {
+            val o = __offset(84)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCDMObject(_bb: ByteBuffer): CDMObject = getRootAsCDMObject(_bb, CDMObject())
@@ -407,8 +453,9 @@ class CDMObject : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCDMObject(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, pocOffset: Int, operatorContactPositionOffset: Int, operatorOrganizationOffset: Int, ephemerisNameOffset: Int, covarianceMethod: Byte, referenceFrameOffset: Int, gravityModelOffset: Int, atmosphericModelOffset: Int, nBodyPerturbationsOffset: Int, solarRadPressure: Boolean, earthTides: Boolean, intrackThrust: Boolean, timeLastobStartOffset: Int, timeLastobEndOffset: Int, recommendedOdSpan: Double, actualOdSpan: Double, obsAvailable: UInt, obsUsed: UInt, tracksAvailable: UInt, tracksUsed: UInt, residualsAccepted: Double, weightedRms: Double, areaPc: Double, areaDrg: Double, areaSrp: Double, crAreaOverMass: Double, thrustAcceleration: Double, sedr: Double, x: Double, y: Double, z: Double, xDot: Double, yDot: Double, zDot: Double, covarianceOffset: Int) : Int {
-            builder.startTable(37)
+        fun createCDMObject(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, pocOffset: Int, operatorContactPositionOffset: Int, operatorOrganizationOffset: Int, ephemerisNameOffset: Int, covarianceMethod: Byte, referenceFrameOffset: Int, gravityModelOffset: Int, atmosphericModelOffset: Int, nBodyPerturbationsOffset: Int, solarRadPressure: Boolean, earthTides: Boolean, intrackThrust: Boolean, timeLastobStartOffset: Int, timeLastobEndOffset: Int, recommendedOdSpan: Double, actualOdSpan: Double, obsAvailable: UInt, obsUsed: UInt, tracksAvailable: UInt, tracksUsed: UInt, residualsAccepted: Double, weightedRms: Double, areaPc: Double, areaDrg: Double, areaSrp: Double, crAreaOverMass: Double, thrustAcceleration: Double, sedr: Double, x: Double, y: Double, z: Double, xDot: Double, yDot: Double, zDot: Double, covarianceOffset: Int, objectDesignatorOffset: Int, catalogNameOffset: Int, maneuverable: Byte, cdAreaOverMass: Double) : Int {
+            builder.startTable(41)
+            addCDAREAOVERMASS(builder, cdAreaOverMass)
             addZDOT(builder, zDot)
             addYDOT(builder, yDot)
             addXDOT(builder, xDot)
@@ -425,6 +472,8 @@ class CDMObject : Table() {
             addRESIDUALSACCEPTED(builder, residualsAccepted)
             addACTUALODSPAN(builder, actualOdSpan)
             addRECOMMENDEDODSPAN(builder, recommendedOdSpan)
+            addCATALOGNAME(builder, catalogNameOffset)
+            addOBJECTDESIGNATOR(builder, objectDesignatorOffset)
             addCOVARIANCE(builder, covarianceOffset)
             addTRACKSUSED(builder, tracksUsed)
             addTRACKSAVAILABLE(builder, tracksAvailable)
@@ -442,13 +491,14 @@ class CDMObject : Table() {
             addPOC(builder, pocOffset)
             addOBJECT(builder, objectOffset)
             addCOMMENT(builder, commentOffset)
+            addMANEUVERABLE(builder, maneuverable)
             addINTRACKTHRUST(builder, intrackThrust)
             addEARTHTIDES(builder, earthTides)
             addSOLARRADPRESSURE(builder, solarRadPressure)
             addCOVARIANCEMETHOD(builder, covarianceMethod)
             return endCDMObject(builder)
         }
-        fun startCDMObject(builder: FlatBufferBuilder) = builder.startTable(37)
+        fun startCDMObject(builder: FlatBufferBuilder) = builder.startTable(41)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun addOBJECT(builder: FlatBufferBuilder, object: Int) = builder.addOffset(1, object, 0)
         fun addPOC(builder: FlatBufferBuilder, poc: Int) = builder.addOffset(2, poc, 0)
@@ -494,6 +544,10 @@ class CDMObject : Table() {
             return builder.endVector()
         }
         fun startCovarianceVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addOBJECTDESIGNATOR(builder: FlatBufferBuilder, objectDesignator: Int) = builder.addOffset(37, objectDesignator, 0)
+        fun addCATALOGNAME(builder: FlatBufferBuilder, catalogName: Int) = builder.addOffset(38, catalogName, 0)
+        fun addMANEUVERABLE(builder: FlatBufferBuilder, maneuverable: Byte) = builder.addByte(39, maneuverable, 0)
+        fun addCDAREAOVERMASS(builder: FlatBufferBuilder, cdAreaOverMass: Double) = builder.addDouble(40, cdAreaOverMass, 0.0)
         fun endCDMObject(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

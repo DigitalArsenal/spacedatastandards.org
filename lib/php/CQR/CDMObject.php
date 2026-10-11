@@ -392,22 +392,58 @@ class CDMObject extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+    /// as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+    public function getOBJECT_DESIGNATOR()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+    public function getCATALOG_NAME()
+    {
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+    /// same fact as a flag, true for YES.
+    /**
+     * @return sbyte
+     */
+    public function getMANEUVERABLE()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \cdmManeuverable::UNSPECIFIED;
+    }
+
+    /// CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+    /**
+     * @return double
+     */
+    public function getCD_AREA_OVER_MASS()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCDMObject(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(37);
+        $builder->StartObject(41);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CDMObject
      */
-    public static function createCDMObject(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $POC, $OPERATOR_CONTACT_POSITION, $OPERATOR_ORGANIZATION, $EPHEMERIS_NAME, $COVARIANCE_METHOD, $REFERENCE_FRAME, $GRAVITY_MODEL, $ATMOSPHERIC_MODEL, $N_BODY_PERTURBATIONS, $SOLAR_RAD_PRESSURE, $EARTH_TIDES, $INTRACK_THRUST, $TIME_LASTOB_START, $TIME_LASTOB_END, $RECOMMENDED_OD_SPAN, $ACTUAL_OD_SPAN, $OBS_AVAILABLE, $OBS_USED, $TRACKS_AVAILABLE, $TRACKS_USED, $RESIDUALS_ACCEPTED, $WEIGHTED_RMS, $AREA_PC, $AREA_DRG, $AREA_SRP, $CR_AREA_OVER_MASS, $THRUST_ACCELERATION, $SEDR, $X, $Y, $Z, $X_DOT, $Y_DOT, $Z_DOT, $COVARIANCE)
+    public static function createCDMObject(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $POC, $OPERATOR_CONTACT_POSITION, $OPERATOR_ORGANIZATION, $EPHEMERIS_NAME, $COVARIANCE_METHOD, $REFERENCE_FRAME, $GRAVITY_MODEL, $ATMOSPHERIC_MODEL, $N_BODY_PERTURBATIONS, $SOLAR_RAD_PRESSURE, $EARTH_TIDES, $INTRACK_THRUST, $TIME_LASTOB_START, $TIME_LASTOB_END, $RECOMMENDED_OD_SPAN, $ACTUAL_OD_SPAN, $OBS_AVAILABLE, $OBS_USED, $TRACKS_AVAILABLE, $TRACKS_USED, $RESIDUALS_ACCEPTED, $WEIGHTED_RMS, $AREA_PC, $AREA_DRG, $AREA_SRP, $CR_AREA_OVER_MASS, $THRUST_ACCELERATION, $SEDR, $X, $Y, $Z, $X_DOT, $Y_DOT, $Z_DOT, $COVARIANCE, $OBJECT_DESIGNATOR, $CATALOG_NAME, $MANEUVERABLE, $CD_AREA_OVER_MASS)
     {
-        $builder->startObject(37);
+        $builder->startObject(41);
         self::addCOMMENT($builder, $COMMENT);
         self::addOBJECT($builder, $OBJECT);
         self::addPOC($builder, $POC);
@@ -445,6 +481,10 @@ class CDMObject extends Table
         self::addY_DOT($builder, $Y_DOT);
         self::addZ_DOT($builder, $Z_DOT);
         self::addCOVARIANCE($builder, $COVARIANCE);
+        self::addOBJECT_DESIGNATOR($builder, $OBJECT_DESIGNATOR);
+        self::addCATALOG_NAME($builder, $CATALOG_NAME);
+        self::addMANEUVERABLE($builder, $MANEUVERABLE);
+        self::addCD_AREA_OVER_MASS($builder, $CD_AREA_OVER_MASS);
         $o = $builder->endObject();
         return $o;
     }
@@ -841,6 +881,46 @@ class CDMObject extends Table
     public static function startCOVARIANCEVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_DESIGNATOR(FlatBufferBuilder $builder, $OBJECT_DESIGNATOR)
+    {
+        $builder->addOffsetX(37, $OBJECT_DESIGNATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCATALOG_NAME(FlatBufferBuilder $builder, $CATALOG_NAME)
+    {
+        $builder->addOffsetX(38, $CATALOG_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addMANEUVERABLE(FlatBufferBuilder $builder, $MANEUVERABLE)
+    {
+        $builder->addSbyteX(39, $MANEUVERABLE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCD_AREA_OVER_MASS(FlatBufferBuilder $builder, $CD_AREA_OVER_MASS)
+    {
+        $builder->addDoubleX(40, $CD_AREA_OVER_MASS, 0.0);
     }
 
     /**

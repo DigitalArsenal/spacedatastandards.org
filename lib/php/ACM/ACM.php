@@ -175,11 +175,223 @@ class ACM extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \maneuverableFlag::YES;
     }
 
-    /// Additional comments
+    /// COMMENT lines of the message header, metadata and user-defined data
+    /// (CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,
+    /// covariance, maneuver or determination block's own comments stay with it.
     public function getCOMMENT()
     {
         $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CLASSIFICATION of the message: the optional header keyword stating its
+    /// security classification or handling caveat.
+    public function getCLASSIFICATION()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+    /// unique for this message.
+    public function getMESSAGE_ID()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.
+    /// OBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH
+    /// above its EPOCH_TZERO, the epoch every relative time is measured from.
+    public function getOBJECT_DESIGNATOR()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ORIGINATOR_POC: point of contact at the originator.
+    public function getORIGINATOR_POC()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ORIGINATOR_POSITION: position of the point of contact.
+    public function getORIGINATOR_POSITION()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ORIGINATOR_PHONE: telephone number of the point of contact.
+    public function getORIGINATOR_PHONE()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ORIGINATOR_EMAIL: email address of the point of contact.
+    public function getORIGINATOR_EMAIL()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ORIGINATOR_ADDRESS: postal address of the point of contact.
+    public function getORIGINATOR_ADDRESS()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.
+    public function getODM_MSG_LINK()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CENTER_NAME: the orbit center, when the message states one.
+    public function getCENTER_NAME()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.
+    public function getACM_DATA_ELEMENTS()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// START_TIME: start of the total time span the message covers.
+    public function getSTART_TIME()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// STOP_TIME: end of the total time span the message covers.
+    public function getSTOP_TIME()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// TAIMUTC_AT_TZERO in seconds, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getTAIMUTC_AT_TZERO()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.
+    public function getNEXT_LEAP_EPOCH()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getNEXT_LEAP_TAIMUTC()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Attitude state time histories (ATT_START blocks), in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getATT_BLOCKS($j)
+    {
+        $o = $this->__offset(64);
+        $obj = new ACMAttitudeBlock();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getATT_BLOCKSLength()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Covariance time histories (COV_START blocks), in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getCOV_BLOCKS($j)
+    {
+        $o = $this->__offset(66);
+        $obj = new ACMCovarianceBlock();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOV_BLOCKSLength()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Maneuver specifications (MAN_START blocks), in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getMAN_BLOCKS($j)
+    {
+        $o = $this->__offset(68);
+        $obj = new ACMManeuverBlock();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMAN_BLOCKSLength()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// The attitude determination data (AD_START block), when the message has them.
+    public function getDETERMINATION()
+    {
+        $obj = new ACMDetermination();
+        $o = $this->__offset(70);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Every USER_DEFINED parameter of the message, in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getUSER_DEFINED_PARAMETERS($j)
+    {
+        $o = $this->__offset(72);
+        $obj = new ACMUserDefinedParameter();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUSER_DEFINED_PARAMETERSLength()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /**
@@ -188,16 +400,16 @@ class ACM extends Table
      */
     public static function startACM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(35);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACM
      */
-    public static function createACM(FlatBufferBuilder $builder, $CCSDS_ACM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CATALOG_NAME, $EPOCH, $TIME_SYSTEM, $ATT_STATES, $PHYS_PROPERTIES, $COV_DATA, $MANEUVERS, $MANEUVERABLE, $COMMENT)
+    public static function createACM(FlatBufferBuilder $builder, $CCSDS_ACM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CATALOG_NAME, $EPOCH, $TIME_SYSTEM, $ATT_STATES, $PHYS_PROPERTIES, $COV_DATA, $MANEUVERS, $MANEUVERABLE, $COMMENT, $CLASSIFICATION, $MESSAGE_ID, $OBJECT_DESIGNATOR, $ORIGINATOR_POC, $ORIGINATOR_POSITION, $ORIGINATOR_PHONE, $ORIGINATOR_EMAIL, $ORIGINATOR_ADDRESS, $ODM_MSG_LINK, $CENTER_NAME, $ACM_DATA_ELEMENTS, $START_TIME, $STOP_TIME, $TAIMUTC_AT_TZERO, $NEXT_LEAP_EPOCH, $NEXT_LEAP_TAIMUTC, $ATT_BLOCKS, $COV_BLOCKS, $MAN_BLOCKS, $DETERMINATION, $USER_DEFINED_PARAMETERS)
     {
-        $builder->startObject(14);
+        $builder->startObject(35);
         self::addCCSDS_ACM_VERS($builder, $CCSDS_ACM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -212,6 +424,27 @@ class ACM extends Table
         self::addMANEUVERS($builder, $MANEUVERS);
         self::addMANEUVERABLE($builder, $MANEUVERABLE);
         self::addCOMMENT($builder, $COMMENT);
+        self::addCLASSIFICATION($builder, $CLASSIFICATION);
+        self::addMESSAGE_ID($builder, $MESSAGE_ID);
+        self::addOBJECT_DESIGNATOR($builder, $OBJECT_DESIGNATOR);
+        self::addORIGINATOR_POC($builder, $ORIGINATOR_POC);
+        self::addORIGINATOR_POSITION($builder, $ORIGINATOR_POSITION);
+        self::addORIGINATOR_PHONE($builder, $ORIGINATOR_PHONE);
+        self::addORIGINATOR_EMAIL($builder, $ORIGINATOR_EMAIL);
+        self::addORIGINATOR_ADDRESS($builder, $ORIGINATOR_ADDRESS);
+        self::addODM_MSG_LINK($builder, $ODM_MSG_LINK);
+        self::addCENTER_NAME($builder, $CENTER_NAME);
+        self::addACM_DATA_ELEMENTS($builder, $ACM_DATA_ELEMENTS);
+        self::addSTART_TIME($builder, $START_TIME);
+        self::addSTOP_TIME($builder, $STOP_TIME);
+        self::addTAIMUTC_AT_TZERO($builder, $TAIMUTC_AT_TZERO);
+        self::addNEXT_LEAP_EPOCH($builder, $NEXT_LEAP_EPOCH);
+        self::addNEXT_LEAP_TAIMUTC($builder, $NEXT_LEAP_TAIMUTC);
+        self::addATT_BLOCKS($builder, $ATT_BLOCKS);
+        self::addCOV_BLOCKS($builder, $COV_BLOCKS);
+        self::addMAN_BLOCKS($builder, $MAN_BLOCKS);
+        self::addDETERMINATION($builder, $DETERMINATION);
+        self::addUSER_DEFINED_PARAMETERS($builder, $USER_DEFINED_PARAMETERS);
         $o = $builder->endObject();
         return $o;
     }
@@ -426,6 +659,312 @@ class ACM extends Table
     public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
     {
         $builder->addOffsetX(13, $COMMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCLASSIFICATION(FlatBufferBuilder $builder, $CLASSIFICATION)
+    {
+        $builder->addOffsetX(14, $CLASSIFICATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMESSAGE_ID(FlatBufferBuilder $builder, $MESSAGE_ID)
+    {
+        $builder->addOffsetX(15, $MESSAGE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_DESIGNATOR(FlatBufferBuilder $builder, $OBJECT_DESIGNATOR)
+    {
+        $builder->addOffsetX(16, $OBJECT_DESIGNATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIGINATOR_POC(FlatBufferBuilder $builder, $ORIGINATOR_POC)
+    {
+        $builder->addOffsetX(17, $ORIGINATOR_POC, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIGINATOR_POSITION(FlatBufferBuilder $builder, $ORIGINATOR_POSITION)
+    {
+        $builder->addOffsetX(18, $ORIGINATOR_POSITION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIGINATOR_PHONE(FlatBufferBuilder $builder, $ORIGINATOR_PHONE)
+    {
+        $builder->addOffsetX(19, $ORIGINATOR_PHONE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIGINATOR_EMAIL(FlatBufferBuilder $builder, $ORIGINATOR_EMAIL)
+    {
+        $builder->addOffsetX(20, $ORIGINATOR_EMAIL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIGINATOR_ADDRESS(FlatBufferBuilder $builder, $ORIGINATOR_ADDRESS)
+    {
+        $builder->addOffsetX(21, $ORIGINATOR_ADDRESS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addODM_MSG_LINK(FlatBufferBuilder $builder, $ODM_MSG_LINK)
+    {
+        $builder->addOffsetX(22, $ODM_MSG_LINK, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCENTER_NAME(FlatBufferBuilder $builder, $CENTER_NAME)
+    {
+        $builder->addOffsetX(23, $CENTER_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addACM_DATA_ELEMENTS(FlatBufferBuilder $builder, $ACM_DATA_ELEMENTS)
+    {
+        $builder->addOffsetX(24, $ACM_DATA_ELEMENTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTART_TIME(FlatBufferBuilder $builder, $START_TIME)
+    {
+        $builder->addOffsetX(25, $START_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTOP_TIME(FlatBufferBuilder $builder, $STOP_TIME)
+    {
+        $builder->addOffsetX(26, $STOP_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTAIMUTC_AT_TZERO(FlatBufferBuilder $builder, $TAIMUTC_AT_TZERO)
+    {
+        $builder->addDoubleX(27, $TAIMUTC_AT_TZERO, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNEXT_LEAP_EPOCH(FlatBufferBuilder $builder, $NEXT_LEAP_EPOCH)
+    {
+        $builder->addOffsetX(28, $NEXT_LEAP_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addNEXT_LEAP_TAIMUTC(FlatBufferBuilder $builder, $NEXT_LEAP_TAIMUTC)
+    {
+        $builder->addDoubleX(29, $NEXT_LEAP_TAIMUTC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addATT_BLOCKS(FlatBufferBuilder $builder, $ATT_BLOCKS)
+    {
+        $builder->addOffsetX(30, $ATT_BLOCKS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createATT_BLOCKSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startATT_BLOCKSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_BLOCKS(FlatBufferBuilder $builder, $COV_BLOCKS)
+    {
+        $builder->addOffsetX(31, $COV_BLOCKS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOV_BLOCKSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOV_BLOCKSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMAN_BLOCKS(FlatBufferBuilder $builder, $MAN_BLOCKS)
+    {
+        $builder->addOffsetX(32, $MAN_BLOCKS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createMAN_BLOCKSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startMAN_BLOCKSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDETERMINATION(FlatBufferBuilder $builder, $DETERMINATION)
+    {
+        $builder->addOffsetX(33, $DETERMINATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addUSER_DEFINED_PARAMETERS(FlatBufferBuilder $builder, $USER_DEFINED_PARAMETERS)
+    {
+        $builder->addOffsetX(34, $USER_DEFINED_PARAMETERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

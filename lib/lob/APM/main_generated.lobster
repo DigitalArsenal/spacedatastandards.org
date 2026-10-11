@@ -3,6 +3,18 @@ import flatbuffers
 
 class APM
 
+class APMQuaternionState
+
+class APMEulerAngleState
+
+class APMAngularVelocity
+
+class APMSpinState
+
+class APMInertia
+
+class APMManeuver
+
 /// Attitude Parameter Message
 class APM : flatbuffers.handle
     def CCSDS_APM_VERS() -> string:
@@ -25,13 +37,64 @@ class APM : flatbuffers.handle
         return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
     def QC() -> float:
         return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and
+    /// data groups, in message order, joined by a line feed. A state group's own
+    /// comments stay with it.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 24)
+    /// CLASSIFICATION of the message: the optional header keyword stating its
+    /// security classification or handling caveat.
+    def CLASSIFICATION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+    /// unique for this message.
+    def MESSAGE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 28)
+    /// CENTER_NAME: the orbit center, when the message states one.
+    def CENTER_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 30)
+    /// TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.
+    def TIME_SYSTEM() -> string:
+        return flatbuffers.field_string(buf_, pos_, 32)
+    /// Quaternion states (QUAT_START block), in message order. Q1..QC above are the
+    /// single frameless quaternion of the earlier form of this record; a message is
+    /// read into and written from these lists.
+    def QUATERNION_STATES(i:int) -> APMQuaternionState:
+        return APMQuaternionState { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 34) + i * 4) }
+    def QUATERNION_STATES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 34)
+    /// Euler angle states (EULER_START block), in message order.
+    def EULER_ANGLE_STATES(i:int) -> APMEulerAngleState:
+        return APMEulerAngleState { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 36) + i * 4) }
+    def EULER_ANGLE_STATES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 36)
+    /// Angular velocities (ANGVEL_START block), in message order.
+    def ANGULAR_VELOCITIES(i:int) -> APMAngularVelocity:
+        return APMAngularVelocity { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 38) + i * 4) }
+    def ANGULAR_VELOCITIES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 38)
+    /// Spin states (SPIN_START block), in message order.
+    def SPIN_STATES(i:int) -> APMSpinState:
+        return APMSpinState { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 40) + i * 4) }
+    def SPIN_STATES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 40)
+    /// Inertia tensors (INERTIA_START block), in message order.
+    def INERTIAS(i:int) -> APMInertia:
+        return APMInertia { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 42) + i * 4) }
+    def INERTIAS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 42)
+    /// Attitude maneuvers (MAN_START block), in message order.
+    def MANEUVERS(i:int) -> APMManeuver:
+        return APMManeuver { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 44) + i * 4) }
+    def MANEUVERS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 44)
 
 def GetRootAsAPM(buf:string): return APM { buf, flatbuffers.indirect(buf, 0) }
 
 struct APMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(10)
+        b_.StartObject(21)
         return this
     def add_CCSDS_APM_VERS(CCSDS_APM_VERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, CCSDS_APM_VERS)
@@ -62,6 +125,508 @@ struct APMBuilder:
         return this
     def add_QC(QC:float):
         b_.PrependFloat64Slot(9, QC, 0.0)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, COMMENT)
+        return this
+    def add_CLASSIFICATION(CLASSIFICATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, CLASSIFICATION)
+        return this
+    def add_MESSAGE_ID(MESSAGE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, MESSAGE_ID)
+        return this
+    def add_CENTER_NAME(CENTER_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, CENTER_NAME)
+        return this
+    def add_TIME_SYSTEM(TIME_SYSTEM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, TIME_SYSTEM)
+        return this
+    def add_QUATERNION_STATES(QUATERNION_STATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, QUATERNION_STATES)
+        return this
+    def add_EULER_ANGLE_STATES(EULER_ANGLE_STATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, EULER_ANGLE_STATES)
+        return this
+    def add_ANGULAR_VELOCITIES(ANGULAR_VELOCITIES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, ANGULAR_VELOCITIES)
+        return this
+    def add_SPIN_STATES(SPIN_STATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, SPIN_STATES)
+        return this
+    def add_INERTIAS(INERTIAS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, INERTIAS)
+        return this
+    def add_MANEUVERS(MANEUVERS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, MANEUVERS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def APMStartQUATERNIONSTATESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def APMCreateQUATERNIONSTATESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def APMStartEULERANGLESTATESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def APMCreateEULERANGLESTATESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def APMStartANGULARVELOCITIESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def APMCreateANGULARVELOCITIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def APMStartSPINSTATESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def APMCreateSPINSTATESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def APMStartINERTIASVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def APMCreateINERTIASVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def APMStartMANEUVERSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def APMCreateMANEUVERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// A quaternion state of an APM (CCSDS 504.0-B-2 Table 3-3): rotation from
+/// REF_FRAME_A to REF_FRAME_B. The derivative is NaN when the message states none.
+class APMQuaternionState : flatbuffers.handle
+    /// COMMENT lines of this block, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// REF_FRAME_A: the frame the rotation starts from.
+    def REF_FRAME_A() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// REF_FRAME_B: the frame the rotation ends in.
+    def REF_FRAME_B() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// Q1 (vector part, x).
+    def Q1() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Q2 (vector part, y).
+    def Q2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Q3 (vector part, z).
+    def Q3() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// QC (scalar part).
+    def QC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// Q1_DOT in 1/s, NaN when not stated.
+    def Q1_DOT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, nan)
+    /// Q2_DOT in 1/s, NaN when not stated.
+    def Q2_DOT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, nan)
+    /// Q3_DOT in 1/s, NaN when not stated.
+    def Q3_DOT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, nan)
+    /// QC_DOT in 1/s, NaN when not stated.
+    def QC_DOT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, nan)
+
+def GetRootAsAPMQuaternionState(buf:string): return APMQuaternionState { buf, flatbuffers.indirect(buf, 0) }
+
+struct APMQuaternionStateBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(11)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_REF_FRAME_A(REF_FRAME_A:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, REF_FRAME_A)
+        return this
+    def add_REF_FRAME_B(REF_FRAME_B:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, REF_FRAME_B)
+        return this
+    def add_Q1(Q1:float):
+        b_.PrependFloat64Slot(3, Q1, 0.0)
+        return this
+    def add_Q2(Q2:float):
+        b_.PrependFloat64Slot(4, Q2, 0.0)
+        return this
+    def add_Q3(Q3:float):
+        b_.PrependFloat64Slot(5, Q3, 0.0)
+        return this
+    def add_QC(QC:float):
+        b_.PrependFloat64Slot(6, QC, 0.0)
+        return this
+    def add_Q1_DOT(Q1_DOT:float):
+        b_.PrependFloat64Slot(7, Q1_DOT, nan)
+        return this
+    def add_Q2_DOT(Q2_DOT:float):
+        b_.PrependFloat64Slot(8, Q2_DOT, nan)
+        return this
+    def add_Q3_DOT(Q3_DOT:float):
+        b_.PrependFloat64Slot(9, Q3_DOT, nan)
+        return this
+    def add_QC_DOT(QC_DOT:float):
+        b_.PrependFloat64Slot(10, QC_DOT, nan)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// An Euler angle state of an APM (EULER_START block). Angles in degrees; a rate
+/// is NaN when the message states none.
+class APMEulerAngleState : flatbuffers.handle
+    /// COMMENT lines of this block, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// REF_FRAME_A: the frame the rotation starts from.
+    def REF_FRAME_A() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// REF_FRAME_B: the frame the rotation ends in.
+    def REF_FRAME_B() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// EULER_ROT_SEQ: the rotation sequence, for example ZXZ.
+    def EULER_ROT_SEQ() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// ANGLE_1 in degrees.
+    def ANGLE_1() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// ANGLE_2 in degrees.
+    def ANGLE_2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// ANGLE_3 in degrees.
+    def ANGLE_3() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// ANGLE_1_DOT in deg/s, NaN when not stated.
+    def ANGLE_1_DOT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, nan)
+    /// ANGLE_2_DOT in deg/s, NaN when not stated.
+    def ANGLE_2_DOT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, nan)
+    /// ANGLE_3_DOT in deg/s, NaN when not stated.
+    def ANGLE_3_DOT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, nan)
+
+def GetRootAsAPMEulerAngleState(buf:string): return APMEulerAngleState { buf, flatbuffers.indirect(buf, 0) }
+
+struct APMEulerAngleStateBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(10)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_REF_FRAME_A(REF_FRAME_A:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, REF_FRAME_A)
+        return this
+    def add_REF_FRAME_B(REF_FRAME_B:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, REF_FRAME_B)
+        return this
+    def add_EULER_ROT_SEQ(EULER_ROT_SEQ:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, EULER_ROT_SEQ)
+        return this
+    def add_ANGLE_1(ANGLE_1:float):
+        b_.PrependFloat64Slot(4, ANGLE_1, 0.0)
+        return this
+    def add_ANGLE_2(ANGLE_2:float):
+        b_.PrependFloat64Slot(5, ANGLE_2, 0.0)
+        return this
+    def add_ANGLE_3(ANGLE_3:float):
+        b_.PrependFloat64Slot(6, ANGLE_3, 0.0)
+        return this
+    def add_ANGLE_1_DOT(ANGLE_1_DOT:float):
+        b_.PrependFloat64Slot(7, ANGLE_1_DOT, nan)
+        return this
+    def add_ANGLE_2_DOT(ANGLE_2_DOT:float):
+        b_.PrependFloat64Slot(8, ANGLE_2_DOT, nan)
+        return this
+    def add_ANGLE_3_DOT(ANGLE_3_DOT:float):
+        b_.PrependFloat64Slot(9, ANGLE_3_DOT, nan)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// An angular velocity of an APM (ANGVEL_START block), in deg/s.
+class APMAngularVelocity : flatbuffers.handle
+    /// COMMENT lines of this block, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// REF_FRAME_A: the frame the rotation starts from.
+    def REF_FRAME_A() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// REF_FRAME_B: the frame the rotation ends in.
+    def REF_FRAME_B() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// ANGVEL_FRAME: the frame the components are in.
+    def ANGVEL_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// ANGVEL_X in deg/s.
+    def ANGVEL_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// ANGVEL_Y in deg/s.
+    def ANGVEL_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// ANGVEL_Z in deg/s.
+    def ANGVEL_Z() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+
+def GetRootAsAPMAngularVelocity(buf:string): return APMAngularVelocity { buf, flatbuffers.indirect(buf, 0) }
+
+struct APMAngularVelocityBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(7)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_REF_FRAME_A(REF_FRAME_A:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, REF_FRAME_A)
+        return this
+    def add_REF_FRAME_B(REF_FRAME_B:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, REF_FRAME_B)
+        return this
+    def add_ANGVEL_FRAME(ANGVEL_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, ANGVEL_FRAME)
+        return this
+    def add_ANGVEL_X(ANGVEL_X:float):
+        b_.PrependFloat64Slot(4, ANGVEL_X, 0.0)
+        return this
+    def add_ANGVEL_Y(ANGVEL_Y:float):
+        b_.PrependFloat64Slot(5, ANGVEL_Y, 0.0)
+        return this
+    def add_ANGVEL_Z(ANGVEL_Z:float):
+        b_.PrependFloat64Slot(6, ANGVEL_Z, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// A spin state of an APM (SPIN_START block). The nutation terms come as either of
+/// two groups, nutation angle, period and phase or the momentum direction and the
+/// velocity around it; those not stated are NaN.
+class APMSpinState : flatbuffers.handle
+    /// COMMENT lines of this block, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// REF_FRAME_A: the frame the rotation starts from.
+    def REF_FRAME_A() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// REF_FRAME_B: the frame the rotation ends in.
+    def REF_FRAME_B() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// SPIN_ALPHA: right ascension of the spin axis in degrees.
+    def SPIN_ALPHA() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// SPIN_DELTA: declination of the spin axis in degrees.
+    def SPIN_DELTA() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// SPIN_ANGLE: phase in degrees.
+    def SPIN_ANGLE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// SPIN_ANGLE_VEL: angular velocity in deg/s.
+    def SPIN_ANGLE_VEL() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// NUTATION: nutation angle in degrees, NaN when not stated.
+    def NUTATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, nan)
+    /// NUTATION_PER: nutation period in seconds, NaN when not stated.
+    def NUTATION_PER() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, nan)
+    /// NUTATION_PHASE: nutation phase in degrees, NaN when not stated.
+    def NUTATION_PHASE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, nan)
+    /// MOMENTUM_ALPHA: right ascension of the angular momentum vector in degrees,
+    /// NaN when not stated.
+    def MOMENTUM_ALPHA() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, nan)
+    /// MOMENTUM_DELTA: declination of the angular momentum vector in degrees, NaN
+    /// when not stated.
+    def MOMENTUM_DELTA() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, nan)
+    /// NUTATION_VEL: angular velocity around the momentum vector in deg/s, NaN when
+    /// not stated.
+    def NUTATION_VEL() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, nan)
+
+def GetRootAsAPMSpinState(buf:string): return APMSpinState { buf, flatbuffers.indirect(buf, 0) }
+
+struct APMSpinStateBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(13)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_REF_FRAME_A(REF_FRAME_A:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, REF_FRAME_A)
+        return this
+    def add_REF_FRAME_B(REF_FRAME_B:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, REF_FRAME_B)
+        return this
+    def add_SPIN_ALPHA(SPIN_ALPHA:float):
+        b_.PrependFloat64Slot(3, SPIN_ALPHA, 0.0)
+        return this
+    def add_SPIN_DELTA(SPIN_DELTA:float):
+        b_.PrependFloat64Slot(4, SPIN_DELTA, 0.0)
+        return this
+    def add_SPIN_ANGLE(SPIN_ANGLE:float):
+        b_.PrependFloat64Slot(5, SPIN_ANGLE, 0.0)
+        return this
+    def add_SPIN_ANGLE_VEL(SPIN_ANGLE_VEL:float):
+        b_.PrependFloat64Slot(6, SPIN_ANGLE_VEL, 0.0)
+        return this
+    def add_NUTATION(NUTATION:float):
+        b_.PrependFloat64Slot(7, NUTATION, nan)
+        return this
+    def add_NUTATION_PER(NUTATION_PER:float):
+        b_.PrependFloat64Slot(8, NUTATION_PER, nan)
+        return this
+    def add_NUTATION_PHASE(NUTATION_PHASE:float):
+        b_.PrependFloat64Slot(9, NUTATION_PHASE, nan)
+        return this
+    def add_MOMENTUM_ALPHA(MOMENTUM_ALPHA:float):
+        b_.PrependFloat64Slot(10, MOMENTUM_ALPHA, nan)
+        return this
+    def add_MOMENTUM_DELTA(MOMENTUM_DELTA:float):
+        b_.PrependFloat64Slot(11, MOMENTUM_DELTA, nan)
+        return this
+    def add_NUTATION_VEL(NUTATION_VEL:float):
+        b_.PrependFloat64Slot(12, NUTATION_VEL, nan)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// An inertia tensor of an APM (INERTIA_START block), in kg*m**2.
+class APMInertia : flatbuffers.handle
+    /// COMMENT lines of this block, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// INERTIA_REF_FRAME: the frame the tensor is in.
+    def INERTIA_REF_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// IXX: moment about X.
+    def IXX() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// IYY: moment about Y.
+    def IYY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// IZZ: moment about Z.
+    def IZZ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// IXY: cross product X-Y.
+    def IXY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// IXZ: cross product X-Z.
+    def IXZ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// IYZ: cross product Y-Z.
+    def IYZ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+
+def GetRootAsAPMInertia(buf:string): return APMInertia { buf, flatbuffers.indirect(buf, 0) }
+
+struct APMInertiaBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(8)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_INERTIA_REF_FRAME(INERTIA_REF_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, INERTIA_REF_FRAME)
+        return this
+    def add_IXX(IXX:float):
+        b_.PrependFloat64Slot(2, IXX, 0.0)
+        return this
+    def add_IYY(IYY:float):
+        b_.PrependFloat64Slot(3, IYY, 0.0)
+        return this
+    def add_IZZ(IZZ:float):
+        b_.PrependFloat64Slot(4, IZZ, 0.0)
+        return this
+    def add_IXY(IXY:float):
+        b_.PrependFloat64Slot(5, IXY, 0.0)
+        return this
+    def add_IXZ(IXZ:float):
+        b_.PrependFloat64Slot(6, IXZ, 0.0)
+        return this
+    def add_IYZ(IYZ:float):
+        b_.PrependFloat64Slot(7, IYZ, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// An attitude maneuver of an APM (MAN_START block).
+class APMManeuver : flatbuffers.handle
+    /// COMMENT lines of this block, joined by a line feed.
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// MAN_EPOCH_START: epoch of the start of the maneuver.
+    def MAN_EPOCH_START() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// MAN_DURATION in seconds.
+    def MAN_DURATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// MAN_REF_FRAME: the frame the torque is in.
+    def MAN_REF_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// MAN_TOR_X in N*m.
+    def MAN_TOR_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// MAN_TOR_Y in N*m.
+    def MAN_TOR_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// MAN_TOR_Z in N*m.
+    def MAN_TOR_Z() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// MAN_DELTA_MASS in kg (negative or zero), NaN when not stated.
+    def MAN_DELTA_MASS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, nan)
+
+def GetRootAsAPMManeuver(buf:string): return APMManeuver { buf, flatbuffers.indirect(buf, 0) }
+
+struct APMManeuverBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(8)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COMMENT)
+        return this
+    def add_MAN_EPOCH_START(MAN_EPOCH_START:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, MAN_EPOCH_START)
+        return this
+    def add_MAN_DURATION(MAN_DURATION:float):
+        b_.PrependFloat64Slot(2, MAN_DURATION, 0.0)
+        return this
+    def add_MAN_REF_FRAME(MAN_REF_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, MAN_REF_FRAME)
+        return this
+    def add_MAN_TOR_X(MAN_TOR_X:float):
+        b_.PrependFloat64Slot(4, MAN_TOR_X, 0.0)
+        return this
+    def add_MAN_TOR_Y(MAN_TOR_Y:float):
+        b_.PrependFloat64Slot(5, MAN_TOR_Y, 0.0)
+        return this
+    def add_MAN_TOR_Z(MAN_TOR_Z:float):
+        b_.PrependFloat64Slot(6, MAN_TOR_Z, 0.0)
+        return this
+    def add_MAN_DELTA_MASS(MAN_DELTA_MASS:float):
+        b_.PrependFloat64Slot(7, MAN_DELTA_MASS, nan)
         return this
     def end():
         return b_.EndObject()

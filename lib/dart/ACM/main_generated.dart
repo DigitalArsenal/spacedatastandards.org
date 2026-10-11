@@ -504,10 +504,13 @@ class attPhysicalProperties {
   double get IXZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
   ///  Product of inertia YZ in kg*m^2
   double get IYZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+  ///  joined by a line feed.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
 
   @override
   String toString() {
-    return 'attPhysicalProperties{dragCoeff: ${dragCoeff}, wetMass: ${wetMass}, dryMass: ${dryMass}, cpRefFrame: ${cpRefFrame}, cpX: ${cpX}, cpY: ${cpY}, cpZ: ${cpZ}, inertiaRefFrame: ${inertiaRefFrame}, IXX: ${IXX}, IYY: ${IYY}, IZZ: ${IZZ}, IXY: ${IXY}, IXZ: ${IXZ}, IYZ: ${IYZ}}';
+    return 'attPhysicalProperties{dragCoeff: ${dragCoeff}, wetMass: ${wetMass}, dryMass: ${dryMass}, cpRefFrame: ${cpRefFrame}, cpX: ${cpX}, cpY: ${cpY}, cpZ: ${cpZ}, inertiaRefFrame: ${inertiaRefFrame}, IXX: ${IXX}, IYY: ${IYY}, IZZ: ${IZZ}, IXY: ${IXY}, IXZ: ${IXZ}, IYZ: ${IYZ}, COMMENT: ${COMMENT}}';
   }
 }
 
@@ -525,7 +528,7 @@ class attPhysicalPropertiesBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(14);
+    fbBuilder.startTable(15);
   }
 
   int addDragCoeff(double? DRAG_COEFF) {
@@ -584,6 +587,10 @@ class attPhysicalPropertiesBuilder {
     fbBuilder.addFloat64(13, IYZ);
     return fbBuilder.offset;
   }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -605,6 +612,7 @@ class attPhysicalPropertiesObjectBuilder extends fb.ObjectBuilder {
   final double? _IXY;
   final double? _IXZ;
   final double? _IYZ;
+  final String? _COMMENT;
 
   attPhysicalPropertiesObjectBuilder({
     double? DRAG_COEFF,
@@ -629,6 +637,7 @@ class attPhysicalPropertiesObjectBuilder extends fb.ObjectBuilder {
     double? IXY,
     double? IXZ,
     double? IYZ,
+    String? COMMENT,
   })
       : _DRAG_COEFF = dragCoeff ?? DRAG_COEFF,
         _WET_MASS = wetMass ?? WET_MASS,
@@ -643,7 +652,8 @@ class attPhysicalPropertiesObjectBuilder extends fb.ObjectBuilder {
         _IZZ = IZZ,
         _IXY = IXY,
         _IXZ = IXZ,
-        _IYZ = IYZ;
+        _IYZ = IYZ,
+        _COMMENT = COMMENT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -652,7 +662,9 @@ class attPhysicalPropertiesObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_CP_REF_FRAME!);
     final int? INERTIA_REF_FRAMEOffset = _INERTIA_REF_FRAME == null ? null
         : fbBuilder.writeString(_INERTIA_REF_FRAME!);
-    fbBuilder.startTable(14);
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    fbBuilder.startTable(15);
     fbBuilder.addFloat64(0, _DRAG_COEFF);
     fbBuilder.addFloat64(1, _WET_MASS);
     fbBuilder.addFloat64(2, _DRY_MASS);
@@ -667,6 +679,7 @@ class attPhysicalPropertiesObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(11, _IXY);
     fbBuilder.addFloat64(12, _IXZ);
     fbBuilder.addFloat64(13, _IYZ);
+    fbBuilder.addOffset(14, COMMENTOffset);
     return fbBuilder.endTable();
   }
 
@@ -976,12 +989,79 @@ class ACM {
   List<attManeuver>? get MANEUVERS => const fb.ListReader<attManeuver>(attManeuver.reader).vTableGetNullable(_bc, _bcOffset, 26);
   ///  Maneuverability status
   maneuverableFlag get MANEUVERABLE => maneuverableFlag.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 0));
-  ///  Additional comments
+  ///  COMMENT lines of the message header, metadata and user-defined data
+  ///  (CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,
+  ///  covariance, maneuver or determination block's own comments stay with it.
   String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  CLASSIFICATION of the message: the optional header keyword stating its
+  ///  security classification or handling caveat.
+  String? get CLASSIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  ///  unique for this message.
+  String? get MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get messageId => MESSAGE_ID;
+  ///  OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.
+  ///  OBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH
+  ///  above its EPOCH_TZERO, the epoch every relative time is measured from.
+  String? get OBJECT_DESIGNATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get objectDesignator => OBJECT_DESIGNATOR;
+  ///  ORIGINATOR_POC: point of contact at the originator.
+  String? get ORIGINATOR_POC => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get originatorPoc => ORIGINATOR_POC;
+  ///  ORIGINATOR_POSITION: position of the point of contact.
+  String? get ORIGINATOR_POSITION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get originatorPosition => ORIGINATOR_POSITION;
+  ///  ORIGINATOR_PHONE: telephone number of the point of contact.
+  String? get ORIGINATOR_PHONE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get originatorPhone => ORIGINATOR_PHONE;
+  ///  ORIGINATOR_EMAIL: email address of the point of contact.
+  String? get ORIGINATOR_EMAIL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get originatorEmail => ORIGINATOR_EMAIL;
+  ///  ORIGINATOR_ADDRESS: postal address of the point of contact.
+  String? get ORIGINATOR_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get originatorAddress => ORIGINATOR_ADDRESS;
+  ///  ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.
+  String? get ODM_MSG_LINK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get odmMsgLink => ODM_MSG_LINK;
+  ///  CENTER_NAME: the orbit center, when the message states one.
+  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
+  String? get centerName => CENTER_NAME;
+  ///  ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.
+  String? get ACM_DATA_ELEMENTS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get acmDataElements => ACM_DATA_ELEMENTS;
+  ///  START_TIME: start of the total time span the message covers.
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  String? get startTime => START_TIME;
+  ///  STOP_TIME: end of the total time span the message covers.
+  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  String? get stopTime => STOP_TIME;
+  ///  TAIMUTC_AT_TZERO in seconds, NaN when not stated.
+  double get TAIMUTC_AT_TZERO => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, double.nan);
+  double get taimutcAtTzero => TAIMUTC_AT_TZERO;
+  ///  NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.
+  String? get NEXT_LEAP_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get nextLeapEpoch => NEXT_LEAP_EPOCH;
+  ///  NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.
+  double get NEXT_LEAP_TAIMUTC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, double.nan);
+  double get nextLeapTaimutc => NEXT_LEAP_TAIMUTC;
+  ///  Attitude state time histories (ATT_START blocks), in message order.
+  List<ACMAttitudeBlock>? get ATT_BLOCKS => const fb.ListReader<ACMAttitudeBlock>(ACMAttitudeBlock.reader).vTableGetNullable(_bc, _bcOffset, 64);
+  List<ACMAttitudeBlock>? get attBlocks => ATT_BLOCKS;
+  ///  Covariance time histories (COV_START blocks), in message order.
+  List<ACMCovarianceBlock>? get COV_BLOCKS => const fb.ListReader<ACMCovarianceBlock>(ACMCovarianceBlock.reader).vTableGetNullable(_bc, _bcOffset, 66);
+  List<ACMCovarianceBlock>? get covBlocks => COV_BLOCKS;
+  ///  Maneuver specifications (MAN_START blocks), in message order.
+  List<ACMManeuverBlock>? get MAN_BLOCKS => const fb.ListReader<ACMManeuverBlock>(ACMManeuverBlock.reader).vTableGetNullable(_bc, _bcOffset, 68);
+  List<ACMManeuverBlock>? get manBlocks => MAN_BLOCKS;
+  ///  The attitude determination data (AD_START block), when the message has them.
+  ACMDetermination? get DETERMINATION => ACMDetermination.reader.vTableGetNullable(_bc, _bcOffset, 70);
+  ///  Every USER_DEFINED parameter of the message, in message order.
+  List<ACMUserDefinedParameter>? get USER_DEFINED_PARAMETERS => const fb.ListReader<ACMUserDefinedParameter>(ACMUserDefinedParameter.reader).vTableGetNullable(_bc, _bcOffset, 72);
+  List<ACMUserDefinedParameter>? get userDefinedParameters => USER_DEFINED_PARAMETERS;
 
   @override
   String toString() {
-    return 'ACM{ccsdsAcmVers: ${ccsdsAcmVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, objectId: ${objectId}, catalogName: ${catalogName}, EPOCH: ${EPOCH}, timeSystem: ${timeSystem}, attStates: ${attStates}, physProperties: ${physProperties}, covData: ${covData}, MANEUVERS: ${MANEUVERS}, MANEUVERABLE: ${MANEUVERABLE}, COMMENT: ${COMMENT}}';
+    return 'ACM{ccsdsAcmVers: ${ccsdsAcmVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, objectId: ${objectId}, catalogName: ${catalogName}, EPOCH: ${EPOCH}, timeSystem: ${timeSystem}, attStates: ${attStates}, physProperties: ${physProperties}, covData: ${covData}, MANEUVERS: ${MANEUVERS}, MANEUVERABLE: ${MANEUVERABLE}, COMMENT: ${COMMENT}, CLASSIFICATION: ${CLASSIFICATION}, messageId: ${messageId}, objectDesignator: ${objectDesignator}, originatorPoc: ${originatorPoc}, originatorPosition: ${originatorPosition}, originatorPhone: ${originatorPhone}, originatorEmail: ${originatorEmail}, originatorAddress: ${originatorAddress}, odmMsgLink: ${odmMsgLink}, centerName: ${centerName}, acmDataElements: ${acmDataElements}, startTime: ${startTime}, stopTime: ${stopTime}, taimutcAtTzero: ${taimutcAtTzero}, nextLeapEpoch: ${nextLeapEpoch}, nextLeapTaimutc: ${nextLeapTaimutc}, attBlocks: ${attBlocks}, covBlocks: ${covBlocks}, manBlocks: ${manBlocks}, DETERMINATION: ${DETERMINATION}, userDefinedParameters: ${userDefinedParameters}}';
   }
 }
 
@@ -999,7 +1079,7 @@ class ACMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(14);
+    fbBuilder.startTable(35);
   }
 
   int addCcsdsAcmVersOffset(int? offset) {
@@ -1058,6 +1138,90 @@ class ACMBuilder {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
+  int addClassificationOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectDesignatorOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorPocOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorPositionOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorPhoneOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorEmailOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addOriginatorAddressOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addOdmMsgLinkOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addCenterNameOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addAcmDataElementsOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addTaimutcAtTzero(double? TAIMUTC_AT_TZERO) {
+    fbBuilder.addFloat64(27, TAIMUTC_AT_TZERO);
+    return fbBuilder.offset;
+  }
+  int addNextLeapEpochOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addNextLeapTaimutc(double? NEXT_LEAP_TAIMUTC) {
+    fbBuilder.addFloat64(29, NEXT_LEAP_TAIMUTC);
+    return fbBuilder.offset;
+  }
+  int addAttBlocksOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addCovBlocksOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addManBlocksOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addDeterminationOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedParametersOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1079,6 +1243,27 @@ class ACMObjectBuilder extends fb.ObjectBuilder {
   final List<attManeuverObjectBuilder>? _MANEUVERS;
   final maneuverableFlag? _MANEUVERABLE;
   final String? _COMMENT;
+  final String? _CLASSIFICATION;
+  final String? _MESSAGE_ID;
+  final String? _OBJECT_DESIGNATOR;
+  final String? _ORIGINATOR_POC;
+  final String? _ORIGINATOR_POSITION;
+  final String? _ORIGINATOR_PHONE;
+  final String? _ORIGINATOR_EMAIL;
+  final String? _ORIGINATOR_ADDRESS;
+  final String? _ODM_MSG_LINK;
+  final String? _CENTER_NAME;
+  final String? _ACM_DATA_ELEMENTS;
+  final String? _START_TIME;
+  final String? _STOP_TIME;
+  final double? _TAIMUTC_AT_TZERO;
+  final String? _NEXT_LEAP_EPOCH;
+  final double? _NEXT_LEAP_TAIMUTC;
+  final List<ACMAttitudeBlockObjectBuilder>? _ATT_BLOCKS;
+  final List<ACMCovarianceBlockObjectBuilder>? _COV_BLOCKS;
+  final List<ACMManeuverBlockObjectBuilder>? _MAN_BLOCKS;
+  final ACMDeterminationObjectBuilder? _DETERMINATION;
+  final List<ACMUserDefinedParameterObjectBuilder>? _USER_DEFINED_PARAMETERS;
 
   ACMObjectBuilder({
     String? CCSDS_ACM_VERS,
@@ -1104,6 +1289,46 @@ class ACMObjectBuilder extends fb.ObjectBuilder {
     List<attManeuverObjectBuilder>? MANEUVERS,
     maneuverableFlag? MANEUVERABLE,
     String? COMMENT,
+    String? CLASSIFICATION,
+    String? MESSAGE_ID,
+    String? messageId,
+    String? OBJECT_DESIGNATOR,
+    String? objectDesignator,
+    String? ORIGINATOR_POC,
+    String? originatorPoc,
+    String? ORIGINATOR_POSITION,
+    String? originatorPosition,
+    String? ORIGINATOR_PHONE,
+    String? originatorPhone,
+    String? ORIGINATOR_EMAIL,
+    String? originatorEmail,
+    String? ORIGINATOR_ADDRESS,
+    String? originatorAddress,
+    String? ODM_MSG_LINK,
+    String? odmMsgLink,
+    String? CENTER_NAME,
+    String? centerName,
+    String? ACM_DATA_ELEMENTS,
+    String? acmDataElements,
+    String? START_TIME,
+    String? startTime,
+    String? STOP_TIME,
+    String? stopTime,
+    double? TAIMUTC_AT_TZERO,
+    double? taimutcAtTzero,
+    String? NEXT_LEAP_EPOCH,
+    String? nextLeapEpoch,
+    double? NEXT_LEAP_TAIMUTC,
+    double? nextLeapTaimutc,
+    List<ACMAttitudeBlockObjectBuilder>? ATT_BLOCKS,
+    List<ACMAttitudeBlockObjectBuilder>? attBlocks,
+    List<ACMCovarianceBlockObjectBuilder>? COV_BLOCKS,
+    List<ACMCovarianceBlockObjectBuilder>? covBlocks,
+    List<ACMManeuverBlockObjectBuilder>? MAN_BLOCKS,
+    List<ACMManeuverBlockObjectBuilder>? manBlocks,
+    ACMDeterminationObjectBuilder? DETERMINATION,
+    List<ACMUserDefinedParameterObjectBuilder>? USER_DEFINED_PARAMETERS,
+    List<ACMUserDefinedParameterObjectBuilder>? userDefinedParameters,
   })
       : _CCSDS_ACM_VERS = ccsdsAcmVers ?? CCSDS_ACM_VERS,
         _CREATION_DATE = creationDate ?? CREATION_DATE,
@@ -1118,7 +1343,28 @@ class ACMObjectBuilder extends fb.ObjectBuilder {
         _COV_DATA = covData ?? COV_DATA,
         _MANEUVERS = MANEUVERS,
         _MANEUVERABLE = MANEUVERABLE,
-        _COMMENT = COMMENT;
+        _COMMENT = COMMENT,
+        _CLASSIFICATION = CLASSIFICATION,
+        _MESSAGE_ID = messageId ?? MESSAGE_ID,
+        _OBJECT_DESIGNATOR = objectDesignator ?? OBJECT_DESIGNATOR,
+        _ORIGINATOR_POC = originatorPoc ?? ORIGINATOR_POC,
+        _ORIGINATOR_POSITION = originatorPosition ?? ORIGINATOR_POSITION,
+        _ORIGINATOR_PHONE = originatorPhone ?? ORIGINATOR_PHONE,
+        _ORIGINATOR_EMAIL = originatorEmail ?? ORIGINATOR_EMAIL,
+        _ORIGINATOR_ADDRESS = originatorAddress ?? ORIGINATOR_ADDRESS,
+        _ODM_MSG_LINK = odmMsgLink ?? ODM_MSG_LINK,
+        _CENTER_NAME = centerName ?? CENTER_NAME,
+        _ACM_DATA_ELEMENTS = acmDataElements ?? ACM_DATA_ELEMENTS,
+        _START_TIME = startTime ?? START_TIME,
+        _STOP_TIME = stopTime ?? STOP_TIME,
+        _TAIMUTC_AT_TZERO = taimutcAtTzero ?? TAIMUTC_AT_TZERO,
+        _NEXT_LEAP_EPOCH = nextLeapEpoch ?? NEXT_LEAP_EPOCH,
+        _NEXT_LEAP_TAIMUTC = nextLeapTaimutc ?? NEXT_LEAP_TAIMUTC,
+        _ATT_BLOCKS = attBlocks ?? ATT_BLOCKS,
+        _COV_BLOCKS = covBlocks ?? COV_BLOCKS,
+        _MAN_BLOCKS = manBlocks ?? MAN_BLOCKS,
+        _DETERMINATION = DETERMINATION,
+        _USER_DEFINED_PARAMETERS = userDefinedParameters ?? USER_DEFINED_PARAMETERS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1148,7 +1394,44 @@ class ACMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_MANEUVERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? COMMENTOffset = _COMMENT == null ? null
         : fbBuilder.writeString(_COMMENT!);
-    fbBuilder.startTable(14);
+    final int? CLASSIFICATIONOffset = _CLASSIFICATION == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION!);
+    final int? MESSAGE_IDOffset = _MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_MESSAGE_ID!);
+    final int? OBJECT_DESIGNATOROffset = _OBJECT_DESIGNATOR == null ? null
+        : fbBuilder.writeString(_OBJECT_DESIGNATOR!);
+    final int? ORIGINATOR_POCOffset = _ORIGINATOR_POC == null ? null
+        : fbBuilder.writeString(_ORIGINATOR_POC!);
+    final int? ORIGINATOR_POSITIONOffset = _ORIGINATOR_POSITION == null ? null
+        : fbBuilder.writeString(_ORIGINATOR_POSITION!);
+    final int? ORIGINATOR_PHONEOffset = _ORIGINATOR_PHONE == null ? null
+        : fbBuilder.writeString(_ORIGINATOR_PHONE!);
+    final int? ORIGINATOR_EMAILOffset = _ORIGINATOR_EMAIL == null ? null
+        : fbBuilder.writeString(_ORIGINATOR_EMAIL!);
+    final int? ORIGINATOR_ADDRESSOffset = _ORIGINATOR_ADDRESS == null ? null
+        : fbBuilder.writeString(_ORIGINATOR_ADDRESS!);
+    final int? ODM_MSG_LINKOffset = _ODM_MSG_LINK == null ? null
+        : fbBuilder.writeString(_ODM_MSG_LINK!);
+    final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
+        : fbBuilder.writeString(_CENTER_NAME!);
+    final int? ACM_DATA_ELEMENTSOffset = _ACM_DATA_ELEMENTS == null ? null
+        : fbBuilder.writeString(_ACM_DATA_ELEMENTS!);
+    final int? START_TIMEOffset = _START_TIME == null ? null
+        : fbBuilder.writeString(_START_TIME!);
+    final int? STOP_TIMEOffset = _STOP_TIME == null ? null
+        : fbBuilder.writeString(_STOP_TIME!);
+    final int? NEXT_LEAP_EPOCHOffset = _NEXT_LEAP_EPOCH == null ? null
+        : fbBuilder.writeString(_NEXT_LEAP_EPOCH!);
+    final int? ATT_BLOCKSOffset = _ATT_BLOCKS == null ? null
+        : fbBuilder.writeList(_ATT_BLOCKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? COV_BLOCKSOffset = _COV_BLOCKS == null ? null
+        : fbBuilder.writeList(_COV_BLOCKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? MAN_BLOCKSOffset = _MAN_BLOCKS == null ? null
+        : fbBuilder.writeList(_MAN_BLOCKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? DETERMINATIONOffset = _DETERMINATION?.getOrCreateOffset(fbBuilder);
+    final int? USER_DEFINED_PARAMETERSOffset = _USER_DEFINED_PARAMETERS == null ? null
+        : fbBuilder.writeList(_USER_DEFINED_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(35);
     fbBuilder.addOffset(0, CCSDS_ACM_VERSOffset);
     fbBuilder.addOffset(1, CREATION_DATEOffset);
     fbBuilder.addOffset(2, ORIGINATOROffset);
@@ -1163,6 +1446,1169 @@ class ACMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(11, MANEUVERSOffset);
     fbBuilder.addInt8(12, _MANEUVERABLE?.value);
     fbBuilder.addOffset(13, COMMENTOffset);
+    fbBuilder.addOffset(14, CLASSIFICATIONOffset);
+    fbBuilder.addOffset(15, MESSAGE_IDOffset);
+    fbBuilder.addOffset(16, OBJECT_DESIGNATOROffset);
+    fbBuilder.addOffset(17, ORIGINATOR_POCOffset);
+    fbBuilder.addOffset(18, ORIGINATOR_POSITIONOffset);
+    fbBuilder.addOffset(19, ORIGINATOR_PHONEOffset);
+    fbBuilder.addOffset(20, ORIGINATOR_EMAILOffset);
+    fbBuilder.addOffset(21, ORIGINATOR_ADDRESSOffset);
+    fbBuilder.addOffset(22, ODM_MSG_LINKOffset);
+    fbBuilder.addOffset(23, CENTER_NAMEOffset);
+    fbBuilder.addOffset(24, ACM_DATA_ELEMENTSOffset);
+    fbBuilder.addOffset(25, START_TIMEOffset);
+    fbBuilder.addOffset(26, STOP_TIMEOffset);
+    fbBuilder.addFloat64(27, _TAIMUTC_AT_TZERO);
+    fbBuilder.addOffset(28, NEXT_LEAP_EPOCHOffset);
+    fbBuilder.addFloat64(29, _NEXT_LEAP_TAIMUTC);
+    fbBuilder.addOffset(30, ATT_BLOCKSOffset);
+    fbBuilder.addOffset(31, COV_BLOCKSOffset);
+    fbBuilder.addOffset(32, MAN_BLOCKSOffset);
+    fbBuilder.addOffset(33, DETERMINATIONOffset);
+    fbBuilder.addOffset(34, USER_DEFINED_PARAMETERSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One attitude state time history of an ACM (CCSDS 504.0-B-2 Table 5-4): the
+///  block's keywords, then its data lines as TIMES (the first column of each line,
+///  elapsed seconds from EPOCH_TZERO or an epoch, as written) and VALUES (the other
+///  columns, NUMBER_STATES per line, row by row).
+class ACMAttitudeBlock {
+  ACMAttitudeBlock._(this._bc, this._bcOffset);
+  factory ACMAttitudeBlock(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ACMAttitudeBlock> reader = _ACMAttitudeBlockReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  ATT_ID.
+  String? get ATT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get attId => ATT_ID;
+  ///  ATT_PREV_ID.
+  String? get ATT_PREV_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get attPrevId => ATT_PREV_ID;
+  ///  ATT_BASIS: PREDICTED, DETERMINED_GND, DETERMINED_OBC or SIMULATED.
+  String? get ATT_BASIS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get attBasis => ATT_BASIS;
+  ///  ATT_BASIS_ID.
+  String? get ATT_BASIS_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get attBasisId => ATT_BASIS_ID;
+  ///  REF_FRAME_A: the frame the transformation starts from.
+  String? get REF_FRAME_A => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get refFrameA => REF_FRAME_A;
+  ///  REF_FRAME_B: the frame the transformation ends in.
+  String? get REF_FRAME_B => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get refFrameB => REF_FRAME_B;
+  ///  NUMBER_STATES: the data columns on each line (attitude, then rate).
+  int get NUMBER_STATES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get numberStates => NUMBER_STATES;
+  ///  ATT_TYPE: QUATERNION, EULER_ANGLES, DCM or ANGVEL.
+  String? get ATT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get attType => ATT_TYPE;
+  ///  EULER_ROT_SEQ, when ATT_TYPE is EULER_ANGLES.
+  String? get EULER_ROT_SEQ => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get eulerRotSeq => EULER_ROT_SEQ;
+  ///  RATE_TYPE: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS, when the lines carry rates.
+  String? get RATE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get rateType => RATE_TYPE;
+  ///  The first column of each data line, as written.
+  List<String>? get TIMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  The other columns of the data lines, NUMBER_STATES per line.
+  List<double>? get VALUES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 28);
+
+  @override
+  String toString() {
+    return 'ACMAttitudeBlock{COMMENT: ${COMMENT}, attId: ${attId}, attPrevId: ${attPrevId}, attBasis: ${attBasis}, attBasisId: ${attBasisId}, refFrameA: ${refFrameA}, refFrameB: ${refFrameB}, numberStates: ${numberStates}, attType: ${attType}, eulerRotSeq: ${eulerRotSeq}, rateType: ${rateType}, TIMES: ${TIMES}, VALUES: ${VALUES}}';
+  }
+}
+
+class _ACMAttitudeBlockReader extends fb.TableReader<ACMAttitudeBlock> {
+  const _ACMAttitudeBlockReader();
+
+  @override
+  ACMAttitudeBlock createObject(fb.BufferContext bc, int offset) =>
+    ACMAttitudeBlock._(bc, offset);
+}
+
+class ACMAttitudeBlockBuilder {
+  ACMAttitudeBlockBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(13);
+  }
+
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addAttIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addAttPrevIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addAttBasisOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addAttBasisIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addRefFrameAOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addRefFrameBOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addNumberStates(int? NUMBER_STATES) {
+    fbBuilder.addUint32(7, NUMBER_STATES);
+    return fbBuilder.offset;
+  }
+  int addAttTypeOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addEulerRotSeqOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addRateTypeOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addTimesOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addValuesOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ACMAttitudeBlockObjectBuilder extends fb.ObjectBuilder {
+  final String? _COMMENT;
+  final String? _ATT_ID;
+  final String? _ATT_PREV_ID;
+  final String? _ATT_BASIS;
+  final String? _ATT_BASIS_ID;
+  final String? _REF_FRAME_A;
+  final String? _REF_FRAME_B;
+  final int? _NUMBER_STATES;
+  final String? _ATT_TYPE;
+  final String? _EULER_ROT_SEQ;
+  final String? _RATE_TYPE;
+  final List<String>? _TIMES;
+  final List<double>? _VALUES;
+
+  ACMAttitudeBlockObjectBuilder({
+    String? COMMENT,
+    String? ATT_ID,
+    String? attId,
+    String? ATT_PREV_ID,
+    String? attPrevId,
+    String? ATT_BASIS,
+    String? attBasis,
+    String? ATT_BASIS_ID,
+    String? attBasisId,
+    String? REF_FRAME_A,
+    String? refFrameA,
+    String? REF_FRAME_B,
+    String? refFrameB,
+    int? NUMBER_STATES,
+    int? numberStates,
+    String? ATT_TYPE,
+    String? attType,
+    String? EULER_ROT_SEQ,
+    String? eulerRotSeq,
+    String? RATE_TYPE,
+    String? rateType,
+    List<String>? TIMES,
+    List<double>? VALUES,
+  })
+      : _COMMENT = COMMENT,
+        _ATT_ID = attId ?? ATT_ID,
+        _ATT_PREV_ID = attPrevId ?? ATT_PREV_ID,
+        _ATT_BASIS = attBasis ?? ATT_BASIS,
+        _ATT_BASIS_ID = attBasisId ?? ATT_BASIS_ID,
+        _REF_FRAME_A = refFrameA ?? REF_FRAME_A,
+        _REF_FRAME_B = refFrameB ?? REF_FRAME_B,
+        _NUMBER_STATES = numberStates ?? NUMBER_STATES,
+        _ATT_TYPE = attType ?? ATT_TYPE,
+        _EULER_ROT_SEQ = eulerRotSeq ?? EULER_ROT_SEQ,
+        _RATE_TYPE = rateType ?? RATE_TYPE,
+        _TIMES = TIMES,
+        _VALUES = VALUES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? ATT_IDOffset = _ATT_ID == null ? null
+        : fbBuilder.writeString(_ATT_ID!);
+    final int? ATT_PREV_IDOffset = _ATT_PREV_ID == null ? null
+        : fbBuilder.writeString(_ATT_PREV_ID!);
+    final int? ATT_BASISOffset = _ATT_BASIS == null ? null
+        : fbBuilder.writeString(_ATT_BASIS!);
+    final int? ATT_BASIS_IDOffset = _ATT_BASIS_ID == null ? null
+        : fbBuilder.writeString(_ATT_BASIS_ID!);
+    final int? REF_FRAME_AOffset = _REF_FRAME_A == null ? null
+        : fbBuilder.writeString(_REF_FRAME_A!);
+    final int? REF_FRAME_BOffset = _REF_FRAME_B == null ? null
+        : fbBuilder.writeString(_REF_FRAME_B!);
+    final int? ATT_TYPEOffset = _ATT_TYPE == null ? null
+        : fbBuilder.writeString(_ATT_TYPE!);
+    final int? EULER_ROT_SEQOffset = _EULER_ROT_SEQ == null ? null
+        : fbBuilder.writeString(_EULER_ROT_SEQ!);
+    final int? RATE_TYPEOffset = _RATE_TYPE == null ? null
+        : fbBuilder.writeString(_RATE_TYPE!);
+    final int? TIMESOffset = _TIMES == null ? null
+        : fbBuilder.writeList(_TIMES!.map(fbBuilder.writeString).toList());
+    final int? VALUESOffset = _VALUES == null ? null
+        : fbBuilder.writeListFloat64(_VALUES!);
+    fbBuilder.startTable(13);
+    fbBuilder.addOffset(0, COMMENTOffset);
+    fbBuilder.addOffset(1, ATT_IDOffset);
+    fbBuilder.addOffset(2, ATT_PREV_IDOffset);
+    fbBuilder.addOffset(3, ATT_BASISOffset);
+    fbBuilder.addOffset(4, ATT_BASIS_IDOffset);
+    fbBuilder.addOffset(5, REF_FRAME_AOffset);
+    fbBuilder.addOffset(6, REF_FRAME_BOffset);
+    fbBuilder.addUint32(7, _NUMBER_STATES);
+    fbBuilder.addOffset(8, ATT_TYPEOffset);
+    fbBuilder.addOffset(9, EULER_ROT_SEQOffset);
+    fbBuilder.addOffset(10, RATE_TYPEOffset);
+    fbBuilder.addOffset(11, TIMESOffset);
+    fbBuilder.addOffset(12, VALUESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One covariance time history of an ACM (Table 5-6): the diagonal terms of the
+///  covariance on each line, as TIMES and VALUES like ACMAttitudeBlock; every line
+///  has the same number of values.
+class ACMCovarianceBlock {
+  ACMCovarianceBlock._(this._bc, this._bcOffset);
+  factory ACMCovarianceBlock(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ACMCovarianceBlock> reader = _ACMCovarianceBlockReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  COV_ID.
+  String? get COV_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get covId => COV_ID;
+  ///  COV_PREV_ID.
+  String? get COV_PREV_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get covPrevId => COV_PREV_ID;
+  ///  COV_BASIS.
+  String? get COV_BASIS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get covBasis => COV_BASIS;
+  ///  COV_BASIS_ID.
+  String? get COV_BASIS_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get covBasisId => COV_BASIS_ID;
+  ///  COV_REF_FRAME.
+  String? get COV_REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get covRefFrame => COV_REF_FRAME;
+  ///  COV_TYPE: ANGLE, ANGLE_GYROBIAS, ANGLE_ANGVEL, QUATERNION, QUATERNION_GYROBIAS
+  ///  or QUATERNION_ANGVEL.
+  String? get COV_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get covType => COV_TYPE;
+  ///  The first column of each data line, as written.
+  List<String>? get TIMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  The diagonal terms of each line, row by row.
+  List<double>? get VALUES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 20);
+
+  @override
+  String toString() {
+    return 'ACMCovarianceBlock{COMMENT: ${COMMENT}, covId: ${covId}, covPrevId: ${covPrevId}, covBasis: ${covBasis}, covBasisId: ${covBasisId}, covRefFrame: ${covRefFrame}, covType: ${covType}, TIMES: ${TIMES}, VALUES: ${VALUES}}';
+  }
+}
+
+class _ACMCovarianceBlockReader extends fb.TableReader<ACMCovarianceBlock> {
+  const _ACMCovarianceBlockReader();
+
+  @override
+  ACMCovarianceBlock createObject(fb.BufferContext bc, int offset) =>
+    ACMCovarianceBlock._(bc, offset);
+}
+
+class ACMCovarianceBlockBuilder {
+  ACMCovarianceBlockBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCovIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addCovPrevIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCovBasisOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCovBasisIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addCovRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addCovTypeOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addTimesOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addValuesOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ACMCovarianceBlockObjectBuilder extends fb.ObjectBuilder {
+  final String? _COMMENT;
+  final String? _COV_ID;
+  final String? _COV_PREV_ID;
+  final String? _COV_BASIS;
+  final String? _COV_BASIS_ID;
+  final String? _COV_REF_FRAME;
+  final String? _COV_TYPE;
+  final List<String>? _TIMES;
+  final List<double>? _VALUES;
+
+  ACMCovarianceBlockObjectBuilder({
+    String? COMMENT,
+    String? COV_ID,
+    String? covId,
+    String? COV_PREV_ID,
+    String? covPrevId,
+    String? COV_BASIS,
+    String? covBasis,
+    String? COV_BASIS_ID,
+    String? covBasisId,
+    String? COV_REF_FRAME,
+    String? covRefFrame,
+    String? COV_TYPE,
+    String? covType,
+    List<String>? TIMES,
+    List<double>? VALUES,
+  })
+      : _COMMENT = COMMENT,
+        _COV_ID = covId ?? COV_ID,
+        _COV_PREV_ID = covPrevId ?? COV_PREV_ID,
+        _COV_BASIS = covBasis ?? COV_BASIS,
+        _COV_BASIS_ID = covBasisId ?? COV_BASIS_ID,
+        _COV_REF_FRAME = covRefFrame ?? COV_REF_FRAME,
+        _COV_TYPE = covType ?? COV_TYPE,
+        _TIMES = TIMES,
+        _VALUES = VALUES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? COV_IDOffset = _COV_ID == null ? null
+        : fbBuilder.writeString(_COV_ID!);
+    final int? COV_PREV_IDOffset = _COV_PREV_ID == null ? null
+        : fbBuilder.writeString(_COV_PREV_ID!);
+    final int? COV_BASISOffset = _COV_BASIS == null ? null
+        : fbBuilder.writeString(_COV_BASIS!);
+    final int? COV_BASIS_IDOffset = _COV_BASIS_ID == null ? null
+        : fbBuilder.writeString(_COV_BASIS_ID!);
+    final int? COV_REF_FRAMEOffset = _COV_REF_FRAME == null ? null
+        : fbBuilder.writeString(_COV_REF_FRAME!);
+    final int? COV_TYPEOffset = _COV_TYPE == null ? null
+        : fbBuilder.writeString(_COV_TYPE!);
+    final int? TIMESOffset = _TIMES == null ? null
+        : fbBuilder.writeList(_TIMES!.map(fbBuilder.writeString).toList());
+    final int? VALUESOffset = _VALUES == null ? null
+        : fbBuilder.writeListFloat64(_VALUES!);
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, COMMENTOffset);
+    fbBuilder.addOffset(1, COV_IDOffset);
+    fbBuilder.addOffset(2, COV_PREV_IDOffset);
+    fbBuilder.addOffset(3, COV_BASISOffset);
+    fbBuilder.addOffset(4, COV_BASIS_IDOffset);
+    fbBuilder.addOffset(5, COV_REF_FRAMEOffset);
+    fbBuilder.addOffset(6, COV_TYPEOffset);
+    fbBuilder.addOffset(7, TIMESOffset);
+    fbBuilder.addOffset(8, VALUESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One maneuver specification of an ACM (Table 5-7).
+class ACMManeuverBlock {
+  ACMManeuverBlock._(this._bc, this._bcOffset);
+  factory ACMManeuverBlock(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ACMManeuverBlock> reader = _ACMManeuverBlockReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  MAN_ID.
+  String? get MAN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get manId => MAN_ID;
+  ///  MAN_PREV_ID.
+  String? get MAN_PREV_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get manPrevId => MAN_PREV_ID;
+  ///  MAN_PURPOSE: for example MOM_DESAT.
+  String? get MAN_PURPOSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get manPurpose => MAN_PURPOSE;
+  ///  MAN_BEGIN_TIME in seconds from EPOCH_TZERO.
+  double get MAN_BEGIN_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get manBeginTime => MAN_BEGIN_TIME;
+  ///  MAN_END_TIME in seconds from EPOCH_TZERO; NaN when the message states
+  ///  MAN_DURATION instead (a message states one of the two).
+  double get MAN_END_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, double.nan);
+  double get manEndTime => MAN_END_TIME;
+  ///  MAN_DURATION in seconds; NaN when the message states MAN_END_TIME instead.
+  double get MAN_DURATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, double.nan);
+  double get manDuration => MAN_DURATION;
+  ///  ACTUATOR_USED.
+  String? get ACTUATOR_USED => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get actuatorUsed => ACTUATOR_USED;
+  ///  TARGET_MOMENTUM: three components in N*m*s; empty when not stated.
+  List<double>? get TARGET_MOMENTUM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 20);
+  List<double>? get targetMomentum => TARGET_MOMENTUM;
+  ///  TARGET_MOM_FRAME.
+  String? get TARGET_MOM_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get targetMomFrame => TARGET_MOM_FRAME;
+  ///  TARGET_ATTITUDE: the target attitude components; empty when not stated.
+  List<double>? get TARGET_ATTITUDE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 24);
+  List<double>? get targetAttitude => TARGET_ATTITUDE;
+  ///  TARGET_SPINRATE in deg/s, NaN when not stated.
+  double get TARGET_SPINRATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, double.nan);
+  double get targetSpinrate => TARGET_SPINRATE;
+
+  @override
+  String toString() {
+    return 'ACMManeuverBlock{COMMENT: ${COMMENT}, manId: ${manId}, manPrevId: ${manPrevId}, manPurpose: ${manPurpose}, manBeginTime: ${manBeginTime}, manEndTime: ${manEndTime}, manDuration: ${manDuration}, actuatorUsed: ${actuatorUsed}, targetMomentum: ${targetMomentum}, targetMomFrame: ${targetMomFrame}, targetAttitude: ${targetAttitude}, targetSpinrate: ${targetSpinrate}}';
+  }
+}
+
+class _ACMManeuverBlockReader extends fb.TableReader<ACMManeuverBlock> {
+  const _ACMManeuverBlockReader();
+
+  @override
+  ACMManeuverBlock createObject(fb.BufferContext bc, int offset) =>
+    ACMManeuverBlock._(bc, offset);
+}
+
+class ACMManeuverBlockBuilder {
+  ACMManeuverBlockBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addManIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addManPrevIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addManPurposeOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addManBeginTime(double? MAN_BEGIN_TIME) {
+    fbBuilder.addFloat64(4, MAN_BEGIN_TIME);
+    return fbBuilder.offset;
+  }
+  int addManEndTime(double? MAN_END_TIME) {
+    fbBuilder.addFloat64(5, MAN_END_TIME);
+    return fbBuilder.offset;
+  }
+  int addManDuration(double? MAN_DURATION) {
+    fbBuilder.addFloat64(6, MAN_DURATION);
+    return fbBuilder.offset;
+  }
+  int addActuatorUsedOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetMomentumOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetMomFrameOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetAttitudeOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetSpinrate(double? TARGET_SPINRATE) {
+    fbBuilder.addFloat64(11, TARGET_SPINRATE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ACMManeuverBlockObjectBuilder extends fb.ObjectBuilder {
+  final String? _COMMENT;
+  final String? _MAN_ID;
+  final String? _MAN_PREV_ID;
+  final String? _MAN_PURPOSE;
+  final double? _MAN_BEGIN_TIME;
+  final double? _MAN_END_TIME;
+  final double? _MAN_DURATION;
+  final String? _ACTUATOR_USED;
+  final List<double>? _TARGET_MOMENTUM;
+  final String? _TARGET_MOM_FRAME;
+  final List<double>? _TARGET_ATTITUDE;
+  final double? _TARGET_SPINRATE;
+
+  ACMManeuverBlockObjectBuilder({
+    String? COMMENT,
+    String? MAN_ID,
+    String? manId,
+    String? MAN_PREV_ID,
+    String? manPrevId,
+    String? MAN_PURPOSE,
+    String? manPurpose,
+    double? MAN_BEGIN_TIME,
+    double? manBeginTime,
+    double? MAN_END_TIME,
+    double? manEndTime,
+    double? MAN_DURATION,
+    double? manDuration,
+    String? ACTUATOR_USED,
+    String? actuatorUsed,
+    List<double>? TARGET_MOMENTUM,
+    List<double>? targetMomentum,
+    String? TARGET_MOM_FRAME,
+    String? targetMomFrame,
+    List<double>? TARGET_ATTITUDE,
+    List<double>? targetAttitude,
+    double? TARGET_SPINRATE,
+    double? targetSpinrate,
+  })
+      : _COMMENT = COMMENT,
+        _MAN_ID = manId ?? MAN_ID,
+        _MAN_PREV_ID = manPrevId ?? MAN_PREV_ID,
+        _MAN_PURPOSE = manPurpose ?? MAN_PURPOSE,
+        _MAN_BEGIN_TIME = manBeginTime ?? MAN_BEGIN_TIME,
+        _MAN_END_TIME = manEndTime ?? MAN_END_TIME,
+        _MAN_DURATION = manDuration ?? MAN_DURATION,
+        _ACTUATOR_USED = actuatorUsed ?? ACTUATOR_USED,
+        _TARGET_MOMENTUM = targetMomentum ?? TARGET_MOMENTUM,
+        _TARGET_MOM_FRAME = targetMomFrame ?? TARGET_MOM_FRAME,
+        _TARGET_ATTITUDE = targetAttitude ?? TARGET_ATTITUDE,
+        _TARGET_SPINRATE = targetSpinrate ?? TARGET_SPINRATE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? MAN_IDOffset = _MAN_ID == null ? null
+        : fbBuilder.writeString(_MAN_ID!);
+    final int? MAN_PREV_IDOffset = _MAN_PREV_ID == null ? null
+        : fbBuilder.writeString(_MAN_PREV_ID!);
+    final int? MAN_PURPOSEOffset = _MAN_PURPOSE == null ? null
+        : fbBuilder.writeString(_MAN_PURPOSE!);
+    final int? ACTUATOR_USEDOffset = _ACTUATOR_USED == null ? null
+        : fbBuilder.writeString(_ACTUATOR_USED!);
+    final int? TARGET_MOMENTUMOffset = _TARGET_MOMENTUM == null ? null
+        : fbBuilder.writeListFloat64(_TARGET_MOMENTUM!);
+    final int? TARGET_MOM_FRAMEOffset = _TARGET_MOM_FRAME == null ? null
+        : fbBuilder.writeString(_TARGET_MOM_FRAME!);
+    final int? TARGET_ATTITUDEOffset = _TARGET_ATTITUDE == null ? null
+        : fbBuilder.writeListFloat64(_TARGET_ATTITUDE!);
+    fbBuilder.startTable(12);
+    fbBuilder.addOffset(0, COMMENTOffset);
+    fbBuilder.addOffset(1, MAN_IDOffset);
+    fbBuilder.addOffset(2, MAN_PREV_IDOffset);
+    fbBuilder.addOffset(3, MAN_PURPOSEOffset);
+    fbBuilder.addFloat64(4, _MAN_BEGIN_TIME);
+    fbBuilder.addFloat64(5, _MAN_END_TIME);
+    fbBuilder.addFloat64(6, _MAN_DURATION);
+    fbBuilder.addOffset(7, ACTUATOR_USEDOffset);
+    fbBuilder.addOffset(8, TARGET_MOMENTUMOffset);
+    fbBuilder.addOffset(9, TARGET_MOM_FRAMEOffset);
+    fbBuilder.addOffset(10, TARGET_ATTITUDEOffset);
+    fbBuilder.addFloat64(11, _TARGET_SPINRATE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  The attitude determination data of an ACM (Table 5-8).
+class ACMDetermination {
+  ACMDetermination._(this._bc, this._bcOffset);
+  factory ACMDetermination(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ACMDetermination> reader = _ACMDeterminationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  AD_ID.
+  String? get AD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get adId => AD_ID;
+  ///  AD_PREV_ID.
+  String? get AD_PREV_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get adPrevId => AD_PREV_ID;
+  ///  AD_METHOD: for example EKF, TRIAD or QUEST.
+  String? get AD_METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get adMethod => AD_METHOD;
+  ///  ATTITUDE_SOURCE.
+  String? get ATTITUDE_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get attitudeSource => ATTITUDE_SOURCE;
+  ///  NUMBER_STATES.
+  int get NUMBER_STATES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get numberStates => NUMBER_STATES;
+  ///  ATTITUDE_STATES: QUATERNION, EULER_ANGLES, DCM or ANGVEL.
+  String? get ATTITUDE_STATES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get attitudeStates => ATTITUDE_STATES;
+  ///  EULER_ROT_SEQ.
+  String? get EULER_ROT_SEQ => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get eulerRotSeq => EULER_ROT_SEQ;
+  ///  COV_TYPE.
+  String? get COV_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get covType => COV_TYPE;
+  ///  REF_FRAME_A.
+  String? get REF_FRAME_A => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get refFrameA => REF_FRAME_A;
+  ///  REF_FRAME_B.
+  String? get REF_FRAME_B => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get refFrameB => REF_FRAME_B;
+  ///  RATE_STATES: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS.
+  String? get RATE_STATES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get rateStates => RATE_STATES;
+  ///  SIGMA_U in deg/s**1.5, NaN when not stated.
+  double get SIGMA_U => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, double.nan);
+  double get sigmaU => SIGMA_U;
+  ///  SIGMA_V in deg/s**0.5, NaN when not stated.
+  double get SIGMA_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, double.nan);
+  double get sigmaV => SIGMA_V;
+  ///  RATE_PROCESS_NOISE_STDDEV in deg/s**1.5, NaN when not stated.
+  double get RATE_PROCESS_NOISE_STDDEV => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, double.nan);
+  double get rateProcessNoiseStddev => RATE_PROCESS_NOISE_STDDEV;
+  ///  The sensors, in message order.
+  List<ACMSensor>? get SENSORS => const fb.ListReader<ACMSensor>(ACMSensor.reader).vTableGetNullable(_bc, _bcOffset, 34);
+
+  @override
+  String toString() {
+    return 'ACMDetermination{COMMENT: ${COMMENT}, adId: ${adId}, adPrevId: ${adPrevId}, adMethod: ${adMethod}, attitudeSource: ${attitudeSource}, numberStates: ${numberStates}, attitudeStates: ${attitudeStates}, eulerRotSeq: ${eulerRotSeq}, covType: ${covType}, refFrameA: ${refFrameA}, refFrameB: ${refFrameB}, rateStates: ${rateStates}, sigmaU: ${sigmaU}, sigmaV: ${sigmaV}, rateProcessNoiseStddev: ${rateProcessNoiseStddev}, SENSORS: ${SENSORS}}';
+  }
+}
+
+class _ACMDeterminationReader extends fb.TableReader<ACMDetermination> {
+  const _ACMDeterminationReader();
+
+  @override
+  ACMDetermination createObject(fb.BufferContext bc, int offset) =>
+    ACMDetermination._(bc, offset);
+}
+
+class ACMDeterminationBuilder {
+  ACMDeterminationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(16);
+  }
+
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addAdIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addAdPrevIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addAdMethodOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addAttitudeSourceOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addNumberStates(int? NUMBER_STATES) {
+    fbBuilder.addUint32(5, NUMBER_STATES);
+    return fbBuilder.offset;
+  }
+  int addAttitudeStatesOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addEulerRotSeqOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addCovTypeOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addRefFrameAOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addRefFrameBOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addRateStatesOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addSigmaU(double? SIGMA_U) {
+    fbBuilder.addFloat64(12, SIGMA_U);
+    return fbBuilder.offset;
+  }
+  int addSigmaV(double? SIGMA_V) {
+    fbBuilder.addFloat64(13, SIGMA_V);
+    return fbBuilder.offset;
+  }
+  int addRateProcessNoiseStddev(double? RATE_PROCESS_NOISE_STDDEV) {
+    fbBuilder.addFloat64(14, RATE_PROCESS_NOISE_STDDEV);
+    return fbBuilder.offset;
+  }
+  int addSensorsOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ACMDeterminationObjectBuilder extends fb.ObjectBuilder {
+  final String? _COMMENT;
+  final String? _AD_ID;
+  final String? _AD_PREV_ID;
+  final String? _AD_METHOD;
+  final String? _ATTITUDE_SOURCE;
+  final int? _NUMBER_STATES;
+  final String? _ATTITUDE_STATES;
+  final String? _EULER_ROT_SEQ;
+  final String? _COV_TYPE;
+  final String? _REF_FRAME_A;
+  final String? _REF_FRAME_B;
+  final String? _RATE_STATES;
+  final double? _SIGMA_U;
+  final double? _SIGMA_V;
+  final double? _RATE_PROCESS_NOISE_STDDEV;
+  final List<ACMSensorObjectBuilder>? _SENSORS;
+
+  ACMDeterminationObjectBuilder({
+    String? COMMENT,
+    String? AD_ID,
+    String? adId,
+    String? AD_PREV_ID,
+    String? adPrevId,
+    String? AD_METHOD,
+    String? adMethod,
+    String? ATTITUDE_SOURCE,
+    String? attitudeSource,
+    int? NUMBER_STATES,
+    int? numberStates,
+    String? ATTITUDE_STATES,
+    String? attitudeStates,
+    String? EULER_ROT_SEQ,
+    String? eulerRotSeq,
+    String? COV_TYPE,
+    String? covType,
+    String? REF_FRAME_A,
+    String? refFrameA,
+    String? REF_FRAME_B,
+    String? refFrameB,
+    String? RATE_STATES,
+    String? rateStates,
+    double? SIGMA_U,
+    double? sigmaU,
+    double? SIGMA_V,
+    double? sigmaV,
+    double? RATE_PROCESS_NOISE_STDDEV,
+    double? rateProcessNoiseStddev,
+    List<ACMSensorObjectBuilder>? SENSORS,
+  })
+      : _COMMENT = COMMENT,
+        _AD_ID = adId ?? AD_ID,
+        _AD_PREV_ID = adPrevId ?? AD_PREV_ID,
+        _AD_METHOD = adMethod ?? AD_METHOD,
+        _ATTITUDE_SOURCE = attitudeSource ?? ATTITUDE_SOURCE,
+        _NUMBER_STATES = numberStates ?? NUMBER_STATES,
+        _ATTITUDE_STATES = attitudeStates ?? ATTITUDE_STATES,
+        _EULER_ROT_SEQ = eulerRotSeq ?? EULER_ROT_SEQ,
+        _COV_TYPE = covType ?? COV_TYPE,
+        _REF_FRAME_A = refFrameA ?? REF_FRAME_A,
+        _REF_FRAME_B = refFrameB ?? REF_FRAME_B,
+        _RATE_STATES = rateStates ?? RATE_STATES,
+        _SIGMA_U = sigmaU ?? SIGMA_U,
+        _SIGMA_V = sigmaV ?? SIGMA_V,
+        _RATE_PROCESS_NOISE_STDDEV = rateProcessNoiseStddev ?? RATE_PROCESS_NOISE_STDDEV,
+        _SENSORS = SENSORS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? AD_IDOffset = _AD_ID == null ? null
+        : fbBuilder.writeString(_AD_ID!);
+    final int? AD_PREV_IDOffset = _AD_PREV_ID == null ? null
+        : fbBuilder.writeString(_AD_PREV_ID!);
+    final int? AD_METHODOffset = _AD_METHOD == null ? null
+        : fbBuilder.writeString(_AD_METHOD!);
+    final int? ATTITUDE_SOURCEOffset = _ATTITUDE_SOURCE == null ? null
+        : fbBuilder.writeString(_ATTITUDE_SOURCE!);
+    final int? ATTITUDE_STATESOffset = _ATTITUDE_STATES == null ? null
+        : fbBuilder.writeString(_ATTITUDE_STATES!);
+    final int? EULER_ROT_SEQOffset = _EULER_ROT_SEQ == null ? null
+        : fbBuilder.writeString(_EULER_ROT_SEQ!);
+    final int? COV_TYPEOffset = _COV_TYPE == null ? null
+        : fbBuilder.writeString(_COV_TYPE!);
+    final int? REF_FRAME_AOffset = _REF_FRAME_A == null ? null
+        : fbBuilder.writeString(_REF_FRAME_A!);
+    final int? REF_FRAME_BOffset = _REF_FRAME_B == null ? null
+        : fbBuilder.writeString(_REF_FRAME_B!);
+    final int? RATE_STATESOffset = _RATE_STATES == null ? null
+        : fbBuilder.writeString(_RATE_STATES!);
+    final int? SENSORSOffset = _SENSORS == null ? null
+        : fbBuilder.writeList(_SENSORS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(16);
+    fbBuilder.addOffset(0, COMMENTOffset);
+    fbBuilder.addOffset(1, AD_IDOffset);
+    fbBuilder.addOffset(2, AD_PREV_IDOffset);
+    fbBuilder.addOffset(3, AD_METHODOffset);
+    fbBuilder.addOffset(4, ATTITUDE_SOURCEOffset);
+    fbBuilder.addUint32(5, _NUMBER_STATES);
+    fbBuilder.addOffset(6, ATTITUDE_STATESOffset);
+    fbBuilder.addOffset(7, EULER_ROT_SEQOffset);
+    fbBuilder.addOffset(8, COV_TYPEOffset);
+    fbBuilder.addOffset(9, REF_FRAME_AOffset);
+    fbBuilder.addOffset(10, REF_FRAME_BOffset);
+    fbBuilder.addOffset(11, RATE_STATESOffset);
+    fbBuilder.addFloat64(12, _SIGMA_U);
+    fbBuilder.addFloat64(13, _SIGMA_V);
+    fbBuilder.addFloat64(14, _RATE_PROCESS_NOISE_STDDEV);
+    fbBuilder.addOffset(15, SENSORSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One sensor block of an ACM's attitude determination data.
+class ACMSensor {
+  ACMSensor._(this._bc, this._bcOffset);
+  factory ACMSensor(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ACMSensor> reader = _ACMSensorReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  SENSOR_NUMBER; it need not be sequential.
+  int get SENSOR_NUMBER => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get sensorNumber => SENSOR_NUMBER;
+  ///  SENSOR_USED: for example AST, DSS or IMU.
+  String? get SENSOR_USED => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get sensorUsed => SENSOR_USED;
+  ///  NUMBER_SENSOR_NOISE_COVARIANCE.
+  int get NUMBER_SENSOR_NOISE_COVARIANCE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get numberSensorNoiseCovariance => NUMBER_SENSOR_NOISE_COVARIANCE;
+  ///  SENSOR_NOISE_STDDEV in deg: one value per noise covariance.
+  List<double>? get SENSOR_NOISE_STDDEV => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
+  List<double>? get sensorNoiseStddev => SENSOR_NOISE_STDDEV;
+  ///  SENSOR_FREQUENCY in Hz, NaN when not stated.
+  double get SENSOR_FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, double.nan);
+  double get sensorFrequency => SENSOR_FREQUENCY;
+
+  @override
+  String toString() {
+    return 'ACMSensor{sensorNumber: ${sensorNumber}, sensorUsed: ${sensorUsed}, numberSensorNoiseCovariance: ${numberSensorNoiseCovariance}, sensorNoiseStddev: ${sensorNoiseStddev}, sensorFrequency: ${sensorFrequency}}';
+  }
+}
+
+class _ACMSensorReader extends fb.TableReader<ACMSensor> {
+  const _ACMSensorReader();
+
+  @override
+  ACMSensor createObject(fb.BufferContext bc, int offset) =>
+    ACMSensor._(bc, offset);
+}
+
+class ACMSensorBuilder {
+  ACMSensorBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addSensorNumber(int? SENSOR_NUMBER) {
+    fbBuilder.addUint32(0, SENSOR_NUMBER);
+    return fbBuilder.offset;
+  }
+  int addSensorUsedOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addNumberSensorNoiseCovariance(int? NUMBER_SENSOR_NOISE_COVARIANCE) {
+    fbBuilder.addUint32(2, NUMBER_SENSOR_NOISE_COVARIANCE);
+    return fbBuilder.offset;
+  }
+  int addSensorNoiseStddevOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSensorFrequency(double? SENSOR_FREQUENCY) {
+    fbBuilder.addFloat64(4, SENSOR_FREQUENCY);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ACMSensorObjectBuilder extends fb.ObjectBuilder {
+  final int? _SENSOR_NUMBER;
+  final String? _SENSOR_USED;
+  final int? _NUMBER_SENSOR_NOISE_COVARIANCE;
+  final List<double>? _SENSOR_NOISE_STDDEV;
+  final double? _SENSOR_FREQUENCY;
+
+  ACMSensorObjectBuilder({
+    int? SENSOR_NUMBER,
+    int? sensorNumber,
+    String? SENSOR_USED,
+    String? sensorUsed,
+    int? NUMBER_SENSOR_NOISE_COVARIANCE,
+    int? numberSensorNoiseCovariance,
+    List<double>? SENSOR_NOISE_STDDEV,
+    List<double>? sensorNoiseStddev,
+    double? SENSOR_FREQUENCY,
+    double? sensorFrequency,
+  })
+      : _SENSOR_NUMBER = sensorNumber ?? SENSOR_NUMBER,
+        _SENSOR_USED = sensorUsed ?? SENSOR_USED,
+        _NUMBER_SENSOR_NOISE_COVARIANCE = numberSensorNoiseCovariance ?? NUMBER_SENSOR_NOISE_COVARIANCE,
+        _SENSOR_NOISE_STDDEV = sensorNoiseStddev ?? SENSOR_NOISE_STDDEV,
+        _SENSOR_FREQUENCY = sensorFrequency ?? SENSOR_FREQUENCY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SENSOR_USEDOffset = _SENSOR_USED == null ? null
+        : fbBuilder.writeString(_SENSOR_USED!);
+    final int? SENSOR_NOISE_STDDEVOffset = _SENSOR_NOISE_STDDEV == null ? null
+        : fbBuilder.writeListFloat64(_SENSOR_NOISE_STDDEV!);
+    fbBuilder.startTable(5);
+    fbBuilder.addUint32(0, _SENSOR_NUMBER);
+    fbBuilder.addOffset(1, SENSOR_USEDOffset);
+    fbBuilder.addUint32(2, _NUMBER_SENSOR_NOISE_COVARIANCE);
+    fbBuilder.addOffset(3, SENSOR_NOISE_STDDEVOffset);
+    fbBuilder.addFloat64(4, _SENSOR_FREQUENCY);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One USER_DEFINED_x keyword of an ACM, or one USER_DEFINED element of its XML
+///  form: the parameter name (the x) and the value as written.
+class ACMUserDefinedParameter {
+  ACMUserDefinedParameter._(this._bc, this._bcOffset);
+  factory ACMUserDefinedParameter(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ACMUserDefinedParameter> reader = _ACMUserDefinedParameterReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  String? get PARAM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get paramName => PARAM_NAME;
+  ///  The value as written
+  String? get PARAM_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get paramValue => PARAM_VALUE;
+
+  @override
+  String toString() {
+    return 'ACMUserDefinedParameter{paramName: ${paramName}, paramValue: ${paramValue}}';
+  }
+}
+
+class _ACMUserDefinedParameterReader extends fb.TableReader<ACMUserDefinedParameter> {
+  const _ACMUserDefinedParameterReader();
+
+  @override
+  ACMUserDefinedParameter createObject(fb.BufferContext bc, int offset) =>
+    ACMUserDefinedParameter._(bc, offset);
+}
+
+class ACMUserDefinedParameterBuilder {
+  ACMUserDefinedParameterBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addParamNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addParamValueOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ACMUserDefinedParameterObjectBuilder extends fb.ObjectBuilder {
+  final String? _PARAM_NAME;
+  final String? _PARAM_VALUE;
+
+  ACMUserDefinedParameterObjectBuilder({
+    String? PARAM_NAME,
+    String? paramName,
+    String? PARAM_VALUE,
+    String? paramValue,
+  })
+      : _PARAM_NAME = paramName ?? PARAM_NAME,
+        _PARAM_VALUE = paramValue ?? PARAM_VALUE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PARAM_NAMEOffset = _PARAM_NAME == null ? null
+        : fbBuilder.writeString(_PARAM_NAME!);
+    final int? PARAM_VALUEOffset = _PARAM_VALUE == null ? null
+        : fbBuilder.writeString(_PARAM_VALUE!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, PARAM_NAMEOffset);
+    fbBuilder.addOffset(1, PARAM_VALUEOffset);
     return fbBuilder.endTable();
   }
 

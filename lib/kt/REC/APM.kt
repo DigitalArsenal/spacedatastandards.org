@@ -115,6 +115,178 @@ class APM : Table() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and
+     * data groups, in message order, joined by a line feed. A state group's own
+     * comments stay with it.
+     */
+    val comment : String?
+        get() {
+            val o = __offset(24)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * CLASSIFICATION of the message: the optional header keyword stating its
+     * security classification or handling caveat.
+     */
+    val classification : String?
+        get() {
+            val o = __offset(26)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val classificationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun classificationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * MESSAGE_ID: the optional header keyword, an identifier the originator makes
+     * unique for this message.
+     */
+    val messageId : String?
+        get() {
+            val o = __offset(28)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val messageIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun messageIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * CENTER_NAME: the orbit center, when the message states one.
+     */
+    val centerName : String?
+        get() {
+            val o = __offset(30)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val centerNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun centerNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.
+     */
+    val timeSystem : String?
+        get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val timeSystemAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun timeSystemInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Quaternion states (QUAT_START block), in message order. Q1..QC above are the
+     * single frameless quaternion of the earlier form of this record; a message is
+     * read into and written from these lists.
+     */
+    fun quaternionStates(j: Int) : APMQuaternionState? = quaternionStates(APMQuaternionState(), j)
+    fun quaternionStates(obj: APMQuaternionState, j: Int) : APMQuaternionState? {
+        val o = __offset(34)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val quaternionStatesLength : Int
+        get() {
+            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Euler angle states (EULER_START block), in message order.
+     */
+    fun eulerAngleStates(j: Int) : APMEulerAngleState? = eulerAngleStates(APMEulerAngleState(), j)
+    fun eulerAngleStates(obj: APMEulerAngleState, j: Int) : APMEulerAngleState? {
+        val o = __offset(36)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val eulerAngleStatesLength : Int
+        get() {
+            val o = __offset(36); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Angular velocities (ANGVEL_START block), in message order.
+     */
+    fun angularVelocities(j: Int) : APMAngularVelocity? = angularVelocities(APMAngularVelocity(), j)
+    fun angularVelocities(obj: APMAngularVelocity, j: Int) : APMAngularVelocity? {
+        val o = __offset(38)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val angularVelocitiesLength : Int
+        get() {
+            val o = __offset(38); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Spin states (SPIN_START block), in message order.
+     */
+    fun spinStates(j: Int) : APMSpinState? = spinStates(APMSpinState(), j)
+    fun spinStates(obj: APMSpinState, j: Int) : APMSpinState? {
+        val o = __offset(40)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val spinStatesLength : Int
+        get() {
+            val o = __offset(40); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Inertia tensors (INERTIA_START block), in message order.
+     */
+    fun inertias(j: Int) : APMInertia? = inertias(APMInertia(), j)
+    fun inertias(obj: APMInertia, j: Int) : APMInertia? {
+        val o = __offset(42)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val inertiasLength : Int
+        get() {
+            val o = __offset(42); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Attitude maneuvers (MAN_START block), in message order.
+     */
+    fun maneuvers(j: Int) : APMManeuver? = maneuvers(APMManeuver(), j)
+    fun maneuvers(obj: APMManeuver, j: Int) : APMManeuver? {
+        val o = __offset(44)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val maneuversLength : Int
+        get() {
+            val o = __offset(44); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAPM(_bb: ByteBuffer): APM = getRootAsAPM(_bb, APM())
@@ -123,12 +295,23 @@ class APM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun APMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$APM")
-        fun createAPM(builder: FlatBufferBuilder, ccsdsApmVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, epochOffset: Int, q1: Double, q2: Double, q3: Double, qc: Double) : Int {
-            builder.startTable(10)
+        fun createAPM(builder: FlatBufferBuilder, ccsdsApmVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, epochOffset: Int, q1: Double, q2: Double, q3: Double, qc: Double, commentOffset: Int, classificationOffset: Int, messageIdOffset: Int, centerNameOffset: Int, timeSystemOffset: Int, quaternionStatesOffset: Int, eulerAngleStatesOffset: Int, angularVelocitiesOffset: Int, spinStatesOffset: Int, inertiasOffset: Int, maneuversOffset: Int) : Int {
+            builder.startTable(21)
             addQC(builder, qc)
             addQ3(builder, q3)
             addQ2(builder, q2)
             addQ1(builder, q1)
+            addMANEUVERS(builder, maneuversOffset)
+            addINERTIAS(builder, inertiasOffset)
+            addSPINSTATES(builder, spinStatesOffset)
+            addANGULARVELOCITIES(builder, angularVelocitiesOffset)
+            addEULERANGLESTATES(builder, eulerAngleStatesOffset)
+            addQUATERNIONSTATES(builder, quaternionStatesOffset)
+            addTIMESYSTEM(builder, timeSystemOffset)
+            addCENTERNAME(builder, centerNameOffset)
+            addMESSAGEID(builder, messageIdOffset)
+            addCLASSIFICATION(builder, classificationOffset)
+            addCOMMENT(builder, commentOffset)
             addEPOCH(builder, epochOffset)
             addOBJECTID(builder, objectIdOffset)
             addOBJECTNAME(builder, objectNameOffset)
@@ -137,7 +320,7 @@ class APM : Table() {
             addCCSDSAPMVERS(builder, ccsdsApmVersOffset)
             return endAPM(builder)
         }
-        fun startAPM(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun startAPM(builder: FlatBufferBuilder) = builder.startTable(21)
         fun addCCSDSAPMVERS(builder: FlatBufferBuilder, ccsdsApmVers: Int) = builder.addOffset(0, ccsdsApmVers, 0)
         fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -148,6 +331,65 @@ class APM : Table() {
         fun addQ2(builder: FlatBufferBuilder, q2: Double) = builder.addDouble(7, q2, 0.0)
         fun addQ3(builder: FlatBufferBuilder, q3: Double) = builder.addDouble(8, q3, 0.0)
         fun addQC(builder: FlatBufferBuilder, qc: Double) = builder.addDouble(9, qc, 0.0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(10, comment, 0)
+        fun addCLASSIFICATION(builder: FlatBufferBuilder, classification: Int) = builder.addOffset(11, classification, 0)
+        fun addMESSAGEID(builder: FlatBufferBuilder, messageId: Int) = builder.addOffset(12, messageId, 0)
+        fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(13, centerName, 0)
+        fun addTIMESYSTEM(builder: FlatBufferBuilder, timeSystem: Int) = builder.addOffset(14, timeSystem, 0)
+        fun addQUATERNIONSTATES(builder: FlatBufferBuilder, quaternionStates: Int) = builder.addOffset(15, quaternionStates, 0)
+        fun createQuaternionStatesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startQuaternionStatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addEULERANGLESTATES(builder: FlatBufferBuilder, eulerAngleStates: Int) = builder.addOffset(16, eulerAngleStates, 0)
+        fun createEulerAngleStatesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startEulerAngleStatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addANGULARVELOCITIES(builder: FlatBufferBuilder, angularVelocities: Int) = builder.addOffset(17, angularVelocities, 0)
+        fun createAngularVelocitiesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startAngularVelocitiesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSPINSTATES(builder: FlatBufferBuilder, spinStates: Int) = builder.addOffset(18, spinStates, 0)
+        fun createSpinStatesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSpinStatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addINERTIAS(builder: FlatBufferBuilder, inertias: Int) = builder.addOffset(19, inertias, 0)
+        fun createInertiasVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startInertiasVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMANEUVERS(builder: FlatBufferBuilder, maneuvers: Int) = builder.addOffset(20, maneuvers, 0)
+        fun createManeuversVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startManeuversVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endAPM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

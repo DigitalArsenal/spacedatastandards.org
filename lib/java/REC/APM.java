@@ -50,6 +50,90 @@ public final class APM extends com.google.flatbuffers.Table {
   public double Q2() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double Q3() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double QC() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and
+   * data groups, in message order, joined by a line feed. A state group's own
+   * comments stay with it.
+   */
+  public String COMMENT() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * CLASSIFICATION of the message: the optional header keyword stating its
+   * security classification or handling caveat.
+   */
+  public String CLASSIFICATION() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CLASSIFICATIONAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer CLASSIFICATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * MESSAGE_ID: the optional header keyword, an identifier the originator makes
+   * unique for this message.
+   */
+  public String MESSAGE_ID() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MESSAGE_IDAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer MESSAGE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * CENTER_NAME: the orbit center, when the message states one.
+   */
+  public String CENTER_NAME() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CENTER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer CENTER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.
+   */
+  public String TIME_SYSTEM() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TIME_SYSTEMAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer TIME_SYSTEMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Quaternion states (QUAT_START block), in message order. Q1..QC above are the
+   * single frameless quaternion of the earlier form of this record; a message is
+   * read into and written from these lists.
+   */
+  public APMQuaternionState QUATERNION_STATES(int j) { return QUATERNION_STATES(new APMQuaternionState(), j); }
+  public APMQuaternionState QUATERNION_STATES(APMQuaternionState obj, int j) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int QUATERNION_STATESLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
+  public APMQuaternionState.Vector quaternionStatesVector() { return quaternionStatesVector(new APMQuaternionState.Vector()); }
+  public APMQuaternionState.Vector quaternionStatesVector(APMQuaternionState.Vector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Euler angle states (EULER_START block), in message order.
+   */
+  public APMEulerAngleState EULER_ANGLE_STATES(int j) { return EULER_ANGLE_STATES(new APMEulerAngleState(), j); }
+  public APMEulerAngleState EULER_ANGLE_STATES(APMEulerAngleState obj, int j) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int EULER_ANGLE_STATESLength() { int o = __offset(36); return o != 0 ? __vector_len(o) : 0; }
+  public APMEulerAngleState.Vector eulerAngleStatesVector() { return eulerAngleStatesVector(new APMEulerAngleState.Vector()); }
+  public APMEulerAngleState.Vector eulerAngleStatesVector(APMEulerAngleState.Vector obj) { int o = __offset(36); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Angular velocities (ANGVEL_START block), in message order.
+   */
+  public APMAngularVelocity ANGULAR_VELOCITIES(int j) { return ANGULAR_VELOCITIES(new APMAngularVelocity(), j); }
+  public APMAngularVelocity ANGULAR_VELOCITIES(APMAngularVelocity obj, int j) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int ANGULAR_VELOCITIESLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
+  public APMAngularVelocity.Vector angularVelocitiesVector() { return angularVelocitiesVector(new APMAngularVelocity.Vector()); }
+  public APMAngularVelocity.Vector angularVelocitiesVector(APMAngularVelocity.Vector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Spin states (SPIN_START block), in message order.
+   */
+  public APMSpinState SPIN_STATES(int j) { return SPIN_STATES(new APMSpinState(), j); }
+  public APMSpinState SPIN_STATES(APMSpinState obj, int j) { int o = __offset(40); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SPIN_STATESLength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
+  public APMSpinState.Vector spinStatesVector() { return spinStatesVector(new APMSpinState.Vector()); }
+  public APMSpinState.Vector spinStatesVector(APMSpinState.Vector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Inertia tensors (INERTIA_START block), in message order.
+   */
+  public APMInertia INERTIAS(int j) { return INERTIAS(new APMInertia(), j); }
+  public APMInertia INERTIAS(APMInertia obj, int j) { int o = __offset(42); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int INERTIASLength() { int o = __offset(42); return o != 0 ? __vector_len(o) : 0; }
+  public APMInertia.Vector inertiasVector() { return inertiasVector(new APMInertia.Vector()); }
+  public APMInertia.Vector inertiasVector(APMInertia.Vector obj) { int o = __offset(42); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Attitude maneuvers (MAN_START block), in message order.
+   */
+  public APMManeuver MANEUVERS(int j) { return MANEUVERS(new APMManeuver(), j); }
+  public APMManeuver MANEUVERS(APMManeuver obj, int j) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int MANEUVERSLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
+  public APMManeuver.Vector maneuversVector() { return maneuversVector(new APMManeuver.Vector()); }
+  public APMManeuver.Vector maneuversVector(APMManeuver.Vector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createAPM(FlatBufferBuilder builder,
       int CCSDS_APM_VERSOffset,
@@ -61,12 +145,34 @@ public final class APM extends com.google.flatbuffers.Table {
       double Q1,
       double Q2,
       double Q3,
-      double QC) {
-    builder.startTable(10);
+      double QC,
+      int COMMENTOffset,
+      int CLASSIFICATIONOffset,
+      int MESSAGE_IDOffset,
+      int CENTER_NAMEOffset,
+      int TIME_SYSTEMOffset,
+      int QUATERNION_STATESOffset,
+      int EULER_ANGLE_STATESOffset,
+      int ANGULAR_VELOCITIESOffset,
+      int SPIN_STATESOffset,
+      int INERTIASOffset,
+      int MANEUVERSOffset) {
+    builder.startTable(21);
     APM.addQc(builder, QC);
     APM.addQ3(builder, Q3);
     APM.addQ2(builder, Q2);
     APM.addQ1(builder, Q1);
+    APM.addManeuvers(builder, MANEUVERSOffset);
+    APM.addInertias(builder, INERTIASOffset);
+    APM.addSpinStates(builder, SPIN_STATESOffset);
+    APM.addAngularVelocities(builder, ANGULAR_VELOCITIESOffset);
+    APM.addEulerAngleStates(builder, EULER_ANGLE_STATESOffset);
+    APM.addQuaternionStates(builder, QUATERNION_STATESOffset);
+    APM.addTimeSystem(builder, TIME_SYSTEMOffset);
+    APM.addCenterName(builder, CENTER_NAMEOffset);
+    APM.addMessageId(builder, MESSAGE_IDOffset);
+    APM.addClassification(builder, CLASSIFICATIONOffset);
+    APM.addComment(builder, COMMENTOffset);
     APM.addEpoch(builder, EPOCHOffset);
     APM.addObjectId(builder, OBJECT_IDOffset);
     APM.addObjectName(builder, OBJECT_NAMEOffset);
@@ -76,7 +182,7 @@ public final class APM extends com.google.flatbuffers.Table {
     return APM.endAPM(builder);
   }
 
-  public static void startAPM(FlatBufferBuilder builder) { builder.startTable(10); }
+  public static void startAPM(FlatBufferBuilder builder) { builder.startTable(21); }
   public static void addCcsdsApmVers(FlatBufferBuilder builder, int CCSDS_APM_VERSOffset) { builder.addOffset(0, CCSDS_APM_VERSOffset, 0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -87,6 +193,29 @@ public final class APM extends com.google.flatbuffers.Table {
   public static void addQ2(FlatBufferBuilder builder, double Q2) { builder.addDouble(7, Q2, 0.0); }
   public static void addQ3(FlatBufferBuilder builder, double Q3) { builder.addDouble(8, Q3, 0.0); }
   public static void addQc(FlatBufferBuilder builder, double QC) { builder.addDouble(9, QC, 0.0); }
+  public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(10, COMMENTOffset, 0); }
+  public static void addClassification(FlatBufferBuilder builder, int CLASSIFICATIONOffset) { builder.addOffset(11, CLASSIFICATIONOffset, 0); }
+  public static void addMessageId(FlatBufferBuilder builder, int MESSAGE_IDOffset) { builder.addOffset(12, MESSAGE_IDOffset, 0); }
+  public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(13, CENTER_NAMEOffset, 0); }
+  public static void addTimeSystem(FlatBufferBuilder builder, int TIME_SYSTEMOffset) { builder.addOffset(14, TIME_SYSTEMOffset, 0); }
+  public static void addQuaternionStates(FlatBufferBuilder builder, int QUATERNION_STATESOffset) { builder.addOffset(15, QUATERNION_STATESOffset, 0); }
+  public static int createQuaternionStatesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startQuaternionStatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addEulerAngleStates(FlatBufferBuilder builder, int EULER_ANGLE_STATESOffset) { builder.addOffset(16, EULER_ANGLE_STATESOffset, 0); }
+  public static int createEulerAngleStatesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startEulerAngleStatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addAngularVelocities(FlatBufferBuilder builder, int ANGULAR_VELOCITIESOffset) { builder.addOffset(17, ANGULAR_VELOCITIESOffset, 0); }
+  public static int createAngularVelocitiesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startAngularVelocitiesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSpinStates(FlatBufferBuilder builder, int SPIN_STATESOffset) { builder.addOffset(18, SPIN_STATESOffset, 0); }
+  public static int createSpinStatesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSpinStatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addInertias(FlatBufferBuilder builder, int INERTIASOffset) { builder.addOffset(19, INERTIASOffset, 0); }
+  public static int createInertiasVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startInertiasVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addManeuvers(FlatBufferBuilder builder, int MANEUVERSOffset) { builder.addOffset(20, MANEUVERSOffset, 0); }
+  public static int createManeuversVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startManeuversVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endAPM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

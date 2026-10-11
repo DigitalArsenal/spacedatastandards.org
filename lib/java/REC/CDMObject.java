@@ -201,6 +201,28 @@ public final class CDMObject extends com.google.flatbuffers.Table {
   public DoubleVector covarianceVector(DoubleVector obj) { int o = __offset(76); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer COVARIANCEAsByteBuffer() { return __vector_as_bytebuffer(76, 8); }
   public ByteBuffer COVARIANCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 8); }
+  /**
+   * OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+   * as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+   */
+  public String OBJECT_DESIGNATOR() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
+  public ByteBuffer OBJECT_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
+  /**
+   * CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+   */
+  public String CATALOG_NAME() { int o = __offset(80); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CATALOG_NAMEAsByteBuffer() { return __vector_as_bytebuffer(80, 1); }
+  public ByteBuffer CATALOG_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 80, 1); }
+  /**
+   * MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+   * same fact as a flag, true for YES.
+   */
+  public byte MANEUVERABLE() { int o = __offset(82); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+   */
+  public double CD_AREA_OVER_MASS() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createCDMObject(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -239,8 +261,13 @@ public final class CDMObject extends com.google.flatbuffers.Table {
       double X_DOT,
       double Y_DOT,
       double Z_DOT,
-      int COVARIANCEOffset) {
-    builder.startTable(37);
+      int COVARIANCEOffset,
+      int OBJECT_DESIGNATOROffset,
+      int CATALOG_NAMEOffset,
+      byte MANEUVERABLE,
+      double CD_AREA_OVER_MASS) {
+    builder.startTable(41);
+    CDMObject.addCdAreaOverMass(builder, CD_AREA_OVER_MASS);
     CDMObject.addZDot(builder, Z_DOT);
     CDMObject.addYDot(builder, Y_DOT);
     CDMObject.addXDot(builder, X_DOT);
@@ -257,6 +284,8 @@ public final class CDMObject extends com.google.flatbuffers.Table {
     CDMObject.addResidualsAccepted(builder, RESIDUALS_ACCEPTED);
     CDMObject.addActualOdSpan(builder, ACTUAL_OD_SPAN);
     CDMObject.addRecommendedOdSpan(builder, RECOMMENDED_OD_SPAN);
+    CDMObject.addCatalogName(builder, CATALOG_NAMEOffset);
+    CDMObject.addObjectDesignator(builder, OBJECT_DESIGNATOROffset);
     CDMObject.addCovariance(builder, COVARIANCEOffset);
     CDMObject.addTracksUsed(builder, TRACKS_USED);
     CDMObject.addTracksAvailable(builder, TRACKS_AVAILABLE);
@@ -274,6 +303,7 @@ public final class CDMObject extends com.google.flatbuffers.Table {
     CDMObject.addPoc(builder, POCOffset);
     CDMObject.addObject(builder, OBJECTOffset);
     CDMObject.addComment(builder, COMMENTOffset);
+    CDMObject.addManeuverable(builder, MANEUVERABLE);
     CDMObject.addIntrackThrust(builder, INTRACK_THRUST);
     CDMObject.addEarthTides(builder, EARTH_TIDES);
     CDMObject.addSolarRadPressure(builder, SOLAR_RAD_PRESSURE);
@@ -281,7 +311,7 @@ public final class CDMObject extends com.google.flatbuffers.Table {
     return CDMObject.endCDMObject(builder);
   }
 
-  public static void startCDMObject(FlatBufferBuilder builder) { builder.startTable(37); }
+  public static void startCDMObject(FlatBufferBuilder builder) { builder.startTable(41); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static void addObject(FlatBufferBuilder builder, int OBJECTOffset) { builder.addOffset(1, OBJECTOffset, 0); }
   public static void addPoc(FlatBufferBuilder builder, int POCOffset) { builder.addOffset(2, POCOffset, 0); }
@@ -321,6 +351,10 @@ public final class CDMObject extends com.google.flatbuffers.Table {
   public static void addCovariance(FlatBufferBuilder builder, int COVARIANCEOffset) { builder.addOffset(36, COVARIANCEOffset, 0); }
   public static int createCovarianceVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startCovarianceVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addObjectDesignator(FlatBufferBuilder builder, int OBJECT_DESIGNATOROffset) { builder.addOffset(37, OBJECT_DESIGNATOROffset, 0); }
+  public static void addCatalogName(FlatBufferBuilder builder, int CATALOG_NAMEOffset) { builder.addOffset(38, CATALOG_NAMEOffset, 0); }
+  public static void addManeuverable(FlatBufferBuilder builder, byte MANEUVERABLE) { builder.addByte(39, MANEUVERABLE, 0); }
+  public static void addCdAreaOverMass(FlatBufferBuilder builder, double CD_AREA_OVER_MASS) { builder.addDouble(40, CD_AREA_OVER_MASS, 0.0); }
   public static int endCDMObject(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

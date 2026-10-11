@@ -57,6 +57,15 @@ public struct attPhysicalProperties : IFlatbufferObject
   public double IXZ { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Product of inertia YZ in kg*m^2
   public double IYZ { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+  /// joined by a line feed.
+  public string COMMENT { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOMMENTBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(32); }
 
   public static Offset<attPhysicalProperties> CreateattPhysicalProperties(FlatBufferBuilder builder,
       double DRAG_COEFF = 0.0,
@@ -72,8 +81,9 @@ public struct attPhysicalProperties : IFlatbufferObject
       double IZZ = 0.0,
       double IXY = 0.0,
       double IXZ = 0.0,
-      double IYZ = 0.0) {
-    builder.StartTable(14);
+      double IYZ = 0.0,
+      StringOffset COMMENTOffset = default(StringOffset)) {
+    builder.StartTable(15);
     attPhysicalProperties.AddIYZ(builder, IYZ);
     attPhysicalProperties.AddIXZ(builder, IXZ);
     attPhysicalProperties.AddIXY(builder, IXY);
@@ -86,12 +96,13 @@ public struct attPhysicalProperties : IFlatbufferObject
     attPhysicalProperties.AddDRY_MASS(builder, DRY_MASS);
     attPhysicalProperties.AddWET_MASS(builder, WET_MASS);
     attPhysicalProperties.AddDRAG_COEFF(builder, DRAG_COEFF);
+    attPhysicalProperties.AddCOMMENT(builder, COMMENTOffset);
     attPhysicalProperties.AddINERTIA_REF_FRAME(builder, INERTIA_REF_FRAMEOffset);
     attPhysicalProperties.AddCP_REF_FRAME(builder, CP_REF_FRAMEOffset);
     return attPhysicalProperties.EndattPhysicalProperties(builder);
   }
 
-  public static void StartattPhysicalProperties(FlatBufferBuilder builder) { builder.StartTable(14); }
+  public static void StartattPhysicalProperties(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddDRAG_COEFF(FlatBufferBuilder builder, double DRAG_COEFF) { builder.AddDouble(0, DRAG_COEFF, 0.0); }
   public static void AddWET_MASS(FlatBufferBuilder builder, double WET_MASS) { builder.AddDouble(1, WET_MASS, 0.0); }
   public static void AddDRY_MASS(FlatBufferBuilder builder, double DRY_MASS) { builder.AddDouble(2, DRY_MASS, 0.0); }
@@ -106,6 +117,7 @@ public struct attPhysicalProperties : IFlatbufferObject
   public static void AddIXY(FlatBufferBuilder builder, double IXY) { builder.AddDouble(11, IXY, 0.0); }
   public static void AddIXZ(FlatBufferBuilder builder, double IXZ) { builder.AddDouble(12, IXZ, 0.0); }
   public static void AddIYZ(FlatBufferBuilder builder, double IYZ) { builder.AddDouble(13, IYZ, 0.0); }
+  public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(14, COMMENTOffset.Value, 0); }
   public static Offset<attPhysicalProperties> EndattPhysicalProperties(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<attPhysicalProperties>(o);
@@ -130,11 +142,13 @@ public struct attPhysicalProperties : IFlatbufferObject
     _o.IXY = this.IXY;
     _o.IXZ = this.IXZ;
     _o.IYZ = this.IYZ;
+    _o.COMMENT = this.COMMENT;
   }
   public static Offset<attPhysicalProperties> Pack(FlatBufferBuilder builder, attPhysicalPropertiesT _o) {
     if (_o == null) return default(Offset<attPhysicalProperties>);
     var _CP_REF_FRAME = _o.CP_REF_FRAME == null ? default(StringOffset) : builder.CreateString(_o.CP_REF_FRAME);
     var _INERTIA_REF_FRAME = _o.INERTIA_REF_FRAME == null ? default(StringOffset) : builder.CreateString(_o.INERTIA_REF_FRAME);
+    var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
     return CreateattPhysicalProperties(
       builder,
       _o.DRAG_COEFF,
@@ -150,7 +164,8 @@ public struct attPhysicalProperties : IFlatbufferObject
       _o.IZZ,
       _o.IXY,
       _o.IXZ,
-      _o.IYZ);
+      _o.IYZ,
+      _COMMENT);
   }
 }
 
@@ -170,6 +185,7 @@ public class attPhysicalPropertiesT
   public double IXY { get; set; }
   public double IXZ { get; set; }
   public double IYZ { get; set; }
+  public string COMMENT { get; set; }
 
   public attPhysicalPropertiesT() {
     this.DRAG_COEFF = 0.0;
@@ -186,6 +202,7 @@ public class attPhysicalPropertiesT
     this.IXY = 0.0;
     this.IXZ = 0.0;
     this.IYZ = 0.0;
+    this.COMMENT = null;
   }
 }
 
@@ -209,6 +226,7 @@ static public class attPhysicalPropertiesVerify
       && verifier.VerifyField(tablePos, 26 /*IXY*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 28 /*IXZ*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 30 /*IYZ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 32 /*COMMENT*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

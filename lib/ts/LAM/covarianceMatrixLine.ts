@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { RFM, RFMT } from './RFM.js';
 
 
 /**
@@ -205,8 +206,27 @@ CZ_DOT_Z_DOT():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.
+ */
+COMMENT():string|null
+COMMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COMMENT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix
+ * is expressed in, when it differs from the block's COV_REFERENCE_FRAME.
+ */
+COV_REFERENCE_FRAME(obj?:RFM):RFM|null {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startcovarianceMatrixLine(builder:flatbuffers.Builder) {
-  builder.startObject(22);
+  builder.startObject(24);
 }
 
 static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
@@ -297,37 +317,19 @@ static addCzDotZDot(builder:flatbuffers.Builder, CZ_DOT_Z_DOT:number) {
   builder.addFieldFloat64(21, CZ_DOT_Z_DOT, 0.0);
 }
 
+static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, COMMENTOffset, 0);
+}
+
+static addCovReferenceFrame(builder:flatbuffers.Builder, COV_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(23, COV_REFERENCE_FRAMEOffset, 0);
+}
+
 static endcovarianceMatrixLine(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createcovarianceMatrixLine(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset, CX_X:number, CY_X:number, CY_Y:number, CZ_X:number, CZ_Y:number, CZ_Z:number, CX_DOT_X:number, CX_DOT_Y:number, CX_DOT_Z:number, CX_DOT_X_DOT:number, CY_DOT_X:number, CY_DOT_Y:number, CY_DOT_Z:number, CY_DOT_X_DOT:number, CY_DOT_Y_DOT:number, CZ_DOT_X:number, CZ_DOT_Y:number, CZ_DOT_Z:number, CZ_DOT_X_DOT:number, CZ_DOT_Y_DOT:number, CZ_DOT_Z_DOT:number):flatbuffers.Offset {
-  covarianceMatrixLine.startcovarianceMatrixLine(builder);
-  covarianceMatrixLine.addEpoch(builder, EPOCHOffset);
-  covarianceMatrixLine.addCxX(builder, CX_X);
-  covarianceMatrixLine.addCyX(builder, CY_X);
-  covarianceMatrixLine.addCyY(builder, CY_Y);
-  covarianceMatrixLine.addCzX(builder, CZ_X);
-  covarianceMatrixLine.addCzY(builder, CZ_Y);
-  covarianceMatrixLine.addCzZ(builder, CZ_Z);
-  covarianceMatrixLine.addCxDotX(builder, CX_DOT_X);
-  covarianceMatrixLine.addCxDotY(builder, CX_DOT_Y);
-  covarianceMatrixLine.addCxDotZ(builder, CX_DOT_Z);
-  covarianceMatrixLine.addCxDotXDot(builder, CX_DOT_X_DOT);
-  covarianceMatrixLine.addCyDotX(builder, CY_DOT_X);
-  covarianceMatrixLine.addCyDotY(builder, CY_DOT_Y);
-  covarianceMatrixLine.addCyDotZ(builder, CY_DOT_Z);
-  covarianceMatrixLine.addCyDotXDot(builder, CY_DOT_X_DOT);
-  covarianceMatrixLine.addCyDotYDot(builder, CY_DOT_Y_DOT);
-  covarianceMatrixLine.addCzDotX(builder, CZ_DOT_X);
-  covarianceMatrixLine.addCzDotY(builder, CZ_DOT_Y);
-  covarianceMatrixLine.addCzDotZ(builder, CZ_DOT_Z);
-  covarianceMatrixLine.addCzDotXDot(builder, CZ_DOT_X_DOT);
-  covarianceMatrixLine.addCzDotYDot(builder, CZ_DOT_Y_DOT);
-  covarianceMatrixLine.addCzDotZDot(builder, CZ_DOT_Z_DOT);
-  return covarianceMatrixLine.endcovarianceMatrixLine(builder);
-}
 
 unpack(): covarianceMatrixLineT {
   return new covarianceMatrixLineT(
@@ -352,7 +354,9 @@ unpack(): covarianceMatrixLineT {
     this.CZ_DOT_Z(),
     this.CZ_DOT_X_DOT(),
     this.CZ_DOT_Y_DOT(),
-    this.CZ_DOT_Z_DOT()
+    this.CZ_DOT_Z_DOT(),
+    this.COMMENT(),
+    (this.COV_REFERENCE_FRAME() !== null ? this.COV_REFERENCE_FRAME()!.unpack() : null)
   );
 }
 
@@ -380,6 +384,8 @@ unpackTo(_o: covarianceMatrixLineT): void {
   _o.CZ_DOT_X_DOT = this.CZ_DOT_X_DOT();
   _o.CZ_DOT_Y_DOT = this.CZ_DOT_Y_DOT();
   _o.CZ_DOT_Z_DOT = this.CZ_DOT_Z_DOT();
+  _o.COMMENT = this.COMMENT();
+  _o.COV_REFERENCE_FRAME = (this.COV_REFERENCE_FRAME() !== null ? this.COV_REFERENCE_FRAME()!.unpack() : null);
 }
 }
 
@@ -406,36 +412,43 @@ constructor(
   public CZ_DOT_Z: number = 0.0,
   public CZ_DOT_X_DOT: number = 0.0,
   public CZ_DOT_Y_DOT: number = 0.0,
-  public CZ_DOT_Z_DOT: number = 0.0
+  public CZ_DOT_Z_DOT: number = 0.0,
+  public COMMENT: string|Uint8Array|null = null,
+  public COV_REFERENCE_FRAME: RFMT|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
+  const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
+  const COV_REFERENCE_FRAME = (this.COV_REFERENCE_FRAME !== null ? this.COV_REFERENCE_FRAME!.pack(builder) : 0);
 
-  return covarianceMatrixLine.createcovarianceMatrixLine(builder,
-    EPOCH,
-    this.CX_X,
-    this.CY_X,
-    this.CY_Y,
-    this.CZ_X,
-    this.CZ_Y,
-    this.CZ_Z,
-    this.CX_DOT_X,
-    this.CX_DOT_Y,
-    this.CX_DOT_Z,
-    this.CX_DOT_X_DOT,
-    this.CY_DOT_X,
-    this.CY_DOT_Y,
-    this.CY_DOT_Z,
-    this.CY_DOT_X_DOT,
-    this.CY_DOT_Y_DOT,
-    this.CZ_DOT_X,
-    this.CZ_DOT_Y,
-    this.CZ_DOT_Z,
-    this.CZ_DOT_X_DOT,
-    this.CZ_DOT_Y_DOT,
-    this.CZ_DOT_Z_DOT
-  );
+  covarianceMatrixLine.startcovarianceMatrixLine(builder);
+  covarianceMatrixLine.addEpoch(builder, EPOCH);
+  covarianceMatrixLine.addCxX(builder, this.CX_X);
+  covarianceMatrixLine.addCyX(builder, this.CY_X);
+  covarianceMatrixLine.addCyY(builder, this.CY_Y);
+  covarianceMatrixLine.addCzX(builder, this.CZ_X);
+  covarianceMatrixLine.addCzY(builder, this.CZ_Y);
+  covarianceMatrixLine.addCzZ(builder, this.CZ_Z);
+  covarianceMatrixLine.addCxDotX(builder, this.CX_DOT_X);
+  covarianceMatrixLine.addCxDotY(builder, this.CX_DOT_Y);
+  covarianceMatrixLine.addCxDotZ(builder, this.CX_DOT_Z);
+  covarianceMatrixLine.addCxDotXDot(builder, this.CX_DOT_X_DOT);
+  covarianceMatrixLine.addCyDotX(builder, this.CY_DOT_X);
+  covarianceMatrixLine.addCyDotY(builder, this.CY_DOT_Y);
+  covarianceMatrixLine.addCyDotZ(builder, this.CY_DOT_Z);
+  covarianceMatrixLine.addCyDotXDot(builder, this.CY_DOT_X_DOT);
+  covarianceMatrixLine.addCyDotYDot(builder, this.CY_DOT_Y_DOT);
+  covarianceMatrixLine.addCzDotX(builder, this.CZ_DOT_X);
+  covarianceMatrixLine.addCzDotY(builder, this.CZ_DOT_Y);
+  covarianceMatrixLine.addCzDotZ(builder, this.CZ_DOT_Z);
+  covarianceMatrixLine.addCzDotXDot(builder, this.CZ_DOT_X_DOT);
+  covarianceMatrixLine.addCzDotYDot(builder, this.CZ_DOT_Y_DOT);
+  covarianceMatrixLine.addCzDotZDot(builder, this.CZ_DOT_Z_DOT);
+  covarianceMatrixLine.addComment(builder, COMMENT);
+  covarianceMatrixLine.addCovReferenceFrame(builder, COV_REFERENCE_FRAME);
+
+  return covarianceMatrixLine.endcovarianceMatrixLine(builder);
 }
 }

@@ -88,8 +88,25 @@ class OEM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         return o == 0
 
+    # COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.
+    # OEM
+    def COMMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator
+    # makes unique for this message.
+    # OEM
+    def MESSAGE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def OEMStart(builder):
-    builder.StartObject(5)
+    builder.StartObject(7)
 
 def Start(builder):
     OEMStart(builder)
@@ -136,6 +153,18 @@ def OEMCreateEPHEMERIS_DATA_BLOCKVector(builder, data):
 def CreateEPHEMERIS_DATA_BLOCKVector(builder, data):
     return OEMCreateEPHEMERIS_DATA_BLOCKVector(builder, data)
 
+def OEMAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    OEMAddCOMMENT(builder, COMMENT)
+
+def OEMAddMESSAGE_ID(builder, MESSAGE_ID):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_ID), 0)
+
+def AddMESSAGE_ID(builder, MESSAGE_ID):
+    OEMAddMESSAGE_ID(builder, MESSAGE_ID)
+
 def OEMEnd(builder):
     return builder.EndObject()
 
@@ -158,12 +187,16 @@ class OEMT(object):
         CREATION_DATE = None,
         ORIGINATOR = None,
         EPHEMERIS_DATA_BLOCK = None,
+        COMMENT = None,
+        MESSAGE_ID = None,
     ):
         self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
         self.CCSDS_OEM_VERS = CCSDS_OEM_VERS  # type: float
         self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
         self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
         self.EPHEMERIS_DATA_BLOCK = EPHEMERIS_DATA_BLOCK  # type: Optional[List[ephemerisDataBlock.ephemerisDataBlockT]]
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.MESSAGE_ID = MESSAGE_ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -198,6 +231,8 @@ class OEMT(object):
                 else:
                     ephemerisDataBlock_ = ephemerisDataBlock.ephemerisDataBlockT.InitFromObj(OEM.EPHEMERIS_DATA_BLOCK(i))
                     self.EPHEMERIS_DATA_BLOCK.append(ephemerisDataBlock_)
+        self.COMMENT = OEM.COMMENT()
+        self.MESSAGE_ID = OEM.MESSAGE_ID()
 
     # OEMT
     def Pack(self, builder):
@@ -215,6 +250,10 @@ class OEMT(object):
             for i in reversed(range(len(self.EPHEMERIS_DATA_BLOCK))):
                 builder.PrependUOffsetTRelative(EPHEMERIS_DATA_BLOCKlist[i])
             EPHEMERIS_DATA_BLOCK = builder.EndVector()
+        if self.COMMENT is not None:
+            COMMENT = builder.CreateString(self.COMMENT)
+        if self.MESSAGE_ID is not None:
+            MESSAGE_ID = builder.CreateString(self.MESSAGE_ID)
         OEMStart(builder)
         if self.CLASSIFICATION is not None:
             OEMAddCLASSIFICATION(builder, CLASSIFICATION)
@@ -225,5 +264,9 @@ class OEMT(object):
             OEMAddORIGINATOR(builder, ORIGINATOR)
         if self.EPHEMERIS_DATA_BLOCK is not None:
             OEMAddEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCK)
+        if self.COMMENT is not None:
+            OEMAddCOMMENT(builder, COMMENT)
+        if self.MESSAGE_ID is not None:
+            OEMAddMESSAGE_ID(builder, MESSAGE_ID)
         OEM = OEMEnd(builder)
         return OEM

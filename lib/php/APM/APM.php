@@ -113,22 +113,183 @@ class APM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and
+    /// data groups, in message order, joined by a line feed. A state group's own
+    /// comments stay with it.
+    public function getCOMMENT()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CLASSIFICATION of the message: the optional header keyword stating its
+    /// security classification or handling caveat.
+    public function getCLASSIFICATION()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+    /// unique for this message.
+    public function getMESSAGE_ID()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CENTER_NAME: the orbit center, when the message states one.
+    public function getCENTER_NAME()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.
+    public function getTIME_SYSTEM()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Quaternion states (QUAT_START block), in message order. Q1..QC above are the
+    /// single frameless quaternion of the earlier form of this record; a message is
+    /// read into and written from these lists.
+    /**
+     * @returnVectorOffset
+     */
+    public function getQUATERNION_STATES($j)
+    {
+        $o = $this->__offset(34);
+        $obj = new APMQuaternionState();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQUATERNION_STATESLength()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Euler angle states (EULER_START block), in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getEULER_ANGLE_STATES($j)
+    {
+        $o = $this->__offset(36);
+        $obj = new APMEulerAngleState();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEULER_ANGLE_STATESLength()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Angular velocities (ANGVEL_START block), in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getANGULAR_VELOCITIES($j)
+    {
+        $o = $this->__offset(38);
+        $obj = new APMAngularVelocity();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getANGULAR_VELOCITIESLength()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Spin states (SPIN_START block), in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getSPIN_STATES($j)
+    {
+        $o = $this->__offset(40);
+        $obj = new APMSpinState();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSPIN_STATESLength()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Inertia tensors (INERTIA_START block), in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getINERTIAS($j)
+    {
+        $o = $this->__offset(42);
+        $obj = new APMInertia();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getINERTIASLength()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Attitude maneuvers (MAN_START block), in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getMANEUVERS($j)
+    {
+        $o = $this->__offset(44);
+        $obj = new APMManeuver();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMANEUVERSLength()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startAPM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(10);
+        $builder->StartObject(21);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return APM
      */
-    public static function createAPM(FlatBufferBuilder $builder, $CCSDS_APM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $EPOCH, $Q1, $Q2, $Q3, $QC)
+    public static function createAPM(FlatBufferBuilder $builder, $CCSDS_APM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $EPOCH, $Q1, $Q2, $Q3, $QC, $COMMENT, $CLASSIFICATION, $MESSAGE_ID, $CENTER_NAME, $TIME_SYSTEM, $QUATERNION_STATES, $EULER_ANGLE_STATES, $ANGULAR_VELOCITIES, $SPIN_STATES, $INERTIAS, $MANEUVERS)
     {
-        $builder->startObject(10);
+        $builder->startObject(21);
         self::addCCSDS_APM_VERS($builder, $CCSDS_APM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -139,6 +300,17 @@ class APM extends Table
         self::addQ2($builder, $Q2);
         self::addQ3($builder, $Q3);
         self::addQC($builder, $QC);
+        self::addCOMMENT($builder, $COMMENT);
+        self::addCLASSIFICATION($builder, $CLASSIFICATION);
+        self::addMESSAGE_ID($builder, $MESSAGE_ID);
+        self::addCENTER_NAME($builder, $CENTER_NAME);
+        self::addTIME_SYSTEM($builder, $TIME_SYSTEM);
+        self::addQUATERNION_STATES($builder, $QUATERNION_STATES);
+        self::addEULER_ANGLE_STATES($builder, $EULER_ANGLE_STATES);
+        self::addANGULAR_VELOCITIES($builder, $ANGULAR_VELOCITIES);
+        self::addSPIN_STATES($builder, $SPIN_STATES);
+        self::addINERTIAS($builder, $INERTIAS);
+        self::addMANEUVERS($builder, $MANEUVERS);
         $o = $builder->endObject();
         return $o;
     }
@@ -241,6 +413,260 @@ class APM extends Table
     public static function addQC(FlatBufferBuilder $builder, $QC)
     {
         $builder->addDoubleX(9, $QC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
+    {
+        $builder->addOffsetX(10, $COMMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCLASSIFICATION(FlatBufferBuilder $builder, $CLASSIFICATION)
+    {
+        $builder->addOffsetX(11, $CLASSIFICATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMESSAGE_ID(FlatBufferBuilder $builder, $MESSAGE_ID)
+    {
+        $builder->addOffsetX(12, $MESSAGE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCENTER_NAME(FlatBufferBuilder $builder, $CENTER_NAME)
+    {
+        $builder->addOffsetX(13, $CENTER_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTIME_SYSTEM(FlatBufferBuilder $builder, $TIME_SYSTEM)
+    {
+        $builder->addOffsetX(14, $TIME_SYSTEM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addQUATERNION_STATES(FlatBufferBuilder $builder, $QUATERNION_STATES)
+    {
+        $builder->addOffsetX(15, $QUATERNION_STATES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createQUATERNION_STATESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startQUATERNION_STATESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEULER_ANGLE_STATES(FlatBufferBuilder $builder, $EULER_ANGLE_STATES)
+    {
+        $builder->addOffsetX(16, $EULER_ANGLE_STATES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createEULER_ANGLE_STATESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startEULER_ANGLE_STATESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addANGULAR_VELOCITIES(FlatBufferBuilder $builder, $ANGULAR_VELOCITIES)
+    {
+        $builder->addOffsetX(17, $ANGULAR_VELOCITIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createANGULAR_VELOCITIESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startANGULAR_VELOCITIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSPIN_STATES(FlatBufferBuilder $builder, $SPIN_STATES)
+    {
+        $builder->addOffsetX(18, $SPIN_STATES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSPIN_STATESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSPIN_STATESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addINERTIAS(FlatBufferBuilder $builder, $INERTIAS)
+    {
+        $builder->addOffsetX(19, $INERTIAS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createINERTIASVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startINERTIASVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMANEUVERS(FlatBufferBuilder $builder, $MANEUVERS)
+    {
+        $builder->addOffsetX(20, $MANEUVERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createMANEUVERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startMANEUVERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

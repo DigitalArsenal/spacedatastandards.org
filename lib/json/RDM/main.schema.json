@@ -5,6 +5,10 @@
       "type" : "string",
       "enum": ["CONTROLLED", "UNCONTROLLED", "SEMI_CONTROLLED"]
     },
+    "rdmControlledReentry" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "YES", "NO", "UNKNOWN"]
+    },
     "reentryReason" : {
       "type" : "string",
       "enum": ["NATURAL_DECAY", "COMMANDED_DEORBIT", "PROPULSION_FAILURE", "COLLISION", "FRAGMENTATION", "UNKNOWN"]
@@ -220,7 +224,342 @@
               },
         "COMMENT" : {
                 "type" : "string",
-                "description" : "Additional comments"
+                "description" : "COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and\ndata groups, in message order, joined by a line feed."
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "The fields below, with the earlier ones that say so, are the keywords of\nCCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,\nNORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH\nNOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS\nWET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,\nREENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,\nSURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are\nnot keywords of the message.\nMESSAGE_ID: an identifier the originator makes unique for this message."
+              },
+        "CATALOG_NAME" : {
+                "type" : "string",
+                "description" : "CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in."
+              },
+        "OBJECT_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written."
+              },
+        "OBJECT_OWNER" : {
+                "type" : "string",
+                "description" : "OBJECT_OWNER."
+              },
+        "OBJECT_OPERATOR" : {
+                "type" : "string",
+                "description" : "OBJECT_OPERATOR."
+              },
+        "CONTROLLED_REENTRY" : {
+                "$ref" : "#/definitions/rdmControlledReentry",
+                "description" : "CONTROLLED_REENTRY: YES, NO or UNKNOWN."
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "CENTER_NAME: the body being re-entered."
+              },
+        "EPOCH_TZERO" : {
+                "type" : "string",
+                "description" : "EPOCH_TZERO: the epoch the message's relative times are measured from."
+              },
+        "REF_FRAME" : {
+                "type" : "string",
+                "description" : "REF_FRAME: the frame of the state vector."
+              },
+        "REF_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "REF_FRAME_EPOCH."
+              },
+        "EPHEMERIS_NAME" : {
+                "type" : "string",
+                "description" : "EPHEMERIS_NAME."
+              },
+        "GRAVITY_MODEL" : {
+                "type" : "string",
+                "description" : "GRAVITY_MODEL."
+              },
+        "ATMOSPHERIC_MODEL" : {
+                "type" : "string",
+                "description" : "ATMOSPHERIC_MODEL."
+              },
+        "SOLAR_FLUX_PREDICTION" : {
+                "type" : "string",
+                "description" : "SOLAR_FLUX_PREDICTION."
+              },
+        "N_BODY_PERTURBATIONS" : {
+                "type" : "string",
+                "description" : "N_BODY_PERTURBATIONS."
+              },
+        "SOLAR_RAD_PRESSURE" : {
+                "type" : "string",
+                "description" : "SOLAR_RAD_PRESSURE: a model name, or YES or NO."
+              },
+        "EARTH_TIDES" : {
+                "type" : "string",
+                "description" : "EARTH_TIDES: a model name."
+              },
+        "INTRACK_THRUST" : {
+                "type" : "string",
+                "description" : "INTRACK_THRUST: YES or NO."
+              },
+        "DRAG_PARAMETERS_SOURCE" : {
+                "type" : "string",
+                "description" : "DRAG_PARAMETERS_SOURCE."
+              },
+        "DRAG_PARAMETERS_ALTITUDE" : {
+                "type" : "number",
+                "description" : "DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated."
+              },
+        "REENTRY_UNCERTAINTY_METHOD" : {
+                "type" : "string",
+                "description" : "REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL."
+              },
+        "REENTRY_DISINTEGRATION" : {
+                "type" : "string",
+                "description" : "REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP."
+              },
+        "IMPACT_UNCERTAINTY_METHOD" : {
+                "type" : "string",
+                "description" : "IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL."
+              },
+        "PREVIOUS_MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "PREVIOUS_MESSAGE_ID."
+              },
+        "NEXT_MESSAGE_EPOCH" : {
+                "type" : "string",
+                "description" : "NEXT_MESSAGE_EPOCH."
+              },
+        "ORBIT_LIFETIME" : {
+                "type" : "number",
+                "description" : "ORBIT_LIFETIME in days."
+              },
+        "ORBIT_LIFETIME_WINDOW_START" : {
+                "type" : "number",
+                "description" : "ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated."
+              },
+        "ORBIT_LIFETIME_WINDOW_END" : {
+                "type" : "number",
+                "description" : "ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated."
+              },
+        "REENTRY_WINDOW_START" : {
+                "type" : "string",
+                "description" : "REENTRY_WINDOW_START."
+              },
+        "REENTRY_WINDOW_END" : {
+                "type" : "string",
+                "description" : "REENTRY_WINDOW_END."
+              },
+        "ORBIT_LIFETIME_CONFIDENCE_LEVEL" : {
+                "type" : "number",
+                "description" : "ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated."
+              },
+        "PROBABILITY_OF_IMPACT" : {
+                "type" : "number",
+                "description" : "PROBABILITY_OF_IMPACT, NaN when not stated."
+              },
+        "PROBABILITY_OF_BURN_UP" : {
+                "type" : "number",
+                "description" : "PROBABILITY_OF_BURN_UP, NaN when not stated."
+              },
+        "PROBABILITY_OF_BREAK_UP" : {
+                "type" : "number",
+                "description" : "PROBABILITY_OF_BREAK_UP, NaN when not stated."
+              },
+        "PROBABILITY_OF_LAND_IMPACT" : {
+                "type" : "number",
+                "description" : "PROBABILITY_OF_LAND_IMPACT, NaN when not stated."
+              },
+        "PROBABILITY_OF_CASUALTY" : {
+                "type" : "number",
+                "description" : "PROBABILITY_OF_CASUALTY, NaN when not stated."
+              },
+        "NOMINAL_IMPACT_EPOCH" : {
+                "type" : "string",
+                "description" : "NOMINAL_IMPACT_EPOCH."
+              },
+        "IMPACT_WINDOW_START" : {
+                "type" : "string",
+                "description" : "IMPACT_WINDOW_START."
+              },
+        "IMPACT_WINDOW_END" : {
+                "type" : "string",
+                "description" : "IMPACT_WINDOW_END."
+              },
+        "IMPACT_REF_FRAME" : {
+                "type" : "string",
+                "description" : "IMPACT_REF_FRAME."
+              },
+        "NOMINAL_IMPACT_LON" : {
+                "type" : "number",
+                "description" : "NOMINAL_IMPACT_LON in degrees, NaN when not stated."
+              },
+        "NOMINAL_IMPACT_LAT" : {
+                "type" : "number",
+                "description" : "NOMINAL_IMPACT_LAT in degrees, NaN when not stated."
+              },
+        "NOMINAL_IMPACT_ALT" : {
+                "type" : "number",
+                "description" : "NOMINAL_IMPACT_ALT in metres, NaN when not stated."
+              },
+        "IMPACT_1_CONFIDENCE" : {
+                "type" : "number",
+                "description" : "IMPACT_1_CONFIDENCE in percent, NaN when not stated."
+              },
+        "IMPACT_1_START_LON" : {
+                "type" : "number",
+                "description" : "IMPACT_1_START_LON in degrees, NaN when not stated."
+              },
+        "IMPACT_1_START_LAT" : {
+                "type" : "number",
+                "description" : "IMPACT_1_START_LAT in degrees, NaN when not stated."
+              },
+        "IMPACT_1_STOP_LON" : {
+                "type" : "number",
+                "description" : "IMPACT_1_STOP_LON in degrees, NaN when not stated."
+              },
+        "IMPACT_1_STOP_LAT" : {
+                "type" : "number",
+                "description" : "IMPACT_1_STOP_LAT in degrees, NaN when not stated."
+              },
+        "IMPACT_1_CROSS_TRACK" : {
+                "type" : "number",
+                "description" : "IMPACT_1_CROSS_TRACK in km, NaN when not stated."
+              },
+        "IMPACT_2_CONFIDENCE" : {
+                "type" : "number",
+                "description" : "IMPACT_2_CONFIDENCE in percent, NaN when not stated."
+              },
+        "IMPACT_2_START_LON" : {
+                "type" : "number",
+                "description" : "IMPACT_2_START_LON in degrees, NaN when not stated."
+              },
+        "IMPACT_2_START_LAT" : {
+                "type" : "number",
+                "description" : "IMPACT_2_START_LAT in degrees, NaN when not stated."
+              },
+        "IMPACT_2_STOP_LON" : {
+                "type" : "number",
+                "description" : "IMPACT_2_STOP_LON in degrees, NaN when not stated."
+              },
+        "IMPACT_2_STOP_LAT" : {
+                "type" : "number",
+                "description" : "IMPACT_2_STOP_LAT in degrees, NaN when not stated."
+              },
+        "IMPACT_2_CROSS_TRACK" : {
+                "type" : "number",
+                "description" : "IMPACT_2_CROSS_TRACK in km, NaN when not stated."
+              },
+        "IMPACT_3_CONFIDENCE" : {
+                "type" : "number",
+                "description" : "IMPACT_3_CONFIDENCE in percent, NaN when not stated."
+              },
+        "IMPACT_3_START_LON" : {
+                "type" : "number",
+                "description" : "IMPACT_3_START_LON in degrees, NaN when not stated."
+              },
+        "IMPACT_3_START_LAT" : {
+                "type" : "number",
+                "description" : "IMPACT_3_START_LAT in degrees, NaN when not stated."
+              },
+        "IMPACT_3_STOP_LON" : {
+                "type" : "number",
+                "description" : "IMPACT_3_STOP_LON in degrees, NaN when not stated."
+              },
+        "IMPACT_3_STOP_LAT" : {
+                "type" : "number",
+                "description" : "IMPACT_3_STOP_LAT in degrees, NaN when not stated."
+              },
+        "IMPACT_3_CROSS_TRACK" : {
+                "type" : "number",
+                "description" : "IMPACT_3_CROSS_TRACK in km, NaN when not stated."
+              },
+        "COV_REF_FRAME" : {
+                "type" : "string",
+                "description" : "COV_REF_FRAME: the frame of COVARIANCE."
+              },
+        "COVARIANCE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Position/velocity covariance matrix at the state vector's epoch, 6x6 lower\ntriangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,\nCX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,\nCY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,\nCZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated."
+              },
+        "DRY_MASS" : {
+                "type" : "number",
+                "description" : "WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated."
+              },
+        "HAZARDOUS_SUBSTANCES" : {
+                "type" : "string",
+                "description" : "HAZARDOUS_SUBSTANCES."
+              },
+        "SOLAR_RAD_COEFF" : {
+                "type" : "number",
+                "description" : "SOLAR_RAD_COEFF, NaN when not stated."
+              },
+        "DRAG_COEFF" : {
+                "type" : "number",
+                "description" : "DRAG_COEFF, NaN when not stated."
+              },
+        "RCS" : {
+                "type" : "number",
+                "description" : "RCS in m**2, NaN when not stated."
+              },
+        "THRUST_ACCELERATION" : {
+                "type" : "number",
+                "description" : "THRUST_ACCELERATION in m/s**2, NaN when not stated."
+              },
+        "TIME_LASTOB_START" : {
+                "type" : "string",
+                "description" : "TIME_LASTOB_START."
+              },
+        "TIME_LASTOB_END" : {
+                "type" : "string",
+                "description" : "TIME_LASTOB_END."
+              },
+        "RECOMMENDED_OD_SPAN" : {
+                "type" : "number",
+                "description" : "RECOMMENDED_OD_SPAN in days, NaN when not stated."
+              },
+        "ACTUAL_OD_SPAN" : {
+                "type" : "number",
+                "description" : "ACTUAL_OD_SPAN in days, NaN when not stated."
+              },
+        "OBS_AVAILABLE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "OBS_AVAILABLE."
+              },
+        "OBS_USED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "OBS_USED."
+              },
+        "TRACKS_AVAILABLE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "TRACKS_AVAILABLE."
+              },
+        "TRACKS_USED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "TRACKS_USED."
+              },
+        "RESIDUALS_ACCEPTED" : {
+                "type" : "number",
+                "description" : "RESIDUALS_ACCEPTED in percent, NaN when not stated."
+              },
+        "WEIGHTED_RMS" : {
+                "type" : "number",
+                "description" : "WEIGHTED_RMS, NaN when not stated."
+              },
+        "USER_DEFINED_PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RDMUserDefinedParameter"},
+                "description" : "Every USER_DEFINED keyword of the message, in message order."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RDMUserDefinedParameter" : {
+      "type" : "object",
+      "description" : "One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+      "properties" : {
+        "PARAM_NAME" : {
+                "type" : "string",
+                "description" : "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+              },
+        "PARAM_VALUE" : {
+                "type" : "string",
+                "description" : "The value as written"
               }
       },
       "additionalProperties" : false

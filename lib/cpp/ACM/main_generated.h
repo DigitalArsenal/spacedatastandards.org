@@ -28,6 +28,24 @@ struct attManeuverBuilder;
 struct ACM;
 struct ACMBuilder;
 
+struct ACMAttitudeBlock;
+struct ACMAttitudeBlockBuilder;
+
+struct ACMCovarianceBlock;
+struct ACMCovarianceBlockBuilder;
+
+struct ACMManeuverBlock;
+struct ACMManeuverBlockBuilder;
+
+struct ACMDetermination;
+struct ACMDeterminationBuilder;
+
+struct ACMSensor;
+struct ACMSensorBuilder;
+
+struct ACMUserDefinedParameter;
+struct ACMUserDefinedParameterBuilder;
+
 enum attitudeStateType : int8_t {
   attitudeStateType_QUATERNION = 0,
   attitudeStateType_EULER_ANGLES = 1,
@@ -498,7 +516,8 @@ struct attPhysicalProperties FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Ta
     VT_IZZ = 24,
     VT_IXY = 26,
     VT_IXZ = 28,
-    VT_IYZ = 30
+    VT_IYZ = 30,
+    VT_COMMENT = 32
   };
   /// Drag coefficient
   double DRAG_COEFF() const {
@@ -556,6 +575,11 @@ struct attPhysicalProperties FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Ta
   double IYZ() const {
     return GetField<double>(VT_IYZ, 0.0);
   }
+  /// COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+  /// joined by a line feed.
+  const ::flatbuffers::String *COMMENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -575,6 +599,8 @@ struct attPhysicalProperties FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Ta
            VerifyField<double>(verifier, VT_IXY, 8) &&
            VerifyField<double>(verifier, VT_IXZ, 8) &&
            VerifyField<double>(verifier, VT_IYZ, 8) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyString(COMMENT()) &&
            verifier.EndTable();
   }
 };
@@ -625,6 +651,9 @@ struct attPhysicalPropertiesBuilder {
   void add_IYZ(double IYZ) {
     fbb_.AddElement<double>(attPhysicalProperties::VT_IYZ, IYZ, 0.0);
   }
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
+    fbb_.AddOffset(attPhysicalProperties::VT_COMMENT, COMMENT);
+  }
   explicit attPhysicalPropertiesBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -651,7 +680,8 @@ inline ::flatbuffers::Offset<attPhysicalProperties> CreateattPhysicalProperties(
     double IZZ = 0.0,
     double IXY = 0.0,
     double IXZ = 0.0,
-    double IYZ = 0.0) {
+    double IYZ = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0) {
   attPhysicalPropertiesBuilder builder_(_fbb);
   builder_.add_IYZ(IYZ);
   builder_.add_IXZ(IXZ);
@@ -665,6 +695,7 @@ inline ::flatbuffers::Offset<attPhysicalProperties> CreateattPhysicalProperties(
   builder_.add_DRY_MASS(DRY_MASS);
   builder_.add_WET_MASS(WET_MASS);
   builder_.add_DRAG_COEFF(DRAG_COEFF);
+  builder_.add_COMMENT(COMMENT);
   builder_.add_INERTIA_REF_FRAME(INERTIA_REF_FRAME);
   builder_.add_CP_REF_FRAME(CP_REF_FRAME);
   return builder_.Finish();
@@ -685,9 +716,11 @@ inline ::flatbuffers::Offset<attPhysicalProperties> CreateattPhysicalPropertiesD
     double IZZ = 0.0,
     double IXY = 0.0,
     double IXZ = 0.0,
-    double IYZ = 0.0) {
+    double IYZ = 0.0,
+    const char *COMMENT = nullptr) {
   auto CP_REF_FRAME__ = CP_REF_FRAME ? _fbb.CreateString(CP_REF_FRAME) : 0;
   auto INERTIA_REF_FRAME__ = INERTIA_REF_FRAME ? _fbb.CreateString(INERTIA_REF_FRAME) : 0;
+  auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
   return CreateattPhysicalProperties(
       _fbb,
       DRAG_COEFF,
@@ -703,7 +736,8 @@ inline ::flatbuffers::Offset<attPhysicalProperties> CreateattPhysicalPropertiesD
       IZZ,
       IXY,
       IXZ,
-      IYZ);
+      IYZ,
+      COMMENT__);
 }
 
 /// Attitude Covariance
@@ -941,7 +975,28 @@ struct ACM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_COV_DATA = 24,
     VT_MANEUVERS = 26,
     VT_MANEUVERABLE = 28,
-    VT_COMMENT = 30
+    VT_COMMENT = 30,
+    VT_CLASSIFICATION = 32,
+    VT_MESSAGE_ID = 34,
+    VT_OBJECT_DESIGNATOR = 36,
+    VT_ORIGINATOR_POC = 38,
+    VT_ORIGINATOR_POSITION = 40,
+    VT_ORIGINATOR_PHONE = 42,
+    VT_ORIGINATOR_EMAIL = 44,
+    VT_ORIGINATOR_ADDRESS = 46,
+    VT_ODM_MSG_LINK = 48,
+    VT_CENTER_NAME = 50,
+    VT_ACM_DATA_ELEMENTS = 52,
+    VT_START_TIME = 54,
+    VT_STOP_TIME = 56,
+    VT_TAIMUTC_AT_TZERO = 58,
+    VT_NEXT_LEAP_EPOCH = 60,
+    VT_NEXT_LEAP_TAIMUTC = 62,
+    VT_ATT_BLOCKS = 64,
+    VT_COV_BLOCKS = 66,
+    VT_MAN_BLOCKS = 68,
+    VT_DETERMINATION = 70,
+    VT_USER_DEFINED_PARAMETERS = 72
   };
   /// CCSDS ACM version
   const ::flatbuffers::String *CCSDS_ACM_VERS() const {
@@ -995,9 +1050,99 @@ struct ACM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   maneuverableFlag MANEUVERABLE() const {
     return static_cast<maneuverableFlag>(GetField<int8_t>(VT_MANEUVERABLE, 0));
   }
-  /// Additional comments
+  /// COMMENT lines of the message header, metadata and user-defined data
+  /// (CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,
+  /// covariance, maneuver or determination block's own comments stay with it.
   const ::flatbuffers::String *COMMENT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
+  }
+  /// CLASSIFICATION of the message: the optional header keyword stating its
+  /// security classification or handling caveat.
+  const ::flatbuffers::String *CLASSIFICATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION);
+  }
+  /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  /// unique for this message.
+  const ::flatbuffers::String *MESSAGE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE_ID);
+  }
+  /// OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.
+  /// OBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH
+  /// above its EPOCH_TZERO, the epoch every relative time is measured from.
+  const ::flatbuffers::String *OBJECT_DESIGNATOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_DESIGNATOR);
+  }
+  /// ORIGINATOR_POC: point of contact at the originator.
+  const ::flatbuffers::String *ORIGINATOR_POC() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR_POC);
+  }
+  /// ORIGINATOR_POSITION: position of the point of contact.
+  const ::flatbuffers::String *ORIGINATOR_POSITION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR_POSITION);
+  }
+  /// ORIGINATOR_PHONE: telephone number of the point of contact.
+  const ::flatbuffers::String *ORIGINATOR_PHONE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR_PHONE);
+  }
+  /// ORIGINATOR_EMAIL: email address of the point of contact.
+  const ::flatbuffers::String *ORIGINATOR_EMAIL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR_EMAIL);
+  }
+  /// ORIGINATOR_ADDRESS: postal address of the point of contact.
+  const ::flatbuffers::String *ORIGINATOR_ADDRESS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR_ADDRESS);
+  }
+  /// ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.
+  const ::flatbuffers::String *ODM_MSG_LINK() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ODM_MSG_LINK);
+  }
+  /// CENTER_NAME: the orbit center, when the message states one.
+  const ::flatbuffers::String *CENTER_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CENTER_NAME);
+  }
+  /// ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.
+  const ::flatbuffers::String *ACM_DATA_ELEMENTS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ACM_DATA_ELEMENTS);
+  }
+  /// START_TIME: start of the total time span the message covers.
+  const ::flatbuffers::String *START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_START_TIME);
+  }
+  /// STOP_TIME: end of the total time span the message covers.
+  const ::flatbuffers::String *STOP_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STOP_TIME);
+  }
+  /// TAIMUTC_AT_TZERO in seconds, NaN when not stated.
+  double TAIMUTC_AT_TZERO() const {
+    return GetField<double>(VT_TAIMUTC_AT_TZERO, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.
+  const ::flatbuffers::String *NEXT_LEAP_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NEXT_LEAP_EPOCH);
+  }
+  /// NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.
+  double NEXT_LEAP_TAIMUTC() const {
+    return GetField<double>(VT_NEXT_LEAP_TAIMUTC, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Attitude state time histories (ATT_START blocks), in message order.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACMAttitudeBlock>> *ATT_BLOCKS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACMAttitudeBlock>> *>(VT_ATT_BLOCKS);
+  }
+  /// Covariance time histories (COV_START blocks), in message order.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACMCovarianceBlock>> *COV_BLOCKS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACMCovarianceBlock>> *>(VT_COV_BLOCKS);
+  }
+  /// Maneuver specifications (MAN_START blocks), in message order.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACMManeuverBlock>> *MAN_BLOCKS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACMManeuverBlock>> *>(VT_MAN_BLOCKS);
+  }
+  /// The attitude determination data (AD_START block), when the message has them.
+  const ACMDetermination *DETERMINATION() const {
+    return GetPointer<const ACMDetermination *>(VT_DETERMINATION);
+  }
+  /// Every USER_DEFINED parameter of the message, in message order.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACMUserDefinedParameter>> *USER_DEFINED_PARAMETERS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACMUserDefinedParameter>> *>(VT_USER_DEFINED_PARAMETERS);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -1032,6 +1177,50 @@ struct ACM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int8_t>(verifier, VT_MANEUVERABLE, 1) &&
            VerifyOffset(verifier, VT_COMMENT) &&
            verifier.VerifyString(COMMENT()) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION) &&
+           verifier.VerifyString(CLASSIFICATION()) &&
+           VerifyOffset(verifier, VT_MESSAGE_ID) &&
+           verifier.VerifyString(MESSAGE_ID()) &&
+           VerifyOffset(verifier, VT_OBJECT_DESIGNATOR) &&
+           verifier.VerifyString(OBJECT_DESIGNATOR()) &&
+           VerifyOffset(verifier, VT_ORIGINATOR_POC) &&
+           verifier.VerifyString(ORIGINATOR_POC()) &&
+           VerifyOffset(verifier, VT_ORIGINATOR_POSITION) &&
+           verifier.VerifyString(ORIGINATOR_POSITION()) &&
+           VerifyOffset(verifier, VT_ORIGINATOR_PHONE) &&
+           verifier.VerifyString(ORIGINATOR_PHONE()) &&
+           VerifyOffset(verifier, VT_ORIGINATOR_EMAIL) &&
+           verifier.VerifyString(ORIGINATOR_EMAIL()) &&
+           VerifyOffset(verifier, VT_ORIGINATOR_ADDRESS) &&
+           verifier.VerifyString(ORIGINATOR_ADDRESS()) &&
+           VerifyOffset(verifier, VT_ODM_MSG_LINK) &&
+           verifier.VerifyString(ODM_MSG_LINK()) &&
+           VerifyOffset(verifier, VT_CENTER_NAME) &&
+           verifier.VerifyString(CENTER_NAME()) &&
+           VerifyOffset(verifier, VT_ACM_DATA_ELEMENTS) &&
+           verifier.VerifyString(ACM_DATA_ELEMENTS()) &&
+           VerifyOffset(verifier, VT_START_TIME) &&
+           verifier.VerifyString(START_TIME()) &&
+           VerifyOffset(verifier, VT_STOP_TIME) &&
+           verifier.VerifyString(STOP_TIME()) &&
+           VerifyField<double>(verifier, VT_TAIMUTC_AT_TZERO, 8) &&
+           VerifyOffset(verifier, VT_NEXT_LEAP_EPOCH) &&
+           verifier.VerifyString(NEXT_LEAP_EPOCH()) &&
+           VerifyField<double>(verifier, VT_NEXT_LEAP_TAIMUTC, 8) &&
+           VerifyOffset(verifier, VT_ATT_BLOCKS) &&
+           verifier.VerifyVector(ATT_BLOCKS()) &&
+           verifier.VerifyVectorOfTables(ATT_BLOCKS()) &&
+           VerifyOffset(verifier, VT_COV_BLOCKS) &&
+           verifier.VerifyVector(COV_BLOCKS()) &&
+           verifier.VerifyVectorOfTables(COV_BLOCKS()) &&
+           VerifyOffset(verifier, VT_MAN_BLOCKS) &&
+           verifier.VerifyVector(MAN_BLOCKS()) &&
+           verifier.VerifyVectorOfTables(MAN_BLOCKS()) &&
+           VerifyOffset(verifier, VT_DETERMINATION) &&
+           verifier.VerifyTable(DETERMINATION()) &&
+           VerifyOffset(verifier, VT_USER_DEFINED_PARAMETERS) &&
+           verifier.VerifyVector(USER_DEFINED_PARAMETERS()) &&
+           verifier.VerifyVectorOfTables(USER_DEFINED_PARAMETERS()) &&
            verifier.EndTable();
   }
 };
@@ -1082,6 +1271,69 @@ struct ACMBuilder {
   void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
     fbb_.AddOffset(ACM::VT_COMMENT, COMMENT);
   }
+  void add_CLASSIFICATION(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION) {
+    fbb_.AddOffset(ACM::VT_CLASSIFICATION, CLASSIFICATION);
+  }
+  void add_MESSAGE_ID(::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID) {
+    fbb_.AddOffset(ACM::VT_MESSAGE_ID, MESSAGE_ID);
+  }
+  void add_OBJECT_DESIGNATOR(::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR) {
+    fbb_.AddOffset(ACM::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
+  }
+  void add_ORIGINATOR_POC(::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR_POC) {
+    fbb_.AddOffset(ACM::VT_ORIGINATOR_POC, ORIGINATOR_POC);
+  }
+  void add_ORIGINATOR_POSITION(::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR_POSITION) {
+    fbb_.AddOffset(ACM::VT_ORIGINATOR_POSITION, ORIGINATOR_POSITION);
+  }
+  void add_ORIGINATOR_PHONE(::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR_PHONE) {
+    fbb_.AddOffset(ACM::VT_ORIGINATOR_PHONE, ORIGINATOR_PHONE);
+  }
+  void add_ORIGINATOR_EMAIL(::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR_EMAIL) {
+    fbb_.AddOffset(ACM::VT_ORIGINATOR_EMAIL, ORIGINATOR_EMAIL);
+  }
+  void add_ORIGINATOR_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR_ADDRESS) {
+    fbb_.AddOffset(ACM::VT_ORIGINATOR_ADDRESS, ORIGINATOR_ADDRESS);
+  }
+  void add_ODM_MSG_LINK(::flatbuffers::Offset<::flatbuffers::String> ODM_MSG_LINK) {
+    fbb_.AddOffset(ACM::VT_ODM_MSG_LINK, ODM_MSG_LINK);
+  }
+  void add_CENTER_NAME(::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME) {
+    fbb_.AddOffset(ACM::VT_CENTER_NAME, CENTER_NAME);
+  }
+  void add_ACM_DATA_ELEMENTS(::flatbuffers::Offset<::flatbuffers::String> ACM_DATA_ELEMENTS) {
+    fbb_.AddOffset(ACM::VT_ACM_DATA_ELEMENTS, ACM_DATA_ELEMENTS);
+  }
+  void add_START_TIME(::flatbuffers::Offset<::flatbuffers::String> START_TIME) {
+    fbb_.AddOffset(ACM::VT_START_TIME, START_TIME);
+  }
+  void add_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> STOP_TIME) {
+    fbb_.AddOffset(ACM::VT_STOP_TIME, STOP_TIME);
+  }
+  void add_TAIMUTC_AT_TZERO(double TAIMUTC_AT_TZERO) {
+    fbb_.AddElement<double>(ACM::VT_TAIMUTC_AT_TZERO, TAIMUTC_AT_TZERO, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_NEXT_LEAP_EPOCH(::flatbuffers::Offset<::flatbuffers::String> NEXT_LEAP_EPOCH) {
+    fbb_.AddOffset(ACM::VT_NEXT_LEAP_EPOCH, NEXT_LEAP_EPOCH);
+  }
+  void add_NEXT_LEAP_TAIMUTC(double NEXT_LEAP_TAIMUTC) {
+    fbb_.AddElement<double>(ACM::VT_NEXT_LEAP_TAIMUTC, NEXT_LEAP_TAIMUTC, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_ATT_BLOCKS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACMAttitudeBlock>>> ATT_BLOCKS) {
+    fbb_.AddOffset(ACM::VT_ATT_BLOCKS, ATT_BLOCKS);
+  }
+  void add_COV_BLOCKS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACMCovarianceBlock>>> COV_BLOCKS) {
+    fbb_.AddOffset(ACM::VT_COV_BLOCKS, COV_BLOCKS);
+  }
+  void add_MAN_BLOCKS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACMManeuverBlock>>> MAN_BLOCKS) {
+    fbb_.AddOffset(ACM::VT_MAN_BLOCKS, MAN_BLOCKS);
+  }
+  void add_DETERMINATION(::flatbuffers::Offset<ACMDetermination> DETERMINATION) {
+    fbb_.AddOffset(ACM::VT_DETERMINATION, DETERMINATION);
+  }
+  void add_USER_DEFINED_PARAMETERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACMUserDefinedParameter>>> USER_DEFINED_PARAMETERS) {
+    fbb_.AddOffset(ACM::VT_USER_DEFINED_PARAMETERS, USER_DEFINED_PARAMETERS);
+  }
   explicit ACMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1108,8 +1360,50 @@ inline ::flatbuffers::Offset<ACM> CreateACM(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<attCovariance>>> COV_DATA = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<attManeuver>>> MANEUVERS = 0,
     maneuverableFlag MANEUVERABLE = maneuverableFlag_YES,
-    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR_POC = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR_POSITION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR_PHONE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR_EMAIL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR_ADDRESS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ODM_MSG_LINK = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ACM_DATA_ELEMENTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> STOP_TIME = 0,
+    double TAIMUTC_AT_TZERO = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> NEXT_LEAP_EPOCH = 0,
+    double NEXT_LEAP_TAIMUTC = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACMAttitudeBlock>>> ATT_BLOCKS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACMCovarianceBlock>>> COV_BLOCKS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACMManeuverBlock>>> MAN_BLOCKS = 0,
+    ::flatbuffers::Offset<ACMDetermination> DETERMINATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACMUserDefinedParameter>>> USER_DEFINED_PARAMETERS = 0) {
   ACMBuilder builder_(_fbb);
+  builder_.add_NEXT_LEAP_TAIMUTC(NEXT_LEAP_TAIMUTC);
+  builder_.add_TAIMUTC_AT_TZERO(TAIMUTC_AT_TZERO);
+  builder_.add_USER_DEFINED_PARAMETERS(USER_DEFINED_PARAMETERS);
+  builder_.add_DETERMINATION(DETERMINATION);
+  builder_.add_MAN_BLOCKS(MAN_BLOCKS);
+  builder_.add_COV_BLOCKS(COV_BLOCKS);
+  builder_.add_ATT_BLOCKS(ATT_BLOCKS);
+  builder_.add_NEXT_LEAP_EPOCH(NEXT_LEAP_EPOCH);
+  builder_.add_STOP_TIME(STOP_TIME);
+  builder_.add_START_TIME(START_TIME);
+  builder_.add_ACM_DATA_ELEMENTS(ACM_DATA_ELEMENTS);
+  builder_.add_CENTER_NAME(CENTER_NAME);
+  builder_.add_ODM_MSG_LINK(ODM_MSG_LINK);
+  builder_.add_ORIGINATOR_ADDRESS(ORIGINATOR_ADDRESS);
+  builder_.add_ORIGINATOR_EMAIL(ORIGINATOR_EMAIL);
+  builder_.add_ORIGINATOR_PHONE(ORIGINATOR_PHONE);
+  builder_.add_ORIGINATOR_POSITION(ORIGINATOR_POSITION);
+  builder_.add_ORIGINATOR_POC(ORIGINATOR_POC);
+  builder_.add_OBJECT_DESIGNATOR(OBJECT_DESIGNATOR);
+  builder_.add_MESSAGE_ID(MESSAGE_ID);
+  builder_.add_CLASSIFICATION(CLASSIFICATION);
   builder_.add_COMMENT(COMMENT);
   builder_.add_MANEUVERS(MANEUVERS);
   builder_.add_COV_DATA(COV_DATA);
@@ -1142,7 +1436,28 @@ inline ::flatbuffers::Offset<ACM> CreateACMDirect(
     const std::vector<::flatbuffers::Offset<attCovariance>> *COV_DATA = nullptr,
     const std::vector<::flatbuffers::Offset<attManeuver>> *MANEUVERS = nullptr,
     maneuverableFlag MANEUVERABLE = maneuverableFlag_YES,
-    const char *COMMENT = nullptr) {
+    const char *COMMENT = nullptr,
+    const char *CLASSIFICATION = nullptr,
+    const char *MESSAGE_ID = nullptr,
+    const char *OBJECT_DESIGNATOR = nullptr,
+    const char *ORIGINATOR_POC = nullptr,
+    const char *ORIGINATOR_POSITION = nullptr,
+    const char *ORIGINATOR_PHONE = nullptr,
+    const char *ORIGINATOR_EMAIL = nullptr,
+    const char *ORIGINATOR_ADDRESS = nullptr,
+    const char *ODM_MSG_LINK = nullptr,
+    const char *CENTER_NAME = nullptr,
+    const char *ACM_DATA_ELEMENTS = nullptr,
+    const char *START_TIME = nullptr,
+    const char *STOP_TIME = nullptr,
+    double TAIMUTC_AT_TZERO = std::numeric_limits<double>::quiet_NaN(),
+    const char *NEXT_LEAP_EPOCH = nullptr,
+    double NEXT_LEAP_TAIMUTC = std::numeric_limits<double>::quiet_NaN(),
+    const std::vector<::flatbuffers::Offset<ACMAttitudeBlock>> *ATT_BLOCKS = nullptr,
+    const std::vector<::flatbuffers::Offset<ACMCovarianceBlock>> *COV_BLOCKS = nullptr,
+    const std::vector<::flatbuffers::Offset<ACMManeuverBlock>> *MAN_BLOCKS = nullptr,
+    ::flatbuffers::Offset<ACMDetermination> DETERMINATION = 0,
+    const std::vector<::flatbuffers::Offset<ACMUserDefinedParameter>> *USER_DEFINED_PARAMETERS = nullptr) {
   auto CCSDS_ACM_VERS__ = CCSDS_ACM_VERS ? _fbb.CreateString(CCSDS_ACM_VERS) : 0;
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
@@ -1155,6 +1470,24 @@ inline ::flatbuffers::Offset<ACM> CreateACMDirect(
   auto COV_DATA__ = COV_DATA ? _fbb.CreateVector<::flatbuffers::Offset<attCovariance>>(*COV_DATA) : 0;
   auto MANEUVERS__ = MANEUVERS ? _fbb.CreateVector<::flatbuffers::Offset<attManeuver>>(*MANEUVERS) : 0;
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
+  auto CLASSIFICATION__ = CLASSIFICATION ? _fbb.CreateString(CLASSIFICATION) : 0;
+  auto MESSAGE_ID__ = MESSAGE_ID ? _fbb.CreateString(MESSAGE_ID) : 0;
+  auto OBJECT_DESIGNATOR__ = OBJECT_DESIGNATOR ? _fbb.CreateString(OBJECT_DESIGNATOR) : 0;
+  auto ORIGINATOR_POC__ = ORIGINATOR_POC ? _fbb.CreateString(ORIGINATOR_POC) : 0;
+  auto ORIGINATOR_POSITION__ = ORIGINATOR_POSITION ? _fbb.CreateString(ORIGINATOR_POSITION) : 0;
+  auto ORIGINATOR_PHONE__ = ORIGINATOR_PHONE ? _fbb.CreateString(ORIGINATOR_PHONE) : 0;
+  auto ORIGINATOR_EMAIL__ = ORIGINATOR_EMAIL ? _fbb.CreateString(ORIGINATOR_EMAIL) : 0;
+  auto ORIGINATOR_ADDRESS__ = ORIGINATOR_ADDRESS ? _fbb.CreateString(ORIGINATOR_ADDRESS) : 0;
+  auto ODM_MSG_LINK__ = ODM_MSG_LINK ? _fbb.CreateString(ODM_MSG_LINK) : 0;
+  auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
+  auto ACM_DATA_ELEMENTS__ = ACM_DATA_ELEMENTS ? _fbb.CreateString(ACM_DATA_ELEMENTS) : 0;
+  auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
+  auto STOP_TIME__ = STOP_TIME ? _fbb.CreateString(STOP_TIME) : 0;
+  auto NEXT_LEAP_EPOCH__ = NEXT_LEAP_EPOCH ? _fbb.CreateString(NEXT_LEAP_EPOCH) : 0;
+  auto ATT_BLOCKS__ = ATT_BLOCKS ? _fbb.CreateVector<::flatbuffers::Offset<ACMAttitudeBlock>>(*ATT_BLOCKS) : 0;
+  auto COV_BLOCKS__ = COV_BLOCKS ? _fbb.CreateVector<::flatbuffers::Offset<ACMCovarianceBlock>>(*COV_BLOCKS) : 0;
+  auto MAN_BLOCKS__ = MAN_BLOCKS ? _fbb.CreateVector<::flatbuffers::Offset<ACMManeuverBlock>>(*MAN_BLOCKS) : 0;
+  auto USER_DEFINED_PARAMETERS__ = USER_DEFINED_PARAMETERS ? _fbb.CreateVector<::flatbuffers::Offset<ACMUserDefinedParameter>>(*USER_DEFINED_PARAMETERS) : 0;
   return CreateACM(
       _fbb,
       CCSDS_ACM_VERS__,
@@ -1170,7 +1503,1104 @@ inline ::flatbuffers::Offset<ACM> CreateACMDirect(
       COV_DATA__,
       MANEUVERS__,
       MANEUVERABLE,
-      COMMENT__);
+      COMMENT__,
+      CLASSIFICATION__,
+      MESSAGE_ID__,
+      OBJECT_DESIGNATOR__,
+      ORIGINATOR_POC__,
+      ORIGINATOR_POSITION__,
+      ORIGINATOR_PHONE__,
+      ORIGINATOR_EMAIL__,
+      ORIGINATOR_ADDRESS__,
+      ODM_MSG_LINK__,
+      CENTER_NAME__,
+      ACM_DATA_ELEMENTS__,
+      START_TIME__,
+      STOP_TIME__,
+      TAIMUTC_AT_TZERO,
+      NEXT_LEAP_EPOCH__,
+      NEXT_LEAP_TAIMUTC,
+      ATT_BLOCKS__,
+      COV_BLOCKS__,
+      MAN_BLOCKS__,
+      DETERMINATION,
+      USER_DEFINED_PARAMETERS__);
+}
+
+/// One attitude state time history of an ACM (CCSDS 504.0-B-2 Table 5-4): the
+/// block's keywords, then its data lines as TIMES (the first column of each line,
+/// elapsed seconds from EPOCH_TZERO or an epoch, as written) and VALUES (the other
+/// columns, NUMBER_STATES per line, row by row).
+struct ACMAttitudeBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ACMAttitudeBlockBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COMMENT = 4,
+    VT_ATT_ID = 6,
+    VT_ATT_PREV_ID = 8,
+    VT_ATT_BASIS = 10,
+    VT_ATT_BASIS_ID = 12,
+    VT_REF_FRAME_A = 14,
+    VT_REF_FRAME_B = 16,
+    VT_NUMBER_STATES = 18,
+    VT_ATT_TYPE = 20,
+    VT_EULER_ROT_SEQ = 22,
+    VT_RATE_TYPE = 24,
+    VT_TIMES = 26,
+    VT_VALUES = 28
+  };
+  /// COMMENT lines of this block, joined by a line feed.
+  const ::flatbuffers::String *COMMENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
+  }
+  /// ATT_ID.
+  const ::flatbuffers::String *ATT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ATT_ID);
+  }
+  /// ATT_PREV_ID.
+  const ::flatbuffers::String *ATT_PREV_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ATT_PREV_ID);
+  }
+  /// ATT_BASIS: PREDICTED, DETERMINED_GND, DETERMINED_OBC or SIMULATED.
+  const ::flatbuffers::String *ATT_BASIS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ATT_BASIS);
+  }
+  /// ATT_BASIS_ID.
+  const ::flatbuffers::String *ATT_BASIS_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ATT_BASIS_ID);
+  }
+  /// REF_FRAME_A: the frame the transformation starts from.
+  const ::flatbuffers::String *REF_FRAME_A() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME_A);
+  }
+  /// REF_FRAME_B: the frame the transformation ends in.
+  const ::flatbuffers::String *REF_FRAME_B() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME_B);
+  }
+  /// NUMBER_STATES: the data columns on each line (attitude, then rate).
+  uint32_t NUMBER_STATES() const {
+    return GetField<uint32_t>(VT_NUMBER_STATES, 0);
+  }
+  /// ATT_TYPE: QUATERNION, EULER_ANGLES, DCM or ANGVEL.
+  const ::flatbuffers::String *ATT_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ATT_TYPE);
+  }
+  /// EULER_ROT_SEQ, when ATT_TYPE is EULER_ANGLES.
+  const ::flatbuffers::String *EULER_ROT_SEQ() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EULER_ROT_SEQ);
+  }
+  /// RATE_TYPE: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS, when the lines carry rates.
+  const ::flatbuffers::String *RATE_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RATE_TYPE);
+  }
+  /// The first column of each data line, as written.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TIMES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TIMES);
+  }
+  /// The other columns of the data lines, NUMBER_STATES per line.
+  const ::flatbuffers::Vector<double> *VALUES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_VALUES);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyString(COMMENT()) &&
+           VerifyOffset(verifier, VT_ATT_ID) &&
+           verifier.VerifyString(ATT_ID()) &&
+           VerifyOffset(verifier, VT_ATT_PREV_ID) &&
+           verifier.VerifyString(ATT_PREV_ID()) &&
+           VerifyOffset(verifier, VT_ATT_BASIS) &&
+           verifier.VerifyString(ATT_BASIS()) &&
+           VerifyOffset(verifier, VT_ATT_BASIS_ID) &&
+           verifier.VerifyString(ATT_BASIS_ID()) &&
+           VerifyOffset(verifier, VT_REF_FRAME_A) &&
+           verifier.VerifyString(REF_FRAME_A()) &&
+           VerifyOffset(verifier, VT_REF_FRAME_B) &&
+           verifier.VerifyString(REF_FRAME_B()) &&
+           VerifyField<uint32_t>(verifier, VT_NUMBER_STATES, 4) &&
+           VerifyOffset(verifier, VT_ATT_TYPE) &&
+           verifier.VerifyString(ATT_TYPE()) &&
+           VerifyOffset(verifier, VT_EULER_ROT_SEQ) &&
+           verifier.VerifyString(EULER_ROT_SEQ()) &&
+           VerifyOffset(verifier, VT_RATE_TYPE) &&
+           verifier.VerifyString(RATE_TYPE()) &&
+           VerifyOffset(verifier, VT_TIMES) &&
+           verifier.VerifyVector(TIMES()) &&
+           verifier.VerifyVectorOfStrings(TIMES()) &&
+           VerifyOffset(verifier, VT_VALUES) &&
+           verifier.VerifyVector(VALUES()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ACMAttitudeBlockBuilder {
+  typedef ACMAttitudeBlock Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
+    fbb_.AddOffset(ACMAttitudeBlock::VT_COMMENT, COMMENT);
+  }
+  void add_ATT_ID(::flatbuffers::Offset<::flatbuffers::String> ATT_ID) {
+    fbb_.AddOffset(ACMAttitudeBlock::VT_ATT_ID, ATT_ID);
+  }
+  void add_ATT_PREV_ID(::flatbuffers::Offset<::flatbuffers::String> ATT_PREV_ID) {
+    fbb_.AddOffset(ACMAttitudeBlock::VT_ATT_PREV_ID, ATT_PREV_ID);
+  }
+  void add_ATT_BASIS(::flatbuffers::Offset<::flatbuffers::String> ATT_BASIS) {
+    fbb_.AddOffset(ACMAttitudeBlock::VT_ATT_BASIS, ATT_BASIS);
+  }
+  void add_ATT_BASIS_ID(::flatbuffers::Offset<::flatbuffers::String> ATT_BASIS_ID) {
+    fbb_.AddOffset(ACMAttitudeBlock::VT_ATT_BASIS_ID, ATT_BASIS_ID);
+  }
+  void add_REF_FRAME_A(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_A) {
+    fbb_.AddOffset(ACMAttitudeBlock::VT_REF_FRAME_A, REF_FRAME_A);
+  }
+  void add_REF_FRAME_B(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_B) {
+    fbb_.AddOffset(ACMAttitudeBlock::VT_REF_FRAME_B, REF_FRAME_B);
+  }
+  void add_NUMBER_STATES(uint32_t NUMBER_STATES) {
+    fbb_.AddElement<uint32_t>(ACMAttitudeBlock::VT_NUMBER_STATES, NUMBER_STATES, 0);
+  }
+  void add_ATT_TYPE(::flatbuffers::Offset<::flatbuffers::String> ATT_TYPE) {
+    fbb_.AddOffset(ACMAttitudeBlock::VT_ATT_TYPE, ATT_TYPE);
+  }
+  void add_EULER_ROT_SEQ(::flatbuffers::Offset<::flatbuffers::String> EULER_ROT_SEQ) {
+    fbb_.AddOffset(ACMAttitudeBlock::VT_EULER_ROT_SEQ, EULER_ROT_SEQ);
+  }
+  void add_RATE_TYPE(::flatbuffers::Offset<::flatbuffers::String> RATE_TYPE) {
+    fbb_.AddOffset(ACMAttitudeBlock::VT_RATE_TYPE, RATE_TYPE);
+  }
+  void add_TIMES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TIMES) {
+    fbb_.AddOffset(ACMAttitudeBlock::VT_TIMES, TIMES);
+  }
+  void add_VALUES(::flatbuffers::Offset<::flatbuffers::Vector<double>> VALUES) {
+    fbb_.AddOffset(ACMAttitudeBlock::VT_VALUES, VALUES);
+  }
+  explicit ACMAttitudeBlockBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ACMAttitudeBlock> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ACMAttitudeBlock>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ACMAttitudeBlock> CreateACMAttitudeBlock(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ATT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ATT_PREV_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ATT_BASIS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ATT_BASIS_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_A = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_B = 0,
+    uint32_t NUMBER_STATES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ATT_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EULER_ROT_SEQ = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RATE_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TIMES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> VALUES = 0) {
+  ACMAttitudeBlockBuilder builder_(_fbb);
+  builder_.add_VALUES(VALUES);
+  builder_.add_TIMES(TIMES);
+  builder_.add_RATE_TYPE(RATE_TYPE);
+  builder_.add_EULER_ROT_SEQ(EULER_ROT_SEQ);
+  builder_.add_ATT_TYPE(ATT_TYPE);
+  builder_.add_NUMBER_STATES(NUMBER_STATES);
+  builder_.add_REF_FRAME_B(REF_FRAME_B);
+  builder_.add_REF_FRAME_A(REF_FRAME_A);
+  builder_.add_ATT_BASIS_ID(ATT_BASIS_ID);
+  builder_.add_ATT_BASIS(ATT_BASIS);
+  builder_.add_ATT_PREV_ID(ATT_PREV_ID);
+  builder_.add_ATT_ID(ATT_ID);
+  builder_.add_COMMENT(COMMENT);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ACMAttitudeBlock> CreateACMAttitudeBlockDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *COMMENT = nullptr,
+    const char *ATT_ID = nullptr,
+    const char *ATT_PREV_ID = nullptr,
+    const char *ATT_BASIS = nullptr,
+    const char *ATT_BASIS_ID = nullptr,
+    const char *REF_FRAME_A = nullptr,
+    const char *REF_FRAME_B = nullptr,
+    uint32_t NUMBER_STATES = 0,
+    const char *ATT_TYPE = nullptr,
+    const char *EULER_ROT_SEQ = nullptr,
+    const char *RATE_TYPE = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TIMES = nullptr,
+    const std::vector<double> *VALUES = nullptr) {
+  auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
+  auto ATT_ID__ = ATT_ID ? _fbb.CreateString(ATT_ID) : 0;
+  auto ATT_PREV_ID__ = ATT_PREV_ID ? _fbb.CreateString(ATT_PREV_ID) : 0;
+  auto ATT_BASIS__ = ATT_BASIS ? _fbb.CreateString(ATT_BASIS) : 0;
+  auto ATT_BASIS_ID__ = ATT_BASIS_ID ? _fbb.CreateString(ATT_BASIS_ID) : 0;
+  auto REF_FRAME_A__ = REF_FRAME_A ? _fbb.CreateString(REF_FRAME_A) : 0;
+  auto REF_FRAME_B__ = REF_FRAME_B ? _fbb.CreateString(REF_FRAME_B) : 0;
+  auto ATT_TYPE__ = ATT_TYPE ? _fbb.CreateString(ATT_TYPE) : 0;
+  auto EULER_ROT_SEQ__ = EULER_ROT_SEQ ? _fbb.CreateString(EULER_ROT_SEQ) : 0;
+  auto RATE_TYPE__ = RATE_TYPE ? _fbb.CreateString(RATE_TYPE) : 0;
+  auto TIMES__ = TIMES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TIMES) : 0;
+  auto VALUES__ = VALUES ? _fbb.CreateVector<double>(*VALUES) : 0;
+  return CreateACMAttitudeBlock(
+      _fbb,
+      COMMENT__,
+      ATT_ID__,
+      ATT_PREV_ID__,
+      ATT_BASIS__,
+      ATT_BASIS_ID__,
+      REF_FRAME_A__,
+      REF_FRAME_B__,
+      NUMBER_STATES,
+      ATT_TYPE__,
+      EULER_ROT_SEQ__,
+      RATE_TYPE__,
+      TIMES__,
+      VALUES__);
+}
+
+/// One covariance time history of an ACM (Table 5-6): the diagonal terms of the
+/// covariance on each line, as TIMES and VALUES like ACMAttitudeBlock; every line
+/// has the same number of values.
+struct ACMCovarianceBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ACMCovarianceBlockBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COMMENT = 4,
+    VT_COV_ID = 6,
+    VT_COV_PREV_ID = 8,
+    VT_COV_BASIS = 10,
+    VT_COV_BASIS_ID = 12,
+    VT_COV_REF_FRAME = 14,
+    VT_COV_TYPE = 16,
+    VT_TIMES = 18,
+    VT_VALUES = 20
+  };
+  /// COMMENT lines of this block, joined by a line feed.
+  const ::flatbuffers::String *COMMENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
+  }
+  /// COV_ID.
+  const ::flatbuffers::String *COV_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_ID);
+  }
+  /// COV_PREV_ID.
+  const ::flatbuffers::String *COV_PREV_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_PREV_ID);
+  }
+  /// COV_BASIS.
+  const ::flatbuffers::String *COV_BASIS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_BASIS);
+  }
+  /// COV_BASIS_ID.
+  const ::flatbuffers::String *COV_BASIS_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_BASIS_ID);
+  }
+  /// COV_REF_FRAME.
+  const ::flatbuffers::String *COV_REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_REF_FRAME);
+  }
+  /// COV_TYPE: ANGLE, ANGLE_GYROBIAS, ANGLE_ANGVEL, QUATERNION, QUATERNION_GYROBIAS
+  /// or QUATERNION_ANGVEL.
+  const ::flatbuffers::String *COV_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_TYPE);
+  }
+  /// The first column of each data line, as written.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TIMES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TIMES);
+  }
+  /// The diagonal terms of each line, row by row.
+  const ::flatbuffers::Vector<double> *VALUES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_VALUES);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyString(COMMENT()) &&
+           VerifyOffset(verifier, VT_COV_ID) &&
+           verifier.VerifyString(COV_ID()) &&
+           VerifyOffset(verifier, VT_COV_PREV_ID) &&
+           verifier.VerifyString(COV_PREV_ID()) &&
+           VerifyOffset(verifier, VT_COV_BASIS) &&
+           verifier.VerifyString(COV_BASIS()) &&
+           VerifyOffset(verifier, VT_COV_BASIS_ID) &&
+           verifier.VerifyString(COV_BASIS_ID()) &&
+           VerifyOffset(verifier, VT_COV_REF_FRAME) &&
+           verifier.VerifyString(COV_REF_FRAME()) &&
+           VerifyOffset(verifier, VT_COV_TYPE) &&
+           verifier.VerifyString(COV_TYPE()) &&
+           VerifyOffset(verifier, VT_TIMES) &&
+           verifier.VerifyVector(TIMES()) &&
+           verifier.VerifyVectorOfStrings(TIMES()) &&
+           VerifyOffset(verifier, VT_VALUES) &&
+           verifier.VerifyVector(VALUES()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ACMCovarianceBlockBuilder {
+  typedef ACMCovarianceBlock Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
+    fbb_.AddOffset(ACMCovarianceBlock::VT_COMMENT, COMMENT);
+  }
+  void add_COV_ID(::flatbuffers::Offset<::flatbuffers::String> COV_ID) {
+    fbb_.AddOffset(ACMCovarianceBlock::VT_COV_ID, COV_ID);
+  }
+  void add_COV_PREV_ID(::flatbuffers::Offset<::flatbuffers::String> COV_PREV_ID) {
+    fbb_.AddOffset(ACMCovarianceBlock::VT_COV_PREV_ID, COV_PREV_ID);
+  }
+  void add_COV_BASIS(::flatbuffers::Offset<::flatbuffers::String> COV_BASIS) {
+    fbb_.AddOffset(ACMCovarianceBlock::VT_COV_BASIS, COV_BASIS);
+  }
+  void add_COV_BASIS_ID(::flatbuffers::Offset<::flatbuffers::String> COV_BASIS_ID) {
+    fbb_.AddOffset(ACMCovarianceBlock::VT_COV_BASIS_ID, COV_BASIS_ID);
+  }
+  void add_COV_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> COV_REF_FRAME) {
+    fbb_.AddOffset(ACMCovarianceBlock::VT_COV_REF_FRAME, COV_REF_FRAME);
+  }
+  void add_COV_TYPE(::flatbuffers::Offset<::flatbuffers::String> COV_TYPE) {
+    fbb_.AddOffset(ACMCovarianceBlock::VT_COV_TYPE, COV_TYPE);
+  }
+  void add_TIMES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TIMES) {
+    fbb_.AddOffset(ACMCovarianceBlock::VT_TIMES, TIMES);
+  }
+  void add_VALUES(::flatbuffers::Offset<::flatbuffers::Vector<double>> VALUES) {
+    fbb_.AddOffset(ACMCovarianceBlock::VT_VALUES, VALUES);
+  }
+  explicit ACMCovarianceBlockBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ACMCovarianceBlock> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ACMCovarianceBlock>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ACMCovarianceBlock> CreateACMCovarianceBlock(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_PREV_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_BASIS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_BASIS_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_REF_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TIMES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> VALUES = 0) {
+  ACMCovarianceBlockBuilder builder_(_fbb);
+  builder_.add_VALUES(VALUES);
+  builder_.add_TIMES(TIMES);
+  builder_.add_COV_TYPE(COV_TYPE);
+  builder_.add_COV_REF_FRAME(COV_REF_FRAME);
+  builder_.add_COV_BASIS_ID(COV_BASIS_ID);
+  builder_.add_COV_BASIS(COV_BASIS);
+  builder_.add_COV_PREV_ID(COV_PREV_ID);
+  builder_.add_COV_ID(COV_ID);
+  builder_.add_COMMENT(COMMENT);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ACMCovarianceBlock> CreateACMCovarianceBlockDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *COMMENT = nullptr,
+    const char *COV_ID = nullptr,
+    const char *COV_PREV_ID = nullptr,
+    const char *COV_BASIS = nullptr,
+    const char *COV_BASIS_ID = nullptr,
+    const char *COV_REF_FRAME = nullptr,
+    const char *COV_TYPE = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TIMES = nullptr,
+    const std::vector<double> *VALUES = nullptr) {
+  auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
+  auto COV_ID__ = COV_ID ? _fbb.CreateString(COV_ID) : 0;
+  auto COV_PREV_ID__ = COV_PREV_ID ? _fbb.CreateString(COV_PREV_ID) : 0;
+  auto COV_BASIS__ = COV_BASIS ? _fbb.CreateString(COV_BASIS) : 0;
+  auto COV_BASIS_ID__ = COV_BASIS_ID ? _fbb.CreateString(COV_BASIS_ID) : 0;
+  auto COV_REF_FRAME__ = COV_REF_FRAME ? _fbb.CreateString(COV_REF_FRAME) : 0;
+  auto COV_TYPE__ = COV_TYPE ? _fbb.CreateString(COV_TYPE) : 0;
+  auto TIMES__ = TIMES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TIMES) : 0;
+  auto VALUES__ = VALUES ? _fbb.CreateVector<double>(*VALUES) : 0;
+  return CreateACMCovarianceBlock(
+      _fbb,
+      COMMENT__,
+      COV_ID__,
+      COV_PREV_ID__,
+      COV_BASIS__,
+      COV_BASIS_ID__,
+      COV_REF_FRAME__,
+      COV_TYPE__,
+      TIMES__,
+      VALUES__);
+}
+
+/// One maneuver specification of an ACM (Table 5-7).
+struct ACMManeuverBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ACMManeuverBlockBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COMMENT = 4,
+    VT_MAN_ID = 6,
+    VT_MAN_PREV_ID = 8,
+    VT_MAN_PURPOSE = 10,
+    VT_MAN_BEGIN_TIME = 12,
+    VT_MAN_END_TIME = 14,
+    VT_MAN_DURATION = 16,
+    VT_ACTUATOR_USED = 18,
+    VT_TARGET_MOMENTUM = 20,
+    VT_TARGET_MOM_FRAME = 22,
+    VT_TARGET_ATTITUDE = 24,
+    VT_TARGET_SPINRATE = 26
+  };
+  /// COMMENT lines of this block, joined by a line feed.
+  const ::flatbuffers::String *COMMENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
+  }
+  /// MAN_ID.
+  const ::flatbuffers::String *MAN_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MAN_ID);
+  }
+  /// MAN_PREV_ID.
+  const ::flatbuffers::String *MAN_PREV_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MAN_PREV_ID);
+  }
+  /// MAN_PURPOSE: for example MOM_DESAT.
+  const ::flatbuffers::String *MAN_PURPOSE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MAN_PURPOSE);
+  }
+  /// MAN_BEGIN_TIME in seconds from EPOCH_TZERO.
+  double MAN_BEGIN_TIME() const {
+    return GetField<double>(VT_MAN_BEGIN_TIME, 0.0);
+  }
+  /// MAN_END_TIME in seconds from EPOCH_TZERO; NaN when the message states
+  /// MAN_DURATION instead (a message states one of the two).
+  double MAN_END_TIME() const {
+    return GetField<double>(VT_MAN_END_TIME, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// MAN_DURATION in seconds; NaN when the message states MAN_END_TIME instead.
+  double MAN_DURATION() const {
+    return GetField<double>(VT_MAN_DURATION, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// ACTUATOR_USED.
+  const ::flatbuffers::String *ACTUATOR_USED() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ACTUATOR_USED);
+  }
+  /// TARGET_MOMENTUM: three components in N*m*s; empty when not stated.
+  const ::flatbuffers::Vector<double> *TARGET_MOMENTUM() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_TARGET_MOMENTUM);
+  }
+  /// TARGET_MOM_FRAME.
+  const ::flatbuffers::String *TARGET_MOM_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TARGET_MOM_FRAME);
+  }
+  /// TARGET_ATTITUDE: the target attitude components; empty when not stated.
+  const ::flatbuffers::Vector<double> *TARGET_ATTITUDE() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_TARGET_ATTITUDE);
+  }
+  /// TARGET_SPINRATE in deg/s, NaN when not stated.
+  double TARGET_SPINRATE() const {
+    return GetField<double>(VT_TARGET_SPINRATE, std::numeric_limits<double>::quiet_NaN());
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyString(COMMENT()) &&
+           VerifyOffset(verifier, VT_MAN_ID) &&
+           verifier.VerifyString(MAN_ID()) &&
+           VerifyOffset(verifier, VT_MAN_PREV_ID) &&
+           verifier.VerifyString(MAN_PREV_ID()) &&
+           VerifyOffset(verifier, VT_MAN_PURPOSE) &&
+           verifier.VerifyString(MAN_PURPOSE()) &&
+           VerifyField<double>(verifier, VT_MAN_BEGIN_TIME, 8) &&
+           VerifyField<double>(verifier, VT_MAN_END_TIME, 8) &&
+           VerifyField<double>(verifier, VT_MAN_DURATION, 8) &&
+           VerifyOffset(verifier, VT_ACTUATOR_USED) &&
+           verifier.VerifyString(ACTUATOR_USED()) &&
+           VerifyOffset(verifier, VT_TARGET_MOMENTUM) &&
+           verifier.VerifyVector(TARGET_MOMENTUM()) &&
+           VerifyOffset(verifier, VT_TARGET_MOM_FRAME) &&
+           verifier.VerifyString(TARGET_MOM_FRAME()) &&
+           VerifyOffset(verifier, VT_TARGET_ATTITUDE) &&
+           verifier.VerifyVector(TARGET_ATTITUDE()) &&
+           VerifyField<double>(verifier, VT_TARGET_SPINRATE, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct ACMManeuverBlockBuilder {
+  typedef ACMManeuverBlock Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
+    fbb_.AddOffset(ACMManeuverBlock::VT_COMMENT, COMMENT);
+  }
+  void add_MAN_ID(::flatbuffers::Offset<::flatbuffers::String> MAN_ID) {
+    fbb_.AddOffset(ACMManeuverBlock::VT_MAN_ID, MAN_ID);
+  }
+  void add_MAN_PREV_ID(::flatbuffers::Offset<::flatbuffers::String> MAN_PREV_ID) {
+    fbb_.AddOffset(ACMManeuverBlock::VT_MAN_PREV_ID, MAN_PREV_ID);
+  }
+  void add_MAN_PURPOSE(::flatbuffers::Offset<::flatbuffers::String> MAN_PURPOSE) {
+    fbb_.AddOffset(ACMManeuverBlock::VT_MAN_PURPOSE, MAN_PURPOSE);
+  }
+  void add_MAN_BEGIN_TIME(double MAN_BEGIN_TIME) {
+    fbb_.AddElement<double>(ACMManeuverBlock::VT_MAN_BEGIN_TIME, MAN_BEGIN_TIME, 0.0);
+  }
+  void add_MAN_END_TIME(double MAN_END_TIME) {
+    fbb_.AddElement<double>(ACMManeuverBlock::VT_MAN_END_TIME, MAN_END_TIME, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_MAN_DURATION(double MAN_DURATION) {
+    fbb_.AddElement<double>(ACMManeuverBlock::VT_MAN_DURATION, MAN_DURATION, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_ACTUATOR_USED(::flatbuffers::Offset<::flatbuffers::String> ACTUATOR_USED) {
+    fbb_.AddOffset(ACMManeuverBlock::VT_ACTUATOR_USED, ACTUATOR_USED);
+  }
+  void add_TARGET_MOMENTUM(::flatbuffers::Offset<::flatbuffers::Vector<double>> TARGET_MOMENTUM) {
+    fbb_.AddOffset(ACMManeuverBlock::VT_TARGET_MOMENTUM, TARGET_MOMENTUM);
+  }
+  void add_TARGET_MOM_FRAME(::flatbuffers::Offset<::flatbuffers::String> TARGET_MOM_FRAME) {
+    fbb_.AddOffset(ACMManeuverBlock::VT_TARGET_MOM_FRAME, TARGET_MOM_FRAME);
+  }
+  void add_TARGET_ATTITUDE(::flatbuffers::Offset<::flatbuffers::Vector<double>> TARGET_ATTITUDE) {
+    fbb_.AddOffset(ACMManeuverBlock::VT_TARGET_ATTITUDE, TARGET_ATTITUDE);
+  }
+  void add_TARGET_SPINRATE(double TARGET_SPINRATE) {
+    fbb_.AddElement<double>(ACMManeuverBlock::VT_TARGET_SPINRATE, TARGET_SPINRATE, std::numeric_limits<double>::quiet_NaN());
+  }
+  explicit ACMManeuverBlockBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ACMManeuverBlock> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ACMManeuverBlock>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ACMManeuverBlock> CreateACMManeuverBlock(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MAN_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MAN_PREV_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MAN_PURPOSE = 0,
+    double MAN_BEGIN_TIME = 0.0,
+    double MAN_END_TIME = std::numeric_limits<double>::quiet_NaN(),
+    double MAN_DURATION = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> ACTUATOR_USED = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> TARGET_MOMENTUM = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TARGET_MOM_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> TARGET_ATTITUDE = 0,
+    double TARGET_SPINRATE = std::numeric_limits<double>::quiet_NaN()) {
+  ACMManeuverBlockBuilder builder_(_fbb);
+  builder_.add_TARGET_SPINRATE(TARGET_SPINRATE);
+  builder_.add_MAN_DURATION(MAN_DURATION);
+  builder_.add_MAN_END_TIME(MAN_END_TIME);
+  builder_.add_MAN_BEGIN_TIME(MAN_BEGIN_TIME);
+  builder_.add_TARGET_ATTITUDE(TARGET_ATTITUDE);
+  builder_.add_TARGET_MOM_FRAME(TARGET_MOM_FRAME);
+  builder_.add_TARGET_MOMENTUM(TARGET_MOMENTUM);
+  builder_.add_ACTUATOR_USED(ACTUATOR_USED);
+  builder_.add_MAN_PURPOSE(MAN_PURPOSE);
+  builder_.add_MAN_PREV_ID(MAN_PREV_ID);
+  builder_.add_MAN_ID(MAN_ID);
+  builder_.add_COMMENT(COMMENT);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ACMManeuverBlock> CreateACMManeuverBlockDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *COMMENT = nullptr,
+    const char *MAN_ID = nullptr,
+    const char *MAN_PREV_ID = nullptr,
+    const char *MAN_PURPOSE = nullptr,
+    double MAN_BEGIN_TIME = 0.0,
+    double MAN_END_TIME = std::numeric_limits<double>::quiet_NaN(),
+    double MAN_DURATION = std::numeric_limits<double>::quiet_NaN(),
+    const char *ACTUATOR_USED = nullptr,
+    const std::vector<double> *TARGET_MOMENTUM = nullptr,
+    const char *TARGET_MOM_FRAME = nullptr,
+    const std::vector<double> *TARGET_ATTITUDE = nullptr,
+    double TARGET_SPINRATE = std::numeric_limits<double>::quiet_NaN()) {
+  auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
+  auto MAN_ID__ = MAN_ID ? _fbb.CreateString(MAN_ID) : 0;
+  auto MAN_PREV_ID__ = MAN_PREV_ID ? _fbb.CreateString(MAN_PREV_ID) : 0;
+  auto MAN_PURPOSE__ = MAN_PURPOSE ? _fbb.CreateString(MAN_PURPOSE) : 0;
+  auto ACTUATOR_USED__ = ACTUATOR_USED ? _fbb.CreateString(ACTUATOR_USED) : 0;
+  auto TARGET_MOMENTUM__ = TARGET_MOMENTUM ? _fbb.CreateVector<double>(*TARGET_MOMENTUM) : 0;
+  auto TARGET_MOM_FRAME__ = TARGET_MOM_FRAME ? _fbb.CreateString(TARGET_MOM_FRAME) : 0;
+  auto TARGET_ATTITUDE__ = TARGET_ATTITUDE ? _fbb.CreateVector<double>(*TARGET_ATTITUDE) : 0;
+  return CreateACMManeuverBlock(
+      _fbb,
+      COMMENT__,
+      MAN_ID__,
+      MAN_PREV_ID__,
+      MAN_PURPOSE__,
+      MAN_BEGIN_TIME,
+      MAN_END_TIME,
+      MAN_DURATION,
+      ACTUATOR_USED__,
+      TARGET_MOMENTUM__,
+      TARGET_MOM_FRAME__,
+      TARGET_ATTITUDE__,
+      TARGET_SPINRATE);
+}
+
+/// The attitude determination data of an ACM (Table 5-8).
+struct ACMDetermination FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ACMDeterminationBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COMMENT = 4,
+    VT_AD_ID = 6,
+    VT_AD_PREV_ID = 8,
+    VT_AD_METHOD = 10,
+    VT_ATTITUDE_SOURCE = 12,
+    VT_NUMBER_STATES = 14,
+    VT_ATTITUDE_STATES = 16,
+    VT_EULER_ROT_SEQ = 18,
+    VT_COV_TYPE = 20,
+    VT_REF_FRAME_A = 22,
+    VT_REF_FRAME_B = 24,
+    VT_RATE_STATES = 26,
+    VT_SIGMA_U = 28,
+    VT_SIGMA_V = 30,
+    VT_RATE_PROCESS_NOISE_STDDEV = 32,
+    VT_SENSORS = 34
+  };
+  /// COMMENT lines of this block, joined by a line feed.
+  const ::flatbuffers::String *COMMENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
+  }
+  /// AD_ID.
+  const ::flatbuffers::String *AD_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_AD_ID);
+  }
+  /// AD_PREV_ID.
+  const ::flatbuffers::String *AD_PREV_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_AD_PREV_ID);
+  }
+  /// AD_METHOD: for example EKF, TRIAD or QUEST.
+  const ::flatbuffers::String *AD_METHOD() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_AD_METHOD);
+  }
+  /// ATTITUDE_SOURCE.
+  const ::flatbuffers::String *ATTITUDE_SOURCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ATTITUDE_SOURCE);
+  }
+  /// NUMBER_STATES.
+  uint32_t NUMBER_STATES() const {
+    return GetField<uint32_t>(VT_NUMBER_STATES, 0);
+  }
+  /// ATTITUDE_STATES: QUATERNION, EULER_ANGLES, DCM or ANGVEL.
+  const ::flatbuffers::String *ATTITUDE_STATES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ATTITUDE_STATES);
+  }
+  /// EULER_ROT_SEQ.
+  const ::flatbuffers::String *EULER_ROT_SEQ() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EULER_ROT_SEQ);
+  }
+  /// COV_TYPE.
+  const ::flatbuffers::String *COV_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_TYPE);
+  }
+  /// REF_FRAME_A.
+  const ::flatbuffers::String *REF_FRAME_A() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME_A);
+  }
+  /// REF_FRAME_B.
+  const ::flatbuffers::String *REF_FRAME_B() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME_B);
+  }
+  /// RATE_STATES: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS.
+  const ::flatbuffers::String *RATE_STATES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RATE_STATES);
+  }
+  /// SIGMA_U in deg/s**1.5, NaN when not stated.
+  double SIGMA_U() const {
+    return GetField<double>(VT_SIGMA_U, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// SIGMA_V in deg/s**0.5, NaN when not stated.
+  double SIGMA_V() const {
+    return GetField<double>(VT_SIGMA_V, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// RATE_PROCESS_NOISE_STDDEV in deg/s**1.5, NaN when not stated.
+  double RATE_PROCESS_NOISE_STDDEV() const {
+    return GetField<double>(VT_RATE_PROCESS_NOISE_STDDEV, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// The sensors, in message order.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACMSensor>> *SENSORS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACMSensor>> *>(VT_SENSORS);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyString(COMMENT()) &&
+           VerifyOffset(verifier, VT_AD_ID) &&
+           verifier.VerifyString(AD_ID()) &&
+           VerifyOffset(verifier, VT_AD_PREV_ID) &&
+           verifier.VerifyString(AD_PREV_ID()) &&
+           VerifyOffset(verifier, VT_AD_METHOD) &&
+           verifier.VerifyString(AD_METHOD()) &&
+           VerifyOffset(verifier, VT_ATTITUDE_SOURCE) &&
+           verifier.VerifyString(ATTITUDE_SOURCE()) &&
+           VerifyField<uint32_t>(verifier, VT_NUMBER_STATES, 4) &&
+           VerifyOffset(verifier, VT_ATTITUDE_STATES) &&
+           verifier.VerifyString(ATTITUDE_STATES()) &&
+           VerifyOffset(verifier, VT_EULER_ROT_SEQ) &&
+           verifier.VerifyString(EULER_ROT_SEQ()) &&
+           VerifyOffset(verifier, VT_COV_TYPE) &&
+           verifier.VerifyString(COV_TYPE()) &&
+           VerifyOffset(verifier, VT_REF_FRAME_A) &&
+           verifier.VerifyString(REF_FRAME_A()) &&
+           VerifyOffset(verifier, VT_REF_FRAME_B) &&
+           verifier.VerifyString(REF_FRAME_B()) &&
+           VerifyOffset(verifier, VT_RATE_STATES) &&
+           verifier.VerifyString(RATE_STATES()) &&
+           VerifyField<double>(verifier, VT_SIGMA_U, 8) &&
+           VerifyField<double>(verifier, VT_SIGMA_V, 8) &&
+           VerifyField<double>(verifier, VT_RATE_PROCESS_NOISE_STDDEV, 8) &&
+           VerifyOffset(verifier, VT_SENSORS) &&
+           verifier.VerifyVector(SENSORS()) &&
+           verifier.VerifyVectorOfTables(SENSORS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ACMDeterminationBuilder {
+  typedef ACMDetermination Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
+    fbb_.AddOffset(ACMDetermination::VT_COMMENT, COMMENT);
+  }
+  void add_AD_ID(::flatbuffers::Offset<::flatbuffers::String> AD_ID) {
+    fbb_.AddOffset(ACMDetermination::VT_AD_ID, AD_ID);
+  }
+  void add_AD_PREV_ID(::flatbuffers::Offset<::flatbuffers::String> AD_PREV_ID) {
+    fbb_.AddOffset(ACMDetermination::VT_AD_PREV_ID, AD_PREV_ID);
+  }
+  void add_AD_METHOD(::flatbuffers::Offset<::flatbuffers::String> AD_METHOD) {
+    fbb_.AddOffset(ACMDetermination::VT_AD_METHOD, AD_METHOD);
+  }
+  void add_ATTITUDE_SOURCE(::flatbuffers::Offset<::flatbuffers::String> ATTITUDE_SOURCE) {
+    fbb_.AddOffset(ACMDetermination::VT_ATTITUDE_SOURCE, ATTITUDE_SOURCE);
+  }
+  void add_NUMBER_STATES(uint32_t NUMBER_STATES) {
+    fbb_.AddElement<uint32_t>(ACMDetermination::VT_NUMBER_STATES, NUMBER_STATES, 0);
+  }
+  void add_ATTITUDE_STATES(::flatbuffers::Offset<::flatbuffers::String> ATTITUDE_STATES) {
+    fbb_.AddOffset(ACMDetermination::VT_ATTITUDE_STATES, ATTITUDE_STATES);
+  }
+  void add_EULER_ROT_SEQ(::flatbuffers::Offset<::flatbuffers::String> EULER_ROT_SEQ) {
+    fbb_.AddOffset(ACMDetermination::VT_EULER_ROT_SEQ, EULER_ROT_SEQ);
+  }
+  void add_COV_TYPE(::flatbuffers::Offset<::flatbuffers::String> COV_TYPE) {
+    fbb_.AddOffset(ACMDetermination::VT_COV_TYPE, COV_TYPE);
+  }
+  void add_REF_FRAME_A(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_A) {
+    fbb_.AddOffset(ACMDetermination::VT_REF_FRAME_A, REF_FRAME_A);
+  }
+  void add_REF_FRAME_B(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_B) {
+    fbb_.AddOffset(ACMDetermination::VT_REF_FRAME_B, REF_FRAME_B);
+  }
+  void add_RATE_STATES(::flatbuffers::Offset<::flatbuffers::String> RATE_STATES) {
+    fbb_.AddOffset(ACMDetermination::VT_RATE_STATES, RATE_STATES);
+  }
+  void add_SIGMA_U(double SIGMA_U) {
+    fbb_.AddElement<double>(ACMDetermination::VT_SIGMA_U, SIGMA_U, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SIGMA_V(double SIGMA_V) {
+    fbb_.AddElement<double>(ACMDetermination::VT_SIGMA_V, SIGMA_V, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_RATE_PROCESS_NOISE_STDDEV(double RATE_PROCESS_NOISE_STDDEV) {
+    fbb_.AddElement<double>(ACMDetermination::VT_RATE_PROCESS_NOISE_STDDEV, RATE_PROCESS_NOISE_STDDEV, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SENSORS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACMSensor>>> SENSORS) {
+    fbb_.AddOffset(ACMDetermination::VT_SENSORS, SENSORS);
+  }
+  explicit ACMDeterminationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ACMDetermination> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ACMDetermination>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ACMDetermination> CreateACMDetermination(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> AD_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> AD_PREV_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> AD_METHOD = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ATTITUDE_SOURCE = 0,
+    uint32_t NUMBER_STATES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ATTITUDE_STATES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EULER_ROT_SEQ = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_A = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_B = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RATE_STATES = 0,
+    double SIGMA_U = std::numeric_limits<double>::quiet_NaN(),
+    double SIGMA_V = std::numeric_limits<double>::quiet_NaN(),
+    double RATE_PROCESS_NOISE_STDDEV = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACMSensor>>> SENSORS = 0) {
+  ACMDeterminationBuilder builder_(_fbb);
+  builder_.add_RATE_PROCESS_NOISE_STDDEV(RATE_PROCESS_NOISE_STDDEV);
+  builder_.add_SIGMA_V(SIGMA_V);
+  builder_.add_SIGMA_U(SIGMA_U);
+  builder_.add_SENSORS(SENSORS);
+  builder_.add_RATE_STATES(RATE_STATES);
+  builder_.add_REF_FRAME_B(REF_FRAME_B);
+  builder_.add_REF_FRAME_A(REF_FRAME_A);
+  builder_.add_COV_TYPE(COV_TYPE);
+  builder_.add_EULER_ROT_SEQ(EULER_ROT_SEQ);
+  builder_.add_ATTITUDE_STATES(ATTITUDE_STATES);
+  builder_.add_NUMBER_STATES(NUMBER_STATES);
+  builder_.add_ATTITUDE_SOURCE(ATTITUDE_SOURCE);
+  builder_.add_AD_METHOD(AD_METHOD);
+  builder_.add_AD_PREV_ID(AD_PREV_ID);
+  builder_.add_AD_ID(AD_ID);
+  builder_.add_COMMENT(COMMENT);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ACMDetermination> CreateACMDeterminationDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *COMMENT = nullptr,
+    const char *AD_ID = nullptr,
+    const char *AD_PREV_ID = nullptr,
+    const char *AD_METHOD = nullptr,
+    const char *ATTITUDE_SOURCE = nullptr,
+    uint32_t NUMBER_STATES = 0,
+    const char *ATTITUDE_STATES = nullptr,
+    const char *EULER_ROT_SEQ = nullptr,
+    const char *COV_TYPE = nullptr,
+    const char *REF_FRAME_A = nullptr,
+    const char *REF_FRAME_B = nullptr,
+    const char *RATE_STATES = nullptr,
+    double SIGMA_U = std::numeric_limits<double>::quiet_NaN(),
+    double SIGMA_V = std::numeric_limits<double>::quiet_NaN(),
+    double RATE_PROCESS_NOISE_STDDEV = std::numeric_limits<double>::quiet_NaN(),
+    const std::vector<::flatbuffers::Offset<ACMSensor>> *SENSORS = nullptr) {
+  auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
+  auto AD_ID__ = AD_ID ? _fbb.CreateString(AD_ID) : 0;
+  auto AD_PREV_ID__ = AD_PREV_ID ? _fbb.CreateString(AD_PREV_ID) : 0;
+  auto AD_METHOD__ = AD_METHOD ? _fbb.CreateString(AD_METHOD) : 0;
+  auto ATTITUDE_SOURCE__ = ATTITUDE_SOURCE ? _fbb.CreateString(ATTITUDE_SOURCE) : 0;
+  auto ATTITUDE_STATES__ = ATTITUDE_STATES ? _fbb.CreateString(ATTITUDE_STATES) : 0;
+  auto EULER_ROT_SEQ__ = EULER_ROT_SEQ ? _fbb.CreateString(EULER_ROT_SEQ) : 0;
+  auto COV_TYPE__ = COV_TYPE ? _fbb.CreateString(COV_TYPE) : 0;
+  auto REF_FRAME_A__ = REF_FRAME_A ? _fbb.CreateString(REF_FRAME_A) : 0;
+  auto REF_FRAME_B__ = REF_FRAME_B ? _fbb.CreateString(REF_FRAME_B) : 0;
+  auto RATE_STATES__ = RATE_STATES ? _fbb.CreateString(RATE_STATES) : 0;
+  auto SENSORS__ = SENSORS ? _fbb.CreateVector<::flatbuffers::Offset<ACMSensor>>(*SENSORS) : 0;
+  return CreateACMDetermination(
+      _fbb,
+      COMMENT__,
+      AD_ID__,
+      AD_PREV_ID__,
+      AD_METHOD__,
+      ATTITUDE_SOURCE__,
+      NUMBER_STATES,
+      ATTITUDE_STATES__,
+      EULER_ROT_SEQ__,
+      COV_TYPE__,
+      REF_FRAME_A__,
+      REF_FRAME_B__,
+      RATE_STATES__,
+      SIGMA_U,
+      SIGMA_V,
+      RATE_PROCESS_NOISE_STDDEV,
+      SENSORS__);
+}
+
+/// One sensor block of an ACM's attitude determination data.
+struct ACMSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ACMSensorBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SENSOR_NUMBER = 4,
+    VT_SENSOR_USED = 6,
+    VT_NUMBER_SENSOR_NOISE_COVARIANCE = 8,
+    VT_SENSOR_NOISE_STDDEV = 10,
+    VT_SENSOR_FREQUENCY = 12
+  };
+  /// SENSOR_NUMBER; it need not be sequential.
+  uint32_t SENSOR_NUMBER() const {
+    return GetField<uint32_t>(VT_SENSOR_NUMBER, 0);
+  }
+  /// SENSOR_USED: for example AST, DSS or IMU.
+  const ::flatbuffers::String *SENSOR_USED() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_USED);
+  }
+  /// NUMBER_SENSOR_NOISE_COVARIANCE.
+  uint32_t NUMBER_SENSOR_NOISE_COVARIANCE() const {
+    return GetField<uint32_t>(VT_NUMBER_SENSOR_NOISE_COVARIANCE, 0);
+  }
+  /// SENSOR_NOISE_STDDEV in deg: one value per noise covariance.
+  const ::flatbuffers::Vector<double> *SENSOR_NOISE_STDDEV() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SENSOR_NOISE_STDDEV);
+  }
+  /// SENSOR_FREQUENCY in Hz, NaN when not stated.
+  double SENSOR_FREQUENCY() const {
+    return GetField<double>(VT_SENSOR_FREQUENCY, std::numeric_limits<double>::quiet_NaN());
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_SENSOR_NUMBER, 4) &&
+           VerifyOffset(verifier, VT_SENSOR_USED) &&
+           verifier.VerifyString(SENSOR_USED()) &&
+           VerifyField<uint32_t>(verifier, VT_NUMBER_SENSOR_NOISE_COVARIANCE, 4) &&
+           VerifyOffset(verifier, VT_SENSOR_NOISE_STDDEV) &&
+           verifier.VerifyVector(SENSOR_NOISE_STDDEV()) &&
+           VerifyField<double>(verifier, VT_SENSOR_FREQUENCY, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct ACMSensorBuilder {
+  typedef ACMSensor Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SENSOR_NUMBER(uint32_t SENSOR_NUMBER) {
+    fbb_.AddElement<uint32_t>(ACMSensor::VT_SENSOR_NUMBER, SENSOR_NUMBER, 0);
+  }
+  void add_SENSOR_USED(::flatbuffers::Offset<::flatbuffers::String> SENSOR_USED) {
+    fbb_.AddOffset(ACMSensor::VT_SENSOR_USED, SENSOR_USED);
+  }
+  void add_NUMBER_SENSOR_NOISE_COVARIANCE(uint32_t NUMBER_SENSOR_NOISE_COVARIANCE) {
+    fbb_.AddElement<uint32_t>(ACMSensor::VT_NUMBER_SENSOR_NOISE_COVARIANCE, NUMBER_SENSOR_NOISE_COVARIANCE, 0);
+  }
+  void add_SENSOR_NOISE_STDDEV(::flatbuffers::Offset<::flatbuffers::Vector<double>> SENSOR_NOISE_STDDEV) {
+    fbb_.AddOffset(ACMSensor::VT_SENSOR_NOISE_STDDEV, SENSOR_NOISE_STDDEV);
+  }
+  void add_SENSOR_FREQUENCY(double SENSOR_FREQUENCY) {
+    fbb_.AddElement<double>(ACMSensor::VT_SENSOR_FREQUENCY, SENSOR_FREQUENCY, std::numeric_limits<double>::quiet_NaN());
+  }
+  explicit ACMSensorBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ACMSensor> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ACMSensor>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ACMSensor> CreateACMSensor(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t SENSOR_NUMBER = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SENSOR_USED = 0,
+    uint32_t NUMBER_SENSOR_NOISE_COVARIANCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SENSOR_NOISE_STDDEV = 0,
+    double SENSOR_FREQUENCY = std::numeric_limits<double>::quiet_NaN()) {
+  ACMSensorBuilder builder_(_fbb);
+  builder_.add_SENSOR_FREQUENCY(SENSOR_FREQUENCY);
+  builder_.add_SENSOR_NOISE_STDDEV(SENSOR_NOISE_STDDEV);
+  builder_.add_NUMBER_SENSOR_NOISE_COVARIANCE(NUMBER_SENSOR_NOISE_COVARIANCE);
+  builder_.add_SENSOR_USED(SENSOR_USED);
+  builder_.add_SENSOR_NUMBER(SENSOR_NUMBER);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ACMSensor> CreateACMSensorDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t SENSOR_NUMBER = 0,
+    const char *SENSOR_USED = nullptr,
+    uint32_t NUMBER_SENSOR_NOISE_COVARIANCE = 0,
+    const std::vector<double> *SENSOR_NOISE_STDDEV = nullptr,
+    double SENSOR_FREQUENCY = std::numeric_limits<double>::quiet_NaN()) {
+  auto SENSOR_USED__ = SENSOR_USED ? _fbb.CreateString(SENSOR_USED) : 0;
+  auto SENSOR_NOISE_STDDEV__ = SENSOR_NOISE_STDDEV ? _fbb.CreateVector<double>(*SENSOR_NOISE_STDDEV) : 0;
+  return CreateACMSensor(
+      _fbb,
+      SENSOR_NUMBER,
+      SENSOR_USED__,
+      NUMBER_SENSOR_NOISE_COVARIANCE,
+      SENSOR_NOISE_STDDEV__,
+      SENSOR_FREQUENCY);
+}
+
+/// One USER_DEFINED_x keyword of an ACM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+struct ACMUserDefinedParameter FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ACMUserDefinedParameterBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PARAM_NAME = 4,
+    VT_PARAM_VALUE = 6
+  };
+  /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  const ::flatbuffers::String *PARAM_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARAM_NAME);
+  }
+  /// The value as written
+  const ::flatbuffers::String *PARAM_VALUE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARAM_VALUE);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_PARAM_NAME) &&
+           verifier.VerifyString(PARAM_NAME()) &&
+           VerifyOffset(verifier, VT_PARAM_VALUE) &&
+           verifier.VerifyString(PARAM_VALUE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ACMUserDefinedParameterBuilder {
+  typedef ACMUserDefinedParameter Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_PARAM_NAME(::flatbuffers::Offset<::flatbuffers::String> PARAM_NAME) {
+    fbb_.AddOffset(ACMUserDefinedParameter::VT_PARAM_NAME, PARAM_NAME);
+  }
+  void add_PARAM_VALUE(::flatbuffers::Offset<::flatbuffers::String> PARAM_VALUE) {
+    fbb_.AddOffset(ACMUserDefinedParameter::VT_PARAM_VALUE, PARAM_VALUE);
+  }
+  explicit ACMUserDefinedParameterBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ACMUserDefinedParameter> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ACMUserDefinedParameter>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ACMUserDefinedParameter> CreateACMUserDefinedParameter(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> PARAM_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PARAM_VALUE = 0) {
+  ACMUserDefinedParameterBuilder builder_(_fbb);
+  builder_.add_PARAM_VALUE(PARAM_VALUE);
+  builder_.add_PARAM_NAME(PARAM_NAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ACMUserDefinedParameter> CreateACMUserDefinedParameterDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *PARAM_NAME = nullptr,
+    const char *PARAM_VALUE = nullptr) {
+  auto PARAM_NAME__ = PARAM_NAME ? _fbb.CreateString(PARAM_NAME) : 0;
+  auto PARAM_VALUE__ = PARAM_VALUE ? _fbb.CreateString(PARAM_VALUE) : 0;
+  return CreateACMUserDefinedParameter(
+      _fbb,
+      PARAM_NAME__,
+      PARAM_VALUE__);
 }
 
 inline const ACM *GetACM(const void *buf) {

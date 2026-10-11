@@ -175,6 +175,9 @@ impl<'a> OMM<'a> {
     pub const VT_USER_DEFINED_EARTH_MODEL: ::flatbuffers::VOffsetT = 78;
     pub const VT_USER_DEFINED_EPOCH_TIMESTAMP: ::flatbuffers::VOffsetT = 80;
     pub const VT_USER_DEFINED_MICROSECONDS: ::flatbuffers::VOffsetT = 82;
+    pub const VT_CLASSIFICATION: ::flatbuffers::VOffsetT = 84;
+    pub const VT_MESSAGE_ID: ::flatbuffers::VOffsetT = 86;
+    pub const VT_USER_DEFINED_PARAMETERS: ::flatbuffers::VOffsetT = 88;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -207,6 +210,9 @@ impl<'a> OMM<'a> {
         builder.add_MEAN_MOTION(args.MEAN_MOTION);
         builder.add_SEMI_MAJOR_AXIS(args.SEMI_MAJOR_AXIS);
         builder.add_CCSDS_OMM_VERS(args.CCSDS_OMM_VERS);
+        if let Some(x) = args.USER_DEFINED_PARAMETERS { builder.add_USER_DEFINED_PARAMETERS(x); }
+        if let Some(x) = args.MESSAGE_ID { builder.add_MESSAGE_ID(x); }
+        if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
         if let Some(x) = args.USER_DEFINED_EARTH_MODEL { builder.add_USER_DEFINED_EARTH_MODEL(x); }
         if let Some(x) = args.USER_DEFINED_OBJECT_DESIGNATOR { builder.add_USER_DEFINED_OBJECT_DESIGNATOR(x); }
         builder.add_USER_DEFINED_BIP_0044_TYPE(args.USER_DEFINED_BIP_0044_TYPE);
@@ -299,6 +305,15 @@ impl<'a> OMM<'a> {
         });
         let USER_DEFINED_EPOCH_TIMESTAMP = self.USER_DEFINED_EPOCH_TIMESTAMP();
         let USER_DEFINED_MICROSECONDS = self.USER_DEFINED_MICROSECONDS();
+        let CLASSIFICATION = self.CLASSIFICATION().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MESSAGE_ID = self.MESSAGE_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let USER_DEFINED_PARAMETERS = self.USER_DEFINED_PARAMETERS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         OMMT {
             CCSDS_OMM_VERS,
             CREATION_DATE,
@@ -340,6 +355,9 @@ impl<'a> OMM<'a> {
             USER_DEFINED_EARTH_MODEL,
             USER_DEFINED_EPOCH_TIMESTAMP,
             USER_DEFINED_MICROSECONDS,
+            CLASSIFICATION,
+            MESSAGE_ID,
+            USER_DEFINED_PARAMETERS,
         }
     }
 
@@ -434,7 +452,10 @@ impl<'a> OMM<'a> {
         unsafe { self._tab.get::<meanElementSource>(OMM::VT_MEAN_ELEMENT_THEORY, Some(meanElementSource::SGP4)).unwrap()}
     }
 
-    /// COMMENT (O)
+    /// COMMENT (O): every COMMENT line of the message, in message order, joined by
+    /// a line feed. A message states comments in its header, its metadata and each
+    /// data group; this field holds them all, so a message written from the record
+    /// states them together in its header.
     #[inline]
     pub fn COMMENT(&self) -> Option<&'a str> {
         // Safety:
@@ -711,6 +732,37 @@ impl<'a> OMM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(OMM::VT_USER_DEFINED_MICROSECONDS, Some(0.0)).unwrap()}
     }
+
+    /// CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+    /// that states its security classification or handling caveat. Not
+    /// CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+    #[inline]
+    pub fn CLASSIFICATION(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_CLASSIFICATION, None)}
+    }
+
+    /// MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+    /// originator makes unique for this message.
+    #[inline]
+    pub fn MESSAGE_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_MESSAGE_ID, None)}
+    }
+
+    /// Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+    /// message that has no dedicated field above, in message order.
+    #[inline]
+    pub fn USER_DEFINED_PARAMETERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMMUserDefinedParameter<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMMUserDefinedParameter>>>>(OMM::VT_USER_DEFINED_PARAMETERS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OMM<'_> {
@@ -759,6 +811,9 @@ impl ::flatbuffers::Verifiable for OMM<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("USER_DEFINED_EARTH_MODEL", Self::VT_USER_DEFINED_EARTH_MODEL, false)?
             .visit_field::<f64>("USER_DEFINED_EPOCH_TIMESTAMP", Self::VT_USER_DEFINED_EPOCH_TIMESTAMP, false)?
             .visit_field::<f64>("USER_DEFINED_MICROSECONDS", Self::VT_USER_DEFINED_MICROSECONDS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION", Self::VT_CLASSIFICATION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_ID", Self::VT_MESSAGE_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OMMUserDefinedParameter>>>>("USER_DEFINED_PARAMETERS", Self::VT_USER_DEFINED_PARAMETERS, false)?
             .finish();
         Ok(())
     }
@@ -805,6 +860,9 @@ pub struct OMMArgs<'a> {
     pub USER_DEFINED_EARTH_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub USER_DEFINED_EPOCH_TIMESTAMP: f64,
     pub USER_DEFINED_MICROSECONDS: f64,
+    pub CLASSIFICATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub USER_DEFINED_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMMUserDefinedParameter<'a>>>>>,
 }
 
 impl<'a> Default for OMMArgs<'a> {
@@ -851,6 +909,9 @@ impl<'a> Default for OMMArgs<'a> {
             USER_DEFINED_EARTH_MODEL: None,
             USER_DEFINED_EPOCH_TIMESTAMP: 0.0,
             USER_DEFINED_MICROSECONDS: 0.0,
+            CLASSIFICATION: None,
+            MESSAGE_ID: None,
+            USER_DEFINED_PARAMETERS: None,
         }
     }
 }
@@ -1062,6 +1123,21 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OMMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_CLASSIFICATION(&mut self, CLASSIFICATION: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_CLASSIFICATION, CLASSIFICATION);
+    }
+
+    #[inline]
+    pub fn add_MESSAGE_ID(&mut self, MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_MESSAGE_ID, MESSAGE_ID);
+    }
+
+    #[inline]
+    pub fn add_USER_DEFINED_PARAMETERS(&mut self, USER_DEFINED_PARAMETERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<OMMUserDefinedParameter<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMM::VT_USER_DEFINED_PARAMETERS, USER_DEFINED_PARAMETERS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OMMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OMMBuilder {
@@ -1120,6 +1196,9 @@ impl ::core::fmt::Debug for OMM<'_> {
         ds.field("USER_DEFINED_EARTH_MODEL", &self.USER_DEFINED_EARTH_MODEL());
         ds.field("USER_DEFINED_EPOCH_TIMESTAMP", &self.USER_DEFINED_EPOCH_TIMESTAMP());
         ds.field("USER_DEFINED_MICROSECONDS", &self.USER_DEFINED_MICROSECONDS());
+        ds.field("CLASSIFICATION", &self.CLASSIFICATION());
+        ds.field("MESSAGE_ID", &self.MESSAGE_ID());
+        ds.field("USER_DEFINED_PARAMETERS", &self.USER_DEFINED_PARAMETERS());
         ds.finish()
     }
 }
@@ -1167,6 +1246,9 @@ pub struct OMMT {
     pub USER_DEFINED_EARTH_MODEL: Option<alloc::string::String>,
     pub USER_DEFINED_EPOCH_TIMESTAMP: f64,
     pub USER_DEFINED_MICROSECONDS: f64,
+    pub CLASSIFICATION: Option<alloc::string::String>,
+    pub MESSAGE_ID: Option<alloc::string::String>,
+    pub USER_DEFINED_PARAMETERS: Option<alloc::vec::Vec<OMMUserDefinedParameterT>>,
 }
 
 impl Default for OMMT {
@@ -1212,6 +1294,9 @@ impl Default for OMMT {
             USER_DEFINED_EARTH_MODEL: None,
             USER_DEFINED_EPOCH_TIMESTAMP: 0.0,
             USER_DEFINED_MICROSECONDS: 0.0,
+            CLASSIFICATION: None,
+            MESSAGE_ID: None,
+            USER_DEFINED_PARAMETERS: None,
         }
     }
 }
@@ -1289,6 +1374,15 @@ impl OMMT {
         });
         let USER_DEFINED_EPOCH_TIMESTAMP = self.USER_DEFINED_EPOCH_TIMESTAMP;
         let USER_DEFINED_MICROSECONDS = self.USER_DEFINED_MICROSECONDS;
+        let CLASSIFICATION = self.CLASSIFICATION.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MESSAGE_ID = self.MESSAGE_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let USER_DEFINED_PARAMETERS = self.USER_DEFINED_PARAMETERS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
         OMM::create(_fbb, &OMMArgs{
             CCSDS_OMM_VERS,
             CREATION_DATE,
@@ -1330,6 +1424,182 @@ impl OMMT {
             USER_DEFINED_EARTH_MODEL,
             USER_DEFINED_EPOCH_TIMESTAMP,
             USER_DEFINED_MICROSECONDS,
+            CLASSIFICATION,
+            MESSAGE_ID,
+            USER_DEFINED_PARAMETERS,
+        })
+    }
+}
+
+pub enum OMMUserDefinedParameterOffset {}
+
+/// One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+#[derive(Copy, Clone, PartialEq)]
+pub struct OMMUserDefinedParameter<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OMMUserDefinedParameter<'a> {
+    type Inner = OMMUserDefinedParameter<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OMMUserDefinedParameter<'a> {
+    pub const VT_PARAM_NAME: ::flatbuffers::VOffsetT = 4;
+    pub const VT_PARAM_VALUE: ::flatbuffers::VOffsetT = 6;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OMMUserDefinedParameter { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OMMUserDefinedParameterArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OMMUserDefinedParameter<'bldr>> {
+        let mut builder = OMMUserDefinedParameterBuilder::new(_fbb);
+        if let Some(x) = args.PARAM_VALUE { builder.add_PARAM_VALUE(x); }
+        if let Some(x) = args.PARAM_NAME { builder.add_PARAM_NAME(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OMMUserDefinedParameterT {
+        let PARAM_NAME = self.PARAM_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let PARAM_VALUE = self.PARAM_VALUE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        OMMUserDefinedParameterT {
+            PARAM_NAME,
+            PARAM_VALUE,
+        }
+    }
+
+    /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+    #[inline]
+    pub fn PARAM_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMMUserDefinedParameter::VT_PARAM_NAME, None)}
+    }
+
+    /// The value as written, unit-less text
+    #[inline]
+    pub fn PARAM_VALUE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMMUserDefinedParameter::VT_PARAM_VALUE, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OMMUserDefinedParameter<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARAM_NAME", Self::VT_PARAM_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARAM_VALUE", Self::VT_PARAM_VALUE, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OMMUserDefinedParameterArgs<'a> {
+    pub PARAM_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PARAM_VALUE: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+
+impl<'a> Default for OMMUserDefinedParameterArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OMMUserDefinedParameterArgs {
+            PARAM_NAME: None,
+            PARAM_VALUE: None,
+        }
+    }
+}
+
+pub struct OMMUserDefinedParameterBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OMMUserDefinedParameterBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_PARAM_NAME(&mut self, PARAM_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMMUserDefinedParameter::VT_PARAM_NAME, PARAM_NAME);
+    }
+
+    #[inline]
+    pub fn add_PARAM_VALUE(&mut self, PARAM_VALUE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OMMUserDefinedParameter::VT_PARAM_VALUE, PARAM_VALUE);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OMMUserDefinedParameterBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OMMUserDefinedParameterBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OMMUserDefinedParameter<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OMMUserDefinedParameter<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OMMUserDefinedParameter");
+        ds.field("PARAM_NAME", &self.PARAM_NAME());
+        ds.field("PARAM_VALUE", &self.PARAM_VALUE());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OMMUserDefinedParameterT {
+    pub PARAM_NAME: Option<alloc::string::String>,
+    pub PARAM_VALUE: Option<alloc::string::String>,
+}
+
+impl Default for OMMUserDefinedParameterT {
+    fn default() -> Self {
+        Self {
+            PARAM_NAME: None,
+            PARAM_VALUE: None,
+        }
+    }
+}
+
+impl OMMUserDefinedParameterT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OMMUserDefinedParameter<'b>> {
+        let PARAM_NAME = self.PARAM_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let PARAM_VALUE = self.PARAM_VALUE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        OMMUserDefinedParameter::create(_fbb, &OMMUserDefinedParameterArgs{
+            PARAM_NAME,
+            PARAM_VALUE,
         })
     }
 }

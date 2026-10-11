@@ -258,22 +258,38 @@ class covarianceMatrixLine extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.
+    public function getCOMMENT()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix
+    /// is expressed in, when it differs from the block's COV_REFERENCE_FRAME.
+    public function getCOV_REFERENCE_FRAME()
+    {
+        $obj = new RFM();
+        $o = $this->__offset(50);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startcovarianceMatrixLine(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(22);
+        $builder->StartObject(24);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return covarianceMatrixLine
      */
-    public static function createcovarianceMatrixLine(FlatBufferBuilder $builder, $EPOCH, $CX_X, $CY_X, $CY_Y, $CZ_X, $CZ_Y, $CZ_Z, $CX_DOT_X, $CX_DOT_Y, $CX_DOT_Z, $CX_DOT_X_DOT, $CY_DOT_X, $CY_DOT_Y, $CY_DOT_Z, $CY_DOT_X_DOT, $CY_DOT_Y_DOT, $CZ_DOT_X, $CZ_DOT_Y, $CZ_DOT_Z, $CZ_DOT_X_DOT, $CZ_DOT_Y_DOT, $CZ_DOT_Z_DOT)
+    public static function createcovarianceMatrixLine(FlatBufferBuilder $builder, $EPOCH, $CX_X, $CY_X, $CY_Y, $CZ_X, $CZ_Y, $CZ_Z, $CX_DOT_X, $CX_DOT_Y, $CX_DOT_Z, $CX_DOT_X_DOT, $CY_DOT_X, $CY_DOT_Y, $CY_DOT_Z, $CY_DOT_X_DOT, $CY_DOT_Y_DOT, $CZ_DOT_X, $CZ_DOT_Y, $CZ_DOT_Z, $CZ_DOT_X_DOT, $CZ_DOT_Y_DOT, $CZ_DOT_Z_DOT, $COMMENT, $COV_REFERENCE_FRAME)
     {
-        $builder->startObject(22);
+        $builder->startObject(24);
         self::addEPOCH($builder, $EPOCH);
         self::addCX_X($builder, $CX_X);
         self::addCY_X($builder, $CY_X);
@@ -296,6 +312,8 @@ class covarianceMatrixLine extends Table
         self::addCZ_DOT_X_DOT($builder, $CZ_DOT_X_DOT);
         self::addCZ_DOT_Y_DOT($builder, $CZ_DOT_Y_DOT);
         self::addCZ_DOT_Z_DOT($builder, $CZ_DOT_Z_DOT);
+        self::addCOMMENT($builder, $COMMENT);
+        self::addCOV_REFERENCE_FRAME($builder, $COV_REFERENCE_FRAME);
         $o = $builder->endObject();
         return $o;
     }
@@ -518,6 +536,26 @@ class covarianceMatrixLine extends Table
     public static function addCZ_DOT_Z_DOT(FlatBufferBuilder $builder, $CZ_DOT_Z_DOT)
     {
         $builder->addDoubleX(21, $CZ_DOT_Z_DOT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
+    {
+        $builder->addOffsetX(22, $COMMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_REFERENCE_FRAME(FlatBufferBuilder $builder, $COV_REFERENCE_FRAME)
+    {
+        $builder->addOffsetX(23, $COV_REFERENCE_FRAME, 0);
     }
 
     /**

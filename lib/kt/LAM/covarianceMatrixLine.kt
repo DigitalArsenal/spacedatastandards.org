@@ -211,6 +211,33 @@ class covarianceMatrixLine : Table() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.
+     */
+    val comment : String?
+        get() {
+            val o = __offset(48)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
+    /**
+     * COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix
+     * is expressed in, when it differs from the block's COV_REFERENCE_FRAME.
+     */
+    val covReferenceFrame : RFM? get() = covReferenceFrame(RFM())
+    fun covReferenceFrame(obj: RFM) : RFM? {
+        val o = __offset(50)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAscovarianceMatrixLine(_bb: ByteBuffer): covarianceMatrixLine = getRootAscovarianceMatrixLine(_bb, covarianceMatrixLine())
@@ -218,8 +245,8 @@ class covarianceMatrixLine : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createcovarianceMatrixLine(builder: FlatBufferBuilder, epochOffset: Int, cxX: Double, cyX: Double, cyY: Double, czX: Double, czY: Double, czZ: Double, cxDotX: Double, cxDotY: Double, cxDotZ: Double, cxDotXDot: Double, cyDotX: Double, cyDotY: Double, cyDotZ: Double, cyDotXDot: Double, cyDotYDot: Double, czDotX: Double, czDotY: Double, czDotZ: Double, czDotXDot: Double, czDotYDot: Double, czDotZDot: Double) : Int {
-            builder.startTable(22)
+        fun createcovarianceMatrixLine(builder: FlatBufferBuilder, epochOffset: Int, cxX: Double, cyX: Double, cyY: Double, czX: Double, czY: Double, czZ: Double, cxDotX: Double, cxDotY: Double, cxDotZ: Double, cxDotXDot: Double, cyDotX: Double, cyDotY: Double, cyDotZ: Double, cyDotXDot: Double, cyDotYDot: Double, czDotX: Double, czDotY: Double, czDotZ: Double, czDotXDot: Double, czDotYDot: Double, czDotZDot: Double, commentOffset: Int, covReferenceFrameOffset: Int) : Int {
+            builder.startTable(24)
             addCZDOTZDOT(builder, czDotZDot)
             addCZDOTYDOT(builder, czDotYDot)
             addCZDOTXDOT(builder, czDotXDot)
@@ -241,10 +268,12 @@ class covarianceMatrixLine : Table() {
             addCYY(builder, cyY)
             addCYX(builder, cyX)
             addCXX(builder, cxX)
+            addCOVREFERENCEFRAME(builder, covReferenceFrameOffset)
+            addCOMMENT(builder, commentOffset)
             addEPOCH(builder, epochOffset)
             return endcovarianceMatrixLine(builder)
         }
-        fun startcovarianceMatrixLine(builder: FlatBufferBuilder) = builder.startTable(22)
+        fun startcovarianceMatrixLine(builder: FlatBufferBuilder) = builder.startTable(24)
         fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(0, epoch, 0)
         fun addCXX(builder: FlatBufferBuilder, cxX: Double) = builder.addDouble(1, cxX, 0.0)
         fun addCYX(builder: FlatBufferBuilder, cyX: Double) = builder.addDouble(2, cyX, 0.0)
@@ -267,6 +296,8 @@ class covarianceMatrixLine : Table() {
         fun addCZDOTXDOT(builder: FlatBufferBuilder, czDotXDot: Double) = builder.addDouble(19, czDotXDot, 0.0)
         fun addCZDOTYDOT(builder: FlatBufferBuilder, czDotYDot: Double) = builder.addDouble(20, czDotYDot, 0.0)
         fun addCZDOTZDOT(builder: FlatBufferBuilder, czDotZDot: Double) = builder.addDouble(21, czDotZDot, 0.0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(22, comment, 0)
+        fun addCOVREFERENCEFRAME(builder: FlatBufferBuilder, covReferenceFrame: Int) = builder.addOffset(23, covReferenceFrame, 0)
         fun endcovarianceMatrixLine(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

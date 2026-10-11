@@ -518,8 +518,43 @@ func (rcv *covarianceMatrixLine) MutateCzDotZDot(n float64) bool {
 	return rcv.MutateCZ_DOT_Z_DOT(n)
 }
 
+/// COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.
+func (rcv *covarianceMatrixLine) COMMENT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *covarianceMatrixLine) Comment() []byte {
+	return rcv.COMMENT()
+}
+
+/// COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.
+/// COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix
+/// is expressed in, when it differs from the block's COV_REFERENCE_FRAME.
+func (rcv *covarianceMatrixLine) COV_REFERENCE_FRAME(obj *RFM) *RFM {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFM)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *covarianceMatrixLine) CovReferenceFrame(obj *RFM) *RFM {
+	return rcv.COV_REFERENCE_FRAME(obj)
+}
+
+/// COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix
+/// is expressed in, when it differs from the block's COV_REFERENCE_FRAME.
 func covarianceMatrixLineStart(builder *flatbuffers.Builder) {
-	builder.StartObject(22)
+	builder.StartObject(24)
 }
 func covarianceMatrixLineAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
@@ -652,6 +687,18 @@ func covarianceMatrixLineAddCZ_DOT_Z_DOT(builder *flatbuffers.Builder, CZ_DOT_Z_
 }
 func covarianceMatrixLineAddCzDotZDot(builder *flatbuffers.Builder, CZ_DOT_Z_DOT float64) {
 	covarianceMatrixLineAddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT)
+}
+func covarianceMatrixLineAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func covarianceMatrixLineAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	covarianceMatrixLineAddCOMMENT(builder, COMMENT)
+}
+func covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(COV_REFERENCE_FRAME), 0)
+}
+func covarianceMatrixLineAddCovReferenceFrame(builder *flatbuffers.Builder, COV_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	covarianceMatrixLineAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
 }
 func covarianceMatrixLineEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

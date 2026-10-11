@@ -35,6 +35,7 @@ export * from './MNV.js';
 export * from './mnvOrbitalState.js';
 export * from './ObservationPosition.js';
 export * from './OMM.js';
+export * from './OMMUserDefinedParameter.js';
 export * from './OrbitFrame.js';
 export * from './OrbitFrameWrapper.js';
 export * from './PolarizationType.js';

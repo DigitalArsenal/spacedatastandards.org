@@ -4,6 +4,7 @@ package LAM
 
 import (
 	flatbuffers "github.com/google/flatbuffers/go"
+	"math"
 )
 
 type OrbitDetermination struct {
@@ -570,8 +571,451 @@ func (rcv *OrbitDetermination) OdDynamicParametersLength() int {
 /// Dynamical-model parameters of the solution with their values, solved for or held. An
 /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
 /// COV_PARAMETERS names in the covariance are entries of this list.
+/// DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+func (rcv *OrbitDetermination) DAYS_SINCE_FIRST_OBS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *OrbitDetermination) DaysSinceFirstObs() float64 {
+	return rcv.DAYS_SINCE_FIRST_OBS()
+}
+
+/// DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+func (rcv *OrbitDetermination) MutateDAYS_SINCE_FIRST_OBS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *OrbitDetermination) MutateDaysSinceFirstObs(n float64) bool {
+	return rcv.MutateDAYS_SINCE_FIRST_OBS(n)
+}
+
+/// DAYS_SINCE_LAST_OBS, NaN when not stated.
+func (rcv *OrbitDetermination) DAYS_SINCE_LAST_OBS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *OrbitDetermination) DaysSinceLastObs() float64 {
+	return rcv.DAYS_SINCE_LAST_OBS()
+}
+
+/// DAYS_SINCE_LAST_OBS, NaN when not stated.
+func (rcv *OrbitDetermination) MutateDAYS_SINCE_LAST_OBS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *OrbitDetermination) MutateDaysSinceLastObs(n float64) bool {
+	return rcv.MutateDAYS_SINCE_LAST_OBS(n)
+}
+
+/// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+func (rcv *OrbitDetermination) RECOMMENDED_OD_SPAN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *OrbitDetermination) RecommendedOdSpan() float64 {
+	return rcv.RECOMMENDED_OD_SPAN()
+}
+
+/// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+func (rcv *OrbitDetermination) MutateRECOMMENDED_OD_SPAN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+func (rcv *OrbitDetermination) MutateRecommendedOdSpan(n float64) bool {
+	return rcv.MutateRECOMMENDED_OD_SPAN(n)
+}
+
+/// ACTUAL_OD_SPAN in days, NaN when not stated.
+func (rcv *OrbitDetermination) ACTUAL_OD_SPAN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *OrbitDetermination) ActualOdSpan() float64 {
+	return rcv.ACTUAL_OD_SPAN()
+}
+
+/// ACTUAL_OD_SPAN in days, NaN when not stated.
+func (rcv *OrbitDetermination) MutateACTUAL_OD_SPAN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *OrbitDetermination) MutateActualOdSpan(n float64) bool {
+	return rcv.MutateACTUAL_OD_SPAN(n)
+}
+
+/// OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+func (rcv *OrbitDetermination) OBS_AVAILABLE() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *OrbitDetermination) ObsAvailable() uint32 {
+	return rcv.OBS_AVAILABLE()
+}
+
+/// OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+func (rcv *OrbitDetermination) MutateOBS_AVAILABLE(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(64, n)
+}
+
+func (rcv *OrbitDetermination) MutateObsAvailable(n uint32) bool {
+	return rcv.MutateOBS_AVAILABLE(n)
+}
+
+/// TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+func (rcv *OrbitDetermination) TRACKS_AVAILABLE() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *OrbitDetermination) TracksAvailable() uint32 {
+	return rcv.TRACKS_AVAILABLE()
+}
+
+/// TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+func (rcv *OrbitDetermination) MutateTRACKS_AVAILABLE(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(66, n)
+}
+
+func (rcv *OrbitDetermination) MutateTracksAvailable(n uint32) bool {
+	return rcv.MutateTRACKS_AVAILABLE(n)
+}
+
+/// MAXIMUM_OBS_GAP in days, NaN when not stated.
+func (rcv *OrbitDetermination) MAXIMUM_OBS_GAP() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *OrbitDetermination) MaximumObsGap() float64 {
+	return rcv.MAXIMUM_OBS_GAP()
+}
+
+/// MAXIMUM_OBS_GAP in days, NaN when not stated.
+func (rcv *OrbitDetermination) MutateMAXIMUM_OBS_GAP(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(68, n)
+}
+
+func (rcv *OrbitDetermination) MutateMaximumObsGap(n float64) bool {
+	return rcv.MutateMAXIMUM_OBS_GAP(n)
+}
+
+/// OD_EPOCH_EIGMAJ in m, NaN when not stated.
+func (rcv *OrbitDetermination) OD_EPOCH_EIGMAJ() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *OrbitDetermination) OdEpochEigmaj() float64 {
+	return rcv.OD_EPOCH_EIGMAJ()
+}
+
+/// OD_EPOCH_EIGMAJ in m, NaN when not stated.
+func (rcv *OrbitDetermination) MutateOD_EPOCH_EIGMAJ(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(70, n)
+}
+
+func (rcv *OrbitDetermination) MutateOdEpochEigmaj(n float64) bool {
+	return rcv.MutateOD_EPOCH_EIGMAJ(n)
+}
+
+/// OD_EPOCH_EIGINT in m, NaN when not stated.
+func (rcv *OrbitDetermination) OD_EPOCH_EIGINT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *OrbitDetermination) OdEpochEigint() float64 {
+	return rcv.OD_EPOCH_EIGINT()
+}
+
+/// OD_EPOCH_EIGINT in m, NaN when not stated.
+func (rcv *OrbitDetermination) MutateOD_EPOCH_EIGINT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(72, n)
+}
+
+func (rcv *OrbitDetermination) MutateOdEpochEigint(n float64) bool {
+	return rcv.MutateOD_EPOCH_EIGINT(n)
+}
+
+/// OD_EPOCH_EIGMIN in m, NaN when not stated.
+func (rcv *OrbitDetermination) OD_EPOCH_EIGMIN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *OrbitDetermination) OdEpochEigmin() float64 {
+	return rcv.OD_EPOCH_EIGMIN()
+}
+
+/// OD_EPOCH_EIGMIN in m, NaN when not stated.
+func (rcv *OrbitDetermination) MutateOD_EPOCH_EIGMIN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(74, n)
+}
+
+func (rcv *OrbitDetermination) MutateOdEpochEigmin(n float64) bool {
+	return rcv.MutateOD_EPOCH_EIGMIN(n)
+}
+
+/// OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+func (rcv *OrbitDetermination) OD_MAX_PRED_EIGMAJ() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *OrbitDetermination) OdMaxPredEigmaj() float64 {
+	return rcv.OD_MAX_PRED_EIGMAJ()
+}
+
+/// OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+func (rcv *OrbitDetermination) MutateOD_MAX_PRED_EIGMAJ(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(76, n)
+}
+
+func (rcv *OrbitDetermination) MutateOdMaxPredEigmaj(n float64) bool {
+	return rcv.MutateOD_MAX_PRED_EIGMAJ(n)
+}
+
+/// OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+func (rcv *OrbitDetermination) OD_MIN_PRED_EIGMIN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *OrbitDetermination) OdMinPredEigmin() float64 {
+	return rcv.OD_MIN_PRED_EIGMIN()
+}
+
+/// OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+func (rcv *OrbitDetermination) MutateOD_MIN_PRED_EIGMIN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(78, n)
+}
+
+func (rcv *OrbitDetermination) MutateOdMinPredEigmin(n float64) bool {
+	return rcv.MutateOD_MIN_PRED_EIGMIN(n)
+}
+
+/// OD_CONFIDENCE in percent, NaN when not stated.
+func (rcv *OrbitDetermination) OD_CONFIDENCE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *OrbitDetermination) OdConfidence() float64 {
+	return rcv.OD_CONFIDENCE()
+}
+
+/// OD_CONFIDENCE in percent, NaN when not stated.
+func (rcv *OrbitDetermination) MutateOD_CONFIDENCE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(80, n)
+}
+
+func (rcv *OrbitDetermination) MutateOdConfidence(n float64) bool {
+	return rcv.MutateOD_CONFIDENCE(n)
+}
+
+/// GDOP, NaN when not stated.
+func (rcv *OrbitDetermination) GDOP() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *OrbitDetermination) Gdop() float64 {
+	return rcv.GDOP()
+}
+
+/// GDOP, NaN when not stated.
+func (rcv *OrbitDetermination) MutateGDOP(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(82, n)
+}
+
+func (rcv *OrbitDetermination) MutateGdop(n float64) bool {
+	return rcv.MutateGDOP(n)
+}
+
+/// SOLVE_N: the number of solved-for states.
+func (rcv *OrbitDetermination) SOLVE_N() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *OrbitDetermination) SolveN() uint32 {
+	return rcv.SOLVE_N()
+}
+
+/// SOLVE_N: the number of solved-for states.
+func (rcv *OrbitDetermination) MutateSOLVE_N(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(84, n)
+}
+
+func (rcv *OrbitDetermination) MutateSolveN(n uint32) bool {
+	return rcv.MutateSOLVE_N(n)
+}
+
+/// SOLVE_STATES: the solved-for states, as written.
+func (rcv *OrbitDetermination) SOLVE_STATES() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OrbitDetermination) SolveStates() []byte {
+	return rcv.SOLVE_STATES()
+}
+
+/// SOLVE_STATES: the solved-for states, as written.
+/// CONSIDER_N: the number of consider parameters.
+func (rcv *OrbitDetermination) CONSIDER_N() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *OrbitDetermination) ConsiderN() uint32 {
+	return rcv.CONSIDER_N()
+}
+
+/// CONSIDER_N: the number of consider parameters.
+func (rcv *OrbitDetermination) MutateCONSIDER_N(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(88, n)
+}
+
+func (rcv *OrbitDetermination) MutateConsiderN(n uint32) bool {
+	return rcv.MutateCONSIDER_N(n)
+}
+
+/// CONSIDER_PARAMS: the consider parameters, as written.
+func (rcv *OrbitDetermination) CONSIDER_PARAMS() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OrbitDetermination) ConsiderParams() []byte {
+	return rcv.CONSIDER_PARAMS()
+}
+
+/// CONSIDER_PARAMS: the consider parameters, as written.
+/// SENSORS_N: the number of sensors.
+func (rcv *OrbitDetermination) SENSORS_N() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *OrbitDetermination) SensorsN() uint32 {
+	return rcv.SENSORS_N()
+}
+
+/// SENSORS_N: the number of sensors.
+func (rcv *OrbitDetermination) MutateSENSORS_N(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(92, n)
+}
+
+func (rcv *OrbitDetermination) MutateSensorsN(n uint32) bool {
+	return rcv.MutateSENSORS_N(n)
+}
+
+/// SENSORS: the sensors, as written.
+func (rcv *OrbitDetermination) SENSORS() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OrbitDetermination) Sensors() []byte {
+	return rcv.SENSORS()
+}
+
+/// SENSORS: the sensors, as written.
+/// COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+func (rcv *OrbitDetermination) COMMENT(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *OrbitDetermination) Comment(j int) []byte {
+	return rcv.COMMENT(j)
+}
+
+func (rcv *OrbitDetermination) COMMENTLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OrbitDetermination) CommentLength() int {
+	return rcv.COMMENTLength()
+}
+
+/// COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
 func OrbitDeterminationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(26)
+	builder.StartObject(47)
 }
 func OrbitDeterminationAddOD_ID(builder *flatbuffers.Builder, OD_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OD_ID), 0)
@@ -758,6 +1202,138 @@ func OrbitDeterminationStartOD_DYNAMIC_PARAMETERSVector(builder *flatbuffers.Bui
 }
 func OrbitDeterminationStartOdDynamicParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return OrbitDeterminationStartOD_DYNAMIC_PARAMETERSVector(builder, numElems)
+}
+func OrbitDeterminationAddDAYS_SINCE_FIRST_OBS(builder *flatbuffers.Builder, DAYS_SINCE_FIRST_OBS float64) {
+	builder.PrependFloat64Slot(26, DAYS_SINCE_FIRST_OBS, float64(math.NaN()))
+}
+func OrbitDeterminationAddDaysSinceFirstObs(builder *flatbuffers.Builder, DAYS_SINCE_FIRST_OBS float64) {
+	OrbitDeterminationAddDAYS_SINCE_FIRST_OBS(builder, DAYS_SINCE_FIRST_OBS)
+}
+func OrbitDeterminationAddDAYS_SINCE_LAST_OBS(builder *flatbuffers.Builder, DAYS_SINCE_LAST_OBS float64) {
+	builder.PrependFloat64Slot(27, DAYS_SINCE_LAST_OBS, float64(math.NaN()))
+}
+func OrbitDeterminationAddDaysSinceLastObs(builder *flatbuffers.Builder, DAYS_SINCE_LAST_OBS float64) {
+	OrbitDeterminationAddDAYS_SINCE_LAST_OBS(builder, DAYS_SINCE_LAST_OBS)
+}
+func OrbitDeterminationAddRECOMMENDED_OD_SPAN(builder *flatbuffers.Builder, RECOMMENDED_OD_SPAN float64) {
+	builder.PrependFloat64Slot(28, RECOMMENDED_OD_SPAN, float64(math.NaN()))
+}
+func OrbitDeterminationAddRecommendedOdSpan(builder *flatbuffers.Builder, RECOMMENDED_OD_SPAN float64) {
+	OrbitDeterminationAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN)
+}
+func OrbitDeterminationAddACTUAL_OD_SPAN(builder *flatbuffers.Builder, ACTUAL_OD_SPAN float64) {
+	builder.PrependFloat64Slot(29, ACTUAL_OD_SPAN, float64(math.NaN()))
+}
+func OrbitDeterminationAddActualOdSpan(builder *flatbuffers.Builder, ACTUAL_OD_SPAN float64) {
+	OrbitDeterminationAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN)
+}
+func OrbitDeterminationAddOBS_AVAILABLE(builder *flatbuffers.Builder, OBS_AVAILABLE uint32) {
+	builder.PrependUint32Slot(30, OBS_AVAILABLE, 0)
+}
+func OrbitDeterminationAddObsAvailable(builder *flatbuffers.Builder, OBS_AVAILABLE uint32) {
+	OrbitDeterminationAddOBS_AVAILABLE(builder, OBS_AVAILABLE)
+}
+func OrbitDeterminationAddTRACKS_AVAILABLE(builder *flatbuffers.Builder, TRACKS_AVAILABLE uint32) {
+	builder.PrependUint32Slot(31, TRACKS_AVAILABLE, 0)
+}
+func OrbitDeterminationAddTracksAvailable(builder *flatbuffers.Builder, TRACKS_AVAILABLE uint32) {
+	OrbitDeterminationAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE)
+}
+func OrbitDeterminationAddMAXIMUM_OBS_GAP(builder *flatbuffers.Builder, MAXIMUM_OBS_GAP float64) {
+	builder.PrependFloat64Slot(32, MAXIMUM_OBS_GAP, float64(math.NaN()))
+}
+func OrbitDeterminationAddMaximumObsGap(builder *flatbuffers.Builder, MAXIMUM_OBS_GAP float64) {
+	OrbitDeterminationAddMAXIMUM_OBS_GAP(builder, MAXIMUM_OBS_GAP)
+}
+func OrbitDeterminationAddOD_EPOCH_EIGMAJ(builder *flatbuffers.Builder, OD_EPOCH_EIGMAJ float64) {
+	builder.PrependFloat64Slot(33, OD_EPOCH_EIGMAJ, float64(math.NaN()))
+}
+func OrbitDeterminationAddOdEpochEigmaj(builder *flatbuffers.Builder, OD_EPOCH_EIGMAJ float64) {
+	OrbitDeterminationAddOD_EPOCH_EIGMAJ(builder, OD_EPOCH_EIGMAJ)
+}
+func OrbitDeterminationAddOD_EPOCH_EIGINT(builder *flatbuffers.Builder, OD_EPOCH_EIGINT float64) {
+	builder.PrependFloat64Slot(34, OD_EPOCH_EIGINT, float64(math.NaN()))
+}
+func OrbitDeterminationAddOdEpochEigint(builder *flatbuffers.Builder, OD_EPOCH_EIGINT float64) {
+	OrbitDeterminationAddOD_EPOCH_EIGINT(builder, OD_EPOCH_EIGINT)
+}
+func OrbitDeterminationAddOD_EPOCH_EIGMIN(builder *flatbuffers.Builder, OD_EPOCH_EIGMIN float64) {
+	builder.PrependFloat64Slot(35, OD_EPOCH_EIGMIN, float64(math.NaN()))
+}
+func OrbitDeterminationAddOdEpochEigmin(builder *flatbuffers.Builder, OD_EPOCH_EIGMIN float64) {
+	OrbitDeterminationAddOD_EPOCH_EIGMIN(builder, OD_EPOCH_EIGMIN)
+}
+func OrbitDeterminationAddOD_MAX_PRED_EIGMAJ(builder *flatbuffers.Builder, OD_MAX_PRED_EIGMAJ float64) {
+	builder.PrependFloat64Slot(36, OD_MAX_PRED_EIGMAJ, float64(math.NaN()))
+}
+func OrbitDeterminationAddOdMaxPredEigmaj(builder *flatbuffers.Builder, OD_MAX_PRED_EIGMAJ float64) {
+	OrbitDeterminationAddOD_MAX_PRED_EIGMAJ(builder, OD_MAX_PRED_EIGMAJ)
+}
+func OrbitDeterminationAddOD_MIN_PRED_EIGMIN(builder *flatbuffers.Builder, OD_MIN_PRED_EIGMIN float64) {
+	builder.PrependFloat64Slot(37, OD_MIN_PRED_EIGMIN, float64(math.NaN()))
+}
+func OrbitDeterminationAddOdMinPredEigmin(builder *flatbuffers.Builder, OD_MIN_PRED_EIGMIN float64) {
+	OrbitDeterminationAddOD_MIN_PRED_EIGMIN(builder, OD_MIN_PRED_EIGMIN)
+}
+func OrbitDeterminationAddOD_CONFIDENCE(builder *flatbuffers.Builder, OD_CONFIDENCE float64) {
+	builder.PrependFloat64Slot(38, OD_CONFIDENCE, float64(math.NaN()))
+}
+func OrbitDeterminationAddOdConfidence(builder *flatbuffers.Builder, OD_CONFIDENCE float64) {
+	OrbitDeterminationAddOD_CONFIDENCE(builder, OD_CONFIDENCE)
+}
+func OrbitDeterminationAddGDOP(builder *flatbuffers.Builder, GDOP float64) {
+	builder.PrependFloat64Slot(39, GDOP, float64(math.NaN()))
+}
+func OrbitDeterminationAddGdop(builder *flatbuffers.Builder, GDOP float64) {
+	OrbitDeterminationAddGDOP(builder, GDOP)
+}
+func OrbitDeterminationAddSOLVE_N(builder *flatbuffers.Builder, SOLVE_N uint32) {
+	builder.PrependUint32Slot(40, SOLVE_N, 0)
+}
+func OrbitDeterminationAddSolveN(builder *flatbuffers.Builder, SOLVE_N uint32) {
+	OrbitDeterminationAddSOLVE_N(builder, SOLVE_N)
+}
+func OrbitDeterminationAddSOLVE_STATES(builder *flatbuffers.Builder, SOLVE_STATES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(SOLVE_STATES), 0)
+}
+func OrbitDeterminationAddSolveStates(builder *flatbuffers.Builder, SOLVE_STATES flatbuffers.UOffsetT) {
+	OrbitDeterminationAddSOLVE_STATES(builder, SOLVE_STATES)
+}
+func OrbitDeterminationAddCONSIDER_N(builder *flatbuffers.Builder, CONSIDER_N uint32) {
+	builder.PrependUint32Slot(42, CONSIDER_N, 0)
+}
+func OrbitDeterminationAddConsiderN(builder *flatbuffers.Builder, CONSIDER_N uint32) {
+	OrbitDeterminationAddCONSIDER_N(builder, CONSIDER_N)
+}
+func OrbitDeterminationAddCONSIDER_PARAMS(builder *flatbuffers.Builder, CONSIDER_PARAMS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(CONSIDER_PARAMS), 0)
+}
+func OrbitDeterminationAddConsiderParams(builder *flatbuffers.Builder, CONSIDER_PARAMS flatbuffers.UOffsetT) {
+	OrbitDeterminationAddCONSIDER_PARAMS(builder, CONSIDER_PARAMS)
+}
+func OrbitDeterminationAddSENSORS_N(builder *flatbuffers.Builder, SENSORS_N uint32) {
+	builder.PrependUint32Slot(44, SENSORS_N, 0)
+}
+func OrbitDeterminationAddSensorsN(builder *flatbuffers.Builder, SENSORS_N uint32) {
+	OrbitDeterminationAddSENSORS_N(builder, SENSORS_N)
+}
+func OrbitDeterminationAddSENSORS(builder *flatbuffers.Builder, SENSORS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(SENSORS), 0)
+}
+func OrbitDeterminationAddSensors(builder *flatbuffers.Builder, SENSORS flatbuffers.UOffsetT) {
+	OrbitDeterminationAddSENSORS(builder, SENSORS)
+}
+func OrbitDeterminationAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(46, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func OrbitDeterminationAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	OrbitDeterminationAddCOMMENT(builder, COMMENT)
+}
+func OrbitDeterminationStartCOMMENTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OrbitDeterminationStartCommentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OrbitDeterminationStartCOMMENTVector(builder, numElems)
 }
 func OrbitDeterminationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

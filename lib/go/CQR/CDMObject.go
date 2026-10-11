@@ -778,8 +778,84 @@ func (rcv *CDMObject) MutateCovariance(j int, n float64) bool {
 	return rcv.MutateCOVARIANCE(j, n)
 }
 
+/// OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+/// as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+func (rcv *CDMObject) OBJECT_DESIGNATOR() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CDMObject) ObjectDesignator() []byte {
+	return rcv.OBJECT_DESIGNATOR()
+}
+
+/// OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+/// as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+/// CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+func (rcv *CDMObject) CATALOG_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CDMObject) CatalogName() []byte {
+	return rcv.CATALOG_NAME()
+}
+
+/// CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+/// MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+/// same fact as a flag, true for YES.
+func (rcv *CDMObject) MANEUVERABLE() cdmManeuverable {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		return cdmManeuverable(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *CDMObject) Maneuverable() cdmManeuverable {
+	return rcv.MANEUVERABLE()
+}
+
+/// MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+/// same fact as a flag, true for YES.
+func (rcv *CDMObject) MutateMANEUVERABLE(n cdmManeuverable) bool {
+	return rcv._tab.MutateInt8Slot(82, int8(n))
+}
+
+func (rcv *CDMObject) MutateManeuverable(n cdmManeuverable) bool {
+	return rcv.MutateMANEUVERABLE(n)
+}
+
+/// CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+func (rcv *CDMObject) CD_AREA_OVER_MASS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *CDMObject) CdAreaOverMass() float64 {
+	return rcv.CD_AREA_OVER_MASS()
+}
+
+/// CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+func (rcv *CDMObject) MutateCD_AREA_OVER_MASS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(84, n)
+}
+
+func (rcv *CDMObject) MutateCdAreaOverMass(n float64) bool {
+	return rcv.MutateCD_AREA_OVER_MASS(n)
+}
+
 func CDMObjectStart(builder *flatbuffers.Builder) {
-	builder.StartObject(37)
+	builder.StartObject(41)
 }
 func CDMObjectAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -999,6 +1075,30 @@ func CDMObjectStartCOVARIANCEVector(builder *flatbuffers.Builder, numElems int) 
 }
 func CDMObjectStartCovarianceVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return CDMObjectStartCOVARIANCEVector(builder, numElems)
+}
+func CDMObjectAddOBJECT_DESIGNATOR(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(OBJECT_DESIGNATOR), 0)
+}
+func CDMObjectAddObjectDesignator(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	CDMObjectAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+}
+func CDMObjectAddCATALOG_NAME(builder *flatbuffers.Builder, CATALOG_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(CATALOG_NAME), 0)
+}
+func CDMObjectAddCatalogName(builder *flatbuffers.Builder, CATALOG_NAME flatbuffers.UOffsetT) {
+	CDMObjectAddCATALOG_NAME(builder, CATALOG_NAME)
+}
+func CDMObjectAddMANEUVERABLE(builder *flatbuffers.Builder, MANEUVERABLE cdmManeuverable) {
+	builder.PrependInt8Slot(39, int8(MANEUVERABLE), 0)
+}
+func CDMObjectAddManeuverable(builder *flatbuffers.Builder, MANEUVERABLE cdmManeuverable) {
+	CDMObjectAddMANEUVERABLE(builder, MANEUVERABLE)
+}
+func CDMObjectAddCD_AREA_OVER_MASS(builder *flatbuffers.Builder, CD_AREA_OVER_MASS float64) {
+	builder.PrependFloat64Slot(40, CD_AREA_OVER_MASS, 0.0)
+}
+func CDMObjectAddCdAreaOverMass(builder *flatbuffers.Builder, CD_AREA_OVER_MASS float64) {
+	CDMObjectAddCD_AREA_OVER_MASS(builder, CD_AREA_OVER_MASS)
 }
 func CDMObjectEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -132,6 +132,93 @@ public final class Perturbations extends com.google.flatbuffers.Table {
    * time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
    */
   public double FIXED_GEOMAG_AP() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+   * above is the model family when the text names one.
+   */
+  public String ATMOSPHERIC_MODEL_NAME() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ATMOSPHERIC_MODEL_NAMEAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer ATMOSPHERIC_MODEL_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  /**
+   * EQUATORIAL_RADIUS in km, NaN when not stated.
+   */
+  public double EQUATORIAL_RADIUS() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+   */
+  public double CENTRAL_BODY_ROTATION() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * OBLATE_FLATTENING, NaN when not stated.
+   */
+  public double OBLATE_FLATTENING() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * REDUCTION_THEORY.
+   */
+  public String REDUCTION_THEORY() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REDUCTION_THEORYAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
+  public ByteBuffer REDUCTION_THEORYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
+  /**
+   * ALBEDO_GRID_SIZE.
+   */
+  public long ALBEDO_GRID_SIZE() { int o = __offset(54); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * SHADOW_MODEL.
+   */
+  public String SHADOW_MODEL() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SHADOW_MODELAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer SHADOW_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * SHADOW_BODIES.
+   */
+  public String SHADOW_BODIES() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SHADOW_BODIESAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer SHADOW_BODIESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  /**
+   * SW_DATA_SOURCE: the space weather data source.
+   */
+  public String SW_DATA_SOURCE() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SW_DATA_SOURCEAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer SW_DATA_SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * SW_DATA_EPOCH.
+   */
+  public String SW_DATA_EPOCH() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SW_DATA_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer SW_DATA_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * SW_INTERP_METHOD.
+   */
+  public String SW_INTERP_METHOD() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SW_INTERP_METHODAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
+  public ByteBuffer SW_INTERP_METHODInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
+  /**
+   * FIXED_GEOMAG_DST in nT, NaN when not stated.
+   */
+  public double FIXED_GEOMAG_DST() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * FIXED_M10P7, NaN when not stated.
+   */
+  public double FIXED_M10P7() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * FIXED_M10P7_MEAN, NaN when not stated.
+   */
+  public double FIXED_M10P7_MEAN() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * FIXED_S10P7, NaN when not stated.
+   */
+  public double FIXED_S10P7() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * FIXED_S10P7_MEAN, NaN when not stated.
+   */
+  public double FIXED_S10P7_MEAN() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * FIXED_Y10P7, NaN when not stated.
+   */
+  public double FIXED_Y10P7() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * FIXED_Y10P7_MEAN, NaN when not stated.
+   */
+  public double FIXED_Y10P7_MEAN() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
 
   public static int createPerturbations(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -153,13 +240,49 @@ public final class Perturbations extends com.google.flatbuffers.Table {
       double FIXED_GEOMAG_KP,
       double FIXED_F10P7,
       double FIXED_F10P7_MEAN,
-      double FIXED_GEOMAG_AP) {
-    builder.startTable(20);
+      double FIXED_GEOMAG_AP,
+      int ATMOSPHERIC_MODEL_NAMEOffset,
+      double EQUATORIAL_RADIUS,
+      double CENTRAL_BODY_ROTATION,
+      double OBLATE_FLATTENING,
+      int REDUCTION_THEORYOffset,
+      long ALBEDO_GRID_SIZE,
+      int SHADOW_MODELOffset,
+      int SHADOW_BODIESOffset,
+      int SW_DATA_SOURCEOffset,
+      int SW_DATA_EPOCHOffset,
+      int SW_INTERP_METHODOffset,
+      double FIXED_GEOMAG_DST,
+      double FIXED_M10P7,
+      double FIXED_M10P7_MEAN,
+      double FIXED_S10P7,
+      double FIXED_S10P7_MEAN,
+      double FIXED_Y10P7,
+      double FIXED_Y10P7_MEAN) {
+    builder.startTable(38);
+    Perturbations.addFixedY10P7Mean(builder, FIXED_Y10P7_MEAN);
+    Perturbations.addFixedY10P7(builder, FIXED_Y10P7);
+    Perturbations.addFixedS10P7Mean(builder, FIXED_S10P7_MEAN);
+    Perturbations.addFixedS10P7(builder, FIXED_S10P7);
+    Perturbations.addFixedM10P7Mean(builder, FIXED_M10P7_MEAN);
+    Perturbations.addFixedM10P7(builder, FIXED_M10P7);
+    Perturbations.addFixedGeomagDst(builder, FIXED_GEOMAG_DST);
+    Perturbations.addOblateFlattening(builder, OBLATE_FLATTENING);
+    Perturbations.addCentralBodyRotation(builder, CENTRAL_BODY_ROTATION);
+    Perturbations.addEquatorialRadius(builder, EQUATORIAL_RADIUS);
     Perturbations.addFixedGeomagAp(builder, FIXED_GEOMAG_AP);
     Perturbations.addFixedF10P7Mean(builder, FIXED_F10P7_MEAN);
     Perturbations.addFixedF10P7(builder, FIXED_F10P7);
     Perturbations.addFixedGeomagKp(builder, FIXED_GEOMAG_KP);
     Perturbations.addGm(builder, GM);
+    Perturbations.addSwInterpMethod(builder, SW_INTERP_METHODOffset);
+    Perturbations.addSwDataEpoch(builder, SW_DATA_EPOCHOffset);
+    Perturbations.addSwDataSource(builder, SW_DATA_SOURCEOffset);
+    Perturbations.addShadowBodies(builder, SHADOW_BODIESOffset);
+    Perturbations.addShadowModel(builder, SHADOW_MODELOffset);
+    Perturbations.addAlbedoGridSize(builder, ALBEDO_GRID_SIZE);
+    Perturbations.addReductionTheory(builder, REDUCTION_THEORYOffset);
+    Perturbations.addAtmosphericModelName(builder, ATMOSPHERIC_MODEL_NAMEOffset);
     Perturbations.addAtmosphericDrag(builder, ATMOSPHERIC_DRAGOffset);
     Perturbations.addRelativity(builder, RELATIVITYOffset);
     Perturbations.addThermal(builder, THERMALOffset);
@@ -178,7 +301,7 @@ public final class Perturbations extends com.google.flatbuffers.Table {
     return Perturbations.endPerturbations(builder);
   }
 
-  public static void startPerturbations(FlatBufferBuilder builder) { builder.startTable(20); }
+  public static void startPerturbations(FlatBufferBuilder builder) { builder.startTable(38); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static int createCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCommentVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
@@ -203,6 +326,24 @@ public final class Perturbations extends com.google.flatbuffers.Table {
   public static void addFixedF10P7(FlatBufferBuilder builder, double FIXED_F10P7) { builder.addDouble(17, FIXED_F10P7, 0.0); }
   public static void addFixedF10P7Mean(FlatBufferBuilder builder, double FIXED_F10P7_MEAN) { builder.addDouble(18, FIXED_F10P7_MEAN, 0.0); }
   public static void addFixedGeomagAp(FlatBufferBuilder builder, double FIXED_GEOMAG_AP) { builder.addDouble(19, FIXED_GEOMAG_AP, 0.0); }
+  public static void addAtmosphericModelName(FlatBufferBuilder builder, int ATMOSPHERIC_MODEL_NAMEOffset) { builder.addOffset(20, ATMOSPHERIC_MODEL_NAMEOffset, 0); }
+  public static void addEquatorialRadius(FlatBufferBuilder builder, double EQUATORIAL_RADIUS) { builder.addDouble(21, EQUATORIAL_RADIUS, Double.NaN); }
+  public static void addCentralBodyRotation(FlatBufferBuilder builder, double CENTRAL_BODY_ROTATION) { builder.addDouble(22, CENTRAL_BODY_ROTATION, Double.NaN); }
+  public static void addOblateFlattening(FlatBufferBuilder builder, double OBLATE_FLATTENING) { builder.addDouble(23, OBLATE_FLATTENING, Double.NaN); }
+  public static void addReductionTheory(FlatBufferBuilder builder, int REDUCTION_THEORYOffset) { builder.addOffset(24, REDUCTION_THEORYOffset, 0); }
+  public static void addAlbedoGridSize(FlatBufferBuilder builder, long ALBEDO_GRID_SIZE) { builder.addInt(25, (int) ALBEDO_GRID_SIZE, (int) 0L); }
+  public static void addShadowModel(FlatBufferBuilder builder, int SHADOW_MODELOffset) { builder.addOffset(26, SHADOW_MODELOffset, 0); }
+  public static void addShadowBodies(FlatBufferBuilder builder, int SHADOW_BODIESOffset) { builder.addOffset(27, SHADOW_BODIESOffset, 0); }
+  public static void addSwDataSource(FlatBufferBuilder builder, int SW_DATA_SOURCEOffset) { builder.addOffset(28, SW_DATA_SOURCEOffset, 0); }
+  public static void addSwDataEpoch(FlatBufferBuilder builder, int SW_DATA_EPOCHOffset) { builder.addOffset(29, SW_DATA_EPOCHOffset, 0); }
+  public static void addSwInterpMethod(FlatBufferBuilder builder, int SW_INTERP_METHODOffset) { builder.addOffset(30, SW_INTERP_METHODOffset, 0); }
+  public static void addFixedGeomagDst(FlatBufferBuilder builder, double FIXED_GEOMAG_DST) { builder.addDouble(31, FIXED_GEOMAG_DST, Double.NaN); }
+  public static void addFixedM10P7(FlatBufferBuilder builder, double FIXED_M10P7) { builder.addDouble(32, FIXED_M10P7, Double.NaN); }
+  public static void addFixedM10P7Mean(FlatBufferBuilder builder, double FIXED_M10P7_MEAN) { builder.addDouble(33, FIXED_M10P7_MEAN, Double.NaN); }
+  public static void addFixedS10P7(FlatBufferBuilder builder, double FIXED_S10P7) { builder.addDouble(34, FIXED_S10P7, Double.NaN); }
+  public static void addFixedS10P7Mean(FlatBufferBuilder builder, double FIXED_S10P7_MEAN) { builder.addDouble(35, FIXED_S10P7_MEAN, Double.NaN); }
+  public static void addFixedY10P7(FlatBufferBuilder builder, double FIXED_Y10P7) { builder.addDouble(36, FIXED_Y10P7, Double.NaN); }
+  public static void addFixedY10P7Mean(FlatBufferBuilder builder, double FIXED_Y10P7_MEAN) { builder.addDouble(37, FIXED_Y10P7_MEAN, Double.NaN); }
   public static int endPerturbations(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

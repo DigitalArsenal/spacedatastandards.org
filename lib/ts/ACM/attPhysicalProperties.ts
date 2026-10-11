@@ -143,8 +143,19 @@ IYZ():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+ * joined by a line feed.
+ */
+COMMENT():string|null
+COMMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COMMENT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startattPhysicalProperties(builder:flatbuffers.Builder) {
-  builder.startObject(14);
+  builder.startObject(15);
 }
 
 static addDragCoeff(builder:flatbuffers.Builder, DRAG_COEFF:number) {
@@ -203,12 +214,16 @@ static addIyz(builder:flatbuffers.Builder, IYZ:number) {
   builder.addFieldFloat64(13, IYZ, 0.0);
 }
 
+static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, COMMENTOffset, 0);
+}
+
 static endattPhysicalProperties(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createattPhysicalProperties(builder:flatbuffers.Builder, DRAG_COEFF:number, WET_MASS:number, DRY_MASS:number, CP_REF_FRAMEOffset:flatbuffers.Offset, CP_X:number, CP_Y:number, CP_Z:number, INERTIA_REF_FRAMEOffset:flatbuffers.Offset, IXX:number, IYY:number, IZZ:number, IXY:number, IXZ:number, IYZ:number):flatbuffers.Offset {
+static createattPhysicalProperties(builder:flatbuffers.Builder, DRAG_COEFF:number, WET_MASS:number, DRY_MASS:number, CP_REF_FRAMEOffset:flatbuffers.Offset, CP_X:number, CP_Y:number, CP_Z:number, INERTIA_REF_FRAMEOffset:flatbuffers.Offset, IXX:number, IYY:number, IZZ:number, IXY:number, IXZ:number, IYZ:number, COMMENTOffset:flatbuffers.Offset):flatbuffers.Offset {
   attPhysicalProperties.startattPhysicalProperties(builder);
   attPhysicalProperties.addDragCoeff(builder, DRAG_COEFF);
   attPhysicalProperties.addWetMass(builder, WET_MASS);
@@ -224,6 +239,7 @@ static createattPhysicalProperties(builder:flatbuffers.Builder, DRAG_COEFF:numbe
   attPhysicalProperties.addIxy(builder, IXY);
   attPhysicalProperties.addIxz(builder, IXZ);
   attPhysicalProperties.addIyz(builder, IYZ);
+  attPhysicalProperties.addComment(builder, COMMENTOffset);
   return attPhysicalProperties.endattPhysicalProperties(builder);
 }
 
@@ -242,7 +258,8 @@ unpack(): attPhysicalPropertiesT {
     this.IZZ(),
     this.IXY(),
     this.IXZ(),
-    this.IYZ()
+    this.IYZ(),
+    this.COMMENT()
   );
 }
 
@@ -262,6 +279,7 @@ unpackTo(_o: attPhysicalPropertiesT): void {
   _o.IXY = this.IXY();
   _o.IXZ = this.IXZ();
   _o.IYZ = this.IYZ();
+  _o.COMMENT = this.COMMENT();
 }
 }
 
@@ -280,13 +298,15 @@ constructor(
   public IZZ: number = 0.0,
   public IXY: number = 0.0,
   public IXZ: number = 0.0,
-  public IYZ: number = 0.0
+  public IYZ: number = 0.0,
+  public COMMENT: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CP_REF_FRAME = (this.CP_REF_FRAME !== null ? builder.createString(this.CP_REF_FRAME!) : 0);
   const INERTIA_REF_FRAME = (this.INERTIA_REF_FRAME !== null ? builder.createString(this.INERTIA_REF_FRAME!) : 0);
+  const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
 
   return attPhysicalProperties.createattPhysicalProperties(builder,
     this.DRAG_COEFF,
@@ -302,7 +322,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.IZZ,
     this.IXY,
     this.IXZ,
-    this.IYZ
+    this.IYZ,
+    COMMENT
   );
 }
 }

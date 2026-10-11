@@ -84,8 +84,29 @@ ephemerisDataBlockLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.
+ */
+COMMENT():string|null
+COMMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COMMENT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator
+ * makes unique for this message.
+ */
+MESSAGE_ID():string|null
+MESSAGE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MESSAGE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startOEM(builder:flatbuffers.Builder) {
-  builder.startObject(5);
+  builder.startObject(7);
 }
 
 static addClassification(builder:flatbuffers.Builder, CLASSIFICATIONOffset:flatbuffers.Offset) {
@@ -120,6 +141,14 @@ static startEphemerisDataBlockVector(builder:flatbuffers.Builder, numElems:numbe
   builder.startVector(4, numElems, 4);
 }
 
+static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, COMMENTOffset, 0);
+}
+
+static addMessageId(builder:flatbuffers.Builder, MESSAGE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, MESSAGE_IDOffset, 0);
+}
+
 static endOEM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -133,13 +162,15 @@ static finishSizePrefixedOEMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$OEM', true);
 }
 
-static createOEM(builder:flatbuffers.Builder, CLASSIFICATIONOffset:flatbuffers.Offset, CCSDS_OEM_VERS:number, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, EPHEMERIS_DATA_BLOCKOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createOEM(builder:flatbuffers.Builder, CLASSIFICATIONOffset:flatbuffers.Offset, CCSDS_OEM_VERS:number, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, EPHEMERIS_DATA_BLOCKOffset:flatbuffers.Offset, COMMENTOffset:flatbuffers.Offset, MESSAGE_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
   OEM.startOEM(builder);
   OEM.addClassification(builder, CLASSIFICATIONOffset);
   OEM.addCcsdsOemVers(builder, CCSDS_OEM_VERS);
   OEM.addCreationDate(builder, CREATION_DATEOffset);
   OEM.addOriginator(builder, ORIGINATOROffset);
   OEM.addEphemerisDataBlock(builder, EPHEMERIS_DATA_BLOCKOffset);
+  OEM.addComment(builder, COMMENTOffset);
+  OEM.addMessageId(builder, MESSAGE_IDOffset);
   return OEM.endOEM(builder);
 }
 
@@ -149,7 +180,9 @@ unpack(): OEMT {
     this.CCSDS_OEM_VERS(),
     this.CREATION_DATE(),
     this.ORIGINATOR(),
-    this.bb!.createObjList<ephemerisDataBlock, ephemerisDataBlockT>(this.EPHEMERIS_DATA_BLOCK.bind(this), this.ephemerisDataBlockLength())
+    this.bb!.createObjList<ephemerisDataBlock, ephemerisDataBlockT>(this.EPHEMERIS_DATA_BLOCK.bind(this), this.ephemerisDataBlockLength()),
+    this.COMMENT(),
+    this.MESSAGE_ID()
   );
 }
 
@@ -160,6 +193,8 @@ unpackTo(_o: OEMT): void {
   _o.CREATION_DATE = this.CREATION_DATE();
   _o.ORIGINATOR = this.ORIGINATOR();
   _o.EPHEMERIS_DATA_BLOCK = this.bb!.createObjList<ephemerisDataBlock, ephemerisDataBlockT>(this.EPHEMERIS_DATA_BLOCK.bind(this), this.ephemerisDataBlockLength());
+  _o.COMMENT = this.COMMENT();
+  _o.MESSAGE_ID = this.MESSAGE_ID();
 }
 }
 
@@ -169,7 +204,9 @@ constructor(
   public CCSDS_OEM_VERS: number = 0.0,
   public CREATION_DATE: string|Uint8Array|null = null,
   public ORIGINATOR: string|Uint8Array|null = null,
-  public EPHEMERIS_DATA_BLOCK: (ephemerisDataBlockT)[] = []
+  public EPHEMERIS_DATA_BLOCK: (ephemerisDataBlockT)[] = [],
+  public COMMENT: string|Uint8Array|null = null,
+  public MESSAGE_ID: string|Uint8Array|null = null
 ){}
 
 
@@ -178,13 +215,17 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CREATION_DATE = (this.CREATION_DATE !== null ? builder.createString(this.CREATION_DATE!) : 0);
   const ORIGINATOR = (this.ORIGINATOR !== null ? builder.createString(this.ORIGINATOR!) : 0);
   const EPHEMERIS_DATA_BLOCK = OEM.createEphemerisDataBlockVector(builder, builder.createObjectOffsetList(this.EPHEMERIS_DATA_BLOCK));
+  const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
+  const MESSAGE_ID = (this.MESSAGE_ID !== null ? builder.createString(this.MESSAGE_ID!) : 0);
 
   return OEM.createOEM(builder,
     CLASSIFICATION,
     this.CCSDS_OEM_VERS,
     CREATION_DATE,
     ORIGINATOR,
-    EPHEMERIS_DATA_BLOCK
+    EPHEMERIS_DATA_BLOCK,
+    COMMENT,
+    MESSAGE_ID
   );
 }
 }

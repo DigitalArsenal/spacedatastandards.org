@@ -1908,6 +1908,31 @@
         }
       }
     },
+    "cdmManeuverable": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "YES",
+        "NO",
+        "NOT_APPLICABLE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "YES": {
+          "value": 1
+        },
+        "NO": {
+          "value": 2
+        },
+        "NOT_APPLICABLE": {
+          "value": 3
+        }
+      }
+    },
     "PNM": {
       "type": "object",
       "description": "Publish Notification Message.\n\nPNM is the compact network announcement for a published record, manifest, or\ndataset update. For dataset updates, FILE_ID is the complete canonical\nidentity for the published update and CID usually points to a small DPM\nmanifest or digest. The DPM carries the full verification contract:\nprovider identity, retrieval protocol, canonical query, result hash, Merkle\nroots, completeness-capable indexes, file_id partition key, and signature.\nLarge or paid dataset updates do not need to be published as globally\ndiscoverable IPFS files; a PNM may instead advertise a provider-mediated SDN\nquery protocol. In that mode the PNM is only the announcement. The DPM is\nthe signed commitment, and each provider response carries records plus\nMerkle proof material that the subscriber verifies against the DPM roots and\nthe announced FILE_ID before import.",
@@ -5200,13 +5225,48 @@
           },
           "description": "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]",
           "x-flatbuffer-type": "[double]"
+        },
+        "OBJECT_DESIGNATOR": {
+          "type": "string",
+          "description": "OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,\nas written. A numeric designator is also OBJECT.NORAD_CAT_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "CATALOG_NAME": {
+          "type": "string",
+          "description": "CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.",
+          "x-flatbuffer-type": "string"
+        },
+        "MANEUVERABLE": {
+          "$ref": "#/definitions/cdmManeuverable",
+          "description": "MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the\nsame fact as a flag, true for YES.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "YES": {
+              "value": 1
+            },
+            "NO": {
+              "value": 2
+            },
+            "NOT_APPLICABLE": {
+              "value": 3
+            }
+          }
+        },
+        "CD_AREA_OVER_MASS": {
+          "type": "number",
+          "description": "CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.",
+          "x-flatbuffer-type": "double"
         }
       },
       "additionalProperties": false
     },
     "CDM": {
       "type": "object",
-      "description": "Conjunction Data Message",
+      "description": "Conjunction Data Message\n\nUnits of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,\nSCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part\nof each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and\nkm**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives\nMISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of\nCOVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust\nterms) are held as the message states them.",
       "properties": {
         "CCSDS_CDM_VERS": {
           "type": "number",
@@ -5361,6 +5421,11 @@
           "$ref": "#/definitions/PNM",
           "description": "Data Source for the positional information for Object 2",
           "x-flatbuffer-type": "PNM"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "COMMENT lines of the message header and of its relative metadata and data\n(CCSDS 508.0-B-1), in message order, joined by a line feed.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

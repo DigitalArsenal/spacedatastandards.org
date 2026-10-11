@@ -156,6 +156,28 @@ public struct CDMObject : IFlatbufferObject
   public ArraySegment<byte>? GetCOVARIANCEBytes() { return __p.__vector_as_arraysegment(76); }
 #endif
   public double[] GetCOVARIANCEArray() { return __p.__vector_as_array<double>(76); }
+  /// OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+  /// as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+  public string OBJECT_DESIGNATOR { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_span<byte>(78, 1); }
+#else
+  public ArraySegment<byte>? GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_arraysegment(78); }
+#endif
+  public byte[] GetOBJECT_DESIGNATORArray() { return __p.__vector_as_array<byte>(78); }
+  /// CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+  public string CATALOG_NAME { get { int o = __p.__offset(80); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCATALOG_NAMEBytes() { return __p.__vector_as_span<byte>(80, 1); }
+#else
+  public ArraySegment<byte>? GetCATALOG_NAMEBytes() { return __p.__vector_as_arraysegment(80); }
+#endif
+  public byte[] GetCATALOG_NAMEArray() { return __p.__vector_as_array<byte>(80); }
+  /// MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+  /// same fact as a flag, true for YES.
+  public cdmManeuverable MANEUVERABLE { get { int o = __p.__offset(82); return o != 0 ? (cdmManeuverable)__p.bb.GetSbyte(o + __p.bb_pos) : cdmManeuverable.UNSPECIFIED; } }
+  /// CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+  public double CD_AREA_OVER_MASS { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<CDMObject> CreateCDMObject(FlatBufferBuilder builder,
       StringOffset COMMENTOffset = default(StringOffset),
@@ -194,8 +216,13 @@ public struct CDMObject : IFlatbufferObject
       double X_DOT = 0.0,
       double Y_DOT = 0.0,
       double Z_DOT = 0.0,
-      VectorOffset COVARIANCEOffset = default(VectorOffset)) {
-    builder.StartTable(37);
+      VectorOffset COVARIANCEOffset = default(VectorOffset),
+      StringOffset OBJECT_DESIGNATOROffset = default(StringOffset),
+      StringOffset CATALOG_NAMEOffset = default(StringOffset),
+      cdmManeuverable MANEUVERABLE = cdmManeuverable.UNSPECIFIED,
+      double CD_AREA_OVER_MASS = 0.0) {
+    builder.StartTable(41);
+    CDMObject.AddCD_AREA_OVER_MASS(builder, CD_AREA_OVER_MASS);
     CDMObject.AddZ_DOT(builder, Z_DOT);
     CDMObject.AddY_DOT(builder, Y_DOT);
     CDMObject.AddX_DOT(builder, X_DOT);
@@ -212,6 +239,8 @@ public struct CDMObject : IFlatbufferObject
     CDMObject.AddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED);
     CDMObject.AddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN);
     CDMObject.AddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN);
+    CDMObject.AddCATALOG_NAME(builder, CATALOG_NAMEOffset);
+    CDMObject.AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOROffset);
     CDMObject.AddCOVARIANCE(builder, COVARIANCEOffset);
     CDMObject.AddTRACKS_USED(builder, TRACKS_USED);
     CDMObject.AddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE);
@@ -229,6 +258,7 @@ public struct CDMObject : IFlatbufferObject
     CDMObject.AddPOC(builder, POCOffset);
     CDMObject.AddOBJECT(builder, OBJECTOffset);
     CDMObject.AddCOMMENT(builder, COMMENTOffset);
+    CDMObject.AddMANEUVERABLE(builder, MANEUVERABLE);
     CDMObject.AddINTRACK_THRUST(builder, INTRACK_THRUST);
     CDMObject.AddEARTH_TIDES(builder, EARTH_TIDES);
     CDMObject.AddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE);
@@ -236,7 +266,7 @@ public struct CDMObject : IFlatbufferObject
     return CDMObject.EndCDMObject(builder);
   }
 
-  public static void StartCDMObject(FlatBufferBuilder builder) { builder.StartTable(37); }
+  public static void StartCDMObject(FlatBufferBuilder builder) { builder.StartTable(41); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static void AddOBJECT(FlatBufferBuilder builder, Offset<CAT> OBJECTOffset) { builder.AddOffset(1, OBJECTOffset.Value, 0); }
   public static void AddPOC(FlatBufferBuilder builder, Offset<EPM> POCOffset) { builder.AddOffset(2, POCOffset.Value, 0); }
@@ -279,6 +309,10 @@ public struct CDMObject : IFlatbufferObject
   public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCOVARIANCEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddOBJECT_DESIGNATOR(FlatBufferBuilder builder, StringOffset OBJECT_DESIGNATOROffset) { builder.AddOffset(37, OBJECT_DESIGNATOROffset.Value, 0); }
+  public static void AddCATALOG_NAME(FlatBufferBuilder builder, StringOffset CATALOG_NAMEOffset) { builder.AddOffset(38, CATALOG_NAMEOffset.Value, 0); }
+  public static void AddMANEUVERABLE(FlatBufferBuilder builder, cdmManeuverable MANEUVERABLE) { builder.AddSbyte(39, (sbyte)MANEUVERABLE, 0); }
+  public static void AddCD_AREA_OVER_MASS(FlatBufferBuilder builder, double CD_AREA_OVER_MASS) { builder.AddDouble(40, CD_AREA_OVER_MASS, 0.0); }
   public static Offset<CDMObject> EndCDMObject(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CDMObject>(o);
@@ -327,6 +361,10 @@ public struct CDMObject : IFlatbufferObject
     _o.Z_DOT = this.Z_DOT;
     _o.COVARIANCE = new List<double>();
     for (var _j = 0; _j < this.COVARIANCELength; ++_j) {_o.COVARIANCE.Add(this.COVARIANCE(_j));}
+    _o.OBJECT_DESIGNATOR = this.OBJECT_DESIGNATOR;
+    _o.CATALOG_NAME = this.CATALOG_NAME;
+    _o.MANEUVERABLE = this.MANEUVERABLE;
+    _o.CD_AREA_OVER_MASS = this.CD_AREA_OVER_MASS;
   }
   public static Offset<CDMObject> Pack(FlatBufferBuilder builder, CDMObjectT _o) {
     if (_o == null) return default(Offset<CDMObject>);
@@ -347,6 +385,8 @@ public struct CDMObject : IFlatbufferObject
       var __COVARIANCE = _o.COVARIANCE.ToArray();
       _COVARIANCE = CreateCOVARIANCEVector(builder, __COVARIANCE);
     }
+    var _OBJECT_DESIGNATOR = _o.OBJECT_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_DESIGNATOR);
+    var _CATALOG_NAME = _o.CATALOG_NAME == null ? default(StringOffset) : builder.CreateString(_o.CATALOG_NAME);
     return CreateCDMObject(
       builder,
       _COMMENT,
@@ -385,7 +425,11 @@ public struct CDMObject : IFlatbufferObject
       _o.X_DOT,
       _o.Y_DOT,
       _o.Z_DOT,
-      _COVARIANCE);
+      _COVARIANCE,
+      _OBJECT_DESIGNATOR,
+      _CATALOG_NAME,
+      _o.MANEUVERABLE,
+      _o.CD_AREA_OVER_MASS);
   }
 }
 
@@ -428,6 +472,10 @@ public class CDMObjectT
   public double Y_DOT { get; set; }
   public double Z_DOT { get; set; }
   public List<double> COVARIANCE { get; set; }
+  public string OBJECT_DESIGNATOR { get; set; }
+  public string CATALOG_NAME { get; set; }
+  public cdmManeuverable MANEUVERABLE { get; set; }
+  public double CD_AREA_OVER_MASS { get; set; }
 
   public CDMObjectT() {
     this.COMMENT = null;
@@ -467,6 +515,10 @@ public class CDMObjectT
     this.Y_DOT = 0.0;
     this.Z_DOT = 0.0;
     this.COVARIANCE = null;
+    this.OBJECT_DESIGNATOR = null;
+    this.CATALOG_NAME = null;
+    this.MANEUVERABLE = cdmManeuverable.UNSPECIFIED;
+    this.CD_AREA_OVER_MASS = 0.0;
   }
 }
 
@@ -513,6 +565,10 @@ static public class CDMObjectVerify
       && verifier.VerifyField(tablePos, 72 /*Y_DOT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 74 /*Z_DOT*/, 8 /*double*/, 8, false)
       && verifier.VerifyVectorOfData(tablePos, 76 /*COVARIANCE*/, 8 /*double*/, false)
+      && verifier.VerifyString(tablePos, 78 /*OBJECT_DESIGNATOR*/, false)
+      && verifier.VerifyString(tablePos, 80 /*CATALOG_NAME*/, false)
+      && verifier.VerifyField(tablePos, 82 /*MANEUVERABLE*/, 1 /*cdmManeuverable*/, 1, false)
+      && verifier.VerifyField(tablePos, 84 /*CD_AREA_OVER_MASS*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

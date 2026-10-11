@@ -67,6 +67,17 @@ public struct covarianceMatrixLine : IFlatbufferObject
   public double CZ_DOT_Y_DOT { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Covariance matrix [6,6] km**2/s**2
   public double CZ_DOT_Z_DOT { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.
+  public string COMMENT { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOMMENTBytes() { return __p.__vector_as_span<byte>(48, 1); }
+#else
+  public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(48); }
+#endif
+  public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(48); }
+  /// COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix
+  /// is expressed in, when it differs from the block's COV_REFERENCE_FRAME.
+  public RFM? COV_REFERENCE_FRAME { get { int o = __p.__offset(50); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<covarianceMatrixLine> CreatecovarianceMatrixLine(FlatBufferBuilder builder,
       StringOffset EPOCHOffset = default(StringOffset),
@@ -90,8 +101,10 @@ public struct covarianceMatrixLine : IFlatbufferObject
       double CZ_DOT_Z = 0.0,
       double CZ_DOT_X_DOT = 0.0,
       double CZ_DOT_Y_DOT = 0.0,
-      double CZ_DOT_Z_DOT = 0.0) {
-    builder.StartTable(22);
+      double CZ_DOT_Z_DOT = 0.0,
+      StringOffset COMMENTOffset = default(StringOffset),
+      Offset<RFM> COV_REFERENCE_FRAMEOffset = default(Offset<RFM>)) {
+    builder.StartTable(24);
     covarianceMatrixLine.AddCZ_DOT_Z_DOT(builder, CZ_DOT_Z_DOT);
     covarianceMatrixLine.AddCZ_DOT_Y_DOT(builder, CZ_DOT_Y_DOT);
     covarianceMatrixLine.AddCZ_DOT_X_DOT(builder, CZ_DOT_X_DOT);
@@ -113,11 +126,13 @@ public struct covarianceMatrixLine : IFlatbufferObject
     covarianceMatrixLine.AddCY_Y(builder, CY_Y);
     covarianceMatrixLine.AddCY_X(builder, CY_X);
     covarianceMatrixLine.AddCX_X(builder, CX_X);
+    covarianceMatrixLine.AddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAMEOffset);
+    covarianceMatrixLine.AddCOMMENT(builder, COMMENTOffset);
     covarianceMatrixLine.AddEPOCH(builder, EPOCHOffset);
     return covarianceMatrixLine.EndcovarianceMatrixLine(builder);
   }
 
-  public static void StartcovarianceMatrixLine(FlatBufferBuilder builder) { builder.StartTable(22); }
+  public static void StartcovarianceMatrixLine(FlatBufferBuilder builder) { builder.StartTable(24); }
   public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(0, EPOCHOffset.Value, 0); }
   public static void AddCX_X(FlatBufferBuilder builder, double CX_X) { builder.AddDouble(1, CX_X, 0.0); }
   public static void AddCY_X(FlatBufferBuilder builder, double CY_X) { builder.AddDouble(2, CY_X, 0.0); }
@@ -140,6 +155,8 @@ public struct covarianceMatrixLine : IFlatbufferObject
   public static void AddCZ_DOT_X_DOT(FlatBufferBuilder builder, double CZ_DOT_X_DOT) { builder.AddDouble(19, CZ_DOT_X_DOT, 0.0); }
   public static void AddCZ_DOT_Y_DOT(FlatBufferBuilder builder, double CZ_DOT_Y_DOT) { builder.AddDouble(20, CZ_DOT_Y_DOT, 0.0); }
   public static void AddCZ_DOT_Z_DOT(FlatBufferBuilder builder, double CZ_DOT_Z_DOT) { builder.AddDouble(21, CZ_DOT_Z_DOT, 0.0); }
+  public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(22, COMMENTOffset.Value, 0); }
+  public static void AddCOV_REFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> COV_REFERENCE_FRAMEOffset) { builder.AddOffset(23, COV_REFERENCE_FRAMEOffset.Value, 0); }
   public static Offset<covarianceMatrixLine> EndcovarianceMatrixLine(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<covarianceMatrixLine>(o);
@@ -172,10 +189,14 @@ public struct covarianceMatrixLine : IFlatbufferObject
     _o.CZ_DOT_X_DOT = this.CZ_DOT_X_DOT;
     _o.CZ_DOT_Y_DOT = this.CZ_DOT_Y_DOT;
     _o.CZ_DOT_Z_DOT = this.CZ_DOT_Z_DOT;
+    _o.COMMENT = this.COMMENT;
+    _o.COV_REFERENCE_FRAME = this.COV_REFERENCE_FRAME.HasValue ? this.COV_REFERENCE_FRAME.Value.UnPack() : null;
   }
   public static Offset<covarianceMatrixLine> Pack(FlatBufferBuilder builder, covarianceMatrixLineT _o) {
     if (_o == null) return default(Offset<covarianceMatrixLine>);
     var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
+    var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
+    var _COV_REFERENCE_FRAME = _o.COV_REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.COV_REFERENCE_FRAME);
     return CreatecovarianceMatrixLine(
       builder,
       _EPOCH,
@@ -199,7 +220,9 @@ public struct covarianceMatrixLine : IFlatbufferObject
       _o.CZ_DOT_Z,
       _o.CZ_DOT_X_DOT,
       _o.CZ_DOT_Y_DOT,
-      _o.CZ_DOT_Z_DOT);
+      _o.CZ_DOT_Z_DOT,
+      _COMMENT,
+      _COV_REFERENCE_FRAME);
   }
 }
 
@@ -227,6 +250,8 @@ public class covarianceMatrixLineT
   public double CZ_DOT_X_DOT { get; set; }
   public double CZ_DOT_Y_DOT { get; set; }
   public double CZ_DOT_Z_DOT { get; set; }
+  public string COMMENT { get; set; }
+  public RFMT COV_REFERENCE_FRAME { get; set; }
 
   public covarianceMatrixLineT() {
     this.EPOCH = null;
@@ -251,6 +276,8 @@ public class covarianceMatrixLineT
     this.CZ_DOT_X_DOT = 0.0;
     this.CZ_DOT_Y_DOT = 0.0;
     this.CZ_DOT_Z_DOT = 0.0;
+    this.COMMENT = null;
+    this.COV_REFERENCE_FRAME = null;
   }
 }
 
@@ -282,6 +309,8 @@ static public class covarianceMatrixLineVerify
       && verifier.VerifyField(tablePos, 42 /*CZ_DOT_X_DOT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 44 /*CZ_DOT_Y_DOT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 46 /*CZ_DOT_Z_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 48 /*COMMENT*/, false)
+      && verifier.VerifyTable(tablePos, 50 /*COV_REFERENCE_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

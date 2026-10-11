@@ -199,6 +199,111 @@ impl<'a> ::flatbuffers::Verifiable for covarianceAlgorithm {
 
 impl ::flatbuffers::SimpleToVerifyInSlice for covarianceAlgorithm {}
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CDM_MANEUVERABLE: i8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CDM_MANEUVERABLE: i8 = 3;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CDM_MANEUVERABLE: [cdmManeuverable; 4] = [
+    cdmManeuverable::UNSPECIFIED,
+    cdmManeuverable::YES,
+    cdmManeuverable::NO,
+    cdmManeuverable::NOT_APPLICABLE,
+];
+
+/// MANEUVERABLE of a CDM object (CCSDS 508.0-B-1): whether it can maneuver.
+/// UNSPECIFIED is the zero value: the record does not state it.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct cdmManeuverable(pub i8);
+
+#[allow(non_upper_case_globals)]
+impl cdmManeuverable {
+    pub const UNSPECIFIED: Self = Self(0);
+    pub const YES: Self = Self(1);
+    pub const NO: Self = Self(2);
+    pub const NOT_APPLICABLE: Self = Self(3);
+
+    pub const ENUM_MIN: i8 = 0;
+    pub const ENUM_MAX: i8 = 3;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::YES,
+        Self::NO,
+        Self::NOT_APPLICABLE,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::YES => Some("YES"),
+            Self::NO => Some("NO"),
+            Self::NOT_APPLICABLE => Some("NOT_APPLICABLE"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for cdmManeuverable {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for cdmManeuverable {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for cdmManeuverable {
+    type Output = cdmManeuverable;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for cdmManeuverable {
+    type Scalar = i8;
+
+    #[inline]
+    fn to_little_endian(self) -> i8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: i8) -> Self {
+        let b = i8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for cdmManeuverable {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        i8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for cdmManeuverable {}
+
 pub enum CDMObjectOffset {}
 
 #[derive(Copy, Clone, PartialEq)]
@@ -253,6 +358,10 @@ impl<'a> CDMObject<'a> {
     pub const VT_Y_DOT: ::flatbuffers::VOffsetT = 72;
     pub const VT_Z_DOT: ::flatbuffers::VOffsetT = 74;
     pub const VT_COVARIANCE: ::flatbuffers::VOffsetT = 76;
+    pub const VT_OBJECT_DESIGNATOR: ::flatbuffers::VOffsetT = 78;
+    pub const VT_CATALOG_NAME: ::flatbuffers::VOffsetT = 80;
+    pub const VT_MANEUVERABLE: ::flatbuffers::VOffsetT = 82;
+    pub const VT_CD_AREA_OVER_MASS: ::flatbuffers::VOffsetT = 84;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -265,6 +374,7 @@ impl<'a> CDMObject<'a> {
         args: &'args CDMObjectArgs<'args>
     ) -> ::flatbuffers::WIPOffset<CDMObject<'bldr>> {
         let mut builder = CDMObjectBuilder::new(_fbb);
+        builder.add_CD_AREA_OVER_MASS(args.CD_AREA_OVER_MASS);
         builder.add_Z_DOT(args.Z_DOT);
         builder.add_Y_DOT(args.Y_DOT);
         builder.add_X_DOT(args.X_DOT);
@@ -281,6 +391,8 @@ impl<'a> CDMObject<'a> {
         builder.add_RESIDUALS_ACCEPTED(args.RESIDUALS_ACCEPTED);
         builder.add_ACTUAL_OD_SPAN(args.ACTUAL_OD_SPAN);
         builder.add_RECOMMENDED_OD_SPAN(args.RECOMMENDED_OD_SPAN);
+        if let Some(x) = args.CATALOG_NAME { builder.add_CATALOG_NAME(x); }
+        if let Some(x) = args.OBJECT_DESIGNATOR { builder.add_OBJECT_DESIGNATOR(x); }
         if let Some(x) = args.COVARIANCE { builder.add_COVARIANCE(x); }
         builder.add_TRACKS_USED(args.TRACKS_USED);
         builder.add_TRACKS_AVAILABLE(args.TRACKS_AVAILABLE);
@@ -298,6 +410,7 @@ impl<'a> CDMObject<'a> {
         if let Some(x) = args.POC { builder.add_POC(x); }
         if let Some(x) = args.OBJECT { builder.add_OBJECT(x); }
         if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+        builder.add_MANEUVERABLE(args.MANEUVERABLE);
         builder.add_INTRACK_THRUST(args.INTRACK_THRUST);
         builder.add_EARTH_TIDES(args.EARTH_TIDES);
         builder.add_SOLAR_RAD_PRESSURE(args.SOLAR_RAD_PRESSURE);
@@ -369,6 +482,14 @@ impl<'a> CDMObject<'a> {
         let COVARIANCE = self.COVARIANCE().map(|x| {
             x.into_iter().collect()
         });
+        let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let CATALOG_NAME = self.CATALOG_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MANEUVERABLE = self.MANEUVERABLE();
+        let CD_AREA_OVER_MASS = self.CD_AREA_OVER_MASS();
         CDMObjectT {
             COMMENT,
             OBJECT,
@@ -407,6 +528,10 @@ impl<'a> CDMObject<'a> {
             Y_DOT,
             Z_DOT,
             COVARIANCE,
+            OBJECT_DESIGNATOR,
+            CATALOG_NAME,
+            MANEUVERABLE,
+            CD_AREA_OVER_MASS,
         }
     }
 
@@ -747,6 +872,44 @@ impl<'a> CDMObject<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(CDMObject::VT_COVARIANCE, None)}
     }
+
+    /// OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+    /// as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+    #[inline]
+    pub fn OBJECT_DESIGNATOR(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_OBJECT_DESIGNATOR, None)}
+    }
+
+    /// CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+    #[inline]
+    pub fn CATALOG_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDMObject::VT_CATALOG_NAME, None)}
+    }
+
+    /// MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+    /// same fact as a flag, true for YES.
+    #[inline]
+    pub fn MANEUVERABLE(&self) -> cdmManeuverable {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<cdmManeuverable>(CDMObject::VT_MANEUVERABLE, Some(cdmManeuverable::UNSPECIFIED)).unwrap()}
+    }
+
+    /// CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+    #[inline]
+    pub fn CD_AREA_OVER_MASS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CDMObject::VT_CD_AREA_OVER_MASS, Some(0.0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CDMObject<'_> {
@@ -792,6 +955,10 @@ impl ::flatbuffers::Verifiable for CDMObject<'_> {
             .visit_field::<f64>("Y_DOT", Self::VT_Y_DOT, false)?
             .visit_field::<f64>("Z_DOT", Self::VT_Z_DOT, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COVARIANCE", Self::VT_COVARIANCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_DESIGNATOR", Self::VT_OBJECT_DESIGNATOR, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CATALOG_NAME", Self::VT_CATALOG_NAME, false)?
+            .visit_field::<cdmManeuverable>("MANEUVERABLE", Self::VT_MANEUVERABLE, false)?
+            .visit_field::<f64>("CD_AREA_OVER_MASS", Self::VT_CD_AREA_OVER_MASS, false)?
             .finish();
         Ok(())
     }
@@ -835,6 +1002,10 @@ pub struct CDMObjectArgs<'a> {
     pub Y_DOT: f64,
     pub Z_DOT: f64,
     pub COVARIANCE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub OBJECT_DESIGNATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CATALOG_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MANEUVERABLE: cdmManeuverable,
+    pub CD_AREA_OVER_MASS: f64,
 }
 
 impl<'a> Default for CDMObjectArgs<'a> {
@@ -878,6 +1049,10 @@ impl<'a> Default for CDMObjectArgs<'a> {
             Y_DOT: 0.0,
             Z_DOT: 0.0,
             COVARIANCE: None,
+            OBJECT_DESIGNATOR: None,
+            CATALOG_NAME: None,
+            MANEUVERABLE: cdmManeuverable::UNSPECIFIED,
+            CD_AREA_OVER_MASS: 0.0,
         }
     }
 }
@@ -1074,6 +1249,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CDMObjectBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_OBJECT_DESIGNATOR(&mut self, OBJECT_DESIGNATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDMObject::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
+    }
+
+    #[inline]
+    pub fn add_CATALOG_NAME(&mut self, CATALOG_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDMObject::VT_CATALOG_NAME, CATALOG_NAME);
+    }
+
+    #[inline]
+    pub fn add_MANEUVERABLE(&mut self, MANEUVERABLE: cdmManeuverable) {
+        self.fbb_.push_slot::<cdmManeuverable>(CDMObject::VT_MANEUVERABLE, MANEUVERABLE, cdmManeuverable::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_CD_AREA_OVER_MASS(&mut self, CD_AREA_OVER_MASS: f64) {
+        self.fbb_.push_slot::<f64>(CDMObject::VT_CD_AREA_OVER_MASS, CD_AREA_OVER_MASS, 0.0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CDMObjectBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CDMObjectBuilder {
@@ -1129,6 +1324,10 @@ impl ::core::fmt::Debug for CDMObject<'_> {
         ds.field("Y_DOT", &self.Y_DOT());
         ds.field("Z_DOT", &self.Z_DOT());
         ds.field("COVARIANCE", &self.COVARIANCE());
+        ds.field("OBJECT_DESIGNATOR", &self.OBJECT_DESIGNATOR());
+        ds.field("CATALOG_NAME", &self.CATALOG_NAME());
+        ds.field("MANEUVERABLE", &self.MANEUVERABLE());
+        ds.field("CD_AREA_OVER_MASS", &self.CD_AREA_OVER_MASS());
         ds.finish()
     }
 }
@@ -1173,6 +1372,10 @@ pub struct CDMObjectT {
     pub Y_DOT: f64,
     pub Z_DOT: f64,
     pub COVARIANCE: Option<alloc::vec::Vec<f64>>,
+    pub OBJECT_DESIGNATOR: Option<alloc::string::String>,
+    pub CATALOG_NAME: Option<alloc::string::String>,
+    pub MANEUVERABLE: cdmManeuverable,
+    pub CD_AREA_OVER_MASS: f64,
 }
 
 impl Default for CDMObjectT {
@@ -1215,6 +1418,10 @@ impl Default for CDMObjectT {
             Y_DOT: 0.0,
             Z_DOT: 0.0,
             COVARIANCE: None,
+            OBJECT_DESIGNATOR: None,
+            CATALOG_NAME: None,
+            MANEUVERABLE: cdmManeuverable::UNSPECIFIED,
+            CD_AREA_OVER_MASS: 0.0,
         }
     }
 }
@@ -1287,6 +1494,14 @@ impl CDMObjectT {
         let COVARIANCE = self.COVARIANCE.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
+        let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let CATALOG_NAME = self.CATALOG_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MANEUVERABLE = self.MANEUVERABLE;
+        let CD_AREA_OVER_MASS = self.CD_AREA_OVER_MASS;
         CDMObject::create(_fbb, &CDMObjectArgs{
             COMMENT,
             OBJECT,
@@ -1325,6 +1540,10 @@ impl CDMObjectT {
             Y_DOT,
             Z_DOT,
             COVARIANCE,
+            OBJECT_DESIGNATOR,
+            CATALOG_NAME,
+            MANEUVERABLE,
+            CD_AREA_OVER_MASS,
         })
     }
 }
@@ -1332,6 +1551,14 @@ impl CDMObjectT {
 pub enum CDMOffset {}
 
 /// Conjunction Data Message
+///
+/// Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+/// SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+/// of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+/// km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+/// MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+/// COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+/// terms) are held as the message states them.
 #[derive(Copy, Clone, PartialEq)]
 pub struct CDM<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -1376,6 +1603,7 @@ impl<'a> CDM<'a> {
     pub const VT_OBJECT2: ::flatbuffers::VOffsetT = 56;
     pub const VT_OBJECT1_DATASOURCE: ::flatbuffers::VOffsetT = 58;
     pub const VT_OBJECT2_DATASOURCE: ::flatbuffers::VOffsetT = 60;
+    pub const VT_COMMENT: ::flatbuffers::VOffsetT = 62;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1401,6 +1629,7 @@ impl<'a> CDM<'a> {
         builder.add_RELATIVE_SPEED(args.RELATIVE_SPEED);
         builder.add_MISS_DISTANCE(args.MISS_DISTANCE);
         builder.add_CCSDS_CDM_VERS(args.CCSDS_CDM_VERS);
+        if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
         if let Some(x) = args.OBJECT2_DATASOURCE { builder.add_OBJECT2_DATASOURCE(x); }
         if let Some(x) = args.OBJECT1_DATASOURCE { builder.add_OBJECT1_DATASOURCE(x); }
         if let Some(x) = args.OBJECT2 { builder.add_OBJECT2(x); }
@@ -1480,6 +1709,9 @@ impl<'a> CDM<'a> {
         let OBJECT2_DATASOURCE = self.OBJECT2_DATASOURCE().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let COMMENT = self.COMMENT().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         CDMT {
             CCSDS_CDM_VERS,
             CREATION_DATE,
@@ -1510,6 +1742,7 @@ impl<'a> CDM<'a> {
             OBJECT2,
             OBJECT1_DATASOURCE,
             OBJECT2_DATASOURCE,
+            COMMENT,
         }
     }
 
@@ -1773,6 +2006,16 @@ impl<'a> CDM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PNM>>(CDM::VT_OBJECT2_DATASOURCE, None)}
     }
+
+    /// COMMENT lines of the message header and of its relative metadata and data
+    /// (CCSDS 508.0-B-1), in message order, joined by a line feed.
+    #[inline]
+    pub fn COMMENT(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CDM::VT_COMMENT, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CDM<'_> {
@@ -1810,6 +2053,7 @@ impl ::flatbuffers::Verifiable for CDM<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<CDMObject>>("OBJECT2", Self::VT_OBJECT2, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PNM>>("OBJECT1_DATASOURCE", Self::VT_OBJECT1_DATASOURCE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PNM>>("OBJECT2_DATASOURCE", Self::VT_OBJECT2_DATASOURCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
             .finish();
         Ok(())
     }
@@ -1845,6 +2089,7 @@ pub struct CDMArgs<'a> {
     pub OBJECT2: Option<::flatbuffers::WIPOffset<CDMObject<'a>>>,
     pub OBJECT1_DATASOURCE: Option<::flatbuffers::WIPOffset<PNM<'a>>>,
     pub OBJECT2_DATASOURCE: Option<::flatbuffers::WIPOffset<PNM<'a>>>,
+    pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for CDMArgs<'a> {
@@ -1880,6 +2125,7 @@ impl<'a> Default for CDMArgs<'a> {
             OBJECT2: None,
             OBJECT1_DATASOURCE: None,
             OBJECT2_DATASOURCE: None,
+            COMMENT: None,
         }
     }
 }
@@ -2036,6 +2282,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CDMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CDM::VT_COMMENT, COMMENT);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CDMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CDMBuilder {
@@ -2083,6 +2334,7 @@ impl ::core::fmt::Debug for CDM<'_> {
         ds.field("OBJECT2", &self.OBJECT2());
         ds.field("OBJECT1_DATASOURCE", &self.OBJECT1_DATASOURCE());
         ds.field("OBJECT2_DATASOURCE", &self.OBJECT2_DATASOURCE());
+        ds.field("COMMENT", &self.COMMENT());
         ds.finish()
     }
 }
@@ -2119,6 +2371,7 @@ pub struct CDMT {
     pub OBJECT2: Option<alloc::boxed::Box<CDMObjectT>>,
     pub OBJECT1_DATASOURCE: Option<alloc::boxed::Box<PNMT>>,
     pub OBJECT2_DATASOURCE: Option<alloc::boxed::Box<PNMT>>,
+    pub COMMENT: Option<alloc::string::String>,
 }
 
 impl Default for CDMT {
@@ -2153,6 +2406,7 @@ impl Default for CDMT {
             OBJECT2: None,
             OBJECT1_DATASOURCE: None,
             OBJECT2_DATASOURCE: None,
+            COMMENT: None,
         }
     }
 }
@@ -2221,6 +2475,9 @@ impl CDMT {
         let OBJECT2_DATASOURCE = self.OBJECT2_DATASOURCE.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let COMMENT = self.COMMENT.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         CDM::create(_fbb, &CDMArgs{
             CCSDS_CDM_VERS,
             CREATION_DATE,
@@ -2251,6 +2508,7 @@ impl CDMT {
             OBJECT2,
             OBJECT1_DATASOURCE,
             OBJECT2_DATASOURCE,
+            COMMENT,
         })
     }
 }

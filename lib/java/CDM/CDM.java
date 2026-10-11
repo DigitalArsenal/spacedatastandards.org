@@ -18,6 +18,14 @@ import java.nio.ByteOrder;
 
 /**
  * Conjunction Data Message
+ *
+ * Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+ * SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+ * of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+ * km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+ * MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+ * COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+ * terms) are held as the message states them.
  */
 @SuppressWarnings("unused")
 public final class CDM extends com.google.flatbuffers.Table {
@@ -169,6 +177,13 @@ public final class CDM extends com.google.flatbuffers.Table {
    */
   public PNM OBJECT2_DATASOURCE() { return OBJECT2_DATASOURCE(new PNM()); }
   public PNM OBJECT2_DATASOURCE(PNM obj) { int o = __offset(60); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * COMMENT lines of the message header and of its relative metadata and data
+   * (CCSDS 508.0-B-1), in message order, joined by a line feed.
+   */
+  public String COMMENT() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
 
   public static int createCDM(FlatBufferBuilder builder,
       double CCSDS_CDM_VERS,
@@ -199,8 +214,9 @@ public final class CDM extends com.google.flatbuffers.Table {
       int OBJECT1Offset,
       int OBJECT2Offset,
       int OBJECT1_DATASOURCEOffset,
-      int OBJECT2_DATASOURCEOffset) {
-    builder.startTable(29);
+      int OBJECT2_DATASOURCEOffset,
+      int COMMENTOffset) {
+    builder.startTable(30);
     CDM.addCollisionProbability(builder, COLLISION_PROBABILITY);
     CDM.addScreenVolumeZ(builder, SCREEN_VOLUME_Z);
     CDM.addScreenVolumeY(builder, SCREEN_VOLUME_Y);
@@ -214,6 +230,7 @@ public final class CDM extends com.google.flatbuffers.Table {
     CDM.addRelativeSpeed(builder, RELATIVE_SPEED);
     CDM.addMissDistance(builder, MISS_DISTANCE);
     CDM.addCcsdsCdmVers(builder, CCSDS_CDM_VERS);
+    CDM.addComment(builder, COMMENTOffset);
     CDM.addObject2Datasource(builder, OBJECT2_DATASOURCEOffset);
     CDM.addObject1Datasource(builder, OBJECT1_DATASOURCEOffset);
     CDM.addObject2(builder, OBJECT2Offset);
@@ -233,7 +250,7 @@ public final class CDM extends com.google.flatbuffers.Table {
     return CDM.endCDM(builder);
   }
 
-  public static void startCDM(FlatBufferBuilder builder) { builder.startTable(29); }
+  public static void startCDM(FlatBufferBuilder builder) { builder.startTable(30); }
   public static void addCcsdsCdmVers(FlatBufferBuilder builder, double CCSDS_CDM_VERS) { builder.addDouble(0, CCSDS_CDM_VERS, 0.0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -263,6 +280,7 @@ public final class CDM extends com.google.flatbuffers.Table {
   public static void addObject2(FlatBufferBuilder builder, int OBJECT2Offset) { builder.addOffset(26, OBJECT2Offset, 0); }
   public static void addObject1Datasource(FlatBufferBuilder builder, int OBJECT1_DATASOURCEOffset) { builder.addOffset(27, OBJECT1_DATASOURCEOffset, 0); }
   public static void addObject2Datasource(FlatBufferBuilder builder, int OBJECT2_DATASOURCEOffset) { builder.addOffset(28, OBJECT2_DATASOURCEOffset, 0); }
+  public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(29, COMMENTOffset, 0); }
   public static int endCDM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

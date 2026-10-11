@@ -182,6 +182,99 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
   public int OD_DYNAMIC_PARAMETERSLength() { int o = __offset(54); return o != 0 ? __vector_len(o) : 0; }
   public OCMDynamicParameter.Vector odDynamicParametersVector() { return odDynamicParametersVector(new OCMDynamicParameter.Vector()); }
   public OCMDynamicParameter.Vector odDynamicParametersVector(OCMDynamicParameter.Vector obj) { int o = __offset(54); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+   */
+  public double DAYS_SINCE_FIRST_OBS() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * DAYS_SINCE_LAST_OBS, NaN when not stated.
+   */
+  public double DAYS_SINCE_LAST_OBS() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * RECOMMENDED_OD_SPAN in days, NaN when not stated.
+   */
+  public double RECOMMENDED_OD_SPAN() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * ACTUAL_OD_SPAN in days, NaN when not stated.
+   */
+  public double ACTUAL_OD_SPAN() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+   */
+  public long OBS_AVAILABLE() { int o = __offset(64); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+   */
+  public long TRACKS_AVAILABLE() { int o = __offset(66); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * MAXIMUM_OBS_GAP in days, NaN when not stated.
+   */
+  public double MAXIMUM_OBS_GAP() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * OD_EPOCH_EIGMAJ in m, NaN when not stated.
+   */
+  public double OD_EPOCH_EIGMAJ() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * OD_EPOCH_EIGINT in m, NaN when not stated.
+   */
+  public double OD_EPOCH_EIGINT() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * OD_EPOCH_EIGMIN in m, NaN when not stated.
+   */
+  public double OD_EPOCH_EIGMIN() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+   */
+  public double OD_MAX_PRED_EIGMAJ() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+   */
+  public double OD_MIN_PRED_EIGMIN() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * OD_CONFIDENCE in percent, NaN when not stated.
+   */
+  public double OD_CONFIDENCE() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * GDOP, NaN when not stated.
+   */
+  public double GDOP() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * SOLVE_N: the number of solved-for states.
+   */
+  public long SOLVE_N() { int o = __offset(84); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * SOLVE_STATES: the solved-for states, as written.
+   */
+  public String SOLVE_STATES() { int o = __offset(86); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOLVE_STATESAsByteBuffer() { return __vector_as_bytebuffer(86, 1); }
+  public ByteBuffer SOLVE_STATESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 86, 1); }
+  /**
+   * CONSIDER_N: the number of consider parameters.
+   */
+  public long CONSIDER_N() { int o = __offset(88); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * CONSIDER_PARAMS: the consider parameters, as written.
+   */
+  public String CONSIDER_PARAMS() { int o = __offset(90); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CONSIDER_PARAMSAsByteBuffer() { return __vector_as_bytebuffer(90, 1); }
+  public ByteBuffer CONSIDER_PARAMSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 90, 1); }
+  /**
+   * SENSORS_N: the number of sensors.
+   */
+  public long SENSORS_N() { int o = __offset(92); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * SENSORS: the sensors, as written.
+   */
+  public String SENSORS() { int o = __offset(94); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SENSORSAsByteBuffer() { return __vector_as_bytebuffer(94, 1); }
+  public ByteBuffer SENSORSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 94, 1); }
+  /**
+   * COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+   */
+  public String COMMENT(int j) { int o = __offset(96); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int COMMENTLength() { int o = __offset(96); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector commentVector() { return commentVector(new StringVector()); }
+  public StringVector commentVector(StringVector obj) { int o = __offset(96); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createOrbitDetermination(FlatBufferBuilder builder,
       int OD_IDOffset,
@@ -209,12 +302,54 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
       double OD_BATCH_BASELINE_RMS,
       double SEDR,
       double WEIGHTED_RMS,
-      int OD_DYNAMIC_PARAMETERSOffset) {
-    builder.startTable(26);
+      int OD_DYNAMIC_PARAMETERSOffset,
+      double DAYS_SINCE_FIRST_OBS,
+      double DAYS_SINCE_LAST_OBS,
+      double RECOMMENDED_OD_SPAN,
+      double ACTUAL_OD_SPAN,
+      long OBS_AVAILABLE,
+      long TRACKS_AVAILABLE,
+      double MAXIMUM_OBS_GAP,
+      double OD_EPOCH_EIGMAJ,
+      double OD_EPOCH_EIGINT,
+      double OD_EPOCH_EIGMIN,
+      double OD_MAX_PRED_EIGMAJ,
+      double OD_MIN_PRED_EIGMIN,
+      double OD_CONFIDENCE,
+      double GDOP,
+      long SOLVE_N,
+      int SOLVE_STATESOffset,
+      long CONSIDER_N,
+      int CONSIDER_PARAMSOffset,
+      long SENSORS_N,
+      int SENSORSOffset,
+      int COMMENTOffset) {
+    builder.startTable(47);
+    OrbitDetermination.addGdop(builder, GDOP);
+    OrbitDetermination.addOdConfidence(builder, OD_CONFIDENCE);
+    OrbitDetermination.addOdMinPredEigmin(builder, OD_MIN_PRED_EIGMIN);
+    OrbitDetermination.addOdMaxPredEigmaj(builder, OD_MAX_PRED_EIGMAJ);
+    OrbitDetermination.addOdEpochEigmin(builder, OD_EPOCH_EIGMIN);
+    OrbitDetermination.addOdEpochEigint(builder, OD_EPOCH_EIGINT);
+    OrbitDetermination.addOdEpochEigmaj(builder, OD_EPOCH_EIGMAJ);
+    OrbitDetermination.addMaximumObsGap(builder, MAXIMUM_OBS_GAP);
+    OrbitDetermination.addActualOdSpan(builder, ACTUAL_OD_SPAN);
+    OrbitDetermination.addRecommendedOdSpan(builder, RECOMMENDED_OD_SPAN);
+    OrbitDetermination.addDaysSinceLastObs(builder, DAYS_SINCE_LAST_OBS);
+    OrbitDetermination.addDaysSinceFirstObs(builder, DAYS_SINCE_FIRST_OBS);
     OrbitDetermination.addWeightedRms(builder, WEIGHTED_RMS);
     OrbitDetermination.addSedr(builder, SEDR);
     OrbitDetermination.addOdBatchBaselineRms(builder, OD_BATCH_BASELINE_RMS);
     OrbitDetermination.addOdResidualRms(builder, OD_RESIDUAL_RMS);
+    OrbitDetermination.addComment(builder, COMMENTOffset);
+    OrbitDetermination.addSensors(builder, SENSORSOffset);
+    OrbitDetermination.addSensorsN(builder, SENSORS_N);
+    OrbitDetermination.addConsiderParams(builder, CONSIDER_PARAMSOffset);
+    OrbitDetermination.addConsiderN(builder, CONSIDER_N);
+    OrbitDetermination.addSolveStates(builder, SOLVE_STATESOffset);
+    OrbitDetermination.addSolveN(builder, SOLVE_N);
+    OrbitDetermination.addTracksAvailable(builder, TRACKS_AVAILABLE);
+    OrbitDetermination.addObsAvailable(builder, OBS_AVAILABLE);
     OrbitDetermination.addOdDynamicParameters(builder, OD_DYNAMIC_PARAMETERSOffset);
     OrbitDetermination.addOdBatchBaselineId(builder, OD_BATCH_BASELINE_IDOffset);
     OrbitDetermination.addOdResidualEpochs(builder, OD_RESIDUAL_EPOCHSOffset);
@@ -240,7 +375,7 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
     return OrbitDetermination.endOrbitDetermination(builder);
   }
 
-  public static void startOrbitDetermination(FlatBufferBuilder builder) { builder.startTable(26); }
+  public static void startOrbitDetermination(FlatBufferBuilder builder) { builder.startTable(47); }
   public static void addOdId(FlatBufferBuilder builder, int OD_IDOffset) { builder.addOffset(0, OD_IDOffset, 0); }
   public static void addOdPrevId(FlatBufferBuilder builder, int OD_PREV_IDOffset) { builder.addOffset(1, OD_PREV_IDOffset, 0); }
   public static void addOdAlgorithm(FlatBufferBuilder builder, int OD_ALGORITHMOffset) { builder.addOffset(2, OD_ALGORITHMOffset, 0); }
@@ -277,6 +412,29 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
   public static void addOdDynamicParameters(FlatBufferBuilder builder, int OD_DYNAMIC_PARAMETERSOffset) { builder.addOffset(25, OD_DYNAMIC_PARAMETERSOffset, 0); }
   public static int createOdDynamicParametersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startOdDynamicParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addDaysSinceFirstObs(FlatBufferBuilder builder, double DAYS_SINCE_FIRST_OBS) { builder.addDouble(26, DAYS_SINCE_FIRST_OBS, Double.NaN); }
+  public static void addDaysSinceLastObs(FlatBufferBuilder builder, double DAYS_SINCE_LAST_OBS) { builder.addDouble(27, DAYS_SINCE_LAST_OBS, Double.NaN); }
+  public static void addRecommendedOdSpan(FlatBufferBuilder builder, double RECOMMENDED_OD_SPAN) { builder.addDouble(28, RECOMMENDED_OD_SPAN, Double.NaN); }
+  public static void addActualOdSpan(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.addDouble(29, ACTUAL_OD_SPAN, Double.NaN); }
+  public static void addObsAvailable(FlatBufferBuilder builder, long OBS_AVAILABLE) { builder.addInt(30, (int) OBS_AVAILABLE, (int) 0L); }
+  public static void addTracksAvailable(FlatBufferBuilder builder, long TRACKS_AVAILABLE) { builder.addInt(31, (int) TRACKS_AVAILABLE, (int) 0L); }
+  public static void addMaximumObsGap(FlatBufferBuilder builder, double MAXIMUM_OBS_GAP) { builder.addDouble(32, MAXIMUM_OBS_GAP, Double.NaN); }
+  public static void addOdEpochEigmaj(FlatBufferBuilder builder, double OD_EPOCH_EIGMAJ) { builder.addDouble(33, OD_EPOCH_EIGMAJ, Double.NaN); }
+  public static void addOdEpochEigint(FlatBufferBuilder builder, double OD_EPOCH_EIGINT) { builder.addDouble(34, OD_EPOCH_EIGINT, Double.NaN); }
+  public static void addOdEpochEigmin(FlatBufferBuilder builder, double OD_EPOCH_EIGMIN) { builder.addDouble(35, OD_EPOCH_EIGMIN, Double.NaN); }
+  public static void addOdMaxPredEigmaj(FlatBufferBuilder builder, double OD_MAX_PRED_EIGMAJ) { builder.addDouble(36, OD_MAX_PRED_EIGMAJ, Double.NaN); }
+  public static void addOdMinPredEigmin(FlatBufferBuilder builder, double OD_MIN_PRED_EIGMIN) { builder.addDouble(37, OD_MIN_PRED_EIGMIN, Double.NaN); }
+  public static void addOdConfidence(FlatBufferBuilder builder, double OD_CONFIDENCE) { builder.addDouble(38, OD_CONFIDENCE, Double.NaN); }
+  public static void addGdop(FlatBufferBuilder builder, double GDOP) { builder.addDouble(39, GDOP, Double.NaN); }
+  public static void addSolveN(FlatBufferBuilder builder, long SOLVE_N) { builder.addInt(40, (int) SOLVE_N, (int) 0L); }
+  public static void addSolveStates(FlatBufferBuilder builder, int SOLVE_STATESOffset) { builder.addOffset(41, SOLVE_STATESOffset, 0); }
+  public static void addConsiderN(FlatBufferBuilder builder, long CONSIDER_N) { builder.addInt(42, (int) CONSIDER_N, (int) 0L); }
+  public static void addConsiderParams(FlatBufferBuilder builder, int CONSIDER_PARAMSOffset) { builder.addOffset(43, CONSIDER_PARAMSOffset, 0); }
+  public static void addSensorsN(FlatBufferBuilder builder, long SENSORS_N) { builder.addInt(44, (int) SENSORS_N, (int) 0L); }
+  public static void addSensors(FlatBufferBuilder builder, int SENSORSOffset) { builder.addOffset(45, SENSORSOffset, 0); }
+  public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(46, COMMENTOffset, 0); }
+  public static int createCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startCommentVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endOrbitDetermination(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

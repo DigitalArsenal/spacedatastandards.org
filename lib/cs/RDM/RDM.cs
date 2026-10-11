@@ -127,7 +127,8 @@ public struct RDM : IFlatbufferObject
   public uint NUM_FRAGMENTS { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Total surviving mass in kg
   public double SURVIVING_MASS { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Additional comments
+  /// COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+  /// data groups, in message order, joined by a line feed.
   public string COMMENT { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCOMMENTBytes() { return __p.__vector_as_span<byte>(56, 1); }
@@ -135,6 +136,384 @@ public struct RDM : IFlatbufferObject
   public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(56); }
 #endif
   public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(56); }
+  /// The fields below, with the earlier ones that say so, are the keywords of
+  /// CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+  /// NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+  /// NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+  /// WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+  /// REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+  /// SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+  /// not keywords of the message.
+  /// MESSAGE_ID: an identifier the originator makes unique for this message.
+  public string MESSAGE_ID { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMESSAGE_IDBytes() { return __p.__vector_as_span<byte>(58, 1); }
+#else
+  public ArraySegment<byte>? GetMESSAGE_IDBytes() { return __p.__vector_as_arraysegment(58); }
+#endif
+  public byte[] GetMESSAGE_IDArray() { return __p.__vector_as_array<byte>(58); }
+  /// CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+  public string CATALOG_NAME { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCATALOG_NAMEBytes() { return __p.__vector_as_span<byte>(60, 1); }
+#else
+  public ArraySegment<byte>? GetCATALOG_NAMEBytes() { return __p.__vector_as_arraysegment(60); }
+#endif
+  public byte[] GetCATALOG_NAMEArray() { return __p.__vector_as_array<byte>(60); }
+  /// OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+  public string OBJECT_DESIGNATOR { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_span<byte>(62, 1); }
+#else
+  public ArraySegment<byte>? GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_arraysegment(62); }
+#endif
+  public byte[] GetOBJECT_DESIGNATORArray() { return __p.__vector_as_array<byte>(62); }
+  /// OBJECT_OWNER.
+  public string OBJECT_OWNER { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOBJECT_OWNERBytes() { return __p.__vector_as_span<byte>(64, 1); }
+#else
+  public ArraySegment<byte>? GetOBJECT_OWNERBytes() { return __p.__vector_as_arraysegment(64); }
+#endif
+  public byte[] GetOBJECT_OWNERArray() { return __p.__vector_as_array<byte>(64); }
+  /// OBJECT_OPERATOR.
+  public string OBJECT_OPERATOR { get { int o = __p.__offset(66); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOBJECT_OPERATORBytes() { return __p.__vector_as_span<byte>(66, 1); }
+#else
+  public ArraySegment<byte>? GetOBJECT_OPERATORBytes() { return __p.__vector_as_arraysegment(66); }
+#endif
+  public byte[] GetOBJECT_OPERATORArray() { return __p.__vector_as_array<byte>(66); }
+  /// CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+  public rdmControlledReentry CONTROLLED_REENTRY { get { int o = __p.__offset(68); return o != 0 ? (rdmControlledReentry)__p.bb.GetSbyte(o + __p.bb_pos) : rdmControlledReentry.UNSPECIFIED; } }
+  /// CENTER_NAME: the body being re-entered.
+  public string CENTER_NAME { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCENTER_NAMEBytes() { return __p.__vector_as_span<byte>(70, 1); }
+#else
+  public ArraySegment<byte>? GetCENTER_NAMEBytes() { return __p.__vector_as_arraysegment(70); }
+#endif
+  public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(70); }
+  /// EPOCH_TZERO: the epoch the message's relative times are measured from.
+  public string EPOCH_TZERO { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPOCH_TZEROBytes() { return __p.__vector_as_span<byte>(72, 1); }
+#else
+  public ArraySegment<byte>? GetEPOCH_TZEROBytes() { return __p.__vector_as_arraysegment(72); }
+#endif
+  public byte[] GetEPOCH_TZEROArray() { return __p.__vector_as_array<byte>(72); }
+  /// REF_FRAME: the frame of the state vector.
+  public string REF_FRAME { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREF_FRAMEBytes() { return __p.__vector_as_span<byte>(74, 1); }
+#else
+  public ArraySegment<byte>? GetREF_FRAMEBytes() { return __p.__vector_as_arraysegment(74); }
+#endif
+  public byte[] GetREF_FRAMEArray() { return __p.__vector_as_array<byte>(74); }
+  /// REF_FRAME_EPOCH.
+  public string REF_FRAME_EPOCH { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREF_FRAME_EPOCHBytes() { return __p.__vector_as_span<byte>(76, 1); }
+#else
+  public ArraySegment<byte>? GetREF_FRAME_EPOCHBytes() { return __p.__vector_as_arraysegment(76); }
+#endif
+  public byte[] GetREF_FRAME_EPOCHArray() { return __p.__vector_as_array<byte>(76); }
+  /// EPHEMERIS_NAME.
+  public string EPHEMERIS_NAME { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPHEMERIS_NAMEBytes() { return __p.__vector_as_span<byte>(78, 1); }
+#else
+  public ArraySegment<byte>? GetEPHEMERIS_NAMEBytes() { return __p.__vector_as_arraysegment(78); }
+#endif
+  public byte[] GetEPHEMERIS_NAMEArray() { return __p.__vector_as_array<byte>(78); }
+  /// GRAVITY_MODEL.
+  public string GRAVITY_MODEL { get { int o = __p.__offset(80); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetGRAVITY_MODELBytes() { return __p.__vector_as_span<byte>(80, 1); }
+#else
+  public ArraySegment<byte>? GetGRAVITY_MODELBytes() { return __p.__vector_as_arraysegment(80); }
+#endif
+  public byte[] GetGRAVITY_MODELArray() { return __p.__vector_as_array<byte>(80); }
+  /// ATMOSPHERIC_MODEL.
+  public string ATMOSPHERIC_MODEL { get { int o = __p.__offset(82); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetATMOSPHERIC_MODELBytes() { return __p.__vector_as_span<byte>(82, 1); }
+#else
+  public ArraySegment<byte>? GetATMOSPHERIC_MODELBytes() { return __p.__vector_as_arraysegment(82); }
+#endif
+  public byte[] GetATMOSPHERIC_MODELArray() { return __p.__vector_as_array<byte>(82); }
+  /// SOLAR_FLUX_PREDICTION.
+  public string SOLAR_FLUX_PREDICTION { get { int o = __p.__offset(84); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSOLAR_FLUX_PREDICTIONBytes() { return __p.__vector_as_span<byte>(84, 1); }
+#else
+  public ArraySegment<byte>? GetSOLAR_FLUX_PREDICTIONBytes() { return __p.__vector_as_arraysegment(84); }
+#endif
+  public byte[] GetSOLAR_FLUX_PREDICTIONArray() { return __p.__vector_as_array<byte>(84); }
+  /// N_BODY_PERTURBATIONS.
+  public string N_BODY_PERTURBATIONS { get { int o = __p.__offset(86); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetN_BODY_PERTURBATIONSBytes() { return __p.__vector_as_span<byte>(86, 1); }
+#else
+  public ArraySegment<byte>? GetN_BODY_PERTURBATIONSBytes() { return __p.__vector_as_arraysegment(86); }
+#endif
+  public byte[] GetN_BODY_PERTURBATIONSArray() { return __p.__vector_as_array<byte>(86); }
+  /// SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+  public string SOLAR_RAD_PRESSURE { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSOLAR_RAD_PRESSUREBytes() { return __p.__vector_as_span<byte>(88, 1); }
+#else
+  public ArraySegment<byte>? GetSOLAR_RAD_PRESSUREBytes() { return __p.__vector_as_arraysegment(88); }
+#endif
+  public byte[] GetSOLAR_RAD_PRESSUREArray() { return __p.__vector_as_array<byte>(88); }
+  /// EARTH_TIDES: a model name.
+  public string EARTH_TIDES { get { int o = __p.__offset(90); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEARTH_TIDESBytes() { return __p.__vector_as_span<byte>(90, 1); }
+#else
+  public ArraySegment<byte>? GetEARTH_TIDESBytes() { return __p.__vector_as_arraysegment(90); }
+#endif
+  public byte[] GetEARTH_TIDESArray() { return __p.__vector_as_array<byte>(90); }
+  /// INTRACK_THRUST: YES or NO.
+  public string INTRACK_THRUST { get { int o = __p.__offset(92); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetINTRACK_THRUSTBytes() { return __p.__vector_as_span<byte>(92, 1); }
+#else
+  public ArraySegment<byte>? GetINTRACK_THRUSTBytes() { return __p.__vector_as_arraysegment(92); }
+#endif
+  public byte[] GetINTRACK_THRUSTArray() { return __p.__vector_as_array<byte>(92); }
+  /// DRAG_PARAMETERS_SOURCE.
+  public string DRAG_PARAMETERS_SOURCE { get { int o = __p.__offset(94); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDRAG_PARAMETERS_SOURCEBytes() { return __p.__vector_as_span<byte>(94, 1); }
+#else
+  public ArraySegment<byte>? GetDRAG_PARAMETERS_SOURCEBytes() { return __p.__vector_as_arraysegment(94); }
+#endif
+  public byte[] GetDRAG_PARAMETERS_SOURCEArray() { return __p.__vector_as_array<byte>(94); }
+  /// DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+  public double DRAG_PARAMETERS_ALTITUDE { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+  public string REENTRY_UNCERTAINTY_METHOD { get { int o = __p.__offset(98); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREENTRY_UNCERTAINTY_METHODBytes() { return __p.__vector_as_span<byte>(98, 1); }
+#else
+  public ArraySegment<byte>? GetREENTRY_UNCERTAINTY_METHODBytes() { return __p.__vector_as_arraysegment(98); }
+#endif
+  public byte[] GetREENTRY_UNCERTAINTY_METHODArray() { return __p.__vector_as_array<byte>(98); }
+  /// REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+  public string REENTRY_DISINTEGRATION { get { int o = __p.__offset(100); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREENTRY_DISINTEGRATIONBytes() { return __p.__vector_as_span<byte>(100, 1); }
+#else
+  public ArraySegment<byte>? GetREENTRY_DISINTEGRATIONBytes() { return __p.__vector_as_arraysegment(100); }
+#endif
+  public byte[] GetREENTRY_DISINTEGRATIONArray() { return __p.__vector_as_array<byte>(100); }
+  /// IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+  public string IMPACT_UNCERTAINTY_METHOD { get { int o = __p.__offset(102); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetIMPACT_UNCERTAINTY_METHODBytes() { return __p.__vector_as_span<byte>(102, 1); }
+#else
+  public ArraySegment<byte>? GetIMPACT_UNCERTAINTY_METHODBytes() { return __p.__vector_as_arraysegment(102); }
+#endif
+  public byte[] GetIMPACT_UNCERTAINTY_METHODArray() { return __p.__vector_as_array<byte>(102); }
+  /// PREVIOUS_MESSAGE_ID.
+  public string PREVIOUS_MESSAGE_ID { get { int o = __p.__offset(104); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPREVIOUS_MESSAGE_IDBytes() { return __p.__vector_as_span<byte>(104, 1); }
+#else
+  public ArraySegment<byte>? GetPREVIOUS_MESSAGE_IDBytes() { return __p.__vector_as_arraysegment(104); }
+#endif
+  public byte[] GetPREVIOUS_MESSAGE_IDArray() { return __p.__vector_as_array<byte>(104); }
+  /// NEXT_MESSAGE_EPOCH.
+  public string NEXT_MESSAGE_EPOCH { get { int o = __p.__offset(106); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNEXT_MESSAGE_EPOCHBytes() { return __p.__vector_as_span<byte>(106, 1); }
+#else
+  public ArraySegment<byte>? GetNEXT_MESSAGE_EPOCHBytes() { return __p.__vector_as_arraysegment(106); }
+#endif
+  public byte[] GetNEXT_MESSAGE_EPOCHArray() { return __p.__vector_as_array<byte>(106); }
+  /// ORBIT_LIFETIME in days.
+  public double ORBIT_LIFETIME { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+  public double ORBIT_LIFETIME_WINDOW_START { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+  public double ORBIT_LIFETIME_WINDOW_END { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// REENTRY_WINDOW_START.
+  public string REENTRY_WINDOW_START { get { int o = __p.__offset(114); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREENTRY_WINDOW_STARTBytes() { return __p.__vector_as_span<byte>(114, 1); }
+#else
+  public ArraySegment<byte>? GetREENTRY_WINDOW_STARTBytes() { return __p.__vector_as_arraysegment(114); }
+#endif
+  public byte[] GetREENTRY_WINDOW_STARTArray() { return __p.__vector_as_array<byte>(114); }
+  /// REENTRY_WINDOW_END.
+  public string REENTRY_WINDOW_END { get { int o = __p.__offset(116); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREENTRY_WINDOW_ENDBytes() { return __p.__vector_as_span<byte>(116, 1); }
+#else
+  public ArraySegment<byte>? GetREENTRY_WINDOW_ENDBytes() { return __p.__vector_as_arraysegment(116); }
+#endif
+  public byte[] GetREENTRY_WINDOW_ENDArray() { return __p.__vector_as_array<byte>(116); }
+  /// ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+  public double ORBIT_LIFETIME_CONFIDENCE_LEVEL { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// PROBABILITY_OF_IMPACT, NaN when not stated.
+  public double PROBABILITY_OF_IMPACT { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// PROBABILITY_OF_BURN_UP, NaN when not stated.
+  public double PROBABILITY_OF_BURN_UP { get { int o = __p.__offset(122); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// PROBABILITY_OF_BREAK_UP, NaN when not stated.
+  public double PROBABILITY_OF_BREAK_UP { get { int o = __p.__offset(124); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+  public double PROBABILITY_OF_LAND_IMPACT { get { int o = __p.__offset(126); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// PROBABILITY_OF_CASUALTY, NaN when not stated.
+  public double PROBABILITY_OF_CASUALTY { get { int o = __p.__offset(128); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// NOMINAL_IMPACT_EPOCH.
+  public string NOMINAL_IMPACT_EPOCH { get { int o = __p.__offset(130); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNOMINAL_IMPACT_EPOCHBytes() { return __p.__vector_as_span<byte>(130, 1); }
+#else
+  public ArraySegment<byte>? GetNOMINAL_IMPACT_EPOCHBytes() { return __p.__vector_as_arraysegment(130); }
+#endif
+  public byte[] GetNOMINAL_IMPACT_EPOCHArray() { return __p.__vector_as_array<byte>(130); }
+  /// IMPACT_WINDOW_START.
+  public string IMPACT_WINDOW_START { get { int o = __p.__offset(132); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetIMPACT_WINDOW_STARTBytes() { return __p.__vector_as_span<byte>(132, 1); }
+#else
+  public ArraySegment<byte>? GetIMPACT_WINDOW_STARTBytes() { return __p.__vector_as_arraysegment(132); }
+#endif
+  public byte[] GetIMPACT_WINDOW_STARTArray() { return __p.__vector_as_array<byte>(132); }
+  /// IMPACT_WINDOW_END.
+  public string IMPACT_WINDOW_END { get { int o = __p.__offset(134); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetIMPACT_WINDOW_ENDBytes() { return __p.__vector_as_span<byte>(134, 1); }
+#else
+  public ArraySegment<byte>? GetIMPACT_WINDOW_ENDBytes() { return __p.__vector_as_arraysegment(134); }
+#endif
+  public byte[] GetIMPACT_WINDOW_ENDArray() { return __p.__vector_as_array<byte>(134); }
+  /// IMPACT_REF_FRAME.
+  public string IMPACT_REF_FRAME { get { int o = __p.__offset(136); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetIMPACT_REF_FRAMEBytes() { return __p.__vector_as_span<byte>(136, 1); }
+#else
+  public ArraySegment<byte>? GetIMPACT_REF_FRAMEBytes() { return __p.__vector_as_arraysegment(136); }
+#endif
+  public byte[] GetIMPACT_REF_FRAMEArray() { return __p.__vector_as_array<byte>(136); }
+  /// NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+  public double NOMINAL_IMPACT_LON { get { int o = __p.__offset(138); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+  public double NOMINAL_IMPACT_LAT { get { int o = __p.__offset(140); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+  public double NOMINAL_IMPACT_ALT { get { int o = __p.__offset(142); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+  public double IMPACT_1_CONFIDENCE { get { int o = __p.__offset(144); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_1_START_LON in degrees, NaN when not stated.
+  public double IMPACT_1_START_LON { get { int o = __p.__offset(146); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_1_START_LAT in degrees, NaN when not stated.
+  public double IMPACT_1_START_LAT { get { int o = __p.__offset(148); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_1_STOP_LON in degrees, NaN when not stated.
+  public double IMPACT_1_STOP_LON { get { int o = __p.__offset(150); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+  public double IMPACT_1_STOP_LAT { get { int o = __p.__offset(152); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+  public double IMPACT_1_CROSS_TRACK { get { int o = __p.__offset(154); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+  public double IMPACT_2_CONFIDENCE { get { int o = __p.__offset(156); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_2_START_LON in degrees, NaN when not stated.
+  public double IMPACT_2_START_LON { get { int o = __p.__offset(158); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_2_START_LAT in degrees, NaN when not stated.
+  public double IMPACT_2_START_LAT { get { int o = __p.__offset(160); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_2_STOP_LON in degrees, NaN when not stated.
+  public double IMPACT_2_STOP_LON { get { int o = __p.__offset(162); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+  public double IMPACT_2_STOP_LAT { get { int o = __p.__offset(164); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+  public double IMPACT_2_CROSS_TRACK { get { int o = __p.__offset(166); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+  public double IMPACT_3_CONFIDENCE { get { int o = __p.__offset(168); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_3_START_LON in degrees, NaN when not stated.
+  public double IMPACT_3_START_LON { get { int o = __p.__offset(170); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_3_START_LAT in degrees, NaN when not stated.
+  public double IMPACT_3_START_LAT { get { int o = __p.__offset(172); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_3_STOP_LON in degrees, NaN when not stated.
+  public double IMPACT_3_STOP_LON { get { int o = __p.__offset(174); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+  public double IMPACT_3_STOP_LAT { get { int o = __p.__offset(176); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+  public double IMPACT_3_CROSS_TRACK { get { int o = __p.__offset(178); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// COV_REF_FRAME: the frame of COVARIANCE.
+  public string COV_REF_FRAME { get { int o = __p.__offset(180); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOV_REF_FRAMEBytes() { return __p.__vector_as_span<byte>(180, 1); }
+#else
+  public ArraySegment<byte>? GetCOV_REF_FRAMEBytes() { return __p.__vector_as_arraysegment(180); }
+#endif
+  public byte[] GetCOV_REF_FRAMEArray() { return __p.__vector_as_array<byte>(180); }
+  /// Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+  /// triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+  /// CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+  /// CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+  /// CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+  public double COVARIANCE(int j) { int o = __p.__offset(182); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int COVARIANCELength { get { int o = __p.__offset(182); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetCOVARIANCEBytes() { return __p.__vector_as_span<double>(182, 8); }
+#else
+  public ArraySegment<byte>? GetCOVARIANCEBytes() { return __p.__vector_as_arraysegment(182); }
+#endif
+  public double[] GetCOVARIANCEArray() { return __p.__vector_as_array<double>(182); }
+  /// WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+  public double DRY_MASS { get { int o = __p.__offset(184); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// HAZARDOUS_SUBSTANCES.
+  public string HAZARDOUS_SUBSTANCES { get { int o = __p.__offset(186); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetHAZARDOUS_SUBSTANCESBytes() { return __p.__vector_as_span<byte>(186, 1); }
+#else
+  public ArraySegment<byte>? GetHAZARDOUS_SUBSTANCESBytes() { return __p.__vector_as_arraysegment(186); }
+#endif
+  public byte[] GetHAZARDOUS_SUBSTANCESArray() { return __p.__vector_as_array<byte>(186); }
+  /// SOLAR_RAD_COEFF, NaN when not stated.
+  public double SOLAR_RAD_COEFF { get { int o = __p.__offset(188); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// DRAG_COEFF, NaN when not stated.
+  public double DRAG_COEFF { get { int o = __p.__offset(190); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// RCS in m**2, NaN when not stated.
+  public double RCS { get { int o = __p.__offset(192); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// THRUST_ACCELERATION in m/s**2, NaN when not stated.
+  public double THRUST_ACCELERATION { get { int o = __p.__offset(194); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// TIME_LASTOB_START.
+  public string TIME_LASTOB_START { get { int o = __p.__offset(196); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTIME_LASTOB_STARTBytes() { return __p.__vector_as_span<byte>(196, 1); }
+#else
+  public ArraySegment<byte>? GetTIME_LASTOB_STARTBytes() { return __p.__vector_as_arraysegment(196); }
+#endif
+  public byte[] GetTIME_LASTOB_STARTArray() { return __p.__vector_as_array<byte>(196); }
+  /// TIME_LASTOB_END.
+  public string TIME_LASTOB_END { get { int o = __p.__offset(198); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTIME_LASTOB_ENDBytes() { return __p.__vector_as_span<byte>(198, 1); }
+#else
+  public ArraySegment<byte>? GetTIME_LASTOB_ENDBytes() { return __p.__vector_as_arraysegment(198); }
+#endif
+  public byte[] GetTIME_LASTOB_ENDArray() { return __p.__vector_as_array<byte>(198); }
+  /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+  public double RECOMMENDED_OD_SPAN { get { int o = __p.__offset(200); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// ACTUAL_OD_SPAN in days, NaN when not stated.
+  public double ACTUAL_OD_SPAN { get { int o = __p.__offset(202); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// OBS_AVAILABLE.
+  public uint OBS_AVAILABLE { get { int o = __p.__offset(204); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// OBS_USED.
+  public uint OBS_USED { get { int o = __p.__offset(206); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// TRACKS_AVAILABLE.
+  public uint TRACKS_AVAILABLE { get { int o = __p.__offset(208); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// TRACKS_USED.
+  public uint TRACKS_USED { get { int o = __p.__offset(210); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// RESIDUALS_ACCEPTED in percent, NaN when not stated.
+  public double RESIDUALS_ACCEPTED { get { int o = __p.__offset(212); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// WEIGHTED_RMS, NaN when not stated.
+  public double WEIGHTED_RMS { get { int o = __p.__offset(214); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Every USER_DEFINED keyword of the message, in message order.
+  public RDMUserDefinedParameter? USER_DEFINED_PARAMETERS(int j) { int o = __p.__offset(216); return o != 0 ? (RDMUserDefinedParameter?)(new RDMUserDefinedParameter()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int USER_DEFINED_PARAMETERSLength { get { int o = __p.__offset(216); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<RDM> CreateRDM(FlatBufferBuilder builder,
       StringOffset CCSDS_RDM_VERSOffset = default(StringOffset),
@@ -163,8 +542,128 @@ public struct RDM : IFlatbufferObject
       double CASUALTY_EXPECTATION = 0.0,
       uint NUM_FRAGMENTS = 0,
       double SURVIVING_MASS = 0.0,
-      StringOffset COMMENTOffset = default(StringOffset)) {
-    builder.StartTable(27);
+      StringOffset COMMENTOffset = default(StringOffset),
+      StringOffset MESSAGE_IDOffset = default(StringOffset),
+      StringOffset CATALOG_NAMEOffset = default(StringOffset),
+      StringOffset OBJECT_DESIGNATOROffset = default(StringOffset),
+      StringOffset OBJECT_OWNEROffset = default(StringOffset),
+      StringOffset OBJECT_OPERATOROffset = default(StringOffset),
+      rdmControlledReentry CONTROLLED_REENTRY = rdmControlledReentry.UNSPECIFIED,
+      StringOffset CENTER_NAMEOffset = default(StringOffset),
+      StringOffset EPOCH_TZEROOffset = default(StringOffset),
+      StringOffset REF_FRAMEOffset = default(StringOffset),
+      StringOffset REF_FRAME_EPOCHOffset = default(StringOffset),
+      StringOffset EPHEMERIS_NAMEOffset = default(StringOffset),
+      StringOffset GRAVITY_MODELOffset = default(StringOffset),
+      StringOffset ATMOSPHERIC_MODELOffset = default(StringOffset),
+      StringOffset SOLAR_FLUX_PREDICTIONOffset = default(StringOffset),
+      StringOffset N_BODY_PERTURBATIONSOffset = default(StringOffset),
+      StringOffset SOLAR_RAD_PRESSUREOffset = default(StringOffset),
+      StringOffset EARTH_TIDESOffset = default(StringOffset),
+      StringOffset INTRACK_THRUSTOffset = default(StringOffset),
+      StringOffset DRAG_PARAMETERS_SOURCEOffset = default(StringOffset),
+      double DRAG_PARAMETERS_ALTITUDE = Double.NaN,
+      StringOffset REENTRY_UNCERTAINTY_METHODOffset = default(StringOffset),
+      StringOffset REENTRY_DISINTEGRATIONOffset = default(StringOffset),
+      StringOffset IMPACT_UNCERTAINTY_METHODOffset = default(StringOffset),
+      StringOffset PREVIOUS_MESSAGE_IDOffset = default(StringOffset),
+      StringOffset NEXT_MESSAGE_EPOCHOffset = default(StringOffset),
+      double ORBIT_LIFETIME = 0.0,
+      double ORBIT_LIFETIME_WINDOW_START = Double.NaN,
+      double ORBIT_LIFETIME_WINDOW_END = Double.NaN,
+      StringOffset REENTRY_WINDOW_STARTOffset = default(StringOffset),
+      StringOffset REENTRY_WINDOW_ENDOffset = default(StringOffset),
+      double ORBIT_LIFETIME_CONFIDENCE_LEVEL = Double.NaN,
+      double PROBABILITY_OF_IMPACT = Double.NaN,
+      double PROBABILITY_OF_BURN_UP = Double.NaN,
+      double PROBABILITY_OF_BREAK_UP = Double.NaN,
+      double PROBABILITY_OF_LAND_IMPACT = Double.NaN,
+      double PROBABILITY_OF_CASUALTY = Double.NaN,
+      StringOffset NOMINAL_IMPACT_EPOCHOffset = default(StringOffset),
+      StringOffset IMPACT_WINDOW_STARTOffset = default(StringOffset),
+      StringOffset IMPACT_WINDOW_ENDOffset = default(StringOffset),
+      StringOffset IMPACT_REF_FRAMEOffset = default(StringOffset),
+      double NOMINAL_IMPACT_LON = Double.NaN,
+      double NOMINAL_IMPACT_LAT = Double.NaN,
+      double NOMINAL_IMPACT_ALT = Double.NaN,
+      double IMPACT_1_CONFIDENCE = Double.NaN,
+      double IMPACT_1_START_LON = Double.NaN,
+      double IMPACT_1_START_LAT = Double.NaN,
+      double IMPACT_1_STOP_LON = Double.NaN,
+      double IMPACT_1_STOP_LAT = Double.NaN,
+      double IMPACT_1_CROSS_TRACK = Double.NaN,
+      double IMPACT_2_CONFIDENCE = Double.NaN,
+      double IMPACT_2_START_LON = Double.NaN,
+      double IMPACT_2_START_LAT = Double.NaN,
+      double IMPACT_2_STOP_LON = Double.NaN,
+      double IMPACT_2_STOP_LAT = Double.NaN,
+      double IMPACT_2_CROSS_TRACK = Double.NaN,
+      double IMPACT_3_CONFIDENCE = Double.NaN,
+      double IMPACT_3_START_LON = Double.NaN,
+      double IMPACT_3_START_LAT = Double.NaN,
+      double IMPACT_3_STOP_LON = Double.NaN,
+      double IMPACT_3_STOP_LAT = Double.NaN,
+      double IMPACT_3_CROSS_TRACK = Double.NaN,
+      StringOffset COV_REF_FRAMEOffset = default(StringOffset),
+      VectorOffset COVARIANCEOffset = default(VectorOffset),
+      double DRY_MASS = Double.NaN,
+      StringOffset HAZARDOUS_SUBSTANCESOffset = default(StringOffset),
+      double SOLAR_RAD_COEFF = Double.NaN,
+      double DRAG_COEFF = Double.NaN,
+      double RCS = Double.NaN,
+      double THRUST_ACCELERATION = Double.NaN,
+      StringOffset TIME_LASTOB_STARTOffset = default(StringOffset),
+      StringOffset TIME_LASTOB_ENDOffset = default(StringOffset),
+      double RECOMMENDED_OD_SPAN = Double.NaN,
+      double ACTUAL_OD_SPAN = Double.NaN,
+      uint OBS_AVAILABLE = 0,
+      uint OBS_USED = 0,
+      uint TRACKS_AVAILABLE = 0,
+      uint TRACKS_USED = 0,
+      double RESIDUALS_ACCEPTED = Double.NaN,
+      double WEIGHTED_RMS = Double.NaN,
+      VectorOffset USER_DEFINED_PARAMETERSOffset = default(VectorOffset)) {
+    builder.StartTable(107);
+    RDM.AddWEIGHTED_RMS(builder, WEIGHTED_RMS);
+    RDM.AddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED);
+    RDM.AddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN);
+    RDM.AddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN);
+    RDM.AddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION);
+    RDM.AddRCS(builder, RCS);
+    RDM.AddDRAG_COEFF(builder, DRAG_COEFF);
+    RDM.AddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF);
+    RDM.AddDRY_MASS(builder, DRY_MASS);
+    RDM.AddIMPACT_3_CROSS_TRACK(builder, IMPACT_3_CROSS_TRACK);
+    RDM.AddIMPACT_3_STOP_LAT(builder, IMPACT_3_STOP_LAT);
+    RDM.AddIMPACT_3_STOP_LON(builder, IMPACT_3_STOP_LON);
+    RDM.AddIMPACT_3_START_LAT(builder, IMPACT_3_START_LAT);
+    RDM.AddIMPACT_3_START_LON(builder, IMPACT_3_START_LON);
+    RDM.AddIMPACT_3_CONFIDENCE(builder, IMPACT_3_CONFIDENCE);
+    RDM.AddIMPACT_2_CROSS_TRACK(builder, IMPACT_2_CROSS_TRACK);
+    RDM.AddIMPACT_2_STOP_LAT(builder, IMPACT_2_STOP_LAT);
+    RDM.AddIMPACT_2_STOP_LON(builder, IMPACT_2_STOP_LON);
+    RDM.AddIMPACT_2_START_LAT(builder, IMPACT_2_START_LAT);
+    RDM.AddIMPACT_2_START_LON(builder, IMPACT_2_START_LON);
+    RDM.AddIMPACT_2_CONFIDENCE(builder, IMPACT_2_CONFIDENCE);
+    RDM.AddIMPACT_1_CROSS_TRACK(builder, IMPACT_1_CROSS_TRACK);
+    RDM.AddIMPACT_1_STOP_LAT(builder, IMPACT_1_STOP_LAT);
+    RDM.AddIMPACT_1_STOP_LON(builder, IMPACT_1_STOP_LON);
+    RDM.AddIMPACT_1_START_LAT(builder, IMPACT_1_START_LAT);
+    RDM.AddIMPACT_1_START_LON(builder, IMPACT_1_START_LON);
+    RDM.AddIMPACT_1_CONFIDENCE(builder, IMPACT_1_CONFIDENCE);
+    RDM.AddNOMINAL_IMPACT_ALT(builder, NOMINAL_IMPACT_ALT);
+    RDM.AddNOMINAL_IMPACT_LAT(builder, NOMINAL_IMPACT_LAT);
+    RDM.AddNOMINAL_IMPACT_LON(builder, NOMINAL_IMPACT_LON);
+    RDM.AddPROBABILITY_OF_CASUALTY(builder, PROBABILITY_OF_CASUALTY);
+    RDM.AddPROBABILITY_OF_LAND_IMPACT(builder, PROBABILITY_OF_LAND_IMPACT);
+    RDM.AddPROBABILITY_OF_BREAK_UP(builder, PROBABILITY_OF_BREAK_UP);
+    RDM.AddPROBABILITY_OF_BURN_UP(builder, PROBABILITY_OF_BURN_UP);
+    RDM.AddPROBABILITY_OF_IMPACT(builder, PROBABILITY_OF_IMPACT);
+    RDM.AddORBIT_LIFETIME_CONFIDENCE_LEVEL(builder, ORBIT_LIFETIME_CONFIDENCE_LEVEL);
+    RDM.AddORBIT_LIFETIME_WINDOW_END(builder, ORBIT_LIFETIME_WINDOW_END);
+    RDM.AddORBIT_LIFETIME_WINDOW_START(builder, ORBIT_LIFETIME_WINDOW_START);
+    RDM.AddORBIT_LIFETIME(builder, ORBIT_LIFETIME);
+    RDM.AddDRAG_PARAMETERS_ALTITUDE(builder, DRAG_PARAMETERS_ALTITUDE);
     RDM.AddSURVIVING_MASS(builder, SURVIVING_MASS);
     RDM.AddCASUALTY_EXPECTATION(builder, CASUALTY_EXPECTATION);
     RDM.AddDRAG_AREA(builder, DRAG_AREA);
@@ -175,6 +674,45 @@ public struct RDM : IFlatbufferObject
     RDM.AddREENTRY_LONGITUDE(builder, REENTRY_LONGITUDE);
     RDM.AddREENTRY_LATITUDE(builder, REENTRY_LATITUDE);
     RDM.AddREENTRY_EPOCH_UNC(builder, REENTRY_EPOCH_UNC);
+    RDM.AddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERSOffset);
+    RDM.AddTRACKS_USED(builder, TRACKS_USED);
+    RDM.AddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE);
+    RDM.AddOBS_USED(builder, OBS_USED);
+    RDM.AddOBS_AVAILABLE(builder, OBS_AVAILABLE);
+    RDM.AddTIME_LASTOB_END(builder, TIME_LASTOB_ENDOffset);
+    RDM.AddTIME_LASTOB_START(builder, TIME_LASTOB_STARTOffset);
+    RDM.AddHAZARDOUS_SUBSTANCES(builder, HAZARDOUS_SUBSTANCESOffset);
+    RDM.AddCOVARIANCE(builder, COVARIANCEOffset);
+    RDM.AddCOV_REF_FRAME(builder, COV_REF_FRAMEOffset);
+    RDM.AddIMPACT_REF_FRAME(builder, IMPACT_REF_FRAMEOffset);
+    RDM.AddIMPACT_WINDOW_END(builder, IMPACT_WINDOW_ENDOffset);
+    RDM.AddIMPACT_WINDOW_START(builder, IMPACT_WINDOW_STARTOffset);
+    RDM.AddNOMINAL_IMPACT_EPOCH(builder, NOMINAL_IMPACT_EPOCHOffset);
+    RDM.AddREENTRY_WINDOW_END(builder, REENTRY_WINDOW_ENDOffset);
+    RDM.AddREENTRY_WINDOW_START(builder, REENTRY_WINDOW_STARTOffset);
+    RDM.AddNEXT_MESSAGE_EPOCH(builder, NEXT_MESSAGE_EPOCHOffset);
+    RDM.AddPREVIOUS_MESSAGE_ID(builder, PREVIOUS_MESSAGE_IDOffset);
+    RDM.AddIMPACT_UNCERTAINTY_METHOD(builder, IMPACT_UNCERTAINTY_METHODOffset);
+    RDM.AddREENTRY_DISINTEGRATION(builder, REENTRY_DISINTEGRATIONOffset);
+    RDM.AddREENTRY_UNCERTAINTY_METHOD(builder, REENTRY_UNCERTAINTY_METHODOffset);
+    RDM.AddDRAG_PARAMETERS_SOURCE(builder, DRAG_PARAMETERS_SOURCEOffset);
+    RDM.AddINTRACK_THRUST(builder, INTRACK_THRUSTOffset);
+    RDM.AddEARTH_TIDES(builder, EARTH_TIDESOffset);
+    RDM.AddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSUREOffset);
+    RDM.AddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONSOffset);
+    RDM.AddSOLAR_FLUX_PREDICTION(builder, SOLAR_FLUX_PREDICTIONOffset);
+    RDM.AddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODELOffset);
+    RDM.AddGRAVITY_MODEL(builder, GRAVITY_MODELOffset);
+    RDM.AddEPHEMERIS_NAME(builder, EPHEMERIS_NAMEOffset);
+    RDM.AddREF_FRAME_EPOCH(builder, REF_FRAME_EPOCHOffset);
+    RDM.AddREF_FRAME(builder, REF_FRAMEOffset);
+    RDM.AddEPOCH_TZERO(builder, EPOCH_TZEROOffset);
+    RDM.AddCENTER_NAME(builder, CENTER_NAMEOffset);
+    RDM.AddOBJECT_OPERATOR(builder, OBJECT_OPERATOROffset);
+    RDM.AddOBJECT_OWNER(builder, OBJECT_OWNEROffset);
+    RDM.AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOROffset);
+    RDM.AddCATALOG_NAME(builder, CATALOG_NAMEOffset);
+    RDM.AddMESSAGE_ID(builder, MESSAGE_IDOffset);
     RDM.AddCOMMENT(builder, COMMENTOffset);
     RDM.AddNUM_FRAGMENTS(builder, NUM_FRAGMENTS);
     RDM.AddSURVIVING_DEBRIS(builder, SURVIVING_DEBRISOffset);
@@ -190,12 +728,13 @@ public struct RDM : IFlatbufferObject
     RDM.AddORIGINATOR(builder, ORIGINATOROffset);
     RDM.AddCREATION_DATE(builder, CREATION_DATEOffset);
     RDM.AddCCSDS_RDM_VERS(builder, CCSDS_RDM_VERSOffset);
+    RDM.AddCONTROLLED_REENTRY(builder, CONTROLLED_REENTRY);
     RDM.AddREASON(builder, REASON);
     RDM.AddDISPOSITION(builder, DISPOSITION);
     return RDM.EndRDM(builder);
   }
 
-  public static void StartRDM(FlatBufferBuilder builder) { builder.StartTable(27); }
+  public static void StartRDM(FlatBufferBuilder builder) { builder.StartTable(107); }
   public static void AddCCSDS_RDM_VERS(FlatBufferBuilder builder, StringOffset CCSDS_RDM_VERSOffset) { builder.AddOffset(0, CCSDS_RDM_VERSOffset.Value, 0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -233,6 +772,96 @@ public struct RDM : IFlatbufferObject
   public static void AddNUM_FRAGMENTS(FlatBufferBuilder builder, uint NUM_FRAGMENTS) { builder.AddUint(24, NUM_FRAGMENTS, 0); }
   public static void AddSURVIVING_MASS(FlatBufferBuilder builder, double SURVIVING_MASS) { builder.AddDouble(25, SURVIVING_MASS, 0.0); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(26, COMMENTOffset.Value, 0); }
+  public static void AddMESSAGE_ID(FlatBufferBuilder builder, StringOffset MESSAGE_IDOffset) { builder.AddOffset(27, MESSAGE_IDOffset.Value, 0); }
+  public static void AddCATALOG_NAME(FlatBufferBuilder builder, StringOffset CATALOG_NAMEOffset) { builder.AddOffset(28, CATALOG_NAMEOffset.Value, 0); }
+  public static void AddOBJECT_DESIGNATOR(FlatBufferBuilder builder, StringOffset OBJECT_DESIGNATOROffset) { builder.AddOffset(29, OBJECT_DESIGNATOROffset.Value, 0); }
+  public static void AddOBJECT_OWNER(FlatBufferBuilder builder, StringOffset OBJECT_OWNEROffset) { builder.AddOffset(30, OBJECT_OWNEROffset.Value, 0); }
+  public static void AddOBJECT_OPERATOR(FlatBufferBuilder builder, StringOffset OBJECT_OPERATOROffset) { builder.AddOffset(31, OBJECT_OPERATOROffset.Value, 0); }
+  public static void AddCONTROLLED_REENTRY(FlatBufferBuilder builder, rdmControlledReentry CONTROLLED_REENTRY) { builder.AddSbyte(32, (sbyte)CONTROLLED_REENTRY, 0); }
+  public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(33, CENTER_NAMEOffset.Value, 0); }
+  public static void AddEPOCH_TZERO(FlatBufferBuilder builder, StringOffset EPOCH_TZEROOffset) { builder.AddOffset(34, EPOCH_TZEROOffset.Value, 0); }
+  public static void AddREF_FRAME(FlatBufferBuilder builder, StringOffset REF_FRAMEOffset) { builder.AddOffset(35, REF_FRAMEOffset.Value, 0); }
+  public static void AddREF_FRAME_EPOCH(FlatBufferBuilder builder, StringOffset REF_FRAME_EPOCHOffset) { builder.AddOffset(36, REF_FRAME_EPOCHOffset.Value, 0); }
+  public static void AddEPHEMERIS_NAME(FlatBufferBuilder builder, StringOffset EPHEMERIS_NAMEOffset) { builder.AddOffset(37, EPHEMERIS_NAMEOffset.Value, 0); }
+  public static void AddGRAVITY_MODEL(FlatBufferBuilder builder, StringOffset GRAVITY_MODELOffset) { builder.AddOffset(38, GRAVITY_MODELOffset.Value, 0); }
+  public static void AddATMOSPHERIC_MODEL(FlatBufferBuilder builder, StringOffset ATMOSPHERIC_MODELOffset) { builder.AddOffset(39, ATMOSPHERIC_MODELOffset.Value, 0); }
+  public static void AddSOLAR_FLUX_PREDICTION(FlatBufferBuilder builder, StringOffset SOLAR_FLUX_PREDICTIONOffset) { builder.AddOffset(40, SOLAR_FLUX_PREDICTIONOffset.Value, 0); }
+  public static void AddN_BODY_PERTURBATIONS(FlatBufferBuilder builder, StringOffset N_BODY_PERTURBATIONSOffset) { builder.AddOffset(41, N_BODY_PERTURBATIONSOffset.Value, 0); }
+  public static void AddSOLAR_RAD_PRESSURE(FlatBufferBuilder builder, StringOffset SOLAR_RAD_PRESSUREOffset) { builder.AddOffset(42, SOLAR_RAD_PRESSUREOffset.Value, 0); }
+  public static void AddEARTH_TIDES(FlatBufferBuilder builder, StringOffset EARTH_TIDESOffset) { builder.AddOffset(43, EARTH_TIDESOffset.Value, 0); }
+  public static void AddINTRACK_THRUST(FlatBufferBuilder builder, StringOffset INTRACK_THRUSTOffset) { builder.AddOffset(44, INTRACK_THRUSTOffset.Value, 0); }
+  public static void AddDRAG_PARAMETERS_SOURCE(FlatBufferBuilder builder, StringOffset DRAG_PARAMETERS_SOURCEOffset) { builder.AddOffset(45, DRAG_PARAMETERS_SOURCEOffset.Value, 0); }
+  public static void AddDRAG_PARAMETERS_ALTITUDE(FlatBufferBuilder builder, double DRAG_PARAMETERS_ALTITUDE) { builder.AddDouble(46, DRAG_PARAMETERS_ALTITUDE, Double.NaN); }
+  public static void AddREENTRY_UNCERTAINTY_METHOD(FlatBufferBuilder builder, StringOffset REENTRY_UNCERTAINTY_METHODOffset) { builder.AddOffset(47, REENTRY_UNCERTAINTY_METHODOffset.Value, 0); }
+  public static void AddREENTRY_DISINTEGRATION(FlatBufferBuilder builder, StringOffset REENTRY_DISINTEGRATIONOffset) { builder.AddOffset(48, REENTRY_DISINTEGRATIONOffset.Value, 0); }
+  public static void AddIMPACT_UNCERTAINTY_METHOD(FlatBufferBuilder builder, StringOffset IMPACT_UNCERTAINTY_METHODOffset) { builder.AddOffset(49, IMPACT_UNCERTAINTY_METHODOffset.Value, 0); }
+  public static void AddPREVIOUS_MESSAGE_ID(FlatBufferBuilder builder, StringOffset PREVIOUS_MESSAGE_IDOffset) { builder.AddOffset(50, PREVIOUS_MESSAGE_IDOffset.Value, 0); }
+  public static void AddNEXT_MESSAGE_EPOCH(FlatBufferBuilder builder, StringOffset NEXT_MESSAGE_EPOCHOffset) { builder.AddOffset(51, NEXT_MESSAGE_EPOCHOffset.Value, 0); }
+  public static void AddORBIT_LIFETIME(FlatBufferBuilder builder, double ORBIT_LIFETIME) { builder.AddDouble(52, ORBIT_LIFETIME, 0.0); }
+  public static void AddORBIT_LIFETIME_WINDOW_START(FlatBufferBuilder builder, double ORBIT_LIFETIME_WINDOW_START) { builder.AddDouble(53, ORBIT_LIFETIME_WINDOW_START, Double.NaN); }
+  public static void AddORBIT_LIFETIME_WINDOW_END(FlatBufferBuilder builder, double ORBIT_LIFETIME_WINDOW_END) { builder.AddDouble(54, ORBIT_LIFETIME_WINDOW_END, Double.NaN); }
+  public static void AddREENTRY_WINDOW_START(FlatBufferBuilder builder, StringOffset REENTRY_WINDOW_STARTOffset) { builder.AddOffset(55, REENTRY_WINDOW_STARTOffset.Value, 0); }
+  public static void AddREENTRY_WINDOW_END(FlatBufferBuilder builder, StringOffset REENTRY_WINDOW_ENDOffset) { builder.AddOffset(56, REENTRY_WINDOW_ENDOffset.Value, 0); }
+  public static void AddORBIT_LIFETIME_CONFIDENCE_LEVEL(FlatBufferBuilder builder, double ORBIT_LIFETIME_CONFIDENCE_LEVEL) { builder.AddDouble(57, ORBIT_LIFETIME_CONFIDENCE_LEVEL, Double.NaN); }
+  public static void AddPROBABILITY_OF_IMPACT(FlatBufferBuilder builder, double PROBABILITY_OF_IMPACT) { builder.AddDouble(58, PROBABILITY_OF_IMPACT, Double.NaN); }
+  public static void AddPROBABILITY_OF_BURN_UP(FlatBufferBuilder builder, double PROBABILITY_OF_BURN_UP) { builder.AddDouble(59, PROBABILITY_OF_BURN_UP, Double.NaN); }
+  public static void AddPROBABILITY_OF_BREAK_UP(FlatBufferBuilder builder, double PROBABILITY_OF_BREAK_UP) { builder.AddDouble(60, PROBABILITY_OF_BREAK_UP, Double.NaN); }
+  public static void AddPROBABILITY_OF_LAND_IMPACT(FlatBufferBuilder builder, double PROBABILITY_OF_LAND_IMPACT) { builder.AddDouble(61, PROBABILITY_OF_LAND_IMPACT, Double.NaN); }
+  public static void AddPROBABILITY_OF_CASUALTY(FlatBufferBuilder builder, double PROBABILITY_OF_CASUALTY) { builder.AddDouble(62, PROBABILITY_OF_CASUALTY, Double.NaN); }
+  public static void AddNOMINAL_IMPACT_EPOCH(FlatBufferBuilder builder, StringOffset NOMINAL_IMPACT_EPOCHOffset) { builder.AddOffset(63, NOMINAL_IMPACT_EPOCHOffset.Value, 0); }
+  public static void AddIMPACT_WINDOW_START(FlatBufferBuilder builder, StringOffset IMPACT_WINDOW_STARTOffset) { builder.AddOffset(64, IMPACT_WINDOW_STARTOffset.Value, 0); }
+  public static void AddIMPACT_WINDOW_END(FlatBufferBuilder builder, StringOffset IMPACT_WINDOW_ENDOffset) { builder.AddOffset(65, IMPACT_WINDOW_ENDOffset.Value, 0); }
+  public static void AddIMPACT_REF_FRAME(FlatBufferBuilder builder, StringOffset IMPACT_REF_FRAMEOffset) { builder.AddOffset(66, IMPACT_REF_FRAMEOffset.Value, 0); }
+  public static void AddNOMINAL_IMPACT_LON(FlatBufferBuilder builder, double NOMINAL_IMPACT_LON) { builder.AddDouble(67, NOMINAL_IMPACT_LON, Double.NaN); }
+  public static void AddNOMINAL_IMPACT_LAT(FlatBufferBuilder builder, double NOMINAL_IMPACT_LAT) { builder.AddDouble(68, NOMINAL_IMPACT_LAT, Double.NaN); }
+  public static void AddNOMINAL_IMPACT_ALT(FlatBufferBuilder builder, double NOMINAL_IMPACT_ALT) { builder.AddDouble(69, NOMINAL_IMPACT_ALT, Double.NaN); }
+  public static void AddIMPACT_1_CONFIDENCE(FlatBufferBuilder builder, double IMPACT_1_CONFIDENCE) { builder.AddDouble(70, IMPACT_1_CONFIDENCE, Double.NaN); }
+  public static void AddIMPACT_1_START_LON(FlatBufferBuilder builder, double IMPACT_1_START_LON) { builder.AddDouble(71, IMPACT_1_START_LON, Double.NaN); }
+  public static void AddIMPACT_1_START_LAT(FlatBufferBuilder builder, double IMPACT_1_START_LAT) { builder.AddDouble(72, IMPACT_1_START_LAT, Double.NaN); }
+  public static void AddIMPACT_1_STOP_LON(FlatBufferBuilder builder, double IMPACT_1_STOP_LON) { builder.AddDouble(73, IMPACT_1_STOP_LON, Double.NaN); }
+  public static void AddIMPACT_1_STOP_LAT(FlatBufferBuilder builder, double IMPACT_1_STOP_LAT) { builder.AddDouble(74, IMPACT_1_STOP_LAT, Double.NaN); }
+  public static void AddIMPACT_1_CROSS_TRACK(FlatBufferBuilder builder, double IMPACT_1_CROSS_TRACK) { builder.AddDouble(75, IMPACT_1_CROSS_TRACK, Double.NaN); }
+  public static void AddIMPACT_2_CONFIDENCE(FlatBufferBuilder builder, double IMPACT_2_CONFIDENCE) { builder.AddDouble(76, IMPACT_2_CONFIDENCE, Double.NaN); }
+  public static void AddIMPACT_2_START_LON(FlatBufferBuilder builder, double IMPACT_2_START_LON) { builder.AddDouble(77, IMPACT_2_START_LON, Double.NaN); }
+  public static void AddIMPACT_2_START_LAT(FlatBufferBuilder builder, double IMPACT_2_START_LAT) { builder.AddDouble(78, IMPACT_2_START_LAT, Double.NaN); }
+  public static void AddIMPACT_2_STOP_LON(FlatBufferBuilder builder, double IMPACT_2_STOP_LON) { builder.AddDouble(79, IMPACT_2_STOP_LON, Double.NaN); }
+  public static void AddIMPACT_2_STOP_LAT(FlatBufferBuilder builder, double IMPACT_2_STOP_LAT) { builder.AddDouble(80, IMPACT_2_STOP_LAT, Double.NaN); }
+  public static void AddIMPACT_2_CROSS_TRACK(FlatBufferBuilder builder, double IMPACT_2_CROSS_TRACK) { builder.AddDouble(81, IMPACT_2_CROSS_TRACK, Double.NaN); }
+  public static void AddIMPACT_3_CONFIDENCE(FlatBufferBuilder builder, double IMPACT_3_CONFIDENCE) { builder.AddDouble(82, IMPACT_3_CONFIDENCE, Double.NaN); }
+  public static void AddIMPACT_3_START_LON(FlatBufferBuilder builder, double IMPACT_3_START_LON) { builder.AddDouble(83, IMPACT_3_START_LON, Double.NaN); }
+  public static void AddIMPACT_3_START_LAT(FlatBufferBuilder builder, double IMPACT_3_START_LAT) { builder.AddDouble(84, IMPACT_3_START_LAT, Double.NaN); }
+  public static void AddIMPACT_3_STOP_LON(FlatBufferBuilder builder, double IMPACT_3_STOP_LON) { builder.AddDouble(85, IMPACT_3_STOP_LON, Double.NaN); }
+  public static void AddIMPACT_3_STOP_LAT(FlatBufferBuilder builder, double IMPACT_3_STOP_LAT) { builder.AddDouble(86, IMPACT_3_STOP_LAT, Double.NaN); }
+  public static void AddIMPACT_3_CROSS_TRACK(FlatBufferBuilder builder, double IMPACT_3_CROSS_TRACK) { builder.AddDouble(87, IMPACT_3_CROSS_TRACK, Double.NaN); }
+  public static void AddCOV_REF_FRAME(FlatBufferBuilder builder, StringOffset COV_REF_FRAMEOffset) { builder.AddOffset(88, COV_REF_FRAMEOffset.Value, 0); }
+  public static void AddCOVARIANCE(FlatBufferBuilder builder, VectorOffset COVARIANCEOffset) { builder.AddOffset(89, COVARIANCEOffset.Value, 0); }
+  public static VectorOffset CreateCOVARIANCEVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOVARIANCEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddDRY_MASS(FlatBufferBuilder builder, double DRY_MASS) { builder.AddDouble(90, DRY_MASS, Double.NaN); }
+  public static void AddHAZARDOUS_SUBSTANCES(FlatBufferBuilder builder, StringOffset HAZARDOUS_SUBSTANCESOffset) { builder.AddOffset(91, HAZARDOUS_SUBSTANCESOffset.Value, 0); }
+  public static void AddSOLAR_RAD_COEFF(FlatBufferBuilder builder, double SOLAR_RAD_COEFF) { builder.AddDouble(92, SOLAR_RAD_COEFF, Double.NaN); }
+  public static void AddDRAG_COEFF(FlatBufferBuilder builder, double DRAG_COEFF) { builder.AddDouble(93, DRAG_COEFF, Double.NaN); }
+  public static void AddRCS(FlatBufferBuilder builder, double RCS) { builder.AddDouble(94, RCS, Double.NaN); }
+  public static void AddTHRUST_ACCELERATION(FlatBufferBuilder builder, double THRUST_ACCELERATION) { builder.AddDouble(95, THRUST_ACCELERATION, Double.NaN); }
+  public static void AddTIME_LASTOB_START(FlatBufferBuilder builder, StringOffset TIME_LASTOB_STARTOffset) { builder.AddOffset(96, TIME_LASTOB_STARTOffset.Value, 0); }
+  public static void AddTIME_LASTOB_END(FlatBufferBuilder builder, StringOffset TIME_LASTOB_ENDOffset) { builder.AddOffset(97, TIME_LASTOB_ENDOffset.Value, 0); }
+  public static void AddRECOMMENDED_OD_SPAN(FlatBufferBuilder builder, double RECOMMENDED_OD_SPAN) { builder.AddDouble(98, RECOMMENDED_OD_SPAN, Double.NaN); }
+  public static void AddACTUAL_OD_SPAN(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.AddDouble(99, ACTUAL_OD_SPAN, Double.NaN); }
+  public static void AddOBS_AVAILABLE(FlatBufferBuilder builder, uint OBS_AVAILABLE) { builder.AddUint(100, OBS_AVAILABLE, 0); }
+  public static void AddOBS_USED(FlatBufferBuilder builder, uint OBS_USED) { builder.AddUint(101, OBS_USED, 0); }
+  public static void AddTRACKS_AVAILABLE(FlatBufferBuilder builder, uint TRACKS_AVAILABLE) { builder.AddUint(102, TRACKS_AVAILABLE, 0); }
+  public static void AddTRACKS_USED(FlatBufferBuilder builder, uint TRACKS_USED) { builder.AddUint(103, TRACKS_USED, 0); }
+  public static void AddRESIDUALS_ACCEPTED(FlatBufferBuilder builder, double RESIDUALS_ACCEPTED) { builder.AddDouble(104, RESIDUALS_ACCEPTED, Double.NaN); }
+  public static void AddWEIGHTED_RMS(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.AddDouble(105, WEIGHTED_RMS, Double.NaN); }
+  public static void AddUSER_DEFINED_PARAMETERS(FlatBufferBuilder builder, VectorOffset USER_DEFINED_PARAMETERSOffset) { builder.AddOffset(106, USER_DEFINED_PARAMETERSOffset.Value, 0); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder builder, Offset<RDMUserDefinedParameter>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, Offset<RDMUserDefinedParameter>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<RDMUserDefinedParameter>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<RDMUserDefinedParameter>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<RDM> EndRDM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RDM>(o);
@@ -274,6 +903,88 @@ public struct RDM : IFlatbufferObject
     _o.NUM_FRAGMENTS = this.NUM_FRAGMENTS;
     _o.SURVIVING_MASS = this.SURVIVING_MASS;
     _o.COMMENT = this.COMMENT;
+    _o.MESSAGE_ID = this.MESSAGE_ID;
+    _o.CATALOG_NAME = this.CATALOG_NAME;
+    _o.OBJECT_DESIGNATOR = this.OBJECT_DESIGNATOR;
+    _o.OBJECT_OWNER = this.OBJECT_OWNER;
+    _o.OBJECT_OPERATOR = this.OBJECT_OPERATOR;
+    _o.CONTROLLED_REENTRY = this.CONTROLLED_REENTRY;
+    _o.CENTER_NAME = this.CENTER_NAME;
+    _o.EPOCH_TZERO = this.EPOCH_TZERO;
+    _o.REF_FRAME = this.REF_FRAME;
+    _o.REF_FRAME_EPOCH = this.REF_FRAME_EPOCH;
+    _o.EPHEMERIS_NAME = this.EPHEMERIS_NAME;
+    _o.GRAVITY_MODEL = this.GRAVITY_MODEL;
+    _o.ATMOSPHERIC_MODEL = this.ATMOSPHERIC_MODEL;
+    _o.SOLAR_FLUX_PREDICTION = this.SOLAR_FLUX_PREDICTION;
+    _o.N_BODY_PERTURBATIONS = this.N_BODY_PERTURBATIONS;
+    _o.SOLAR_RAD_PRESSURE = this.SOLAR_RAD_PRESSURE;
+    _o.EARTH_TIDES = this.EARTH_TIDES;
+    _o.INTRACK_THRUST = this.INTRACK_THRUST;
+    _o.DRAG_PARAMETERS_SOURCE = this.DRAG_PARAMETERS_SOURCE;
+    _o.DRAG_PARAMETERS_ALTITUDE = this.DRAG_PARAMETERS_ALTITUDE;
+    _o.REENTRY_UNCERTAINTY_METHOD = this.REENTRY_UNCERTAINTY_METHOD;
+    _o.REENTRY_DISINTEGRATION = this.REENTRY_DISINTEGRATION;
+    _o.IMPACT_UNCERTAINTY_METHOD = this.IMPACT_UNCERTAINTY_METHOD;
+    _o.PREVIOUS_MESSAGE_ID = this.PREVIOUS_MESSAGE_ID;
+    _o.NEXT_MESSAGE_EPOCH = this.NEXT_MESSAGE_EPOCH;
+    _o.ORBIT_LIFETIME = this.ORBIT_LIFETIME;
+    _o.ORBIT_LIFETIME_WINDOW_START = this.ORBIT_LIFETIME_WINDOW_START;
+    _o.ORBIT_LIFETIME_WINDOW_END = this.ORBIT_LIFETIME_WINDOW_END;
+    _o.REENTRY_WINDOW_START = this.REENTRY_WINDOW_START;
+    _o.REENTRY_WINDOW_END = this.REENTRY_WINDOW_END;
+    _o.ORBIT_LIFETIME_CONFIDENCE_LEVEL = this.ORBIT_LIFETIME_CONFIDENCE_LEVEL;
+    _o.PROBABILITY_OF_IMPACT = this.PROBABILITY_OF_IMPACT;
+    _o.PROBABILITY_OF_BURN_UP = this.PROBABILITY_OF_BURN_UP;
+    _o.PROBABILITY_OF_BREAK_UP = this.PROBABILITY_OF_BREAK_UP;
+    _o.PROBABILITY_OF_LAND_IMPACT = this.PROBABILITY_OF_LAND_IMPACT;
+    _o.PROBABILITY_OF_CASUALTY = this.PROBABILITY_OF_CASUALTY;
+    _o.NOMINAL_IMPACT_EPOCH = this.NOMINAL_IMPACT_EPOCH;
+    _o.IMPACT_WINDOW_START = this.IMPACT_WINDOW_START;
+    _o.IMPACT_WINDOW_END = this.IMPACT_WINDOW_END;
+    _o.IMPACT_REF_FRAME = this.IMPACT_REF_FRAME;
+    _o.NOMINAL_IMPACT_LON = this.NOMINAL_IMPACT_LON;
+    _o.NOMINAL_IMPACT_LAT = this.NOMINAL_IMPACT_LAT;
+    _o.NOMINAL_IMPACT_ALT = this.NOMINAL_IMPACT_ALT;
+    _o.IMPACT_1_CONFIDENCE = this.IMPACT_1_CONFIDENCE;
+    _o.IMPACT_1_START_LON = this.IMPACT_1_START_LON;
+    _o.IMPACT_1_START_LAT = this.IMPACT_1_START_LAT;
+    _o.IMPACT_1_STOP_LON = this.IMPACT_1_STOP_LON;
+    _o.IMPACT_1_STOP_LAT = this.IMPACT_1_STOP_LAT;
+    _o.IMPACT_1_CROSS_TRACK = this.IMPACT_1_CROSS_TRACK;
+    _o.IMPACT_2_CONFIDENCE = this.IMPACT_2_CONFIDENCE;
+    _o.IMPACT_2_START_LON = this.IMPACT_2_START_LON;
+    _o.IMPACT_2_START_LAT = this.IMPACT_2_START_LAT;
+    _o.IMPACT_2_STOP_LON = this.IMPACT_2_STOP_LON;
+    _o.IMPACT_2_STOP_LAT = this.IMPACT_2_STOP_LAT;
+    _o.IMPACT_2_CROSS_TRACK = this.IMPACT_2_CROSS_TRACK;
+    _o.IMPACT_3_CONFIDENCE = this.IMPACT_3_CONFIDENCE;
+    _o.IMPACT_3_START_LON = this.IMPACT_3_START_LON;
+    _o.IMPACT_3_START_LAT = this.IMPACT_3_START_LAT;
+    _o.IMPACT_3_STOP_LON = this.IMPACT_3_STOP_LON;
+    _o.IMPACT_3_STOP_LAT = this.IMPACT_3_STOP_LAT;
+    _o.IMPACT_3_CROSS_TRACK = this.IMPACT_3_CROSS_TRACK;
+    _o.COV_REF_FRAME = this.COV_REF_FRAME;
+    _o.COVARIANCE = new List<double>();
+    for (var _j = 0; _j < this.COVARIANCELength; ++_j) {_o.COVARIANCE.Add(this.COVARIANCE(_j));}
+    _o.DRY_MASS = this.DRY_MASS;
+    _o.HAZARDOUS_SUBSTANCES = this.HAZARDOUS_SUBSTANCES;
+    _o.SOLAR_RAD_COEFF = this.SOLAR_RAD_COEFF;
+    _o.DRAG_COEFF = this.DRAG_COEFF;
+    _o.RCS = this.RCS;
+    _o.THRUST_ACCELERATION = this.THRUST_ACCELERATION;
+    _o.TIME_LASTOB_START = this.TIME_LASTOB_START;
+    _o.TIME_LASTOB_END = this.TIME_LASTOB_END;
+    _o.RECOMMENDED_OD_SPAN = this.RECOMMENDED_OD_SPAN;
+    _o.ACTUAL_OD_SPAN = this.ACTUAL_OD_SPAN;
+    _o.OBS_AVAILABLE = this.OBS_AVAILABLE;
+    _o.OBS_USED = this.OBS_USED;
+    _o.TRACKS_AVAILABLE = this.TRACKS_AVAILABLE;
+    _o.TRACKS_USED = this.TRACKS_USED;
+    _o.RESIDUALS_ACCEPTED = this.RESIDUALS_ACCEPTED;
+    _o.WEIGHTED_RMS = this.WEIGHTED_RMS;
+    _o.USER_DEFINED_PARAMETERS = new List<RDMUserDefinedParameterT>();
+    for (var _j = 0; _j < this.USER_DEFINED_PARAMETERSLength; ++_j) {_o.USER_DEFINED_PARAMETERS.Add(this.USER_DEFINED_PARAMETERS(_j).HasValue ? this.USER_DEFINED_PARAMETERS(_j).Value.UnPack() : null);}
   }
   public static Offset<RDM> Pack(FlatBufferBuilder builder, RDMT _o) {
     if (_o == null) return default(Offset<RDM>);
@@ -300,6 +1011,50 @@ public struct RDM : IFlatbufferObject
       _SURVIVING_DEBRIS = CreateSURVIVING_DEBRISVector(builder, __SURVIVING_DEBRIS);
     }
     var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
+    var _MESSAGE_ID = _o.MESSAGE_ID == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE_ID);
+    var _CATALOG_NAME = _o.CATALOG_NAME == null ? default(StringOffset) : builder.CreateString(_o.CATALOG_NAME);
+    var _OBJECT_DESIGNATOR = _o.OBJECT_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_DESIGNATOR);
+    var _OBJECT_OWNER = _o.OBJECT_OWNER == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_OWNER);
+    var _OBJECT_OPERATOR = _o.OBJECT_OPERATOR == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_OPERATOR);
+    var _CENTER_NAME = _o.CENTER_NAME == null ? default(StringOffset) : builder.CreateString(_o.CENTER_NAME);
+    var _EPOCH_TZERO = _o.EPOCH_TZERO == null ? default(StringOffset) : builder.CreateString(_o.EPOCH_TZERO);
+    var _REF_FRAME = _o.REF_FRAME == null ? default(StringOffset) : builder.CreateString(_o.REF_FRAME);
+    var _REF_FRAME_EPOCH = _o.REF_FRAME_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.REF_FRAME_EPOCH);
+    var _EPHEMERIS_NAME = _o.EPHEMERIS_NAME == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERIS_NAME);
+    var _GRAVITY_MODEL = _o.GRAVITY_MODEL == null ? default(StringOffset) : builder.CreateString(_o.GRAVITY_MODEL);
+    var _ATMOSPHERIC_MODEL = _o.ATMOSPHERIC_MODEL == null ? default(StringOffset) : builder.CreateString(_o.ATMOSPHERIC_MODEL);
+    var _SOLAR_FLUX_PREDICTION = _o.SOLAR_FLUX_PREDICTION == null ? default(StringOffset) : builder.CreateString(_o.SOLAR_FLUX_PREDICTION);
+    var _N_BODY_PERTURBATIONS = _o.N_BODY_PERTURBATIONS == null ? default(StringOffset) : builder.CreateString(_o.N_BODY_PERTURBATIONS);
+    var _SOLAR_RAD_PRESSURE = _o.SOLAR_RAD_PRESSURE == null ? default(StringOffset) : builder.CreateString(_o.SOLAR_RAD_PRESSURE);
+    var _EARTH_TIDES = _o.EARTH_TIDES == null ? default(StringOffset) : builder.CreateString(_o.EARTH_TIDES);
+    var _INTRACK_THRUST = _o.INTRACK_THRUST == null ? default(StringOffset) : builder.CreateString(_o.INTRACK_THRUST);
+    var _DRAG_PARAMETERS_SOURCE = _o.DRAG_PARAMETERS_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.DRAG_PARAMETERS_SOURCE);
+    var _REENTRY_UNCERTAINTY_METHOD = _o.REENTRY_UNCERTAINTY_METHOD == null ? default(StringOffset) : builder.CreateString(_o.REENTRY_UNCERTAINTY_METHOD);
+    var _REENTRY_DISINTEGRATION = _o.REENTRY_DISINTEGRATION == null ? default(StringOffset) : builder.CreateString(_o.REENTRY_DISINTEGRATION);
+    var _IMPACT_UNCERTAINTY_METHOD = _o.IMPACT_UNCERTAINTY_METHOD == null ? default(StringOffset) : builder.CreateString(_o.IMPACT_UNCERTAINTY_METHOD);
+    var _PREVIOUS_MESSAGE_ID = _o.PREVIOUS_MESSAGE_ID == null ? default(StringOffset) : builder.CreateString(_o.PREVIOUS_MESSAGE_ID);
+    var _NEXT_MESSAGE_EPOCH = _o.NEXT_MESSAGE_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.NEXT_MESSAGE_EPOCH);
+    var _REENTRY_WINDOW_START = _o.REENTRY_WINDOW_START == null ? default(StringOffset) : builder.CreateString(_o.REENTRY_WINDOW_START);
+    var _REENTRY_WINDOW_END = _o.REENTRY_WINDOW_END == null ? default(StringOffset) : builder.CreateString(_o.REENTRY_WINDOW_END);
+    var _NOMINAL_IMPACT_EPOCH = _o.NOMINAL_IMPACT_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.NOMINAL_IMPACT_EPOCH);
+    var _IMPACT_WINDOW_START = _o.IMPACT_WINDOW_START == null ? default(StringOffset) : builder.CreateString(_o.IMPACT_WINDOW_START);
+    var _IMPACT_WINDOW_END = _o.IMPACT_WINDOW_END == null ? default(StringOffset) : builder.CreateString(_o.IMPACT_WINDOW_END);
+    var _IMPACT_REF_FRAME = _o.IMPACT_REF_FRAME == null ? default(StringOffset) : builder.CreateString(_o.IMPACT_REF_FRAME);
+    var _COV_REF_FRAME = _o.COV_REF_FRAME == null ? default(StringOffset) : builder.CreateString(_o.COV_REF_FRAME);
+    var _COVARIANCE = default(VectorOffset);
+    if (_o.COVARIANCE != null) {
+      var __COVARIANCE = _o.COVARIANCE.ToArray();
+      _COVARIANCE = CreateCOVARIANCEVector(builder, __COVARIANCE);
+    }
+    var _HAZARDOUS_SUBSTANCES = _o.HAZARDOUS_SUBSTANCES == null ? default(StringOffset) : builder.CreateString(_o.HAZARDOUS_SUBSTANCES);
+    var _TIME_LASTOB_START = _o.TIME_LASTOB_START == null ? default(StringOffset) : builder.CreateString(_o.TIME_LASTOB_START);
+    var _TIME_LASTOB_END = _o.TIME_LASTOB_END == null ? default(StringOffset) : builder.CreateString(_o.TIME_LASTOB_END);
+    var _USER_DEFINED_PARAMETERS = default(VectorOffset);
+    if (_o.USER_DEFINED_PARAMETERS != null) {
+      var __USER_DEFINED_PARAMETERS = new Offset<RDMUserDefinedParameter>[_o.USER_DEFINED_PARAMETERS.Count];
+      for (var _j = 0; _j < __USER_DEFINED_PARAMETERS.Length; ++_j) { __USER_DEFINED_PARAMETERS[_j] = RDMUserDefinedParameter.Pack(builder, _o.USER_DEFINED_PARAMETERS[_j]); }
+      _USER_DEFINED_PARAMETERS = CreateUSER_DEFINED_PARAMETERSVector(builder, __USER_DEFINED_PARAMETERS);
+    }
     return CreateRDM(
       builder,
       _CCSDS_RDM_VERS,
@@ -328,7 +1083,87 @@ public struct RDM : IFlatbufferObject
       _o.CASUALTY_EXPECTATION,
       _o.NUM_FRAGMENTS,
       _o.SURVIVING_MASS,
-      _COMMENT);
+      _COMMENT,
+      _MESSAGE_ID,
+      _CATALOG_NAME,
+      _OBJECT_DESIGNATOR,
+      _OBJECT_OWNER,
+      _OBJECT_OPERATOR,
+      _o.CONTROLLED_REENTRY,
+      _CENTER_NAME,
+      _EPOCH_TZERO,
+      _REF_FRAME,
+      _REF_FRAME_EPOCH,
+      _EPHEMERIS_NAME,
+      _GRAVITY_MODEL,
+      _ATMOSPHERIC_MODEL,
+      _SOLAR_FLUX_PREDICTION,
+      _N_BODY_PERTURBATIONS,
+      _SOLAR_RAD_PRESSURE,
+      _EARTH_TIDES,
+      _INTRACK_THRUST,
+      _DRAG_PARAMETERS_SOURCE,
+      _o.DRAG_PARAMETERS_ALTITUDE,
+      _REENTRY_UNCERTAINTY_METHOD,
+      _REENTRY_DISINTEGRATION,
+      _IMPACT_UNCERTAINTY_METHOD,
+      _PREVIOUS_MESSAGE_ID,
+      _NEXT_MESSAGE_EPOCH,
+      _o.ORBIT_LIFETIME,
+      _o.ORBIT_LIFETIME_WINDOW_START,
+      _o.ORBIT_LIFETIME_WINDOW_END,
+      _REENTRY_WINDOW_START,
+      _REENTRY_WINDOW_END,
+      _o.ORBIT_LIFETIME_CONFIDENCE_LEVEL,
+      _o.PROBABILITY_OF_IMPACT,
+      _o.PROBABILITY_OF_BURN_UP,
+      _o.PROBABILITY_OF_BREAK_UP,
+      _o.PROBABILITY_OF_LAND_IMPACT,
+      _o.PROBABILITY_OF_CASUALTY,
+      _NOMINAL_IMPACT_EPOCH,
+      _IMPACT_WINDOW_START,
+      _IMPACT_WINDOW_END,
+      _IMPACT_REF_FRAME,
+      _o.NOMINAL_IMPACT_LON,
+      _o.NOMINAL_IMPACT_LAT,
+      _o.NOMINAL_IMPACT_ALT,
+      _o.IMPACT_1_CONFIDENCE,
+      _o.IMPACT_1_START_LON,
+      _o.IMPACT_1_START_LAT,
+      _o.IMPACT_1_STOP_LON,
+      _o.IMPACT_1_STOP_LAT,
+      _o.IMPACT_1_CROSS_TRACK,
+      _o.IMPACT_2_CONFIDENCE,
+      _o.IMPACT_2_START_LON,
+      _o.IMPACT_2_START_LAT,
+      _o.IMPACT_2_STOP_LON,
+      _o.IMPACT_2_STOP_LAT,
+      _o.IMPACT_2_CROSS_TRACK,
+      _o.IMPACT_3_CONFIDENCE,
+      _o.IMPACT_3_START_LON,
+      _o.IMPACT_3_START_LAT,
+      _o.IMPACT_3_STOP_LON,
+      _o.IMPACT_3_STOP_LAT,
+      _o.IMPACT_3_CROSS_TRACK,
+      _COV_REF_FRAME,
+      _COVARIANCE,
+      _o.DRY_MASS,
+      _HAZARDOUS_SUBSTANCES,
+      _o.SOLAR_RAD_COEFF,
+      _o.DRAG_COEFF,
+      _o.RCS,
+      _o.THRUST_ACCELERATION,
+      _TIME_LASTOB_START,
+      _TIME_LASTOB_END,
+      _o.RECOMMENDED_OD_SPAN,
+      _o.ACTUAL_OD_SPAN,
+      _o.OBS_AVAILABLE,
+      _o.OBS_USED,
+      _o.TRACKS_AVAILABLE,
+      _o.TRACKS_USED,
+      _o.RESIDUALS_ACCEPTED,
+      _o.WEIGHTED_RMS,
+      _USER_DEFINED_PARAMETERS);
   }
 }
 
@@ -361,6 +1196,86 @@ public class RDMT
   public uint NUM_FRAGMENTS { get; set; }
   public double SURVIVING_MASS { get; set; }
   public string COMMENT { get; set; }
+  public string MESSAGE_ID { get; set; }
+  public string CATALOG_NAME { get; set; }
+  public string OBJECT_DESIGNATOR { get; set; }
+  public string OBJECT_OWNER { get; set; }
+  public string OBJECT_OPERATOR { get; set; }
+  public rdmControlledReentry CONTROLLED_REENTRY { get; set; }
+  public string CENTER_NAME { get; set; }
+  public string EPOCH_TZERO { get; set; }
+  public string REF_FRAME { get; set; }
+  public string REF_FRAME_EPOCH { get; set; }
+  public string EPHEMERIS_NAME { get; set; }
+  public string GRAVITY_MODEL { get; set; }
+  public string ATMOSPHERIC_MODEL { get; set; }
+  public string SOLAR_FLUX_PREDICTION { get; set; }
+  public string N_BODY_PERTURBATIONS { get; set; }
+  public string SOLAR_RAD_PRESSURE { get; set; }
+  public string EARTH_TIDES { get; set; }
+  public string INTRACK_THRUST { get; set; }
+  public string DRAG_PARAMETERS_SOURCE { get; set; }
+  public double DRAG_PARAMETERS_ALTITUDE { get; set; }
+  public string REENTRY_UNCERTAINTY_METHOD { get; set; }
+  public string REENTRY_DISINTEGRATION { get; set; }
+  public string IMPACT_UNCERTAINTY_METHOD { get; set; }
+  public string PREVIOUS_MESSAGE_ID { get; set; }
+  public string NEXT_MESSAGE_EPOCH { get; set; }
+  public double ORBIT_LIFETIME { get; set; }
+  public double ORBIT_LIFETIME_WINDOW_START { get; set; }
+  public double ORBIT_LIFETIME_WINDOW_END { get; set; }
+  public string REENTRY_WINDOW_START { get; set; }
+  public string REENTRY_WINDOW_END { get; set; }
+  public double ORBIT_LIFETIME_CONFIDENCE_LEVEL { get; set; }
+  public double PROBABILITY_OF_IMPACT { get; set; }
+  public double PROBABILITY_OF_BURN_UP { get; set; }
+  public double PROBABILITY_OF_BREAK_UP { get; set; }
+  public double PROBABILITY_OF_LAND_IMPACT { get; set; }
+  public double PROBABILITY_OF_CASUALTY { get; set; }
+  public string NOMINAL_IMPACT_EPOCH { get; set; }
+  public string IMPACT_WINDOW_START { get; set; }
+  public string IMPACT_WINDOW_END { get; set; }
+  public string IMPACT_REF_FRAME { get; set; }
+  public double NOMINAL_IMPACT_LON { get; set; }
+  public double NOMINAL_IMPACT_LAT { get; set; }
+  public double NOMINAL_IMPACT_ALT { get; set; }
+  public double IMPACT_1_CONFIDENCE { get; set; }
+  public double IMPACT_1_START_LON { get; set; }
+  public double IMPACT_1_START_LAT { get; set; }
+  public double IMPACT_1_STOP_LON { get; set; }
+  public double IMPACT_1_STOP_LAT { get; set; }
+  public double IMPACT_1_CROSS_TRACK { get; set; }
+  public double IMPACT_2_CONFIDENCE { get; set; }
+  public double IMPACT_2_START_LON { get; set; }
+  public double IMPACT_2_START_LAT { get; set; }
+  public double IMPACT_2_STOP_LON { get; set; }
+  public double IMPACT_2_STOP_LAT { get; set; }
+  public double IMPACT_2_CROSS_TRACK { get; set; }
+  public double IMPACT_3_CONFIDENCE { get; set; }
+  public double IMPACT_3_START_LON { get; set; }
+  public double IMPACT_3_START_LAT { get; set; }
+  public double IMPACT_3_STOP_LON { get; set; }
+  public double IMPACT_3_STOP_LAT { get; set; }
+  public double IMPACT_3_CROSS_TRACK { get; set; }
+  public string COV_REF_FRAME { get; set; }
+  public List<double> COVARIANCE { get; set; }
+  public double DRY_MASS { get; set; }
+  public string HAZARDOUS_SUBSTANCES { get; set; }
+  public double SOLAR_RAD_COEFF { get; set; }
+  public double DRAG_COEFF { get; set; }
+  public double RCS { get; set; }
+  public double THRUST_ACCELERATION { get; set; }
+  public string TIME_LASTOB_START { get; set; }
+  public string TIME_LASTOB_END { get; set; }
+  public double RECOMMENDED_OD_SPAN { get; set; }
+  public double ACTUAL_OD_SPAN { get; set; }
+  public uint OBS_AVAILABLE { get; set; }
+  public uint OBS_USED { get; set; }
+  public uint TRACKS_AVAILABLE { get; set; }
+  public uint TRACKS_USED { get; set; }
+  public double RESIDUALS_ACCEPTED { get; set; }
+  public double WEIGHTED_RMS { get; set; }
+  public List<RDMUserDefinedParameterT> USER_DEFINED_PARAMETERS { get; set; }
 
   public RDMT() {
     this.CCSDS_RDM_VERS = null;
@@ -390,6 +1305,86 @@ public class RDMT
     this.NUM_FRAGMENTS = 0;
     this.SURVIVING_MASS = 0.0;
     this.COMMENT = null;
+    this.MESSAGE_ID = null;
+    this.CATALOG_NAME = null;
+    this.OBJECT_DESIGNATOR = null;
+    this.OBJECT_OWNER = null;
+    this.OBJECT_OPERATOR = null;
+    this.CONTROLLED_REENTRY = rdmControlledReentry.UNSPECIFIED;
+    this.CENTER_NAME = null;
+    this.EPOCH_TZERO = null;
+    this.REF_FRAME = null;
+    this.REF_FRAME_EPOCH = null;
+    this.EPHEMERIS_NAME = null;
+    this.GRAVITY_MODEL = null;
+    this.ATMOSPHERIC_MODEL = null;
+    this.SOLAR_FLUX_PREDICTION = null;
+    this.N_BODY_PERTURBATIONS = null;
+    this.SOLAR_RAD_PRESSURE = null;
+    this.EARTH_TIDES = null;
+    this.INTRACK_THRUST = null;
+    this.DRAG_PARAMETERS_SOURCE = null;
+    this.DRAG_PARAMETERS_ALTITUDE = Double.NaN;
+    this.REENTRY_UNCERTAINTY_METHOD = null;
+    this.REENTRY_DISINTEGRATION = null;
+    this.IMPACT_UNCERTAINTY_METHOD = null;
+    this.PREVIOUS_MESSAGE_ID = null;
+    this.NEXT_MESSAGE_EPOCH = null;
+    this.ORBIT_LIFETIME = 0.0;
+    this.ORBIT_LIFETIME_WINDOW_START = Double.NaN;
+    this.ORBIT_LIFETIME_WINDOW_END = Double.NaN;
+    this.REENTRY_WINDOW_START = null;
+    this.REENTRY_WINDOW_END = null;
+    this.ORBIT_LIFETIME_CONFIDENCE_LEVEL = Double.NaN;
+    this.PROBABILITY_OF_IMPACT = Double.NaN;
+    this.PROBABILITY_OF_BURN_UP = Double.NaN;
+    this.PROBABILITY_OF_BREAK_UP = Double.NaN;
+    this.PROBABILITY_OF_LAND_IMPACT = Double.NaN;
+    this.PROBABILITY_OF_CASUALTY = Double.NaN;
+    this.NOMINAL_IMPACT_EPOCH = null;
+    this.IMPACT_WINDOW_START = null;
+    this.IMPACT_WINDOW_END = null;
+    this.IMPACT_REF_FRAME = null;
+    this.NOMINAL_IMPACT_LON = Double.NaN;
+    this.NOMINAL_IMPACT_LAT = Double.NaN;
+    this.NOMINAL_IMPACT_ALT = Double.NaN;
+    this.IMPACT_1_CONFIDENCE = Double.NaN;
+    this.IMPACT_1_START_LON = Double.NaN;
+    this.IMPACT_1_START_LAT = Double.NaN;
+    this.IMPACT_1_STOP_LON = Double.NaN;
+    this.IMPACT_1_STOP_LAT = Double.NaN;
+    this.IMPACT_1_CROSS_TRACK = Double.NaN;
+    this.IMPACT_2_CONFIDENCE = Double.NaN;
+    this.IMPACT_2_START_LON = Double.NaN;
+    this.IMPACT_2_START_LAT = Double.NaN;
+    this.IMPACT_2_STOP_LON = Double.NaN;
+    this.IMPACT_2_STOP_LAT = Double.NaN;
+    this.IMPACT_2_CROSS_TRACK = Double.NaN;
+    this.IMPACT_3_CONFIDENCE = Double.NaN;
+    this.IMPACT_3_START_LON = Double.NaN;
+    this.IMPACT_3_START_LAT = Double.NaN;
+    this.IMPACT_3_STOP_LON = Double.NaN;
+    this.IMPACT_3_STOP_LAT = Double.NaN;
+    this.IMPACT_3_CROSS_TRACK = Double.NaN;
+    this.COV_REF_FRAME = null;
+    this.COVARIANCE = null;
+    this.DRY_MASS = Double.NaN;
+    this.HAZARDOUS_SUBSTANCES = null;
+    this.SOLAR_RAD_COEFF = Double.NaN;
+    this.DRAG_COEFF = Double.NaN;
+    this.RCS = Double.NaN;
+    this.THRUST_ACCELERATION = Double.NaN;
+    this.TIME_LASTOB_START = null;
+    this.TIME_LASTOB_END = null;
+    this.RECOMMENDED_OD_SPAN = Double.NaN;
+    this.ACTUAL_OD_SPAN = Double.NaN;
+    this.OBS_AVAILABLE = 0;
+    this.OBS_USED = 0;
+    this.TRACKS_AVAILABLE = 0;
+    this.TRACKS_USED = 0;
+    this.RESIDUALS_ACCEPTED = Double.NaN;
+    this.WEIGHTED_RMS = Double.NaN;
+    this.USER_DEFINED_PARAMETERS = null;
   }
   public static RDMT DeserializeFromBinary(byte[] fbBuffer) {
     return RDM.GetRootAsRDM(new ByteBuffer(fbBuffer)).UnPack();
@@ -434,6 +1429,86 @@ static public class RDMVerify
       && verifier.VerifyField(tablePos, 52 /*NUM_FRAGMENTS*/, 4 /*uint*/, 4, false)
       && verifier.VerifyField(tablePos, 54 /*SURVIVING_MASS*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 56 /*COMMENT*/, false)
+      && verifier.VerifyString(tablePos, 58 /*MESSAGE_ID*/, false)
+      && verifier.VerifyString(tablePos, 60 /*CATALOG_NAME*/, false)
+      && verifier.VerifyString(tablePos, 62 /*OBJECT_DESIGNATOR*/, false)
+      && verifier.VerifyString(tablePos, 64 /*OBJECT_OWNER*/, false)
+      && verifier.VerifyString(tablePos, 66 /*OBJECT_OPERATOR*/, false)
+      && verifier.VerifyField(tablePos, 68 /*CONTROLLED_REENTRY*/, 1 /*rdmControlledReentry*/, 1, false)
+      && verifier.VerifyString(tablePos, 70 /*CENTER_NAME*/, false)
+      && verifier.VerifyString(tablePos, 72 /*EPOCH_TZERO*/, false)
+      && verifier.VerifyString(tablePos, 74 /*REF_FRAME*/, false)
+      && verifier.VerifyString(tablePos, 76 /*REF_FRAME_EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 78 /*EPHEMERIS_NAME*/, false)
+      && verifier.VerifyString(tablePos, 80 /*GRAVITY_MODEL*/, false)
+      && verifier.VerifyString(tablePos, 82 /*ATMOSPHERIC_MODEL*/, false)
+      && verifier.VerifyString(tablePos, 84 /*SOLAR_FLUX_PREDICTION*/, false)
+      && verifier.VerifyString(tablePos, 86 /*N_BODY_PERTURBATIONS*/, false)
+      && verifier.VerifyString(tablePos, 88 /*SOLAR_RAD_PRESSURE*/, false)
+      && verifier.VerifyString(tablePos, 90 /*EARTH_TIDES*/, false)
+      && verifier.VerifyString(tablePos, 92 /*INTRACK_THRUST*/, false)
+      && verifier.VerifyString(tablePos, 94 /*DRAG_PARAMETERS_SOURCE*/, false)
+      && verifier.VerifyField(tablePos, 96 /*DRAG_PARAMETERS_ALTITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 98 /*REENTRY_UNCERTAINTY_METHOD*/, false)
+      && verifier.VerifyString(tablePos, 100 /*REENTRY_DISINTEGRATION*/, false)
+      && verifier.VerifyString(tablePos, 102 /*IMPACT_UNCERTAINTY_METHOD*/, false)
+      && verifier.VerifyString(tablePos, 104 /*PREVIOUS_MESSAGE_ID*/, false)
+      && verifier.VerifyString(tablePos, 106 /*NEXT_MESSAGE_EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 108 /*ORBIT_LIFETIME*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 110 /*ORBIT_LIFETIME_WINDOW_START*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 112 /*ORBIT_LIFETIME_WINDOW_END*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 114 /*REENTRY_WINDOW_START*/, false)
+      && verifier.VerifyString(tablePos, 116 /*REENTRY_WINDOW_END*/, false)
+      && verifier.VerifyField(tablePos, 118 /*ORBIT_LIFETIME_CONFIDENCE_LEVEL*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 120 /*PROBABILITY_OF_IMPACT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 122 /*PROBABILITY_OF_BURN_UP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 124 /*PROBABILITY_OF_BREAK_UP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 126 /*PROBABILITY_OF_LAND_IMPACT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 128 /*PROBABILITY_OF_CASUALTY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 130 /*NOMINAL_IMPACT_EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 132 /*IMPACT_WINDOW_START*/, false)
+      && verifier.VerifyString(tablePos, 134 /*IMPACT_WINDOW_END*/, false)
+      && verifier.VerifyString(tablePos, 136 /*IMPACT_REF_FRAME*/, false)
+      && verifier.VerifyField(tablePos, 138 /*NOMINAL_IMPACT_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 140 /*NOMINAL_IMPACT_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 142 /*NOMINAL_IMPACT_ALT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 144 /*IMPACT_1_CONFIDENCE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 146 /*IMPACT_1_START_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 148 /*IMPACT_1_START_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 150 /*IMPACT_1_STOP_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 152 /*IMPACT_1_STOP_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 154 /*IMPACT_1_CROSS_TRACK*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 156 /*IMPACT_2_CONFIDENCE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 158 /*IMPACT_2_START_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 160 /*IMPACT_2_START_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 162 /*IMPACT_2_STOP_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 164 /*IMPACT_2_STOP_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 166 /*IMPACT_2_CROSS_TRACK*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 168 /*IMPACT_3_CONFIDENCE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 170 /*IMPACT_3_START_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 172 /*IMPACT_3_START_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 174 /*IMPACT_3_STOP_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 176 /*IMPACT_3_STOP_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 178 /*IMPACT_3_CROSS_TRACK*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 180 /*COV_REF_FRAME*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 182 /*COVARIANCE*/, 8 /*double*/, false)
+      && verifier.VerifyField(tablePos, 184 /*DRY_MASS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 186 /*HAZARDOUS_SUBSTANCES*/, false)
+      && verifier.VerifyField(tablePos, 188 /*SOLAR_RAD_COEFF*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 190 /*DRAG_COEFF*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 192 /*RCS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 194 /*THRUST_ACCELERATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 196 /*TIME_LASTOB_START*/, false)
+      && verifier.VerifyString(tablePos, 198 /*TIME_LASTOB_END*/, false)
+      && verifier.VerifyField(tablePos, 200 /*RECOMMENDED_OD_SPAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 202 /*ACTUAL_OD_SPAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 204 /*OBS_AVAILABLE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 206 /*OBS_USED*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 208 /*TRACKS_AVAILABLE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 210 /*TRACKS_USED*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 212 /*RESIDUALS_ACCEPTED*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 214 /*WEIGHTED_RMS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfTables(tablePos, 216 /*USER_DEFINED_PARAMETERS*/, RDMUserDefinedParameterVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { OPMManeuver, OPMManeuverT } from './OPMManeuver.js';
+import { OPMUserDefinedParameter, OPMUserDefinedParameterT } from './OPMUserDefinedParameter.js';
 
 
 /**
@@ -189,8 +191,110 @@ DRAG_COEFF():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+ * and data groups, in message order, joined by a line feed.
+ */
+COMMENT():string|null
+COMMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COMMENT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * CLASSIFICATION of the message: the optional header keyword stating its
+ * security classification or handling caveat.
+ */
+CLASSIFICATION():string|null
+CLASSIFICATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CLASSIFICATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * MESSAGE_ID: the optional header keyword, an identifier the originator makes
+ * unique for this message.
+ */
+MESSAGE_ID():string|null
+MESSAGE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MESSAGE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+ */
+REF_FRAME_EPOCH():string|null
+REF_FRAME_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REF_FRAME_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+ * when it is REF_FRAME.
+ */
+COV_REF_FRAME():string|null
+COV_REF_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COV_REF_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+ * CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+ * CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+ * CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+ * Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+ */
+COVARIANCE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+covarianceLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+covarianceArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * The message's maneuvers, in message order.
+ */
+MANEUVERS(index: number, obj?:OPMManeuver):OPMManeuver|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? (obj || new OPMManeuver()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+maneuversLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Every USER_DEFINED_x keyword of the message, in message order.
+ */
+USER_DEFINED_PARAMETERS(index: number, obj?:OPMUserDefinedParameter):OPMUserDefinedParameter|null {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? (obj || new OPMUserDefinedParameter()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+userDefinedParametersLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startOPM(builder:flatbuffers.Builder) {
-  builder.startObject(28);
+  builder.startObject(36);
 }
 
 static addCcsdsOpmVers(builder:flatbuffers.Builder, CCSDS_OPM_VERSOffset:flatbuffers.Offset) {
@@ -305,6 +409,79 @@ static addDragCoeff(builder:flatbuffers.Builder, DRAG_COEFF:number) {
   builder.addFieldFloat64(27, DRAG_COEFF, 0.0);
 }
 
+static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, COMMENTOffset, 0);
+}
+
+static addClassification(builder:flatbuffers.Builder, CLASSIFICATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, CLASSIFICATIONOffset, 0);
+}
+
+static addMessageId(builder:flatbuffers.Builder, MESSAGE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(30, MESSAGE_IDOffset, 0);
+}
+
+static addRefFrameEpoch(builder:flatbuffers.Builder, REF_FRAME_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(31, REF_FRAME_EPOCHOffset, 0);
+}
+
+static addCovRefFrame(builder:flatbuffers.Builder, COV_REF_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(32, COV_REF_FRAMEOffset, 0);
+}
+
+static addCovariance(builder:flatbuffers.Builder, COVARIANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, COVARIANCEOffset, 0);
+}
+
+static createCovarianceVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createCovarianceVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createCovarianceVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovarianceVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addManeuvers(builder:flatbuffers.Builder, MANEUVERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(34, MANEUVERSOffset, 0);
+}
+
+static createManeuversVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startManeuversVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addUserDefinedParameters(builder:flatbuffers.Builder, USER_DEFINED_PARAMETERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(35, USER_DEFINED_PARAMETERSOffset, 0);
+}
+
+static createUserDefinedParametersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startUserDefinedParametersVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endOPM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -318,7 +495,7 @@ static finishSizePrefixedOPMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$OPM', true);
 }
 
-static createOPM(builder:flatbuffers.Builder, CCSDS_OPM_VERSOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, CENTER_NAMEOffset:flatbuffers.Offset, REF_FRAMEOffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, X:number, Y:number, Z:number, X_DOT:number, Y_DOT:number, Z_DOT:number, SEMI_MAJOR_AXIS:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, TRUE_ANOMALY:number, MEAN_ANOMALY:number, GM:number, MASS:number, SOLAR_RAD_AREA:number, SOLAR_RAD_COEFF:number, DRAG_AREA:number, DRAG_COEFF:number):flatbuffers.Offset {
+static createOPM(builder:flatbuffers.Builder, CCSDS_OPM_VERSOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, CENTER_NAMEOffset:flatbuffers.Offset, REF_FRAMEOffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, X:number, Y:number, Z:number, X_DOT:number, Y_DOT:number, Z_DOT:number, SEMI_MAJOR_AXIS:number, ECCENTRICITY:number, INCLINATION:number, RA_OF_ASC_NODE:number, ARG_OF_PERICENTER:number, TRUE_ANOMALY:number, MEAN_ANOMALY:number, GM:number, MASS:number, SOLAR_RAD_AREA:number, SOLAR_RAD_COEFF:number, DRAG_AREA:number, DRAG_COEFF:number, COMMENTOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, MESSAGE_IDOffset:flatbuffers.Offset, REF_FRAME_EPOCHOffset:flatbuffers.Offset, COV_REF_FRAMEOffset:flatbuffers.Offset, COVARIANCEOffset:flatbuffers.Offset, MANEUVERSOffset:flatbuffers.Offset, USER_DEFINED_PARAMETERSOffset:flatbuffers.Offset):flatbuffers.Offset {
   OPM.startOPM(builder);
   OPM.addCcsdsOpmVers(builder, CCSDS_OPM_VERSOffset);
   OPM.addCreationDate(builder, CREATION_DATEOffset);
@@ -348,6 +525,14 @@ static createOPM(builder:flatbuffers.Builder, CCSDS_OPM_VERSOffset:flatbuffers.O
   OPM.addSolarRadCoeff(builder, SOLAR_RAD_COEFF);
   OPM.addDragArea(builder, DRAG_AREA);
   OPM.addDragCoeff(builder, DRAG_COEFF);
+  OPM.addComment(builder, COMMENTOffset);
+  OPM.addClassification(builder, CLASSIFICATIONOffset);
+  OPM.addMessageId(builder, MESSAGE_IDOffset);
+  OPM.addRefFrameEpoch(builder, REF_FRAME_EPOCHOffset);
+  OPM.addCovRefFrame(builder, COV_REF_FRAMEOffset);
+  OPM.addCovariance(builder, COVARIANCEOffset);
+  OPM.addManeuvers(builder, MANEUVERSOffset);
+  OPM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERSOffset);
   return OPM.endOPM(builder);
 }
 
@@ -380,7 +565,15 @@ unpack(): OPMT {
     this.SOLAR_RAD_AREA(),
     this.SOLAR_RAD_COEFF(),
     this.DRAG_AREA(),
-    this.DRAG_COEFF()
+    this.DRAG_COEFF(),
+    this.COMMENT(),
+    this.CLASSIFICATION(),
+    this.MESSAGE_ID(),
+    this.REF_FRAME_EPOCH(),
+    this.COV_REF_FRAME(),
+    this.bb!.createScalarList<number>(this.COVARIANCE.bind(this), this.covarianceLength()),
+    this.bb!.createObjList<OPMManeuver, OPMManeuverT>(this.MANEUVERS.bind(this), this.maneuversLength()),
+    this.bb!.createObjList<OPMUserDefinedParameter, OPMUserDefinedParameterT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength())
   );
 }
 
@@ -414,6 +607,14 @@ unpackTo(_o: OPMT): void {
   _o.SOLAR_RAD_COEFF = this.SOLAR_RAD_COEFF();
   _o.DRAG_AREA = this.DRAG_AREA();
   _o.DRAG_COEFF = this.DRAG_COEFF();
+  _o.COMMENT = this.COMMENT();
+  _o.CLASSIFICATION = this.CLASSIFICATION();
+  _o.MESSAGE_ID = this.MESSAGE_ID();
+  _o.REF_FRAME_EPOCH = this.REF_FRAME_EPOCH();
+  _o.COV_REF_FRAME = this.COV_REF_FRAME();
+  _o.COVARIANCE = this.bb!.createScalarList<number>(this.COVARIANCE.bind(this), this.covarianceLength());
+  _o.MANEUVERS = this.bb!.createObjList<OPMManeuver, OPMManeuverT>(this.MANEUVERS.bind(this), this.maneuversLength());
+  _o.USER_DEFINED_PARAMETERS = this.bb!.createObjList<OPMUserDefinedParameter, OPMUserDefinedParameterT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength());
 }
 }
 
@@ -446,7 +647,15 @@ constructor(
   public SOLAR_RAD_AREA: number = 0.0,
   public SOLAR_RAD_COEFF: number = 0.0,
   public DRAG_AREA: number = 0.0,
-  public DRAG_COEFF: number = 0.0
+  public DRAG_COEFF: number = 0.0,
+  public COMMENT: string|Uint8Array|null = null,
+  public CLASSIFICATION: string|Uint8Array|null = null,
+  public MESSAGE_ID: string|Uint8Array|null = null,
+  public REF_FRAME_EPOCH: string|Uint8Array|null = null,
+  public COV_REF_FRAME: string|Uint8Array|null = null,
+  public COVARIANCE: (number)[] = [],
+  public MANEUVERS: (OPMManeuverT)[] = [],
+  public USER_DEFINED_PARAMETERS: (OPMUserDefinedParameterT)[] = []
 ){}
 
 
@@ -460,6 +669,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const REF_FRAME = (this.REF_FRAME !== null ? builder.createString(this.REF_FRAME!) : 0);
   const TIME_SYSTEM = (this.TIME_SYSTEM !== null ? builder.createString(this.TIME_SYSTEM!) : 0);
   const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
+  const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
+  const CLASSIFICATION = (this.CLASSIFICATION !== null ? builder.createString(this.CLASSIFICATION!) : 0);
+  const MESSAGE_ID = (this.MESSAGE_ID !== null ? builder.createString(this.MESSAGE_ID!) : 0);
+  const REF_FRAME_EPOCH = (this.REF_FRAME_EPOCH !== null ? builder.createString(this.REF_FRAME_EPOCH!) : 0);
+  const COV_REF_FRAME = (this.COV_REF_FRAME !== null ? builder.createString(this.COV_REF_FRAME!) : 0);
+  const COVARIANCE = OPM.createCovarianceVector(builder, this.COVARIANCE);
+  const MANEUVERS = OPM.createManeuversVector(builder, builder.createObjectOffsetList(this.MANEUVERS));
+  const USER_DEFINED_PARAMETERS = OPM.createUserDefinedParametersVector(builder, builder.createObjectOffsetList(this.USER_DEFINED_PARAMETERS));
 
   return OPM.createOPM(builder,
     CCSDS_OPM_VERS,
@@ -489,7 +706,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.SOLAR_RAD_AREA,
     this.SOLAR_RAD_COEFF,
     this.DRAG_AREA,
-    this.DRAG_COEFF
+    this.DRAG_COEFF,
+    COMMENT,
+    CLASSIFICATION,
+    MESSAGE_ID,
+    REF_FRAME_EPOCH,
+    COV_REF_FRAME,
+    COVARIANCE,
+    MANEUVERS,
+    USER_DEFINED_PARAMETERS
   );
 }
 }

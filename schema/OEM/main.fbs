@@ -1,5 +1,5 @@
-// Hash: 7a7c258d63755676bc73a25f858ec8636a9797f3bcd7c09dfafa16d359135289
-// Version: 1.1.4
+// Hash: 036289aeca3015e926e02c42655f7ce693decec4cdc7d580647d6b201acf67a0
+// Version: 1.1.5
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -188,6 +188,11 @@ table covarianceMatrixLine {
   CZ_DOT_Y_DOT:double;
   /// Covariance matrix [6,6] km**2/s**2
   CZ_DOT_Z_DOT:double;
+  /// COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.
+  COMMENT:string;
+  /// COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix
+  /// is expressed in, when it differs from the block's COV_REFERENCE_FRAME.
+  COV_REFERENCE_FRAME:RFM;
 }
 
 /// OEM Ephemeris Data Block
@@ -325,6 +330,11 @@ table OEM {
 
   /// Array of ephemeris data blocks
   EPHEMERIS_DATA_BLOCK:[ephemerisDataBlock];
+  /// COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.
+  COMMENT:string;
+  /// MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator
+  /// makes unique for this message.
+  MESSAGE_ID:string;
 }
 
 root_type OEM;

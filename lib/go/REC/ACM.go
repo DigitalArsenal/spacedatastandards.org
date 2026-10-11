@@ -4,6 +4,7 @@ package REC
 
 import (
 	flatbuffers "github.com/google/flatbuffers/go"
+	"math"
 )
 
 /// Attitude Comprehensive Message
@@ -306,7 +307,9 @@ func (rcv *ACM) MutateManeuverable(n maneuverableFlag) bool {
 	return rcv.MutateMANEUVERABLE(n)
 }
 
-/// Additional comments
+/// COMMENT lines of the message header, metadata and user-defined data
+/// (CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,
+/// covariance, maneuver or determination block's own comments stay with it.
 func (rcv *ACM) COMMENT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -319,9 +322,410 @@ func (rcv *ACM) Comment() []byte {
 	return rcv.COMMENT()
 }
 
-/// Additional comments
+/// COMMENT lines of the message header, metadata and user-defined data
+/// (CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,
+/// covariance, maneuver or determination block's own comments stay with it.
+/// CLASSIFICATION of the message: the optional header keyword stating its
+/// security classification or handling caveat.
+func (rcv *ACM) CLASSIFICATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) Classification() []byte {
+	return rcv.CLASSIFICATION()
+}
+
+/// CLASSIFICATION of the message: the optional header keyword stating its
+/// security classification or handling caveat.
+/// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+/// unique for this message.
+func (rcv *ACM) MESSAGE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) MessageId() []byte {
+	return rcv.MESSAGE_ID()
+}
+
+/// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+/// unique for this message.
+/// OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.
+/// OBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH
+/// above its EPOCH_TZERO, the epoch every relative time is measured from.
+func (rcv *ACM) OBJECT_DESIGNATOR() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) ObjectDesignator() []byte {
+	return rcv.OBJECT_DESIGNATOR()
+}
+
+/// OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.
+/// OBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH
+/// above its EPOCH_TZERO, the epoch every relative time is measured from.
+/// ORIGINATOR_POC: point of contact at the originator.
+func (rcv *ACM) ORIGINATOR_POC() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) OriginatorPoc() []byte {
+	return rcv.ORIGINATOR_POC()
+}
+
+/// ORIGINATOR_POC: point of contact at the originator.
+/// ORIGINATOR_POSITION: position of the point of contact.
+func (rcv *ACM) ORIGINATOR_POSITION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) OriginatorPosition() []byte {
+	return rcv.ORIGINATOR_POSITION()
+}
+
+/// ORIGINATOR_POSITION: position of the point of contact.
+/// ORIGINATOR_PHONE: telephone number of the point of contact.
+func (rcv *ACM) ORIGINATOR_PHONE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) OriginatorPhone() []byte {
+	return rcv.ORIGINATOR_PHONE()
+}
+
+/// ORIGINATOR_PHONE: telephone number of the point of contact.
+/// ORIGINATOR_EMAIL: email address of the point of contact.
+func (rcv *ACM) ORIGINATOR_EMAIL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) OriginatorEmail() []byte {
+	return rcv.ORIGINATOR_EMAIL()
+}
+
+/// ORIGINATOR_EMAIL: email address of the point of contact.
+/// ORIGINATOR_ADDRESS: postal address of the point of contact.
+func (rcv *ACM) ORIGINATOR_ADDRESS() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) OriginatorAddress() []byte {
+	return rcv.ORIGINATOR_ADDRESS()
+}
+
+/// ORIGINATOR_ADDRESS: postal address of the point of contact.
+/// ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.
+func (rcv *ACM) ODM_MSG_LINK() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) OdmMsgLink() []byte {
+	return rcv.ODM_MSG_LINK()
+}
+
+/// ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.
+/// CENTER_NAME: the orbit center, when the message states one.
+func (rcv *ACM) CENTER_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) CenterName() []byte {
+	return rcv.CENTER_NAME()
+}
+
+/// CENTER_NAME: the orbit center, when the message states one.
+/// ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.
+func (rcv *ACM) ACM_DATA_ELEMENTS() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) AcmDataElements() []byte {
+	return rcv.ACM_DATA_ELEMENTS()
+}
+
+/// ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.
+/// START_TIME: start of the total time span the message covers.
+func (rcv *ACM) START_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) StartTime() []byte {
+	return rcv.START_TIME()
+}
+
+/// START_TIME: start of the total time span the message covers.
+/// STOP_TIME: end of the total time span the message covers.
+func (rcv *ACM) STOP_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) StopTime() []byte {
+	return rcv.STOP_TIME()
+}
+
+/// STOP_TIME: end of the total time span the message covers.
+/// TAIMUTC_AT_TZERO in seconds, NaN when not stated.
+func (rcv *ACM) TAIMUTC_AT_TZERO() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *ACM) TaimutcAtTzero() float64 {
+	return rcv.TAIMUTC_AT_TZERO()
+}
+
+/// TAIMUTC_AT_TZERO in seconds, NaN when not stated.
+func (rcv *ACM) MutateTAIMUTC_AT_TZERO(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *ACM) MutateTaimutcAtTzero(n float64) bool {
+	return rcv.MutateTAIMUTC_AT_TZERO(n)
+}
+
+/// NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.
+func (rcv *ACM) NEXT_LEAP_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACM) NextLeapEpoch() []byte {
+	return rcv.NEXT_LEAP_EPOCH()
+}
+
+/// NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.
+/// NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.
+func (rcv *ACM) NEXT_LEAP_TAIMUTC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *ACM) NextLeapTaimutc() float64 {
+	return rcv.NEXT_LEAP_TAIMUTC()
+}
+
+/// NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.
+func (rcv *ACM) MutateNEXT_LEAP_TAIMUTC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *ACM) MutateNextLeapTaimutc(n float64) bool {
+	return rcv.MutateNEXT_LEAP_TAIMUTC(n)
+}
+
+/// Attitude state time histories (ATT_START blocks), in message order.
+func (rcv *ACM) ATT_BLOCKS(obj *ACMAttitudeBlock, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACMAttitudeBlock)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACM) AttBlocks(obj *ACMAttitudeBlock, j int) bool {
+	return rcv.ATT_BLOCKS(obj, j)
+}
+
+func (rcv *ACM) ATT_BLOCKSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACM) AttBlocksLength() int {
+	return rcv.ATT_BLOCKSLength()
+}
+
+/// Attitude state time histories (ATT_START blocks), in message order.
+/// Covariance time histories (COV_START blocks), in message order.
+func (rcv *ACM) COV_BLOCKS(obj *ACMCovarianceBlock, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACMCovarianceBlock)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACM) CovBlocks(obj *ACMCovarianceBlock, j int) bool {
+	return rcv.COV_BLOCKS(obj, j)
+}
+
+func (rcv *ACM) COV_BLOCKSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACM) CovBlocksLength() int {
+	return rcv.COV_BLOCKSLength()
+}
+
+/// Covariance time histories (COV_START blocks), in message order.
+/// Maneuver specifications (MAN_START blocks), in message order.
+func (rcv *ACM) MAN_BLOCKS(obj *ACMManeuverBlock, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACMManeuverBlock)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACM) ManBlocks(obj *ACMManeuverBlock, j int) bool {
+	return rcv.MAN_BLOCKS(obj, j)
+}
+
+func (rcv *ACM) MAN_BLOCKSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACM) ManBlocksLength() int {
+	return rcv.MAN_BLOCKSLength()
+}
+
+/// Maneuver specifications (MAN_START blocks), in message order.
+/// The attitude determination data (AD_START block), when the message has them.
+func (rcv *ACM) DETERMINATION(obj *ACMDetermination) *ACMDetermination {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(ACMDetermination)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *ACM) Determination(obj *ACMDetermination) *ACMDetermination {
+	return rcv.DETERMINATION(obj)
+}
+
+/// The attitude determination data (AD_START block), when the message has them.
+/// Every USER_DEFINED parameter of the message, in message order.
+func (rcv *ACM) USER_DEFINED_PARAMETERS(obj *ACMUserDefinedParameter, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACMUserDefinedParameter)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACM) UserDefinedParameters(obj *ACMUserDefinedParameter, j int) bool {
+	return rcv.USER_DEFINED_PARAMETERS(obj, j)
+}
+
+func (rcv *ACM) USER_DEFINED_PARAMETERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACM) UserDefinedParametersLength() int {
+	return rcv.USER_DEFINED_PARAMETERSLength()
+}
+
+/// Every USER_DEFINED parameter of the message, in message order.
 func ACMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(35)
 }
 func ACMAddCCSDS_ACM_VERS(builder *flatbuffers.Builder, CCSDS_ACM_VERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CCSDS_ACM_VERS), 0)
@@ -424,6 +828,156 @@ func ACMAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 }
 func ACMAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	ACMAddCOMMENT(builder, COMMENT)
+}
+func ACMAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(CLASSIFICATION), 0)
+}
+func ACMAddClassification(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	ACMAddCLASSIFICATION(builder, CLASSIFICATION)
+}
+func ACMAddMESSAGE_ID(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(MESSAGE_ID), 0)
+}
+func ACMAddMessageId(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	ACMAddMESSAGE_ID(builder, MESSAGE_ID)
+}
+func ACMAddOBJECT_DESIGNATOR(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(OBJECT_DESIGNATOR), 0)
+}
+func ACMAddObjectDesignator(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	ACMAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+}
+func ACMAddORIGINATOR_POC(builder *flatbuffers.Builder, ORIGINATOR_POC flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(ORIGINATOR_POC), 0)
+}
+func ACMAddOriginatorPoc(builder *flatbuffers.Builder, ORIGINATOR_POC flatbuffers.UOffsetT) {
+	ACMAddORIGINATOR_POC(builder, ORIGINATOR_POC)
+}
+func ACMAddORIGINATOR_POSITION(builder *flatbuffers.Builder, ORIGINATOR_POSITION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(ORIGINATOR_POSITION), 0)
+}
+func ACMAddOriginatorPosition(builder *flatbuffers.Builder, ORIGINATOR_POSITION flatbuffers.UOffsetT) {
+	ACMAddORIGINATOR_POSITION(builder, ORIGINATOR_POSITION)
+}
+func ACMAddORIGINATOR_PHONE(builder *flatbuffers.Builder, ORIGINATOR_PHONE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(ORIGINATOR_PHONE), 0)
+}
+func ACMAddOriginatorPhone(builder *flatbuffers.Builder, ORIGINATOR_PHONE flatbuffers.UOffsetT) {
+	ACMAddORIGINATOR_PHONE(builder, ORIGINATOR_PHONE)
+}
+func ACMAddORIGINATOR_EMAIL(builder *flatbuffers.Builder, ORIGINATOR_EMAIL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(ORIGINATOR_EMAIL), 0)
+}
+func ACMAddOriginatorEmail(builder *flatbuffers.Builder, ORIGINATOR_EMAIL flatbuffers.UOffsetT) {
+	ACMAddORIGINATOR_EMAIL(builder, ORIGINATOR_EMAIL)
+}
+func ACMAddORIGINATOR_ADDRESS(builder *flatbuffers.Builder, ORIGINATOR_ADDRESS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(ORIGINATOR_ADDRESS), 0)
+}
+func ACMAddOriginatorAddress(builder *flatbuffers.Builder, ORIGINATOR_ADDRESS flatbuffers.UOffsetT) {
+	ACMAddORIGINATOR_ADDRESS(builder, ORIGINATOR_ADDRESS)
+}
+func ACMAddODM_MSG_LINK(builder *flatbuffers.Builder, ODM_MSG_LINK flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(ODM_MSG_LINK), 0)
+}
+func ACMAddOdmMsgLink(builder *flatbuffers.Builder, ODM_MSG_LINK flatbuffers.UOffsetT) {
+	ACMAddODM_MSG_LINK(builder, ODM_MSG_LINK)
+}
+func ACMAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(CENTER_NAME), 0)
+}
+func ACMAddCenterName(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	ACMAddCENTER_NAME(builder, CENTER_NAME)
+}
+func ACMAddACM_DATA_ELEMENTS(builder *flatbuffers.Builder, ACM_DATA_ELEMENTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(ACM_DATA_ELEMENTS), 0)
+}
+func ACMAddAcmDataElements(builder *flatbuffers.Builder, ACM_DATA_ELEMENTS flatbuffers.UOffsetT) {
+	ACMAddACM_DATA_ELEMENTS(builder, ACM_DATA_ELEMENTS)
+}
+func ACMAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(START_TIME), 0)
+}
+func ACMAddStartTime(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	ACMAddSTART_TIME(builder, START_TIME)
+}
+func ACMAddSTOP_TIME(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(STOP_TIME), 0)
+}
+func ACMAddStopTime(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
+	ACMAddSTOP_TIME(builder, STOP_TIME)
+}
+func ACMAddTAIMUTC_AT_TZERO(builder *flatbuffers.Builder, TAIMUTC_AT_TZERO float64) {
+	builder.PrependFloat64Slot(27, TAIMUTC_AT_TZERO, float64(math.NaN()))
+}
+func ACMAddTaimutcAtTzero(builder *flatbuffers.Builder, TAIMUTC_AT_TZERO float64) {
+	ACMAddTAIMUTC_AT_TZERO(builder, TAIMUTC_AT_TZERO)
+}
+func ACMAddNEXT_LEAP_EPOCH(builder *flatbuffers.Builder, NEXT_LEAP_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(NEXT_LEAP_EPOCH), 0)
+}
+func ACMAddNextLeapEpoch(builder *flatbuffers.Builder, NEXT_LEAP_EPOCH flatbuffers.UOffsetT) {
+	ACMAddNEXT_LEAP_EPOCH(builder, NEXT_LEAP_EPOCH)
+}
+func ACMAddNEXT_LEAP_TAIMUTC(builder *flatbuffers.Builder, NEXT_LEAP_TAIMUTC float64) {
+	builder.PrependFloat64Slot(29, NEXT_LEAP_TAIMUTC, float64(math.NaN()))
+}
+func ACMAddNextLeapTaimutc(builder *flatbuffers.Builder, NEXT_LEAP_TAIMUTC float64) {
+	ACMAddNEXT_LEAP_TAIMUTC(builder, NEXT_LEAP_TAIMUTC)
+}
+func ACMAddATT_BLOCKS(builder *flatbuffers.Builder, ATT_BLOCKS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(ATT_BLOCKS), 0)
+}
+func ACMAddAttBlocks(builder *flatbuffers.Builder, ATT_BLOCKS flatbuffers.UOffsetT) {
+	ACMAddATT_BLOCKS(builder, ATT_BLOCKS)
+}
+func ACMStartATT_BLOCKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACMStartAttBlocksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACMStartATT_BLOCKSVector(builder, numElems)
+}
+func ACMAddCOV_BLOCKS(builder *flatbuffers.Builder, COV_BLOCKS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(COV_BLOCKS), 0)
+}
+func ACMAddCovBlocks(builder *flatbuffers.Builder, COV_BLOCKS flatbuffers.UOffsetT) {
+	ACMAddCOV_BLOCKS(builder, COV_BLOCKS)
+}
+func ACMStartCOV_BLOCKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACMStartCovBlocksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACMStartCOV_BLOCKSVector(builder, numElems)
+}
+func ACMAddMAN_BLOCKS(builder *flatbuffers.Builder, MAN_BLOCKS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(MAN_BLOCKS), 0)
+}
+func ACMAddManBlocks(builder *flatbuffers.Builder, MAN_BLOCKS flatbuffers.UOffsetT) {
+	ACMAddMAN_BLOCKS(builder, MAN_BLOCKS)
+}
+func ACMStartMAN_BLOCKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACMStartManBlocksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACMStartMAN_BLOCKSVector(builder, numElems)
+}
+func ACMAddDETERMINATION(builder *flatbuffers.Builder, DETERMINATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(DETERMINATION), 0)
+}
+func ACMAddDetermination(builder *flatbuffers.Builder, DETERMINATION flatbuffers.UOffsetT) {
+	ACMAddDETERMINATION(builder, DETERMINATION)
+}
+func ACMAddUSER_DEFINED_PARAMETERS(builder *flatbuffers.Builder, USER_DEFINED_PARAMETERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(USER_DEFINED_PARAMETERS), 0)
+}
+func ACMAddUserDefinedParameters(builder *flatbuffers.Builder, USER_DEFINED_PARAMETERS flatbuffers.UOffsetT) {
+	ACMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
+}
+func ACMStartUSER_DEFINED_PARAMETERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACMStartUserDefinedParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACMStartUSER_DEFINED_PARAMETERSVector(builder, numElems)
 }
 func ACMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

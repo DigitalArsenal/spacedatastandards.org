@@ -141,8 +141,17 @@ class attPhysicalProperties(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+    # joined by a line feed.
+    # attPhysicalProperties
+    def COMMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def attPhysicalPropertiesStart(builder):
-    builder.StartObject(14)
+    builder.StartObject(15)
 
 def Start(builder):
     attPhysicalPropertiesStart(builder)
@@ -231,6 +240,12 @@ def attPhysicalPropertiesAddIYZ(builder, IYZ):
 def AddIYZ(builder, IYZ):
     attPhysicalPropertiesAddIYZ(builder, IYZ)
 
+def attPhysicalPropertiesAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    attPhysicalPropertiesAddCOMMENT(builder, COMMENT)
+
 def attPhysicalPropertiesEnd(builder):
     return builder.EndObject()
 
@@ -257,6 +272,7 @@ class attPhysicalPropertiesT(object):
         IXY = 0.0,
         IXZ = 0.0,
         IYZ = 0.0,
+        COMMENT = None,
     ):
         self.DRAG_COEFF = DRAG_COEFF  # type: float
         self.WET_MASS = WET_MASS  # type: float
@@ -272,6 +288,7 @@ class attPhysicalPropertiesT(object):
         self.IXY = IXY  # type: float
         self.IXZ = IXZ  # type: float
         self.IYZ = IYZ  # type: float
+        self.COMMENT = COMMENT  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -308,6 +325,7 @@ class attPhysicalPropertiesT(object):
         self.IXY = attPhysicalProperties.IXY()
         self.IXZ = attPhysicalProperties.IXZ()
         self.IYZ = attPhysicalProperties.IYZ()
+        self.COMMENT = attPhysicalProperties.COMMENT()
 
     # attPhysicalPropertiesT
     def Pack(self, builder):
@@ -315,6 +333,8 @@ class attPhysicalPropertiesT(object):
             CP_REF_FRAME = builder.CreateString(self.CP_REF_FRAME)
         if self.INERTIA_REF_FRAME is not None:
             INERTIA_REF_FRAME = builder.CreateString(self.INERTIA_REF_FRAME)
+        if self.COMMENT is not None:
+            COMMENT = builder.CreateString(self.COMMENT)
         attPhysicalPropertiesStart(builder)
         attPhysicalPropertiesAddDRAG_COEFF(builder, self.DRAG_COEFF)
         attPhysicalPropertiesAddWET_MASS(builder, self.WET_MASS)
@@ -332,5 +352,7 @@ class attPhysicalPropertiesT(object):
         attPhysicalPropertiesAddIXY(builder, self.IXY)
         attPhysicalPropertiesAddIXZ(builder, self.IXZ)
         attPhysicalPropertiesAddIYZ(builder, self.IYZ)
+        if self.COMMENT is not None:
+            attPhysicalPropertiesAddCOMMENT(builder, COMMENT)
         attPhysicalProperties = attPhysicalPropertiesEnd(builder)
         return attPhysicalProperties

@@ -119,6 +119,85 @@ public struct Perturbations : IFlatbufferObject
   /// Fixed (time-invariant) geomagnetic index ap used in place of the normal
   /// time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
   public double FIXED_GEOMAG_AP { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+  /// above is the model family when the text names one.
+  public string ATMOSPHERIC_MODEL_NAME { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetATMOSPHERIC_MODEL_NAMEBytes() { return __p.__vector_as_span<byte>(44, 1); }
+#else
+  public ArraySegment<byte>? GetATMOSPHERIC_MODEL_NAMEBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public byte[] GetATMOSPHERIC_MODEL_NAMEArray() { return __p.__vector_as_array<byte>(44); }
+  /// EQUATORIAL_RADIUS in km, NaN when not stated.
+  public double EQUATORIAL_RADIUS { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+  public double CENTRAL_BODY_ROTATION { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// OBLATE_FLATTENING, NaN when not stated.
+  public double OBLATE_FLATTENING { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// REDUCTION_THEORY.
+  public string REDUCTION_THEORY { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREDUCTION_THEORYBytes() { return __p.__vector_as_span<byte>(52, 1); }
+#else
+  public ArraySegment<byte>? GetREDUCTION_THEORYBytes() { return __p.__vector_as_arraysegment(52); }
+#endif
+  public byte[] GetREDUCTION_THEORYArray() { return __p.__vector_as_array<byte>(52); }
+  /// ALBEDO_GRID_SIZE.
+  public uint ALBEDO_GRID_SIZE { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// SHADOW_MODEL.
+  public string SHADOW_MODEL { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSHADOW_MODELBytes() { return __p.__vector_as_span<byte>(56, 1); }
+#else
+  public ArraySegment<byte>? GetSHADOW_MODELBytes() { return __p.__vector_as_arraysegment(56); }
+#endif
+  public byte[] GetSHADOW_MODELArray() { return __p.__vector_as_array<byte>(56); }
+  /// SHADOW_BODIES.
+  public string SHADOW_BODIES { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSHADOW_BODIESBytes() { return __p.__vector_as_span<byte>(58, 1); }
+#else
+  public ArraySegment<byte>? GetSHADOW_BODIESBytes() { return __p.__vector_as_arraysegment(58); }
+#endif
+  public byte[] GetSHADOW_BODIESArray() { return __p.__vector_as_array<byte>(58); }
+  /// SW_DATA_SOURCE: the space weather data source.
+  public string SW_DATA_SOURCE { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSW_DATA_SOURCEBytes() { return __p.__vector_as_span<byte>(60, 1); }
+#else
+  public ArraySegment<byte>? GetSW_DATA_SOURCEBytes() { return __p.__vector_as_arraysegment(60); }
+#endif
+  public byte[] GetSW_DATA_SOURCEArray() { return __p.__vector_as_array<byte>(60); }
+  /// SW_DATA_EPOCH.
+  public string SW_DATA_EPOCH { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSW_DATA_EPOCHBytes() { return __p.__vector_as_span<byte>(62, 1); }
+#else
+  public ArraySegment<byte>? GetSW_DATA_EPOCHBytes() { return __p.__vector_as_arraysegment(62); }
+#endif
+  public byte[] GetSW_DATA_EPOCHArray() { return __p.__vector_as_array<byte>(62); }
+  /// SW_INTERP_METHOD.
+  public string SW_INTERP_METHOD { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSW_INTERP_METHODBytes() { return __p.__vector_as_span<byte>(64, 1); }
+#else
+  public ArraySegment<byte>? GetSW_INTERP_METHODBytes() { return __p.__vector_as_arraysegment(64); }
+#endif
+  public byte[] GetSW_INTERP_METHODArray() { return __p.__vector_as_array<byte>(64); }
+  /// FIXED_GEOMAG_DST in nT, NaN when not stated.
+  public double FIXED_GEOMAG_DST { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// FIXED_M10P7, NaN when not stated.
+  public double FIXED_M10P7 { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// FIXED_M10P7_MEAN, NaN when not stated.
+  public double FIXED_M10P7_MEAN { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// FIXED_S10P7, NaN when not stated.
+  public double FIXED_S10P7 { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// FIXED_S10P7_MEAN, NaN when not stated.
+  public double FIXED_S10P7_MEAN { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// FIXED_Y10P7, NaN when not stated.
+  public double FIXED_Y10P7 { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// FIXED_Y10P7_MEAN, NaN when not stated.
+  public double FIXED_Y10P7_MEAN { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
 
   public static Offset<Perturbations> CreatePerturbations(FlatBufferBuilder builder,
       VectorOffset COMMENTOffset = default(VectorOffset),
@@ -140,13 +219,49 @@ public struct Perturbations : IFlatbufferObject
       double FIXED_GEOMAG_KP = 0.0,
       double FIXED_F10P7 = 0.0,
       double FIXED_F10P7_MEAN = 0.0,
-      double FIXED_GEOMAG_AP = 0.0) {
-    builder.StartTable(20);
+      double FIXED_GEOMAG_AP = 0.0,
+      StringOffset ATMOSPHERIC_MODEL_NAMEOffset = default(StringOffset),
+      double EQUATORIAL_RADIUS = Double.NaN,
+      double CENTRAL_BODY_ROTATION = Double.NaN,
+      double OBLATE_FLATTENING = Double.NaN,
+      StringOffset REDUCTION_THEORYOffset = default(StringOffset),
+      uint ALBEDO_GRID_SIZE = 0,
+      StringOffset SHADOW_MODELOffset = default(StringOffset),
+      StringOffset SHADOW_BODIESOffset = default(StringOffset),
+      StringOffset SW_DATA_SOURCEOffset = default(StringOffset),
+      StringOffset SW_DATA_EPOCHOffset = default(StringOffset),
+      StringOffset SW_INTERP_METHODOffset = default(StringOffset),
+      double FIXED_GEOMAG_DST = Double.NaN,
+      double FIXED_M10P7 = Double.NaN,
+      double FIXED_M10P7_MEAN = Double.NaN,
+      double FIXED_S10P7 = Double.NaN,
+      double FIXED_S10P7_MEAN = Double.NaN,
+      double FIXED_Y10P7 = Double.NaN,
+      double FIXED_Y10P7_MEAN = Double.NaN) {
+    builder.StartTable(38);
+    Perturbations.AddFIXED_Y10P7_MEAN(builder, FIXED_Y10P7_MEAN);
+    Perturbations.AddFIXED_Y10P7(builder, FIXED_Y10P7);
+    Perturbations.AddFIXED_S10P7_MEAN(builder, FIXED_S10P7_MEAN);
+    Perturbations.AddFIXED_S10P7(builder, FIXED_S10P7);
+    Perturbations.AddFIXED_M10P7_MEAN(builder, FIXED_M10P7_MEAN);
+    Perturbations.AddFIXED_M10P7(builder, FIXED_M10P7);
+    Perturbations.AddFIXED_GEOMAG_DST(builder, FIXED_GEOMAG_DST);
+    Perturbations.AddOBLATE_FLATTENING(builder, OBLATE_FLATTENING);
+    Perturbations.AddCENTRAL_BODY_ROTATION(builder, CENTRAL_BODY_ROTATION);
+    Perturbations.AddEQUATORIAL_RADIUS(builder, EQUATORIAL_RADIUS);
     Perturbations.AddFIXED_GEOMAG_AP(builder, FIXED_GEOMAG_AP);
     Perturbations.AddFIXED_F10P7_MEAN(builder, FIXED_F10P7_MEAN);
     Perturbations.AddFIXED_F10P7(builder, FIXED_F10P7);
     Perturbations.AddFIXED_GEOMAG_KP(builder, FIXED_GEOMAG_KP);
     Perturbations.AddGM(builder, GM);
+    Perturbations.AddSW_INTERP_METHOD(builder, SW_INTERP_METHODOffset);
+    Perturbations.AddSW_DATA_EPOCH(builder, SW_DATA_EPOCHOffset);
+    Perturbations.AddSW_DATA_SOURCE(builder, SW_DATA_SOURCEOffset);
+    Perturbations.AddSHADOW_BODIES(builder, SHADOW_BODIESOffset);
+    Perturbations.AddSHADOW_MODEL(builder, SHADOW_MODELOffset);
+    Perturbations.AddALBEDO_GRID_SIZE(builder, ALBEDO_GRID_SIZE);
+    Perturbations.AddREDUCTION_THEORY(builder, REDUCTION_THEORYOffset);
+    Perturbations.AddATMOSPHERIC_MODEL_NAME(builder, ATMOSPHERIC_MODEL_NAMEOffset);
     Perturbations.AddATMOSPHERIC_DRAG(builder, ATMOSPHERIC_DRAGOffset);
     Perturbations.AddRELATIVITY(builder, RELATIVITYOffset);
     Perturbations.AddTHERMAL(builder, THERMALOffset);
@@ -165,7 +280,7 @@ public struct Perturbations : IFlatbufferObject
     return Perturbations.EndPerturbations(builder);
   }
 
-  public static void StartPerturbations(FlatBufferBuilder builder) { builder.StartTable(20); }
+  public static void StartPerturbations(FlatBufferBuilder builder) { builder.StartTable(38); }
   public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static VectorOffset CreateCOMMENTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -196,6 +311,24 @@ public struct Perturbations : IFlatbufferObject
   public static void AddFIXED_F10P7(FlatBufferBuilder builder, double FIXED_F10P7) { builder.AddDouble(17, FIXED_F10P7, 0.0); }
   public static void AddFIXED_F10P7_MEAN(FlatBufferBuilder builder, double FIXED_F10P7_MEAN) { builder.AddDouble(18, FIXED_F10P7_MEAN, 0.0); }
   public static void AddFIXED_GEOMAG_AP(FlatBufferBuilder builder, double FIXED_GEOMAG_AP) { builder.AddDouble(19, FIXED_GEOMAG_AP, 0.0); }
+  public static void AddATMOSPHERIC_MODEL_NAME(FlatBufferBuilder builder, StringOffset ATMOSPHERIC_MODEL_NAMEOffset) { builder.AddOffset(20, ATMOSPHERIC_MODEL_NAMEOffset.Value, 0); }
+  public static void AddEQUATORIAL_RADIUS(FlatBufferBuilder builder, double EQUATORIAL_RADIUS) { builder.AddDouble(21, EQUATORIAL_RADIUS, Double.NaN); }
+  public static void AddCENTRAL_BODY_ROTATION(FlatBufferBuilder builder, double CENTRAL_BODY_ROTATION) { builder.AddDouble(22, CENTRAL_BODY_ROTATION, Double.NaN); }
+  public static void AddOBLATE_FLATTENING(FlatBufferBuilder builder, double OBLATE_FLATTENING) { builder.AddDouble(23, OBLATE_FLATTENING, Double.NaN); }
+  public static void AddREDUCTION_THEORY(FlatBufferBuilder builder, StringOffset REDUCTION_THEORYOffset) { builder.AddOffset(24, REDUCTION_THEORYOffset.Value, 0); }
+  public static void AddALBEDO_GRID_SIZE(FlatBufferBuilder builder, uint ALBEDO_GRID_SIZE) { builder.AddUint(25, ALBEDO_GRID_SIZE, 0); }
+  public static void AddSHADOW_MODEL(FlatBufferBuilder builder, StringOffset SHADOW_MODELOffset) { builder.AddOffset(26, SHADOW_MODELOffset.Value, 0); }
+  public static void AddSHADOW_BODIES(FlatBufferBuilder builder, StringOffset SHADOW_BODIESOffset) { builder.AddOffset(27, SHADOW_BODIESOffset.Value, 0); }
+  public static void AddSW_DATA_SOURCE(FlatBufferBuilder builder, StringOffset SW_DATA_SOURCEOffset) { builder.AddOffset(28, SW_DATA_SOURCEOffset.Value, 0); }
+  public static void AddSW_DATA_EPOCH(FlatBufferBuilder builder, StringOffset SW_DATA_EPOCHOffset) { builder.AddOffset(29, SW_DATA_EPOCHOffset.Value, 0); }
+  public static void AddSW_INTERP_METHOD(FlatBufferBuilder builder, StringOffset SW_INTERP_METHODOffset) { builder.AddOffset(30, SW_INTERP_METHODOffset.Value, 0); }
+  public static void AddFIXED_GEOMAG_DST(FlatBufferBuilder builder, double FIXED_GEOMAG_DST) { builder.AddDouble(31, FIXED_GEOMAG_DST, Double.NaN); }
+  public static void AddFIXED_M10P7(FlatBufferBuilder builder, double FIXED_M10P7) { builder.AddDouble(32, FIXED_M10P7, Double.NaN); }
+  public static void AddFIXED_M10P7_MEAN(FlatBufferBuilder builder, double FIXED_M10P7_MEAN) { builder.AddDouble(33, FIXED_M10P7_MEAN, Double.NaN); }
+  public static void AddFIXED_S10P7(FlatBufferBuilder builder, double FIXED_S10P7) { builder.AddDouble(34, FIXED_S10P7, Double.NaN); }
+  public static void AddFIXED_S10P7_MEAN(FlatBufferBuilder builder, double FIXED_S10P7_MEAN) { builder.AddDouble(35, FIXED_S10P7_MEAN, Double.NaN); }
+  public static void AddFIXED_Y10P7(FlatBufferBuilder builder, double FIXED_Y10P7) { builder.AddDouble(36, FIXED_Y10P7, Double.NaN); }
+  public static void AddFIXED_Y10P7_MEAN(FlatBufferBuilder builder, double FIXED_Y10P7_MEAN) { builder.AddDouble(37, FIXED_Y10P7_MEAN, Double.NaN); }
   public static Offset<Perturbations> EndPerturbations(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<Perturbations>(o);
@@ -228,6 +361,24 @@ public struct Perturbations : IFlatbufferObject
     _o.FIXED_F10P7 = this.FIXED_F10P7;
     _o.FIXED_F10P7_MEAN = this.FIXED_F10P7_MEAN;
     _o.FIXED_GEOMAG_AP = this.FIXED_GEOMAG_AP;
+    _o.ATMOSPHERIC_MODEL_NAME = this.ATMOSPHERIC_MODEL_NAME;
+    _o.EQUATORIAL_RADIUS = this.EQUATORIAL_RADIUS;
+    _o.CENTRAL_BODY_ROTATION = this.CENTRAL_BODY_ROTATION;
+    _o.OBLATE_FLATTENING = this.OBLATE_FLATTENING;
+    _o.REDUCTION_THEORY = this.REDUCTION_THEORY;
+    _o.ALBEDO_GRID_SIZE = this.ALBEDO_GRID_SIZE;
+    _o.SHADOW_MODEL = this.SHADOW_MODEL;
+    _o.SHADOW_BODIES = this.SHADOW_BODIES;
+    _o.SW_DATA_SOURCE = this.SW_DATA_SOURCE;
+    _o.SW_DATA_EPOCH = this.SW_DATA_EPOCH;
+    _o.SW_INTERP_METHOD = this.SW_INTERP_METHOD;
+    _o.FIXED_GEOMAG_DST = this.FIXED_GEOMAG_DST;
+    _o.FIXED_M10P7 = this.FIXED_M10P7;
+    _o.FIXED_M10P7_MEAN = this.FIXED_M10P7_MEAN;
+    _o.FIXED_S10P7 = this.FIXED_S10P7;
+    _o.FIXED_S10P7_MEAN = this.FIXED_S10P7_MEAN;
+    _o.FIXED_Y10P7 = this.FIXED_Y10P7;
+    _o.FIXED_Y10P7_MEAN = this.FIXED_Y10P7_MEAN;
   }
   public static Offset<Perturbations> Pack(FlatBufferBuilder builder, PerturbationsT _o) {
     if (_o == null) return default(Offset<Perturbations>);
@@ -254,6 +405,13 @@ public struct Perturbations : IFlatbufferObject
     var _THERMAL = _o.THERMAL == null ? default(StringOffset) : builder.CreateString(_o.THERMAL);
     var _RELATIVITY = _o.RELATIVITY == null ? default(StringOffset) : builder.CreateString(_o.RELATIVITY);
     var _ATMOSPHERIC_DRAG = _o.ATMOSPHERIC_DRAG == null ? default(StringOffset) : builder.CreateString(_o.ATMOSPHERIC_DRAG);
+    var _ATMOSPHERIC_MODEL_NAME = _o.ATMOSPHERIC_MODEL_NAME == null ? default(StringOffset) : builder.CreateString(_o.ATMOSPHERIC_MODEL_NAME);
+    var _REDUCTION_THEORY = _o.REDUCTION_THEORY == null ? default(StringOffset) : builder.CreateString(_o.REDUCTION_THEORY);
+    var _SHADOW_MODEL = _o.SHADOW_MODEL == null ? default(StringOffset) : builder.CreateString(_o.SHADOW_MODEL);
+    var _SHADOW_BODIES = _o.SHADOW_BODIES == null ? default(StringOffset) : builder.CreateString(_o.SHADOW_BODIES);
+    var _SW_DATA_SOURCE = _o.SW_DATA_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.SW_DATA_SOURCE);
+    var _SW_DATA_EPOCH = _o.SW_DATA_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.SW_DATA_EPOCH);
+    var _SW_INTERP_METHOD = _o.SW_INTERP_METHOD == null ? default(StringOffset) : builder.CreateString(_o.SW_INTERP_METHOD);
     return CreatePerturbations(
       builder,
       _COMMENT,
@@ -275,7 +433,25 @@ public struct Perturbations : IFlatbufferObject
       _o.FIXED_GEOMAG_KP,
       _o.FIXED_F10P7,
       _o.FIXED_F10P7_MEAN,
-      _o.FIXED_GEOMAG_AP);
+      _o.FIXED_GEOMAG_AP,
+      _ATMOSPHERIC_MODEL_NAME,
+      _o.EQUATORIAL_RADIUS,
+      _o.CENTRAL_BODY_ROTATION,
+      _o.OBLATE_FLATTENING,
+      _REDUCTION_THEORY,
+      _o.ALBEDO_GRID_SIZE,
+      _SHADOW_MODEL,
+      _SHADOW_BODIES,
+      _SW_DATA_SOURCE,
+      _SW_DATA_EPOCH,
+      _SW_INTERP_METHOD,
+      _o.FIXED_GEOMAG_DST,
+      _o.FIXED_M10P7,
+      _o.FIXED_M10P7_MEAN,
+      _o.FIXED_S10P7,
+      _o.FIXED_S10P7_MEAN,
+      _o.FIXED_Y10P7,
+      _o.FIXED_Y10P7_MEAN);
   }
 }
 
@@ -301,6 +477,24 @@ public class PerturbationsT
   public double FIXED_F10P7 { get; set; }
   public double FIXED_F10P7_MEAN { get; set; }
   public double FIXED_GEOMAG_AP { get; set; }
+  public string ATMOSPHERIC_MODEL_NAME { get; set; }
+  public double EQUATORIAL_RADIUS { get; set; }
+  public double CENTRAL_BODY_ROTATION { get; set; }
+  public double OBLATE_FLATTENING { get; set; }
+  public string REDUCTION_THEORY { get; set; }
+  public uint ALBEDO_GRID_SIZE { get; set; }
+  public string SHADOW_MODEL { get; set; }
+  public string SHADOW_BODIES { get; set; }
+  public string SW_DATA_SOURCE { get; set; }
+  public string SW_DATA_EPOCH { get; set; }
+  public string SW_INTERP_METHOD { get; set; }
+  public double FIXED_GEOMAG_DST { get; set; }
+  public double FIXED_M10P7 { get; set; }
+  public double FIXED_M10P7_MEAN { get; set; }
+  public double FIXED_S10P7 { get; set; }
+  public double FIXED_S10P7_MEAN { get; set; }
+  public double FIXED_Y10P7 { get; set; }
+  public double FIXED_Y10P7_MEAN { get; set; }
 
   public PerturbationsT() {
     this.COMMENT = null;
@@ -323,6 +517,24 @@ public class PerturbationsT
     this.FIXED_F10P7 = 0.0;
     this.FIXED_F10P7_MEAN = 0.0;
     this.FIXED_GEOMAG_AP = 0.0;
+    this.ATMOSPHERIC_MODEL_NAME = null;
+    this.EQUATORIAL_RADIUS = Double.NaN;
+    this.CENTRAL_BODY_ROTATION = Double.NaN;
+    this.OBLATE_FLATTENING = Double.NaN;
+    this.REDUCTION_THEORY = null;
+    this.ALBEDO_GRID_SIZE = 0;
+    this.SHADOW_MODEL = null;
+    this.SHADOW_BODIES = null;
+    this.SW_DATA_SOURCE = null;
+    this.SW_DATA_EPOCH = null;
+    this.SW_INTERP_METHOD = null;
+    this.FIXED_GEOMAG_DST = Double.NaN;
+    this.FIXED_M10P7 = Double.NaN;
+    this.FIXED_M10P7_MEAN = Double.NaN;
+    this.FIXED_S10P7 = Double.NaN;
+    this.FIXED_S10P7_MEAN = Double.NaN;
+    this.FIXED_Y10P7 = Double.NaN;
+    this.FIXED_Y10P7_MEAN = Double.NaN;
   }
 }
 
@@ -352,6 +564,24 @@ static public class PerturbationsVerify
       && verifier.VerifyField(tablePos, 38 /*FIXED_F10P7*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 40 /*FIXED_F10P7_MEAN*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 42 /*FIXED_GEOMAG_AP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 44 /*ATMOSPHERIC_MODEL_NAME*/, false)
+      && verifier.VerifyField(tablePos, 46 /*EQUATORIAL_RADIUS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 48 /*CENTRAL_BODY_ROTATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*OBLATE_FLATTENING*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 52 /*REDUCTION_THEORY*/, false)
+      && verifier.VerifyField(tablePos, 54 /*ALBEDO_GRID_SIZE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 56 /*SHADOW_MODEL*/, false)
+      && verifier.VerifyString(tablePos, 58 /*SHADOW_BODIES*/, false)
+      && verifier.VerifyString(tablePos, 60 /*SW_DATA_SOURCE*/, false)
+      && verifier.VerifyString(tablePos, 62 /*SW_DATA_EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 64 /*SW_INTERP_METHOD*/, false)
+      && verifier.VerifyField(tablePos, 66 /*FIXED_GEOMAG_DST*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 68 /*FIXED_M10P7*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 70 /*FIXED_M10P7_MEAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 72 /*FIXED_S10P7*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 74 /*FIXED_S10P7_MEAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 76 /*FIXED_Y10P7*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 78 /*FIXED_Y10P7_MEAN*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

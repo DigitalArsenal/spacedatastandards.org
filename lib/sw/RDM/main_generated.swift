@@ -21,6 +21,22 @@ public enum reentryDisposition: Int8, FlatbuffersVectorInitializable, Enum, Veri
 }
 
 
+///  CONTROLLED_REENTRY of an RDM (CCSDS 508.1-B-1): whether the re-entry is
+///  controlled. UNSPECIFIED is the zero value: the record does not state it.
+public enum rdmControlledReentry: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  case yes = 1
+  case no = 2
+  case unknown = 3
+
+  public static var max: rdmControlledReentry { return .unknown }
+  public static var min: rdmControlledReentry { return .unspecified }
+}
+
+
 public enum reentryReason: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
@@ -312,6 +328,86 @@ public struct RDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let NUM_FRAGMENTS: VOffset = 52
     static let SURVIVING_MASS: VOffset = 54
     static let COMMENT: VOffset = 56
+    static let MESSAGE_ID: VOffset = 58
+    static let CATALOG_NAME: VOffset = 60
+    static let OBJECT_DESIGNATOR: VOffset = 62
+    static let OBJECT_OWNER: VOffset = 64
+    static let OBJECT_OPERATOR: VOffset = 66
+    static let CONTROLLED_REENTRY: VOffset = 68
+    static let CENTER_NAME: VOffset = 70
+    static let EPOCH_TZERO: VOffset = 72
+    static let REF_FRAME: VOffset = 74
+    static let REF_FRAME_EPOCH: VOffset = 76
+    static let EPHEMERIS_NAME: VOffset = 78
+    static let GRAVITY_MODEL: VOffset = 80
+    static let ATMOSPHERIC_MODEL: VOffset = 82
+    static let SOLAR_FLUX_PREDICTION: VOffset = 84
+    static let N_BODY_PERTURBATIONS: VOffset = 86
+    static let SOLAR_RAD_PRESSURE: VOffset = 88
+    static let EARTH_TIDES: VOffset = 90
+    static let INTRACK_THRUST: VOffset = 92
+    static let DRAG_PARAMETERS_SOURCE: VOffset = 94
+    static let DRAG_PARAMETERS_ALTITUDE: VOffset = 96
+    static let REENTRY_UNCERTAINTY_METHOD: VOffset = 98
+    static let REENTRY_DISINTEGRATION: VOffset = 100
+    static let IMPACT_UNCERTAINTY_METHOD: VOffset = 102
+    static let PREVIOUS_MESSAGE_ID: VOffset = 104
+    static let NEXT_MESSAGE_EPOCH: VOffset = 106
+    static let ORBIT_LIFETIME: VOffset = 108
+    static let ORBIT_LIFETIME_WINDOW_START: VOffset = 110
+    static let ORBIT_LIFETIME_WINDOW_END: VOffset = 112
+    static let REENTRY_WINDOW_START: VOffset = 114
+    static let REENTRY_WINDOW_END: VOffset = 116
+    static let ORBIT_LIFETIME_CONFIDENCE_LEVEL: VOffset = 118
+    static let PROBABILITY_OF_IMPACT: VOffset = 120
+    static let PROBABILITY_OF_BURN_UP: VOffset = 122
+    static let PROBABILITY_OF_BREAK_UP: VOffset = 124
+    static let PROBABILITY_OF_LAND_IMPACT: VOffset = 126
+    static let PROBABILITY_OF_CASUALTY: VOffset = 128
+    static let NOMINAL_IMPACT_EPOCH: VOffset = 130
+    static let IMPACT_WINDOW_START: VOffset = 132
+    static let IMPACT_WINDOW_END: VOffset = 134
+    static let IMPACT_REF_FRAME: VOffset = 136
+    static let NOMINAL_IMPACT_LON: VOffset = 138
+    static let NOMINAL_IMPACT_LAT: VOffset = 140
+    static let NOMINAL_IMPACT_ALT: VOffset = 142
+    static let IMPACT_1_CONFIDENCE: VOffset = 144
+    static let IMPACT_1_START_LON: VOffset = 146
+    static let IMPACT_1_START_LAT: VOffset = 148
+    static let IMPACT_1_STOP_LON: VOffset = 150
+    static let IMPACT_1_STOP_LAT: VOffset = 152
+    static let IMPACT_1_CROSS_TRACK: VOffset = 154
+    static let IMPACT_2_CONFIDENCE: VOffset = 156
+    static let IMPACT_2_START_LON: VOffset = 158
+    static let IMPACT_2_START_LAT: VOffset = 160
+    static let IMPACT_2_STOP_LON: VOffset = 162
+    static let IMPACT_2_STOP_LAT: VOffset = 164
+    static let IMPACT_2_CROSS_TRACK: VOffset = 166
+    static let IMPACT_3_CONFIDENCE: VOffset = 168
+    static let IMPACT_3_START_LON: VOffset = 170
+    static let IMPACT_3_START_LAT: VOffset = 172
+    static let IMPACT_3_STOP_LON: VOffset = 174
+    static let IMPACT_3_STOP_LAT: VOffset = 176
+    static let IMPACT_3_CROSS_TRACK: VOffset = 178
+    static let COV_REF_FRAME: VOffset = 180
+    static let COVARIANCE: VOffset = 182
+    static let DRY_MASS: VOffset = 184
+    static let HAZARDOUS_SUBSTANCES: VOffset = 186
+    static let SOLAR_RAD_COEFF: VOffset = 188
+    static let DRAG_COEFF: VOffset = 190
+    static let RCS: VOffset = 192
+    static let THRUST_ACCELERATION: VOffset = 194
+    static let TIME_LASTOB_START: VOffset = 196
+    static let TIME_LASTOB_END: VOffset = 198
+    static let RECOMMENDED_OD_SPAN: VOffset = 200
+    static let ACTUAL_OD_SPAN: VOffset = 202
+    static let OBS_AVAILABLE: VOffset = 204
+    static let OBS_USED: VOffset = 206
+    static let TRACKS_AVAILABLE: VOffset = 208
+    static let TRACKS_USED: VOffset = 210
+    static let RESIDUALS_ACCEPTED: VOffset = 212
+    static let WEIGHTED_RMS: VOffset = 214
+    static let USER_DEFINED_PARAMETERS: VOffset = 216
   }
 
   ///  CCSDS RDM version
@@ -375,10 +471,217 @@ public struct RDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var NUM_FRAGMENTS: UInt32 { let o = _accessor.offset(VT.NUM_FRAGMENTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Total surviving mass in kg
   public var SURVIVING_MASS: Double { let o = _accessor.offset(VT.SURVIVING_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Additional comments
+  ///  COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+  ///  data groups, in message order, joined by a line feed.
   public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
   public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
-  public static func startRDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 27) }
+  ///  The fields below, with the earlier ones that say so, are the keywords of
+  ///  CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+  ///  NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+  ///  NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+  ///  WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+  ///  REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+  ///  SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+  ///  not keywords of the message.
+  ///  MESSAGE_ID: an identifier the originator makes unique for this message.
+  public var MESSAGE_ID: String? { let o = _accessor.offset(VT.MESSAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MESSAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE_ID) }
+  ///  CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+  public var CATALOG_NAME: String? { let o = _accessor.offset(VT.CATALOG_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CATALOG_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CATALOG_NAME) }
+  ///  OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+  public var OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VT.OBJECT_DESIGNATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_DESIGNATOR) }
+  ///  OBJECT_OWNER.
+  public var OBJECT_OWNER: String? { let o = _accessor.offset(VT.OBJECT_OWNER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_OWNERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_OWNER) }
+  ///  OBJECT_OPERATOR.
+  public var OBJECT_OPERATOR: String? { let o = _accessor.offset(VT.OBJECT_OPERATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_OPERATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_OPERATOR) }
+  ///  CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+  public var CONTROLLED_REENTRY: rdmControlledReentry { let o = _accessor.offset(VT.CONTROLLED_REENTRY); return o == 0 ? .unspecified : rdmControlledReentry(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  CENTER_NAME: the body being re-entered.
+  public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
+  ///  EPOCH_TZERO: the epoch the message's relative times are measured from.
+  public var EPOCH_TZERO: String? { let o = _accessor.offset(VT.EPOCH_TZERO); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCH_TZEROSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH_TZERO) }
+  ///  REF_FRAME: the frame of the state vector.
+  public var REF_FRAME: String? { let o = _accessor.offset(VT.REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME) }
+  ///  REF_FRAME_EPOCH.
+  public var REF_FRAME_EPOCH: String? { let o = _accessor.offset(VT.REF_FRAME_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME_EPOCH) }
+  ///  EPHEMERIS_NAME.
+  public var EPHEMERIS_NAME: String? { let o = _accessor.offset(VT.EPHEMERIS_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPHEMERIS_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPHEMERIS_NAME) }
+  ///  GRAVITY_MODEL.
+  public var GRAVITY_MODEL: String? { let o = _accessor.offset(VT.GRAVITY_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GRAVITY_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GRAVITY_MODEL) }
+  ///  ATMOSPHERIC_MODEL.
+  public var ATMOSPHERIC_MODEL: String? { let o = _accessor.offset(VT.ATMOSPHERIC_MODEL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ATMOSPHERIC_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ATMOSPHERIC_MODEL) }
+  ///  SOLAR_FLUX_PREDICTION.
+  public var SOLAR_FLUX_PREDICTION: String? { let o = _accessor.offset(VT.SOLAR_FLUX_PREDICTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOLAR_FLUX_PREDICTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOLAR_FLUX_PREDICTION) }
+  ///  N_BODY_PERTURBATIONS.
+  public var N_BODY_PERTURBATIONS: String? { let o = _accessor.offset(VT.N_BODY_PERTURBATIONS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var N_BODY_PERTURBATIONSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.N_BODY_PERTURBATIONS) }
+  ///  SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+  public var SOLAR_RAD_PRESSURE: String? { let o = _accessor.offset(VT.SOLAR_RAD_PRESSURE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOLAR_RAD_PRESSURESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOLAR_RAD_PRESSURE) }
+  ///  EARTH_TIDES: a model name.
+  public var EARTH_TIDES: String? { let o = _accessor.offset(VT.EARTH_TIDES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EARTH_TIDESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EARTH_TIDES) }
+  ///  INTRACK_THRUST: YES or NO.
+  public var INTRACK_THRUST: String? { let o = _accessor.offset(VT.INTRACK_THRUST); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INTRACK_THRUSTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INTRACK_THRUST) }
+  ///  DRAG_PARAMETERS_SOURCE.
+  public var DRAG_PARAMETERS_SOURCE: String? { let o = _accessor.offset(VT.DRAG_PARAMETERS_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DRAG_PARAMETERS_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DRAG_PARAMETERS_SOURCE) }
+  ///  DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+  public var DRAG_PARAMETERS_ALTITUDE: Double { let o = _accessor.offset(VT.DRAG_PARAMETERS_ALTITUDE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+  public var REENTRY_UNCERTAINTY_METHOD: String? { let o = _accessor.offset(VT.REENTRY_UNCERTAINTY_METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REENTRY_UNCERTAINTY_METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REENTRY_UNCERTAINTY_METHOD) }
+  ///  REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+  public var REENTRY_DISINTEGRATION: String? { let o = _accessor.offset(VT.REENTRY_DISINTEGRATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REENTRY_DISINTEGRATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REENTRY_DISINTEGRATION) }
+  ///  IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+  public var IMPACT_UNCERTAINTY_METHOD: String? { let o = _accessor.offset(VT.IMPACT_UNCERTAINTY_METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMPACT_UNCERTAINTY_METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMPACT_UNCERTAINTY_METHOD) }
+  ///  PREVIOUS_MESSAGE_ID.
+  public var PREVIOUS_MESSAGE_ID: String? { let o = _accessor.offset(VT.PREVIOUS_MESSAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PREVIOUS_MESSAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PREVIOUS_MESSAGE_ID) }
+  ///  NEXT_MESSAGE_EPOCH.
+  public var NEXT_MESSAGE_EPOCH: String? { let o = _accessor.offset(VT.NEXT_MESSAGE_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NEXT_MESSAGE_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NEXT_MESSAGE_EPOCH) }
+  ///  ORBIT_LIFETIME in days.
+  public var ORBIT_LIFETIME: Double { let o = _accessor.offset(VT.ORBIT_LIFETIME); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+  public var ORBIT_LIFETIME_WINDOW_START: Double { let o = _accessor.offset(VT.ORBIT_LIFETIME_WINDOW_START); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+  public var ORBIT_LIFETIME_WINDOW_END: Double { let o = _accessor.offset(VT.ORBIT_LIFETIME_WINDOW_END); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  REENTRY_WINDOW_START.
+  public var REENTRY_WINDOW_START: String? { let o = _accessor.offset(VT.REENTRY_WINDOW_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REENTRY_WINDOW_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REENTRY_WINDOW_START) }
+  ///  REENTRY_WINDOW_END.
+  public var REENTRY_WINDOW_END: String? { let o = _accessor.offset(VT.REENTRY_WINDOW_END); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REENTRY_WINDOW_ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REENTRY_WINDOW_END) }
+  ///  ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+  public var ORBIT_LIFETIME_CONFIDENCE_LEVEL: Double { let o = _accessor.offset(VT.ORBIT_LIFETIME_CONFIDENCE_LEVEL); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  PROBABILITY_OF_IMPACT, NaN when not stated.
+  public var PROBABILITY_OF_IMPACT: Double { let o = _accessor.offset(VT.PROBABILITY_OF_IMPACT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  PROBABILITY_OF_BURN_UP, NaN when not stated.
+  public var PROBABILITY_OF_BURN_UP: Double { let o = _accessor.offset(VT.PROBABILITY_OF_BURN_UP); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  PROBABILITY_OF_BREAK_UP, NaN when not stated.
+  public var PROBABILITY_OF_BREAK_UP: Double { let o = _accessor.offset(VT.PROBABILITY_OF_BREAK_UP); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+  public var PROBABILITY_OF_LAND_IMPACT: Double { let o = _accessor.offset(VT.PROBABILITY_OF_LAND_IMPACT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  PROBABILITY_OF_CASUALTY, NaN when not stated.
+  public var PROBABILITY_OF_CASUALTY: Double { let o = _accessor.offset(VT.PROBABILITY_OF_CASUALTY); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  NOMINAL_IMPACT_EPOCH.
+  public var NOMINAL_IMPACT_EPOCH: String? { let o = _accessor.offset(VT.NOMINAL_IMPACT_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOMINAL_IMPACT_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOMINAL_IMPACT_EPOCH) }
+  ///  IMPACT_WINDOW_START.
+  public var IMPACT_WINDOW_START: String? { let o = _accessor.offset(VT.IMPACT_WINDOW_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMPACT_WINDOW_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMPACT_WINDOW_START) }
+  ///  IMPACT_WINDOW_END.
+  public var IMPACT_WINDOW_END: String? { let o = _accessor.offset(VT.IMPACT_WINDOW_END); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMPACT_WINDOW_ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMPACT_WINDOW_END) }
+  ///  IMPACT_REF_FRAME.
+  public var IMPACT_REF_FRAME: String? { let o = _accessor.offset(VT.IMPACT_REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMPACT_REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.IMPACT_REF_FRAME) }
+  ///  NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+  public var NOMINAL_IMPACT_LON: Double { let o = _accessor.offset(VT.NOMINAL_IMPACT_LON); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+  public var NOMINAL_IMPACT_LAT: Double { let o = _accessor.offset(VT.NOMINAL_IMPACT_LAT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+  public var NOMINAL_IMPACT_ALT: Double { let o = _accessor.offset(VT.NOMINAL_IMPACT_ALT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+  public var IMPACT_1_CONFIDENCE: Double { let o = _accessor.offset(VT.IMPACT_1_CONFIDENCE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_1_START_LON in degrees, NaN when not stated.
+  public var IMPACT_1_START_LON: Double { let o = _accessor.offset(VT.IMPACT_1_START_LON); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_1_START_LAT in degrees, NaN when not stated.
+  public var IMPACT_1_START_LAT: Double { let o = _accessor.offset(VT.IMPACT_1_START_LAT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_1_STOP_LON in degrees, NaN when not stated.
+  public var IMPACT_1_STOP_LON: Double { let o = _accessor.offset(VT.IMPACT_1_STOP_LON); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+  public var IMPACT_1_STOP_LAT: Double { let o = _accessor.offset(VT.IMPACT_1_STOP_LAT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+  public var IMPACT_1_CROSS_TRACK: Double { let o = _accessor.offset(VT.IMPACT_1_CROSS_TRACK); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+  public var IMPACT_2_CONFIDENCE: Double { let o = _accessor.offset(VT.IMPACT_2_CONFIDENCE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_2_START_LON in degrees, NaN when not stated.
+  public var IMPACT_2_START_LON: Double { let o = _accessor.offset(VT.IMPACT_2_START_LON); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_2_START_LAT in degrees, NaN when not stated.
+  public var IMPACT_2_START_LAT: Double { let o = _accessor.offset(VT.IMPACT_2_START_LAT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_2_STOP_LON in degrees, NaN when not stated.
+  public var IMPACT_2_STOP_LON: Double { let o = _accessor.offset(VT.IMPACT_2_STOP_LON); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+  public var IMPACT_2_STOP_LAT: Double { let o = _accessor.offset(VT.IMPACT_2_STOP_LAT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+  public var IMPACT_2_CROSS_TRACK: Double { let o = _accessor.offset(VT.IMPACT_2_CROSS_TRACK); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+  public var IMPACT_3_CONFIDENCE: Double { let o = _accessor.offset(VT.IMPACT_3_CONFIDENCE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_3_START_LON in degrees, NaN when not stated.
+  public var IMPACT_3_START_LON: Double { let o = _accessor.offset(VT.IMPACT_3_START_LON); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_3_START_LAT in degrees, NaN when not stated.
+  public var IMPACT_3_START_LAT: Double { let o = _accessor.offset(VT.IMPACT_3_START_LAT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_3_STOP_LON in degrees, NaN when not stated.
+  public var IMPACT_3_STOP_LON: Double { let o = _accessor.offset(VT.IMPACT_3_STOP_LON); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+  public var IMPACT_3_STOP_LAT: Double { let o = _accessor.offset(VT.IMPACT_3_STOP_LAT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+  public var IMPACT_3_CROSS_TRACK: Double { let o = _accessor.offset(VT.IMPACT_3_CROSS_TRACK); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  COV_REF_FRAME: the frame of COVARIANCE.
+  public var COV_REF_FRAME: String? { let o = _accessor.offset(VT.COV_REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_REF_FRAME) }
+  ///  Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+  ///  triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+  ///  CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+  ///  CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+  ///  CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+  public var COVARIANCE: FlatbufferVector<Double> { return _accessor.vector(at: VT.COVARIANCE, byteSize: 8) }
+  public func withUnsafePointerToCovariance<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COVARIANCE, body: body) }
+  ///  WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+  public var DRY_MASS: Double { let o = _accessor.offset(VT.DRY_MASS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  HAZARDOUS_SUBSTANCES.
+  public var HAZARDOUS_SUBSTANCES: String? { let o = _accessor.offset(VT.HAZARDOUS_SUBSTANCES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HAZARDOUS_SUBSTANCESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HAZARDOUS_SUBSTANCES) }
+  ///  SOLAR_RAD_COEFF, NaN when not stated.
+  public var SOLAR_RAD_COEFF: Double { let o = _accessor.offset(VT.SOLAR_RAD_COEFF); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  DRAG_COEFF, NaN when not stated.
+  public var DRAG_COEFF: Double { let o = _accessor.offset(VT.DRAG_COEFF); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  RCS in m**2, NaN when not stated.
+  public var RCS: Double { let o = _accessor.offset(VT.RCS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  THRUST_ACCELERATION in m/s**2, NaN when not stated.
+  public var THRUST_ACCELERATION: Double { let o = _accessor.offset(VT.THRUST_ACCELERATION); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  TIME_LASTOB_START.
+  public var TIME_LASTOB_START: String? { let o = _accessor.offset(VT.TIME_LASTOB_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_LASTOB_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_LASTOB_START) }
+  ///  TIME_LASTOB_END.
+  public var TIME_LASTOB_END: String? { let o = _accessor.offset(VT.TIME_LASTOB_END); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_LASTOB_ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_LASTOB_END) }
+  ///  RECOMMENDED_OD_SPAN in days, NaN when not stated.
+  public var RECOMMENDED_OD_SPAN: Double { let o = _accessor.offset(VT.RECOMMENDED_OD_SPAN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ACTUAL_OD_SPAN in days, NaN when not stated.
+  public var ACTUAL_OD_SPAN: Double { let o = _accessor.offset(VT.ACTUAL_OD_SPAN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  OBS_AVAILABLE.
+  public var OBS_AVAILABLE: UInt32 { let o = _accessor.offset(VT.OBS_AVAILABLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  OBS_USED.
+  public var OBS_USED: UInt32 { let o = _accessor.offset(VT.OBS_USED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  TRACKS_AVAILABLE.
+  public var TRACKS_AVAILABLE: UInt32 { let o = _accessor.offset(VT.TRACKS_AVAILABLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  TRACKS_USED.
+  public var TRACKS_USED: UInt32 { let o = _accessor.offset(VT.TRACKS_USED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  RESIDUALS_ACCEPTED in percent, NaN when not stated.
+  public var RESIDUALS_ACCEPTED: Double { let o = _accessor.offset(VT.RESIDUALS_ACCEPTED); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  WEIGHTED_RMS, NaN when not stated.
+  public var WEIGHTED_RMS: Double { let o = _accessor.offset(VT.WEIGHTED_RMS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Every USER_DEFINED keyword of the message, in message order.
+  public var USER_DEFINED_PARAMETERS: FlatbufferVector<RDMUserDefinedParameter> { return _accessor.vector(at: VT.USER_DEFINED_PARAMETERS, byteSize: 4) }
+  public static func startRDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 107) }
   public static func add(CCSDS_RDM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_RDM_VERS, at: VT.CCSDS_RDM_VERS) }
   public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
@@ -406,6 +709,86 @@ public struct RDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(NUM_FRAGMENTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_FRAGMENTS, def: 0, at: VT.NUM_FRAGMENTS) }
   public static func add(SURVIVING_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SURVIVING_MASS, def: 0.0, at: VT.SURVIVING_MASS) }
   public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(MESSAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_ID, at: VT.MESSAGE_ID) }
+  public static func add(CATALOG_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG_NAME, at: VT.CATALOG_NAME) }
+  public static func add(OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_DESIGNATOR, at: VT.OBJECT_DESIGNATOR) }
+  public static func add(OBJECT_OWNER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_OWNER, at: VT.OBJECT_OWNER) }
+  public static func add(OBJECT_OPERATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_OPERATOR, at: VT.OBJECT_OPERATOR) }
+  public static func add(CONTROLLED_REENTRY: rdmControlledReentry, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTROLLED_REENTRY.rawValue, def: 0, at: VT.CONTROLLED_REENTRY) }
+  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
+  public static func add(EPOCH_TZERO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_TZERO, at: VT.EPOCH_TZERO) }
+  public static func add(REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME, at: VT.REF_FRAME) }
+  public static func add(REF_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_EPOCH, at: VT.REF_FRAME_EPOCH) }
+  public static func add(EPHEMERIS_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_NAME, at: VT.EPHEMERIS_NAME) }
+  public static func add(GRAVITY_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRAVITY_MODEL, at: VT.GRAVITY_MODEL) }
+  public static func add(ATMOSPHERIC_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERIC_MODEL, at: VT.ATMOSPHERIC_MODEL) }
+  public static func add(SOLAR_FLUX_PREDICTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLAR_FLUX_PREDICTION, at: VT.SOLAR_FLUX_PREDICTION) }
+  public static func add(N_BODY_PERTURBATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: N_BODY_PERTURBATIONS, at: VT.N_BODY_PERTURBATIONS) }
+  public static func add(SOLAR_RAD_PRESSURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLAR_RAD_PRESSURE, at: VT.SOLAR_RAD_PRESSURE) }
+  public static func add(EARTH_TIDES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EARTH_TIDES, at: VT.EARTH_TIDES) }
+  public static func add(INTRACK_THRUST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTRACK_THRUST, at: VT.INTRACK_THRUST) }
+  public static func add(DRAG_PARAMETERS_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DRAG_PARAMETERS_SOURCE, at: VT.DRAG_PARAMETERS_SOURCE) }
+  public static func add(DRAG_PARAMETERS_ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_PARAMETERS_ALTITUDE, def: .nan, at: VT.DRAG_PARAMETERS_ALTITUDE) }
+  public static func add(REENTRY_UNCERTAINTY_METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REENTRY_UNCERTAINTY_METHOD, at: VT.REENTRY_UNCERTAINTY_METHOD) }
+  public static func add(REENTRY_DISINTEGRATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REENTRY_DISINTEGRATION, at: VT.REENTRY_DISINTEGRATION) }
+  public static func add(IMPACT_UNCERTAINTY_METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_UNCERTAINTY_METHOD, at: VT.IMPACT_UNCERTAINTY_METHOD) }
+  public static func add(PREVIOUS_MESSAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREVIOUS_MESSAGE_ID, at: VT.PREVIOUS_MESSAGE_ID) }
+  public static func add(NEXT_MESSAGE_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NEXT_MESSAGE_EPOCH, at: VT.NEXT_MESSAGE_EPOCH) }
+  public static func add(ORBIT_LIFETIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORBIT_LIFETIME, def: 0.0, at: VT.ORBIT_LIFETIME) }
+  public static func add(ORBIT_LIFETIME_WINDOW_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORBIT_LIFETIME_WINDOW_START, def: .nan, at: VT.ORBIT_LIFETIME_WINDOW_START) }
+  public static func add(ORBIT_LIFETIME_WINDOW_END: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORBIT_LIFETIME_WINDOW_END, def: .nan, at: VT.ORBIT_LIFETIME_WINDOW_END) }
+  public static func add(REENTRY_WINDOW_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REENTRY_WINDOW_START, at: VT.REENTRY_WINDOW_START) }
+  public static func add(REENTRY_WINDOW_END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REENTRY_WINDOW_END, at: VT.REENTRY_WINDOW_END) }
+  public static func add(ORBIT_LIFETIME_CONFIDENCE_LEVEL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORBIT_LIFETIME_CONFIDENCE_LEVEL, def: .nan, at: VT.ORBIT_LIFETIME_CONFIDENCE_LEVEL) }
+  public static func add(PROBABILITY_OF_IMPACT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROBABILITY_OF_IMPACT, def: .nan, at: VT.PROBABILITY_OF_IMPACT) }
+  public static func add(PROBABILITY_OF_BURN_UP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROBABILITY_OF_BURN_UP, def: .nan, at: VT.PROBABILITY_OF_BURN_UP) }
+  public static func add(PROBABILITY_OF_BREAK_UP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROBABILITY_OF_BREAK_UP, def: .nan, at: VT.PROBABILITY_OF_BREAK_UP) }
+  public static func add(PROBABILITY_OF_LAND_IMPACT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROBABILITY_OF_LAND_IMPACT, def: .nan, at: VT.PROBABILITY_OF_LAND_IMPACT) }
+  public static func add(PROBABILITY_OF_CASUALTY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROBABILITY_OF_CASUALTY, def: .nan, at: VT.PROBABILITY_OF_CASUALTY) }
+  public static func add(NOMINAL_IMPACT_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOMINAL_IMPACT_EPOCH, at: VT.NOMINAL_IMPACT_EPOCH) }
+  public static func add(IMPACT_WINDOW_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_WINDOW_START, at: VT.IMPACT_WINDOW_START) }
+  public static func add(IMPACT_WINDOW_END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_WINDOW_END, at: VT.IMPACT_WINDOW_END) }
+  public static func add(IMPACT_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_REF_FRAME, at: VT.IMPACT_REF_FRAME) }
+  public static func add(NOMINAL_IMPACT_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOMINAL_IMPACT_LON, def: .nan, at: VT.NOMINAL_IMPACT_LON) }
+  public static func add(NOMINAL_IMPACT_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOMINAL_IMPACT_LAT, def: .nan, at: VT.NOMINAL_IMPACT_LAT) }
+  public static func add(NOMINAL_IMPACT_ALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOMINAL_IMPACT_ALT, def: .nan, at: VT.NOMINAL_IMPACT_ALT) }
+  public static func add(IMPACT_1_CONFIDENCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_1_CONFIDENCE, def: .nan, at: VT.IMPACT_1_CONFIDENCE) }
+  public static func add(IMPACT_1_START_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_1_START_LON, def: .nan, at: VT.IMPACT_1_START_LON) }
+  public static func add(IMPACT_1_START_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_1_START_LAT, def: .nan, at: VT.IMPACT_1_START_LAT) }
+  public static func add(IMPACT_1_STOP_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_1_STOP_LON, def: .nan, at: VT.IMPACT_1_STOP_LON) }
+  public static func add(IMPACT_1_STOP_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_1_STOP_LAT, def: .nan, at: VT.IMPACT_1_STOP_LAT) }
+  public static func add(IMPACT_1_CROSS_TRACK: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_1_CROSS_TRACK, def: .nan, at: VT.IMPACT_1_CROSS_TRACK) }
+  public static func add(IMPACT_2_CONFIDENCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_2_CONFIDENCE, def: .nan, at: VT.IMPACT_2_CONFIDENCE) }
+  public static func add(IMPACT_2_START_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_2_START_LON, def: .nan, at: VT.IMPACT_2_START_LON) }
+  public static func add(IMPACT_2_START_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_2_START_LAT, def: .nan, at: VT.IMPACT_2_START_LAT) }
+  public static func add(IMPACT_2_STOP_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_2_STOP_LON, def: .nan, at: VT.IMPACT_2_STOP_LON) }
+  public static func add(IMPACT_2_STOP_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_2_STOP_LAT, def: .nan, at: VT.IMPACT_2_STOP_LAT) }
+  public static func add(IMPACT_2_CROSS_TRACK: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_2_CROSS_TRACK, def: .nan, at: VT.IMPACT_2_CROSS_TRACK) }
+  public static func add(IMPACT_3_CONFIDENCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_3_CONFIDENCE, def: .nan, at: VT.IMPACT_3_CONFIDENCE) }
+  public static func add(IMPACT_3_START_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_3_START_LON, def: .nan, at: VT.IMPACT_3_START_LON) }
+  public static func add(IMPACT_3_START_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_3_START_LAT, def: .nan, at: VT.IMPACT_3_START_LAT) }
+  public static func add(IMPACT_3_STOP_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_3_STOP_LON, def: .nan, at: VT.IMPACT_3_STOP_LON) }
+  public static func add(IMPACT_3_STOP_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_3_STOP_LAT, def: .nan, at: VT.IMPACT_3_STOP_LAT) }
+  public static func add(IMPACT_3_CROSS_TRACK: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_3_CROSS_TRACK, def: .nan, at: VT.IMPACT_3_CROSS_TRACK) }
+  public static func add(COV_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REF_FRAME, at: VT.COV_REF_FRAME) }
+  public static func addVectorOf(COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE, at: VT.COVARIANCE) }
+  public static func add(DRY_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRY_MASS, def: .nan, at: VT.DRY_MASS) }
+  public static func add(HAZARDOUS_SUBSTANCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HAZARDOUS_SUBSTANCES, at: VT.HAZARDOUS_SUBSTANCES) }
+  public static func add(SOLAR_RAD_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_COEFF, def: .nan, at: VT.SOLAR_RAD_COEFF) }
+  public static func add(DRAG_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_COEFF, def: .nan, at: VT.DRAG_COEFF) }
+  public static func add(RCS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS, def: .nan, at: VT.RCS) }
+  public static func add(THRUST_ACCELERATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRUST_ACCELERATION, def: .nan, at: VT.THRUST_ACCELERATION) }
+  public static func add(TIME_LASTOB_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_LASTOB_START, at: VT.TIME_LASTOB_START) }
+  public static func add(TIME_LASTOB_END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_LASTOB_END, at: VT.TIME_LASTOB_END) }
+  public static func add(RECOMMENDED_OD_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECOMMENDED_OD_SPAN, def: .nan, at: VT.RECOMMENDED_OD_SPAN) }
+  public static func add(ACTUAL_OD_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTUAL_OD_SPAN, def: .nan, at: VT.ACTUAL_OD_SPAN) }
+  public static func add(OBS_AVAILABLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBS_AVAILABLE, def: 0, at: VT.OBS_AVAILABLE) }
+  public static func add(OBS_USED: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBS_USED, def: 0, at: VT.OBS_USED) }
+  public static func add(TRACKS_AVAILABLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACKS_AVAILABLE, def: 0, at: VT.TRACKS_AVAILABLE) }
+  public static func add(TRACKS_USED: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACKS_USED, def: 0, at: VT.TRACKS_USED) }
+  public static func add(RESIDUALS_ACCEPTED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESIDUALS_ACCEPTED, def: .nan, at: VT.RESIDUALS_ACCEPTED) }
+  public static func add(WEIGHTED_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHTED_RMS, def: .nan, at: VT.WEIGHTED_RMS) }
+  public static func addVectorOf(USER_DEFINED_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_PARAMETERS, at: VT.USER_DEFINED_PARAMETERS) }
   public static func endRDM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRDM(
     _ fbb: inout FlatBufferBuilder,
@@ -435,7 +818,87 @@ public struct RDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     CASUALTY_EXPECTATION: Double = 0.0,
     NUM_FRAGMENTS: UInt32 = 0,
     SURVIVING_MASS: Double = 0.0,
-    COMMENTOffset COMMENT: Offset = Offset()
+    COMMENTOffset COMMENT: Offset = Offset(),
+    MESSAGE_IDOffset MESSAGE_ID: Offset = Offset(),
+    CATALOG_NAMEOffset CATALOG_NAME: Offset = Offset(),
+    OBJECT_DESIGNATOROffset OBJECT_DESIGNATOR: Offset = Offset(),
+    OBJECT_OWNEROffset OBJECT_OWNER: Offset = Offset(),
+    OBJECT_OPERATOROffset OBJECT_OPERATOR: Offset = Offset(),
+    CONTROLLED_REENTRY: rdmControlledReentry = .unspecified,
+    CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
+    EPOCH_TZEROOffset EPOCH_TZERO: Offset = Offset(),
+    REF_FRAMEOffset REF_FRAME: Offset = Offset(),
+    REF_FRAME_EPOCHOffset REF_FRAME_EPOCH: Offset = Offset(),
+    EPHEMERIS_NAMEOffset EPHEMERIS_NAME: Offset = Offset(),
+    GRAVITY_MODELOffset GRAVITY_MODEL: Offset = Offset(),
+    ATMOSPHERIC_MODELOffset ATMOSPHERIC_MODEL: Offset = Offset(),
+    SOLAR_FLUX_PREDICTIONOffset SOLAR_FLUX_PREDICTION: Offset = Offset(),
+    N_BODY_PERTURBATIONSOffset N_BODY_PERTURBATIONS: Offset = Offset(),
+    SOLAR_RAD_PRESSUREOffset SOLAR_RAD_PRESSURE: Offset = Offset(),
+    EARTH_TIDESOffset EARTH_TIDES: Offset = Offset(),
+    INTRACK_THRUSTOffset INTRACK_THRUST: Offset = Offset(),
+    DRAG_PARAMETERS_SOURCEOffset DRAG_PARAMETERS_SOURCE: Offset = Offset(),
+    DRAG_PARAMETERS_ALTITUDE: Double = .nan,
+    REENTRY_UNCERTAINTY_METHODOffset REENTRY_UNCERTAINTY_METHOD: Offset = Offset(),
+    REENTRY_DISINTEGRATIONOffset REENTRY_DISINTEGRATION: Offset = Offset(),
+    IMPACT_UNCERTAINTY_METHODOffset IMPACT_UNCERTAINTY_METHOD: Offset = Offset(),
+    PREVIOUS_MESSAGE_IDOffset PREVIOUS_MESSAGE_ID: Offset = Offset(),
+    NEXT_MESSAGE_EPOCHOffset NEXT_MESSAGE_EPOCH: Offset = Offset(),
+    ORBIT_LIFETIME: Double = 0.0,
+    ORBIT_LIFETIME_WINDOW_START: Double = .nan,
+    ORBIT_LIFETIME_WINDOW_END: Double = .nan,
+    REENTRY_WINDOW_STARTOffset REENTRY_WINDOW_START: Offset = Offset(),
+    REENTRY_WINDOW_ENDOffset REENTRY_WINDOW_END: Offset = Offset(),
+    ORBIT_LIFETIME_CONFIDENCE_LEVEL: Double = .nan,
+    PROBABILITY_OF_IMPACT: Double = .nan,
+    PROBABILITY_OF_BURN_UP: Double = .nan,
+    PROBABILITY_OF_BREAK_UP: Double = .nan,
+    PROBABILITY_OF_LAND_IMPACT: Double = .nan,
+    PROBABILITY_OF_CASUALTY: Double = .nan,
+    NOMINAL_IMPACT_EPOCHOffset NOMINAL_IMPACT_EPOCH: Offset = Offset(),
+    IMPACT_WINDOW_STARTOffset IMPACT_WINDOW_START: Offset = Offset(),
+    IMPACT_WINDOW_ENDOffset IMPACT_WINDOW_END: Offset = Offset(),
+    IMPACT_REF_FRAMEOffset IMPACT_REF_FRAME: Offset = Offset(),
+    NOMINAL_IMPACT_LON: Double = .nan,
+    NOMINAL_IMPACT_LAT: Double = .nan,
+    NOMINAL_IMPACT_ALT: Double = .nan,
+    IMPACT_1_CONFIDENCE: Double = .nan,
+    IMPACT_1_START_LON: Double = .nan,
+    IMPACT_1_START_LAT: Double = .nan,
+    IMPACT_1_STOP_LON: Double = .nan,
+    IMPACT_1_STOP_LAT: Double = .nan,
+    IMPACT_1_CROSS_TRACK: Double = .nan,
+    IMPACT_2_CONFIDENCE: Double = .nan,
+    IMPACT_2_START_LON: Double = .nan,
+    IMPACT_2_START_LAT: Double = .nan,
+    IMPACT_2_STOP_LON: Double = .nan,
+    IMPACT_2_STOP_LAT: Double = .nan,
+    IMPACT_2_CROSS_TRACK: Double = .nan,
+    IMPACT_3_CONFIDENCE: Double = .nan,
+    IMPACT_3_START_LON: Double = .nan,
+    IMPACT_3_START_LAT: Double = .nan,
+    IMPACT_3_STOP_LON: Double = .nan,
+    IMPACT_3_STOP_LAT: Double = .nan,
+    IMPACT_3_CROSS_TRACK: Double = .nan,
+    COV_REF_FRAMEOffset COV_REF_FRAME: Offset = Offset(),
+    COVARIANCEVectorOffset COVARIANCE: Offset = Offset(),
+    DRY_MASS: Double = .nan,
+    HAZARDOUS_SUBSTANCESOffset HAZARDOUS_SUBSTANCES: Offset = Offset(),
+    SOLAR_RAD_COEFF: Double = .nan,
+    DRAG_COEFF: Double = .nan,
+    RCS: Double = .nan,
+    THRUST_ACCELERATION: Double = .nan,
+    TIME_LASTOB_STARTOffset TIME_LASTOB_START: Offset = Offset(),
+    TIME_LASTOB_ENDOffset TIME_LASTOB_END: Offset = Offset(),
+    RECOMMENDED_OD_SPAN: Double = .nan,
+    ACTUAL_OD_SPAN: Double = .nan,
+    OBS_AVAILABLE: UInt32 = 0,
+    OBS_USED: UInt32 = 0,
+    TRACKS_AVAILABLE: UInt32 = 0,
+    TRACKS_USED: UInt32 = 0,
+    RESIDUALS_ACCEPTED: Double = .nan,
+    WEIGHTED_RMS: Double = .nan,
+    USER_DEFINED_PARAMETERSVectorOffset USER_DEFINED_PARAMETERS: Offset = Offset()
   ) -> Offset {
     let __start = RDM.startRDM(&fbb)
     RDM.add(CCSDS_RDM_VERS: CCSDS_RDM_VERS, &fbb)
@@ -465,6 +928,86 @@ public struct RDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     RDM.add(NUM_FRAGMENTS: NUM_FRAGMENTS, &fbb)
     RDM.add(SURVIVING_MASS: SURVIVING_MASS, &fbb)
     RDM.add(COMMENT: COMMENT, &fbb)
+    RDM.add(MESSAGE_ID: MESSAGE_ID, &fbb)
+    RDM.add(CATALOG_NAME: CATALOG_NAME, &fbb)
+    RDM.add(OBJECT_DESIGNATOR: OBJECT_DESIGNATOR, &fbb)
+    RDM.add(OBJECT_OWNER: OBJECT_OWNER, &fbb)
+    RDM.add(OBJECT_OPERATOR: OBJECT_OPERATOR, &fbb)
+    RDM.add(CONTROLLED_REENTRY: CONTROLLED_REENTRY, &fbb)
+    RDM.add(CENTER_NAME: CENTER_NAME, &fbb)
+    RDM.add(EPOCH_TZERO: EPOCH_TZERO, &fbb)
+    RDM.add(REF_FRAME: REF_FRAME, &fbb)
+    RDM.add(REF_FRAME_EPOCH: REF_FRAME_EPOCH, &fbb)
+    RDM.add(EPHEMERIS_NAME: EPHEMERIS_NAME, &fbb)
+    RDM.add(GRAVITY_MODEL: GRAVITY_MODEL, &fbb)
+    RDM.add(ATMOSPHERIC_MODEL: ATMOSPHERIC_MODEL, &fbb)
+    RDM.add(SOLAR_FLUX_PREDICTION: SOLAR_FLUX_PREDICTION, &fbb)
+    RDM.add(N_BODY_PERTURBATIONS: N_BODY_PERTURBATIONS, &fbb)
+    RDM.add(SOLAR_RAD_PRESSURE: SOLAR_RAD_PRESSURE, &fbb)
+    RDM.add(EARTH_TIDES: EARTH_TIDES, &fbb)
+    RDM.add(INTRACK_THRUST: INTRACK_THRUST, &fbb)
+    RDM.add(DRAG_PARAMETERS_SOURCE: DRAG_PARAMETERS_SOURCE, &fbb)
+    RDM.add(DRAG_PARAMETERS_ALTITUDE: DRAG_PARAMETERS_ALTITUDE, &fbb)
+    RDM.add(REENTRY_UNCERTAINTY_METHOD: REENTRY_UNCERTAINTY_METHOD, &fbb)
+    RDM.add(REENTRY_DISINTEGRATION: REENTRY_DISINTEGRATION, &fbb)
+    RDM.add(IMPACT_UNCERTAINTY_METHOD: IMPACT_UNCERTAINTY_METHOD, &fbb)
+    RDM.add(PREVIOUS_MESSAGE_ID: PREVIOUS_MESSAGE_ID, &fbb)
+    RDM.add(NEXT_MESSAGE_EPOCH: NEXT_MESSAGE_EPOCH, &fbb)
+    RDM.add(ORBIT_LIFETIME: ORBIT_LIFETIME, &fbb)
+    RDM.add(ORBIT_LIFETIME_WINDOW_START: ORBIT_LIFETIME_WINDOW_START, &fbb)
+    RDM.add(ORBIT_LIFETIME_WINDOW_END: ORBIT_LIFETIME_WINDOW_END, &fbb)
+    RDM.add(REENTRY_WINDOW_START: REENTRY_WINDOW_START, &fbb)
+    RDM.add(REENTRY_WINDOW_END: REENTRY_WINDOW_END, &fbb)
+    RDM.add(ORBIT_LIFETIME_CONFIDENCE_LEVEL: ORBIT_LIFETIME_CONFIDENCE_LEVEL, &fbb)
+    RDM.add(PROBABILITY_OF_IMPACT: PROBABILITY_OF_IMPACT, &fbb)
+    RDM.add(PROBABILITY_OF_BURN_UP: PROBABILITY_OF_BURN_UP, &fbb)
+    RDM.add(PROBABILITY_OF_BREAK_UP: PROBABILITY_OF_BREAK_UP, &fbb)
+    RDM.add(PROBABILITY_OF_LAND_IMPACT: PROBABILITY_OF_LAND_IMPACT, &fbb)
+    RDM.add(PROBABILITY_OF_CASUALTY: PROBABILITY_OF_CASUALTY, &fbb)
+    RDM.add(NOMINAL_IMPACT_EPOCH: NOMINAL_IMPACT_EPOCH, &fbb)
+    RDM.add(IMPACT_WINDOW_START: IMPACT_WINDOW_START, &fbb)
+    RDM.add(IMPACT_WINDOW_END: IMPACT_WINDOW_END, &fbb)
+    RDM.add(IMPACT_REF_FRAME: IMPACT_REF_FRAME, &fbb)
+    RDM.add(NOMINAL_IMPACT_LON: NOMINAL_IMPACT_LON, &fbb)
+    RDM.add(NOMINAL_IMPACT_LAT: NOMINAL_IMPACT_LAT, &fbb)
+    RDM.add(NOMINAL_IMPACT_ALT: NOMINAL_IMPACT_ALT, &fbb)
+    RDM.add(IMPACT_1_CONFIDENCE: IMPACT_1_CONFIDENCE, &fbb)
+    RDM.add(IMPACT_1_START_LON: IMPACT_1_START_LON, &fbb)
+    RDM.add(IMPACT_1_START_LAT: IMPACT_1_START_LAT, &fbb)
+    RDM.add(IMPACT_1_STOP_LON: IMPACT_1_STOP_LON, &fbb)
+    RDM.add(IMPACT_1_STOP_LAT: IMPACT_1_STOP_LAT, &fbb)
+    RDM.add(IMPACT_1_CROSS_TRACK: IMPACT_1_CROSS_TRACK, &fbb)
+    RDM.add(IMPACT_2_CONFIDENCE: IMPACT_2_CONFIDENCE, &fbb)
+    RDM.add(IMPACT_2_START_LON: IMPACT_2_START_LON, &fbb)
+    RDM.add(IMPACT_2_START_LAT: IMPACT_2_START_LAT, &fbb)
+    RDM.add(IMPACT_2_STOP_LON: IMPACT_2_STOP_LON, &fbb)
+    RDM.add(IMPACT_2_STOP_LAT: IMPACT_2_STOP_LAT, &fbb)
+    RDM.add(IMPACT_2_CROSS_TRACK: IMPACT_2_CROSS_TRACK, &fbb)
+    RDM.add(IMPACT_3_CONFIDENCE: IMPACT_3_CONFIDENCE, &fbb)
+    RDM.add(IMPACT_3_START_LON: IMPACT_3_START_LON, &fbb)
+    RDM.add(IMPACT_3_START_LAT: IMPACT_3_START_LAT, &fbb)
+    RDM.add(IMPACT_3_STOP_LON: IMPACT_3_STOP_LON, &fbb)
+    RDM.add(IMPACT_3_STOP_LAT: IMPACT_3_STOP_LAT, &fbb)
+    RDM.add(IMPACT_3_CROSS_TRACK: IMPACT_3_CROSS_TRACK, &fbb)
+    RDM.add(COV_REF_FRAME: COV_REF_FRAME, &fbb)
+    RDM.addVectorOf(COVARIANCE: COVARIANCE, &fbb)
+    RDM.add(DRY_MASS: DRY_MASS, &fbb)
+    RDM.add(HAZARDOUS_SUBSTANCES: HAZARDOUS_SUBSTANCES, &fbb)
+    RDM.add(SOLAR_RAD_COEFF: SOLAR_RAD_COEFF, &fbb)
+    RDM.add(DRAG_COEFF: DRAG_COEFF, &fbb)
+    RDM.add(RCS: RCS, &fbb)
+    RDM.add(THRUST_ACCELERATION: THRUST_ACCELERATION, &fbb)
+    RDM.add(TIME_LASTOB_START: TIME_LASTOB_START, &fbb)
+    RDM.add(TIME_LASTOB_END: TIME_LASTOB_END, &fbb)
+    RDM.add(RECOMMENDED_OD_SPAN: RECOMMENDED_OD_SPAN, &fbb)
+    RDM.add(ACTUAL_OD_SPAN: ACTUAL_OD_SPAN, &fbb)
+    RDM.add(OBS_AVAILABLE: OBS_AVAILABLE, &fbb)
+    RDM.add(OBS_USED: OBS_USED, &fbb)
+    RDM.add(TRACKS_AVAILABLE: TRACKS_AVAILABLE, &fbb)
+    RDM.add(TRACKS_USED: TRACKS_USED, &fbb)
+    RDM.add(RESIDUALS_ACCEPTED: RESIDUALS_ACCEPTED, &fbb)
+    RDM.add(WEIGHTED_RMS: WEIGHTED_RMS, &fbb)
+    RDM.addVectorOf(USER_DEFINED_PARAMETERS: USER_DEFINED_PARAMETERS, &fbb)
     return RDM.endRDM(&fbb, start: __start)
   }
 
@@ -497,6 +1040,133 @@ public struct RDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.NUM_FRAGMENTS, fieldName: "NUM_FRAGMENTS", required: false, type: UInt32.self)
     try _v.visit(field: VT.SURVIVING_MASS, fieldName: "SURVIVING_MASS", required: false, type: Double.self)
     try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MESSAGE_ID, fieldName: "MESSAGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CATALOG_NAME, fieldName: "CATALOG_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_DESIGNATOR, fieldName: "OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_OWNER, fieldName: "OBJECT_OWNER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBJECT_OPERATOR, fieldName: "OBJECT_OPERATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTROLLED_REENTRY, fieldName: "CONTROLLED_REENTRY", required: false, type: rdmControlledReentry.self)
+    try _v.visit(field: VT.CENTER_NAME, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH_TZERO, fieldName: "EPOCH_TZERO", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME, fieldName: "REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME_EPOCH, fieldName: "REF_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPHEMERIS_NAME, fieldName: "EPHEMERIS_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GRAVITY_MODEL, fieldName: "GRAVITY_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATMOSPHERIC_MODEL, fieldName: "ATMOSPHERIC_MODEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLAR_FLUX_PREDICTION, fieldName: "SOLAR_FLUX_PREDICTION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.N_BODY_PERTURBATIONS, fieldName: "N_BODY_PERTURBATIONS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLAR_RAD_PRESSURE, fieldName: "SOLAR_RAD_PRESSURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EARTH_TIDES, fieldName: "EARTH_TIDES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INTRACK_THRUST, fieldName: "INTRACK_THRUST", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DRAG_PARAMETERS_SOURCE, fieldName: "DRAG_PARAMETERS_SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DRAG_PARAMETERS_ALTITUDE, fieldName: "DRAG_PARAMETERS_ALTITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.REENTRY_UNCERTAINTY_METHOD, fieldName: "REENTRY_UNCERTAINTY_METHOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REENTRY_DISINTEGRATION, fieldName: "REENTRY_DISINTEGRATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMPACT_UNCERTAINTY_METHOD, fieldName: "IMPACT_UNCERTAINTY_METHOD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PREVIOUS_MESSAGE_ID, fieldName: "PREVIOUS_MESSAGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NEXT_MESSAGE_EPOCH, fieldName: "NEXT_MESSAGE_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORBIT_LIFETIME, fieldName: "ORBIT_LIFETIME", required: false, type: Double.self)
+    try _v.visit(field: VT.ORBIT_LIFETIME_WINDOW_START, fieldName: "ORBIT_LIFETIME_WINDOW_START", required: false, type: Double.self)
+    try _v.visit(field: VT.ORBIT_LIFETIME_WINDOW_END, fieldName: "ORBIT_LIFETIME_WINDOW_END", required: false, type: Double.self)
+    try _v.visit(field: VT.REENTRY_WINDOW_START, fieldName: "REENTRY_WINDOW_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REENTRY_WINDOW_END, fieldName: "REENTRY_WINDOW_END", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ORBIT_LIFETIME_CONFIDENCE_LEVEL, fieldName: "ORBIT_LIFETIME_CONFIDENCE_LEVEL", required: false, type: Double.self)
+    try _v.visit(field: VT.PROBABILITY_OF_IMPACT, fieldName: "PROBABILITY_OF_IMPACT", required: false, type: Double.self)
+    try _v.visit(field: VT.PROBABILITY_OF_BURN_UP, fieldName: "PROBABILITY_OF_BURN_UP", required: false, type: Double.self)
+    try _v.visit(field: VT.PROBABILITY_OF_BREAK_UP, fieldName: "PROBABILITY_OF_BREAK_UP", required: false, type: Double.self)
+    try _v.visit(field: VT.PROBABILITY_OF_LAND_IMPACT, fieldName: "PROBABILITY_OF_LAND_IMPACT", required: false, type: Double.self)
+    try _v.visit(field: VT.PROBABILITY_OF_CASUALTY, fieldName: "PROBABILITY_OF_CASUALTY", required: false, type: Double.self)
+    try _v.visit(field: VT.NOMINAL_IMPACT_EPOCH, fieldName: "NOMINAL_IMPACT_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMPACT_WINDOW_START, fieldName: "IMPACT_WINDOW_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMPACT_WINDOW_END, fieldName: "IMPACT_WINDOW_END", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IMPACT_REF_FRAME, fieldName: "IMPACT_REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NOMINAL_IMPACT_LON, fieldName: "NOMINAL_IMPACT_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.NOMINAL_IMPACT_LAT, fieldName: "NOMINAL_IMPACT_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.NOMINAL_IMPACT_ALT, fieldName: "NOMINAL_IMPACT_ALT", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_1_CONFIDENCE, fieldName: "IMPACT_1_CONFIDENCE", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_1_START_LON, fieldName: "IMPACT_1_START_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_1_START_LAT, fieldName: "IMPACT_1_START_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_1_STOP_LON, fieldName: "IMPACT_1_STOP_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_1_STOP_LAT, fieldName: "IMPACT_1_STOP_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_1_CROSS_TRACK, fieldName: "IMPACT_1_CROSS_TRACK", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_2_CONFIDENCE, fieldName: "IMPACT_2_CONFIDENCE", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_2_START_LON, fieldName: "IMPACT_2_START_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_2_START_LAT, fieldName: "IMPACT_2_START_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_2_STOP_LON, fieldName: "IMPACT_2_STOP_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_2_STOP_LAT, fieldName: "IMPACT_2_STOP_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_2_CROSS_TRACK, fieldName: "IMPACT_2_CROSS_TRACK", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_3_CONFIDENCE, fieldName: "IMPACT_3_CONFIDENCE", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_3_START_LON, fieldName: "IMPACT_3_START_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_3_START_LAT, fieldName: "IMPACT_3_START_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_3_STOP_LON, fieldName: "IMPACT_3_STOP_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_3_STOP_LAT, fieldName: "IMPACT_3_STOP_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPACT_3_CROSS_TRACK, fieldName: "IMPACT_3_CROSS_TRACK", required: false, type: Double.self)
+    try _v.visit(field: VT.COV_REF_FRAME, fieldName: "COV_REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COVARIANCE, fieldName: "COVARIANCE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.DRY_MASS, fieldName: "DRY_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.HAZARDOUS_SUBSTANCES, fieldName: "HAZARDOUS_SUBSTANCES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLAR_RAD_COEFF, fieldName: "SOLAR_RAD_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.DRAG_COEFF, fieldName: "DRAG_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.RCS, fieldName: "RCS", required: false, type: Double.self)
+    try _v.visit(field: VT.THRUST_ACCELERATION, fieldName: "THRUST_ACCELERATION", required: false, type: Double.self)
+    try _v.visit(field: VT.TIME_LASTOB_START, fieldName: "TIME_LASTOB_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_LASTOB_END, fieldName: "TIME_LASTOB_END", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECOMMENDED_OD_SPAN, fieldName: "RECOMMENDED_OD_SPAN", required: false, type: Double.self)
+    try _v.visit(field: VT.ACTUAL_OD_SPAN, fieldName: "ACTUAL_OD_SPAN", required: false, type: Double.self)
+    try _v.visit(field: VT.OBS_AVAILABLE, fieldName: "OBS_AVAILABLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBS_USED, fieldName: "OBS_USED", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TRACKS_AVAILABLE, fieldName: "TRACKS_AVAILABLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TRACKS_USED, fieldName: "TRACKS_USED", required: false, type: UInt32.self)
+    try _v.visit(field: VT.RESIDUALS_ACCEPTED, fieldName: "RESIDUALS_ACCEPTED", required: false, type: Double.self)
+    try _v.visit(field: VT.WEIGHTED_RMS, fieldName: "WEIGHTED_RMS", required: false, type: Double.self)
+    try _v.visit(field: VT.USER_DEFINED_PARAMETERS, fieldName: "USER_DEFINED_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<RDMUserDefinedParameter>, RDMUserDefinedParameter>>.self)
+    _v.finish()
+  }
+}
+
+///  One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML
+///  form: the parameter name (the x) and the value as written.
+public struct RDMUserDefinedParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RDM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RDMUserDefinedParameter.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PARAM_NAME: VOffset = 4
+    static let PARAM_VALUE: VOffset = 6
+  }
+
+  ///  x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  public var PARAM_NAME: String? { let o = _accessor.offset(VT.PARAM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAM_NAME) }
+  ///  The value as written
+  public var PARAM_VALUE: String? { let o = _accessor.offset(VT.PARAM_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAM_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAM_VALUE) }
+  public static func startRDMUserDefinedParameter(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(PARAM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAM_NAME, at: VT.PARAM_NAME) }
+  public static func add(PARAM_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAM_VALUE, at: VT.PARAM_VALUE) }
+  public static func endRDMUserDefinedParameter(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createRDMUserDefinedParameter(
+    _ fbb: inout FlatBufferBuilder,
+    PARAM_NAMEOffset PARAM_NAME: Offset = Offset(),
+    PARAM_VALUEOffset PARAM_VALUE: Offset = Offset()
+  ) -> Offset {
+    let __start = RDMUserDefinedParameter.startRDMUserDefinedParameter(&fbb)
+    RDMUserDefinedParameter.add(PARAM_NAME: PARAM_NAME, &fbb)
+    RDMUserDefinedParameter.add(PARAM_VALUE: PARAM_VALUE, &fbb)
+    return RDMUserDefinedParameter.endRDMUserDefinedParameter(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PARAM_NAME, fieldName: "PARAM_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAM_VALUE, fieldName: "PARAM_VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

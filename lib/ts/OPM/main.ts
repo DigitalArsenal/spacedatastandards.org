@@ -3,3 +3,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export * from './OPM.js';
+export * from './OPMManeuver.js';
+export * from './OPMUserDefinedParameter.js';

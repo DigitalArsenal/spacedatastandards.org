@@ -2679,7 +2679,7 @@
         },
         "COMMENT": {
           "type": "string",
-          "description": "COMMENT (O)",
+          "description": "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header.",
           "x-flatbuffer-type": "string"
         },
         "EPOCH": {
@@ -2859,6 +2859,41 @@
           "type": "number",
           "description": "USER_DEFINED_MICROSECONDS [O, units per ICD]",
           "x-flatbuffer-type": "double"
+        },
+        "CLASSIFICATION": {
+          "type": "string",
+          "description": "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S.",
+          "x-flatbuffer-type": "string"
+        },
+        "MESSAGE_ID": {
+          "type": "string",
+          "description": "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message.",
+          "x-flatbuffer-type": "string"
+        },
+        "USER_DEFINED_PARAMETERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OMMUserDefinedParameter"
+          },
+          "description": "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order.",
+          "x-flatbuffer-type": "[OMMUserDefinedParameter]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OMMUserDefinedParameter": {
+      "type": "object",
+      "description": "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+      "properties": {
+        "PARAM_NAME": {
+          "type": "string",
+          "description": "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+          "x-flatbuffer-type": "string"
+        },
+        "PARAM_VALUE": {
+          "type": "string",
+          "description": "The value as written, unit-less text",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

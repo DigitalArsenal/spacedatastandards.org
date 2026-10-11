@@ -153,8 +153,38 @@ func (rcv *OEM) EphemerisDataBlockLength() int {
 }
 
 /// Array of ephemeris data blocks
+/// COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.
+func (rcv *OEM) COMMENT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OEM) Comment() []byte {
+	return rcv.COMMENT()
+}
+
+/// COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.
+/// MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator
+/// makes unique for this message.
+func (rcv *OEM) MESSAGE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OEM) MessageId() []byte {
+	return rcv.MESSAGE_ID()
+}
+
+/// MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator
+/// makes unique for this message.
 func OEMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(5)
+	builder.StartObject(7)
 }
 func OEMAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CLASSIFICATION), 0)
@@ -191,6 +221,18 @@ func OEMStartEPHEMERIS_DATA_BLOCKVector(builder *flatbuffers.Builder, numElems i
 }
 func OEMStartEphemerisDataBlockVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return OEMStartEPHEMERIS_DATA_BLOCKVector(builder, numElems)
+}
+func OEMAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func OEMAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	OEMAddCOMMENT(builder, COMMENT)
+}
+func OEMAddMESSAGE_ID(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MESSAGE_ID), 0)
+}
+func OEMAddMessageId(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	OEMAddMESSAGE_ID(builder, MESSAGE_ID)
 }
 func OEMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

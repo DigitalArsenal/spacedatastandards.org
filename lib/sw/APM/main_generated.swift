@@ -31,6 +31,17 @@ public struct APM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let Q2: VOffset = 18
     static let Q3: VOffset = 20
     static let QC: VOffset = 22
+    static let COMMENT: VOffset = 24
+    static let CLASSIFICATION: VOffset = 26
+    static let MESSAGE_ID: VOffset = 28
+    static let CENTER_NAME: VOffset = 30
+    static let TIME_SYSTEM: VOffset = 32
+    static let QUATERNION_STATES: VOffset = 34
+    static let EULER_ANGLE_STATES: VOffset = 36
+    static let ANGULAR_VELOCITIES: VOffset = 38
+    static let SPIN_STATES: VOffset = 40
+    static let INERTIAS: VOffset = 42
+    static let MANEUVERS: VOffset = 44
   }
 
   public var CCSDS_APM_VERS: String? { let o = _accessor.offset(VT.CCSDS_APM_VERS); return o == 0 ? nil : _accessor.string(at: o) }
@@ -49,7 +60,40 @@ public struct APM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var Q2: Double { let o = _accessor.offset(VT.Q2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var Q3: Double { let o = _accessor.offset(VT.Q3); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var QC: Double { let o = _accessor.offset(VT.QC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startAPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  ///  COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and
+  ///  data groups, in message order, joined by a line feed. A state group's own
+  ///  comments stay with it.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  CLASSIFICATION of the message: the optional header keyword stating its
+  ///  security classification or handling caveat.
+  public var CLASSIFICATION: String? { let o = _accessor.offset(VT.CLASSIFICATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION) }
+  ///  MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  ///  unique for this message.
+  public var MESSAGE_ID: String? { let o = _accessor.offset(VT.MESSAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MESSAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE_ID) }
+  ///  CENTER_NAME: the orbit center, when the message states one.
+  public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
+  ///  TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.
+  public var TIME_SYSTEM: String? { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_SYSTEM) }
+  ///  Quaternion states (QUAT_START block), in message order. Q1..QC above are the
+  ///  single frameless quaternion of the earlier form of this record; a message is
+  ///  read into and written from these lists.
+  public var QUATERNION_STATES: FlatbufferVector<APMQuaternionState> { return _accessor.vector(at: VT.QUATERNION_STATES, byteSize: 4) }
+  ///  Euler angle states (EULER_START block), in message order.
+  public var EULER_ANGLE_STATES: FlatbufferVector<APMEulerAngleState> { return _accessor.vector(at: VT.EULER_ANGLE_STATES, byteSize: 4) }
+  ///  Angular velocities (ANGVEL_START block), in message order.
+  public var ANGULAR_VELOCITIES: FlatbufferVector<APMAngularVelocity> { return _accessor.vector(at: VT.ANGULAR_VELOCITIES, byteSize: 4) }
+  ///  Spin states (SPIN_START block), in message order.
+  public var SPIN_STATES: FlatbufferVector<APMSpinState> { return _accessor.vector(at: VT.SPIN_STATES, byteSize: 4) }
+  ///  Inertia tensors (INERTIA_START block), in message order.
+  public var INERTIAS: FlatbufferVector<APMInertia> { return _accessor.vector(at: VT.INERTIAS, byteSize: 4) }
+  ///  Attitude maneuvers (MAN_START block), in message order.
+  public var MANEUVERS: FlatbufferVector<APMManeuver> { return _accessor.vector(at: VT.MANEUVERS, byteSize: 4) }
+  public static func startAPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
   public static func add(CCSDS_APM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_APM_VERS, at: VT.CCSDS_APM_VERS) }
   public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
@@ -60,6 +104,17 @@ public struct APM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(Q2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q2, def: 0.0, at: VT.Q2) }
   public static func add(Q3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q3, def: 0.0, at: VT.Q3) }
   public static func add(QC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC, def: 0.0, at: VT.QC) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VT.CLASSIFICATION) }
+  public static func add(MESSAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_ID, at: VT.MESSAGE_ID) }
+  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
+  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VT.TIME_SYSTEM) }
+  public static func addVectorOf(QUATERNION_STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUATERNION_STATES, at: VT.QUATERNION_STATES) }
+  public static func addVectorOf(EULER_ANGLE_STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EULER_ANGLE_STATES, at: VT.EULER_ANGLE_STATES) }
+  public static func addVectorOf(ANGULAR_VELOCITIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANGULAR_VELOCITIES, at: VT.ANGULAR_VELOCITIES) }
+  public static func addVectorOf(SPIN_STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPIN_STATES, at: VT.SPIN_STATES) }
+  public static func addVectorOf(INERTIAS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INERTIAS, at: VT.INERTIAS) }
+  public static func addVectorOf(MANEUVERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANEUVERS, at: VT.MANEUVERS) }
   public static func endAPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createAPM(
     _ fbb: inout FlatBufferBuilder,
@@ -72,7 +127,18 @@ public struct APM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     Q1: Double = 0.0,
     Q2: Double = 0.0,
     Q3: Double = 0.0,
-    QC: Double = 0.0
+    QC: Double = 0.0,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    CLASSIFICATIONOffset CLASSIFICATION: Offset = Offset(),
+    MESSAGE_IDOffset MESSAGE_ID: Offset = Offset(),
+    CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
+    TIME_SYSTEMOffset TIME_SYSTEM: Offset = Offset(),
+    QUATERNION_STATESVectorOffset QUATERNION_STATES: Offset = Offset(),
+    EULER_ANGLE_STATESVectorOffset EULER_ANGLE_STATES: Offset = Offset(),
+    ANGULAR_VELOCITIESVectorOffset ANGULAR_VELOCITIES: Offset = Offset(),
+    SPIN_STATESVectorOffset SPIN_STATES: Offset = Offset(),
+    INERTIASVectorOffset INERTIAS: Offset = Offset(),
+    MANEUVERSVectorOffset MANEUVERS: Offset = Offset()
   ) -> Offset {
     let __start = APM.startAPM(&fbb)
     APM.add(CCSDS_APM_VERS: CCSDS_APM_VERS, &fbb)
@@ -85,6 +151,17 @@ public struct APM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     APM.add(Q2: Q2, &fbb)
     APM.add(Q3: Q3, &fbb)
     APM.add(QC: QC, &fbb)
+    APM.add(COMMENT: COMMENT, &fbb)
+    APM.add(CLASSIFICATION: CLASSIFICATION, &fbb)
+    APM.add(MESSAGE_ID: MESSAGE_ID, &fbb)
+    APM.add(CENTER_NAME: CENTER_NAME, &fbb)
+    APM.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    APM.addVectorOf(QUATERNION_STATES: QUATERNION_STATES, &fbb)
+    APM.addVectorOf(EULER_ANGLE_STATES: EULER_ANGLE_STATES, &fbb)
+    APM.addVectorOf(ANGULAR_VELOCITIES: ANGULAR_VELOCITIES, &fbb)
+    APM.addVectorOf(SPIN_STATES: SPIN_STATES, &fbb)
+    APM.addVectorOf(INERTIAS: INERTIAS, &fbb)
+    APM.addVectorOf(MANEUVERS: MANEUVERS, &fbb)
     return APM.endAPM(&fbb, start: __start)
   }
 
@@ -100,6 +177,622 @@ public struct APM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.Q2, fieldName: "Q2", required: false, type: Double.self)
     try _v.visit(field: VT.Q3, fieldName: "Q3", required: false, type: Double.self)
     try _v.visit(field: VT.QC, fieldName: "QC", required: false, type: Double.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLASSIFICATION, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MESSAGE_ID, fieldName: "MESSAGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CENTER_NAME, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.QUATERNION_STATES, fieldName: "QUATERNION_STATES", required: false, type: ForwardOffset<Vector<ForwardOffset<APMQuaternionState>, APMQuaternionState>>.self)
+    try _v.visit(field: VT.EULER_ANGLE_STATES, fieldName: "EULER_ANGLE_STATES", required: false, type: ForwardOffset<Vector<ForwardOffset<APMEulerAngleState>, APMEulerAngleState>>.self)
+    try _v.visit(field: VT.ANGULAR_VELOCITIES, fieldName: "ANGULAR_VELOCITIES", required: false, type: ForwardOffset<Vector<ForwardOffset<APMAngularVelocity>, APMAngularVelocity>>.self)
+    try _v.visit(field: VT.SPIN_STATES, fieldName: "SPIN_STATES", required: false, type: ForwardOffset<Vector<ForwardOffset<APMSpinState>, APMSpinState>>.self)
+    try _v.visit(field: VT.INERTIAS, fieldName: "INERTIAS", required: false, type: ForwardOffset<Vector<ForwardOffset<APMInertia>, APMInertia>>.self)
+    try _v.visit(field: VT.MANEUVERS, fieldName: "MANEUVERS", required: false, type: ForwardOffset<Vector<ForwardOffset<APMManeuver>, APMManeuver>>.self)
+    _v.finish()
+  }
+}
+
+///  A quaternion state of an APM (CCSDS 504.0-B-2 Table 3-3): rotation from
+///  REF_FRAME_A to REF_FRAME_B. The derivative is NaN when the message states none.
+public struct APMQuaternionState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$APM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APMQuaternionState.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COMMENT: VOffset = 4
+    static let REF_FRAME_A: VOffset = 6
+    static let REF_FRAME_B: VOffset = 8
+    static let Q1: VOffset = 10
+    static let Q2: VOffset = 12
+    static let Q3: VOffset = 14
+    static let QC: VOffset = 16
+    static let Q1_DOT: VOffset = 18
+    static let Q2_DOT: VOffset = 20
+    static let Q3_DOT: VOffset = 22
+    static let QC_DOT: VOffset = 24
+  }
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  REF_FRAME_A: the frame the rotation starts from.
+  public var REF_FRAME_A: String? { let o = _accessor.offset(VT.REF_FRAME_A); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAME_ASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME_A) }
+  ///  REF_FRAME_B: the frame the rotation ends in.
+  public var REF_FRAME_B: String? { let o = _accessor.offset(VT.REF_FRAME_B); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAME_BSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME_B) }
+  ///  Q1 (vector part, x).
+  public var Q1: Double { let o = _accessor.offset(VT.Q1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Q2 (vector part, y).
+  public var Q2: Double { let o = _accessor.offset(VT.Q2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Q3 (vector part, z).
+  public var Q3: Double { let o = _accessor.offset(VT.Q3); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  QC (scalar part).
+  public var QC: Double { let o = _accessor.offset(VT.QC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Q1_DOT in 1/s, NaN when not stated.
+  public var Q1_DOT: Double { let o = _accessor.offset(VT.Q1_DOT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Q2_DOT in 1/s, NaN when not stated.
+  public var Q2_DOT: Double { let o = _accessor.offset(VT.Q2_DOT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Q3_DOT in 1/s, NaN when not stated.
+  public var Q3_DOT: Double { let o = _accessor.offset(VT.Q3_DOT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  QC_DOT in 1/s, NaN when not stated.
+  public var QC_DOT: Double { let o = _accessor.offset(VT.QC_DOT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startAPMQuaternionState(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(REF_FRAME_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_A, at: VT.REF_FRAME_A) }
+  public static func add(REF_FRAME_B: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_B, at: VT.REF_FRAME_B) }
+  public static func add(Q1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q1, def: 0.0, at: VT.Q1) }
+  public static func add(Q2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q2, def: 0.0, at: VT.Q2) }
+  public static func add(Q3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q3, def: 0.0, at: VT.Q3) }
+  public static func add(QC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC, def: 0.0, at: VT.QC) }
+  public static func add(Q1_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q1_DOT, def: .nan, at: VT.Q1_DOT) }
+  public static func add(Q2_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q2_DOT, def: .nan, at: VT.Q2_DOT) }
+  public static func add(Q3_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q3_DOT, def: .nan, at: VT.Q3_DOT) }
+  public static func add(QC_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC_DOT, def: .nan, at: VT.QC_DOT) }
+  public static func endAPMQuaternionState(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createAPMQuaternionState(
+    _ fbb: inout FlatBufferBuilder,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    REF_FRAME_AOffset REF_FRAME_A: Offset = Offset(),
+    REF_FRAME_BOffset REF_FRAME_B: Offset = Offset(),
+    Q1: Double = 0.0,
+    Q2: Double = 0.0,
+    Q3: Double = 0.0,
+    QC: Double = 0.0,
+    Q1_DOT: Double = .nan,
+    Q2_DOT: Double = .nan,
+    Q3_DOT: Double = .nan,
+    QC_DOT: Double = .nan
+  ) -> Offset {
+    let __start = APMQuaternionState.startAPMQuaternionState(&fbb)
+    APMQuaternionState.add(COMMENT: COMMENT, &fbb)
+    APMQuaternionState.add(REF_FRAME_A: REF_FRAME_A, &fbb)
+    APMQuaternionState.add(REF_FRAME_B: REF_FRAME_B, &fbb)
+    APMQuaternionState.add(Q1: Q1, &fbb)
+    APMQuaternionState.add(Q2: Q2, &fbb)
+    APMQuaternionState.add(Q3: Q3, &fbb)
+    APMQuaternionState.add(QC: QC, &fbb)
+    APMQuaternionState.add(Q1_DOT: Q1_DOT, &fbb)
+    APMQuaternionState.add(Q2_DOT: Q2_DOT, &fbb)
+    APMQuaternionState.add(Q3_DOT: Q3_DOT, &fbb)
+    APMQuaternionState.add(QC_DOT: QC_DOT, &fbb)
+    return APMQuaternionState.endAPMQuaternionState(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME_A, fieldName: "REF_FRAME_A", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME_B, fieldName: "REF_FRAME_B", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.Q1, fieldName: "Q1", required: false, type: Double.self)
+    try _v.visit(field: VT.Q2, fieldName: "Q2", required: false, type: Double.self)
+    try _v.visit(field: VT.Q3, fieldName: "Q3", required: false, type: Double.self)
+    try _v.visit(field: VT.QC, fieldName: "QC", required: false, type: Double.self)
+    try _v.visit(field: VT.Q1_DOT, fieldName: "Q1_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Q2_DOT, fieldName: "Q2_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.Q3_DOT, fieldName: "Q3_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.QC_DOT, fieldName: "QC_DOT", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  An Euler angle state of an APM (EULER_START block). Angles in degrees; a rate
+///  is NaN when the message states none.
+public struct APMEulerAngleState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$APM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APMEulerAngleState.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COMMENT: VOffset = 4
+    static let REF_FRAME_A: VOffset = 6
+    static let REF_FRAME_B: VOffset = 8
+    static let EULER_ROT_SEQ: VOffset = 10
+    static let ANGLE_1: VOffset = 12
+    static let ANGLE_2: VOffset = 14
+    static let ANGLE_3: VOffset = 16
+    static let ANGLE_1_DOT: VOffset = 18
+    static let ANGLE_2_DOT: VOffset = 20
+    static let ANGLE_3_DOT: VOffset = 22
+  }
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  REF_FRAME_A: the frame the rotation starts from.
+  public var REF_FRAME_A: String? { let o = _accessor.offset(VT.REF_FRAME_A); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAME_ASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME_A) }
+  ///  REF_FRAME_B: the frame the rotation ends in.
+  public var REF_FRAME_B: String? { let o = _accessor.offset(VT.REF_FRAME_B); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAME_BSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME_B) }
+  ///  EULER_ROT_SEQ: the rotation sequence, for example ZXZ.
+  public var EULER_ROT_SEQ: String? { let o = _accessor.offset(VT.EULER_ROT_SEQ); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EULER_ROT_SEQSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EULER_ROT_SEQ) }
+  ///  ANGLE_1 in degrees.
+  public var ANGLE_1: Double { let o = _accessor.offset(VT.ANGLE_1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ANGLE_2 in degrees.
+  public var ANGLE_2: Double { let o = _accessor.offset(VT.ANGLE_2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ANGLE_3 in degrees.
+  public var ANGLE_3: Double { let o = _accessor.offset(VT.ANGLE_3); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ANGLE_1_DOT in deg/s, NaN when not stated.
+  public var ANGLE_1_DOT: Double { let o = _accessor.offset(VT.ANGLE_1_DOT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ANGLE_2_DOT in deg/s, NaN when not stated.
+  public var ANGLE_2_DOT: Double { let o = _accessor.offset(VT.ANGLE_2_DOT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ANGLE_3_DOT in deg/s, NaN when not stated.
+  public var ANGLE_3_DOT: Double { let o = _accessor.offset(VT.ANGLE_3_DOT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startAPMEulerAngleState(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(REF_FRAME_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_A, at: VT.REF_FRAME_A) }
+  public static func add(REF_FRAME_B: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_B, at: VT.REF_FRAME_B) }
+  public static func add(EULER_ROT_SEQ: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EULER_ROT_SEQ, at: VT.EULER_ROT_SEQ) }
+  public static func add(ANGLE_1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_1, def: 0.0, at: VT.ANGLE_1) }
+  public static func add(ANGLE_2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_2, def: 0.0, at: VT.ANGLE_2) }
+  public static func add(ANGLE_3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_3, def: 0.0, at: VT.ANGLE_3) }
+  public static func add(ANGLE_1_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_1_DOT, def: .nan, at: VT.ANGLE_1_DOT) }
+  public static func add(ANGLE_2_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_2_DOT, def: .nan, at: VT.ANGLE_2_DOT) }
+  public static func add(ANGLE_3_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_3_DOT, def: .nan, at: VT.ANGLE_3_DOT) }
+  public static func endAPMEulerAngleState(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createAPMEulerAngleState(
+    _ fbb: inout FlatBufferBuilder,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    REF_FRAME_AOffset REF_FRAME_A: Offset = Offset(),
+    REF_FRAME_BOffset REF_FRAME_B: Offset = Offset(),
+    EULER_ROT_SEQOffset EULER_ROT_SEQ: Offset = Offset(),
+    ANGLE_1: Double = 0.0,
+    ANGLE_2: Double = 0.0,
+    ANGLE_3: Double = 0.0,
+    ANGLE_1_DOT: Double = .nan,
+    ANGLE_2_DOT: Double = .nan,
+    ANGLE_3_DOT: Double = .nan
+  ) -> Offset {
+    let __start = APMEulerAngleState.startAPMEulerAngleState(&fbb)
+    APMEulerAngleState.add(COMMENT: COMMENT, &fbb)
+    APMEulerAngleState.add(REF_FRAME_A: REF_FRAME_A, &fbb)
+    APMEulerAngleState.add(REF_FRAME_B: REF_FRAME_B, &fbb)
+    APMEulerAngleState.add(EULER_ROT_SEQ: EULER_ROT_SEQ, &fbb)
+    APMEulerAngleState.add(ANGLE_1: ANGLE_1, &fbb)
+    APMEulerAngleState.add(ANGLE_2: ANGLE_2, &fbb)
+    APMEulerAngleState.add(ANGLE_3: ANGLE_3, &fbb)
+    APMEulerAngleState.add(ANGLE_1_DOT: ANGLE_1_DOT, &fbb)
+    APMEulerAngleState.add(ANGLE_2_DOT: ANGLE_2_DOT, &fbb)
+    APMEulerAngleState.add(ANGLE_3_DOT: ANGLE_3_DOT, &fbb)
+    return APMEulerAngleState.endAPMEulerAngleState(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME_A, fieldName: "REF_FRAME_A", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME_B, fieldName: "REF_FRAME_B", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EULER_ROT_SEQ, fieldName: "EULER_ROT_SEQ", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANGLE_1, fieldName: "ANGLE_1", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE_2, fieldName: "ANGLE_2", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE_3, fieldName: "ANGLE_3", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE_1_DOT, fieldName: "ANGLE_1_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE_2_DOT, fieldName: "ANGLE_2_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGLE_3_DOT, fieldName: "ANGLE_3_DOT", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  An angular velocity of an APM (ANGVEL_START block), in deg/s.
+public struct APMAngularVelocity: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$APM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APMAngularVelocity.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COMMENT: VOffset = 4
+    static let REF_FRAME_A: VOffset = 6
+    static let REF_FRAME_B: VOffset = 8
+    static let ANGVEL_FRAME: VOffset = 10
+    static let ANGVEL_X: VOffset = 12
+    static let ANGVEL_Y: VOffset = 14
+    static let ANGVEL_Z: VOffset = 16
+  }
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  REF_FRAME_A: the frame the rotation starts from.
+  public var REF_FRAME_A: String? { let o = _accessor.offset(VT.REF_FRAME_A); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAME_ASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME_A) }
+  ///  REF_FRAME_B: the frame the rotation ends in.
+  public var REF_FRAME_B: String? { let o = _accessor.offset(VT.REF_FRAME_B); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAME_BSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME_B) }
+  ///  ANGVEL_FRAME: the frame the components are in.
+  public var ANGVEL_FRAME: String? { let o = _accessor.offset(VT.ANGVEL_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ANGVEL_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ANGVEL_FRAME) }
+  ///  ANGVEL_X in deg/s.
+  public var ANGVEL_X: Double { let o = _accessor.offset(VT.ANGVEL_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ANGVEL_Y in deg/s.
+  public var ANGVEL_Y: Double { let o = _accessor.offset(VT.ANGVEL_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ANGVEL_Z in deg/s.
+  public var ANGVEL_Z: Double { let o = _accessor.offset(VT.ANGVEL_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startAPMAngularVelocity(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(REF_FRAME_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_A, at: VT.REF_FRAME_A) }
+  public static func add(REF_FRAME_B: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_B, at: VT.REF_FRAME_B) }
+  public static func add(ANGVEL_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANGVEL_FRAME, at: VT.ANGVEL_FRAME) }
+  public static func add(ANGVEL_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGVEL_X, def: 0.0, at: VT.ANGVEL_X) }
+  public static func add(ANGVEL_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGVEL_Y, def: 0.0, at: VT.ANGVEL_Y) }
+  public static func add(ANGVEL_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGVEL_Z, def: 0.0, at: VT.ANGVEL_Z) }
+  public static func endAPMAngularVelocity(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createAPMAngularVelocity(
+    _ fbb: inout FlatBufferBuilder,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    REF_FRAME_AOffset REF_FRAME_A: Offset = Offset(),
+    REF_FRAME_BOffset REF_FRAME_B: Offset = Offset(),
+    ANGVEL_FRAMEOffset ANGVEL_FRAME: Offset = Offset(),
+    ANGVEL_X: Double = 0.0,
+    ANGVEL_Y: Double = 0.0,
+    ANGVEL_Z: Double = 0.0
+  ) -> Offset {
+    let __start = APMAngularVelocity.startAPMAngularVelocity(&fbb)
+    APMAngularVelocity.add(COMMENT: COMMENT, &fbb)
+    APMAngularVelocity.add(REF_FRAME_A: REF_FRAME_A, &fbb)
+    APMAngularVelocity.add(REF_FRAME_B: REF_FRAME_B, &fbb)
+    APMAngularVelocity.add(ANGVEL_FRAME: ANGVEL_FRAME, &fbb)
+    APMAngularVelocity.add(ANGVEL_X: ANGVEL_X, &fbb)
+    APMAngularVelocity.add(ANGVEL_Y: ANGVEL_Y, &fbb)
+    APMAngularVelocity.add(ANGVEL_Z: ANGVEL_Z, &fbb)
+    return APMAngularVelocity.endAPMAngularVelocity(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME_A, fieldName: "REF_FRAME_A", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME_B, fieldName: "REF_FRAME_B", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANGVEL_FRAME, fieldName: "ANGVEL_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANGVEL_X, fieldName: "ANGVEL_X", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGVEL_Y, fieldName: "ANGVEL_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.ANGVEL_Z, fieldName: "ANGVEL_Z", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  A spin state of an APM (SPIN_START block). The nutation terms come as either of
+///  two groups, nutation angle, period and phase or the momentum direction and the
+///  velocity around it; those not stated are NaN.
+public struct APMSpinState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$APM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APMSpinState.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COMMENT: VOffset = 4
+    static let REF_FRAME_A: VOffset = 6
+    static let REF_FRAME_B: VOffset = 8
+    static let SPIN_ALPHA: VOffset = 10
+    static let SPIN_DELTA: VOffset = 12
+    static let SPIN_ANGLE: VOffset = 14
+    static let SPIN_ANGLE_VEL: VOffset = 16
+    static let NUTATION: VOffset = 18
+    static let NUTATION_PER: VOffset = 20
+    static let NUTATION_PHASE: VOffset = 22
+    static let MOMENTUM_ALPHA: VOffset = 24
+    static let MOMENTUM_DELTA: VOffset = 26
+    static let NUTATION_VEL: VOffset = 28
+  }
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  REF_FRAME_A: the frame the rotation starts from.
+  public var REF_FRAME_A: String? { let o = _accessor.offset(VT.REF_FRAME_A); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAME_ASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME_A) }
+  ///  REF_FRAME_B: the frame the rotation ends in.
+  public var REF_FRAME_B: String? { let o = _accessor.offset(VT.REF_FRAME_B); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAME_BSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME_B) }
+  ///  SPIN_ALPHA: right ascension of the spin axis in degrees.
+  public var SPIN_ALPHA: Double { let o = _accessor.offset(VT.SPIN_ALPHA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  SPIN_DELTA: declination of the spin axis in degrees.
+  public var SPIN_DELTA: Double { let o = _accessor.offset(VT.SPIN_DELTA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  SPIN_ANGLE: phase in degrees.
+  public var SPIN_ANGLE: Double { let o = _accessor.offset(VT.SPIN_ANGLE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  SPIN_ANGLE_VEL: angular velocity in deg/s.
+  public var SPIN_ANGLE_VEL: Double { let o = _accessor.offset(VT.SPIN_ANGLE_VEL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  NUTATION: nutation angle in degrees, NaN when not stated.
+  public var NUTATION: Double { let o = _accessor.offset(VT.NUTATION); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  NUTATION_PER: nutation period in seconds, NaN when not stated.
+  public var NUTATION_PER: Double { let o = _accessor.offset(VT.NUTATION_PER); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  NUTATION_PHASE: nutation phase in degrees, NaN when not stated.
+  public var NUTATION_PHASE: Double { let o = _accessor.offset(VT.NUTATION_PHASE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MOMENTUM_ALPHA: right ascension of the angular momentum vector in degrees,
+  ///  NaN when not stated.
+  public var MOMENTUM_ALPHA: Double { let o = _accessor.offset(VT.MOMENTUM_ALPHA); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MOMENTUM_DELTA: declination of the angular momentum vector in degrees, NaN
+  ///  when not stated.
+  public var MOMENTUM_DELTA: Double { let o = _accessor.offset(VT.MOMENTUM_DELTA); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  NUTATION_VEL: angular velocity around the momentum vector in deg/s, NaN when
+  ///  not stated.
+  public var NUTATION_VEL: Double { let o = _accessor.offset(VT.NUTATION_VEL); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startAPMSpinState(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(REF_FRAME_A: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_A, at: VT.REF_FRAME_A) }
+  public static func add(REF_FRAME_B: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_B, at: VT.REF_FRAME_B) }
+  public static func add(SPIN_ALPHA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPIN_ALPHA, def: 0.0, at: VT.SPIN_ALPHA) }
+  public static func add(SPIN_DELTA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPIN_DELTA, def: 0.0, at: VT.SPIN_DELTA) }
+  public static func add(SPIN_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPIN_ANGLE, def: 0.0, at: VT.SPIN_ANGLE) }
+  public static func add(SPIN_ANGLE_VEL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPIN_ANGLE_VEL, def: 0.0, at: VT.SPIN_ANGLE_VEL) }
+  public static func add(NUTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUTATION, def: .nan, at: VT.NUTATION) }
+  public static func add(NUTATION_PER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUTATION_PER, def: .nan, at: VT.NUTATION_PER) }
+  public static func add(NUTATION_PHASE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUTATION_PHASE, def: .nan, at: VT.NUTATION_PHASE) }
+  public static func add(MOMENTUM_ALPHA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOMENTUM_ALPHA, def: .nan, at: VT.MOMENTUM_ALPHA) }
+  public static func add(MOMENTUM_DELTA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOMENTUM_DELTA, def: .nan, at: VT.MOMENTUM_DELTA) }
+  public static func add(NUTATION_VEL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUTATION_VEL, def: .nan, at: VT.NUTATION_VEL) }
+  public static func endAPMSpinState(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createAPMSpinState(
+    _ fbb: inout FlatBufferBuilder,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    REF_FRAME_AOffset REF_FRAME_A: Offset = Offset(),
+    REF_FRAME_BOffset REF_FRAME_B: Offset = Offset(),
+    SPIN_ALPHA: Double = 0.0,
+    SPIN_DELTA: Double = 0.0,
+    SPIN_ANGLE: Double = 0.0,
+    SPIN_ANGLE_VEL: Double = 0.0,
+    NUTATION: Double = .nan,
+    NUTATION_PER: Double = .nan,
+    NUTATION_PHASE: Double = .nan,
+    MOMENTUM_ALPHA: Double = .nan,
+    MOMENTUM_DELTA: Double = .nan,
+    NUTATION_VEL: Double = .nan
+  ) -> Offset {
+    let __start = APMSpinState.startAPMSpinState(&fbb)
+    APMSpinState.add(COMMENT: COMMENT, &fbb)
+    APMSpinState.add(REF_FRAME_A: REF_FRAME_A, &fbb)
+    APMSpinState.add(REF_FRAME_B: REF_FRAME_B, &fbb)
+    APMSpinState.add(SPIN_ALPHA: SPIN_ALPHA, &fbb)
+    APMSpinState.add(SPIN_DELTA: SPIN_DELTA, &fbb)
+    APMSpinState.add(SPIN_ANGLE: SPIN_ANGLE, &fbb)
+    APMSpinState.add(SPIN_ANGLE_VEL: SPIN_ANGLE_VEL, &fbb)
+    APMSpinState.add(NUTATION: NUTATION, &fbb)
+    APMSpinState.add(NUTATION_PER: NUTATION_PER, &fbb)
+    APMSpinState.add(NUTATION_PHASE: NUTATION_PHASE, &fbb)
+    APMSpinState.add(MOMENTUM_ALPHA: MOMENTUM_ALPHA, &fbb)
+    APMSpinState.add(MOMENTUM_DELTA: MOMENTUM_DELTA, &fbb)
+    APMSpinState.add(NUTATION_VEL: NUTATION_VEL, &fbb)
+    return APMSpinState.endAPMSpinState(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME_A, fieldName: "REF_FRAME_A", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME_B, fieldName: "REF_FRAME_B", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SPIN_ALPHA, fieldName: "SPIN_ALPHA", required: false, type: Double.self)
+    try _v.visit(field: VT.SPIN_DELTA, fieldName: "SPIN_DELTA", required: false, type: Double.self)
+    try _v.visit(field: VT.SPIN_ANGLE, fieldName: "SPIN_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VT.SPIN_ANGLE_VEL, fieldName: "SPIN_ANGLE_VEL", required: false, type: Double.self)
+    try _v.visit(field: VT.NUTATION, fieldName: "NUTATION", required: false, type: Double.self)
+    try _v.visit(field: VT.NUTATION_PER, fieldName: "NUTATION_PER", required: false, type: Double.self)
+    try _v.visit(field: VT.NUTATION_PHASE, fieldName: "NUTATION_PHASE", required: false, type: Double.self)
+    try _v.visit(field: VT.MOMENTUM_ALPHA, fieldName: "MOMENTUM_ALPHA", required: false, type: Double.self)
+    try _v.visit(field: VT.MOMENTUM_DELTA, fieldName: "MOMENTUM_DELTA", required: false, type: Double.self)
+    try _v.visit(field: VT.NUTATION_VEL, fieldName: "NUTATION_VEL", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  An inertia tensor of an APM (INERTIA_START block), in kg*m**2.
+public struct APMInertia: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$APM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APMInertia.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COMMENT: VOffset = 4
+    static let INERTIA_REF_FRAME: VOffset = 6
+    static let IXX: VOffset = 8
+    static let IYY: VOffset = 10
+    static let IZZ: VOffset = 12
+    static let IXY: VOffset = 14
+    static let IXZ: VOffset = 16
+    static let IYZ: VOffset = 18
+  }
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  INERTIA_REF_FRAME: the frame the tensor is in.
+  public var INERTIA_REF_FRAME: String? { let o = _accessor.offset(VT.INERTIA_REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INERTIA_REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INERTIA_REF_FRAME) }
+  ///  IXX: moment about X.
+  public var IXX: Double { let o = _accessor.offset(VT.IXX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IYY: moment about Y.
+  public var IYY: Double { let o = _accessor.offset(VT.IYY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IZZ: moment about Z.
+  public var IZZ: Double { let o = _accessor.offset(VT.IZZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IXY: cross product X-Y.
+  public var IXY: Double { let o = _accessor.offset(VT.IXY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IXZ: cross product X-Z.
+  public var IXZ: Double { let o = _accessor.offset(VT.IXZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  IYZ: cross product Y-Z.
+  public var IYZ: Double { let o = _accessor.offset(VT.IYZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startAPMInertia(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(INERTIA_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INERTIA_REF_FRAME, at: VT.INERTIA_REF_FRAME) }
+  public static func add(IXX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IXX, def: 0.0, at: VT.IXX) }
+  public static func add(IYY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IYY, def: 0.0, at: VT.IYY) }
+  public static func add(IZZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IZZ, def: 0.0, at: VT.IZZ) }
+  public static func add(IXY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IXY, def: 0.0, at: VT.IXY) }
+  public static func add(IXZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IXZ, def: 0.0, at: VT.IXZ) }
+  public static func add(IYZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IYZ, def: 0.0, at: VT.IYZ) }
+  public static func endAPMInertia(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createAPMInertia(
+    _ fbb: inout FlatBufferBuilder,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    INERTIA_REF_FRAMEOffset INERTIA_REF_FRAME: Offset = Offset(),
+    IXX: Double = 0.0,
+    IYY: Double = 0.0,
+    IZZ: Double = 0.0,
+    IXY: Double = 0.0,
+    IXZ: Double = 0.0,
+    IYZ: Double = 0.0
+  ) -> Offset {
+    let __start = APMInertia.startAPMInertia(&fbb)
+    APMInertia.add(COMMENT: COMMENT, &fbb)
+    APMInertia.add(INERTIA_REF_FRAME: INERTIA_REF_FRAME, &fbb)
+    APMInertia.add(IXX: IXX, &fbb)
+    APMInertia.add(IYY: IYY, &fbb)
+    APMInertia.add(IZZ: IZZ, &fbb)
+    APMInertia.add(IXY: IXY, &fbb)
+    APMInertia.add(IXZ: IXZ, &fbb)
+    APMInertia.add(IYZ: IYZ, &fbb)
+    return APMInertia.endAPMInertia(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INERTIA_REF_FRAME, fieldName: "INERTIA_REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.IXX, fieldName: "IXX", required: false, type: Double.self)
+    try _v.visit(field: VT.IYY, fieldName: "IYY", required: false, type: Double.self)
+    try _v.visit(field: VT.IZZ, fieldName: "IZZ", required: false, type: Double.self)
+    try _v.visit(field: VT.IXY, fieldName: "IXY", required: false, type: Double.self)
+    try _v.visit(field: VT.IXZ, fieldName: "IXZ", required: false, type: Double.self)
+    try _v.visit(field: VT.IYZ, fieldName: "IYZ", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  An attitude maneuver of an APM (MAN_START block).
+public struct APMManeuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$APM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APMManeuver.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COMMENT: VOffset = 4
+    static let MAN_EPOCH_START: VOffset = 6
+    static let MAN_DURATION: VOffset = 8
+    static let MAN_REF_FRAME: VOffset = 10
+    static let MAN_TOR_X: VOffset = 12
+    static let MAN_TOR_Y: VOffset = 14
+    static let MAN_TOR_Z: VOffset = 16
+    static let MAN_DELTA_MASS: VOffset = 18
+  }
+
+  ///  COMMENT lines of this block, joined by a line feed.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  MAN_EPOCH_START: epoch of the start of the maneuver.
+  public var MAN_EPOCH_START: String? { let o = _accessor.offset(VT.MAN_EPOCH_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_EPOCH_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_EPOCH_START) }
+  ///  MAN_DURATION in seconds.
+  public var MAN_DURATION: Double { let o = _accessor.offset(VT.MAN_DURATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MAN_REF_FRAME: the frame the torque is in.
+  public var MAN_REF_FRAME: String? { let o = _accessor.offset(VT.MAN_REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_REF_FRAME) }
+  ///  MAN_TOR_X in N*m.
+  public var MAN_TOR_X: Double { let o = _accessor.offset(VT.MAN_TOR_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MAN_TOR_Y in N*m.
+  public var MAN_TOR_Y: Double { let o = _accessor.offset(VT.MAN_TOR_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MAN_TOR_Z in N*m.
+  public var MAN_TOR_Z: Double { let o = _accessor.offset(VT.MAN_TOR_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MAN_DELTA_MASS in kg (negative or zero), NaN when not stated.
+  public var MAN_DELTA_MASS: Double { let o = _accessor.offset(VT.MAN_DELTA_MASS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startAPMManeuver(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(MAN_EPOCH_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_EPOCH_START, at: VT.MAN_EPOCH_START) }
+  public static func add(MAN_DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAN_DURATION, def: 0.0, at: VT.MAN_DURATION) }
+  public static func add(MAN_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_REF_FRAME, at: VT.MAN_REF_FRAME) }
+  public static func add(MAN_TOR_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAN_TOR_X, def: 0.0, at: VT.MAN_TOR_X) }
+  public static func add(MAN_TOR_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAN_TOR_Y, def: 0.0, at: VT.MAN_TOR_Y) }
+  public static func add(MAN_TOR_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAN_TOR_Z, def: 0.0, at: VT.MAN_TOR_Z) }
+  public static func add(MAN_DELTA_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAN_DELTA_MASS, def: .nan, at: VT.MAN_DELTA_MASS) }
+  public static func endAPMManeuver(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createAPMManeuver(
+    _ fbb: inout FlatBufferBuilder,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    MAN_EPOCH_STARTOffset MAN_EPOCH_START: Offset = Offset(),
+    MAN_DURATION: Double = 0.0,
+    MAN_REF_FRAMEOffset MAN_REF_FRAME: Offset = Offset(),
+    MAN_TOR_X: Double = 0.0,
+    MAN_TOR_Y: Double = 0.0,
+    MAN_TOR_Z: Double = 0.0,
+    MAN_DELTA_MASS: Double = .nan
+  ) -> Offset {
+    let __start = APMManeuver.startAPMManeuver(&fbb)
+    APMManeuver.add(COMMENT: COMMENT, &fbb)
+    APMManeuver.add(MAN_EPOCH_START: MAN_EPOCH_START, &fbb)
+    APMManeuver.add(MAN_DURATION: MAN_DURATION, &fbb)
+    APMManeuver.add(MAN_REF_FRAME: MAN_REF_FRAME, &fbb)
+    APMManeuver.add(MAN_TOR_X: MAN_TOR_X, &fbb)
+    APMManeuver.add(MAN_TOR_Y: MAN_TOR_Y, &fbb)
+    APMManeuver.add(MAN_TOR_Z: MAN_TOR_Z, &fbb)
+    APMManeuver.add(MAN_DELTA_MASS: MAN_DELTA_MASS, &fbb)
+    return APMManeuver.endAPMManeuver(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_EPOCH_START, fieldName: "MAN_EPOCH_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_DURATION, fieldName: "MAN_DURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.MAN_REF_FRAME, fieldName: "MAN_REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_TOR_X, fieldName: "MAN_TOR_X", required: false, type: Double.self)
+    try _v.visit(field: VT.MAN_TOR_Y, fieldName: "MAN_TOR_Y", required: false, type: Double.self)
+    try _v.visit(field: VT.MAN_TOR_Z, fieldName: "MAN_TOR_Z", required: false, type: Double.self)
+    try _v.visit(field: VT.MAN_DELTA_MASS, fieldName: "MAN_DELTA_MASS", required: false, type: Double.self)
     _v.finish()
   }
 }

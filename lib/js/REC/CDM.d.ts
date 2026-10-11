@@ -5,6 +5,14 @@ import { RFM, RFMT } from './RFM.js';
 import { screeningVolumeShape } from './screeningVolumeShape.js';
 /**
  * Conjunction Data Message
+ *
+ * Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+ * SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+ * of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+ * km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+ * MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+ * COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+ * terms) are held as the message states them.
  */
 export declare class CDM implements flatbuffers.IUnpackableObject<CDMT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -139,6 +147,12 @@ export declare class CDM implements flatbuffers.IUnpackableObject<CDMT> {
      * Data Source for the positional information for Object 2
      */
     OBJECT2_DATASOURCE(obj?: PNM): PNM | null;
+    /**
+     * COMMENT lines of the message header and of its relative metadata and data
+     * (CCSDS 508.0-B-1), in message order, joined by a line feed.
+     */
+    COMMENT(): string | null;
+    COMMENT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startCDM(builder: flatbuffers.Builder): void;
     static addCcsdsCdmVers(builder: flatbuffers.Builder, CCSDS_CDM_VERS: number): void;
     static addCreationDate(builder: flatbuffers.Builder, CREATION_DATEOffset: flatbuffers.Offset): void;
@@ -169,6 +183,7 @@ export declare class CDM implements flatbuffers.IUnpackableObject<CDMT> {
     static addObject2(builder: flatbuffers.Builder, OBJECT2Offset: flatbuffers.Offset): void;
     static addObject1Datasource(builder: flatbuffers.Builder, OBJECT1_DATASOURCEOffset: flatbuffers.Offset): void;
     static addObject2Datasource(builder: flatbuffers.Builder, OBJECT2_DATASOURCEOffset: flatbuffers.Offset): void;
+    static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static endCDM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishCDMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedCDMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -205,7 +220,8 @@ export declare class CDMT implements flatbuffers.IGeneratedObject {
     OBJECT2: CDMObjectT | null;
     OBJECT1_DATASOURCE: PNMT | null;
     OBJECT2_DATASOURCE: PNMT | null;
-    constructor(CCSDS_CDM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, MESSAGE_FOR?: string | Uint8Array | null, MESSAGE_ID?: string | Uint8Array | null, TCA?: string | Uint8Array | null, MISS_DISTANCE?: number, RELATIVE_SPEED?: number, RELATIVE_POSITION_R?: number, RELATIVE_POSITION_T?: number, RELATIVE_POSITION_N?: number, RELATIVE_VELOCITY_R?: number, RELATIVE_VELOCITY_T?: number, RELATIVE_VELOCITY_N?: number, START_SCREEN_PERIOD?: string | Uint8Array | null, STOP_SCREEN_PERIOD?: string | Uint8Array | null, SCREEN_VOLUME_FRAME?: RFMT | null, SCREEN_VOLUME_SHAPE?: screeningVolumeShape, SCREEN_VOLUME_X?: number, SCREEN_VOLUME_Y?: number, SCREEN_VOLUME_Z?: number, SCREEN_ENTRY_TIME?: string | Uint8Array | null, SCREEN_EXIT_TIME?: string | Uint8Array | null, COLLISION_PROBABILITY?: number, COLLISION_PROBABILITY_METHOD?: string | Uint8Array | null, OBJECT1?: CDMObjectT | null, OBJECT2?: CDMObjectT | null, OBJECT1_DATASOURCE?: PNMT | null, OBJECT2_DATASOURCE?: PNMT | null);
+    COMMENT: string | Uint8Array | null;
+    constructor(CCSDS_CDM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, MESSAGE_FOR?: string | Uint8Array | null, MESSAGE_ID?: string | Uint8Array | null, TCA?: string | Uint8Array | null, MISS_DISTANCE?: number, RELATIVE_SPEED?: number, RELATIVE_POSITION_R?: number, RELATIVE_POSITION_T?: number, RELATIVE_POSITION_N?: number, RELATIVE_VELOCITY_R?: number, RELATIVE_VELOCITY_T?: number, RELATIVE_VELOCITY_N?: number, START_SCREEN_PERIOD?: string | Uint8Array | null, STOP_SCREEN_PERIOD?: string | Uint8Array | null, SCREEN_VOLUME_FRAME?: RFMT | null, SCREEN_VOLUME_SHAPE?: screeningVolumeShape, SCREEN_VOLUME_X?: number, SCREEN_VOLUME_Y?: number, SCREEN_VOLUME_Z?: number, SCREEN_ENTRY_TIME?: string | Uint8Array | null, SCREEN_EXIT_TIME?: string | Uint8Array | null, COLLISION_PROBABILITY?: number, COLLISION_PROBABILITY_METHOD?: string | Uint8Array | null, OBJECT1?: CDMObjectT | null, OBJECT2?: CDMObjectT | null, OBJECT1_DATASOURCE?: PNMT | null, OBJECT2_DATASOURCE?: PNMT | null, COMMENT?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CDM.d.ts.map

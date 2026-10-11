@@ -4,6 +4,7 @@ package REM
 
 import (
 	flatbuffers "github.com/google/flatbuffers/go"
+	"math"
 )
 
 type Perturbations struct {
@@ -410,8 +411,350 @@ func (rcv *Perturbations) MutateFixedGeomagAp(n float64) bool {
 	return rcv.MutateFIXED_GEOMAG_AP(n)
 }
 
+/// ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+/// above is the model family when the text names one.
+func (rcv *Perturbations) ATMOSPHERIC_MODEL_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Perturbations) AtmosphericModelName() []byte {
+	return rcv.ATMOSPHERIC_MODEL_NAME()
+}
+
+/// ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+/// above is the model family when the text names one.
+/// EQUATORIAL_RADIUS in km, NaN when not stated.
+func (rcv *Perturbations) EQUATORIAL_RADIUS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Perturbations) EquatorialRadius() float64 {
+	return rcv.EQUATORIAL_RADIUS()
+}
+
+/// EQUATORIAL_RADIUS in km, NaN when not stated.
+func (rcv *Perturbations) MutateEQUATORIAL_RADIUS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *Perturbations) MutateEquatorialRadius(n float64) bool {
+	return rcv.MutateEQUATORIAL_RADIUS(n)
+}
+
+/// CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+func (rcv *Perturbations) CENTRAL_BODY_ROTATION() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Perturbations) CentralBodyRotation() float64 {
+	return rcv.CENTRAL_BODY_ROTATION()
+}
+
+/// CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+func (rcv *Perturbations) MutateCENTRAL_BODY_ROTATION(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *Perturbations) MutateCentralBodyRotation(n float64) bool {
+	return rcv.MutateCENTRAL_BODY_ROTATION(n)
+}
+
+/// OBLATE_FLATTENING, NaN when not stated.
+func (rcv *Perturbations) OBLATE_FLATTENING() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Perturbations) OblateFlattening() float64 {
+	return rcv.OBLATE_FLATTENING()
+}
+
+/// OBLATE_FLATTENING, NaN when not stated.
+func (rcv *Perturbations) MutateOBLATE_FLATTENING(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *Perturbations) MutateOblateFlattening(n float64) bool {
+	return rcv.MutateOBLATE_FLATTENING(n)
+}
+
+/// REDUCTION_THEORY.
+func (rcv *Perturbations) REDUCTION_THEORY() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Perturbations) ReductionTheory() []byte {
+	return rcv.REDUCTION_THEORY()
+}
+
+/// REDUCTION_THEORY.
+/// ALBEDO_GRID_SIZE.
+func (rcv *Perturbations) ALBEDO_GRID_SIZE() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Perturbations) AlbedoGridSize() uint32 {
+	return rcv.ALBEDO_GRID_SIZE()
+}
+
+/// ALBEDO_GRID_SIZE.
+func (rcv *Perturbations) MutateALBEDO_GRID_SIZE(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(54, n)
+}
+
+func (rcv *Perturbations) MutateAlbedoGridSize(n uint32) bool {
+	return rcv.MutateALBEDO_GRID_SIZE(n)
+}
+
+/// SHADOW_MODEL.
+func (rcv *Perturbations) SHADOW_MODEL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Perturbations) ShadowModel() []byte {
+	return rcv.SHADOW_MODEL()
+}
+
+/// SHADOW_MODEL.
+/// SHADOW_BODIES.
+func (rcv *Perturbations) SHADOW_BODIES() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Perturbations) ShadowBodies() []byte {
+	return rcv.SHADOW_BODIES()
+}
+
+/// SHADOW_BODIES.
+/// SW_DATA_SOURCE: the space weather data source.
+func (rcv *Perturbations) SW_DATA_SOURCE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Perturbations) SwDataSource() []byte {
+	return rcv.SW_DATA_SOURCE()
+}
+
+/// SW_DATA_SOURCE: the space weather data source.
+/// SW_DATA_EPOCH.
+func (rcv *Perturbations) SW_DATA_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Perturbations) SwDataEpoch() []byte {
+	return rcv.SW_DATA_EPOCH()
+}
+
+/// SW_DATA_EPOCH.
+/// SW_INTERP_METHOD.
+func (rcv *Perturbations) SW_INTERP_METHOD() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Perturbations) SwInterpMethod() []byte {
+	return rcv.SW_INTERP_METHOD()
+}
+
+/// SW_INTERP_METHOD.
+/// FIXED_GEOMAG_DST in nT, NaN when not stated.
+func (rcv *Perturbations) FIXED_GEOMAG_DST() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Perturbations) FixedGeomagDst() float64 {
+	return rcv.FIXED_GEOMAG_DST()
+}
+
+/// FIXED_GEOMAG_DST in nT, NaN when not stated.
+func (rcv *Perturbations) MutateFIXED_GEOMAG_DST(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *Perturbations) MutateFixedGeomagDst(n float64) bool {
+	return rcv.MutateFIXED_GEOMAG_DST(n)
+}
+
+/// FIXED_M10P7, NaN when not stated.
+func (rcv *Perturbations) FIXED_M10P7() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Perturbations) FixedM10p7() float64 {
+	return rcv.FIXED_M10P7()
+}
+
+/// FIXED_M10P7, NaN when not stated.
+func (rcv *Perturbations) MutateFIXED_M10P7(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(68, n)
+}
+
+func (rcv *Perturbations) MutateFixedM10p7(n float64) bool {
+	return rcv.MutateFIXED_M10P7(n)
+}
+
+/// FIXED_M10P7_MEAN, NaN when not stated.
+func (rcv *Perturbations) FIXED_M10P7_MEAN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Perturbations) FixedM10p7Mean() float64 {
+	return rcv.FIXED_M10P7_MEAN()
+}
+
+/// FIXED_M10P7_MEAN, NaN when not stated.
+func (rcv *Perturbations) MutateFIXED_M10P7_MEAN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(70, n)
+}
+
+func (rcv *Perturbations) MutateFixedM10p7Mean(n float64) bool {
+	return rcv.MutateFIXED_M10P7_MEAN(n)
+}
+
+/// FIXED_S10P7, NaN when not stated.
+func (rcv *Perturbations) FIXED_S10P7() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Perturbations) FixedS10p7() float64 {
+	return rcv.FIXED_S10P7()
+}
+
+/// FIXED_S10P7, NaN when not stated.
+func (rcv *Perturbations) MutateFIXED_S10P7(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(72, n)
+}
+
+func (rcv *Perturbations) MutateFixedS10p7(n float64) bool {
+	return rcv.MutateFIXED_S10P7(n)
+}
+
+/// FIXED_S10P7_MEAN, NaN when not stated.
+func (rcv *Perturbations) FIXED_S10P7_MEAN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Perturbations) FixedS10p7Mean() float64 {
+	return rcv.FIXED_S10P7_MEAN()
+}
+
+/// FIXED_S10P7_MEAN, NaN when not stated.
+func (rcv *Perturbations) MutateFIXED_S10P7_MEAN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(74, n)
+}
+
+func (rcv *Perturbations) MutateFixedS10p7Mean(n float64) bool {
+	return rcv.MutateFIXED_S10P7_MEAN(n)
+}
+
+/// FIXED_Y10P7, NaN when not stated.
+func (rcv *Perturbations) FIXED_Y10P7() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Perturbations) FixedY10p7() float64 {
+	return rcv.FIXED_Y10P7()
+}
+
+/// FIXED_Y10P7, NaN when not stated.
+func (rcv *Perturbations) MutateFIXED_Y10P7(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(76, n)
+}
+
+func (rcv *Perturbations) MutateFixedY10p7(n float64) bool {
+	return rcv.MutateFIXED_Y10P7(n)
+}
+
+/// FIXED_Y10P7_MEAN, NaN when not stated.
+func (rcv *Perturbations) FIXED_Y10P7_MEAN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *Perturbations) FixedY10p7Mean() float64 {
+	return rcv.FIXED_Y10P7_MEAN()
+}
+
+/// FIXED_Y10P7_MEAN, NaN when not stated.
+func (rcv *Perturbations) MutateFIXED_Y10P7_MEAN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(78, n)
+}
+
+func (rcv *Perturbations) MutateFixedY10p7Mean(n float64) bool {
+	return rcv.MutateFIXED_Y10P7_MEAN(n)
+}
+
 func PerturbationsStart(builder *flatbuffers.Builder) {
-	builder.StartObject(20)
+	builder.StartObject(38)
 }
 func PerturbationsAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -544,6 +887,114 @@ func PerturbationsAddFIXED_GEOMAG_AP(builder *flatbuffers.Builder, FIXED_GEOMAG_
 }
 func PerturbationsAddFixedGeomagAp(builder *flatbuffers.Builder, FIXED_GEOMAG_AP float64) {
 	PerturbationsAddFIXED_GEOMAG_AP(builder, FIXED_GEOMAG_AP)
+}
+func PerturbationsAddATMOSPHERIC_MODEL_NAME(builder *flatbuffers.Builder, ATMOSPHERIC_MODEL_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(ATMOSPHERIC_MODEL_NAME), 0)
+}
+func PerturbationsAddAtmosphericModelName(builder *flatbuffers.Builder, ATMOSPHERIC_MODEL_NAME flatbuffers.UOffsetT) {
+	PerturbationsAddATMOSPHERIC_MODEL_NAME(builder, ATMOSPHERIC_MODEL_NAME)
+}
+func PerturbationsAddEQUATORIAL_RADIUS(builder *flatbuffers.Builder, EQUATORIAL_RADIUS float64) {
+	builder.PrependFloat64Slot(21, EQUATORIAL_RADIUS, float64(math.NaN()))
+}
+func PerturbationsAddEquatorialRadius(builder *flatbuffers.Builder, EQUATORIAL_RADIUS float64) {
+	PerturbationsAddEQUATORIAL_RADIUS(builder, EQUATORIAL_RADIUS)
+}
+func PerturbationsAddCENTRAL_BODY_ROTATION(builder *flatbuffers.Builder, CENTRAL_BODY_ROTATION float64) {
+	builder.PrependFloat64Slot(22, CENTRAL_BODY_ROTATION, float64(math.NaN()))
+}
+func PerturbationsAddCentralBodyRotation(builder *flatbuffers.Builder, CENTRAL_BODY_ROTATION float64) {
+	PerturbationsAddCENTRAL_BODY_ROTATION(builder, CENTRAL_BODY_ROTATION)
+}
+func PerturbationsAddOBLATE_FLATTENING(builder *flatbuffers.Builder, OBLATE_FLATTENING float64) {
+	builder.PrependFloat64Slot(23, OBLATE_FLATTENING, float64(math.NaN()))
+}
+func PerturbationsAddOblateFlattening(builder *flatbuffers.Builder, OBLATE_FLATTENING float64) {
+	PerturbationsAddOBLATE_FLATTENING(builder, OBLATE_FLATTENING)
+}
+func PerturbationsAddREDUCTION_THEORY(builder *flatbuffers.Builder, REDUCTION_THEORY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(REDUCTION_THEORY), 0)
+}
+func PerturbationsAddReductionTheory(builder *flatbuffers.Builder, REDUCTION_THEORY flatbuffers.UOffsetT) {
+	PerturbationsAddREDUCTION_THEORY(builder, REDUCTION_THEORY)
+}
+func PerturbationsAddALBEDO_GRID_SIZE(builder *flatbuffers.Builder, ALBEDO_GRID_SIZE uint32) {
+	builder.PrependUint32Slot(25, ALBEDO_GRID_SIZE, 0)
+}
+func PerturbationsAddAlbedoGridSize(builder *flatbuffers.Builder, ALBEDO_GRID_SIZE uint32) {
+	PerturbationsAddALBEDO_GRID_SIZE(builder, ALBEDO_GRID_SIZE)
+}
+func PerturbationsAddSHADOW_MODEL(builder *flatbuffers.Builder, SHADOW_MODEL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(SHADOW_MODEL), 0)
+}
+func PerturbationsAddShadowModel(builder *flatbuffers.Builder, SHADOW_MODEL flatbuffers.UOffsetT) {
+	PerturbationsAddSHADOW_MODEL(builder, SHADOW_MODEL)
+}
+func PerturbationsAddSHADOW_BODIES(builder *flatbuffers.Builder, SHADOW_BODIES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(SHADOW_BODIES), 0)
+}
+func PerturbationsAddShadowBodies(builder *flatbuffers.Builder, SHADOW_BODIES flatbuffers.UOffsetT) {
+	PerturbationsAddSHADOW_BODIES(builder, SHADOW_BODIES)
+}
+func PerturbationsAddSW_DATA_SOURCE(builder *flatbuffers.Builder, SW_DATA_SOURCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(SW_DATA_SOURCE), 0)
+}
+func PerturbationsAddSwDataSource(builder *flatbuffers.Builder, SW_DATA_SOURCE flatbuffers.UOffsetT) {
+	PerturbationsAddSW_DATA_SOURCE(builder, SW_DATA_SOURCE)
+}
+func PerturbationsAddSW_DATA_EPOCH(builder *flatbuffers.Builder, SW_DATA_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(SW_DATA_EPOCH), 0)
+}
+func PerturbationsAddSwDataEpoch(builder *flatbuffers.Builder, SW_DATA_EPOCH flatbuffers.UOffsetT) {
+	PerturbationsAddSW_DATA_EPOCH(builder, SW_DATA_EPOCH)
+}
+func PerturbationsAddSW_INTERP_METHOD(builder *flatbuffers.Builder, SW_INTERP_METHOD flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(SW_INTERP_METHOD), 0)
+}
+func PerturbationsAddSwInterpMethod(builder *flatbuffers.Builder, SW_INTERP_METHOD flatbuffers.UOffsetT) {
+	PerturbationsAddSW_INTERP_METHOD(builder, SW_INTERP_METHOD)
+}
+func PerturbationsAddFIXED_GEOMAG_DST(builder *flatbuffers.Builder, FIXED_GEOMAG_DST float64) {
+	builder.PrependFloat64Slot(31, FIXED_GEOMAG_DST, float64(math.NaN()))
+}
+func PerturbationsAddFixedGeomagDst(builder *flatbuffers.Builder, FIXED_GEOMAG_DST float64) {
+	PerturbationsAddFIXED_GEOMAG_DST(builder, FIXED_GEOMAG_DST)
+}
+func PerturbationsAddFIXED_M10P7(builder *flatbuffers.Builder, FIXED_M10P7 float64) {
+	builder.PrependFloat64Slot(32, FIXED_M10P7, float64(math.NaN()))
+}
+func PerturbationsAddFixedM10p7(builder *flatbuffers.Builder, FIXED_M10P7 float64) {
+	PerturbationsAddFIXED_M10P7(builder, FIXED_M10P7)
+}
+func PerturbationsAddFIXED_M10P7_MEAN(builder *flatbuffers.Builder, FIXED_M10P7_MEAN float64) {
+	builder.PrependFloat64Slot(33, FIXED_M10P7_MEAN, float64(math.NaN()))
+}
+func PerturbationsAddFixedM10p7Mean(builder *flatbuffers.Builder, FIXED_M10P7_MEAN float64) {
+	PerturbationsAddFIXED_M10P7_MEAN(builder, FIXED_M10P7_MEAN)
+}
+func PerturbationsAddFIXED_S10P7(builder *flatbuffers.Builder, FIXED_S10P7 float64) {
+	builder.PrependFloat64Slot(34, FIXED_S10P7, float64(math.NaN()))
+}
+func PerturbationsAddFixedS10p7(builder *flatbuffers.Builder, FIXED_S10P7 float64) {
+	PerturbationsAddFIXED_S10P7(builder, FIXED_S10P7)
+}
+func PerturbationsAddFIXED_S10P7_MEAN(builder *flatbuffers.Builder, FIXED_S10P7_MEAN float64) {
+	builder.PrependFloat64Slot(35, FIXED_S10P7_MEAN, float64(math.NaN()))
+}
+func PerturbationsAddFixedS10p7Mean(builder *flatbuffers.Builder, FIXED_S10P7_MEAN float64) {
+	PerturbationsAddFIXED_S10P7_MEAN(builder, FIXED_S10P7_MEAN)
+}
+func PerturbationsAddFIXED_Y10P7(builder *flatbuffers.Builder, FIXED_Y10P7 float64) {
+	builder.PrependFloat64Slot(36, FIXED_Y10P7, float64(math.NaN()))
+}
+func PerturbationsAddFixedY10p7(builder *flatbuffers.Builder, FIXED_Y10P7 float64) {
+	PerturbationsAddFIXED_Y10P7(builder, FIXED_Y10P7)
+}
+func PerturbationsAddFIXED_Y10P7_MEAN(builder *flatbuffers.Builder, FIXED_Y10P7_MEAN float64) {
+	builder.PrependFloat64Slot(37, FIXED_Y10P7_MEAN, float64(math.NaN()))
+}
+func PerturbationsAddFixedY10p7Mean(builder *flatbuffers.Builder, FIXED_Y10P7_MEAN float64) {
+	PerturbationsAddFIXED_Y10P7_MEAN(builder, FIXED_Y10P7_MEAN)
 }
 func PerturbationsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

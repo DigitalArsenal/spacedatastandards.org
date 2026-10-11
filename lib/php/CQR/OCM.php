@@ -423,22 +423,66 @@ class OCM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+    /// blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+    /// them above state the first block's CARTPV or CARTPVA states.
+    /**
+     * @returnVectorOffset
+     */
+    public function getTRAJECTORY_BLOCKS($j)
+    {
+        $o = $this->__offset(62);
+        $obj = new OCMTrajectoryBlock();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTRAJECTORY_BLOCKSLength()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Every covariance time history of the message (COV_START blocks), in message
+    /// order. COVARIANCE_DATA and the fields that go with it above state the first
+    /// block when it is one line.
+    /**
+     * @returnVectorOffset
+     */
+    public function getCOVARIANCE_BLOCKS($j)
+    {
+        $o = $this->__offset(64);
+        $obj = new OCMCovarianceBlock();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOVARIANCE_BLOCKSLength()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOCM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(29);
+        $builder->StartObject(31);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OCM
      */
-    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $STATE_EPOCHS, $COV_TYPE, $COV_ORDERING, $COV_SIZE, $COV_PARAMETERS, $COV_UNITS)
+    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $STATE_EPOCHS, $COV_TYPE, $COV_ORDERING, $COV_SIZE, $COV_PARAMETERS, $COV_UNITS, $TRAJECTORY_BLOCKS, $COVARIANCE_BLOCKS)
     {
-        $builder->startObject(29);
+        $builder->startObject(31);
         self::addHEADER($builder, $HEADER);
         self::addMETADATA($builder, $METADATA);
         self::addTRAJ_TYPE($builder, $TRAJ_TYPE);
@@ -468,6 +512,8 @@ class OCM extends Table
         self::addCOV_SIZE($builder, $COV_SIZE);
         self::addCOV_PARAMETERS($builder, $COV_PARAMETERS);
         self::addCOV_UNITS($builder, $COV_UNITS);
+        self::addTRAJECTORY_BLOCKS($builder, $TRAJECTORY_BLOCKS);
+        self::addCOVARIANCE_BLOCKS($builder, $COVARIANCE_BLOCKS);
         $o = $builder->endObject();
         return $o;
     }
@@ -974,6 +1020,74 @@ class OCM extends Table
      * @return void
      */
     public static function startCOV_UNITSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTRAJECTORY_BLOCKS(FlatBufferBuilder $builder, $TRAJECTORY_BLOCKS)
+    {
+        $builder->addOffsetX(29, $TRAJECTORY_BLOCKS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createTRAJECTORY_BLOCKSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startTRAJECTORY_BLOCKSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOVARIANCE_BLOCKS(FlatBufferBuilder $builder, $COVARIANCE_BLOCKS)
+    {
+        $builder->addOffsetX(30, $COVARIANCE_BLOCKS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOVARIANCE_BLOCKSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOVARIANCE_BLOCKSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }

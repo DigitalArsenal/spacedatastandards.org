@@ -474,8 +474,64 @@ class OCM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         return o == 0
 
+    # Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+    # blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+    # them above state the first block's CARTPV or CARTPVA states.
+    # OCM
+    def TRAJECTORY_BLOCKS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from OCMTrajectoryBlock import OCMTrajectoryBlock
+            obj = OCMTrajectoryBlock()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OCM
+    def TRAJECTORY_BLOCKSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def TRAJECTORY_BLOCKSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        return o == 0
+
+    # Every covariance time history of the message (COV_START blocks), in message
+    # order. COVARIANCE_DATA and the fields that go with it above state the first
+    # block when it is one line.
+    # OCM
+    def COVARIANCE_BLOCKS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from OCMCovarianceBlock import OCMCovarianceBlock
+            obj = OCMCovarianceBlock()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OCM
+    def COVARIANCE_BLOCKSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def COVARIANCE_BLOCKSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        return o == 0
+
 def OCMStart(builder):
-    builder.StartObject(29)
+    builder.StartObject(31)
 
 def Start(builder):
     OCMStart(builder)
@@ -770,6 +826,42 @@ def OCMCreateCOV_UNITSVector(builder, data):
 def CreateCOV_UNITSVector(builder, data):
     return OCMCreateCOV_UNITSVector(builder, data)
 
+def OCMAddTRAJECTORY_BLOCKS(builder, TRAJECTORY_BLOCKS):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(TRAJECTORY_BLOCKS), 0)
+
+def AddTRAJECTORY_BLOCKS(builder, TRAJECTORY_BLOCKS):
+    OCMAddTRAJECTORY_BLOCKS(builder, TRAJECTORY_BLOCKS)
+
+def OCMStartTRAJECTORY_BLOCKSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartTRAJECTORY_BLOCKSVector(builder, numElems):
+    return OCMStartTRAJECTORY_BLOCKSVector(builder, numElems)
+
+def OCMCreateTRAJECTORY_BLOCKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTRAJECTORY_BLOCKSVector(builder, data):
+    return OCMCreateTRAJECTORY_BLOCKSVector(builder, data)
+
+def OCMAddCOVARIANCE_BLOCKS(builder, COVARIANCE_BLOCKS):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_BLOCKS), 0)
+
+def AddCOVARIANCE_BLOCKS(builder, COVARIANCE_BLOCKS):
+    OCMAddCOVARIANCE_BLOCKS(builder, COVARIANCE_BLOCKS)
+
+def OCMStartCOVARIANCE_BLOCKSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOVARIANCE_BLOCKSVector(builder, numElems):
+    return OCMStartCOVARIANCE_BLOCKSVector(builder, numElems)
+
+def OCMCreateCOVARIANCE_BLOCKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOVARIANCE_BLOCKSVector(builder, data):
+    return OCMCreateCOVARIANCE_BLOCKSVector(builder, data)
+
 def OCMEnd(builder):
     return builder.EndObject()
 
@@ -779,6 +871,8 @@ def End(builder):
 import Header
 import Maneuver
 import Metadata
+import OCMCovarianceBlock
+import OCMTrajectoryBlock
 import OrbitDetermination
 import PPEOrbitalElementRecord
 import PPEPositionRecord
@@ -825,6 +919,8 @@ class OCMT(object):
         COV_SIZE = 6,
         COV_PARAMETERS = None,
         COV_UNITS = None,
+        TRAJECTORY_BLOCKS = None,
+        COVARIANCE_BLOCKS = None,
     ):
         self.HEADER = HEADER  # type: Optional[Header.HeaderT]
         self.METADATA = METADATA  # type: Optional[Metadata.MetadataT]
@@ -855,6 +951,8 @@ class OCMT(object):
         self.COV_SIZE = COV_SIZE  # type: int
         self.COV_PARAMETERS = COV_PARAMETERS  # type: Optional[List[Optional[str]]]
         self.COV_UNITS = COV_UNITS  # type: Optional[List[Optional[str]]]
+        self.TRAJECTORY_BLOCKS = TRAJECTORY_BLOCKS  # type: Optional[List[OCMTrajectoryBlock.OCMTrajectoryBlockT]]
+        self.COVARIANCE_BLOCKS = COVARIANCE_BLOCKS  # type: Optional[List[OCMCovarianceBlock.OCMCovarianceBlockT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -962,6 +1060,22 @@ class OCMT(object):
             self.COV_UNITS = []
             for i in range(OCM.COV_UNITSLength()):
                 self.COV_UNITS.append(OCM.COV_UNITS(i))
+        if not OCM.TRAJECTORY_BLOCKSIsNone():
+            self.TRAJECTORY_BLOCKS = []
+            for i in range(OCM.TRAJECTORY_BLOCKSLength()):
+                if OCM.TRAJECTORY_BLOCKS(i) is None:
+                    self.TRAJECTORY_BLOCKS.append(None)
+                else:
+                    oCMTrajectoryBlock_ = OCMTrajectoryBlock.OCMTrajectoryBlockT.InitFromObj(OCM.TRAJECTORY_BLOCKS(i))
+                    self.TRAJECTORY_BLOCKS.append(oCMTrajectoryBlock_)
+        if not OCM.COVARIANCE_BLOCKSIsNone():
+            self.COVARIANCE_BLOCKS = []
+            for i in range(OCM.COVARIANCE_BLOCKSLength()):
+                if OCM.COVARIANCE_BLOCKS(i) is None:
+                    self.COVARIANCE_BLOCKS.append(None)
+                else:
+                    oCMCovarianceBlock_ = OCMCovarianceBlock.OCMCovarianceBlockT.InitFromObj(OCM.COVARIANCE_BLOCKS(i))
+                    self.COVARIANCE_BLOCKS.append(oCMCovarianceBlock_)
 
     # OCMT
     def Pack(self, builder):
@@ -1063,6 +1177,22 @@ class OCMT(object):
             for i in reversed(range(len(self.COV_UNITS))):
                 builder.PrependUOffsetTRelative(COV_UNITSlist[i])
             COV_UNITS = builder.EndVector()
+        if self.TRAJECTORY_BLOCKS is not None:
+            TRAJECTORY_BLOCKSlist = []
+            for i in range(len(self.TRAJECTORY_BLOCKS)):
+                TRAJECTORY_BLOCKSlist.append(self.TRAJECTORY_BLOCKS[i].Pack(builder))
+            OCMStartTRAJECTORY_BLOCKSVector(builder, len(self.TRAJECTORY_BLOCKS))
+            for i in reversed(range(len(self.TRAJECTORY_BLOCKS))):
+                builder.PrependUOffsetTRelative(TRAJECTORY_BLOCKSlist[i])
+            TRAJECTORY_BLOCKS = builder.EndVector()
+        if self.COVARIANCE_BLOCKS is not None:
+            COVARIANCE_BLOCKSlist = []
+            for i in range(len(self.COVARIANCE_BLOCKS)):
+                COVARIANCE_BLOCKSlist.append(self.COVARIANCE_BLOCKS[i].Pack(builder))
+            OCMStartCOVARIANCE_BLOCKSVector(builder, len(self.COVARIANCE_BLOCKS))
+            for i in reversed(range(len(self.COVARIANCE_BLOCKS))):
+                builder.PrependUOffsetTRelative(COVARIANCE_BLOCKSlist[i])
+            COVARIANCE_BLOCKS = builder.EndVector()
         OCMStart(builder)
         if self.HEADER is not None:
             OCMAddHEADER(builder, HEADER)
@@ -1115,5 +1245,9 @@ class OCMT(object):
             OCMAddCOV_PARAMETERS(builder, COV_PARAMETERS)
         if self.COV_UNITS is not None:
             OCMAddCOV_UNITS(builder, COV_UNITS)
+        if self.TRAJECTORY_BLOCKS is not None:
+            OCMAddTRAJECTORY_BLOCKS(builder, TRAJECTORY_BLOCKS)
+        if self.COVARIANCE_BLOCKS is not None:
+            OCMAddCOVARIANCE_BLOCKS(builder, COVARIANCE_BLOCKS)
         OCM = OCMEnd(builder)
         return OCM

@@ -175,22 +175,30 @@ class attPhysicalProperties extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+    /// joined by a line feed.
+    public function getCOMMENT()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startattPhysicalProperties(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(15);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return attPhysicalProperties
      */
-    public static function createattPhysicalProperties(FlatBufferBuilder $builder, $DRAG_COEFF, $WET_MASS, $DRY_MASS, $CP_REF_FRAME, $CP_X, $CP_Y, $CP_Z, $INERTIA_REF_FRAME, $IXX, $IYY, $IZZ, $IXY, $IXZ, $IYZ)
+    public static function createattPhysicalProperties(FlatBufferBuilder $builder, $DRAG_COEFF, $WET_MASS, $DRY_MASS, $CP_REF_FRAME, $CP_X, $CP_Y, $CP_Z, $INERTIA_REF_FRAME, $IXX, $IYY, $IZZ, $IXY, $IXZ, $IYZ, $COMMENT)
     {
-        $builder->startObject(14);
+        $builder->startObject(15);
         self::addDRAG_COEFF($builder, $DRAG_COEFF);
         self::addWET_MASS($builder, $WET_MASS);
         self::addDRY_MASS($builder, $DRY_MASS);
@@ -205,6 +213,7 @@ class attPhysicalProperties extends Table
         self::addIXY($builder, $IXY);
         self::addIXZ($builder, $IXZ);
         self::addIYZ($builder, $IYZ);
+        self::addCOMMENT($builder, $COMMENT);
         $o = $builder->endObject();
         return $o;
     }
@@ -347,6 +356,16 @@ class attPhysicalProperties extends Table
     public static function addIYZ(FlatBufferBuilder $builder, $IYZ)
     {
         $builder->addDoubleX(13, $IYZ, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
+    {
+        $builder->addOffsetX(14, $COMMENT, 0);
     }
 
     /**

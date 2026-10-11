@@ -265,6 +265,193 @@ class Perturbations : Table() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+     * above is the model family when the text names one.
+     */
+    val atmosphericModelName : String?
+        get() {
+            val o = __offset(44)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val atmosphericModelNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun atmosphericModelNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
+    /**
+     * EQUATORIAL_RADIUS in km, NaN when not stated.
+     */
+    val equatorialRadius : Double
+        get() {
+            val o = __offset(46)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+     */
+    val centralBodyRotation : Double
+        get() {
+            val o = __offset(48)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * OBLATE_FLATTENING, NaN when not stated.
+     */
+    val oblateFlattening : Double
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * REDUCTION_THEORY.
+     */
+    val reductionTheory : String?
+        get() {
+            val o = __offset(52)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val reductionTheoryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
+    fun reductionTheoryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
+    /**
+     * ALBEDO_GRID_SIZE.
+     */
+    val albedoGridSize : UInt
+        get() {
+            val o = __offset(54)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * SHADOW_MODEL.
+     */
+    val shadowModel : String?
+        get() {
+            val o = __offset(56)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val shadowModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
+    fun shadowModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
+    /**
+     * SHADOW_BODIES.
+     */
+    val shadowBodies : String?
+        get() {
+            val o = __offset(58)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val shadowBodiesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
+    fun shadowBodiesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
+    /**
+     * SW_DATA_SOURCE: the space weather data source.
+     */
+    val swDataSource : String?
+        get() {
+            val o = __offset(60)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val swDataSourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun swDataSourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * SW_DATA_EPOCH.
+     */
+    val swDataEpoch : String?
+        get() {
+            val o = __offset(62)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val swDataEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun swDataEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * SW_INTERP_METHOD.
+     */
+    val swInterpMethod : String?
+        get() {
+            val o = __offset(64)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val swInterpMethodAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(64, 1)
+    fun swInterpMethodInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 64, 1)
+    /**
+     * FIXED_GEOMAG_DST in nT, NaN when not stated.
+     */
+    val fixedGeomagDst : Double
+        get() {
+            val o = __offset(66)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * FIXED_M10P7, NaN when not stated.
+     */
+    val fixedM10P7 : Double
+        get() {
+            val o = __offset(68)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * FIXED_M10P7_MEAN, NaN when not stated.
+     */
+    val fixedM10P7Mean : Double
+        get() {
+            val o = __offset(70)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * FIXED_S10P7, NaN when not stated.
+     */
+    val fixedS10P7 : Double
+        get() {
+            val o = __offset(72)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * FIXED_S10P7_MEAN, NaN when not stated.
+     */
+    val fixedS10P7Mean : Double
+        get() {
+            val o = __offset(74)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * FIXED_Y10P7, NaN when not stated.
+     */
+    val fixedY10P7 : Double
+        get() {
+            val o = __offset(76)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * FIXED_Y10P7_MEAN, NaN when not stated.
+     */
+    val fixedY10P7Mean : Double
+        get() {
+            val o = __offset(78)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPerturbations(_bb: ByteBuffer): Perturbations = getRootAsPerturbations(_bb, Perturbations())
@@ -272,13 +459,31 @@ class Perturbations : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPerturbations(builder: FlatBufferBuilder, commentOffset: Int, atmosphericModelOffset: Int, gravityModelOffset: Int, gravityDegree: Int, gravityOrder: Int, gm: Double, nBodyPerturbationsOffset: Int, oceanTidesModelOffset: Int, solidTidesModelOffset: Int, atmosphericTidesModelOffset: Int, geopotentialModelOffset: Int, solarRadPressureOffset: Int, albedoOffset: Int, thermalOffset: Int, relativityOffset: Int, atmosphericDragOffset: Int, fixedGeomagKp: Double, fixedF10P7: Double, fixedF10P7Mean: Double, fixedGeomagAp: Double) : Int {
-            builder.startTable(20)
+        fun createPerturbations(builder: FlatBufferBuilder, commentOffset: Int, atmosphericModelOffset: Int, gravityModelOffset: Int, gravityDegree: Int, gravityOrder: Int, gm: Double, nBodyPerturbationsOffset: Int, oceanTidesModelOffset: Int, solidTidesModelOffset: Int, atmosphericTidesModelOffset: Int, geopotentialModelOffset: Int, solarRadPressureOffset: Int, albedoOffset: Int, thermalOffset: Int, relativityOffset: Int, atmosphericDragOffset: Int, fixedGeomagKp: Double, fixedF10P7: Double, fixedF10P7Mean: Double, fixedGeomagAp: Double, atmosphericModelNameOffset: Int, equatorialRadius: Double, centralBodyRotation: Double, oblateFlattening: Double, reductionTheoryOffset: Int, albedoGridSize: UInt, shadowModelOffset: Int, shadowBodiesOffset: Int, swDataSourceOffset: Int, swDataEpochOffset: Int, swInterpMethodOffset: Int, fixedGeomagDst: Double, fixedM10P7: Double, fixedM10P7Mean: Double, fixedS10P7: Double, fixedS10P7Mean: Double, fixedY10P7: Double, fixedY10P7Mean: Double) : Int {
+            builder.startTable(38)
+            addFIXEDY10P7MEAN(builder, fixedY10P7Mean)
+            addFIXEDY10P7(builder, fixedY10P7)
+            addFIXEDS10P7MEAN(builder, fixedS10P7Mean)
+            addFIXEDS10P7(builder, fixedS10P7)
+            addFIXEDM10P7MEAN(builder, fixedM10P7Mean)
+            addFIXEDM10P7(builder, fixedM10P7)
+            addFIXEDGEOMAGDST(builder, fixedGeomagDst)
+            addOBLATEFLATTENING(builder, oblateFlattening)
+            addCENTRALBODYROTATION(builder, centralBodyRotation)
+            addEQUATORIALRADIUS(builder, equatorialRadius)
             addFIXEDGEOMAGAP(builder, fixedGeomagAp)
             addFIXEDF10P7MEAN(builder, fixedF10P7Mean)
             addFIXEDF10P7(builder, fixedF10P7)
             addFIXEDGEOMAGKP(builder, fixedGeomagKp)
             addGM(builder, gm)
+            addSWINTERPMETHOD(builder, swInterpMethodOffset)
+            addSWDATAEPOCH(builder, swDataEpochOffset)
+            addSWDATASOURCE(builder, swDataSourceOffset)
+            addSHADOWBODIES(builder, shadowBodiesOffset)
+            addSHADOWMODEL(builder, shadowModelOffset)
+            addALBEDOGRIDSIZE(builder, albedoGridSize)
+            addREDUCTIONTHEORY(builder, reductionTheoryOffset)
+            addATMOSPHERICMODELNAME(builder, atmosphericModelNameOffset)
             addATMOSPHERICDRAG(builder, atmosphericDragOffset)
             addRELATIVITY(builder, relativityOffset)
             addTHERMAL(builder, thermalOffset)
@@ -296,7 +501,7 @@ class Perturbations : Table() {
             addCOMMENT(builder, commentOffset)
             return endPerturbations(builder)
         }
-        fun startPerturbations(builder: FlatBufferBuilder) = builder.startTable(20)
+        fun startPerturbations(builder: FlatBufferBuilder) = builder.startTable(38)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -333,6 +538,24 @@ class Perturbations : Table() {
         fun addFIXEDF10P7(builder: FlatBufferBuilder, fixedF10P7: Double) = builder.addDouble(17, fixedF10P7, 0.0)
         fun addFIXEDF10P7MEAN(builder: FlatBufferBuilder, fixedF10P7Mean: Double) = builder.addDouble(18, fixedF10P7Mean, 0.0)
         fun addFIXEDGEOMAGAP(builder: FlatBufferBuilder, fixedGeomagAp: Double) = builder.addDouble(19, fixedGeomagAp, 0.0)
+        fun addATMOSPHERICMODELNAME(builder: FlatBufferBuilder, atmosphericModelName: Int) = builder.addOffset(20, atmosphericModelName, 0)
+        fun addEQUATORIALRADIUS(builder: FlatBufferBuilder, equatorialRadius: Double) = builder.addDouble(21, equatorialRadius, Double.NaN)
+        fun addCENTRALBODYROTATION(builder: FlatBufferBuilder, centralBodyRotation: Double) = builder.addDouble(22, centralBodyRotation, Double.NaN)
+        fun addOBLATEFLATTENING(builder: FlatBufferBuilder, oblateFlattening: Double) = builder.addDouble(23, oblateFlattening, Double.NaN)
+        fun addREDUCTIONTHEORY(builder: FlatBufferBuilder, reductionTheory: Int) = builder.addOffset(24, reductionTheory, 0)
+        fun addALBEDOGRIDSIZE(builder: FlatBufferBuilder, albedoGridSize: UInt) = builder.addInt(25, albedoGridSize.toInt(), 0)
+        fun addSHADOWMODEL(builder: FlatBufferBuilder, shadowModel: Int) = builder.addOffset(26, shadowModel, 0)
+        fun addSHADOWBODIES(builder: FlatBufferBuilder, shadowBodies: Int) = builder.addOffset(27, shadowBodies, 0)
+        fun addSWDATASOURCE(builder: FlatBufferBuilder, swDataSource: Int) = builder.addOffset(28, swDataSource, 0)
+        fun addSWDATAEPOCH(builder: FlatBufferBuilder, swDataEpoch: Int) = builder.addOffset(29, swDataEpoch, 0)
+        fun addSWINTERPMETHOD(builder: FlatBufferBuilder, swInterpMethod: Int) = builder.addOffset(30, swInterpMethod, 0)
+        fun addFIXEDGEOMAGDST(builder: FlatBufferBuilder, fixedGeomagDst: Double) = builder.addDouble(31, fixedGeomagDst, Double.NaN)
+        fun addFIXEDM10P7(builder: FlatBufferBuilder, fixedM10P7: Double) = builder.addDouble(32, fixedM10P7, Double.NaN)
+        fun addFIXEDM10P7MEAN(builder: FlatBufferBuilder, fixedM10P7Mean: Double) = builder.addDouble(33, fixedM10P7Mean, Double.NaN)
+        fun addFIXEDS10P7(builder: FlatBufferBuilder, fixedS10P7: Double) = builder.addDouble(34, fixedS10P7, Double.NaN)
+        fun addFIXEDS10P7MEAN(builder: FlatBufferBuilder, fixedS10P7Mean: Double) = builder.addDouble(35, fixedS10P7Mean, Double.NaN)
+        fun addFIXEDY10P7(builder: FlatBufferBuilder, fixedY10P7: Double) = builder.addDouble(36, fixedY10P7, Double.NaN)
+        fun addFIXEDY10P7MEAN(builder: FlatBufferBuilder, fixedY10P7Mean: Double) = builder.addDouble(37, fixedY10P7Mean, Double.NaN)
         fun endPerturbations(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

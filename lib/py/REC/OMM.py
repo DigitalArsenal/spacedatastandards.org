@@ -114,7 +114,10 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-    # COMMENT (O)
+    # COMMENT (O): every COMMENT line of the message, in message order, joined by
+    # a line feed. A message states comments in its header, its metadata and each
+    # data group; this field holds them all, so a message written from the record
+    # states them together in its header.
     # OMM
     def COMMENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
@@ -386,8 +389,54 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+    # that states its security classification or handling caveat. Not
+    # CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+    # OMM
+    def CLASSIFICATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+    # originator makes unique for this message.
+    # OMM
+    def MESSAGE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+    # message that has no dedicated field above, in message order.
+    # OMM
+    def USER_DEFINED_PARAMETERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from OMMUserDefinedParameter import OMMUserDefinedParameter
+            obj = OMMUserDefinedParameter()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OMM
+    def USER_DEFINED_PARAMETERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OMM
+    def USER_DEFINED_PARAMETERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        return o == 0
+
 def OMMStart(builder):
-    builder.StartObject(40)
+    builder.StartObject(43)
 
 def Start(builder):
     OMMStart(builder)
@@ -648,12 +697,43 @@ def OMMAddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS):
 def AddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS):
     OMMAddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS)
 
+def OMMAddCLASSIFICATION(builder, CLASSIFICATION):
+    builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
+def AddCLASSIFICATION(builder, CLASSIFICATION):
+    OMMAddCLASSIFICATION(builder, CLASSIFICATION)
+
+def OMMAddMESSAGE_ID(builder, MESSAGE_ID):
+    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_ID), 0)
+
+def AddMESSAGE_ID(builder, MESSAGE_ID):
+    OMMAddMESSAGE_ID(builder, MESSAGE_ID)
+
+def OMMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_PARAMETERS), 0)
+
+def AddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
+    OMMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
+
+def OMMStartUSER_DEFINED_PARAMETERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartUSER_DEFINED_PARAMETERSVector(builder, numElems):
+    return OMMStartUSER_DEFINED_PARAMETERSVector(builder, numElems)
+
+def OMMCreateUSER_DEFINED_PARAMETERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUSER_DEFINED_PARAMETERSVector(builder, data):
+    return OMMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
+
 def OMMEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return OMMEnd(builder)
 
+import OMMUserDefinedParameter
 import RFM
 try:
     from typing import List, Optional
@@ -705,6 +785,9 @@ class OMMT(object):
         USER_DEFINED_EARTH_MODEL = None,
         USER_DEFINED_EPOCH_TIMESTAMP = 0.0,
         USER_DEFINED_MICROSECONDS = 0.0,
+        CLASSIFICATION = None,
+        MESSAGE_ID = None,
+        USER_DEFINED_PARAMETERS = None,
     ):
         self.CCSDS_OMM_VERS = CCSDS_OMM_VERS  # type: float
         self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
@@ -746,6 +829,9 @@ class OMMT(object):
         self.USER_DEFINED_EARTH_MODEL = USER_DEFINED_EARTH_MODEL  # type: Optional[str]
         self.USER_DEFINED_EPOCH_TIMESTAMP = USER_DEFINED_EPOCH_TIMESTAMP  # type: float
         self.USER_DEFINED_MICROSECONDS = USER_DEFINED_MICROSECONDS  # type: float
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
+        self.MESSAGE_ID = MESSAGE_ID  # type: Optional[str]
+        self.USER_DEFINED_PARAMETERS = USER_DEFINED_PARAMETERS  # type: Optional[List[OMMUserDefinedParameter.OMMUserDefinedParameterT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -816,6 +902,16 @@ class OMMT(object):
         self.USER_DEFINED_EARTH_MODEL = OMM.USER_DEFINED_EARTH_MODEL()
         self.USER_DEFINED_EPOCH_TIMESTAMP = OMM.USER_DEFINED_EPOCH_TIMESTAMP()
         self.USER_DEFINED_MICROSECONDS = OMM.USER_DEFINED_MICROSECONDS()
+        self.CLASSIFICATION = OMM.CLASSIFICATION()
+        self.MESSAGE_ID = OMM.MESSAGE_ID()
+        if not OMM.USER_DEFINED_PARAMETERSIsNone():
+            self.USER_DEFINED_PARAMETERS = []
+            for i in range(OMM.USER_DEFINED_PARAMETERSLength()):
+                if OMM.USER_DEFINED_PARAMETERS(i) is None:
+                    self.USER_DEFINED_PARAMETERS.append(None)
+                else:
+                    oMMUserDefinedParameter_ = OMMUserDefinedParameter.OMMUserDefinedParameterT.InitFromObj(OMM.USER_DEFINED_PARAMETERS(i))
+                    self.USER_DEFINED_PARAMETERS.append(oMMUserDefinedParameter_)
 
     # OMMT
     def Pack(self, builder):
@@ -853,6 +949,18 @@ class OMMT(object):
             USER_DEFINED_OBJECT_DESIGNATOR = builder.CreateString(self.USER_DEFINED_OBJECT_DESIGNATOR)
         if self.USER_DEFINED_EARTH_MODEL is not None:
             USER_DEFINED_EARTH_MODEL = builder.CreateString(self.USER_DEFINED_EARTH_MODEL)
+        if self.CLASSIFICATION is not None:
+            CLASSIFICATION = builder.CreateString(self.CLASSIFICATION)
+        if self.MESSAGE_ID is not None:
+            MESSAGE_ID = builder.CreateString(self.MESSAGE_ID)
+        if self.USER_DEFINED_PARAMETERS is not None:
+            USER_DEFINED_PARAMETERSlist = []
+            for i in range(len(self.USER_DEFINED_PARAMETERS)):
+                USER_DEFINED_PARAMETERSlist.append(self.USER_DEFINED_PARAMETERS[i].Pack(builder))
+            OMMStartUSER_DEFINED_PARAMETERSVector(builder, len(self.USER_DEFINED_PARAMETERS))
+            for i in reversed(range(len(self.USER_DEFINED_PARAMETERS))):
+                builder.PrependUOffsetTRelative(USER_DEFINED_PARAMETERSlist[i])
+            USER_DEFINED_PARAMETERS = builder.EndVector()
         OMMStart(builder)
         OMMAddCCSDS_OMM_VERS(builder, self.CCSDS_OMM_VERS)
         if self.CREATION_DATE is not None:
@@ -908,5 +1016,11 @@ class OMMT(object):
             OMMAddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL)
         OMMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder, self.USER_DEFINED_EPOCH_TIMESTAMP)
         OMMAddUSER_DEFINED_MICROSECONDS(builder, self.USER_DEFINED_MICROSECONDS)
+        if self.CLASSIFICATION is not None:
+            OMMAddCLASSIFICATION(builder, CLASSIFICATION)
+        if self.MESSAGE_ID is not None:
+            OMMAddMESSAGE_ID(builder, MESSAGE_ID)
+        if self.USER_DEFINED_PARAMETERS is not None:
+            OMMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
         OMM = OMMEnd(builder)
         return OMM

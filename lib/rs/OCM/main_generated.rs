@@ -2728,6 +2728,38 @@ impl<'a> PhysicalProperties<'a> {
     pub const VT_SRP_CONST_AREA: ::flatbuffers::VOffsetT = 40;
     pub const VT_SOLAR_RAD_COEFF: ::flatbuffers::VOffsetT = 42;
     pub const VT_SRP_UNCERTAINTY: ::flatbuffers::VOffsetT = 44;
+    pub const VT_MANUFACTURER: ::flatbuffers::VOffsetT = 46;
+    pub const VT_BUS_MODEL: ::flatbuffers::VOffsetT = 48;
+    pub const VT_DOCKED_WITH: ::flatbuffers::VOffsetT = 50;
+    pub const VT_INITIAL_WET_MASS: ::flatbuffers::VOffsetT = 52;
+    pub const VT_OEB_PARENT_FRAME: ::flatbuffers::VOffsetT = 54;
+    pub const VT_OEB_PARENT_FRAME_EPOCH: ::flatbuffers::VOffsetT = 56;
+    pub const VT_AREA_MIN_FOR_PC: ::flatbuffers::VOffsetT = 58;
+    pub const VT_AREA_MAX_FOR_PC: ::flatbuffers::VOffsetT = 60;
+    pub const VT_AREA_TYP_FOR_PC: ::flatbuffers::VOffsetT = 62;
+    pub const VT_RCS: ::flatbuffers::VOffsetT = 64;
+    pub const VT_RCS_MIN: ::flatbuffers::VOffsetT = 66;
+    pub const VT_RCS_MAX: ::flatbuffers::VOffsetT = 68;
+    pub const VT_VM_ABSOLUTE: ::flatbuffers::VOffsetT = 70;
+    pub const VT_VM_APPARENT_MIN: ::flatbuffers::VOffsetT = 72;
+    pub const VT_VM_APPARENT: ::flatbuffers::VOffsetT = 74;
+    pub const VT_VM_APPARENT_MAX: ::flatbuffers::VOffsetT = 76;
+    pub const VT_REFLECTANCE: ::flatbuffers::VOffsetT = 78;
+    pub const VT_ATT_CONTROL_MODE: ::flatbuffers::VOffsetT = 80;
+    pub const VT_ATT_ACTUATOR_TYPE: ::flatbuffers::VOffsetT = 82;
+    pub const VT_ATT_KNOWLEDGE: ::flatbuffers::VOffsetT = 84;
+    pub const VT_ATT_CONTROL: ::flatbuffers::VOffsetT = 86;
+    pub const VT_ATT_POINTING: ::flatbuffers::VOffsetT = 88;
+    pub const VT_AVG_MANEUVER_FREQ: ::flatbuffers::VOffsetT = 90;
+    pub const VT_MAX_THRUST: ::flatbuffers::VOffsetT = 92;
+    pub const VT_DV_BOL: ::flatbuffers::VOffsetT = 94;
+    pub const VT_DV_REMAINING: ::flatbuffers::VOffsetT = 96;
+    pub const VT_IXX: ::flatbuffers::VOffsetT = 98;
+    pub const VT_IYY: ::flatbuffers::VOffsetT = 100;
+    pub const VT_IZZ: ::flatbuffers::VOffsetT = 102;
+    pub const VT_IXY: ::flatbuffers::VOffsetT = 104;
+    pub const VT_IXZ: ::flatbuffers::VOffsetT = 106;
+    pub const VT_IYZ: ::flatbuffers::VOffsetT = 108;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2740,6 +2772,31 @@ impl<'a> PhysicalProperties<'a> {
         args: &'args PhysicalPropertiesArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PhysicalProperties<'bldr>> {
         let mut builder = PhysicalPropertiesBuilder::new(_fbb);
+        builder.add_IYZ(args.IYZ);
+        builder.add_IXZ(args.IXZ);
+        builder.add_IXY(args.IXY);
+        builder.add_IZZ(args.IZZ);
+        builder.add_IYY(args.IYY);
+        builder.add_IXX(args.IXX);
+        builder.add_DV_REMAINING(args.DV_REMAINING);
+        builder.add_DV_BOL(args.DV_BOL);
+        builder.add_MAX_THRUST(args.MAX_THRUST);
+        builder.add_AVG_MANEUVER_FREQ(args.AVG_MANEUVER_FREQ);
+        builder.add_ATT_POINTING(args.ATT_POINTING);
+        builder.add_ATT_CONTROL(args.ATT_CONTROL);
+        builder.add_ATT_KNOWLEDGE(args.ATT_KNOWLEDGE);
+        builder.add_REFLECTANCE(args.REFLECTANCE);
+        builder.add_VM_APPARENT_MAX(args.VM_APPARENT_MAX);
+        builder.add_VM_APPARENT(args.VM_APPARENT);
+        builder.add_VM_APPARENT_MIN(args.VM_APPARENT_MIN);
+        builder.add_VM_ABSOLUTE(args.VM_ABSOLUTE);
+        builder.add_RCS_MAX(args.RCS_MAX);
+        builder.add_RCS_MIN(args.RCS_MIN);
+        builder.add_RCS(args.RCS);
+        builder.add_AREA_TYP_FOR_PC(args.AREA_TYP_FOR_PC);
+        builder.add_AREA_MAX_FOR_PC(args.AREA_MAX_FOR_PC);
+        builder.add_AREA_MIN_FOR_PC(args.AREA_MIN_FOR_PC);
+        builder.add_INITIAL_WET_MASS(args.INITIAL_WET_MASS);
         builder.add_SRP_UNCERTAINTY(args.SRP_UNCERTAINTY);
         builder.add_SOLAR_RAD_COEFF(args.SOLAR_RAD_COEFF);
         builder.add_SRP_CONST_AREA(args.SRP_CONST_AREA);
@@ -2758,6 +2815,13 @@ impl<'a> PhysicalProperties<'a> {
         builder.add_OEB_Q1(args.OEB_Q1);
         builder.add_DRY_MASS(args.DRY_MASS);
         builder.add_WET_MASS(args.WET_MASS);
+        if let Some(x) = args.ATT_ACTUATOR_TYPE { builder.add_ATT_ACTUATOR_TYPE(x); }
+        if let Some(x) = args.ATT_CONTROL_MODE { builder.add_ATT_CONTROL_MODE(x); }
+        if let Some(x) = args.OEB_PARENT_FRAME_EPOCH { builder.add_OEB_PARENT_FRAME_EPOCH(x); }
+        if let Some(x) = args.OEB_PARENT_FRAME { builder.add_OEB_PARENT_FRAME(x); }
+        if let Some(x) = args.DOCKED_WITH { builder.add_DOCKED_WITH(x); }
+        if let Some(x) = args.BUS_MODEL { builder.add_BUS_MODEL(x); }
+        if let Some(x) = args.MANUFACTURER { builder.add_MANUFACTURER(x); }
         if let Some(x) = args.AREA_UNITS { builder.add_AREA_UNITS(x); }
         if let Some(x) = args.MASS_UNITS { builder.add_MASS_UNITS(x); }
         if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
@@ -2792,6 +2856,52 @@ impl<'a> PhysicalProperties<'a> {
         let SRP_CONST_AREA = self.SRP_CONST_AREA();
         let SOLAR_RAD_COEFF = self.SOLAR_RAD_COEFF();
         let SRP_UNCERTAINTY = self.SRP_UNCERTAINTY();
+        let MANUFACTURER = self.MANUFACTURER().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let BUS_MODEL = self.BUS_MODEL().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DOCKED_WITH = self.DOCKED_WITH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let INITIAL_WET_MASS = self.INITIAL_WET_MASS();
+        let OEB_PARENT_FRAME = self.OEB_PARENT_FRAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let OEB_PARENT_FRAME_EPOCH = self.OEB_PARENT_FRAME_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let AREA_MIN_FOR_PC = self.AREA_MIN_FOR_PC();
+        let AREA_MAX_FOR_PC = self.AREA_MAX_FOR_PC();
+        let AREA_TYP_FOR_PC = self.AREA_TYP_FOR_PC();
+        let RCS = self.RCS();
+        let RCS_MIN = self.RCS_MIN();
+        let RCS_MAX = self.RCS_MAX();
+        let VM_ABSOLUTE = self.VM_ABSOLUTE();
+        let VM_APPARENT_MIN = self.VM_APPARENT_MIN();
+        let VM_APPARENT = self.VM_APPARENT();
+        let VM_APPARENT_MAX = self.VM_APPARENT_MAX();
+        let REFLECTANCE = self.REFLECTANCE();
+        let ATT_CONTROL_MODE = self.ATT_CONTROL_MODE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let ATT_ACTUATOR_TYPE = self.ATT_ACTUATOR_TYPE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let ATT_KNOWLEDGE = self.ATT_KNOWLEDGE();
+        let ATT_CONTROL = self.ATT_CONTROL();
+        let ATT_POINTING = self.ATT_POINTING();
+        let AVG_MANEUVER_FREQ = self.AVG_MANEUVER_FREQ();
+        let MAX_THRUST = self.MAX_THRUST();
+        let DV_BOL = self.DV_BOL();
+        let DV_REMAINING = self.DV_REMAINING();
+        let IXX = self.IXX();
+        let IYY = self.IYY();
+        let IZZ = self.IZZ();
+        let IXY = self.IXY();
+        let IXZ = self.IXZ();
+        let IYZ = self.IYZ();
         PhysicalPropertiesT {
             COMMENT,
             WET_MASS,
@@ -2814,6 +2924,38 @@ impl<'a> PhysicalProperties<'a> {
             SRP_CONST_AREA,
             SOLAR_RAD_COEFF,
             SRP_UNCERTAINTY,
+            MANUFACTURER,
+            BUS_MODEL,
+            DOCKED_WITH,
+            INITIAL_WET_MASS,
+            OEB_PARENT_FRAME,
+            OEB_PARENT_FRAME_EPOCH,
+            AREA_MIN_FOR_PC,
+            AREA_MAX_FOR_PC,
+            AREA_TYP_FOR_PC,
+            RCS,
+            RCS_MIN,
+            RCS_MAX,
+            VM_ABSOLUTE,
+            VM_APPARENT_MIN,
+            VM_APPARENT,
+            VM_APPARENT_MAX,
+            REFLECTANCE,
+            ATT_CONTROL_MODE,
+            ATT_ACTUATOR_TYPE,
+            ATT_KNOWLEDGE,
+            ATT_CONTROL,
+            ATT_POINTING,
+            AVG_MANEUVER_FREQ,
+            MAX_THRUST,
+            DV_BOL,
+            DV_REMAINING,
+            IXX,
+            IYY,
+            IZZ,
+            IXY,
+            IXZ,
+            IYZ,
         }
     }
 
@@ -3005,6 +3147,294 @@ impl<'a> PhysicalProperties<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(PhysicalProperties::VT_SRP_UNCERTAINTY, Some(0.0)).unwrap()}
     }
+
+    /// MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+    #[inline]
+    pub fn MANUFACTURER(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PhysicalProperties::VT_MANUFACTURER, None)}
+    }
+
+    /// BUS_MODEL: the object's bus model.
+    #[inline]
+    pub fn BUS_MODEL(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PhysicalProperties::VT_BUS_MODEL, None)}
+    }
+
+    /// DOCKED_WITH: comma-separated names of the objects it is docked with.
+    #[inline]
+    pub fn DOCKED_WITH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PhysicalProperties::VT_DOCKED_WITH, None)}
+    }
+
+    /// INITIAL_WET_MASS in kg, NaN when not stated.
+    #[inline]
+    pub fn INITIAL_WET_MASS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_INITIAL_WET_MASS, Some(f64::NAN)).unwrap()}
+    }
+
+    /// OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+    #[inline]
+    pub fn OEB_PARENT_FRAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PhysicalProperties::VT_OEB_PARENT_FRAME, None)}
+    }
+
+    /// OEB_PARENT_FRAME_EPOCH.
+    #[inline]
+    pub fn OEB_PARENT_FRAME_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PhysicalProperties::VT_OEB_PARENT_FRAME_EPOCH, None)}
+    }
+
+    /// AREA_MIN_FOR_PC in m**2, NaN when not stated.
+    #[inline]
+    pub fn AREA_MIN_FOR_PC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_AREA_MIN_FOR_PC, Some(f64::NAN)).unwrap()}
+    }
+
+    /// AREA_MAX_FOR_PC in m**2, NaN when not stated.
+    #[inline]
+    pub fn AREA_MAX_FOR_PC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_AREA_MAX_FOR_PC, Some(f64::NAN)).unwrap()}
+    }
+
+    /// AREA_TYP_FOR_PC in m**2, NaN when not stated.
+    #[inline]
+    pub fn AREA_TYP_FOR_PC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_AREA_TYP_FOR_PC, Some(f64::NAN)).unwrap()}
+    }
+
+    /// RCS in m**2, NaN when not stated.
+    #[inline]
+    pub fn RCS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_RCS, Some(f64::NAN)).unwrap()}
+    }
+
+    /// RCS_MIN in m**2, NaN when not stated.
+    #[inline]
+    pub fn RCS_MIN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_RCS_MIN, Some(f64::NAN)).unwrap()}
+    }
+
+    /// RCS_MAX in m**2, NaN when not stated.
+    #[inline]
+    pub fn RCS_MAX(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_RCS_MAX, Some(f64::NAN)).unwrap()}
+    }
+
+    /// VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+    #[inline]
+    pub fn VM_ABSOLUTE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_VM_ABSOLUTE, Some(f64::NAN)).unwrap()}
+    }
+
+    /// VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+    #[inline]
+    pub fn VM_APPARENT_MIN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_VM_APPARENT_MIN, Some(f64::NAN)).unwrap()}
+    }
+
+    /// VM_APPARENT: apparent visual magnitude, NaN when not stated.
+    #[inline]
+    pub fn VM_APPARENT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_VM_APPARENT, Some(f64::NAN)).unwrap()}
+    }
+
+    /// VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+    #[inline]
+    pub fn VM_APPARENT_MAX(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_VM_APPARENT_MAX, Some(f64::NAN)).unwrap()}
+    }
+
+    /// REFLECTANCE: typical reflectivity, NaN when not stated.
+    #[inline]
+    pub fn REFLECTANCE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_REFLECTANCE, Some(f64::NAN)).unwrap()}
+    }
+
+    /// ATT_CONTROL_MODE.
+    #[inline]
+    pub fn ATT_CONTROL_MODE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PhysicalProperties::VT_ATT_CONTROL_MODE, None)}
+    }
+
+    /// ATT_ACTUATOR_TYPE.
+    #[inline]
+    pub fn ATT_ACTUATOR_TYPE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PhysicalProperties::VT_ATT_ACTUATOR_TYPE, None)}
+    }
+
+    /// ATT_KNOWLEDGE in degrees, NaN when not stated.
+    #[inline]
+    pub fn ATT_KNOWLEDGE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_ATT_KNOWLEDGE, Some(f64::NAN)).unwrap()}
+    }
+
+    /// ATT_CONTROL in degrees, NaN when not stated.
+    #[inline]
+    pub fn ATT_CONTROL(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_ATT_CONTROL, Some(f64::NAN)).unwrap()}
+    }
+
+    /// ATT_POINTING in degrees, NaN when not stated.
+    #[inline]
+    pub fn ATT_POINTING(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_ATT_POINTING, Some(f64::NAN)).unwrap()}
+    }
+
+    /// AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+    #[inline]
+    pub fn AVG_MANEUVER_FREQ(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_AVG_MANEUVER_FREQ, Some(f64::NAN)).unwrap()}
+    }
+
+    /// MAX_THRUST in N, NaN when not stated.
+    #[inline]
+    pub fn MAX_THRUST(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_MAX_THRUST, Some(f64::NAN)).unwrap()}
+    }
+
+    /// DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+    #[inline]
+    pub fn DV_BOL(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_DV_BOL, Some(f64::NAN)).unwrap()}
+    }
+
+    /// DV_REMAINING in km/s, NaN when not stated.
+    #[inline]
+    pub fn DV_REMAINING(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_DV_REMAINING, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IXX in kg*m**2, NaN when not stated.
+    #[inline]
+    pub fn IXX(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_IXX, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IYY in kg*m**2, NaN when not stated.
+    #[inline]
+    pub fn IYY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_IYY, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IZZ in kg*m**2, NaN when not stated.
+    #[inline]
+    pub fn IZZ(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_IZZ, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IXY in kg*m**2, NaN when not stated.
+    #[inline]
+    pub fn IXY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_IXY, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IXZ in kg*m**2, NaN when not stated.
+    #[inline]
+    pub fn IXZ(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_IXZ, Some(f64::NAN)).unwrap()}
+    }
+
+    /// IYZ in kg*m**2, NaN when not stated.
+    #[inline]
+    pub fn IYZ(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PhysicalProperties::VT_IYZ, Some(f64::NAN)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PhysicalProperties<'_> {
@@ -3034,6 +3464,38 @@ impl ::flatbuffers::Verifiable for PhysicalProperties<'_> {
             .visit_field::<f64>("SRP_CONST_AREA", Self::VT_SRP_CONST_AREA, false)?
             .visit_field::<f64>("SOLAR_RAD_COEFF", Self::VT_SOLAR_RAD_COEFF, false)?
             .visit_field::<f64>("SRP_UNCERTAINTY", Self::VT_SRP_UNCERTAINTY, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MANUFACTURER", Self::VT_MANUFACTURER, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BUS_MODEL", Self::VT_BUS_MODEL, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DOCKED_WITH", Self::VT_DOCKED_WITH, false)?
+            .visit_field::<f64>("INITIAL_WET_MASS", Self::VT_INITIAL_WET_MASS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OEB_PARENT_FRAME", Self::VT_OEB_PARENT_FRAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OEB_PARENT_FRAME_EPOCH", Self::VT_OEB_PARENT_FRAME_EPOCH, false)?
+            .visit_field::<f64>("AREA_MIN_FOR_PC", Self::VT_AREA_MIN_FOR_PC, false)?
+            .visit_field::<f64>("AREA_MAX_FOR_PC", Self::VT_AREA_MAX_FOR_PC, false)?
+            .visit_field::<f64>("AREA_TYP_FOR_PC", Self::VT_AREA_TYP_FOR_PC, false)?
+            .visit_field::<f64>("RCS", Self::VT_RCS, false)?
+            .visit_field::<f64>("RCS_MIN", Self::VT_RCS_MIN, false)?
+            .visit_field::<f64>("RCS_MAX", Self::VT_RCS_MAX, false)?
+            .visit_field::<f64>("VM_ABSOLUTE", Self::VT_VM_ABSOLUTE, false)?
+            .visit_field::<f64>("VM_APPARENT_MIN", Self::VT_VM_APPARENT_MIN, false)?
+            .visit_field::<f64>("VM_APPARENT", Self::VT_VM_APPARENT, false)?
+            .visit_field::<f64>("VM_APPARENT_MAX", Self::VT_VM_APPARENT_MAX, false)?
+            .visit_field::<f64>("REFLECTANCE", Self::VT_REFLECTANCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ATT_CONTROL_MODE", Self::VT_ATT_CONTROL_MODE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ATT_ACTUATOR_TYPE", Self::VT_ATT_ACTUATOR_TYPE, false)?
+            .visit_field::<f64>("ATT_KNOWLEDGE", Self::VT_ATT_KNOWLEDGE, false)?
+            .visit_field::<f64>("ATT_CONTROL", Self::VT_ATT_CONTROL, false)?
+            .visit_field::<f64>("ATT_POINTING", Self::VT_ATT_POINTING, false)?
+            .visit_field::<f64>("AVG_MANEUVER_FREQ", Self::VT_AVG_MANEUVER_FREQ, false)?
+            .visit_field::<f64>("MAX_THRUST", Self::VT_MAX_THRUST, false)?
+            .visit_field::<f64>("DV_BOL", Self::VT_DV_BOL, false)?
+            .visit_field::<f64>("DV_REMAINING", Self::VT_DV_REMAINING, false)?
+            .visit_field::<f64>("IXX", Self::VT_IXX, false)?
+            .visit_field::<f64>("IYY", Self::VT_IYY, false)?
+            .visit_field::<f64>("IZZ", Self::VT_IZZ, false)?
+            .visit_field::<f64>("IXY", Self::VT_IXY, false)?
+            .visit_field::<f64>("IXZ", Self::VT_IXZ, false)?
+            .visit_field::<f64>("IYZ", Self::VT_IYZ, false)?
             .finish();
         Ok(())
     }
@@ -3061,6 +3523,38 @@ pub struct PhysicalPropertiesArgs<'a> {
     pub SRP_CONST_AREA: f64,
     pub SOLAR_RAD_COEFF: f64,
     pub SRP_UNCERTAINTY: f64,
+    pub MANUFACTURER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub BUS_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DOCKED_WITH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INITIAL_WET_MASS: f64,
+    pub OEB_PARENT_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OEB_PARENT_FRAME_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub AREA_MIN_FOR_PC: f64,
+    pub AREA_MAX_FOR_PC: f64,
+    pub AREA_TYP_FOR_PC: f64,
+    pub RCS: f64,
+    pub RCS_MIN: f64,
+    pub RCS_MAX: f64,
+    pub VM_ABSOLUTE: f64,
+    pub VM_APPARENT_MIN: f64,
+    pub VM_APPARENT: f64,
+    pub VM_APPARENT_MAX: f64,
+    pub REFLECTANCE: f64,
+    pub ATT_CONTROL_MODE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ATT_ACTUATOR_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ATT_KNOWLEDGE: f64,
+    pub ATT_CONTROL: f64,
+    pub ATT_POINTING: f64,
+    pub AVG_MANEUVER_FREQ: f64,
+    pub MAX_THRUST: f64,
+    pub DV_BOL: f64,
+    pub DV_REMAINING: f64,
+    pub IXX: f64,
+    pub IYY: f64,
+    pub IZZ: f64,
+    pub IXY: f64,
+    pub IXZ: f64,
+    pub IYZ: f64,
 }
 
 impl<'a> Default for PhysicalPropertiesArgs<'a> {
@@ -3088,6 +3582,38 @@ impl<'a> Default for PhysicalPropertiesArgs<'a> {
             SRP_CONST_AREA: 0.0,
             SOLAR_RAD_COEFF: 0.0,
             SRP_UNCERTAINTY: 0.0,
+            MANUFACTURER: None,
+            BUS_MODEL: None,
+            DOCKED_WITH: None,
+            INITIAL_WET_MASS: f64::NAN,
+            OEB_PARENT_FRAME: None,
+            OEB_PARENT_FRAME_EPOCH: None,
+            AREA_MIN_FOR_PC: f64::NAN,
+            AREA_MAX_FOR_PC: f64::NAN,
+            AREA_TYP_FOR_PC: f64::NAN,
+            RCS: f64::NAN,
+            RCS_MIN: f64::NAN,
+            RCS_MAX: f64::NAN,
+            VM_ABSOLUTE: f64::NAN,
+            VM_APPARENT_MIN: f64::NAN,
+            VM_APPARENT: f64::NAN,
+            VM_APPARENT_MAX: f64::NAN,
+            REFLECTANCE: f64::NAN,
+            ATT_CONTROL_MODE: None,
+            ATT_ACTUATOR_TYPE: None,
+            ATT_KNOWLEDGE: f64::NAN,
+            ATT_CONTROL: f64::NAN,
+            ATT_POINTING: f64::NAN,
+            AVG_MANEUVER_FREQ: f64::NAN,
+            MAX_THRUST: f64::NAN,
+            DV_BOL: f64::NAN,
+            DV_REMAINING: f64::NAN,
+            IXX: f64::NAN,
+            IYY: f64::NAN,
+            IZZ: f64::NAN,
+            IXY: f64::NAN,
+            IXZ: f64::NAN,
+            IYZ: f64::NAN,
         }
     }
 }
@@ -3204,6 +3730,166 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PhysicalPropertiesBuilder<'a,
     }
 
     #[inline]
+    pub fn add_MANUFACTURER(&mut self, MANUFACTURER: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PhysicalProperties::VT_MANUFACTURER, MANUFACTURER);
+    }
+
+    #[inline]
+    pub fn add_BUS_MODEL(&mut self, BUS_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PhysicalProperties::VT_BUS_MODEL, BUS_MODEL);
+    }
+
+    #[inline]
+    pub fn add_DOCKED_WITH(&mut self, DOCKED_WITH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PhysicalProperties::VT_DOCKED_WITH, DOCKED_WITH);
+    }
+
+    #[inline]
+    pub fn add_INITIAL_WET_MASS(&mut self, INITIAL_WET_MASS: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_INITIAL_WET_MASS, INITIAL_WET_MASS, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_OEB_PARENT_FRAME(&mut self, OEB_PARENT_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PhysicalProperties::VT_OEB_PARENT_FRAME, OEB_PARENT_FRAME);
+    }
+
+    #[inline]
+    pub fn add_OEB_PARENT_FRAME_EPOCH(&mut self, OEB_PARENT_FRAME_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PhysicalProperties::VT_OEB_PARENT_FRAME_EPOCH, OEB_PARENT_FRAME_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_AREA_MIN_FOR_PC(&mut self, AREA_MIN_FOR_PC: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_AREA_MIN_FOR_PC, AREA_MIN_FOR_PC, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_AREA_MAX_FOR_PC(&mut self, AREA_MAX_FOR_PC: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_AREA_MAX_FOR_PC, AREA_MAX_FOR_PC, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_AREA_TYP_FOR_PC(&mut self, AREA_TYP_FOR_PC: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_AREA_TYP_FOR_PC, AREA_TYP_FOR_PC, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_RCS(&mut self, RCS: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_RCS, RCS, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_RCS_MIN(&mut self, RCS_MIN: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_RCS_MIN, RCS_MIN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_RCS_MAX(&mut self, RCS_MAX: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_RCS_MAX, RCS_MAX, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_VM_ABSOLUTE(&mut self, VM_ABSOLUTE: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_VM_ABSOLUTE, VM_ABSOLUTE, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_VM_APPARENT_MIN(&mut self, VM_APPARENT_MIN: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_VM_APPARENT_MIN, VM_APPARENT_MIN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_VM_APPARENT(&mut self, VM_APPARENT: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_VM_APPARENT, VM_APPARENT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_VM_APPARENT_MAX(&mut self, VM_APPARENT_MAX: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_VM_APPARENT_MAX, VM_APPARENT_MAX, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_REFLECTANCE(&mut self, REFLECTANCE: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_REFLECTANCE, REFLECTANCE, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ATT_CONTROL_MODE(&mut self, ATT_CONTROL_MODE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PhysicalProperties::VT_ATT_CONTROL_MODE, ATT_CONTROL_MODE);
+    }
+
+    #[inline]
+    pub fn add_ATT_ACTUATOR_TYPE(&mut self, ATT_ACTUATOR_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PhysicalProperties::VT_ATT_ACTUATOR_TYPE, ATT_ACTUATOR_TYPE);
+    }
+
+    #[inline]
+    pub fn add_ATT_KNOWLEDGE(&mut self, ATT_KNOWLEDGE: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_ATT_KNOWLEDGE, ATT_KNOWLEDGE, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ATT_CONTROL(&mut self, ATT_CONTROL: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_ATT_CONTROL, ATT_CONTROL, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ATT_POINTING(&mut self, ATT_POINTING: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_ATT_POINTING, ATT_POINTING, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_AVG_MANEUVER_FREQ(&mut self, AVG_MANEUVER_FREQ: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_AVG_MANEUVER_FREQ, AVG_MANEUVER_FREQ, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_MAX_THRUST(&mut self, MAX_THRUST: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_MAX_THRUST, MAX_THRUST, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_DV_BOL(&mut self, DV_BOL: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_DV_BOL, DV_BOL, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_DV_REMAINING(&mut self, DV_REMAINING: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_DV_REMAINING, DV_REMAINING, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IXX(&mut self, IXX: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_IXX, IXX, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IYY(&mut self, IYY: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_IYY, IYY, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IZZ(&mut self, IZZ: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_IZZ, IZZ, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IXY(&mut self, IXY: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_IXY, IXY, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IXZ(&mut self, IXZ: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_IXZ, IXZ, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_IYZ(&mut self, IYZ: f64) {
+        self.fbb_.push_slot::<f64>(PhysicalProperties::VT_IYZ, IYZ, f64::NAN);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PhysicalPropertiesBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PhysicalPropertiesBuilder {
@@ -3243,6 +3929,38 @@ impl ::core::fmt::Debug for PhysicalProperties<'_> {
         ds.field("SRP_CONST_AREA", &self.SRP_CONST_AREA());
         ds.field("SOLAR_RAD_COEFF", &self.SOLAR_RAD_COEFF());
         ds.field("SRP_UNCERTAINTY", &self.SRP_UNCERTAINTY());
+        ds.field("MANUFACTURER", &self.MANUFACTURER());
+        ds.field("BUS_MODEL", &self.BUS_MODEL());
+        ds.field("DOCKED_WITH", &self.DOCKED_WITH());
+        ds.field("INITIAL_WET_MASS", &self.INITIAL_WET_MASS());
+        ds.field("OEB_PARENT_FRAME", &self.OEB_PARENT_FRAME());
+        ds.field("OEB_PARENT_FRAME_EPOCH", &self.OEB_PARENT_FRAME_EPOCH());
+        ds.field("AREA_MIN_FOR_PC", &self.AREA_MIN_FOR_PC());
+        ds.field("AREA_MAX_FOR_PC", &self.AREA_MAX_FOR_PC());
+        ds.field("AREA_TYP_FOR_PC", &self.AREA_TYP_FOR_PC());
+        ds.field("RCS", &self.RCS());
+        ds.field("RCS_MIN", &self.RCS_MIN());
+        ds.field("RCS_MAX", &self.RCS_MAX());
+        ds.field("VM_ABSOLUTE", &self.VM_ABSOLUTE());
+        ds.field("VM_APPARENT_MIN", &self.VM_APPARENT_MIN());
+        ds.field("VM_APPARENT", &self.VM_APPARENT());
+        ds.field("VM_APPARENT_MAX", &self.VM_APPARENT_MAX());
+        ds.field("REFLECTANCE", &self.REFLECTANCE());
+        ds.field("ATT_CONTROL_MODE", &self.ATT_CONTROL_MODE());
+        ds.field("ATT_ACTUATOR_TYPE", &self.ATT_ACTUATOR_TYPE());
+        ds.field("ATT_KNOWLEDGE", &self.ATT_KNOWLEDGE());
+        ds.field("ATT_CONTROL", &self.ATT_CONTROL());
+        ds.field("ATT_POINTING", &self.ATT_POINTING());
+        ds.field("AVG_MANEUVER_FREQ", &self.AVG_MANEUVER_FREQ());
+        ds.field("MAX_THRUST", &self.MAX_THRUST());
+        ds.field("DV_BOL", &self.DV_BOL());
+        ds.field("DV_REMAINING", &self.DV_REMAINING());
+        ds.field("IXX", &self.IXX());
+        ds.field("IYY", &self.IYY());
+        ds.field("IZZ", &self.IZZ());
+        ds.field("IXY", &self.IXY());
+        ds.field("IXZ", &self.IXZ());
+        ds.field("IYZ", &self.IYZ());
         ds.finish()
     }
 }
@@ -3271,6 +3989,38 @@ pub struct PhysicalPropertiesT {
     pub SRP_CONST_AREA: f64,
     pub SOLAR_RAD_COEFF: f64,
     pub SRP_UNCERTAINTY: f64,
+    pub MANUFACTURER: Option<alloc::string::String>,
+    pub BUS_MODEL: Option<alloc::string::String>,
+    pub DOCKED_WITH: Option<alloc::string::String>,
+    pub INITIAL_WET_MASS: f64,
+    pub OEB_PARENT_FRAME: Option<alloc::string::String>,
+    pub OEB_PARENT_FRAME_EPOCH: Option<alloc::string::String>,
+    pub AREA_MIN_FOR_PC: f64,
+    pub AREA_MAX_FOR_PC: f64,
+    pub AREA_TYP_FOR_PC: f64,
+    pub RCS: f64,
+    pub RCS_MIN: f64,
+    pub RCS_MAX: f64,
+    pub VM_ABSOLUTE: f64,
+    pub VM_APPARENT_MIN: f64,
+    pub VM_APPARENT: f64,
+    pub VM_APPARENT_MAX: f64,
+    pub REFLECTANCE: f64,
+    pub ATT_CONTROL_MODE: Option<alloc::string::String>,
+    pub ATT_ACTUATOR_TYPE: Option<alloc::string::String>,
+    pub ATT_KNOWLEDGE: f64,
+    pub ATT_CONTROL: f64,
+    pub ATT_POINTING: f64,
+    pub AVG_MANEUVER_FREQ: f64,
+    pub MAX_THRUST: f64,
+    pub DV_BOL: f64,
+    pub DV_REMAINING: f64,
+    pub IXX: f64,
+    pub IYY: f64,
+    pub IZZ: f64,
+    pub IXY: f64,
+    pub IXZ: f64,
+    pub IYZ: f64,
 }
 
 impl Default for PhysicalPropertiesT {
@@ -3297,6 +4047,38 @@ impl Default for PhysicalPropertiesT {
             SRP_CONST_AREA: 0.0,
             SOLAR_RAD_COEFF: 0.0,
             SRP_UNCERTAINTY: 0.0,
+            MANUFACTURER: None,
+            BUS_MODEL: None,
+            DOCKED_WITH: None,
+            INITIAL_WET_MASS: f64::NAN,
+            OEB_PARENT_FRAME: None,
+            OEB_PARENT_FRAME_EPOCH: None,
+            AREA_MIN_FOR_PC: f64::NAN,
+            AREA_MAX_FOR_PC: f64::NAN,
+            AREA_TYP_FOR_PC: f64::NAN,
+            RCS: f64::NAN,
+            RCS_MIN: f64::NAN,
+            RCS_MAX: f64::NAN,
+            VM_ABSOLUTE: f64::NAN,
+            VM_APPARENT_MIN: f64::NAN,
+            VM_APPARENT: f64::NAN,
+            VM_APPARENT_MAX: f64::NAN,
+            REFLECTANCE: f64::NAN,
+            ATT_CONTROL_MODE: None,
+            ATT_ACTUATOR_TYPE: None,
+            ATT_KNOWLEDGE: f64::NAN,
+            ATT_CONTROL: f64::NAN,
+            ATT_POINTING: f64::NAN,
+            AVG_MANEUVER_FREQ: f64::NAN,
+            MAX_THRUST: f64::NAN,
+            DV_BOL: f64::NAN,
+            DV_REMAINING: f64::NAN,
+            IXX: f64::NAN,
+            IYY: f64::NAN,
+            IZZ: f64::NAN,
+            IXY: f64::NAN,
+            IXZ: f64::NAN,
+            IYZ: f64::NAN,
         }
     }
 }
@@ -3333,6 +4115,52 @@ impl PhysicalPropertiesT {
         let SRP_CONST_AREA = self.SRP_CONST_AREA;
         let SOLAR_RAD_COEFF = self.SOLAR_RAD_COEFF;
         let SRP_UNCERTAINTY = self.SRP_UNCERTAINTY;
+        let MANUFACTURER = self.MANUFACTURER.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let BUS_MODEL = self.BUS_MODEL.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DOCKED_WITH = self.DOCKED_WITH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let INITIAL_WET_MASS = self.INITIAL_WET_MASS;
+        let OEB_PARENT_FRAME = self.OEB_PARENT_FRAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let OEB_PARENT_FRAME_EPOCH = self.OEB_PARENT_FRAME_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let AREA_MIN_FOR_PC = self.AREA_MIN_FOR_PC;
+        let AREA_MAX_FOR_PC = self.AREA_MAX_FOR_PC;
+        let AREA_TYP_FOR_PC = self.AREA_TYP_FOR_PC;
+        let RCS = self.RCS;
+        let RCS_MIN = self.RCS_MIN;
+        let RCS_MAX = self.RCS_MAX;
+        let VM_ABSOLUTE = self.VM_ABSOLUTE;
+        let VM_APPARENT_MIN = self.VM_APPARENT_MIN;
+        let VM_APPARENT = self.VM_APPARENT;
+        let VM_APPARENT_MAX = self.VM_APPARENT_MAX;
+        let REFLECTANCE = self.REFLECTANCE;
+        let ATT_CONTROL_MODE = self.ATT_CONTROL_MODE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let ATT_ACTUATOR_TYPE = self.ATT_ACTUATOR_TYPE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let ATT_KNOWLEDGE = self.ATT_KNOWLEDGE;
+        let ATT_CONTROL = self.ATT_CONTROL;
+        let ATT_POINTING = self.ATT_POINTING;
+        let AVG_MANEUVER_FREQ = self.AVG_MANEUVER_FREQ;
+        let MAX_THRUST = self.MAX_THRUST;
+        let DV_BOL = self.DV_BOL;
+        let DV_REMAINING = self.DV_REMAINING;
+        let IXX = self.IXX;
+        let IYY = self.IYY;
+        let IZZ = self.IZZ;
+        let IXY = self.IXY;
+        let IXZ = self.IXZ;
+        let IYZ = self.IYZ;
         PhysicalProperties::create(_fbb, &PhysicalPropertiesArgs{
             COMMENT,
             WET_MASS,
@@ -3355,6 +4183,38 @@ impl PhysicalPropertiesT {
             SRP_CONST_AREA,
             SOLAR_RAD_COEFF,
             SRP_UNCERTAINTY,
+            MANUFACTURER,
+            BUS_MODEL,
+            DOCKED_WITH,
+            INITIAL_WET_MASS,
+            OEB_PARENT_FRAME,
+            OEB_PARENT_FRAME_EPOCH,
+            AREA_MIN_FOR_PC,
+            AREA_MAX_FOR_PC,
+            AREA_TYP_FOR_PC,
+            RCS,
+            RCS_MIN,
+            RCS_MAX,
+            VM_ABSOLUTE,
+            VM_APPARENT_MIN,
+            VM_APPARENT,
+            VM_APPARENT_MAX,
+            REFLECTANCE,
+            ATT_CONTROL_MODE,
+            ATT_ACTUATOR_TYPE,
+            ATT_KNOWLEDGE,
+            ATT_CONTROL,
+            ATT_POINTING,
+            AVG_MANEUVER_FREQ,
+            MAX_THRUST,
+            DV_BOL,
+            DV_REMAINING,
+            IXX,
+            IYY,
+            IZZ,
+            IXY,
+            IXZ,
+            IYZ,
         })
     }
 }
@@ -3396,6 +4256,24 @@ impl<'a> Perturbations<'a> {
     pub const VT_FIXED_F10P7: ::flatbuffers::VOffsetT = 38;
     pub const VT_FIXED_F10P7_MEAN: ::flatbuffers::VOffsetT = 40;
     pub const VT_FIXED_GEOMAG_AP: ::flatbuffers::VOffsetT = 42;
+    pub const VT_ATMOSPHERIC_MODEL_NAME: ::flatbuffers::VOffsetT = 44;
+    pub const VT_EQUATORIAL_RADIUS: ::flatbuffers::VOffsetT = 46;
+    pub const VT_CENTRAL_BODY_ROTATION: ::flatbuffers::VOffsetT = 48;
+    pub const VT_OBLATE_FLATTENING: ::flatbuffers::VOffsetT = 50;
+    pub const VT_REDUCTION_THEORY: ::flatbuffers::VOffsetT = 52;
+    pub const VT_ALBEDO_GRID_SIZE: ::flatbuffers::VOffsetT = 54;
+    pub const VT_SHADOW_MODEL: ::flatbuffers::VOffsetT = 56;
+    pub const VT_SHADOW_BODIES: ::flatbuffers::VOffsetT = 58;
+    pub const VT_SW_DATA_SOURCE: ::flatbuffers::VOffsetT = 60;
+    pub const VT_SW_DATA_EPOCH: ::flatbuffers::VOffsetT = 62;
+    pub const VT_SW_INTERP_METHOD: ::flatbuffers::VOffsetT = 64;
+    pub const VT_FIXED_GEOMAG_DST: ::flatbuffers::VOffsetT = 66;
+    pub const VT_FIXED_M10P7: ::flatbuffers::VOffsetT = 68;
+    pub const VT_FIXED_M10P7_MEAN: ::flatbuffers::VOffsetT = 70;
+    pub const VT_FIXED_S10P7: ::flatbuffers::VOffsetT = 72;
+    pub const VT_FIXED_S10P7_MEAN: ::flatbuffers::VOffsetT = 74;
+    pub const VT_FIXED_Y10P7: ::flatbuffers::VOffsetT = 76;
+    pub const VT_FIXED_Y10P7_MEAN: ::flatbuffers::VOffsetT = 78;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3408,11 +4286,29 @@ impl<'a> Perturbations<'a> {
         args: &'args PerturbationsArgs<'args>
     ) -> ::flatbuffers::WIPOffset<Perturbations<'bldr>> {
         let mut builder = PerturbationsBuilder::new(_fbb);
+        builder.add_FIXED_Y10P7_MEAN(args.FIXED_Y10P7_MEAN);
+        builder.add_FIXED_Y10P7(args.FIXED_Y10P7);
+        builder.add_FIXED_S10P7_MEAN(args.FIXED_S10P7_MEAN);
+        builder.add_FIXED_S10P7(args.FIXED_S10P7);
+        builder.add_FIXED_M10P7_MEAN(args.FIXED_M10P7_MEAN);
+        builder.add_FIXED_M10P7(args.FIXED_M10P7);
+        builder.add_FIXED_GEOMAG_DST(args.FIXED_GEOMAG_DST);
+        builder.add_OBLATE_FLATTENING(args.OBLATE_FLATTENING);
+        builder.add_CENTRAL_BODY_ROTATION(args.CENTRAL_BODY_ROTATION);
+        builder.add_EQUATORIAL_RADIUS(args.EQUATORIAL_RADIUS);
         builder.add_FIXED_GEOMAG_AP(args.FIXED_GEOMAG_AP);
         builder.add_FIXED_F10P7_MEAN(args.FIXED_F10P7_MEAN);
         builder.add_FIXED_F10P7(args.FIXED_F10P7);
         builder.add_FIXED_GEOMAG_KP(args.FIXED_GEOMAG_KP);
         builder.add_GM(args.GM);
+        if let Some(x) = args.SW_INTERP_METHOD { builder.add_SW_INTERP_METHOD(x); }
+        if let Some(x) = args.SW_DATA_EPOCH { builder.add_SW_DATA_EPOCH(x); }
+        if let Some(x) = args.SW_DATA_SOURCE { builder.add_SW_DATA_SOURCE(x); }
+        if let Some(x) = args.SHADOW_BODIES { builder.add_SHADOW_BODIES(x); }
+        if let Some(x) = args.SHADOW_MODEL { builder.add_SHADOW_MODEL(x); }
+        builder.add_ALBEDO_GRID_SIZE(args.ALBEDO_GRID_SIZE);
+        if let Some(x) = args.REDUCTION_THEORY { builder.add_REDUCTION_THEORY(x); }
+        if let Some(x) = args.ATMOSPHERIC_MODEL_NAME { builder.add_ATMOSPHERIC_MODEL_NAME(x); }
         if let Some(x) = args.ATMOSPHERIC_DRAG { builder.add_ATMOSPHERIC_DRAG(x); }
         if let Some(x) = args.RELATIVITY { builder.add_RELATIVITY(x); }
         if let Some(x) = args.THERMAL { builder.add_THERMAL(x); }
@@ -3478,6 +4374,38 @@ impl<'a> Perturbations<'a> {
         let FIXED_F10P7 = self.FIXED_F10P7();
         let FIXED_F10P7_MEAN = self.FIXED_F10P7_MEAN();
         let FIXED_GEOMAG_AP = self.FIXED_GEOMAG_AP();
+        let ATMOSPHERIC_MODEL_NAME = self.ATMOSPHERIC_MODEL_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let EQUATORIAL_RADIUS = self.EQUATORIAL_RADIUS();
+        let CENTRAL_BODY_ROTATION = self.CENTRAL_BODY_ROTATION();
+        let OBLATE_FLATTENING = self.OBLATE_FLATTENING();
+        let REDUCTION_THEORY = self.REDUCTION_THEORY().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let ALBEDO_GRID_SIZE = self.ALBEDO_GRID_SIZE();
+        let SHADOW_MODEL = self.SHADOW_MODEL().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SHADOW_BODIES = self.SHADOW_BODIES().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SW_DATA_SOURCE = self.SW_DATA_SOURCE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SW_DATA_EPOCH = self.SW_DATA_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SW_INTERP_METHOD = self.SW_INTERP_METHOD().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let FIXED_GEOMAG_DST = self.FIXED_GEOMAG_DST();
+        let FIXED_M10P7 = self.FIXED_M10P7();
+        let FIXED_M10P7_MEAN = self.FIXED_M10P7_MEAN();
+        let FIXED_S10P7 = self.FIXED_S10P7();
+        let FIXED_S10P7_MEAN = self.FIXED_S10P7_MEAN();
+        let FIXED_Y10P7 = self.FIXED_Y10P7();
+        let FIXED_Y10P7_MEAN = self.FIXED_Y10P7_MEAN();
         PerturbationsT {
             COMMENT,
             ATMOSPHERIC_MODEL,
@@ -3499,6 +4427,24 @@ impl<'a> Perturbations<'a> {
             FIXED_F10P7,
             FIXED_F10P7_MEAN,
             FIXED_GEOMAG_AP,
+            ATMOSPHERIC_MODEL_NAME,
+            EQUATORIAL_RADIUS,
+            CENTRAL_BODY_ROTATION,
+            OBLATE_FLATTENING,
+            REDUCTION_THEORY,
+            ALBEDO_GRID_SIZE,
+            SHADOW_MODEL,
+            SHADOW_BODIES,
+            SW_DATA_SOURCE,
+            SW_DATA_EPOCH,
+            SW_INTERP_METHOD,
+            FIXED_GEOMAG_DST,
+            FIXED_M10P7,
+            FIXED_M10P7_MEAN,
+            FIXED_S10P7,
+            FIXED_S10P7_MEAN,
+            FIXED_Y10P7,
+            FIXED_Y10P7_MEAN,
         }
     }
 
@@ -3682,6 +4628,169 @@ impl<'a> Perturbations<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_GEOMAG_AP, Some(0.0)).unwrap()}
     }
+
+    /// ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+    /// above is the model family when the text names one.
+    #[inline]
+    pub fn ATMOSPHERIC_MODEL_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_ATMOSPHERIC_MODEL_NAME, None)}
+    }
+
+    /// EQUATORIAL_RADIUS in km, NaN when not stated.
+    #[inline]
+    pub fn EQUATORIAL_RADIUS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Perturbations::VT_EQUATORIAL_RADIUS, Some(f64::NAN)).unwrap()}
+    }
+
+    /// CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+    #[inline]
+    pub fn CENTRAL_BODY_ROTATION(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Perturbations::VT_CENTRAL_BODY_ROTATION, Some(f64::NAN)).unwrap()}
+    }
+
+    /// OBLATE_FLATTENING, NaN when not stated.
+    #[inline]
+    pub fn OBLATE_FLATTENING(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Perturbations::VT_OBLATE_FLATTENING, Some(f64::NAN)).unwrap()}
+    }
+
+    /// REDUCTION_THEORY.
+    #[inline]
+    pub fn REDUCTION_THEORY(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_REDUCTION_THEORY, None)}
+    }
+
+    /// ALBEDO_GRID_SIZE.
+    #[inline]
+    pub fn ALBEDO_GRID_SIZE(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(Perturbations::VT_ALBEDO_GRID_SIZE, Some(0)).unwrap()}
+    }
+
+    /// SHADOW_MODEL.
+    #[inline]
+    pub fn SHADOW_MODEL(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_SHADOW_MODEL, None)}
+    }
+
+    /// SHADOW_BODIES.
+    #[inline]
+    pub fn SHADOW_BODIES(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_SHADOW_BODIES, None)}
+    }
+
+    /// SW_DATA_SOURCE: the space weather data source.
+    #[inline]
+    pub fn SW_DATA_SOURCE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_SW_DATA_SOURCE, None)}
+    }
+
+    /// SW_DATA_EPOCH.
+    #[inline]
+    pub fn SW_DATA_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_SW_DATA_EPOCH, None)}
+    }
+
+    /// SW_INTERP_METHOD.
+    #[inline]
+    pub fn SW_INTERP_METHOD(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_SW_INTERP_METHOD, None)}
+    }
+
+    /// FIXED_GEOMAG_DST in nT, NaN when not stated.
+    #[inline]
+    pub fn FIXED_GEOMAG_DST(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_GEOMAG_DST, Some(f64::NAN)).unwrap()}
+    }
+
+    /// FIXED_M10P7, NaN when not stated.
+    #[inline]
+    pub fn FIXED_M10P7(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_M10P7, Some(f64::NAN)).unwrap()}
+    }
+
+    /// FIXED_M10P7_MEAN, NaN when not stated.
+    #[inline]
+    pub fn FIXED_M10P7_MEAN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_M10P7_MEAN, Some(f64::NAN)).unwrap()}
+    }
+
+    /// FIXED_S10P7, NaN when not stated.
+    #[inline]
+    pub fn FIXED_S10P7(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_S10P7, Some(f64::NAN)).unwrap()}
+    }
+
+    /// FIXED_S10P7_MEAN, NaN when not stated.
+    #[inline]
+    pub fn FIXED_S10P7_MEAN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_S10P7_MEAN, Some(f64::NAN)).unwrap()}
+    }
+
+    /// FIXED_Y10P7, NaN when not stated.
+    #[inline]
+    pub fn FIXED_Y10P7(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_Y10P7, Some(f64::NAN)).unwrap()}
+    }
+
+    /// FIXED_Y10P7_MEAN, NaN when not stated.
+    #[inline]
+    pub fn FIXED_Y10P7_MEAN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_Y10P7_MEAN, Some(f64::NAN)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for Perturbations<'_> {
@@ -3710,6 +4819,24 @@ impl ::flatbuffers::Verifiable for Perturbations<'_> {
             .visit_field::<f64>("FIXED_F10P7", Self::VT_FIXED_F10P7, false)?
             .visit_field::<f64>("FIXED_F10P7_MEAN", Self::VT_FIXED_F10P7_MEAN, false)?
             .visit_field::<f64>("FIXED_GEOMAG_AP", Self::VT_FIXED_GEOMAG_AP, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ATMOSPHERIC_MODEL_NAME", Self::VT_ATMOSPHERIC_MODEL_NAME, false)?
+            .visit_field::<f64>("EQUATORIAL_RADIUS", Self::VT_EQUATORIAL_RADIUS, false)?
+            .visit_field::<f64>("CENTRAL_BODY_ROTATION", Self::VT_CENTRAL_BODY_ROTATION, false)?
+            .visit_field::<f64>("OBLATE_FLATTENING", Self::VT_OBLATE_FLATTENING, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REDUCTION_THEORY", Self::VT_REDUCTION_THEORY, false)?
+            .visit_field::<u32>("ALBEDO_GRID_SIZE", Self::VT_ALBEDO_GRID_SIZE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SHADOW_MODEL", Self::VT_SHADOW_MODEL, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SHADOW_BODIES", Self::VT_SHADOW_BODIES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SW_DATA_SOURCE", Self::VT_SW_DATA_SOURCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SW_DATA_EPOCH", Self::VT_SW_DATA_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SW_INTERP_METHOD", Self::VT_SW_INTERP_METHOD, false)?
+            .visit_field::<f64>("FIXED_GEOMAG_DST", Self::VT_FIXED_GEOMAG_DST, false)?
+            .visit_field::<f64>("FIXED_M10P7", Self::VT_FIXED_M10P7, false)?
+            .visit_field::<f64>("FIXED_M10P7_MEAN", Self::VT_FIXED_M10P7_MEAN, false)?
+            .visit_field::<f64>("FIXED_S10P7", Self::VT_FIXED_S10P7, false)?
+            .visit_field::<f64>("FIXED_S10P7_MEAN", Self::VT_FIXED_S10P7_MEAN, false)?
+            .visit_field::<f64>("FIXED_Y10P7", Self::VT_FIXED_Y10P7, false)?
+            .visit_field::<f64>("FIXED_Y10P7_MEAN", Self::VT_FIXED_Y10P7_MEAN, false)?
             .finish();
         Ok(())
     }
@@ -3736,6 +4863,24 @@ pub struct PerturbationsArgs<'a> {
     pub FIXED_F10P7: f64,
     pub FIXED_F10P7_MEAN: f64,
     pub FIXED_GEOMAG_AP: f64,
+    pub ATMOSPHERIC_MODEL_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EQUATORIAL_RADIUS: f64,
+    pub CENTRAL_BODY_ROTATION: f64,
+    pub OBLATE_FLATTENING: f64,
+    pub REDUCTION_THEORY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ALBEDO_GRID_SIZE: u32,
+    pub SHADOW_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SHADOW_BODIES: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SW_DATA_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SW_DATA_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SW_INTERP_METHOD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FIXED_GEOMAG_DST: f64,
+    pub FIXED_M10P7: f64,
+    pub FIXED_M10P7_MEAN: f64,
+    pub FIXED_S10P7: f64,
+    pub FIXED_S10P7_MEAN: f64,
+    pub FIXED_Y10P7: f64,
+    pub FIXED_Y10P7_MEAN: f64,
 }
 
 impl<'a> Default for PerturbationsArgs<'a> {
@@ -3762,6 +4907,24 @@ impl<'a> Default for PerturbationsArgs<'a> {
             FIXED_F10P7: 0.0,
             FIXED_F10P7_MEAN: 0.0,
             FIXED_GEOMAG_AP: 0.0,
+            ATMOSPHERIC_MODEL_NAME: None,
+            EQUATORIAL_RADIUS: f64::NAN,
+            CENTRAL_BODY_ROTATION: f64::NAN,
+            OBLATE_FLATTENING: f64::NAN,
+            REDUCTION_THEORY: None,
+            ALBEDO_GRID_SIZE: 0,
+            SHADOW_MODEL: None,
+            SHADOW_BODIES: None,
+            SW_DATA_SOURCE: None,
+            SW_DATA_EPOCH: None,
+            SW_INTERP_METHOD: None,
+            FIXED_GEOMAG_DST: f64::NAN,
+            FIXED_M10P7: f64::NAN,
+            FIXED_M10P7_MEAN: f64::NAN,
+            FIXED_S10P7: f64::NAN,
+            FIXED_S10P7_MEAN: f64::NAN,
+            FIXED_Y10P7: f64::NAN,
+            FIXED_Y10P7_MEAN: f64::NAN,
         }
     }
 }
@@ -3873,6 +5036,96 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PerturbationsBuilder<'a, 'b, 
     }
 
     #[inline]
+    pub fn add_ATMOSPHERIC_MODEL_NAME(&mut self, ATMOSPHERIC_MODEL_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_ATMOSPHERIC_MODEL_NAME, ATMOSPHERIC_MODEL_NAME);
+    }
+
+    #[inline]
+    pub fn add_EQUATORIAL_RADIUS(&mut self, EQUATORIAL_RADIUS: f64) {
+        self.fbb_.push_slot::<f64>(Perturbations::VT_EQUATORIAL_RADIUS, EQUATORIAL_RADIUS, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_CENTRAL_BODY_ROTATION(&mut self, CENTRAL_BODY_ROTATION: f64) {
+        self.fbb_.push_slot::<f64>(Perturbations::VT_CENTRAL_BODY_ROTATION, CENTRAL_BODY_ROTATION, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_OBLATE_FLATTENING(&mut self, OBLATE_FLATTENING: f64) {
+        self.fbb_.push_slot::<f64>(Perturbations::VT_OBLATE_FLATTENING, OBLATE_FLATTENING, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_REDUCTION_THEORY(&mut self, REDUCTION_THEORY: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_REDUCTION_THEORY, REDUCTION_THEORY);
+    }
+
+    #[inline]
+    pub fn add_ALBEDO_GRID_SIZE(&mut self, ALBEDO_GRID_SIZE: u32) {
+        self.fbb_.push_slot::<u32>(Perturbations::VT_ALBEDO_GRID_SIZE, ALBEDO_GRID_SIZE, 0);
+    }
+
+    #[inline]
+    pub fn add_SHADOW_MODEL(&mut self, SHADOW_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_SHADOW_MODEL, SHADOW_MODEL);
+    }
+
+    #[inline]
+    pub fn add_SHADOW_BODIES(&mut self, SHADOW_BODIES: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_SHADOW_BODIES, SHADOW_BODIES);
+    }
+
+    #[inline]
+    pub fn add_SW_DATA_SOURCE(&mut self, SW_DATA_SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_SW_DATA_SOURCE, SW_DATA_SOURCE);
+    }
+
+    #[inline]
+    pub fn add_SW_DATA_EPOCH(&mut self, SW_DATA_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_SW_DATA_EPOCH, SW_DATA_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_SW_INTERP_METHOD(&mut self, SW_INTERP_METHOD: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_SW_INTERP_METHOD, SW_INTERP_METHOD);
+    }
+
+    #[inline]
+    pub fn add_FIXED_GEOMAG_DST(&mut self, FIXED_GEOMAG_DST: f64) {
+        self.fbb_.push_slot::<f64>(Perturbations::VT_FIXED_GEOMAG_DST, FIXED_GEOMAG_DST, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_FIXED_M10P7(&mut self, FIXED_M10P7: f64) {
+        self.fbb_.push_slot::<f64>(Perturbations::VT_FIXED_M10P7, FIXED_M10P7, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_FIXED_M10P7_MEAN(&mut self, FIXED_M10P7_MEAN: f64) {
+        self.fbb_.push_slot::<f64>(Perturbations::VT_FIXED_M10P7_MEAN, FIXED_M10P7_MEAN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_FIXED_S10P7(&mut self, FIXED_S10P7: f64) {
+        self.fbb_.push_slot::<f64>(Perturbations::VT_FIXED_S10P7, FIXED_S10P7, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_FIXED_S10P7_MEAN(&mut self, FIXED_S10P7_MEAN: f64) {
+        self.fbb_.push_slot::<f64>(Perturbations::VT_FIXED_S10P7_MEAN, FIXED_S10P7_MEAN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_FIXED_Y10P7(&mut self, FIXED_Y10P7: f64) {
+        self.fbb_.push_slot::<f64>(Perturbations::VT_FIXED_Y10P7, FIXED_Y10P7, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_FIXED_Y10P7_MEAN(&mut self, FIXED_Y10P7_MEAN: f64) {
+        self.fbb_.push_slot::<f64>(Perturbations::VT_FIXED_Y10P7_MEAN, FIXED_Y10P7_MEAN, f64::NAN);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PerturbationsBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PerturbationsBuilder {
@@ -3911,6 +5164,24 @@ impl ::core::fmt::Debug for Perturbations<'_> {
         ds.field("FIXED_F10P7", &self.FIXED_F10P7());
         ds.field("FIXED_F10P7_MEAN", &self.FIXED_F10P7_MEAN());
         ds.field("FIXED_GEOMAG_AP", &self.FIXED_GEOMAG_AP());
+        ds.field("ATMOSPHERIC_MODEL_NAME", &self.ATMOSPHERIC_MODEL_NAME());
+        ds.field("EQUATORIAL_RADIUS", &self.EQUATORIAL_RADIUS());
+        ds.field("CENTRAL_BODY_ROTATION", &self.CENTRAL_BODY_ROTATION());
+        ds.field("OBLATE_FLATTENING", &self.OBLATE_FLATTENING());
+        ds.field("REDUCTION_THEORY", &self.REDUCTION_THEORY());
+        ds.field("ALBEDO_GRID_SIZE", &self.ALBEDO_GRID_SIZE());
+        ds.field("SHADOW_MODEL", &self.SHADOW_MODEL());
+        ds.field("SHADOW_BODIES", &self.SHADOW_BODIES());
+        ds.field("SW_DATA_SOURCE", &self.SW_DATA_SOURCE());
+        ds.field("SW_DATA_EPOCH", &self.SW_DATA_EPOCH());
+        ds.field("SW_INTERP_METHOD", &self.SW_INTERP_METHOD());
+        ds.field("FIXED_GEOMAG_DST", &self.FIXED_GEOMAG_DST());
+        ds.field("FIXED_M10P7", &self.FIXED_M10P7());
+        ds.field("FIXED_M10P7_MEAN", &self.FIXED_M10P7_MEAN());
+        ds.field("FIXED_S10P7", &self.FIXED_S10P7());
+        ds.field("FIXED_S10P7_MEAN", &self.FIXED_S10P7_MEAN());
+        ds.field("FIXED_Y10P7", &self.FIXED_Y10P7());
+        ds.field("FIXED_Y10P7_MEAN", &self.FIXED_Y10P7_MEAN());
         ds.finish()
     }
 }
@@ -3938,6 +5209,24 @@ pub struct PerturbationsT {
     pub FIXED_F10P7: f64,
     pub FIXED_F10P7_MEAN: f64,
     pub FIXED_GEOMAG_AP: f64,
+    pub ATMOSPHERIC_MODEL_NAME: Option<alloc::string::String>,
+    pub EQUATORIAL_RADIUS: f64,
+    pub CENTRAL_BODY_ROTATION: f64,
+    pub OBLATE_FLATTENING: f64,
+    pub REDUCTION_THEORY: Option<alloc::string::String>,
+    pub ALBEDO_GRID_SIZE: u32,
+    pub SHADOW_MODEL: Option<alloc::string::String>,
+    pub SHADOW_BODIES: Option<alloc::string::String>,
+    pub SW_DATA_SOURCE: Option<alloc::string::String>,
+    pub SW_DATA_EPOCH: Option<alloc::string::String>,
+    pub SW_INTERP_METHOD: Option<alloc::string::String>,
+    pub FIXED_GEOMAG_DST: f64,
+    pub FIXED_M10P7: f64,
+    pub FIXED_M10P7_MEAN: f64,
+    pub FIXED_S10P7: f64,
+    pub FIXED_S10P7_MEAN: f64,
+    pub FIXED_Y10P7: f64,
+    pub FIXED_Y10P7_MEAN: f64,
 }
 
 impl Default for PerturbationsT {
@@ -3963,6 +5252,24 @@ impl Default for PerturbationsT {
             FIXED_F10P7: 0.0,
             FIXED_F10P7_MEAN: 0.0,
             FIXED_GEOMAG_AP: 0.0,
+            ATMOSPHERIC_MODEL_NAME: None,
+            EQUATORIAL_RADIUS: f64::NAN,
+            CENTRAL_BODY_ROTATION: f64::NAN,
+            OBLATE_FLATTENING: f64::NAN,
+            REDUCTION_THEORY: None,
+            ALBEDO_GRID_SIZE: 0,
+            SHADOW_MODEL: None,
+            SHADOW_BODIES: None,
+            SW_DATA_SOURCE: None,
+            SW_DATA_EPOCH: None,
+            SW_INTERP_METHOD: None,
+            FIXED_GEOMAG_DST: f64::NAN,
+            FIXED_M10P7: f64::NAN,
+            FIXED_M10P7_MEAN: f64::NAN,
+            FIXED_S10P7: f64::NAN,
+            FIXED_S10P7_MEAN: f64::NAN,
+            FIXED_Y10P7: f64::NAN,
+            FIXED_Y10P7_MEAN: f64::NAN,
         }
     }
 }
@@ -4018,6 +5325,38 @@ impl PerturbationsT {
         let FIXED_F10P7 = self.FIXED_F10P7;
         let FIXED_F10P7_MEAN = self.FIXED_F10P7_MEAN;
         let FIXED_GEOMAG_AP = self.FIXED_GEOMAG_AP;
+        let ATMOSPHERIC_MODEL_NAME = self.ATMOSPHERIC_MODEL_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let EQUATORIAL_RADIUS = self.EQUATORIAL_RADIUS;
+        let CENTRAL_BODY_ROTATION = self.CENTRAL_BODY_ROTATION;
+        let OBLATE_FLATTENING = self.OBLATE_FLATTENING;
+        let REDUCTION_THEORY = self.REDUCTION_THEORY.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let ALBEDO_GRID_SIZE = self.ALBEDO_GRID_SIZE;
+        let SHADOW_MODEL = self.SHADOW_MODEL.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SHADOW_BODIES = self.SHADOW_BODIES.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SW_DATA_SOURCE = self.SW_DATA_SOURCE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SW_DATA_EPOCH = self.SW_DATA_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SW_INTERP_METHOD = self.SW_INTERP_METHOD.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let FIXED_GEOMAG_DST = self.FIXED_GEOMAG_DST;
+        let FIXED_M10P7 = self.FIXED_M10P7;
+        let FIXED_M10P7_MEAN = self.FIXED_M10P7_MEAN;
+        let FIXED_S10P7 = self.FIXED_S10P7;
+        let FIXED_S10P7_MEAN = self.FIXED_S10P7_MEAN;
+        let FIXED_Y10P7 = self.FIXED_Y10P7;
+        let FIXED_Y10P7_MEAN = self.FIXED_Y10P7_MEAN;
         Perturbations::create(_fbb, &PerturbationsArgs{
             COMMENT,
             ATMOSPHERIC_MODEL,
@@ -4039,6 +5378,24 @@ impl PerturbationsT {
             FIXED_F10P7,
             FIXED_F10P7_MEAN,
             FIXED_GEOMAG_AP,
+            ATMOSPHERIC_MODEL_NAME,
+            EQUATORIAL_RADIUS,
+            CENTRAL_BODY_ROTATION,
+            OBLATE_FLATTENING,
+            REDUCTION_THEORY,
+            ALBEDO_GRID_SIZE,
+            SHADOW_MODEL,
+            SHADOW_BODIES,
+            SW_DATA_SOURCE,
+            SW_DATA_EPOCH,
+            SW_INTERP_METHOD,
+            FIXED_GEOMAG_DST,
+            FIXED_M10P7,
+            FIXED_M10P7_MEAN,
+            FIXED_S10P7,
+            FIXED_S10P7_MEAN,
+            FIXED_Y10P7,
+            FIXED_Y10P7_MEAN,
         })
     }
 }
@@ -5502,6 +6859,27 @@ impl<'a> OrbitDetermination<'a> {
     pub const VT_SEDR: ::flatbuffers::VOffsetT = 50;
     pub const VT_WEIGHTED_RMS: ::flatbuffers::VOffsetT = 52;
     pub const VT_OD_DYNAMIC_PARAMETERS: ::flatbuffers::VOffsetT = 54;
+    pub const VT_DAYS_SINCE_FIRST_OBS: ::flatbuffers::VOffsetT = 56;
+    pub const VT_DAYS_SINCE_LAST_OBS: ::flatbuffers::VOffsetT = 58;
+    pub const VT_RECOMMENDED_OD_SPAN: ::flatbuffers::VOffsetT = 60;
+    pub const VT_ACTUAL_OD_SPAN: ::flatbuffers::VOffsetT = 62;
+    pub const VT_OBS_AVAILABLE: ::flatbuffers::VOffsetT = 64;
+    pub const VT_TRACKS_AVAILABLE: ::flatbuffers::VOffsetT = 66;
+    pub const VT_MAXIMUM_OBS_GAP: ::flatbuffers::VOffsetT = 68;
+    pub const VT_OD_EPOCH_EIGMAJ: ::flatbuffers::VOffsetT = 70;
+    pub const VT_OD_EPOCH_EIGINT: ::flatbuffers::VOffsetT = 72;
+    pub const VT_OD_EPOCH_EIGMIN: ::flatbuffers::VOffsetT = 74;
+    pub const VT_OD_MAX_PRED_EIGMAJ: ::flatbuffers::VOffsetT = 76;
+    pub const VT_OD_MIN_PRED_EIGMIN: ::flatbuffers::VOffsetT = 78;
+    pub const VT_OD_CONFIDENCE: ::flatbuffers::VOffsetT = 80;
+    pub const VT_GDOP: ::flatbuffers::VOffsetT = 82;
+    pub const VT_SOLVE_N: ::flatbuffers::VOffsetT = 84;
+    pub const VT_SOLVE_STATES: ::flatbuffers::VOffsetT = 86;
+    pub const VT_CONSIDER_N: ::flatbuffers::VOffsetT = 88;
+    pub const VT_CONSIDER_PARAMS: ::flatbuffers::VOffsetT = 90;
+    pub const VT_SENSORS_N: ::flatbuffers::VOffsetT = 92;
+    pub const VT_SENSORS: ::flatbuffers::VOffsetT = 94;
+    pub const VT_COMMENT: ::flatbuffers::VOffsetT = 96;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5514,10 +6892,31 @@ impl<'a> OrbitDetermination<'a> {
         args: &'args OrbitDeterminationArgs<'args>
     ) -> ::flatbuffers::WIPOffset<OrbitDetermination<'bldr>> {
         let mut builder = OrbitDeterminationBuilder::new(_fbb);
+        builder.add_GDOP(args.GDOP);
+        builder.add_OD_CONFIDENCE(args.OD_CONFIDENCE);
+        builder.add_OD_MIN_PRED_EIGMIN(args.OD_MIN_PRED_EIGMIN);
+        builder.add_OD_MAX_PRED_EIGMAJ(args.OD_MAX_PRED_EIGMAJ);
+        builder.add_OD_EPOCH_EIGMIN(args.OD_EPOCH_EIGMIN);
+        builder.add_OD_EPOCH_EIGINT(args.OD_EPOCH_EIGINT);
+        builder.add_OD_EPOCH_EIGMAJ(args.OD_EPOCH_EIGMAJ);
+        builder.add_MAXIMUM_OBS_GAP(args.MAXIMUM_OBS_GAP);
+        builder.add_ACTUAL_OD_SPAN(args.ACTUAL_OD_SPAN);
+        builder.add_RECOMMENDED_OD_SPAN(args.RECOMMENDED_OD_SPAN);
+        builder.add_DAYS_SINCE_LAST_OBS(args.DAYS_SINCE_LAST_OBS);
+        builder.add_DAYS_SINCE_FIRST_OBS(args.DAYS_SINCE_FIRST_OBS);
         builder.add_WEIGHTED_RMS(args.WEIGHTED_RMS);
         builder.add_SEDR(args.SEDR);
         builder.add_OD_BATCH_BASELINE_RMS(args.OD_BATCH_BASELINE_RMS);
         builder.add_OD_RESIDUAL_RMS(args.OD_RESIDUAL_RMS);
+        if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+        if let Some(x) = args.SENSORS { builder.add_SENSORS(x); }
+        builder.add_SENSORS_N(args.SENSORS_N);
+        if let Some(x) = args.CONSIDER_PARAMS { builder.add_CONSIDER_PARAMS(x); }
+        builder.add_CONSIDER_N(args.CONSIDER_N);
+        if let Some(x) = args.SOLVE_STATES { builder.add_SOLVE_STATES(x); }
+        builder.add_SOLVE_N(args.SOLVE_N);
+        builder.add_TRACKS_AVAILABLE(args.TRACKS_AVAILABLE);
+        builder.add_OBS_AVAILABLE(args.OBS_AVAILABLE);
         if let Some(x) = args.OD_DYNAMIC_PARAMETERS { builder.add_OD_DYNAMIC_PARAMETERS(x); }
         if let Some(x) = args.OD_BATCH_BASELINE_ID { builder.add_OD_BATCH_BASELINE_ID(x); }
         if let Some(x) = args.OD_RESIDUAL_EPOCHS { builder.add_OD_RESIDUAL_EPOCHS(x); }
@@ -5608,6 +7007,35 @@ impl<'a> OrbitDetermination<'a> {
         let OD_DYNAMIC_PARAMETERS = self.OD_DYNAMIC_PARAMETERS().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let DAYS_SINCE_FIRST_OBS = self.DAYS_SINCE_FIRST_OBS();
+        let DAYS_SINCE_LAST_OBS = self.DAYS_SINCE_LAST_OBS();
+        let RECOMMENDED_OD_SPAN = self.RECOMMENDED_OD_SPAN();
+        let ACTUAL_OD_SPAN = self.ACTUAL_OD_SPAN();
+        let OBS_AVAILABLE = self.OBS_AVAILABLE();
+        let TRACKS_AVAILABLE = self.TRACKS_AVAILABLE();
+        let MAXIMUM_OBS_GAP = self.MAXIMUM_OBS_GAP();
+        let OD_EPOCH_EIGMAJ = self.OD_EPOCH_EIGMAJ();
+        let OD_EPOCH_EIGINT = self.OD_EPOCH_EIGINT();
+        let OD_EPOCH_EIGMIN = self.OD_EPOCH_EIGMIN();
+        let OD_MAX_PRED_EIGMAJ = self.OD_MAX_PRED_EIGMAJ();
+        let OD_MIN_PRED_EIGMIN = self.OD_MIN_PRED_EIGMIN();
+        let OD_CONFIDENCE = self.OD_CONFIDENCE();
+        let GDOP = self.GDOP();
+        let SOLVE_N = self.SOLVE_N();
+        let SOLVE_STATES = self.SOLVE_STATES().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let CONSIDER_N = self.CONSIDER_N();
+        let CONSIDER_PARAMS = self.CONSIDER_PARAMS().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SENSORS_N = self.SENSORS_N();
+        let SENSORS = self.SENSORS().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COMMENT = self.COMMENT().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
         OrbitDeterminationT {
             OD_ID,
             OD_PREV_ID,
@@ -5635,6 +7063,27 @@ impl<'a> OrbitDetermination<'a> {
             SEDR,
             WEIGHTED_RMS,
             OD_DYNAMIC_PARAMETERS,
+            DAYS_SINCE_FIRST_OBS,
+            DAYS_SINCE_LAST_OBS,
+            RECOMMENDED_OD_SPAN,
+            ACTUAL_OD_SPAN,
+            OBS_AVAILABLE,
+            TRACKS_AVAILABLE,
+            MAXIMUM_OBS_GAP,
+            OD_EPOCH_EIGMAJ,
+            OD_EPOCH_EIGINT,
+            OD_EPOCH_EIGMIN,
+            OD_MAX_PRED_EIGMAJ,
+            OD_MIN_PRED_EIGMIN,
+            OD_CONFIDENCE,
+            GDOP,
+            SOLVE_N,
+            SOLVE_STATES,
+            CONSIDER_N,
+            CONSIDER_PARAMS,
+            SENSORS_N,
+            SENSORS,
+            COMMENT,
         }
     }
 
@@ -5877,6 +7326,195 @@ impl<'a> OrbitDetermination<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMDynamicParameter>>>>(OrbitDetermination::VT_OD_DYNAMIC_PARAMETERS, None)}
     }
+
+    /// DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+    #[inline]
+    pub fn DAYS_SINCE_FIRST_OBS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OrbitDetermination::VT_DAYS_SINCE_FIRST_OBS, Some(f64::NAN)).unwrap()}
+    }
+
+    /// DAYS_SINCE_LAST_OBS, NaN when not stated.
+    #[inline]
+    pub fn DAYS_SINCE_LAST_OBS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OrbitDetermination::VT_DAYS_SINCE_LAST_OBS, Some(f64::NAN)).unwrap()}
+    }
+
+    /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+    #[inline]
+    pub fn RECOMMENDED_OD_SPAN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OrbitDetermination::VT_RECOMMENDED_OD_SPAN, Some(f64::NAN)).unwrap()}
+    }
+
+    /// ACTUAL_OD_SPAN in days, NaN when not stated.
+    #[inline]
+    pub fn ACTUAL_OD_SPAN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OrbitDetermination::VT_ACTUAL_OD_SPAN, Some(f64::NAN)).unwrap()}
+    }
+
+    /// OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+    #[inline]
+    pub fn OBS_AVAILABLE(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(OrbitDetermination::VT_OBS_AVAILABLE, Some(0)).unwrap()}
+    }
+
+    /// TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+    #[inline]
+    pub fn TRACKS_AVAILABLE(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(OrbitDetermination::VT_TRACKS_AVAILABLE, Some(0)).unwrap()}
+    }
+
+    /// MAXIMUM_OBS_GAP in days, NaN when not stated.
+    #[inline]
+    pub fn MAXIMUM_OBS_GAP(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OrbitDetermination::VT_MAXIMUM_OBS_GAP, Some(f64::NAN)).unwrap()}
+    }
+
+    /// OD_EPOCH_EIGMAJ in m, NaN when not stated.
+    #[inline]
+    pub fn OD_EPOCH_EIGMAJ(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OrbitDetermination::VT_OD_EPOCH_EIGMAJ, Some(f64::NAN)).unwrap()}
+    }
+
+    /// OD_EPOCH_EIGINT in m, NaN when not stated.
+    #[inline]
+    pub fn OD_EPOCH_EIGINT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OrbitDetermination::VT_OD_EPOCH_EIGINT, Some(f64::NAN)).unwrap()}
+    }
+
+    /// OD_EPOCH_EIGMIN in m, NaN when not stated.
+    #[inline]
+    pub fn OD_EPOCH_EIGMIN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OrbitDetermination::VT_OD_EPOCH_EIGMIN, Some(f64::NAN)).unwrap()}
+    }
+
+    /// OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+    #[inline]
+    pub fn OD_MAX_PRED_EIGMAJ(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OrbitDetermination::VT_OD_MAX_PRED_EIGMAJ, Some(f64::NAN)).unwrap()}
+    }
+
+    /// OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+    #[inline]
+    pub fn OD_MIN_PRED_EIGMIN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OrbitDetermination::VT_OD_MIN_PRED_EIGMIN, Some(f64::NAN)).unwrap()}
+    }
+
+    /// OD_CONFIDENCE in percent, NaN when not stated.
+    #[inline]
+    pub fn OD_CONFIDENCE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OrbitDetermination::VT_OD_CONFIDENCE, Some(f64::NAN)).unwrap()}
+    }
+
+    /// GDOP, NaN when not stated.
+    #[inline]
+    pub fn GDOP(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OrbitDetermination::VT_GDOP, Some(f64::NAN)).unwrap()}
+    }
+
+    /// SOLVE_N: the number of solved-for states.
+    #[inline]
+    pub fn SOLVE_N(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(OrbitDetermination::VT_SOLVE_N, Some(0)).unwrap()}
+    }
+
+    /// SOLVE_STATES: the solved-for states, as written.
+    #[inline]
+    pub fn SOLVE_STATES(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_SOLVE_STATES, None)}
+    }
+
+    /// CONSIDER_N: the number of consider parameters.
+    #[inline]
+    pub fn CONSIDER_N(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(OrbitDetermination::VT_CONSIDER_N, Some(0)).unwrap()}
+    }
+
+    /// CONSIDER_PARAMS: the consider parameters, as written.
+    #[inline]
+    pub fn CONSIDER_PARAMS(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_CONSIDER_PARAMS, None)}
+    }
+
+    /// SENSORS_N: the number of sensors.
+    #[inline]
+    pub fn SENSORS_N(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(OrbitDetermination::VT_SENSORS_N, Some(0)).unwrap()}
+    }
+
+    /// SENSORS: the sensors, as written.
+    #[inline]
+    pub fn SENSORS(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_SENSORS, None)}
+    }
+
+    /// COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+    #[inline]
+    pub fn COMMENT(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OrbitDetermination::VT_COMMENT, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OrbitDetermination<'_> {
@@ -5911,6 +7549,27 @@ impl ::flatbuffers::Verifiable for OrbitDetermination<'_> {
             .visit_field::<f64>("SEDR", Self::VT_SEDR, false)?
             .visit_field::<f64>("WEIGHTED_RMS", Self::VT_WEIGHTED_RMS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OCMDynamicParameter>>>>("OD_DYNAMIC_PARAMETERS", Self::VT_OD_DYNAMIC_PARAMETERS, false)?
+            .visit_field::<f64>("DAYS_SINCE_FIRST_OBS", Self::VT_DAYS_SINCE_FIRST_OBS, false)?
+            .visit_field::<f64>("DAYS_SINCE_LAST_OBS", Self::VT_DAYS_SINCE_LAST_OBS, false)?
+            .visit_field::<f64>("RECOMMENDED_OD_SPAN", Self::VT_RECOMMENDED_OD_SPAN, false)?
+            .visit_field::<f64>("ACTUAL_OD_SPAN", Self::VT_ACTUAL_OD_SPAN, false)?
+            .visit_field::<u32>("OBS_AVAILABLE", Self::VT_OBS_AVAILABLE, false)?
+            .visit_field::<u32>("TRACKS_AVAILABLE", Self::VT_TRACKS_AVAILABLE, false)?
+            .visit_field::<f64>("MAXIMUM_OBS_GAP", Self::VT_MAXIMUM_OBS_GAP, false)?
+            .visit_field::<f64>("OD_EPOCH_EIGMAJ", Self::VT_OD_EPOCH_EIGMAJ, false)?
+            .visit_field::<f64>("OD_EPOCH_EIGINT", Self::VT_OD_EPOCH_EIGINT, false)?
+            .visit_field::<f64>("OD_EPOCH_EIGMIN", Self::VT_OD_EPOCH_EIGMIN, false)?
+            .visit_field::<f64>("OD_MAX_PRED_EIGMAJ", Self::VT_OD_MAX_PRED_EIGMAJ, false)?
+            .visit_field::<f64>("OD_MIN_PRED_EIGMIN", Self::VT_OD_MIN_PRED_EIGMIN, false)?
+            .visit_field::<f64>("OD_CONFIDENCE", Self::VT_OD_CONFIDENCE, false)?
+            .visit_field::<f64>("GDOP", Self::VT_GDOP, false)?
+            .visit_field::<u32>("SOLVE_N", Self::VT_SOLVE_N, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOLVE_STATES", Self::VT_SOLVE_STATES, false)?
+            .visit_field::<u32>("CONSIDER_N", Self::VT_CONSIDER_N, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONSIDER_PARAMS", Self::VT_CONSIDER_PARAMS, false)?
+            .visit_field::<u32>("SENSORS_N", Self::VT_SENSORS_N, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SENSORS", Self::VT_SENSORS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
             .finish();
         Ok(())
     }
@@ -5943,6 +7602,27 @@ pub struct OrbitDeterminationArgs<'a> {
     pub SEDR: f64,
     pub WEIGHTED_RMS: f64,
     pub OD_DYNAMIC_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMDynamicParameter<'a>>>>>,
+    pub DAYS_SINCE_FIRST_OBS: f64,
+    pub DAYS_SINCE_LAST_OBS: f64,
+    pub RECOMMENDED_OD_SPAN: f64,
+    pub ACTUAL_OD_SPAN: f64,
+    pub OBS_AVAILABLE: u32,
+    pub TRACKS_AVAILABLE: u32,
+    pub MAXIMUM_OBS_GAP: f64,
+    pub OD_EPOCH_EIGMAJ: f64,
+    pub OD_EPOCH_EIGINT: f64,
+    pub OD_EPOCH_EIGMIN: f64,
+    pub OD_MAX_PRED_EIGMAJ: f64,
+    pub OD_MIN_PRED_EIGMIN: f64,
+    pub OD_CONFIDENCE: f64,
+    pub GDOP: f64,
+    pub SOLVE_N: u32,
+    pub SOLVE_STATES: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONSIDER_N: u32,
+    pub CONSIDER_PARAMS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SENSORS_N: u32,
+    pub SENSORS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 
 impl<'a> Default for OrbitDeterminationArgs<'a> {
@@ -5975,6 +7655,27 @@ impl<'a> Default for OrbitDeterminationArgs<'a> {
             SEDR: 0.0,
             WEIGHTED_RMS: 0.0,
             OD_DYNAMIC_PARAMETERS: None,
+            DAYS_SINCE_FIRST_OBS: f64::NAN,
+            DAYS_SINCE_LAST_OBS: f64::NAN,
+            RECOMMENDED_OD_SPAN: f64::NAN,
+            ACTUAL_OD_SPAN: f64::NAN,
+            OBS_AVAILABLE: 0,
+            TRACKS_AVAILABLE: 0,
+            MAXIMUM_OBS_GAP: f64::NAN,
+            OD_EPOCH_EIGMAJ: f64::NAN,
+            OD_EPOCH_EIGINT: f64::NAN,
+            OD_EPOCH_EIGMIN: f64::NAN,
+            OD_MAX_PRED_EIGMAJ: f64::NAN,
+            OD_MIN_PRED_EIGMIN: f64::NAN,
+            OD_CONFIDENCE: f64::NAN,
+            GDOP: f64::NAN,
+            SOLVE_N: 0,
+            SOLVE_STATES: None,
+            CONSIDER_N: 0,
+            CONSIDER_PARAMS: None,
+            SENSORS_N: 0,
+            SENSORS: None,
+            COMMENT: None,
         }
     }
 }
@@ -6116,6 +7817,111 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OrbitDeterminationBuilder<'a,
     }
 
     #[inline]
+    pub fn add_DAYS_SINCE_FIRST_OBS(&mut self, DAYS_SINCE_FIRST_OBS: f64) {
+        self.fbb_.push_slot::<f64>(OrbitDetermination::VT_DAYS_SINCE_FIRST_OBS, DAYS_SINCE_FIRST_OBS, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_DAYS_SINCE_LAST_OBS(&mut self, DAYS_SINCE_LAST_OBS: f64) {
+        self.fbb_.push_slot::<f64>(OrbitDetermination::VT_DAYS_SINCE_LAST_OBS, DAYS_SINCE_LAST_OBS, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_RECOMMENDED_OD_SPAN(&mut self, RECOMMENDED_OD_SPAN: f64) {
+        self.fbb_.push_slot::<f64>(OrbitDetermination::VT_RECOMMENDED_OD_SPAN, RECOMMENDED_OD_SPAN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ACTUAL_OD_SPAN(&mut self, ACTUAL_OD_SPAN: f64) {
+        self.fbb_.push_slot::<f64>(OrbitDetermination::VT_ACTUAL_OD_SPAN, ACTUAL_OD_SPAN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_OBS_AVAILABLE(&mut self, OBS_AVAILABLE: u32) {
+        self.fbb_.push_slot::<u32>(OrbitDetermination::VT_OBS_AVAILABLE, OBS_AVAILABLE, 0);
+    }
+
+    #[inline]
+    pub fn add_TRACKS_AVAILABLE(&mut self, TRACKS_AVAILABLE: u32) {
+        self.fbb_.push_slot::<u32>(OrbitDetermination::VT_TRACKS_AVAILABLE, TRACKS_AVAILABLE, 0);
+    }
+
+    #[inline]
+    pub fn add_MAXIMUM_OBS_GAP(&mut self, MAXIMUM_OBS_GAP: f64) {
+        self.fbb_.push_slot::<f64>(OrbitDetermination::VT_MAXIMUM_OBS_GAP, MAXIMUM_OBS_GAP, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_OD_EPOCH_EIGMAJ(&mut self, OD_EPOCH_EIGMAJ: f64) {
+        self.fbb_.push_slot::<f64>(OrbitDetermination::VT_OD_EPOCH_EIGMAJ, OD_EPOCH_EIGMAJ, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_OD_EPOCH_EIGINT(&mut self, OD_EPOCH_EIGINT: f64) {
+        self.fbb_.push_slot::<f64>(OrbitDetermination::VT_OD_EPOCH_EIGINT, OD_EPOCH_EIGINT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_OD_EPOCH_EIGMIN(&mut self, OD_EPOCH_EIGMIN: f64) {
+        self.fbb_.push_slot::<f64>(OrbitDetermination::VT_OD_EPOCH_EIGMIN, OD_EPOCH_EIGMIN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_OD_MAX_PRED_EIGMAJ(&mut self, OD_MAX_PRED_EIGMAJ: f64) {
+        self.fbb_.push_slot::<f64>(OrbitDetermination::VT_OD_MAX_PRED_EIGMAJ, OD_MAX_PRED_EIGMAJ, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_OD_MIN_PRED_EIGMIN(&mut self, OD_MIN_PRED_EIGMIN: f64) {
+        self.fbb_.push_slot::<f64>(OrbitDetermination::VT_OD_MIN_PRED_EIGMIN, OD_MIN_PRED_EIGMIN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_OD_CONFIDENCE(&mut self, OD_CONFIDENCE: f64) {
+        self.fbb_.push_slot::<f64>(OrbitDetermination::VT_OD_CONFIDENCE, OD_CONFIDENCE, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_GDOP(&mut self, GDOP: f64) {
+        self.fbb_.push_slot::<f64>(OrbitDetermination::VT_GDOP, GDOP, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_SOLVE_N(&mut self, SOLVE_N: u32) {
+        self.fbb_.push_slot::<u32>(OrbitDetermination::VT_SOLVE_N, SOLVE_N, 0);
+    }
+
+    #[inline]
+    pub fn add_SOLVE_STATES(&mut self, SOLVE_STATES: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_SOLVE_STATES, SOLVE_STATES);
+    }
+
+    #[inline]
+    pub fn add_CONSIDER_N(&mut self, CONSIDER_N: u32) {
+        self.fbb_.push_slot::<u32>(OrbitDetermination::VT_CONSIDER_N, CONSIDER_N, 0);
+    }
+
+    #[inline]
+    pub fn add_CONSIDER_PARAMS(&mut self, CONSIDER_PARAMS: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_CONSIDER_PARAMS, CONSIDER_PARAMS);
+    }
+
+    #[inline]
+    pub fn add_SENSORS_N(&mut self, SENSORS_N: u32) {
+        self.fbb_.push_slot::<u32>(OrbitDetermination::VT_SENSORS_N, SENSORS_N, 0);
+    }
+
+    #[inline]
+    pub fn add_SENSORS(&mut self, SENSORS: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_SENSORS, SENSORS);
+    }
+
+    #[inline]
+    pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_COMMENT, COMMENT);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OrbitDeterminationBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OrbitDeterminationBuilder {
@@ -6160,6 +7966,27 @@ impl ::core::fmt::Debug for OrbitDetermination<'_> {
         ds.field("SEDR", &self.SEDR());
         ds.field("WEIGHTED_RMS", &self.WEIGHTED_RMS());
         ds.field("OD_DYNAMIC_PARAMETERS", &self.OD_DYNAMIC_PARAMETERS());
+        ds.field("DAYS_SINCE_FIRST_OBS", &self.DAYS_SINCE_FIRST_OBS());
+        ds.field("DAYS_SINCE_LAST_OBS", &self.DAYS_SINCE_LAST_OBS());
+        ds.field("RECOMMENDED_OD_SPAN", &self.RECOMMENDED_OD_SPAN());
+        ds.field("ACTUAL_OD_SPAN", &self.ACTUAL_OD_SPAN());
+        ds.field("OBS_AVAILABLE", &self.OBS_AVAILABLE());
+        ds.field("TRACKS_AVAILABLE", &self.TRACKS_AVAILABLE());
+        ds.field("MAXIMUM_OBS_GAP", &self.MAXIMUM_OBS_GAP());
+        ds.field("OD_EPOCH_EIGMAJ", &self.OD_EPOCH_EIGMAJ());
+        ds.field("OD_EPOCH_EIGINT", &self.OD_EPOCH_EIGINT());
+        ds.field("OD_EPOCH_EIGMIN", &self.OD_EPOCH_EIGMIN());
+        ds.field("OD_MAX_PRED_EIGMAJ", &self.OD_MAX_PRED_EIGMAJ());
+        ds.field("OD_MIN_PRED_EIGMIN", &self.OD_MIN_PRED_EIGMIN());
+        ds.field("OD_CONFIDENCE", &self.OD_CONFIDENCE());
+        ds.field("GDOP", &self.GDOP());
+        ds.field("SOLVE_N", &self.SOLVE_N());
+        ds.field("SOLVE_STATES", &self.SOLVE_STATES());
+        ds.field("CONSIDER_N", &self.CONSIDER_N());
+        ds.field("CONSIDER_PARAMS", &self.CONSIDER_PARAMS());
+        ds.field("SENSORS_N", &self.SENSORS_N());
+        ds.field("SENSORS", &self.SENSORS());
+        ds.field("COMMENT", &self.COMMENT());
         ds.finish()
     }
 }
@@ -6193,6 +8020,27 @@ pub struct OrbitDeterminationT {
     pub SEDR: f64,
     pub WEIGHTED_RMS: f64,
     pub OD_DYNAMIC_PARAMETERS: Option<alloc::vec::Vec<OCMDynamicParameterT>>,
+    pub DAYS_SINCE_FIRST_OBS: f64,
+    pub DAYS_SINCE_LAST_OBS: f64,
+    pub RECOMMENDED_OD_SPAN: f64,
+    pub ACTUAL_OD_SPAN: f64,
+    pub OBS_AVAILABLE: u32,
+    pub TRACKS_AVAILABLE: u32,
+    pub MAXIMUM_OBS_GAP: f64,
+    pub OD_EPOCH_EIGMAJ: f64,
+    pub OD_EPOCH_EIGINT: f64,
+    pub OD_EPOCH_EIGMIN: f64,
+    pub OD_MAX_PRED_EIGMAJ: f64,
+    pub OD_MIN_PRED_EIGMIN: f64,
+    pub OD_CONFIDENCE: f64,
+    pub GDOP: f64,
+    pub SOLVE_N: u32,
+    pub SOLVE_STATES: Option<alloc::string::String>,
+    pub CONSIDER_N: u32,
+    pub CONSIDER_PARAMS: Option<alloc::string::String>,
+    pub SENSORS_N: u32,
+    pub SENSORS: Option<alloc::string::String>,
+    pub COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
 }
 
 impl Default for OrbitDeterminationT {
@@ -6224,6 +8072,27 @@ impl Default for OrbitDeterminationT {
             SEDR: 0.0,
             WEIGHTED_RMS: 0.0,
             OD_DYNAMIC_PARAMETERS: None,
+            DAYS_SINCE_FIRST_OBS: f64::NAN,
+            DAYS_SINCE_LAST_OBS: f64::NAN,
+            RECOMMENDED_OD_SPAN: f64::NAN,
+            ACTUAL_OD_SPAN: f64::NAN,
+            OBS_AVAILABLE: 0,
+            TRACKS_AVAILABLE: 0,
+            MAXIMUM_OBS_GAP: f64::NAN,
+            OD_EPOCH_EIGMAJ: f64::NAN,
+            OD_EPOCH_EIGINT: f64::NAN,
+            OD_EPOCH_EIGMIN: f64::NAN,
+            OD_MAX_PRED_EIGMAJ: f64::NAN,
+            OD_MIN_PRED_EIGMIN: f64::NAN,
+            OD_CONFIDENCE: f64::NAN,
+            GDOP: f64::NAN,
+            SOLVE_N: 0,
+            SOLVE_STATES: None,
+            CONSIDER_N: 0,
+            CONSIDER_PARAMS: None,
+            SENSORS_N: 0,
+            SENSORS: None,
+            COMMENT: None,
         }
     }
 }
@@ -6297,6 +8166,35 @@ impl OrbitDeterminationT {
         let OD_DYNAMIC_PARAMETERS = self.OD_DYNAMIC_PARAMETERS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let DAYS_SINCE_FIRST_OBS = self.DAYS_SINCE_FIRST_OBS;
+        let DAYS_SINCE_LAST_OBS = self.DAYS_SINCE_LAST_OBS;
+        let RECOMMENDED_OD_SPAN = self.RECOMMENDED_OD_SPAN;
+        let ACTUAL_OD_SPAN = self.ACTUAL_OD_SPAN;
+        let OBS_AVAILABLE = self.OBS_AVAILABLE;
+        let TRACKS_AVAILABLE = self.TRACKS_AVAILABLE;
+        let MAXIMUM_OBS_GAP = self.MAXIMUM_OBS_GAP;
+        let OD_EPOCH_EIGMAJ = self.OD_EPOCH_EIGMAJ;
+        let OD_EPOCH_EIGINT = self.OD_EPOCH_EIGINT;
+        let OD_EPOCH_EIGMIN = self.OD_EPOCH_EIGMIN;
+        let OD_MAX_PRED_EIGMAJ = self.OD_MAX_PRED_EIGMAJ;
+        let OD_MIN_PRED_EIGMIN = self.OD_MIN_PRED_EIGMIN;
+        let OD_CONFIDENCE = self.OD_CONFIDENCE;
+        let GDOP = self.GDOP;
+        let SOLVE_N = self.SOLVE_N;
+        let SOLVE_STATES = self.SOLVE_STATES.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let CONSIDER_N = self.CONSIDER_N;
+        let CONSIDER_PARAMS = self.CONSIDER_PARAMS.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SENSORS_N = self.SENSORS_N;
+        let SENSORS = self.SENSORS.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COMMENT = self.COMMENT.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
         OrbitDetermination::create(_fbb, &OrbitDeterminationArgs{
             OD_ID,
             OD_PREV_ID,
@@ -6324,6 +8222,1279 @@ impl OrbitDeterminationT {
             SEDR,
             WEIGHTED_RMS,
             OD_DYNAMIC_PARAMETERS,
+            DAYS_SINCE_FIRST_OBS,
+            DAYS_SINCE_LAST_OBS,
+            RECOMMENDED_OD_SPAN,
+            ACTUAL_OD_SPAN,
+            OBS_AVAILABLE,
+            TRACKS_AVAILABLE,
+            MAXIMUM_OBS_GAP,
+            OD_EPOCH_EIGMAJ,
+            OD_EPOCH_EIGINT,
+            OD_EPOCH_EIGMIN,
+            OD_MAX_PRED_EIGMAJ,
+            OD_MIN_PRED_EIGMIN,
+            OD_CONFIDENCE,
+            GDOP,
+            SOLVE_N,
+            SOLVE_STATES,
+            CONSIDER_N,
+            CONSIDER_PARAMS,
+            SENSORS_N,
+            SENSORS,
+            COMMENT,
+        })
+    }
+}
+
+pub enum OCMTrajectoryBlockOffset {}
+
+/// One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):
+/// the block's keywords, and its data lines as written (a time tag, then the
+/// numbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state
+/// the first block's CARTPV or CARTPVA states for the modules that read those.
+#[derive(Copy, Clone, PartialEq)]
+pub struct OCMTrajectoryBlock<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCMTrajectoryBlock<'a> {
+    type Inner = OCMTrajectoryBlock<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OCMTrajectoryBlock<'a> {
+    pub const VT_COMMENT: ::flatbuffers::VOffsetT = 4;
+    pub const VT_TRAJ_ID: ::flatbuffers::VOffsetT = 6;
+    pub const VT_TRAJ_PREV_ID: ::flatbuffers::VOffsetT = 8;
+    pub const VT_TRAJ_NEXT_ID: ::flatbuffers::VOffsetT = 10;
+    pub const VT_TRAJ_BASIS: ::flatbuffers::VOffsetT = 12;
+    pub const VT_TRAJ_BASIS_ID: ::flatbuffers::VOffsetT = 14;
+    pub const VT_INTERPOLATION: ::flatbuffers::VOffsetT = 16;
+    pub const VT_INTERPOLATION_DEGREE: ::flatbuffers::VOffsetT = 18;
+    pub const VT_PROPAGATOR: ::flatbuffers::VOffsetT = 20;
+    pub const VT_CENTER_NAME: ::flatbuffers::VOffsetT = 22;
+    pub const VT_TRAJ_REF_FRAME: ::flatbuffers::VOffsetT = 24;
+    pub const VT_TRAJ_FRAME_EPOCH: ::flatbuffers::VOffsetT = 26;
+    pub const VT_USEABLE_START_TIME: ::flatbuffers::VOffsetT = 28;
+    pub const VT_USEABLE_STOP_TIME: ::flatbuffers::VOffsetT = 30;
+    pub const VT_ORB_REVNUM: ::flatbuffers::VOffsetT = 32;
+    pub const VT_ORB_REVNUM_BASIS: ::flatbuffers::VOffsetT = 34;
+    pub const VT_TRAJ_TYPE: ::flatbuffers::VOffsetT = 36;
+    pub const VT_ORB_AVERAGING: ::flatbuffers::VOffsetT = 38;
+    pub const VT_TRAJ_UNITS: ::flatbuffers::VOffsetT = 40;
+    pub const VT_LINES: ::flatbuffers::VOffsetT = 42;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OCMTrajectoryBlock { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OCMTrajectoryBlockArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OCMTrajectoryBlock<'bldr>> {
+        let mut builder = OCMTrajectoryBlockBuilder::new(_fbb);
+        builder.add_ORB_REVNUM(args.ORB_REVNUM);
+        if let Some(x) = args.LINES { builder.add_LINES(x); }
+        if let Some(x) = args.TRAJ_UNITS { builder.add_TRAJ_UNITS(x); }
+        if let Some(x) = args.ORB_AVERAGING { builder.add_ORB_AVERAGING(x); }
+        if let Some(x) = args.TRAJ_TYPE { builder.add_TRAJ_TYPE(x); }
+        builder.add_ORB_REVNUM_BASIS(args.ORB_REVNUM_BASIS);
+        if let Some(x) = args.USEABLE_STOP_TIME { builder.add_USEABLE_STOP_TIME(x); }
+        if let Some(x) = args.USEABLE_START_TIME { builder.add_USEABLE_START_TIME(x); }
+        if let Some(x) = args.TRAJ_FRAME_EPOCH { builder.add_TRAJ_FRAME_EPOCH(x); }
+        if let Some(x) = args.TRAJ_REF_FRAME { builder.add_TRAJ_REF_FRAME(x); }
+        if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
+        if let Some(x) = args.PROPAGATOR { builder.add_PROPAGATOR(x); }
+        builder.add_INTERPOLATION_DEGREE(args.INTERPOLATION_DEGREE);
+        if let Some(x) = args.INTERPOLATION { builder.add_INTERPOLATION(x); }
+        if let Some(x) = args.TRAJ_BASIS_ID { builder.add_TRAJ_BASIS_ID(x); }
+        if let Some(x) = args.TRAJ_BASIS { builder.add_TRAJ_BASIS(x); }
+        if let Some(x) = args.TRAJ_NEXT_ID { builder.add_TRAJ_NEXT_ID(x); }
+        if let Some(x) = args.TRAJ_PREV_ID { builder.add_TRAJ_PREV_ID(x); }
+        if let Some(x) = args.TRAJ_ID { builder.add_TRAJ_ID(x); }
+        if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OCMTrajectoryBlockT {
+        let COMMENT = self.COMMENT().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let TRAJ_ID = self.TRAJ_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let TRAJ_PREV_ID = self.TRAJ_PREV_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let TRAJ_NEXT_ID = self.TRAJ_NEXT_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let TRAJ_BASIS = self.TRAJ_BASIS().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let TRAJ_BASIS_ID = self.TRAJ_BASIS_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let INTERPOLATION = self.INTERPOLATION().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let INTERPOLATION_DEGREE = self.INTERPOLATION_DEGREE();
+        let PROPAGATOR = self.PROPAGATOR().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let CENTER_NAME = self.CENTER_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let TRAJ_REF_FRAME = self.TRAJ_REF_FRAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let TRAJ_FRAME_EPOCH = self.TRAJ_FRAME_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let USEABLE_START_TIME = self.USEABLE_START_TIME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let USEABLE_STOP_TIME = self.USEABLE_STOP_TIME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let ORB_REVNUM = self.ORB_REVNUM();
+        let ORB_REVNUM_BASIS = self.ORB_REVNUM_BASIS();
+        let TRAJ_TYPE = self.TRAJ_TYPE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let ORB_AVERAGING = self.ORB_AVERAGING().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let TRAJ_UNITS = self.TRAJ_UNITS().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let LINES = self.LINES().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
+        OCMTrajectoryBlockT {
+            COMMENT,
+            TRAJ_ID,
+            TRAJ_PREV_ID,
+            TRAJ_NEXT_ID,
+            TRAJ_BASIS,
+            TRAJ_BASIS_ID,
+            INTERPOLATION,
+            INTERPOLATION_DEGREE,
+            PROPAGATOR,
+            CENTER_NAME,
+            TRAJ_REF_FRAME,
+            TRAJ_FRAME_EPOCH,
+            USEABLE_START_TIME,
+            USEABLE_STOP_TIME,
+            ORB_REVNUM,
+            ORB_REVNUM_BASIS,
+            TRAJ_TYPE,
+            ORB_AVERAGING,
+            TRAJ_UNITS,
+            LINES,
+        }
+    }
+
+    /// COMMENT lines of this block, joined by a line feed.
+    #[inline]
+    pub fn COMMENT(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_COMMENT, None)}
+    }
+
+    /// TRAJ_ID.
+    #[inline]
+    pub fn TRAJ_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_TRAJ_ID, None)}
+    }
+
+    /// TRAJ_PREV_ID.
+    #[inline]
+    pub fn TRAJ_PREV_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_TRAJ_PREV_ID, None)}
+    }
+
+    /// TRAJ_NEXT_ID.
+    #[inline]
+    pub fn TRAJ_NEXT_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_TRAJ_NEXT_ID, None)}
+    }
+
+    /// TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.
+    #[inline]
+    pub fn TRAJ_BASIS(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_TRAJ_BASIS, None)}
+    }
+
+    /// TRAJ_BASIS_ID.
+    #[inline]
+    pub fn TRAJ_BASIS_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_TRAJ_BASIS_ID, None)}
+    }
+
+    /// INTERPOLATION: the recommended interpolation method.
+    #[inline]
+    pub fn INTERPOLATION(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_INTERPOLATION, None)}
+    }
+
+    /// INTERPOLATION_DEGREE.
+    #[inline]
+    pub fn INTERPOLATION_DEGREE(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(OCMTrajectoryBlock::VT_INTERPOLATION_DEGREE, Some(0)).unwrap()}
+    }
+
+    /// PROPAGATOR.
+    #[inline]
+    pub fn PROPAGATOR(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_PROPAGATOR, None)}
+    }
+
+    /// CENTER_NAME.
+    #[inline]
+    pub fn CENTER_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_CENTER_NAME, None)}
+    }
+
+    /// TRAJ_REF_FRAME.
+    #[inline]
+    pub fn TRAJ_REF_FRAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_TRAJ_REF_FRAME, None)}
+    }
+
+    /// TRAJ_FRAME_EPOCH.
+    #[inline]
+    pub fn TRAJ_FRAME_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_TRAJ_FRAME_EPOCH, None)}
+    }
+
+    /// USEABLE_START_TIME.
+    #[inline]
+    pub fn USEABLE_START_TIME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_USEABLE_START_TIME, None)}
+    }
+
+    /// USEABLE_STOP_TIME.
+    #[inline]
+    pub fn USEABLE_STOP_TIME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_USEABLE_STOP_TIME, None)}
+    }
+
+    /// ORB_REVNUM, NaN when not stated.
+    #[inline]
+    pub fn ORB_REVNUM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMTrajectoryBlock::VT_ORB_REVNUM, Some(f64::NAN)).unwrap()}
+    }
+
+    /// ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.
+    #[inline]
+    pub fn ORB_REVNUM_BASIS(&self) -> i32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i32>(OCMTrajectoryBlock::VT_ORB_REVNUM_BASIS, Some(-1)).unwrap()}
+    }
+
+    /// TRAJ_TYPE as written, for example CARTPV.
+    #[inline]
+    pub fn TRAJ_TYPE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_TRAJ_TYPE, None)}
+    }
+
+    /// ORB_AVERAGING.
+    #[inline]
+    pub fn ORB_AVERAGING(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_ORB_AVERAGING, None)}
+    }
+
+    /// TRAJ_UNITS.
+    #[inline]
+    pub fn TRAJ_UNITS(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMTrajectoryBlock::VT_TRAJ_UNITS, None)}
+    }
+
+    /// The data lines, as written.
+    #[inline]
+    pub fn LINES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OCMTrajectoryBlock::VT_LINES, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OCMTrajectoryBlock<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRAJ_ID", Self::VT_TRAJ_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRAJ_PREV_ID", Self::VT_TRAJ_PREV_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRAJ_NEXT_ID", Self::VT_TRAJ_NEXT_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRAJ_BASIS", Self::VT_TRAJ_BASIS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRAJ_BASIS_ID", Self::VT_TRAJ_BASIS_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INTERPOLATION", Self::VT_INTERPOLATION, false)?
+            .visit_field::<u32>("INTERPOLATION_DEGREE", Self::VT_INTERPOLATION_DEGREE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROPAGATOR", Self::VT_PROPAGATOR, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRAJ_REF_FRAME", Self::VT_TRAJ_REF_FRAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRAJ_FRAME_EPOCH", Self::VT_TRAJ_FRAME_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("USEABLE_START_TIME", Self::VT_USEABLE_START_TIME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("USEABLE_STOP_TIME", Self::VT_USEABLE_STOP_TIME, false)?
+            .visit_field::<f64>("ORB_REVNUM", Self::VT_ORB_REVNUM, false)?
+            .visit_field::<i32>("ORB_REVNUM_BASIS", Self::VT_ORB_REVNUM_BASIS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRAJ_TYPE", Self::VT_TRAJ_TYPE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORB_AVERAGING", Self::VT_ORB_AVERAGING, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRAJ_UNITS", Self::VT_TRAJ_UNITS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("LINES", Self::VT_LINES, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OCMTrajectoryBlockArgs<'a> {
+    pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRAJ_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRAJ_PREV_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRAJ_NEXT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRAJ_BASIS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRAJ_BASIS_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTERPOLATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub INTERPOLATION_DEGREE: u32,
+    pub PROPAGATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CENTER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRAJ_REF_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRAJ_FRAME_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub USEABLE_START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub USEABLE_STOP_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORB_REVNUM: f64,
+    pub ORB_REVNUM_BASIS: i32,
+    pub TRAJ_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ORB_AVERAGING: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRAJ_UNITS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LINES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+}
+
+impl<'a> Default for OCMTrajectoryBlockArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OCMTrajectoryBlockArgs {
+            COMMENT: None,
+            TRAJ_ID: None,
+            TRAJ_PREV_ID: None,
+            TRAJ_NEXT_ID: None,
+            TRAJ_BASIS: None,
+            TRAJ_BASIS_ID: None,
+            INTERPOLATION: None,
+            INTERPOLATION_DEGREE: 0,
+            PROPAGATOR: None,
+            CENTER_NAME: None,
+            TRAJ_REF_FRAME: None,
+            TRAJ_FRAME_EPOCH: None,
+            USEABLE_START_TIME: None,
+            USEABLE_STOP_TIME: None,
+            ORB_REVNUM: f64::NAN,
+            ORB_REVNUM_BASIS: -1,
+            TRAJ_TYPE: None,
+            ORB_AVERAGING: None,
+            TRAJ_UNITS: None,
+            LINES: None,
+        }
+    }
+}
+
+pub struct OCMTrajectoryBlockBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMTrajectoryBlockBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_COMMENT, COMMENT);
+    }
+
+    #[inline]
+    pub fn add_TRAJ_ID(&mut self, TRAJ_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_TRAJ_ID, TRAJ_ID);
+    }
+
+    #[inline]
+    pub fn add_TRAJ_PREV_ID(&mut self, TRAJ_PREV_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_TRAJ_PREV_ID, TRAJ_PREV_ID);
+    }
+
+    #[inline]
+    pub fn add_TRAJ_NEXT_ID(&mut self, TRAJ_NEXT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_TRAJ_NEXT_ID, TRAJ_NEXT_ID);
+    }
+
+    #[inline]
+    pub fn add_TRAJ_BASIS(&mut self, TRAJ_BASIS: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_TRAJ_BASIS, TRAJ_BASIS);
+    }
+
+    #[inline]
+    pub fn add_TRAJ_BASIS_ID(&mut self, TRAJ_BASIS_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_TRAJ_BASIS_ID, TRAJ_BASIS_ID);
+    }
+
+    #[inline]
+    pub fn add_INTERPOLATION(&mut self, INTERPOLATION: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_INTERPOLATION, INTERPOLATION);
+    }
+
+    #[inline]
+    pub fn add_INTERPOLATION_DEGREE(&mut self, INTERPOLATION_DEGREE: u32) {
+        self.fbb_.push_slot::<u32>(OCMTrajectoryBlock::VT_INTERPOLATION_DEGREE, INTERPOLATION_DEGREE, 0);
+    }
+
+    #[inline]
+    pub fn add_PROPAGATOR(&mut self, PROPAGATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_PROPAGATOR, PROPAGATOR);
+    }
+
+    #[inline]
+    pub fn add_CENTER_NAME(&mut self, CENTER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_CENTER_NAME, CENTER_NAME);
+    }
+
+    #[inline]
+    pub fn add_TRAJ_REF_FRAME(&mut self, TRAJ_REF_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_TRAJ_REF_FRAME, TRAJ_REF_FRAME);
+    }
+
+    #[inline]
+    pub fn add_TRAJ_FRAME_EPOCH(&mut self, TRAJ_FRAME_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_TRAJ_FRAME_EPOCH, TRAJ_FRAME_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_USEABLE_START_TIME(&mut self, USEABLE_START_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_USEABLE_START_TIME, USEABLE_START_TIME);
+    }
+
+    #[inline]
+    pub fn add_USEABLE_STOP_TIME(&mut self, USEABLE_STOP_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_USEABLE_STOP_TIME, USEABLE_STOP_TIME);
+    }
+
+    #[inline]
+    pub fn add_ORB_REVNUM(&mut self, ORB_REVNUM: f64) {
+        self.fbb_.push_slot::<f64>(OCMTrajectoryBlock::VT_ORB_REVNUM, ORB_REVNUM, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ORB_REVNUM_BASIS(&mut self, ORB_REVNUM_BASIS: i32) {
+        self.fbb_.push_slot::<i32>(OCMTrajectoryBlock::VT_ORB_REVNUM_BASIS, ORB_REVNUM_BASIS, -1);
+    }
+
+    #[inline]
+    pub fn add_TRAJ_TYPE(&mut self, TRAJ_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_TRAJ_TYPE, TRAJ_TYPE);
+    }
+
+    #[inline]
+    pub fn add_ORB_AVERAGING(&mut self, ORB_AVERAGING: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_ORB_AVERAGING, ORB_AVERAGING);
+    }
+
+    #[inline]
+    pub fn add_TRAJ_UNITS(&mut self, TRAJ_UNITS: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_TRAJ_UNITS, TRAJ_UNITS);
+    }
+
+    #[inline]
+    pub fn add_LINES(&mut self, LINES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMTrajectoryBlock::VT_LINES, LINES);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMTrajectoryBlockBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OCMTrajectoryBlockBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OCMTrajectoryBlock<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OCMTrajectoryBlock<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OCMTrajectoryBlock");
+        ds.field("COMMENT", &self.COMMENT());
+        ds.field("TRAJ_ID", &self.TRAJ_ID());
+        ds.field("TRAJ_PREV_ID", &self.TRAJ_PREV_ID());
+        ds.field("TRAJ_NEXT_ID", &self.TRAJ_NEXT_ID());
+        ds.field("TRAJ_BASIS", &self.TRAJ_BASIS());
+        ds.field("TRAJ_BASIS_ID", &self.TRAJ_BASIS_ID());
+        ds.field("INTERPOLATION", &self.INTERPOLATION());
+        ds.field("INTERPOLATION_DEGREE", &self.INTERPOLATION_DEGREE());
+        ds.field("PROPAGATOR", &self.PROPAGATOR());
+        ds.field("CENTER_NAME", &self.CENTER_NAME());
+        ds.field("TRAJ_REF_FRAME", &self.TRAJ_REF_FRAME());
+        ds.field("TRAJ_FRAME_EPOCH", &self.TRAJ_FRAME_EPOCH());
+        ds.field("USEABLE_START_TIME", &self.USEABLE_START_TIME());
+        ds.field("USEABLE_STOP_TIME", &self.USEABLE_STOP_TIME());
+        ds.field("ORB_REVNUM", &self.ORB_REVNUM());
+        ds.field("ORB_REVNUM_BASIS", &self.ORB_REVNUM_BASIS());
+        ds.field("TRAJ_TYPE", &self.TRAJ_TYPE());
+        ds.field("ORB_AVERAGING", &self.ORB_AVERAGING());
+        ds.field("TRAJ_UNITS", &self.TRAJ_UNITS());
+        ds.field("LINES", &self.LINES());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMTrajectoryBlockT {
+    pub COMMENT: Option<alloc::string::String>,
+    pub TRAJ_ID: Option<alloc::string::String>,
+    pub TRAJ_PREV_ID: Option<alloc::string::String>,
+    pub TRAJ_NEXT_ID: Option<alloc::string::String>,
+    pub TRAJ_BASIS: Option<alloc::string::String>,
+    pub TRAJ_BASIS_ID: Option<alloc::string::String>,
+    pub INTERPOLATION: Option<alloc::string::String>,
+    pub INTERPOLATION_DEGREE: u32,
+    pub PROPAGATOR: Option<alloc::string::String>,
+    pub CENTER_NAME: Option<alloc::string::String>,
+    pub TRAJ_REF_FRAME: Option<alloc::string::String>,
+    pub TRAJ_FRAME_EPOCH: Option<alloc::string::String>,
+    pub USEABLE_START_TIME: Option<alloc::string::String>,
+    pub USEABLE_STOP_TIME: Option<alloc::string::String>,
+    pub ORB_REVNUM: f64,
+    pub ORB_REVNUM_BASIS: i32,
+    pub TRAJ_TYPE: Option<alloc::string::String>,
+    pub ORB_AVERAGING: Option<alloc::string::String>,
+    pub TRAJ_UNITS: Option<alloc::string::String>,
+    pub LINES: Option<alloc::vec::Vec<alloc::string::String>>,
+}
+
+impl Default for OCMTrajectoryBlockT {
+    fn default() -> Self {
+        Self {
+            COMMENT: None,
+            TRAJ_ID: None,
+            TRAJ_PREV_ID: None,
+            TRAJ_NEXT_ID: None,
+            TRAJ_BASIS: None,
+            TRAJ_BASIS_ID: None,
+            INTERPOLATION: None,
+            INTERPOLATION_DEGREE: 0,
+            PROPAGATOR: None,
+            CENTER_NAME: None,
+            TRAJ_REF_FRAME: None,
+            TRAJ_FRAME_EPOCH: None,
+            USEABLE_START_TIME: None,
+            USEABLE_STOP_TIME: None,
+            ORB_REVNUM: f64::NAN,
+            ORB_REVNUM_BASIS: -1,
+            TRAJ_TYPE: None,
+            ORB_AVERAGING: None,
+            TRAJ_UNITS: None,
+            LINES: None,
+        }
+    }
+}
+
+impl OCMTrajectoryBlockT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OCMTrajectoryBlock<'b>> {
+        let COMMENT = self.COMMENT.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let TRAJ_ID = self.TRAJ_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let TRAJ_PREV_ID = self.TRAJ_PREV_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let TRAJ_NEXT_ID = self.TRAJ_NEXT_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let TRAJ_BASIS = self.TRAJ_BASIS.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let TRAJ_BASIS_ID = self.TRAJ_BASIS_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let INTERPOLATION = self.INTERPOLATION.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let INTERPOLATION_DEGREE = self.INTERPOLATION_DEGREE;
+        let PROPAGATOR = self.PROPAGATOR.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let CENTER_NAME = self.CENTER_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let TRAJ_REF_FRAME = self.TRAJ_REF_FRAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let TRAJ_FRAME_EPOCH = self.TRAJ_FRAME_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let USEABLE_START_TIME = self.USEABLE_START_TIME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let USEABLE_STOP_TIME = self.USEABLE_STOP_TIME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let ORB_REVNUM = self.ORB_REVNUM;
+        let ORB_REVNUM_BASIS = self.ORB_REVNUM_BASIS;
+        let TRAJ_TYPE = self.TRAJ_TYPE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let ORB_AVERAGING = self.ORB_AVERAGING.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let TRAJ_UNITS = self.TRAJ_UNITS.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let LINES = self.LINES.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
+        OCMTrajectoryBlock::create(_fbb, &OCMTrajectoryBlockArgs{
+            COMMENT,
+            TRAJ_ID,
+            TRAJ_PREV_ID,
+            TRAJ_NEXT_ID,
+            TRAJ_BASIS,
+            TRAJ_BASIS_ID,
+            INTERPOLATION,
+            INTERPOLATION_DEGREE,
+            PROPAGATOR,
+            CENTER_NAME,
+            TRAJ_REF_FRAME,
+            TRAJ_FRAME_EPOCH,
+            USEABLE_START_TIME,
+            USEABLE_STOP_TIME,
+            ORB_REVNUM,
+            ORB_REVNUM_BASIS,
+            TRAJ_TYPE,
+            ORB_AVERAGING,
+            TRAJ_UNITS,
+            LINES,
+        })
+    }
+}
+
+pub enum OCMCovarianceBlockOffset {}
+
+/// One covariance time history of an OCM (Table 6-6): the block's keywords and its
+/// data lines as written (a time tag, then the covariance in COV_ORDERING). The
+/// single-covariance fields of the OCM above state the first block when it is one
+/// line.
+#[derive(Copy, Clone, PartialEq)]
+pub struct OCMCovarianceBlock<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCMCovarianceBlock<'a> {
+    type Inner = OCMCovarianceBlock<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OCMCovarianceBlock<'a> {
+    pub const VT_COMMENT: ::flatbuffers::VOffsetT = 4;
+    pub const VT_COV_ID: ::flatbuffers::VOffsetT = 6;
+    pub const VT_COV_PREV_ID: ::flatbuffers::VOffsetT = 8;
+    pub const VT_COV_NEXT_ID: ::flatbuffers::VOffsetT = 10;
+    pub const VT_COV_BASIS: ::flatbuffers::VOffsetT = 12;
+    pub const VT_COV_BASIS_ID: ::flatbuffers::VOffsetT = 14;
+    pub const VT_COV_REF_FRAME: ::flatbuffers::VOffsetT = 16;
+    pub const VT_COV_FRAME_EPOCH: ::flatbuffers::VOffsetT = 18;
+    pub const VT_COV_SCALE_MIN: ::flatbuffers::VOffsetT = 20;
+    pub const VT_COV_SCALE_MAX: ::flatbuffers::VOffsetT = 22;
+    pub const VT_COV_CONFIDENCE: ::flatbuffers::VOffsetT = 24;
+    pub const VT_COV_TYPE: ::flatbuffers::VOffsetT = 26;
+    pub const VT_COV_ORDERING: ::flatbuffers::VOffsetT = 28;
+    pub const VT_COV_UNITS: ::flatbuffers::VOffsetT = 30;
+    pub const VT_LINES: ::flatbuffers::VOffsetT = 32;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OCMCovarianceBlock { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OCMCovarianceBlockArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OCMCovarianceBlock<'bldr>> {
+        let mut builder = OCMCovarianceBlockBuilder::new(_fbb);
+        builder.add_COV_CONFIDENCE(args.COV_CONFIDENCE);
+        builder.add_COV_SCALE_MAX(args.COV_SCALE_MAX);
+        builder.add_COV_SCALE_MIN(args.COV_SCALE_MIN);
+        if let Some(x) = args.LINES { builder.add_LINES(x); }
+        if let Some(x) = args.COV_UNITS { builder.add_COV_UNITS(x); }
+        if let Some(x) = args.COV_TYPE { builder.add_COV_TYPE(x); }
+        if let Some(x) = args.COV_FRAME_EPOCH { builder.add_COV_FRAME_EPOCH(x); }
+        if let Some(x) = args.COV_REF_FRAME { builder.add_COV_REF_FRAME(x); }
+        if let Some(x) = args.COV_BASIS_ID { builder.add_COV_BASIS_ID(x); }
+        if let Some(x) = args.COV_BASIS { builder.add_COV_BASIS(x); }
+        if let Some(x) = args.COV_NEXT_ID { builder.add_COV_NEXT_ID(x); }
+        if let Some(x) = args.COV_PREV_ID { builder.add_COV_PREV_ID(x); }
+        if let Some(x) = args.COV_ID { builder.add_COV_ID(x); }
+        if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+        builder.add_COV_ORDERING(args.COV_ORDERING);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OCMCovarianceBlockT {
+        let COMMENT = self.COMMENT().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_ID = self.COV_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_PREV_ID = self.COV_PREV_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_NEXT_ID = self.COV_NEXT_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_BASIS = self.COV_BASIS().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_BASIS_ID = self.COV_BASIS_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_REF_FRAME = self.COV_REF_FRAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_FRAME_EPOCH = self.COV_FRAME_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_SCALE_MIN = self.COV_SCALE_MIN();
+        let COV_SCALE_MAX = self.COV_SCALE_MAX();
+        let COV_CONFIDENCE = self.COV_CONFIDENCE();
+        let COV_TYPE = self.COV_TYPE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_ORDERING = self.COV_ORDERING();
+        let COV_UNITS = self.COV_UNITS().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let LINES = self.LINES().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
+        OCMCovarianceBlockT {
+            COMMENT,
+            COV_ID,
+            COV_PREV_ID,
+            COV_NEXT_ID,
+            COV_BASIS,
+            COV_BASIS_ID,
+            COV_REF_FRAME,
+            COV_FRAME_EPOCH,
+            COV_SCALE_MIN,
+            COV_SCALE_MAX,
+            COV_CONFIDENCE,
+            COV_TYPE,
+            COV_ORDERING,
+            COV_UNITS,
+            LINES,
+        }
+    }
+
+    /// COMMENT lines of this block, joined by a line feed.
+    #[inline]
+    pub fn COMMENT(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMCovarianceBlock::VT_COMMENT, None)}
+    }
+
+    /// COV_ID.
+    #[inline]
+    pub fn COV_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMCovarianceBlock::VT_COV_ID, None)}
+    }
+
+    /// COV_PREV_ID.
+    #[inline]
+    pub fn COV_PREV_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMCovarianceBlock::VT_COV_PREV_ID, None)}
+    }
+
+    /// COV_NEXT_ID.
+    #[inline]
+    pub fn COV_NEXT_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMCovarianceBlock::VT_COV_NEXT_ID, None)}
+    }
+
+    /// COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.
+    #[inline]
+    pub fn COV_BASIS(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMCovarianceBlock::VT_COV_BASIS, None)}
+    }
+
+    /// COV_BASIS_ID.
+    #[inline]
+    pub fn COV_BASIS_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMCovarianceBlock::VT_COV_BASIS_ID, None)}
+    }
+
+    /// COV_REF_FRAME.
+    #[inline]
+    pub fn COV_REF_FRAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMCovarianceBlock::VT_COV_REF_FRAME, None)}
+    }
+
+    /// COV_FRAME_EPOCH.
+    #[inline]
+    pub fn COV_FRAME_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMCovarianceBlock::VT_COV_FRAME_EPOCH, None)}
+    }
+
+    /// COV_SCALE_MIN, NaN when not stated.
+    #[inline]
+    pub fn COV_SCALE_MIN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovarianceBlock::VT_COV_SCALE_MIN, Some(f64::NAN)).unwrap()}
+    }
+
+    /// COV_SCALE_MAX, NaN when not stated.
+    #[inline]
+    pub fn COV_SCALE_MAX(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovarianceBlock::VT_COV_SCALE_MAX, Some(f64::NAN)).unwrap()}
+    }
+
+    /// COV_CONFIDENCE in percent, NaN when not stated.
+    #[inline]
+    pub fn COV_CONFIDENCE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovarianceBlock::VT_COV_CONFIDENCE, Some(f64::NAN)).unwrap()}
+    }
+
+    /// COV_TYPE as written, for example CARTPV.
+    #[inline]
+    pub fn COV_TYPE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMCovarianceBlock::VT_COV_TYPE, None)}
+    }
+
+    /// COV_ORDERING.
+    #[inline]
+    pub fn COV_ORDERING(&self) -> covarianceOrdering {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<covarianceOrdering>(OCMCovarianceBlock::VT_COV_ORDERING, Some(covarianceOrdering::LTM)).unwrap()}
+    }
+
+    /// COV_UNITS.
+    #[inline]
+    pub fn COV_UNITS(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMCovarianceBlock::VT_COV_UNITS, None)}
+    }
+
+    /// The data lines, as written.
+    #[inline]
+    pub fn LINES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OCMCovarianceBlock::VT_LINES, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OCMCovarianceBlock<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_ID", Self::VT_COV_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_PREV_ID", Self::VT_COV_PREV_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_NEXT_ID", Self::VT_COV_NEXT_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_BASIS", Self::VT_COV_BASIS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_BASIS_ID", Self::VT_COV_BASIS_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_REF_FRAME", Self::VT_COV_REF_FRAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_FRAME_EPOCH", Self::VT_COV_FRAME_EPOCH, false)?
+            .visit_field::<f64>("COV_SCALE_MIN", Self::VT_COV_SCALE_MIN, false)?
+            .visit_field::<f64>("COV_SCALE_MAX", Self::VT_COV_SCALE_MAX, false)?
+            .visit_field::<f64>("COV_CONFIDENCE", Self::VT_COV_CONFIDENCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_TYPE", Self::VT_COV_TYPE, false)?
+            .visit_field::<covarianceOrdering>("COV_ORDERING", Self::VT_COV_ORDERING, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_UNITS", Self::VT_COV_UNITS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("LINES", Self::VT_LINES, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OCMCovarianceBlockArgs<'a> {
+    pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_PREV_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_NEXT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_BASIS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_BASIS_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_REF_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_FRAME_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_SCALE_MIN: f64,
+    pub COV_SCALE_MAX: f64,
+    pub COV_CONFIDENCE: f64,
+    pub COV_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_ORDERING: covarianceOrdering,
+    pub COV_UNITS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LINES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+}
+
+impl<'a> Default for OCMCovarianceBlockArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OCMCovarianceBlockArgs {
+            COMMENT: None,
+            COV_ID: None,
+            COV_PREV_ID: None,
+            COV_NEXT_ID: None,
+            COV_BASIS: None,
+            COV_BASIS_ID: None,
+            COV_REF_FRAME: None,
+            COV_FRAME_EPOCH: None,
+            COV_SCALE_MIN: f64::NAN,
+            COV_SCALE_MAX: f64::NAN,
+            COV_CONFIDENCE: f64::NAN,
+            COV_TYPE: None,
+            COV_ORDERING: covarianceOrdering::LTM,
+            COV_UNITS: None,
+            LINES: None,
+        }
+    }
+}
+
+pub struct OCMCovarianceBlockBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMCovarianceBlockBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_COMMENT, COMMENT);
+    }
+
+    #[inline]
+    pub fn add_COV_ID(&mut self, COV_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_COV_ID, COV_ID);
+    }
+
+    #[inline]
+    pub fn add_COV_PREV_ID(&mut self, COV_PREV_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_COV_PREV_ID, COV_PREV_ID);
+    }
+
+    #[inline]
+    pub fn add_COV_NEXT_ID(&mut self, COV_NEXT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_COV_NEXT_ID, COV_NEXT_ID);
+    }
+
+    #[inline]
+    pub fn add_COV_BASIS(&mut self, COV_BASIS: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_COV_BASIS, COV_BASIS);
+    }
+
+    #[inline]
+    pub fn add_COV_BASIS_ID(&mut self, COV_BASIS_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_COV_BASIS_ID, COV_BASIS_ID);
+    }
+
+    #[inline]
+    pub fn add_COV_REF_FRAME(&mut self, COV_REF_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_COV_REF_FRAME, COV_REF_FRAME);
+    }
+
+    #[inline]
+    pub fn add_COV_FRAME_EPOCH(&mut self, COV_FRAME_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_COV_FRAME_EPOCH, COV_FRAME_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_COV_SCALE_MIN(&mut self, COV_SCALE_MIN: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovarianceBlock::VT_COV_SCALE_MIN, COV_SCALE_MIN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_COV_SCALE_MAX(&mut self, COV_SCALE_MAX: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovarianceBlock::VT_COV_SCALE_MAX, COV_SCALE_MAX, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_COV_CONFIDENCE(&mut self, COV_CONFIDENCE: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovarianceBlock::VT_COV_CONFIDENCE, COV_CONFIDENCE, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_COV_TYPE(&mut self, COV_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_COV_TYPE, COV_TYPE);
+    }
+
+    #[inline]
+    pub fn add_COV_ORDERING(&mut self, COV_ORDERING: covarianceOrdering) {
+        self.fbb_.push_slot::<covarianceOrdering>(OCMCovarianceBlock::VT_COV_ORDERING, COV_ORDERING, covarianceOrdering::LTM);
+    }
+
+    #[inline]
+    pub fn add_COV_UNITS(&mut self, COV_UNITS: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_COV_UNITS, COV_UNITS);
+    }
+
+    #[inline]
+    pub fn add_LINES(&mut self, LINES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_LINES, LINES);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMCovarianceBlockBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OCMCovarianceBlockBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OCMCovarianceBlock<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OCMCovarianceBlock<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OCMCovarianceBlock");
+        ds.field("COMMENT", &self.COMMENT());
+        ds.field("COV_ID", &self.COV_ID());
+        ds.field("COV_PREV_ID", &self.COV_PREV_ID());
+        ds.field("COV_NEXT_ID", &self.COV_NEXT_ID());
+        ds.field("COV_BASIS", &self.COV_BASIS());
+        ds.field("COV_BASIS_ID", &self.COV_BASIS_ID());
+        ds.field("COV_REF_FRAME", &self.COV_REF_FRAME());
+        ds.field("COV_FRAME_EPOCH", &self.COV_FRAME_EPOCH());
+        ds.field("COV_SCALE_MIN", &self.COV_SCALE_MIN());
+        ds.field("COV_SCALE_MAX", &self.COV_SCALE_MAX());
+        ds.field("COV_CONFIDENCE", &self.COV_CONFIDENCE());
+        ds.field("COV_TYPE", &self.COV_TYPE());
+        ds.field("COV_ORDERING", &self.COV_ORDERING());
+        ds.field("COV_UNITS", &self.COV_UNITS());
+        ds.field("LINES", &self.LINES());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMCovarianceBlockT {
+    pub COMMENT: Option<alloc::string::String>,
+    pub COV_ID: Option<alloc::string::String>,
+    pub COV_PREV_ID: Option<alloc::string::String>,
+    pub COV_NEXT_ID: Option<alloc::string::String>,
+    pub COV_BASIS: Option<alloc::string::String>,
+    pub COV_BASIS_ID: Option<alloc::string::String>,
+    pub COV_REF_FRAME: Option<alloc::string::String>,
+    pub COV_FRAME_EPOCH: Option<alloc::string::String>,
+    pub COV_SCALE_MIN: f64,
+    pub COV_SCALE_MAX: f64,
+    pub COV_CONFIDENCE: f64,
+    pub COV_TYPE: Option<alloc::string::String>,
+    pub COV_ORDERING: covarianceOrdering,
+    pub COV_UNITS: Option<alloc::string::String>,
+    pub LINES: Option<alloc::vec::Vec<alloc::string::String>>,
+}
+
+impl Default for OCMCovarianceBlockT {
+    fn default() -> Self {
+        Self {
+            COMMENT: None,
+            COV_ID: None,
+            COV_PREV_ID: None,
+            COV_NEXT_ID: None,
+            COV_BASIS: None,
+            COV_BASIS_ID: None,
+            COV_REF_FRAME: None,
+            COV_FRAME_EPOCH: None,
+            COV_SCALE_MIN: f64::NAN,
+            COV_SCALE_MAX: f64::NAN,
+            COV_CONFIDENCE: f64::NAN,
+            COV_TYPE: None,
+            COV_ORDERING: covarianceOrdering::LTM,
+            COV_UNITS: None,
+            LINES: None,
+        }
+    }
+}
+
+impl OCMCovarianceBlockT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OCMCovarianceBlock<'b>> {
+        let COMMENT = self.COMMENT.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_ID = self.COV_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_PREV_ID = self.COV_PREV_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_NEXT_ID = self.COV_NEXT_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_BASIS = self.COV_BASIS.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_BASIS_ID = self.COV_BASIS_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_REF_FRAME = self.COV_REF_FRAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_FRAME_EPOCH = self.COV_FRAME_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_SCALE_MIN = self.COV_SCALE_MIN;
+        let COV_SCALE_MAX = self.COV_SCALE_MAX;
+        let COV_CONFIDENCE = self.COV_CONFIDENCE;
+        let COV_TYPE = self.COV_TYPE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_ORDERING = self.COV_ORDERING;
+        let COV_UNITS = self.COV_UNITS.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let LINES = self.LINES.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
+        OCMCovarianceBlock::create(_fbb, &OCMCovarianceBlockArgs{
+            COMMENT,
+            COV_ID,
+            COV_PREV_ID,
+            COV_NEXT_ID,
+            COV_BASIS,
+            COV_BASIS_ID,
+            COV_REF_FRAME,
+            COV_FRAME_EPOCH,
+            COV_SCALE_MIN,
+            COV_SCALE_MAX,
+            COV_CONFIDENCE,
+            COV_TYPE,
+            COV_ORDERING,
+            COV_UNITS,
+            LINES,
         })
     }
 }
@@ -6546,6 +9717,8 @@ impl<'a> OCM<'a> {
     pub const VT_COV_SIZE: ::flatbuffers::VOffsetT = 56;
     pub const VT_COV_PARAMETERS: ::flatbuffers::VOffsetT = 58;
     pub const VT_COV_UNITS: ::flatbuffers::VOffsetT = 60;
+    pub const VT_TRAJECTORY_BLOCKS: ::flatbuffers::VOffsetT = 62;
+    pub const VT_COVARIANCE_BLOCKS: ::flatbuffers::VOffsetT = 64;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -6559,6 +9732,8 @@ impl<'a> OCM<'a> {
     ) -> ::flatbuffers::WIPOffset<OCM<'bldr>> {
         let mut builder = OCMBuilder::new(_fbb);
         builder.add_STATE_STEP_SIZE(args.STATE_STEP_SIZE);
+        if let Some(x) = args.COVARIANCE_BLOCKS { builder.add_COVARIANCE_BLOCKS(x); }
+        if let Some(x) = args.TRAJECTORY_BLOCKS { builder.add_TRAJECTORY_BLOCKS(x); }
         if let Some(x) = args.COV_UNITS { builder.add_COV_UNITS(x); }
         if let Some(x) = args.COV_PARAMETERS { builder.add_COV_PARAMETERS(x); }
         if let Some(x) = args.COV_TYPE { builder.add_COV_TYPE(x); }
@@ -6664,6 +9839,12 @@ impl<'a> OCM<'a> {
         let COV_UNITS = self.COV_UNITS().map(|x| {
             x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
         });
+        let TRAJECTORY_BLOCKS = self.TRAJECTORY_BLOCKS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        let COVARIANCE_BLOCKS = self.COVARIANCE_BLOCKS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         OCMT {
             HEADER,
             METADATA,
@@ -6694,6 +9875,8 @@ impl<'a> OCM<'a> {
             COV_SIZE,
             COV_PARAMETERS,
             COV_UNITS,
+            TRAJECTORY_BLOCKS,
+            COVARIANCE_BLOCKS,
         }
     }
 
@@ -6991,6 +10174,28 @@ impl<'a> OCM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OCM::VT_COV_UNITS, None)}
     }
+
+    /// Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+    /// blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+    /// them above state the first block's CARTPV or CARTPVA states.
+    #[inline]
+    pub fn TRAJECTORY_BLOCKS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMTrajectoryBlock<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMTrajectoryBlock>>>>(OCM::VT_TRAJECTORY_BLOCKS, None)}
+    }
+
+    /// Every covariance time history of the message (COV_START blocks), in message
+    /// order. COVARIANCE_DATA and the fields that go with it above state the first
+    /// block when it is one line.
+    #[inline]
+    pub fn COVARIANCE_BLOCKS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMCovarianceBlock<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMCovarianceBlock>>>>(OCM::VT_COVARIANCE_BLOCKS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OCM<'_> {
@@ -7028,6 +10233,8 @@ impl ::flatbuffers::Verifiable for OCM<'_> {
             .visit_field::<u8>("COV_SIZE", Self::VT_COV_SIZE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COV_PARAMETERS", Self::VT_COV_PARAMETERS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COV_UNITS", Self::VT_COV_UNITS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OCMTrajectoryBlock>>>>("TRAJECTORY_BLOCKS", Self::VT_TRAJECTORY_BLOCKS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OCMCovarianceBlock>>>>("COVARIANCE_BLOCKS", Self::VT_COVARIANCE_BLOCKS, false)?
             .finish();
         Ok(())
     }
@@ -7063,6 +10270,8 @@ pub struct OCMArgs<'a> {
     pub COV_SIZE: u8,
     pub COV_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub COV_UNITS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub TRAJECTORY_BLOCKS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMTrajectoryBlock<'a>>>>>,
+    pub COVARIANCE_BLOCKS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMCovarianceBlock<'a>>>>>,
 }
 
 impl<'a> Default for OCMArgs<'a> {
@@ -7098,6 +10307,8 @@ impl<'a> Default for OCMArgs<'a> {
             COV_SIZE: 6,
             COV_PARAMETERS: None,
             COV_UNITS: None,
+            TRAJECTORY_BLOCKS: None,
+            COVARIANCE_BLOCKS: None,
         }
     }
 }
@@ -7254,6 +10465,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_TRAJECTORY_BLOCKS(&mut self, TRAJECTORY_BLOCKS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<OCMTrajectoryBlock<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_TRAJECTORY_BLOCKS, TRAJECTORY_BLOCKS);
+    }
+
+    #[inline]
+    pub fn add_COVARIANCE_BLOCKS(&mut self, COVARIANCE_BLOCKS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<OCMCovarianceBlock<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_COVARIANCE_BLOCKS, COVARIANCE_BLOCKS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OCMBuilder {
@@ -7301,6 +10522,8 @@ impl ::core::fmt::Debug for OCM<'_> {
         ds.field("COV_SIZE", &self.COV_SIZE());
         ds.field("COV_PARAMETERS", &self.COV_PARAMETERS());
         ds.field("COV_UNITS", &self.COV_UNITS());
+        ds.field("TRAJECTORY_BLOCKS", &self.TRAJECTORY_BLOCKS());
+        ds.field("COVARIANCE_BLOCKS", &self.COVARIANCE_BLOCKS());
         ds.finish()
     }
 }
@@ -7337,6 +10560,8 @@ pub struct OCMT {
     pub COV_SIZE: u8,
     pub COV_PARAMETERS: Option<alloc::vec::Vec<alloc::string::String>>,
     pub COV_UNITS: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub TRAJECTORY_BLOCKS: Option<alloc::vec::Vec<OCMTrajectoryBlockT>>,
+    pub COVARIANCE_BLOCKS: Option<alloc::vec::Vec<OCMCovarianceBlockT>>,
 }
 
 impl Default for OCMT {
@@ -7371,6 +10596,8 @@ impl Default for OCMT {
             COV_SIZE: 6,
             COV_PARAMETERS: None,
             COV_UNITS: None,
+            TRAJECTORY_BLOCKS: None,
+            COVARIANCE_BLOCKS: None,
         }
     }
 }
@@ -7453,6 +10680,12 @@ impl OCMT {
         let COV_UNITS = self.COV_UNITS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
         });
+        let TRAJECTORY_BLOCKS = self.TRAJECTORY_BLOCKS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        let COVARIANCE_BLOCKS = self.COVARIANCE_BLOCKS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
         OCM::create(_fbb, &OCMArgs{
             HEADER,
             METADATA,
@@ -7483,6 +10716,8 @@ impl OCMT {
             COV_SIZE,
             COV_PARAMETERS,
             COV_UNITS,
+            TRAJECTORY_BLOCKS,
+            COVARIANCE_BLOCKS,
         })
     }
 }

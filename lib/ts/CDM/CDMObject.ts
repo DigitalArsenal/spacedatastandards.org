@@ -7,6 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 import { CAT, CATT } from './CAT.js';
 import { EPM, EPMT } from './EPM.js';
 import { RFM, RFMT } from './RFM.js';
+import { cdmManeuverable } from './cdmManeuverable.js';
 import { covarianceAlgorithm } from './covarianceAlgorithm.js';
 
 
@@ -355,8 +356,46 @@ covarianceArray():Float64Array|null {
   return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+ * as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+ */
+OBJECT_DESIGNATOR():string|null
+OBJECT_DESIGNATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_DESIGNATOR(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+ */
+CATALOG_NAME():string|null
+CATALOG_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CATALOG_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+ * same fact as a flag, true for YES.
+ */
+MANEUVERABLE():cdmManeuverable {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : cdmManeuverable.UNSPECIFIED;
+}
+
+/**
+ * CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+ */
+CD_AREA_OVER_MASS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startCDMObject(builder:flatbuffers.Builder) {
-  builder.startObject(37);
+  builder.startObject(41);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -524,6 +563,22 @@ static startCovarianceVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(8, numElems, 8);
 }
 
+static addObjectDesignator(builder:flatbuffers.Builder, OBJECT_DESIGNATOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(37, OBJECT_DESIGNATOROffset, 0);
+}
+
+static addCatalogName(builder:flatbuffers.Builder, CATALOG_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(38, CATALOG_NAMEOffset, 0);
+}
+
+static addManeuverable(builder:flatbuffers.Builder, MANEUVERABLE:cdmManeuverable) {
+  builder.addFieldInt8(39, MANEUVERABLE, cdmManeuverable.UNSPECIFIED);
+}
+
+static addCdAreaOverMass(builder:flatbuffers.Builder, CD_AREA_OVER_MASS:number) {
+  builder.addFieldFloat64(40, CD_AREA_OVER_MASS, 0.0);
+}
+
 static endCDMObject(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -568,7 +623,11 @@ unpack(): CDMObjectT {
     this.X_DOT(),
     this.Y_DOT(),
     this.Z_DOT(),
-    this.bb!.createScalarList<number>(this.COVARIANCE.bind(this), this.covarianceLength())
+    this.bb!.createScalarList<number>(this.COVARIANCE.bind(this), this.covarianceLength()),
+    this.OBJECT_DESIGNATOR(),
+    this.CATALOG_NAME(),
+    this.MANEUVERABLE(),
+    this.CD_AREA_OVER_MASS()
   );
 }
 
@@ -611,6 +670,10 @@ unpackTo(_o: CDMObjectT): void {
   _o.Y_DOT = this.Y_DOT();
   _o.Z_DOT = this.Z_DOT();
   _o.COVARIANCE = this.bb!.createScalarList<number>(this.COVARIANCE.bind(this), this.covarianceLength());
+  _o.OBJECT_DESIGNATOR = this.OBJECT_DESIGNATOR();
+  _o.CATALOG_NAME = this.CATALOG_NAME();
+  _o.MANEUVERABLE = this.MANEUVERABLE();
+  _o.CD_AREA_OVER_MASS = this.CD_AREA_OVER_MASS();
 }
 }
 
@@ -652,7 +715,11 @@ constructor(
   public X_DOT: number = 0.0,
   public Y_DOT: number = 0.0,
   public Z_DOT: number = 0.0,
-  public COVARIANCE: (number)[] = []
+  public COVARIANCE: (number)[] = [],
+  public OBJECT_DESIGNATOR: string|Uint8Array|null = null,
+  public CATALOG_NAME: string|Uint8Array|null = null,
+  public MANEUVERABLE: cdmManeuverable = cdmManeuverable.UNSPECIFIED,
+  public CD_AREA_OVER_MASS: number = 0.0
 ){}
 
 
@@ -670,6 +737,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TIME_LASTOB_START = (this.TIME_LASTOB_START !== null ? builder.createString(this.TIME_LASTOB_START!) : 0);
   const TIME_LASTOB_END = (this.TIME_LASTOB_END !== null ? builder.createString(this.TIME_LASTOB_END!) : 0);
   const COVARIANCE = CDMObject.createCovarianceVector(builder, this.COVARIANCE);
+  const OBJECT_DESIGNATOR = (this.OBJECT_DESIGNATOR !== null ? builder.createString(this.OBJECT_DESIGNATOR!) : 0);
+  const CATALOG_NAME = (this.CATALOG_NAME !== null ? builder.createString(this.CATALOG_NAME!) : 0);
 
   CDMObject.startCDMObject(builder);
   CDMObject.addComment(builder, COMMENT);
@@ -709,6 +778,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CDMObject.addYDot(builder, this.Y_DOT);
   CDMObject.addZDot(builder, this.Z_DOT);
   CDMObject.addCovariance(builder, COVARIANCE);
+  CDMObject.addObjectDesignator(builder, OBJECT_DESIGNATOR);
+  CDMObject.addCatalogName(builder, CATALOG_NAME);
+  CDMObject.addManeuverable(builder, this.MANEUVERABLE);
+  CDMObject.addCdAreaOverMass(builder, this.CD_AREA_OVER_MASS);
 
   return CDMObject.endCDMObject(builder);
 }

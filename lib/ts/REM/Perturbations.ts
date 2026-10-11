@@ -220,8 +220,167 @@ FIXED_GEOMAG_AP():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+ * above is the model family when the text names one.
+ */
+ATMOSPHERIC_MODEL_NAME():string|null
+ATMOSPHERIC_MODEL_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ATMOSPHERIC_MODEL_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * EQUATORIAL_RADIUS in km, NaN when not stated.
+ */
+EQUATORIAL_RADIUS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+ */
+CENTRAL_BODY_ROTATION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * OBLATE_FLATTENING, NaN when not stated.
+ */
+OBLATE_FLATTENING():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * REDUCTION_THEORY.
+ */
+REDUCTION_THEORY():string|null
+REDUCTION_THEORY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REDUCTION_THEORY(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * ALBEDO_GRID_SIZE.
+ */
+ALBEDO_GRID_SIZE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * SHADOW_MODEL.
+ */
+SHADOW_MODEL():string|null
+SHADOW_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SHADOW_MODEL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * SHADOW_BODIES.
+ */
+SHADOW_BODIES():string|null
+SHADOW_BODIES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SHADOW_BODIES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * SW_DATA_SOURCE: the space weather data source.
+ */
+SW_DATA_SOURCE():string|null
+SW_DATA_SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SW_DATA_SOURCE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * SW_DATA_EPOCH.
+ */
+SW_DATA_EPOCH():string|null
+SW_DATA_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SW_DATA_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * SW_INTERP_METHOD.
+ */
+SW_INTERP_METHOD():string|null
+SW_INTERP_METHOD(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SW_INTERP_METHOD(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * FIXED_GEOMAG_DST in nT, NaN when not stated.
+ */
+FIXED_GEOMAG_DST():number {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * FIXED_M10P7, NaN when not stated.
+ */
+FIXED_M10P7():number {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * FIXED_M10P7_MEAN, NaN when not stated.
+ */
+FIXED_M10P7_MEAN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * FIXED_S10P7, NaN when not stated.
+ */
+FIXED_S10P7():number {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * FIXED_S10P7_MEAN, NaN when not stated.
+ */
+FIXED_S10P7_MEAN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * FIXED_Y10P7, NaN when not stated.
+ */
+FIXED_Y10P7():number {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * FIXED_Y10P7_MEAN, NaN when not stated.
+ */
+FIXED_Y10P7_MEAN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
 static startPerturbations(builder:flatbuffers.Builder) {
-  builder.startObject(20);
+  builder.startObject(38);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -328,6 +487,78 @@ static addFixedGeomagAp(builder:flatbuffers.Builder, FIXED_GEOMAG_AP:number) {
   builder.addFieldFloat64(19, FIXED_GEOMAG_AP, 0.0);
 }
 
+static addAtmosphericModelName(builder:flatbuffers.Builder, ATMOSPHERIC_MODEL_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, ATMOSPHERIC_MODEL_NAMEOffset, 0);
+}
+
+static addEquatorialRadius(builder:flatbuffers.Builder, EQUATORIAL_RADIUS:number) {
+  builder.addFieldFloat64(21, EQUATORIAL_RADIUS, NaN);
+}
+
+static addCentralBodyRotation(builder:flatbuffers.Builder, CENTRAL_BODY_ROTATION:number) {
+  builder.addFieldFloat64(22, CENTRAL_BODY_ROTATION, NaN);
+}
+
+static addOblateFlattening(builder:flatbuffers.Builder, OBLATE_FLATTENING:number) {
+  builder.addFieldFloat64(23, OBLATE_FLATTENING, NaN);
+}
+
+static addReductionTheory(builder:flatbuffers.Builder, REDUCTION_THEORYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(24, REDUCTION_THEORYOffset, 0);
+}
+
+static addAlbedoGridSize(builder:flatbuffers.Builder, ALBEDO_GRID_SIZE:number) {
+  builder.addFieldInt32(25, ALBEDO_GRID_SIZE, 0);
+}
+
+static addShadowModel(builder:flatbuffers.Builder, SHADOW_MODELOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, SHADOW_MODELOffset, 0);
+}
+
+static addShadowBodies(builder:flatbuffers.Builder, SHADOW_BODIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, SHADOW_BODIESOffset, 0);
+}
+
+static addSwDataSource(builder:flatbuffers.Builder, SW_DATA_SOURCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, SW_DATA_SOURCEOffset, 0);
+}
+
+static addSwDataEpoch(builder:flatbuffers.Builder, SW_DATA_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, SW_DATA_EPOCHOffset, 0);
+}
+
+static addSwInterpMethod(builder:flatbuffers.Builder, SW_INTERP_METHODOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(30, SW_INTERP_METHODOffset, 0);
+}
+
+static addFixedGeomagDst(builder:flatbuffers.Builder, FIXED_GEOMAG_DST:number) {
+  builder.addFieldFloat64(31, FIXED_GEOMAG_DST, NaN);
+}
+
+static addFixedM10P7(builder:flatbuffers.Builder, FIXED_M10P7:number) {
+  builder.addFieldFloat64(32, FIXED_M10P7, NaN);
+}
+
+static addFixedM10P7Mean(builder:flatbuffers.Builder, FIXED_M10P7_MEAN:number) {
+  builder.addFieldFloat64(33, FIXED_M10P7_MEAN, NaN);
+}
+
+static addFixedS10P7(builder:flatbuffers.Builder, FIXED_S10P7:number) {
+  builder.addFieldFloat64(34, FIXED_S10P7, NaN);
+}
+
+static addFixedS10P7Mean(builder:flatbuffers.Builder, FIXED_S10P7_MEAN:number) {
+  builder.addFieldFloat64(35, FIXED_S10P7_MEAN, NaN);
+}
+
+static addFixedY10P7(builder:flatbuffers.Builder, FIXED_Y10P7:number) {
+  builder.addFieldFloat64(36, FIXED_Y10P7, NaN);
+}
+
+static addFixedY10P7Mean(builder:flatbuffers.Builder, FIXED_Y10P7_MEAN:number) {
+  builder.addFieldFloat64(37, FIXED_Y10P7_MEAN, NaN);
+}
+
 static endPerturbations(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -355,7 +586,25 @@ unpack(): PerturbationsT {
     this.FIXED_GEOMAG_KP(),
     this.FIXED_F10P7(),
     this.FIXED_F10P7_MEAN(),
-    this.FIXED_GEOMAG_AP()
+    this.FIXED_GEOMAG_AP(),
+    this.ATMOSPHERIC_MODEL_NAME(),
+    this.EQUATORIAL_RADIUS(),
+    this.CENTRAL_BODY_ROTATION(),
+    this.OBLATE_FLATTENING(),
+    this.REDUCTION_THEORY(),
+    this.ALBEDO_GRID_SIZE(),
+    this.SHADOW_MODEL(),
+    this.SHADOW_BODIES(),
+    this.SW_DATA_SOURCE(),
+    this.SW_DATA_EPOCH(),
+    this.SW_INTERP_METHOD(),
+    this.FIXED_GEOMAG_DST(),
+    this.FIXED_M10P7(),
+    this.FIXED_M10P7_MEAN(),
+    this.FIXED_S10P7(),
+    this.FIXED_S10P7_MEAN(),
+    this.FIXED_Y10P7(),
+    this.FIXED_Y10P7_MEAN()
   );
 }
 
@@ -381,6 +630,24 @@ unpackTo(_o: PerturbationsT): void {
   _o.FIXED_F10P7 = this.FIXED_F10P7();
   _o.FIXED_F10P7_MEAN = this.FIXED_F10P7_MEAN();
   _o.FIXED_GEOMAG_AP = this.FIXED_GEOMAG_AP();
+  _o.ATMOSPHERIC_MODEL_NAME = this.ATMOSPHERIC_MODEL_NAME();
+  _o.EQUATORIAL_RADIUS = this.EQUATORIAL_RADIUS();
+  _o.CENTRAL_BODY_ROTATION = this.CENTRAL_BODY_ROTATION();
+  _o.OBLATE_FLATTENING = this.OBLATE_FLATTENING();
+  _o.REDUCTION_THEORY = this.REDUCTION_THEORY();
+  _o.ALBEDO_GRID_SIZE = this.ALBEDO_GRID_SIZE();
+  _o.SHADOW_MODEL = this.SHADOW_MODEL();
+  _o.SHADOW_BODIES = this.SHADOW_BODIES();
+  _o.SW_DATA_SOURCE = this.SW_DATA_SOURCE();
+  _o.SW_DATA_EPOCH = this.SW_DATA_EPOCH();
+  _o.SW_INTERP_METHOD = this.SW_INTERP_METHOD();
+  _o.FIXED_GEOMAG_DST = this.FIXED_GEOMAG_DST();
+  _o.FIXED_M10P7 = this.FIXED_M10P7();
+  _o.FIXED_M10P7_MEAN = this.FIXED_M10P7_MEAN();
+  _o.FIXED_S10P7 = this.FIXED_S10P7();
+  _o.FIXED_S10P7_MEAN = this.FIXED_S10P7_MEAN();
+  _o.FIXED_Y10P7 = this.FIXED_Y10P7();
+  _o.FIXED_Y10P7_MEAN = this.FIXED_Y10P7_MEAN();
 }
 }
 
@@ -405,7 +672,25 @@ constructor(
   public FIXED_GEOMAG_KP: number = 0.0,
   public FIXED_F10P7: number = 0.0,
   public FIXED_F10P7_MEAN: number = 0.0,
-  public FIXED_GEOMAG_AP: number = 0.0
+  public FIXED_GEOMAG_AP: number = 0.0,
+  public ATMOSPHERIC_MODEL_NAME: string|Uint8Array|null = null,
+  public EQUATORIAL_RADIUS: number = NaN,
+  public CENTRAL_BODY_ROTATION: number = NaN,
+  public OBLATE_FLATTENING: number = NaN,
+  public REDUCTION_THEORY: string|Uint8Array|null = null,
+  public ALBEDO_GRID_SIZE: number = 0,
+  public SHADOW_MODEL: string|Uint8Array|null = null,
+  public SHADOW_BODIES: string|Uint8Array|null = null,
+  public SW_DATA_SOURCE: string|Uint8Array|null = null,
+  public SW_DATA_EPOCH: string|Uint8Array|null = null,
+  public SW_INTERP_METHOD: string|Uint8Array|null = null,
+  public FIXED_GEOMAG_DST: number = NaN,
+  public FIXED_M10P7: number = NaN,
+  public FIXED_M10P7_MEAN: number = NaN,
+  public FIXED_S10P7: number = NaN,
+  public FIXED_S10P7_MEAN: number = NaN,
+  public FIXED_Y10P7: number = NaN,
+  public FIXED_Y10P7_MEAN: number = NaN
 ){}
 
 
@@ -423,6 +708,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const THERMAL = (this.THERMAL !== null ? builder.createString(this.THERMAL!) : 0);
   const RELATIVITY = (this.RELATIVITY !== null ? builder.createString(this.RELATIVITY!) : 0);
   const ATMOSPHERIC_DRAG = (this.ATMOSPHERIC_DRAG !== null ? builder.createString(this.ATMOSPHERIC_DRAG!) : 0);
+  const ATMOSPHERIC_MODEL_NAME = (this.ATMOSPHERIC_MODEL_NAME !== null ? builder.createString(this.ATMOSPHERIC_MODEL_NAME!) : 0);
+  const REDUCTION_THEORY = (this.REDUCTION_THEORY !== null ? builder.createString(this.REDUCTION_THEORY!) : 0);
+  const SHADOW_MODEL = (this.SHADOW_MODEL !== null ? builder.createString(this.SHADOW_MODEL!) : 0);
+  const SHADOW_BODIES = (this.SHADOW_BODIES !== null ? builder.createString(this.SHADOW_BODIES!) : 0);
+  const SW_DATA_SOURCE = (this.SW_DATA_SOURCE !== null ? builder.createString(this.SW_DATA_SOURCE!) : 0);
+  const SW_DATA_EPOCH = (this.SW_DATA_EPOCH !== null ? builder.createString(this.SW_DATA_EPOCH!) : 0);
+  const SW_INTERP_METHOD = (this.SW_INTERP_METHOD !== null ? builder.createString(this.SW_INTERP_METHOD!) : 0);
 
   Perturbations.startPerturbations(builder);
   Perturbations.addComment(builder, COMMENT);
@@ -445,6 +737,24 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   Perturbations.addFixedF10P7(builder, this.FIXED_F10P7);
   Perturbations.addFixedF10P7Mean(builder, this.FIXED_F10P7_MEAN);
   Perturbations.addFixedGeomagAp(builder, this.FIXED_GEOMAG_AP);
+  Perturbations.addAtmosphericModelName(builder, ATMOSPHERIC_MODEL_NAME);
+  Perturbations.addEquatorialRadius(builder, this.EQUATORIAL_RADIUS);
+  Perturbations.addCentralBodyRotation(builder, this.CENTRAL_BODY_ROTATION);
+  Perturbations.addOblateFlattening(builder, this.OBLATE_FLATTENING);
+  Perturbations.addReductionTheory(builder, REDUCTION_THEORY);
+  Perturbations.addAlbedoGridSize(builder, this.ALBEDO_GRID_SIZE);
+  Perturbations.addShadowModel(builder, SHADOW_MODEL);
+  Perturbations.addShadowBodies(builder, SHADOW_BODIES);
+  Perturbations.addSwDataSource(builder, SW_DATA_SOURCE);
+  Perturbations.addSwDataEpoch(builder, SW_DATA_EPOCH);
+  Perturbations.addSwInterpMethod(builder, SW_INTERP_METHOD);
+  Perturbations.addFixedGeomagDst(builder, this.FIXED_GEOMAG_DST);
+  Perturbations.addFixedM10P7(builder, this.FIXED_M10P7);
+  Perturbations.addFixedM10P7Mean(builder, this.FIXED_M10P7_MEAN);
+  Perturbations.addFixedS10P7(builder, this.FIXED_S10P7);
+  Perturbations.addFixedS10P7Mean(builder, this.FIXED_S10P7_MEAN);
+  Perturbations.addFixedY10P7(builder, this.FIXED_Y10P7);
+  Perturbations.addFixedY10P7Mean(builder, this.FIXED_Y10P7_MEAN);
 
   return Perturbations.endPerturbations(builder);
 }

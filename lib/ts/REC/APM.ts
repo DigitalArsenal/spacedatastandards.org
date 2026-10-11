@@ -4,6 +4,12 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { APMAngularVelocity, APMAngularVelocityT } from './APMAngularVelocity.js';
+import { APMEulerAngleState, APMEulerAngleStateT } from './APMEulerAngleState.js';
+import { APMInertia, APMInertiaT } from './APMInertia.js';
+import { APMManeuver, APMManeuverT } from './APMManeuver.js';
+import { APMQuaternionState, APMQuaternionStateT } from './APMQuaternionState.js';
+import { APMSpinState, APMSpinStateT } from './APMSpinState.js';
 
 
 /**
@@ -93,8 +99,142 @@ QC():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and
+ * data groups, in message order, joined by a line feed. A state group's own
+ * comments stay with it.
+ */
+COMMENT():string|null
+COMMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COMMENT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * CLASSIFICATION of the message: the optional header keyword stating its
+ * security classification or handling caveat.
+ */
+CLASSIFICATION():string|null
+CLASSIFICATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CLASSIFICATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * MESSAGE_ID: the optional header keyword, an identifier the originator makes
+ * unique for this message.
+ */
+MESSAGE_ID():string|null
+MESSAGE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MESSAGE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * CENTER_NAME: the orbit center, when the message states one.
+ */
+CENTER_NAME():string|null
+CENTER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.
+ */
+TIME_SYSTEM():string|null
+TIME_SYSTEM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TIME_SYSTEM(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Quaternion states (QUAT_START block), in message order. Q1..QC above are the
+ * single frameless quaternion of the earlier form of this record; a message is
+ * read into and written from these lists.
+ */
+QUATERNION_STATES(index: number, obj?:APMQuaternionState):APMQuaternionState|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? (obj || new APMQuaternionState()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+quaternionStatesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Euler angle states (EULER_START block), in message order.
+ */
+EULER_ANGLE_STATES(index: number, obj?:APMEulerAngleState):APMEulerAngleState|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? (obj || new APMEulerAngleState()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+eulerAngleStatesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Angular velocities (ANGVEL_START block), in message order.
+ */
+ANGULAR_VELOCITIES(index: number, obj?:APMAngularVelocity):APMAngularVelocity|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? (obj || new APMAngularVelocity()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+angularVelocitiesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Spin states (SPIN_START block), in message order.
+ */
+SPIN_STATES(index: number, obj?:APMSpinState):APMSpinState|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? (obj || new APMSpinState()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+spinStatesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Inertia tensors (INERTIA_START block), in message order.
+ */
+INERTIAS(index: number, obj?:APMInertia):APMInertia|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? (obj || new APMInertia()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+inertiasLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Attitude maneuvers (MAN_START block), in message order.
+ */
+MANEUVERS(index: number, obj?:APMManeuver):APMManeuver|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? (obj || new APMManeuver()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+maneuversLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startAPM(builder:flatbuffers.Builder) {
-  builder.startObject(10);
+  builder.startObject(21);
 }
 
 static addCcsdsApmVers(builder:flatbuffers.Builder, CCSDS_APM_VERSOffset:flatbuffers.Offset) {
@@ -137,6 +277,122 @@ static addQc(builder:flatbuffers.Builder, QC:number) {
   builder.addFieldFloat64(9, QC, 0.0);
 }
 
+static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, COMMENTOffset, 0);
+}
+
+static addClassification(builder:flatbuffers.Builder, CLASSIFICATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, CLASSIFICATIONOffset, 0);
+}
+
+static addMessageId(builder:flatbuffers.Builder, MESSAGE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, MESSAGE_IDOffset, 0);
+}
+
+static addCenterName(builder:flatbuffers.Builder, CENTER_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, CENTER_NAMEOffset, 0);
+}
+
+static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, TIME_SYSTEMOffset, 0);
+}
+
+static addQuaternionStates(builder:flatbuffers.Builder, QUATERNION_STATESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, QUATERNION_STATESOffset, 0);
+}
+
+static createQuaternionStatesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startQuaternionStatesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addEulerAngleStates(builder:flatbuffers.Builder, EULER_ANGLE_STATESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, EULER_ANGLE_STATESOffset, 0);
+}
+
+static createEulerAngleStatesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startEulerAngleStatesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addAngularVelocities(builder:flatbuffers.Builder, ANGULAR_VELOCITIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, ANGULAR_VELOCITIESOffset, 0);
+}
+
+static createAngularVelocitiesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAngularVelocitiesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSpinStates(builder:flatbuffers.Builder, SPIN_STATESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, SPIN_STATESOffset, 0);
+}
+
+static createSpinStatesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSpinStatesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addInertias(builder:flatbuffers.Builder, INERTIASOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, INERTIASOffset, 0);
+}
+
+static createInertiasVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startInertiasVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addManeuvers(builder:flatbuffers.Builder, MANEUVERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, MANEUVERSOffset, 0);
+}
+
+static createManeuversVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startManeuversVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endAPM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -150,7 +406,7 @@ static finishSizePrefixedAPMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$APM', true);
 }
 
-static createAPM(builder:flatbuffers.Builder, CCSDS_APM_VERSOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, Q1:number, Q2:number, Q3:number, QC:number):flatbuffers.Offset {
+static createAPM(builder:flatbuffers.Builder, CCSDS_APM_VERSOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, Q1:number, Q2:number, Q3:number, QC:number, COMMENTOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, MESSAGE_IDOffset:flatbuffers.Offset, CENTER_NAMEOffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, QUATERNION_STATESOffset:flatbuffers.Offset, EULER_ANGLE_STATESOffset:flatbuffers.Offset, ANGULAR_VELOCITIESOffset:flatbuffers.Offset, SPIN_STATESOffset:flatbuffers.Offset, INERTIASOffset:flatbuffers.Offset, MANEUVERSOffset:flatbuffers.Offset):flatbuffers.Offset {
   APM.startAPM(builder);
   APM.addCcsdsApmVers(builder, CCSDS_APM_VERSOffset);
   APM.addCreationDate(builder, CREATION_DATEOffset);
@@ -162,6 +418,17 @@ static createAPM(builder:flatbuffers.Builder, CCSDS_APM_VERSOffset:flatbuffers.O
   APM.addQ2(builder, Q2);
   APM.addQ3(builder, Q3);
   APM.addQc(builder, QC);
+  APM.addComment(builder, COMMENTOffset);
+  APM.addClassification(builder, CLASSIFICATIONOffset);
+  APM.addMessageId(builder, MESSAGE_IDOffset);
+  APM.addCenterName(builder, CENTER_NAMEOffset);
+  APM.addTimeSystem(builder, TIME_SYSTEMOffset);
+  APM.addQuaternionStates(builder, QUATERNION_STATESOffset);
+  APM.addEulerAngleStates(builder, EULER_ANGLE_STATESOffset);
+  APM.addAngularVelocities(builder, ANGULAR_VELOCITIESOffset);
+  APM.addSpinStates(builder, SPIN_STATESOffset);
+  APM.addInertias(builder, INERTIASOffset);
+  APM.addManeuvers(builder, MANEUVERSOffset);
   return APM.endAPM(builder);
 }
 
@@ -176,7 +443,18 @@ unpack(): APMT {
     this.Q1(),
     this.Q2(),
     this.Q3(),
-    this.QC()
+    this.QC(),
+    this.COMMENT(),
+    this.CLASSIFICATION(),
+    this.MESSAGE_ID(),
+    this.CENTER_NAME(),
+    this.TIME_SYSTEM(),
+    this.bb!.createObjList<APMQuaternionState, APMQuaternionStateT>(this.QUATERNION_STATES.bind(this), this.quaternionStatesLength()),
+    this.bb!.createObjList<APMEulerAngleState, APMEulerAngleStateT>(this.EULER_ANGLE_STATES.bind(this), this.eulerAngleStatesLength()),
+    this.bb!.createObjList<APMAngularVelocity, APMAngularVelocityT>(this.ANGULAR_VELOCITIES.bind(this), this.angularVelocitiesLength()),
+    this.bb!.createObjList<APMSpinState, APMSpinStateT>(this.SPIN_STATES.bind(this), this.spinStatesLength()),
+    this.bb!.createObjList<APMInertia, APMInertiaT>(this.INERTIAS.bind(this), this.inertiasLength()),
+    this.bb!.createObjList<APMManeuver, APMManeuverT>(this.MANEUVERS.bind(this), this.maneuversLength())
   );
 }
 
@@ -192,6 +470,17 @@ unpackTo(_o: APMT): void {
   _o.Q2 = this.Q2();
   _o.Q3 = this.Q3();
   _o.QC = this.QC();
+  _o.COMMENT = this.COMMENT();
+  _o.CLASSIFICATION = this.CLASSIFICATION();
+  _o.MESSAGE_ID = this.MESSAGE_ID();
+  _o.CENTER_NAME = this.CENTER_NAME();
+  _o.TIME_SYSTEM = this.TIME_SYSTEM();
+  _o.QUATERNION_STATES = this.bb!.createObjList<APMQuaternionState, APMQuaternionStateT>(this.QUATERNION_STATES.bind(this), this.quaternionStatesLength());
+  _o.EULER_ANGLE_STATES = this.bb!.createObjList<APMEulerAngleState, APMEulerAngleStateT>(this.EULER_ANGLE_STATES.bind(this), this.eulerAngleStatesLength());
+  _o.ANGULAR_VELOCITIES = this.bb!.createObjList<APMAngularVelocity, APMAngularVelocityT>(this.ANGULAR_VELOCITIES.bind(this), this.angularVelocitiesLength());
+  _o.SPIN_STATES = this.bb!.createObjList<APMSpinState, APMSpinStateT>(this.SPIN_STATES.bind(this), this.spinStatesLength());
+  _o.INERTIAS = this.bb!.createObjList<APMInertia, APMInertiaT>(this.INERTIAS.bind(this), this.inertiasLength());
+  _o.MANEUVERS = this.bb!.createObjList<APMManeuver, APMManeuverT>(this.MANEUVERS.bind(this), this.maneuversLength());
 }
 }
 
@@ -206,7 +495,18 @@ constructor(
   public Q1: number = 0.0,
   public Q2: number = 0.0,
   public Q3: number = 0.0,
-  public QC: number = 0.0
+  public QC: number = 0.0,
+  public COMMENT: string|Uint8Array|null = null,
+  public CLASSIFICATION: string|Uint8Array|null = null,
+  public MESSAGE_ID: string|Uint8Array|null = null,
+  public CENTER_NAME: string|Uint8Array|null = null,
+  public TIME_SYSTEM: string|Uint8Array|null = null,
+  public QUATERNION_STATES: (APMQuaternionStateT)[] = [],
+  public EULER_ANGLE_STATES: (APMEulerAngleStateT)[] = [],
+  public ANGULAR_VELOCITIES: (APMAngularVelocityT)[] = [],
+  public SPIN_STATES: (APMSpinStateT)[] = [],
+  public INERTIAS: (APMInertiaT)[] = [],
+  public MANEUVERS: (APMManeuverT)[] = []
 ){}
 
 
@@ -217,6 +517,17 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OBJECT_NAME = (this.OBJECT_NAME !== null ? builder.createString(this.OBJECT_NAME!) : 0);
   const OBJECT_ID = (this.OBJECT_ID !== null ? builder.createString(this.OBJECT_ID!) : 0);
   const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
+  const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
+  const CLASSIFICATION = (this.CLASSIFICATION !== null ? builder.createString(this.CLASSIFICATION!) : 0);
+  const MESSAGE_ID = (this.MESSAGE_ID !== null ? builder.createString(this.MESSAGE_ID!) : 0);
+  const CENTER_NAME = (this.CENTER_NAME !== null ? builder.createString(this.CENTER_NAME!) : 0);
+  const TIME_SYSTEM = (this.TIME_SYSTEM !== null ? builder.createString(this.TIME_SYSTEM!) : 0);
+  const QUATERNION_STATES = APM.createQuaternionStatesVector(builder, builder.createObjectOffsetList(this.QUATERNION_STATES));
+  const EULER_ANGLE_STATES = APM.createEulerAngleStatesVector(builder, builder.createObjectOffsetList(this.EULER_ANGLE_STATES));
+  const ANGULAR_VELOCITIES = APM.createAngularVelocitiesVector(builder, builder.createObjectOffsetList(this.ANGULAR_VELOCITIES));
+  const SPIN_STATES = APM.createSpinStatesVector(builder, builder.createObjectOffsetList(this.SPIN_STATES));
+  const INERTIAS = APM.createInertiasVector(builder, builder.createObjectOffsetList(this.INERTIAS));
+  const MANEUVERS = APM.createManeuversVector(builder, builder.createObjectOffsetList(this.MANEUVERS));
 
   return APM.createAPM(builder,
     CCSDS_APM_VERS,
@@ -228,7 +539,18 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.Q1,
     this.Q2,
     this.Q3,
-    this.QC
+    this.QC,
+    COMMENT,
+    CLASSIFICATION,
+    MESSAGE_ID,
+    CENTER_NAME,
+    TIME_SYSTEM,
+    QUATERNION_STATES,
+    EULER_ANGLE_STATES,
+    ANGULAR_VELOCITIES,
+    SPIN_STATES,
+    INERTIAS,
+    MANEUVERS
   );
 }
 }

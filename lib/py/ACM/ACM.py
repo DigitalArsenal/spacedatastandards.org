@@ -191,7 +191,9 @@ class ACM(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-    # Additional comments
+    # COMMENT lines of the message header, metadata and user-defined data
+    # (CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,
+    # covariance, maneuver or determination block's own comments stay with it.
     # ACM
     def COMMENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
@@ -199,8 +201,256 @@ class ACM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # CLASSIFICATION of the message: the optional header keyword stating its
+    # security classification or handling caveat.
+    # ACM
+    def CLASSIFICATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # MESSAGE_ID: the optional header keyword, an identifier the originator makes
+    # unique for this message.
+    # ACM
+    def MESSAGE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.
+    # OBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH
+    # above its EPOCH_TZERO, the epoch every relative time is measured from.
+    # ACM
+    def OBJECT_DESIGNATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ORIGINATOR_POC: point of contact at the originator.
+    # ACM
+    def ORIGINATOR_POC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ORIGINATOR_POSITION: position of the point of contact.
+    # ACM
+    def ORIGINATOR_POSITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ORIGINATOR_PHONE: telephone number of the point of contact.
+    # ACM
+    def ORIGINATOR_PHONE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ORIGINATOR_EMAIL: email address of the point of contact.
+    # ACM
+    def ORIGINATOR_EMAIL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ORIGINATOR_ADDRESS: postal address of the point of contact.
+    # ACM
+    def ORIGINATOR_ADDRESS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.
+    # ACM
+    def ODM_MSG_LINK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CENTER_NAME: the orbit center, when the message states one.
+    # ACM
+    def CENTER_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.
+    # ACM
+    def ACM_DATA_ELEMENTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # START_TIME: start of the total time span the message covers.
+    # ACM
+    def START_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # STOP_TIME: end of the total time span the message covers.
+    # ACM
+    def STOP_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # TAIMUTC_AT_TZERO in seconds, NaN when not stated.
+    # ACM
+    def TAIMUTC_AT_TZERO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.
+    # ACM
+    def NEXT_LEAP_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.
+    # ACM
+    def NEXT_LEAP_TAIMUTC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Attitude state time histories (ATT_START blocks), in message order.
+    # ACM
+    def ATT_BLOCKS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ACMAttitudeBlock import ACMAttitudeBlock
+            obj = ACMAttitudeBlock()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ACM
+    def ATT_BLOCKSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACM
+    def ATT_BLOCKSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        return o == 0
+
+    # Covariance time histories (COV_START blocks), in message order.
+    # ACM
+    def COV_BLOCKS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ACMCovarianceBlock import ACMCovarianceBlock
+            obj = ACMCovarianceBlock()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ACM
+    def COV_BLOCKSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACM
+    def COV_BLOCKSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        return o == 0
+
+    # Maneuver specifications (MAN_START blocks), in message order.
+    # ACM
+    def MAN_BLOCKS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ACMManeuverBlock import ACMManeuverBlock
+            obj = ACMManeuverBlock()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ACM
+    def MAN_BLOCKSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACM
+    def MAN_BLOCKSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        return o == 0
+
+    # The attitude determination data (AD_START block), when the message has them.
+    # ACM
+    def DETERMINATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from ACMDetermination import ACMDetermination
+            obj = ACMDetermination()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Every USER_DEFINED parameter of the message, in message order.
+    # ACM
+    def USER_DEFINED_PARAMETERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ACMUserDefinedParameter import ACMUserDefinedParameter
+            obj = ACMUserDefinedParameter()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ACM
+    def USER_DEFINED_PARAMETERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACM
+    def USER_DEFINED_PARAMETERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        return o == 0
+
 def ACMStart(builder):
-    builder.StartObject(14)
+    builder.StartObject(35)
 
 def Start(builder):
     ACMStart(builder)
@@ -325,12 +575,191 @@ def ACMAddCOMMENT(builder, COMMENT):
 def AddCOMMENT(builder, COMMENT):
     ACMAddCOMMENT(builder, COMMENT)
 
+def ACMAddCLASSIFICATION(builder, CLASSIFICATION):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
+def AddCLASSIFICATION(builder, CLASSIFICATION):
+    ACMAddCLASSIFICATION(builder, CLASSIFICATION)
+
+def ACMAddMESSAGE_ID(builder, MESSAGE_ID):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_ID), 0)
+
+def AddMESSAGE_ID(builder, MESSAGE_ID):
+    ACMAddMESSAGE_ID(builder, MESSAGE_ID)
+
+def ACMAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_DESIGNATOR), 0)
+
+def AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    ACMAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+
+def ACMAddORIGINATOR_POC(builder, ORIGINATOR_POC):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR_POC), 0)
+
+def AddORIGINATOR_POC(builder, ORIGINATOR_POC):
+    ACMAddORIGINATOR_POC(builder, ORIGINATOR_POC)
+
+def ACMAddORIGINATOR_POSITION(builder, ORIGINATOR_POSITION):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR_POSITION), 0)
+
+def AddORIGINATOR_POSITION(builder, ORIGINATOR_POSITION):
+    ACMAddORIGINATOR_POSITION(builder, ORIGINATOR_POSITION)
+
+def ACMAddORIGINATOR_PHONE(builder, ORIGINATOR_PHONE):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR_PHONE), 0)
+
+def AddORIGINATOR_PHONE(builder, ORIGINATOR_PHONE):
+    ACMAddORIGINATOR_PHONE(builder, ORIGINATOR_PHONE)
+
+def ACMAddORIGINATOR_EMAIL(builder, ORIGINATOR_EMAIL):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR_EMAIL), 0)
+
+def AddORIGINATOR_EMAIL(builder, ORIGINATOR_EMAIL):
+    ACMAddORIGINATOR_EMAIL(builder, ORIGINATOR_EMAIL)
+
+def ACMAddORIGINATOR_ADDRESS(builder, ORIGINATOR_ADDRESS):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR_ADDRESS), 0)
+
+def AddORIGINATOR_ADDRESS(builder, ORIGINATOR_ADDRESS):
+    ACMAddORIGINATOR_ADDRESS(builder, ORIGINATOR_ADDRESS)
+
+def ACMAddODM_MSG_LINK(builder, ODM_MSG_LINK):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(ODM_MSG_LINK), 0)
+
+def AddODM_MSG_LINK(builder, ODM_MSG_LINK):
+    ACMAddODM_MSG_LINK(builder, ODM_MSG_LINK)
+
+def ACMAddCENTER_NAME(builder, CENTER_NAME):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
+
+def AddCENTER_NAME(builder, CENTER_NAME):
+    ACMAddCENTER_NAME(builder, CENTER_NAME)
+
+def ACMAddACM_DATA_ELEMENTS(builder, ACM_DATA_ELEMENTS):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(ACM_DATA_ELEMENTS), 0)
+
+def AddACM_DATA_ELEMENTS(builder, ACM_DATA_ELEMENTS):
+    ACMAddACM_DATA_ELEMENTS(builder, ACM_DATA_ELEMENTS)
+
+def ACMAddSTART_TIME(builder, START_TIME):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+
+def AddSTART_TIME(builder, START_TIME):
+    ACMAddSTART_TIME(builder, START_TIME)
+
+def ACMAddSTOP_TIME(builder, STOP_TIME):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(STOP_TIME), 0)
+
+def AddSTOP_TIME(builder, STOP_TIME):
+    ACMAddSTOP_TIME(builder, STOP_TIME)
+
+def ACMAddTAIMUTC_AT_TZERO(builder, TAIMUTC_AT_TZERO):
+    builder.PrependFloat64Slot(27, TAIMUTC_AT_TZERO, float('nan'))
+
+def AddTAIMUTC_AT_TZERO(builder, TAIMUTC_AT_TZERO):
+    ACMAddTAIMUTC_AT_TZERO(builder, TAIMUTC_AT_TZERO)
+
+def ACMAddNEXT_LEAP_EPOCH(builder, NEXT_LEAP_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(NEXT_LEAP_EPOCH), 0)
+
+def AddNEXT_LEAP_EPOCH(builder, NEXT_LEAP_EPOCH):
+    ACMAddNEXT_LEAP_EPOCH(builder, NEXT_LEAP_EPOCH)
+
+def ACMAddNEXT_LEAP_TAIMUTC(builder, NEXT_LEAP_TAIMUTC):
+    builder.PrependFloat64Slot(29, NEXT_LEAP_TAIMUTC, float('nan'))
+
+def AddNEXT_LEAP_TAIMUTC(builder, NEXT_LEAP_TAIMUTC):
+    ACMAddNEXT_LEAP_TAIMUTC(builder, NEXT_LEAP_TAIMUTC)
+
+def ACMAddATT_BLOCKS(builder, ATT_BLOCKS):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(ATT_BLOCKS), 0)
+
+def AddATT_BLOCKS(builder, ATT_BLOCKS):
+    ACMAddATT_BLOCKS(builder, ATT_BLOCKS)
+
+def ACMStartATT_BLOCKSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartATT_BLOCKSVector(builder, numElems):
+    return ACMStartATT_BLOCKSVector(builder, numElems)
+
+def ACMCreateATT_BLOCKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateATT_BLOCKSVector(builder, data):
+    return ACMCreateATT_BLOCKSVector(builder, data)
+
+def ACMAddCOV_BLOCKS(builder, COV_BLOCKS):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(COV_BLOCKS), 0)
+
+def AddCOV_BLOCKS(builder, COV_BLOCKS):
+    ACMAddCOV_BLOCKS(builder, COV_BLOCKS)
+
+def ACMStartCOV_BLOCKSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOV_BLOCKSVector(builder, numElems):
+    return ACMStartCOV_BLOCKSVector(builder, numElems)
+
+def ACMCreateCOV_BLOCKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOV_BLOCKSVector(builder, data):
+    return ACMCreateCOV_BLOCKSVector(builder, data)
+
+def ACMAddMAN_BLOCKS(builder, MAN_BLOCKS):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_BLOCKS), 0)
+
+def AddMAN_BLOCKS(builder, MAN_BLOCKS):
+    ACMAddMAN_BLOCKS(builder, MAN_BLOCKS)
+
+def ACMStartMAN_BLOCKSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMAN_BLOCKSVector(builder, numElems):
+    return ACMStartMAN_BLOCKSVector(builder, numElems)
+
+def ACMCreateMAN_BLOCKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMAN_BLOCKSVector(builder, data):
+    return ACMCreateMAN_BLOCKSVector(builder, data)
+
+def ACMAddDETERMINATION(builder, DETERMINATION):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(DETERMINATION), 0)
+
+def AddDETERMINATION(builder, DETERMINATION):
+    ACMAddDETERMINATION(builder, DETERMINATION)
+
+def ACMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_PARAMETERS), 0)
+
+def AddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
+    ACMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
+
+def ACMStartUSER_DEFINED_PARAMETERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartUSER_DEFINED_PARAMETERSVector(builder, numElems):
+    return ACMStartUSER_DEFINED_PARAMETERSVector(builder, numElems)
+
+def ACMCreateUSER_DEFINED_PARAMETERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUSER_DEFINED_PARAMETERSVector(builder, data):
+    return ACMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
+
 def ACMEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return ACMEnd(builder)
 
+import ACMAttitudeBlock
+import ACMCovarianceBlock
+import ACMDetermination
+import ACMManeuverBlock
+import ACMUserDefinedParameter
 import attCovariance
 import attManeuver
 import attPhysicalProperties
@@ -359,6 +788,27 @@ class ACMT(object):
         MANEUVERS = None,
         MANEUVERABLE = 0,
         COMMENT = None,
+        CLASSIFICATION = None,
+        MESSAGE_ID = None,
+        OBJECT_DESIGNATOR = None,
+        ORIGINATOR_POC = None,
+        ORIGINATOR_POSITION = None,
+        ORIGINATOR_PHONE = None,
+        ORIGINATOR_EMAIL = None,
+        ORIGINATOR_ADDRESS = None,
+        ODM_MSG_LINK = None,
+        CENTER_NAME = None,
+        ACM_DATA_ELEMENTS = None,
+        START_TIME = None,
+        STOP_TIME = None,
+        TAIMUTC_AT_TZERO = float('nan'),
+        NEXT_LEAP_EPOCH = None,
+        NEXT_LEAP_TAIMUTC = float('nan'),
+        ATT_BLOCKS = None,
+        COV_BLOCKS = None,
+        MAN_BLOCKS = None,
+        DETERMINATION = None,
+        USER_DEFINED_PARAMETERS = None,
     ):
         self.CCSDS_ACM_VERS = CCSDS_ACM_VERS  # type: Optional[str]
         self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
@@ -374,6 +824,27 @@ class ACMT(object):
         self.MANEUVERS = MANEUVERS  # type: Optional[List[attManeuver.attManeuverT]]
         self.MANEUVERABLE = MANEUVERABLE  # type: int
         self.COMMENT = COMMENT  # type: Optional[str]
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
+        self.MESSAGE_ID = MESSAGE_ID  # type: Optional[str]
+        self.OBJECT_DESIGNATOR = OBJECT_DESIGNATOR  # type: Optional[str]
+        self.ORIGINATOR_POC = ORIGINATOR_POC  # type: Optional[str]
+        self.ORIGINATOR_POSITION = ORIGINATOR_POSITION  # type: Optional[str]
+        self.ORIGINATOR_PHONE = ORIGINATOR_PHONE  # type: Optional[str]
+        self.ORIGINATOR_EMAIL = ORIGINATOR_EMAIL  # type: Optional[str]
+        self.ORIGINATOR_ADDRESS = ORIGINATOR_ADDRESS  # type: Optional[str]
+        self.ODM_MSG_LINK = ODM_MSG_LINK  # type: Optional[str]
+        self.CENTER_NAME = CENTER_NAME  # type: Optional[str]
+        self.ACM_DATA_ELEMENTS = ACM_DATA_ELEMENTS  # type: Optional[str]
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.STOP_TIME = STOP_TIME  # type: Optional[str]
+        self.TAIMUTC_AT_TZERO = TAIMUTC_AT_TZERO  # type: float
+        self.NEXT_LEAP_EPOCH = NEXT_LEAP_EPOCH  # type: Optional[str]
+        self.NEXT_LEAP_TAIMUTC = NEXT_LEAP_TAIMUTC  # type: float
+        self.ATT_BLOCKS = ATT_BLOCKS  # type: Optional[List[ACMAttitudeBlock.ACMAttitudeBlockT]]
+        self.COV_BLOCKS = COV_BLOCKS  # type: Optional[List[ACMCovarianceBlock.ACMCovarianceBlockT]]
+        self.MAN_BLOCKS = MAN_BLOCKS  # type: Optional[List[ACMManeuverBlock.ACMManeuverBlockT]]
+        self.DETERMINATION = DETERMINATION  # type: Optional[ACMDetermination.ACMDeterminationT]
+        self.USER_DEFINED_PARAMETERS = USER_DEFINED_PARAMETERS  # type: Optional[List[ACMUserDefinedParameter.ACMUserDefinedParameterT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -432,6 +903,56 @@ class ACMT(object):
                     self.MANEUVERS.append(attManeuver_)
         self.MANEUVERABLE = ACM.MANEUVERABLE()
         self.COMMENT = ACM.COMMENT()
+        self.CLASSIFICATION = ACM.CLASSIFICATION()
+        self.MESSAGE_ID = ACM.MESSAGE_ID()
+        self.OBJECT_DESIGNATOR = ACM.OBJECT_DESIGNATOR()
+        self.ORIGINATOR_POC = ACM.ORIGINATOR_POC()
+        self.ORIGINATOR_POSITION = ACM.ORIGINATOR_POSITION()
+        self.ORIGINATOR_PHONE = ACM.ORIGINATOR_PHONE()
+        self.ORIGINATOR_EMAIL = ACM.ORIGINATOR_EMAIL()
+        self.ORIGINATOR_ADDRESS = ACM.ORIGINATOR_ADDRESS()
+        self.ODM_MSG_LINK = ACM.ODM_MSG_LINK()
+        self.CENTER_NAME = ACM.CENTER_NAME()
+        self.ACM_DATA_ELEMENTS = ACM.ACM_DATA_ELEMENTS()
+        self.START_TIME = ACM.START_TIME()
+        self.STOP_TIME = ACM.STOP_TIME()
+        self.TAIMUTC_AT_TZERO = ACM.TAIMUTC_AT_TZERO()
+        self.NEXT_LEAP_EPOCH = ACM.NEXT_LEAP_EPOCH()
+        self.NEXT_LEAP_TAIMUTC = ACM.NEXT_LEAP_TAIMUTC()
+        if not ACM.ATT_BLOCKSIsNone():
+            self.ATT_BLOCKS = []
+            for i in range(ACM.ATT_BLOCKSLength()):
+                if ACM.ATT_BLOCKS(i) is None:
+                    self.ATT_BLOCKS.append(None)
+                else:
+                    aCMAttitudeBlock_ = ACMAttitudeBlock.ACMAttitudeBlockT.InitFromObj(ACM.ATT_BLOCKS(i))
+                    self.ATT_BLOCKS.append(aCMAttitudeBlock_)
+        if not ACM.COV_BLOCKSIsNone():
+            self.COV_BLOCKS = []
+            for i in range(ACM.COV_BLOCKSLength()):
+                if ACM.COV_BLOCKS(i) is None:
+                    self.COV_BLOCKS.append(None)
+                else:
+                    aCMCovarianceBlock_ = ACMCovarianceBlock.ACMCovarianceBlockT.InitFromObj(ACM.COV_BLOCKS(i))
+                    self.COV_BLOCKS.append(aCMCovarianceBlock_)
+        if not ACM.MAN_BLOCKSIsNone():
+            self.MAN_BLOCKS = []
+            for i in range(ACM.MAN_BLOCKSLength()):
+                if ACM.MAN_BLOCKS(i) is None:
+                    self.MAN_BLOCKS.append(None)
+                else:
+                    aCMManeuverBlock_ = ACMManeuverBlock.ACMManeuverBlockT.InitFromObj(ACM.MAN_BLOCKS(i))
+                    self.MAN_BLOCKS.append(aCMManeuverBlock_)
+        if ACM.DETERMINATION() is not None:
+            self.DETERMINATION = ACMDetermination.ACMDeterminationT.InitFromObj(ACM.DETERMINATION())
+        if not ACM.USER_DEFINED_PARAMETERSIsNone():
+            self.USER_DEFINED_PARAMETERS = []
+            for i in range(ACM.USER_DEFINED_PARAMETERSLength()):
+                if ACM.USER_DEFINED_PARAMETERS(i) is None:
+                    self.USER_DEFINED_PARAMETERS.append(None)
+                else:
+                    aCMUserDefinedParameter_ = ACMUserDefinedParameter.ACMUserDefinedParameterT.InitFromObj(ACM.USER_DEFINED_PARAMETERS(i))
+                    self.USER_DEFINED_PARAMETERS.append(aCMUserDefinedParameter_)
 
     # ACMT
     def Pack(self, builder):
@@ -479,6 +1000,68 @@ class ACMT(object):
             MANEUVERS = builder.EndVector()
         if self.COMMENT is not None:
             COMMENT = builder.CreateString(self.COMMENT)
+        if self.CLASSIFICATION is not None:
+            CLASSIFICATION = builder.CreateString(self.CLASSIFICATION)
+        if self.MESSAGE_ID is not None:
+            MESSAGE_ID = builder.CreateString(self.MESSAGE_ID)
+        if self.OBJECT_DESIGNATOR is not None:
+            OBJECT_DESIGNATOR = builder.CreateString(self.OBJECT_DESIGNATOR)
+        if self.ORIGINATOR_POC is not None:
+            ORIGINATOR_POC = builder.CreateString(self.ORIGINATOR_POC)
+        if self.ORIGINATOR_POSITION is not None:
+            ORIGINATOR_POSITION = builder.CreateString(self.ORIGINATOR_POSITION)
+        if self.ORIGINATOR_PHONE is not None:
+            ORIGINATOR_PHONE = builder.CreateString(self.ORIGINATOR_PHONE)
+        if self.ORIGINATOR_EMAIL is not None:
+            ORIGINATOR_EMAIL = builder.CreateString(self.ORIGINATOR_EMAIL)
+        if self.ORIGINATOR_ADDRESS is not None:
+            ORIGINATOR_ADDRESS = builder.CreateString(self.ORIGINATOR_ADDRESS)
+        if self.ODM_MSG_LINK is not None:
+            ODM_MSG_LINK = builder.CreateString(self.ODM_MSG_LINK)
+        if self.CENTER_NAME is not None:
+            CENTER_NAME = builder.CreateString(self.CENTER_NAME)
+        if self.ACM_DATA_ELEMENTS is not None:
+            ACM_DATA_ELEMENTS = builder.CreateString(self.ACM_DATA_ELEMENTS)
+        if self.START_TIME is not None:
+            START_TIME = builder.CreateString(self.START_TIME)
+        if self.STOP_TIME is not None:
+            STOP_TIME = builder.CreateString(self.STOP_TIME)
+        if self.NEXT_LEAP_EPOCH is not None:
+            NEXT_LEAP_EPOCH = builder.CreateString(self.NEXT_LEAP_EPOCH)
+        if self.ATT_BLOCKS is not None:
+            ATT_BLOCKSlist = []
+            for i in range(len(self.ATT_BLOCKS)):
+                ATT_BLOCKSlist.append(self.ATT_BLOCKS[i].Pack(builder))
+            ACMStartATT_BLOCKSVector(builder, len(self.ATT_BLOCKS))
+            for i in reversed(range(len(self.ATT_BLOCKS))):
+                builder.PrependUOffsetTRelative(ATT_BLOCKSlist[i])
+            ATT_BLOCKS = builder.EndVector()
+        if self.COV_BLOCKS is not None:
+            COV_BLOCKSlist = []
+            for i in range(len(self.COV_BLOCKS)):
+                COV_BLOCKSlist.append(self.COV_BLOCKS[i].Pack(builder))
+            ACMStartCOV_BLOCKSVector(builder, len(self.COV_BLOCKS))
+            for i in reversed(range(len(self.COV_BLOCKS))):
+                builder.PrependUOffsetTRelative(COV_BLOCKSlist[i])
+            COV_BLOCKS = builder.EndVector()
+        if self.MAN_BLOCKS is not None:
+            MAN_BLOCKSlist = []
+            for i in range(len(self.MAN_BLOCKS)):
+                MAN_BLOCKSlist.append(self.MAN_BLOCKS[i].Pack(builder))
+            ACMStartMAN_BLOCKSVector(builder, len(self.MAN_BLOCKS))
+            for i in reversed(range(len(self.MAN_BLOCKS))):
+                builder.PrependUOffsetTRelative(MAN_BLOCKSlist[i])
+            MAN_BLOCKS = builder.EndVector()
+        if self.DETERMINATION is not None:
+            DETERMINATION = self.DETERMINATION.Pack(builder)
+        if self.USER_DEFINED_PARAMETERS is not None:
+            USER_DEFINED_PARAMETERSlist = []
+            for i in range(len(self.USER_DEFINED_PARAMETERS)):
+                USER_DEFINED_PARAMETERSlist.append(self.USER_DEFINED_PARAMETERS[i].Pack(builder))
+            ACMStartUSER_DEFINED_PARAMETERSVector(builder, len(self.USER_DEFINED_PARAMETERS))
+            for i in reversed(range(len(self.USER_DEFINED_PARAMETERS))):
+                builder.PrependUOffsetTRelative(USER_DEFINED_PARAMETERSlist[i])
+            USER_DEFINED_PARAMETERS = builder.EndVector()
         ACMStart(builder)
         if self.CCSDS_ACM_VERS is not None:
             ACMAddCCSDS_ACM_VERS(builder, CCSDS_ACM_VERS)
@@ -507,5 +1090,45 @@ class ACMT(object):
         ACMAddMANEUVERABLE(builder, self.MANEUVERABLE)
         if self.COMMENT is not None:
             ACMAddCOMMENT(builder, COMMENT)
+        if self.CLASSIFICATION is not None:
+            ACMAddCLASSIFICATION(builder, CLASSIFICATION)
+        if self.MESSAGE_ID is not None:
+            ACMAddMESSAGE_ID(builder, MESSAGE_ID)
+        if self.OBJECT_DESIGNATOR is not None:
+            ACMAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+        if self.ORIGINATOR_POC is not None:
+            ACMAddORIGINATOR_POC(builder, ORIGINATOR_POC)
+        if self.ORIGINATOR_POSITION is not None:
+            ACMAddORIGINATOR_POSITION(builder, ORIGINATOR_POSITION)
+        if self.ORIGINATOR_PHONE is not None:
+            ACMAddORIGINATOR_PHONE(builder, ORIGINATOR_PHONE)
+        if self.ORIGINATOR_EMAIL is not None:
+            ACMAddORIGINATOR_EMAIL(builder, ORIGINATOR_EMAIL)
+        if self.ORIGINATOR_ADDRESS is not None:
+            ACMAddORIGINATOR_ADDRESS(builder, ORIGINATOR_ADDRESS)
+        if self.ODM_MSG_LINK is not None:
+            ACMAddODM_MSG_LINK(builder, ODM_MSG_LINK)
+        if self.CENTER_NAME is not None:
+            ACMAddCENTER_NAME(builder, CENTER_NAME)
+        if self.ACM_DATA_ELEMENTS is not None:
+            ACMAddACM_DATA_ELEMENTS(builder, ACM_DATA_ELEMENTS)
+        if self.START_TIME is not None:
+            ACMAddSTART_TIME(builder, START_TIME)
+        if self.STOP_TIME is not None:
+            ACMAddSTOP_TIME(builder, STOP_TIME)
+        ACMAddTAIMUTC_AT_TZERO(builder, self.TAIMUTC_AT_TZERO)
+        if self.NEXT_LEAP_EPOCH is not None:
+            ACMAddNEXT_LEAP_EPOCH(builder, NEXT_LEAP_EPOCH)
+        ACMAddNEXT_LEAP_TAIMUTC(builder, self.NEXT_LEAP_TAIMUTC)
+        if self.ATT_BLOCKS is not None:
+            ACMAddATT_BLOCKS(builder, ATT_BLOCKS)
+        if self.COV_BLOCKS is not None:
+            ACMAddCOV_BLOCKS(builder, COV_BLOCKS)
+        if self.MAN_BLOCKS is not None:
+            ACMAddMAN_BLOCKS(builder, MAN_BLOCKS)
+        if self.DETERMINATION is not None:
+            ACMAddDETERMINATION(builder, DETERMINATION)
+        if self.USER_DEFINED_PARAMETERS is not None:
+            ACMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
         ACM = ACMEnd(builder)
         return ACM

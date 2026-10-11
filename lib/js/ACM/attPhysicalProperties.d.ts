@@ -66,6 +66,12 @@ export declare class attPhysicalProperties implements flatbuffers.IUnpackableObj
      * Product of inertia YZ in kg*m^2
      */
     IYZ(): number;
+    /**
+     * COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+     * joined by a line feed.
+     */
+    COMMENT(): string | null;
+    COMMENT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startattPhysicalProperties(builder: flatbuffers.Builder): void;
     static addDragCoeff(builder: flatbuffers.Builder, DRAG_COEFF: number): void;
     static addWetMass(builder: flatbuffers.Builder, WET_MASS: number): void;
@@ -81,8 +87,9 @@ export declare class attPhysicalProperties implements flatbuffers.IUnpackableObj
     static addIxy(builder: flatbuffers.Builder, IXY: number): void;
     static addIxz(builder: flatbuffers.Builder, IXZ: number): void;
     static addIyz(builder: flatbuffers.Builder, IYZ: number): void;
+    static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static endattPhysicalProperties(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createattPhysicalProperties(builder: flatbuffers.Builder, DRAG_COEFF: number, WET_MASS: number, DRY_MASS: number, CP_REF_FRAMEOffset: flatbuffers.Offset, CP_X: number, CP_Y: number, CP_Z: number, INERTIA_REF_FRAMEOffset: flatbuffers.Offset, IXX: number, IYY: number, IZZ: number, IXY: number, IXZ: number, IYZ: number): flatbuffers.Offset;
+    static createattPhysicalProperties(builder: flatbuffers.Builder, DRAG_COEFF: number, WET_MASS: number, DRY_MASS: number, CP_REF_FRAMEOffset: flatbuffers.Offset, CP_X: number, CP_Y: number, CP_Z: number, INERTIA_REF_FRAMEOffset: flatbuffers.Offset, IXX: number, IYY: number, IZZ: number, IXY: number, IXZ: number, IYZ: number, COMMENTOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): attPhysicalPropertiesT;
     unpackTo(_o: attPhysicalPropertiesT): void;
 }
@@ -101,7 +108,8 @@ export declare class attPhysicalPropertiesT implements flatbuffers.IGeneratedObj
     IXY: number;
     IXZ: number;
     IYZ: number;
-    constructor(DRAG_COEFF?: number, WET_MASS?: number, DRY_MASS?: number, CP_REF_FRAME?: string | Uint8Array | null, CP_X?: number, CP_Y?: number, CP_Z?: number, INERTIA_REF_FRAME?: string | Uint8Array | null, IXX?: number, IYY?: number, IZZ?: number, IXY?: number, IXZ?: number, IYZ?: number);
+    COMMENT: string | Uint8Array | null;
+    constructor(DRAG_COEFF?: number, WET_MASS?: number, DRY_MASS?: number, CP_REF_FRAME?: string | Uint8Array | null, CP_X?: number, CP_Y?: number, CP_Z?: number, INERTIA_REF_FRAME?: string | Uint8Array | null, IXX?: number, IYY?: number, IZZ?: number, IXY?: number, IXZ?: number, IYZ?: number, COMMENT?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=attPhysicalProperties.d.ts.map

@@ -1,5 +1,5 @@
-// Hash: f61049f0e4e2716f4830875da5d91be9d7cd745e116c687dce05288b660ce387
-// Version: 0.0.3
+// Hash: 2598961374505d016dc23a69f842c76c736efe967953c1fa70c33d9c6c830a57
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 enum attitudeStateType : byte {
   QUATERNION,
@@ -101,6 +101,9 @@ table attPhysicalProperties {
   IXZ:double;
   /// Product of inertia YZ in kg*m^2
   IYZ:double;
+  /// COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+  /// joined by a line feed.
+  COMMENT:string;
 }
 
 /// Attitude Covariance
@@ -159,8 +162,203 @@ table ACM {
   MANEUVERS:[attManeuver];
   /// Maneuverability status
   MANEUVERABLE:maneuverableFlag;
-  /// Additional comments
+  /// COMMENT lines of the message header, metadata and user-defined data
+  /// (CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,
+  /// covariance, maneuver or determination block's own comments stay with it.
   COMMENT:string;
+
+  /// CLASSIFICATION of the message: the optional header keyword stating its
+  /// security classification or handling caveat.
+  CLASSIFICATION:string;
+  /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  /// unique for this message.
+  MESSAGE_ID:string;
+  /// OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.
+  /// OBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH
+  /// above its EPOCH_TZERO, the epoch every relative time is measured from.
+  OBJECT_DESIGNATOR:string;
+  /// ORIGINATOR_POC: point of contact at the originator.
+  ORIGINATOR_POC:string;
+  /// ORIGINATOR_POSITION: position of the point of contact.
+  ORIGINATOR_POSITION:string;
+  /// ORIGINATOR_PHONE: telephone number of the point of contact.
+  ORIGINATOR_PHONE:string;
+  /// ORIGINATOR_EMAIL: email address of the point of contact.
+  ORIGINATOR_EMAIL:string;
+  /// ORIGINATOR_ADDRESS: postal address of the point of contact.
+  ORIGINATOR_ADDRESS:string;
+  /// ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.
+  ODM_MSG_LINK:string;
+  /// CENTER_NAME: the orbit center, when the message states one.
+  CENTER_NAME:string;
+  /// ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.
+  ACM_DATA_ELEMENTS:string;
+  /// START_TIME: start of the total time span the message covers.
+  START_TIME:string;
+  /// STOP_TIME: end of the total time span the message covers.
+  STOP_TIME:string;
+  /// TAIMUTC_AT_TZERO in seconds, NaN when not stated.
+  TAIMUTC_AT_TZERO:double = nan;
+  /// NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.
+  NEXT_LEAP_EPOCH:string;
+  /// NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.
+  NEXT_LEAP_TAIMUTC:double = nan;
+  /// Attitude state time histories (ATT_START blocks), in message order.
+  ATT_BLOCKS:[ACMAttitudeBlock];
+  /// Covariance time histories (COV_START blocks), in message order.
+  COV_BLOCKS:[ACMCovarianceBlock];
+  /// Maneuver specifications (MAN_START blocks), in message order.
+  MAN_BLOCKS:[ACMManeuverBlock];
+  /// The attitude determination data (AD_START block), when the message has them.
+  DETERMINATION:ACMDetermination;
+  /// Every USER_DEFINED parameter of the message, in message order.
+  USER_DEFINED_PARAMETERS:[ACMUserDefinedParameter];
+}
+
+/// One attitude state time history of an ACM (CCSDS 504.0-B-2 Table 5-4): the
+/// block's keywords, then its data lines as TIMES (the first column of each line,
+/// elapsed seconds from EPOCH_TZERO or an epoch, as written) and VALUES (the other
+/// columns, NUMBER_STATES per line, row by row).
+table ACMAttitudeBlock {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// ATT_ID.
+  ATT_ID:string;
+  /// ATT_PREV_ID.
+  ATT_PREV_ID:string;
+  /// ATT_BASIS: PREDICTED, DETERMINED_GND, DETERMINED_OBC or SIMULATED.
+  ATT_BASIS:string;
+  /// ATT_BASIS_ID.
+  ATT_BASIS_ID:string;
+  /// REF_FRAME_A: the frame the transformation starts from.
+  REF_FRAME_A:string;
+  /// REF_FRAME_B: the frame the transformation ends in.
+  REF_FRAME_B:string;
+  /// NUMBER_STATES: the data columns on each line (attitude, then rate).
+  NUMBER_STATES:uint;
+  /// ATT_TYPE: QUATERNION, EULER_ANGLES, DCM or ANGVEL.
+  ATT_TYPE:string;
+  /// EULER_ROT_SEQ, when ATT_TYPE is EULER_ANGLES.
+  EULER_ROT_SEQ:string;
+  /// RATE_TYPE: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS, when the lines carry rates.
+  RATE_TYPE:string;
+  /// The first column of each data line, as written.
+  TIMES:[string];
+  /// The other columns of the data lines, NUMBER_STATES per line.
+  VALUES:[double];
+}
+
+/// One covariance time history of an ACM (Table 5-6): the diagonal terms of the
+/// covariance on each line, as TIMES and VALUES like ACMAttitudeBlock; every line
+/// has the same number of values.
+table ACMCovarianceBlock {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// COV_ID.
+  COV_ID:string;
+  /// COV_PREV_ID.
+  COV_PREV_ID:string;
+  /// COV_BASIS.
+  COV_BASIS:string;
+  /// COV_BASIS_ID.
+  COV_BASIS_ID:string;
+  /// COV_REF_FRAME.
+  COV_REF_FRAME:string;
+  /// COV_TYPE: ANGLE, ANGLE_GYROBIAS, ANGLE_ANGVEL, QUATERNION, QUATERNION_GYROBIAS
+  /// or QUATERNION_ANGVEL.
+  COV_TYPE:string;
+  /// The first column of each data line, as written.
+  TIMES:[string];
+  /// The diagonal terms of each line, row by row.
+  VALUES:[double];
+}
+
+/// One maneuver specification of an ACM (Table 5-7).
+table ACMManeuverBlock {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// MAN_ID.
+  MAN_ID:string;
+  /// MAN_PREV_ID.
+  MAN_PREV_ID:string;
+  /// MAN_PURPOSE: for example MOM_DESAT.
+  MAN_PURPOSE:string;
+  /// MAN_BEGIN_TIME in seconds from EPOCH_TZERO.
+  MAN_BEGIN_TIME:double;
+  /// MAN_END_TIME in seconds from EPOCH_TZERO; NaN when the message states
+  /// MAN_DURATION instead (a message states one of the two).
+  MAN_END_TIME:double = nan;
+  /// MAN_DURATION in seconds; NaN when the message states MAN_END_TIME instead.
+  MAN_DURATION:double = nan;
+  /// ACTUATOR_USED.
+  ACTUATOR_USED:string;
+  /// TARGET_MOMENTUM: three components in N*m*s; empty when not stated.
+  TARGET_MOMENTUM:[double];
+  /// TARGET_MOM_FRAME.
+  TARGET_MOM_FRAME:string;
+  /// TARGET_ATTITUDE: the target attitude components; empty when not stated.
+  TARGET_ATTITUDE:[double];
+  /// TARGET_SPINRATE in deg/s, NaN when not stated.
+  TARGET_SPINRATE:double = nan;
+}
+
+/// The attitude determination data of an ACM (Table 5-8).
+table ACMDetermination {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// AD_ID.
+  AD_ID:string;
+  /// AD_PREV_ID.
+  AD_PREV_ID:string;
+  /// AD_METHOD: for example EKF, TRIAD or QUEST.
+  AD_METHOD:string;
+  /// ATTITUDE_SOURCE.
+  ATTITUDE_SOURCE:string;
+  /// NUMBER_STATES.
+  NUMBER_STATES:uint;
+  /// ATTITUDE_STATES: QUATERNION, EULER_ANGLES, DCM or ANGVEL.
+  ATTITUDE_STATES:string;
+  /// EULER_ROT_SEQ.
+  EULER_ROT_SEQ:string;
+  /// COV_TYPE.
+  COV_TYPE:string;
+  /// REF_FRAME_A.
+  REF_FRAME_A:string;
+  /// REF_FRAME_B.
+  REF_FRAME_B:string;
+  /// RATE_STATES: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS.
+  RATE_STATES:string;
+  /// SIGMA_U in deg/s**1.5, NaN when not stated.
+  SIGMA_U:double = nan;
+  /// SIGMA_V in deg/s**0.5, NaN when not stated.
+  SIGMA_V:double = nan;
+  /// RATE_PROCESS_NOISE_STDDEV in deg/s**1.5, NaN when not stated.
+  RATE_PROCESS_NOISE_STDDEV:double = nan;
+  /// The sensors, in message order.
+  SENSORS:[ACMSensor];
+}
+
+/// One sensor block of an ACM's attitude determination data.
+table ACMSensor {
+  /// SENSOR_NUMBER; it need not be sequential.
+  SENSOR_NUMBER:uint;
+  /// SENSOR_USED: for example AST, DSS or IMU.
+  SENSOR_USED:string;
+  /// NUMBER_SENSOR_NOISE_COVARIANCE.
+  NUMBER_SENSOR_NOISE_COVARIANCE:uint;
+  /// SENSOR_NOISE_STDDEV in deg: one value per noise covariance.
+  SENSOR_NOISE_STDDEV:[double];
+  /// SENSOR_FREQUENCY in Hz, NaN when not stated.
+  SENSOR_FREQUENCY:double = nan;
+}
+
+/// One USER_DEFINED_x keyword of an ACM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+table ACMUserDefinedParameter {
+  /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  PARAM_NAME:string;
+  /// The value as written
+  PARAM_VALUE:string;
 }
 
 root_type ACM;

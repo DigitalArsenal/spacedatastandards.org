@@ -122,7 +122,10 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \meanElementSource::SGP4;
     }
 
-    /// COMMENT (O)
+    /// COMMENT (O): every COMMENT line of the message, in message order, joined by
+    /// a line feed. A message states comments in its header, its metadata and each
+    /// data group; this field holds them all, so a message written from the record
+    /// states them together in its header.
     public function getCOMMENT()
     {
         $o = $this->__offset(24);
@@ -423,22 +426,60 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+    /// that states its security classification or handling caveat. Not
+    /// CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+    public function getCLASSIFICATION()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+    /// originator makes unique for this message.
+    public function getMESSAGE_ID()
+    {
+        $o = $this->__offset(86);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+    /// message that has no dedicated field above, in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getUSER_DEFINED_PARAMETERS($j)
+    {
+        $o = $this->__offset(88);
+        $obj = new OMMUserDefinedParameter();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUSER_DEFINED_PARAMETERSLength()
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOMM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(40);
+        $builder->StartObject(43);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OMM
      */
-    public static function createOMM(FlatBufferBuilder $builder, $CCSDS_OMM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $TIME_SYSTEM, $MEAN_ELEMENT_THEORY, $COMMENT, $EPOCH, $SEMI_MAJOR_AXIS, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $GM, $MASS, $SOLAR_RAD_AREA, $SOLAR_RAD_COEFF, $DRAG_AREA, $DRAG_COEFF, $EPHEMERIS_TYPE, $CLASSIFICATION_TYPE, $NORAD_CAT_ID, $ELEMENT_SET_NO, $REV_AT_EPOCH, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $COV_REFERENCE_FRAME, $COVARIANCE, $USER_DEFINED_BIP_0044_TYPE, $USER_DEFINED_OBJECT_DESIGNATOR, $USER_DEFINED_EARTH_MODEL, $USER_DEFINED_EPOCH_TIMESTAMP, $USER_DEFINED_MICROSECONDS)
+    public static function createOMM(FlatBufferBuilder $builder, $CCSDS_OMM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $TIME_SYSTEM, $MEAN_ELEMENT_THEORY, $COMMENT, $EPOCH, $SEMI_MAJOR_AXIS, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $GM, $MASS, $SOLAR_RAD_AREA, $SOLAR_RAD_COEFF, $DRAG_AREA, $DRAG_COEFF, $EPHEMERIS_TYPE, $CLASSIFICATION_TYPE, $NORAD_CAT_ID, $ELEMENT_SET_NO, $REV_AT_EPOCH, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $COV_REFERENCE_FRAME, $COVARIANCE, $USER_DEFINED_BIP_0044_TYPE, $USER_DEFINED_OBJECT_DESIGNATOR, $USER_DEFINED_EARTH_MODEL, $USER_DEFINED_EPOCH_TIMESTAMP, $USER_DEFINED_MICROSECONDS, $CLASSIFICATION, $MESSAGE_ID, $USER_DEFINED_PARAMETERS)
     {
-        $builder->startObject(40);
+        $builder->startObject(43);
         self::addCCSDS_OMM_VERS($builder, $CCSDS_OMM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -479,6 +520,9 @@ class OMM extends Table
         self::addUSER_DEFINED_EARTH_MODEL($builder, $USER_DEFINED_EARTH_MODEL);
         self::addUSER_DEFINED_EPOCH_TIMESTAMP($builder, $USER_DEFINED_EPOCH_TIMESTAMP);
         self::addUSER_DEFINED_MICROSECONDS($builder, $USER_DEFINED_MICROSECONDS);
+        self::addCLASSIFICATION($builder, $CLASSIFICATION);
+        self::addMESSAGE_ID($builder, $MESSAGE_ID);
+        self::addUSER_DEFINED_PARAMETERS($builder, $USER_DEFINED_PARAMETERS);
         $o = $builder->endObject();
         return $o;
     }
@@ -905,6 +949,60 @@ class OMM extends Table
     public static function addUSER_DEFINED_MICROSECONDS(FlatBufferBuilder $builder, $USER_DEFINED_MICROSECONDS)
     {
         $builder->addDoubleX(39, $USER_DEFINED_MICROSECONDS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCLASSIFICATION(FlatBufferBuilder $builder, $CLASSIFICATION)
+    {
+        $builder->addOffsetX(40, $CLASSIFICATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMESSAGE_ID(FlatBufferBuilder $builder, $MESSAGE_ID)
+    {
+        $builder->addOffsetX(41, $MESSAGE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addUSER_DEFINED_PARAMETERS(FlatBufferBuilder $builder, $USER_DEFINED_PARAMETERS)
+    {
+        $builder->addOffsetX(42, $USER_DEFINED_PARAMETERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

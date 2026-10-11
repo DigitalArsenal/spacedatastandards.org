@@ -66,10 +66,38 @@ class OPM {
   double get dragArea => DRAG_AREA;
   double get DRAG_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
   double get dragCoeff => DRAG_COEFF;
+  ///  COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+  ///  and data groups, in message order, joined by a line feed.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  ///  CLASSIFICATION of the message: the optional header keyword stating its
+  ///  security classification or handling caveat.
+  String? get CLASSIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  ///  MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  ///  unique for this message.
+  String? get MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
+  String? get messageId => MESSAGE_ID;
+  ///  REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+  String? get REF_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
+  String? get refFrameEpoch => REF_FRAME_EPOCH;
+  ///  COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+  ///  when it is REF_FRAME.
+  String? get COV_REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  String? get covRefFrame => COV_REF_FRAME;
+  ///  Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+  ///  CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+  ///  CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///  CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+  ///  Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+  List<double>? get COVARIANCE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 70);
+  ///  The message's maneuvers, in message order.
+  List<OPMManeuver>? get MANEUVERS => const fb.ListReader<OPMManeuver>(OPMManeuver.reader).vTableGetNullable(_bc, _bcOffset, 72);
+  ///  Every USER_DEFINED_x keyword of the message, in message order.
+  List<OPMUserDefinedParameter>? get USER_DEFINED_PARAMETERS => const fb.ListReader<OPMUserDefinedParameter>(OPMUserDefinedParameter.reader).vTableGetNullable(_bc, _bcOffset, 74);
+  List<OPMUserDefinedParameter>? get userDefinedParameters => USER_DEFINED_PARAMETERS;
 
   @override
   String toString() {
-    return 'OPM{ccsdsOpmVers: ${ccsdsOpmVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, objectId: ${objectId}, centerName: ${centerName}, refFrame: ${refFrame}, timeSystem: ${timeSystem}, EPOCH: ${EPOCH}, X: ${X}, Y: ${Y}, Z: ${Z}, xDot: ${xDot}, yDot: ${yDot}, zDot: ${zDot}, semiMajorAxis: ${semiMajorAxis}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, trueAnomaly: ${trueAnomaly}, meanAnomaly: ${meanAnomaly}, GM: ${GM}, MASS: ${MASS}, solarRadArea: ${solarRadArea}, solarRadCoeff: ${solarRadCoeff}, dragArea: ${dragArea}, dragCoeff: ${dragCoeff}}';
+    return 'OPM{ccsdsOpmVers: ${ccsdsOpmVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, objectId: ${objectId}, centerName: ${centerName}, refFrame: ${refFrame}, timeSystem: ${timeSystem}, EPOCH: ${EPOCH}, X: ${X}, Y: ${Y}, Z: ${Z}, xDot: ${xDot}, yDot: ${yDot}, zDot: ${zDot}, semiMajorAxis: ${semiMajorAxis}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, trueAnomaly: ${trueAnomaly}, meanAnomaly: ${meanAnomaly}, GM: ${GM}, MASS: ${MASS}, solarRadArea: ${solarRadArea}, solarRadCoeff: ${solarRadCoeff}, dragArea: ${dragArea}, dragCoeff: ${dragCoeff}, COMMENT: ${COMMENT}, CLASSIFICATION: ${CLASSIFICATION}, messageId: ${messageId}, refFrameEpoch: ${refFrameEpoch}, covRefFrame: ${covRefFrame}, COVARIANCE: ${COVARIANCE}, MANEUVERS: ${MANEUVERS}, userDefinedParameters: ${userDefinedParameters}}';
   }
 }
 
@@ -87,7 +115,7 @@ class OPMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(28);
+    fbBuilder.startTable(36);
   }
 
   int addCcsdsOpmVersOffset(int? offset) {
@@ -202,6 +230,38 @@ class OPMBuilder {
     fbBuilder.addFloat64(27, DRAG_COEFF);
     return fbBuilder.offset;
   }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addClassificationOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addRefFrameEpochOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addCovRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addCovarianceOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addManeuversOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addUserDefinedParametersOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -237,6 +297,14 @@ class OPMObjectBuilder extends fb.ObjectBuilder {
   final double? _SOLAR_RAD_COEFF;
   final double? _DRAG_AREA;
   final double? _DRAG_COEFF;
+  final String? _COMMENT;
+  final String? _CLASSIFICATION;
+  final String? _MESSAGE_ID;
+  final String? _REF_FRAME_EPOCH;
+  final String? _COV_REF_FRAME;
+  final List<double>? _COVARIANCE;
+  final List<OPMManeuverObjectBuilder>? _MANEUVERS;
+  final List<OPMUserDefinedParameterObjectBuilder>? _USER_DEFINED_PARAMETERS;
 
   OPMObjectBuilder({
     String? CCSDS_OPM_VERS,
@@ -286,6 +354,18 @@ class OPMObjectBuilder extends fb.ObjectBuilder {
     double? dragArea,
     double? DRAG_COEFF,
     double? dragCoeff,
+    String? COMMENT,
+    String? CLASSIFICATION,
+    String? MESSAGE_ID,
+    String? messageId,
+    String? REF_FRAME_EPOCH,
+    String? refFrameEpoch,
+    String? COV_REF_FRAME,
+    String? covRefFrame,
+    List<double>? COVARIANCE,
+    List<OPMManeuverObjectBuilder>? MANEUVERS,
+    List<OPMUserDefinedParameterObjectBuilder>? USER_DEFINED_PARAMETERS,
+    List<OPMUserDefinedParameterObjectBuilder>? userDefinedParameters,
   })
       : _CCSDS_OPM_VERS = ccsdsOpmVers ?? CCSDS_OPM_VERS,
         _CREATION_DATE = creationDate ?? CREATION_DATE,
@@ -314,7 +394,15 @@ class OPMObjectBuilder extends fb.ObjectBuilder {
         _SOLAR_RAD_AREA = solarRadArea ?? SOLAR_RAD_AREA,
         _SOLAR_RAD_COEFF = solarRadCoeff ?? SOLAR_RAD_COEFF,
         _DRAG_AREA = dragArea ?? DRAG_AREA,
-        _DRAG_COEFF = dragCoeff ?? DRAG_COEFF;
+        _DRAG_COEFF = dragCoeff ?? DRAG_COEFF,
+        _COMMENT = COMMENT,
+        _CLASSIFICATION = CLASSIFICATION,
+        _MESSAGE_ID = messageId ?? MESSAGE_ID,
+        _REF_FRAME_EPOCH = refFrameEpoch ?? REF_FRAME_EPOCH,
+        _COV_REF_FRAME = covRefFrame ?? COV_REF_FRAME,
+        _COVARIANCE = COVARIANCE,
+        _MANEUVERS = MANEUVERS,
+        _USER_DEFINED_PARAMETERS = userDefinedParameters ?? USER_DEFINED_PARAMETERS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -337,7 +425,23 @@ class OPMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_TIME_SYSTEM!);
     final int? EPOCHOffset = _EPOCH == null ? null
         : fbBuilder.writeString(_EPOCH!);
-    fbBuilder.startTable(28);
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? CLASSIFICATIONOffset = _CLASSIFICATION == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION!);
+    final int? MESSAGE_IDOffset = _MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_MESSAGE_ID!);
+    final int? REF_FRAME_EPOCHOffset = _REF_FRAME_EPOCH == null ? null
+        : fbBuilder.writeString(_REF_FRAME_EPOCH!);
+    final int? COV_REF_FRAMEOffset = _COV_REF_FRAME == null ? null
+        : fbBuilder.writeString(_COV_REF_FRAME!);
+    final int? COVARIANCEOffset = _COVARIANCE == null ? null
+        : fbBuilder.writeListFloat64(_COVARIANCE!);
+    final int? MANEUVERSOffset = _MANEUVERS == null ? null
+        : fbBuilder.writeList(_MANEUVERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? USER_DEFINED_PARAMETERSOffset = _USER_DEFINED_PARAMETERS == null ? null
+        : fbBuilder.writeList(_USER_DEFINED_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(36);
     fbBuilder.addOffset(0, CCSDS_OPM_VERSOffset);
     fbBuilder.addOffset(1, CREATION_DATEOffset);
     fbBuilder.addOffset(2, ORIGINATOROffset);
@@ -366,6 +470,269 @@ class OPMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(25, _SOLAR_RAD_COEFF);
     fbBuilder.addFloat64(26, _DRAG_AREA);
     fbBuilder.addFloat64(27, _DRAG_COEFF);
+    fbBuilder.addOffset(28, COMMENTOffset);
+    fbBuilder.addOffset(29, CLASSIFICATIONOffset);
+    fbBuilder.addOffset(30, MESSAGE_IDOffset);
+    fbBuilder.addOffset(31, REF_FRAME_EPOCHOffset);
+    fbBuilder.addOffset(32, COV_REF_FRAMEOffset);
+    fbBuilder.addOffset(33, COVARIANCEOffset);
+    fbBuilder.addOffset(34, MANEUVERSOffset);
+    fbBuilder.addOffset(35, USER_DEFINED_PARAMETERSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One maneuver of an OPM (CCSDS 502.0-B-3 Table 3-7).
+class OPMManeuver {
+  OPMManeuver._(this._bc, this._bcOffset);
+  factory OPMManeuver(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OPMManeuver> reader = _OPMManeuverReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  COMMENT lines of this maneuver, joined by a line feed.
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  MAN_EPOCH_IGNITION: epoch of ignition.
+  String? get MAN_EPOCH_IGNITION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get manEpochIgnition => MAN_EPOCH_IGNITION;
+  ///  MAN_DURATION: duration of the burn in seconds; zero for an impulsive maneuver.
+  double get MAN_DURATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get manDuration => MAN_DURATION;
+  ///  MAN_DELTA_MASS: mass change during the maneuver in kg, negative or zero.
+  double get MAN_DELTA_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get manDeltaMass => MAN_DELTA_MASS;
+  ///  MAN_REF_FRAME: frame of MAN_DV_1..3 (for example RTN, TNW, or REF_FRAME's).
+  String? get MAN_REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get manRefFrame => MAN_REF_FRAME;
+  ///  MAN_DV_1: first component of the velocity increment in km/s.
+  double get MAN_DV_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get manDv1 => MAN_DV_1;
+  ///  MAN_DV_2: second component of the velocity increment in km/s.
+  double get MAN_DV_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get manDv2 => MAN_DV_2;
+  ///  MAN_DV_3: third component of the velocity increment in km/s.
+  double get MAN_DV_3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get manDv3 => MAN_DV_3;
+
+  @override
+  String toString() {
+    return 'OPMManeuver{COMMENT: ${COMMENT}, manEpochIgnition: ${manEpochIgnition}, manDuration: ${manDuration}, manDeltaMass: ${manDeltaMass}, manRefFrame: ${manRefFrame}, manDv1: ${manDv1}, manDv2: ${manDv2}, manDv3: ${manDv3}}';
+  }
+}
+
+class _OPMManeuverReader extends fb.TableReader<OPMManeuver> {
+  const _OPMManeuverReader();
+
+  @override
+  OPMManeuver createObject(fb.BufferContext bc, int offset) =>
+    OPMManeuver._(bc, offset);
+}
+
+class OPMManeuverBuilder {
+  OPMManeuverBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addManEpochIgnitionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addManDuration(double? MAN_DURATION) {
+    fbBuilder.addFloat64(2, MAN_DURATION);
+    return fbBuilder.offset;
+  }
+  int addManDeltaMass(double? MAN_DELTA_MASS) {
+    fbBuilder.addFloat64(3, MAN_DELTA_MASS);
+    return fbBuilder.offset;
+  }
+  int addManRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addManDv1(double? MAN_DV_1) {
+    fbBuilder.addFloat64(5, MAN_DV_1);
+    return fbBuilder.offset;
+  }
+  int addManDv2(double? MAN_DV_2) {
+    fbBuilder.addFloat64(6, MAN_DV_2);
+    return fbBuilder.offset;
+  }
+  int addManDv3(double? MAN_DV_3) {
+    fbBuilder.addFloat64(7, MAN_DV_3);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OPMManeuverObjectBuilder extends fb.ObjectBuilder {
+  final String? _COMMENT;
+  final String? _MAN_EPOCH_IGNITION;
+  final double? _MAN_DURATION;
+  final double? _MAN_DELTA_MASS;
+  final String? _MAN_REF_FRAME;
+  final double? _MAN_DV_1;
+  final double? _MAN_DV_2;
+  final double? _MAN_DV_3;
+
+  OPMManeuverObjectBuilder({
+    String? COMMENT,
+    String? MAN_EPOCH_IGNITION,
+    String? manEpochIgnition,
+    double? MAN_DURATION,
+    double? manDuration,
+    double? MAN_DELTA_MASS,
+    double? manDeltaMass,
+    String? MAN_REF_FRAME,
+    String? manRefFrame,
+    double? MAN_DV_1,
+    double? manDv1,
+    double? MAN_DV_2,
+    double? manDv2,
+    double? MAN_DV_3,
+    double? manDv3,
+  })
+      : _COMMENT = COMMENT,
+        _MAN_EPOCH_IGNITION = manEpochIgnition ?? MAN_EPOCH_IGNITION,
+        _MAN_DURATION = manDuration ?? MAN_DURATION,
+        _MAN_DELTA_MASS = manDeltaMass ?? MAN_DELTA_MASS,
+        _MAN_REF_FRAME = manRefFrame ?? MAN_REF_FRAME,
+        _MAN_DV_1 = manDv1 ?? MAN_DV_1,
+        _MAN_DV_2 = manDv2 ?? MAN_DV_2,
+        _MAN_DV_3 = manDv3 ?? MAN_DV_3;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? MAN_EPOCH_IGNITIONOffset = _MAN_EPOCH_IGNITION == null ? null
+        : fbBuilder.writeString(_MAN_EPOCH_IGNITION!);
+    final int? MAN_REF_FRAMEOffset = _MAN_REF_FRAME == null ? null
+        : fbBuilder.writeString(_MAN_REF_FRAME!);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, COMMENTOffset);
+    fbBuilder.addOffset(1, MAN_EPOCH_IGNITIONOffset);
+    fbBuilder.addFloat64(2, _MAN_DURATION);
+    fbBuilder.addFloat64(3, _MAN_DELTA_MASS);
+    fbBuilder.addOffset(4, MAN_REF_FRAMEOffset);
+    fbBuilder.addFloat64(5, _MAN_DV_1);
+    fbBuilder.addFloat64(6, _MAN_DV_2);
+    fbBuilder.addFloat64(7, _MAN_DV_3);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One USER_DEFINED_x keyword of an OPM, or one USER_DEFINED element of its XML
+///  form: the parameter name (the x) and the value as written.
+class OPMUserDefinedParameter {
+  OPMUserDefinedParameter._(this._bc, this._bcOffset);
+  factory OPMUserDefinedParameter(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OPMUserDefinedParameter> reader = _OPMUserDefinedParameterReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  String? get PARAM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get paramName => PARAM_NAME;
+  ///  The value as written
+  String? get PARAM_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get paramValue => PARAM_VALUE;
+
+  @override
+  String toString() {
+    return 'OPMUserDefinedParameter{paramName: ${paramName}, paramValue: ${paramValue}}';
+  }
+}
+
+class _OPMUserDefinedParameterReader extends fb.TableReader<OPMUserDefinedParameter> {
+  const _OPMUserDefinedParameterReader();
+
+  @override
+  OPMUserDefinedParameter createObject(fb.BufferContext bc, int offset) =>
+    OPMUserDefinedParameter._(bc, offset);
+}
+
+class OPMUserDefinedParameterBuilder {
+  OPMUserDefinedParameterBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addParamNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addParamValueOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OPMUserDefinedParameterObjectBuilder extends fb.ObjectBuilder {
+  final String? _PARAM_NAME;
+  final String? _PARAM_VALUE;
+
+  OPMUserDefinedParameterObjectBuilder({
+    String? PARAM_NAME,
+    String? paramName,
+    String? PARAM_VALUE,
+    String? paramValue,
+  })
+      : _PARAM_NAME = paramName ?? PARAM_NAME,
+        _PARAM_VALUE = paramValue ?? PARAM_VALUE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PARAM_NAMEOffset = _PARAM_NAME == null ? null
+        : fbBuilder.writeString(_PARAM_NAME!);
+    final int? PARAM_VALUEOffset = _PARAM_VALUE == null ? null
+        : fbBuilder.writeString(_PARAM_VALUE!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, PARAM_NAMEOffset);
+    fbBuilder.addOffset(1, PARAM_VALUEOffset);
     return fbBuilder.endTable();
   }
 

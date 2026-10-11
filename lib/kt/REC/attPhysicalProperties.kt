@@ -153,6 +153,21 @@ class attPhysicalProperties : Table() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+     * joined by a line feed.
+     */
+    val comment : String?
+        get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsattPhysicalProperties(_bb: ByteBuffer): attPhysicalProperties = getRootAsattPhysicalProperties(_bb, attPhysicalProperties())
@@ -160,8 +175,8 @@ class attPhysicalProperties : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createattPhysicalProperties(builder: FlatBufferBuilder, dragCoeff: Double, wetMass: Double, dryMass: Double, cpRefFrameOffset: Int, cpX: Double, cpY: Double, cpZ: Double, inertiaRefFrameOffset: Int, ixx: Double, iyy: Double, izz: Double, ixy: Double, ixz: Double, iyz: Double) : Int {
-            builder.startTable(14)
+        fun createattPhysicalProperties(builder: FlatBufferBuilder, dragCoeff: Double, wetMass: Double, dryMass: Double, cpRefFrameOffset: Int, cpX: Double, cpY: Double, cpZ: Double, inertiaRefFrameOffset: Int, ixx: Double, iyy: Double, izz: Double, ixy: Double, ixz: Double, iyz: Double, commentOffset: Int) : Int {
+            builder.startTable(15)
             addIYZ(builder, iyz)
             addIXZ(builder, ixz)
             addIXY(builder, ixy)
@@ -174,11 +189,12 @@ class attPhysicalProperties : Table() {
             addDRYMASS(builder, dryMass)
             addWETMASS(builder, wetMass)
             addDRAGCOEFF(builder, dragCoeff)
+            addCOMMENT(builder, commentOffset)
             addINERTIAREFFRAME(builder, inertiaRefFrameOffset)
             addCPREFFRAME(builder, cpRefFrameOffset)
             return endattPhysicalProperties(builder)
         }
-        fun startattPhysicalProperties(builder: FlatBufferBuilder) = builder.startTable(14)
+        fun startattPhysicalProperties(builder: FlatBufferBuilder) = builder.startTable(15)
         fun addDRAGCOEFF(builder: FlatBufferBuilder, dragCoeff: Double) = builder.addDouble(0, dragCoeff, 0.0)
         fun addWETMASS(builder: FlatBufferBuilder, wetMass: Double) = builder.addDouble(1, wetMass, 0.0)
         fun addDRYMASS(builder: FlatBufferBuilder, dryMass: Double) = builder.addDouble(2, dryMass, 0.0)
@@ -193,6 +209,7 @@ class attPhysicalProperties : Table() {
         fun addIXY(builder: FlatBufferBuilder, ixy: Double) = builder.addDouble(11, ixy, 0.0)
         fun addIXZ(builder: FlatBufferBuilder, ixz: Double) = builder.addDouble(12, ixz, 0.0)
         fun addIYZ(builder: FlatBufferBuilder, iyz: Double) = builder.addDouble(13, iyz, 0.0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(14, comment, 0)
         fun endattPhysicalProperties(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

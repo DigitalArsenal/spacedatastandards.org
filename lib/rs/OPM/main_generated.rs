@@ -48,6 +48,14 @@ impl<'a> OPM<'a> {
     pub const VT_SOLAR_RAD_COEFF: ::flatbuffers::VOffsetT = 54;
     pub const VT_DRAG_AREA: ::flatbuffers::VOffsetT = 56;
     pub const VT_DRAG_COEFF: ::flatbuffers::VOffsetT = 58;
+    pub const VT_COMMENT: ::flatbuffers::VOffsetT = 60;
+    pub const VT_CLASSIFICATION: ::flatbuffers::VOffsetT = 62;
+    pub const VT_MESSAGE_ID: ::flatbuffers::VOffsetT = 64;
+    pub const VT_REF_FRAME_EPOCH: ::flatbuffers::VOffsetT = 66;
+    pub const VT_COV_REF_FRAME: ::flatbuffers::VOffsetT = 68;
+    pub const VT_COVARIANCE: ::flatbuffers::VOffsetT = 70;
+    pub const VT_MANEUVERS: ::flatbuffers::VOffsetT = 72;
+    pub const VT_USER_DEFINED_PARAMETERS: ::flatbuffers::VOffsetT = 74;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -79,6 +87,14 @@ impl<'a> OPM<'a> {
         builder.add_Z(args.Z);
         builder.add_Y(args.Y);
         builder.add_X(args.X);
+        if let Some(x) = args.USER_DEFINED_PARAMETERS { builder.add_USER_DEFINED_PARAMETERS(x); }
+        if let Some(x) = args.MANEUVERS { builder.add_MANEUVERS(x); }
+        if let Some(x) = args.COVARIANCE { builder.add_COVARIANCE(x); }
+        if let Some(x) = args.COV_REF_FRAME { builder.add_COV_REF_FRAME(x); }
+        if let Some(x) = args.REF_FRAME_EPOCH { builder.add_REF_FRAME_EPOCH(x); }
+        if let Some(x) = args.MESSAGE_ID { builder.add_MESSAGE_ID(x); }
+        if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
+        if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
         if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
         if let Some(x) = args.TIME_SYSTEM { builder.add_TIME_SYSTEM(x); }
         if let Some(x) = args.REF_FRAME { builder.add_REF_FRAME(x); }
@@ -138,6 +154,30 @@ impl<'a> OPM<'a> {
         let SOLAR_RAD_COEFF = self.SOLAR_RAD_COEFF();
         let DRAG_AREA = self.DRAG_AREA();
         let DRAG_COEFF = self.DRAG_COEFF();
+        let COMMENT = self.COMMENT().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let CLASSIFICATION = self.CLASSIFICATION().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MESSAGE_ID = self.MESSAGE_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let REF_FRAME_EPOCH = self.REF_FRAME_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_REF_FRAME = self.COV_REF_FRAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COVARIANCE = self.COVARIANCE().map(|x| {
+            x.into_iter().collect()
+        });
+        let MANEUVERS = self.MANEUVERS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        let USER_DEFINED_PARAMETERS = self.USER_DEFINED_PARAMETERS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         OPMT {
             CCSDS_OPM_VERS,
             CREATION_DATE,
@@ -167,6 +207,14 @@ impl<'a> OPM<'a> {
             SOLAR_RAD_COEFF,
             DRAG_AREA,
             DRAG_COEFF,
+            COMMENT,
+            CLASSIFICATION,
+            MESSAGE_ID,
+            REF_FRAME_EPOCH,
+            COV_REF_FRAME,
+            COVARIANCE,
+            MANEUVERS,
+            USER_DEFINED_PARAMETERS,
         }
     }
 
@@ -393,6 +441,86 @@ impl<'a> OPM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(OPM::VT_DRAG_COEFF, Some(0.0)).unwrap()}
     }
+
+    /// COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+    /// and data groups, in message order, joined by a line feed.
+    #[inline]
+    pub fn COMMENT(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OPM::VT_COMMENT, None)}
+    }
+
+    /// CLASSIFICATION of the message: the optional header keyword stating its
+    /// security classification or handling caveat.
+    #[inline]
+    pub fn CLASSIFICATION(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OPM::VT_CLASSIFICATION, None)}
+    }
+
+    /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+    /// unique for this message.
+    #[inline]
+    pub fn MESSAGE_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OPM::VT_MESSAGE_ID, None)}
+    }
+
+    /// REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+    #[inline]
+    pub fn REF_FRAME_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OPM::VT_REF_FRAME_EPOCH, None)}
+    }
+
+    /// COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+    /// when it is REF_FRAME.
+    #[inline]
+    pub fn COV_REF_FRAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OPM::VT_COV_REF_FRAME, None)}
+    }
+
+    /// Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+    /// CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+    /// CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+    /// CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+    /// Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+    #[inline]
+    pub fn COVARIANCE(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OPM::VT_COVARIANCE, None)}
+    }
+
+    /// The message's maneuvers, in message order.
+    #[inline]
+    pub fn MANEUVERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OPMManeuver<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OPMManeuver>>>>(OPM::VT_MANEUVERS, None)}
+    }
+
+    /// Every USER_DEFINED_x keyword of the message, in message order.
+    #[inline]
+    pub fn USER_DEFINED_PARAMETERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OPMUserDefinedParameter<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OPMUserDefinedParameter>>>>(OPM::VT_USER_DEFINED_PARAMETERS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OPM<'_> {
@@ -429,6 +557,14 @@ impl ::flatbuffers::Verifiable for OPM<'_> {
             .visit_field::<f64>("SOLAR_RAD_COEFF", Self::VT_SOLAR_RAD_COEFF, false)?
             .visit_field::<f64>("DRAG_AREA", Self::VT_DRAG_AREA, false)?
             .visit_field::<f64>("DRAG_COEFF", Self::VT_DRAG_COEFF, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION", Self::VT_CLASSIFICATION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_ID", Self::VT_MESSAGE_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REF_FRAME_EPOCH", Self::VT_REF_FRAME_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_REF_FRAME", Self::VT_COV_REF_FRAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COVARIANCE", Self::VT_COVARIANCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OPMManeuver>>>>("MANEUVERS", Self::VT_MANEUVERS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OPMUserDefinedParameter>>>>("USER_DEFINED_PARAMETERS", Self::VT_USER_DEFINED_PARAMETERS, false)?
             .finish();
         Ok(())
     }
@@ -463,6 +599,14 @@ pub struct OPMArgs<'a> {
     pub SOLAR_RAD_COEFF: f64,
     pub DRAG_AREA: f64,
     pub DRAG_COEFF: f64,
+    pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CLASSIFICATION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REF_FRAME_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_REF_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COVARIANCE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub MANEUVERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OPMManeuver<'a>>>>>,
+    pub USER_DEFINED_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OPMUserDefinedParameter<'a>>>>>,
 }
 
 impl<'a> Default for OPMArgs<'a> {
@@ -497,6 +641,14 @@ impl<'a> Default for OPMArgs<'a> {
             SOLAR_RAD_COEFF: 0.0,
             DRAG_AREA: 0.0,
             DRAG_COEFF: 0.0,
+            COMMENT: None,
+            CLASSIFICATION: None,
+            MESSAGE_ID: None,
+            REF_FRAME_EPOCH: None,
+            COV_REF_FRAME: None,
+            COVARIANCE: None,
+            MANEUVERS: None,
+            USER_DEFINED_PARAMETERS: None,
         }
     }
 }
@@ -648,6 +800,46 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OPMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPM::VT_COMMENT, COMMENT);
+    }
+
+    #[inline]
+    pub fn add_CLASSIFICATION(&mut self, CLASSIFICATION: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPM::VT_CLASSIFICATION, CLASSIFICATION);
+    }
+
+    #[inline]
+    pub fn add_MESSAGE_ID(&mut self, MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPM::VT_MESSAGE_ID, MESSAGE_ID);
+    }
+
+    #[inline]
+    pub fn add_REF_FRAME_EPOCH(&mut self, REF_FRAME_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPM::VT_REF_FRAME_EPOCH, REF_FRAME_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_COV_REF_FRAME(&mut self, COV_REF_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPM::VT_COV_REF_FRAME, COV_REF_FRAME);
+    }
+
+    #[inline]
+    pub fn add_COVARIANCE(&mut self, COVARIANCE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPM::VT_COVARIANCE, COVARIANCE);
+    }
+
+    #[inline]
+    pub fn add_MANEUVERS(&mut self, MANEUVERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<OPMManeuver<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPM::VT_MANEUVERS, MANEUVERS);
+    }
+
+    #[inline]
+    pub fn add_USER_DEFINED_PARAMETERS(&mut self, USER_DEFINED_PARAMETERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<OPMUserDefinedParameter<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPM::VT_USER_DEFINED_PARAMETERS, USER_DEFINED_PARAMETERS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OPMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OPMBuilder {
@@ -694,6 +886,14 @@ impl ::core::fmt::Debug for OPM<'_> {
         ds.field("SOLAR_RAD_COEFF", &self.SOLAR_RAD_COEFF());
         ds.field("DRAG_AREA", &self.DRAG_AREA());
         ds.field("DRAG_COEFF", &self.DRAG_COEFF());
+        ds.field("COMMENT", &self.COMMENT());
+        ds.field("CLASSIFICATION", &self.CLASSIFICATION());
+        ds.field("MESSAGE_ID", &self.MESSAGE_ID());
+        ds.field("REF_FRAME_EPOCH", &self.REF_FRAME_EPOCH());
+        ds.field("COV_REF_FRAME", &self.COV_REF_FRAME());
+        ds.field("COVARIANCE", &self.COVARIANCE());
+        ds.field("MANEUVERS", &self.MANEUVERS());
+        ds.field("USER_DEFINED_PARAMETERS", &self.USER_DEFINED_PARAMETERS());
         ds.finish()
     }
 }
@@ -729,6 +929,14 @@ pub struct OPMT {
     pub SOLAR_RAD_COEFF: f64,
     pub DRAG_AREA: f64,
     pub DRAG_COEFF: f64,
+    pub COMMENT: Option<alloc::string::String>,
+    pub CLASSIFICATION: Option<alloc::string::String>,
+    pub MESSAGE_ID: Option<alloc::string::String>,
+    pub REF_FRAME_EPOCH: Option<alloc::string::String>,
+    pub COV_REF_FRAME: Option<alloc::string::String>,
+    pub COVARIANCE: Option<alloc::vec::Vec<f64>>,
+    pub MANEUVERS: Option<alloc::vec::Vec<OPMManeuverT>>,
+    pub USER_DEFINED_PARAMETERS: Option<alloc::vec::Vec<OPMUserDefinedParameterT>>,
 }
 
 impl Default for OPMT {
@@ -762,6 +970,14 @@ impl Default for OPMT {
             SOLAR_RAD_COEFF: 0.0,
             DRAG_AREA: 0.0,
             DRAG_COEFF: 0.0,
+            COMMENT: None,
+            CLASSIFICATION: None,
+            MESSAGE_ID: None,
+            REF_FRAME_EPOCH: None,
+            COV_REF_FRAME: None,
+            COVARIANCE: None,
+            MANEUVERS: None,
+            USER_DEFINED_PARAMETERS: None,
         }
     }
 }
@@ -817,6 +1033,30 @@ impl OPMT {
         let SOLAR_RAD_COEFF = self.SOLAR_RAD_COEFF;
         let DRAG_AREA = self.DRAG_AREA;
         let DRAG_COEFF = self.DRAG_COEFF;
+        let COMMENT = self.COMMENT.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let CLASSIFICATION = self.CLASSIFICATION.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MESSAGE_ID = self.MESSAGE_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let REF_FRAME_EPOCH = self.REF_FRAME_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_REF_FRAME = self.COV_REF_FRAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COVARIANCE = self.COVARIANCE.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let MANEUVERS = self.MANEUVERS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        let USER_DEFINED_PARAMETERS = self.USER_DEFINED_PARAMETERS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
         OPM::create(_fbb, &OPMArgs{
             CCSDS_OPM_VERS,
             CREATION_DATE,
@@ -846,6 +1086,519 @@ impl OPMT {
             SOLAR_RAD_COEFF,
             DRAG_AREA,
             DRAG_COEFF,
+            COMMENT,
+            CLASSIFICATION,
+            MESSAGE_ID,
+            REF_FRAME_EPOCH,
+            COV_REF_FRAME,
+            COVARIANCE,
+            MANEUVERS,
+            USER_DEFINED_PARAMETERS,
+        })
+    }
+}
+
+pub enum OPMManeuverOffset {}
+
+/// One maneuver of an OPM (CCSDS 502.0-B-3 Table 3-7).
+#[derive(Copy, Clone, PartialEq)]
+pub struct OPMManeuver<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OPMManeuver<'a> {
+    type Inner = OPMManeuver<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OPMManeuver<'a> {
+    pub const VT_COMMENT: ::flatbuffers::VOffsetT = 4;
+    pub const VT_MAN_EPOCH_IGNITION: ::flatbuffers::VOffsetT = 6;
+    pub const VT_MAN_DURATION: ::flatbuffers::VOffsetT = 8;
+    pub const VT_MAN_DELTA_MASS: ::flatbuffers::VOffsetT = 10;
+    pub const VT_MAN_REF_FRAME: ::flatbuffers::VOffsetT = 12;
+    pub const VT_MAN_DV_1: ::flatbuffers::VOffsetT = 14;
+    pub const VT_MAN_DV_2: ::flatbuffers::VOffsetT = 16;
+    pub const VT_MAN_DV_3: ::flatbuffers::VOffsetT = 18;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OPMManeuver { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OPMManeuverArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OPMManeuver<'bldr>> {
+        let mut builder = OPMManeuverBuilder::new(_fbb);
+        builder.add_MAN_DV_3(args.MAN_DV_3);
+        builder.add_MAN_DV_2(args.MAN_DV_2);
+        builder.add_MAN_DV_1(args.MAN_DV_1);
+        builder.add_MAN_DELTA_MASS(args.MAN_DELTA_MASS);
+        builder.add_MAN_DURATION(args.MAN_DURATION);
+        if let Some(x) = args.MAN_REF_FRAME { builder.add_MAN_REF_FRAME(x); }
+        if let Some(x) = args.MAN_EPOCH_IGNITION { builder.add_MAN_EPOCH_IGNITION(x); }
+        if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OPMManeuverT {
+        let COMMENT = self.COMMENT().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MAN_EPOCH_IGNITION = self.MAN_EPOCH_IGNITION().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MAN_DURATION = self.MAN_DURATION();
+        let MAN_DELTA_MASS = self.MAN_DELTA_MASS();
+        let MAN_REF_FRAME = self.MAN_REF_FRAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MAN_DV_1 = self.MAN_DV_1();
+        let MAN_DV_2 = self.MAN_DV_2();
+        let MAN_DV_3 = self.MAN_DV_3();
+        OPMManeuverT {
+            COMMENT,
+            MAN_EPOCH_IGNITION,
+            MAN_DURATION,
+            MAN_DELTA_MASS,
+            MAN_REF_FRAME,
+            MAN_DV_1,
+            MAN_DV_2,
+            MAN_DV_3,
+        }
+    }
+
+    /// COMMENT lines of this maneuver, joined by a line feed.
+    #[inline]
+    pub fn COMMENT(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OPMManeuver::VT_COMMENT, None)}
+    }
+
+    /// MAN_EPOCH_IGNITION: epoch of ignition.
+    #[inline]
+    pub fn MAN_EPOCH_IGNITION(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OPMManeuver::VT_MAN_EPOCH_IGNITION, None)}
+    }
+
+    /// MAN_DURATION: duration of the burn in seconds; zero for an impulsive maneuver.
+    #[inline]
+    pub fn MAN_DURATION(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OPMManeuver::VT_MAN_DURATION, Some(0.0)).unwrap()}
+    }
+
+    /// MAN_DELTA_MASS: mass change during the maneuver in kg, negative or zero.
+    #[inline]
+    pub fn MAN_DELTA_MASS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OPMManeuver::VT_MAN_DELTA_MASS, Some(0.0)).unwrap()}
+    }
+
+    /// MAN_REF_FRAME: frame of MAN_DV_1..3 (for example RTN, TNW, or REF_FRAME's).
+    #[inline]
+    pub fn MAN_REF_FRAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OPMManeuver::VT_MAN_REF_FRAME, None)}
+    }
+
+    /// MAN_DV_1: first component of the velocity increment in km/s.
+    #[inline]
+    pub fn MAN_DV_1(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OPMManeuver::VT_MAN_DV_1, Some(0.0)).unwrap()}
+    }
+
+    /// MAN_DV_2: second component of the velocity increment in km/s.
+    #[inline]
+    pub fn MAN_DV_2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OPMManeuver::VT_MAN_DV_2, Some(0.0)).unwrap()}
+    }
+
+    /// MAN_DV_3: third component of the velocity increment in km/s.
+    #[inline]
+    pub fn MAN_DV_3(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OPMManeuver::VT_MAN_DV_3, Some(0.0)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OPMManeuver<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_EPOCH_IGNITION", Self::VT_MAN_EPOCH_IGNITION, false)?
+            .visit_field::<f64>("MAN_DURATION", Self::VT_MAN_DURATION, false)?
+            .visit_field::<f64>("MAN_DELTA_MASS", Self::VT_MAN_DELTA_MASS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MAN_REF_FRAME", Self::VT_MAN_REF_FRAME, false)?
+            .visit_field::<f64>("MAN_DV_1", Self::VT_MAN_DV_1, false)?
+            .visit_field::<f64>("MAN_DV_2", Self::VT_MAN_DV_2, false)?
+            .visit_field::<f64>("MAN_DV_3", Self::VT_MAN_DV_3, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OPMManeuverArgs<'a> {
+    pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_EPOCH_IGNITION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_DURATION: f64,
+    pub MAN_DELTA_MASS: f64,
+    pub MAN_REF_FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MAN_DV_1: f64,
+    pub MAN_DV_2: f64,
+    pub MAN_DV_3: f64,
+}
+
+impl<'a> Default for OPMManeuverArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OPMManeuverArgs {
+            COMMENT: None,
+            MAN_EPOCH_IGNITION: None,
+            MAN_DURATION: 0.0,
+            MAN_DELTA_MASS: 0.0,
+            MAN_REF_FRAME: None,
+            MAN_DV_1: 0.0,
+            MAN_DV_2: 0.0,
+            MAN_DV_3: 0.0,
+        }
+    }
+}
+
+pub struct OPMManeuverBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OPMManeuverBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPMManeuver::VT_COMMENT, COMMENT);
+    }
+
+    #[inline]
+    pub fn add_MAN_EPOCH_IGNITION(&mut self, MAN_EPOCH_IGNITION: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPMManeuver::VT_MAN_EPOCH_IGNITION, MAN_EPOCH_IGNITION);
+    }
+
+    #[inline]
+    pub fn add_MAN_DURATION(&mut self, MAN_DURATION: f64) {
+        self.fbb_.push_slot::<f64>(OPMManeuver::VT_MAN_DURATION, MAN_DURATION, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MAN_DELTA_MASS(&mut self, MAN_DELTA_MASS: f64) {
+        self.fbb_.push_slot::<f64>(OPMManeuver::VT_MAN_DELTA_MASS, MAN_DELTA_MASS, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MAN_REF_FRAME(&mut self, MAN_REF_FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPMManeuver::VT_MAN_REF_FRAME, MAN_REF_FRAME);
+    }
+
+    #[inline]
+    pub fn add_MAN_DV_1(&mut self, MAN_DV_1: f64) {
+        self.fbb_.push_slot::<f64>(OPMManeuver::VT_MAN_DV_1, MAN_DV_1, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MAN_DV_2(&mut self, MAN_DV_2: f64) {
+        self.fbb_.push_slot::<f64>(OPMManeuver::VT_MAN_DV_2, MAN_DV_2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MAN_DV_3(&mut self, MAN_DV_3: f64) {
+        self.fbb_.push_slot::<f64>(OPMManeuver::VT_MAN_DV_3, MAN_DV_3, 0.0);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OPMManeuverBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OPMManeuverBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OPMManeuver<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OPMManeuver<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OPMManeuver");
+        ds.field("COMMENT", &self.COMMENT());
+        ds.field("MAN_EPOCH_IGNITION", &self.MAN_EPOCH_IGNITION());
+        ds.field("MAN_DURATION", &self.MAN_DURATION());
+        ds.field("MAN_DELTA_MASS", &self.MAN_DELTA_MASS());
+        ds.field("MAN_REF_FRAME", &self.MAN_REF_FRAME());
+        ds.field("MAN_DV_1", &self.MAN_DV_1());
+        ds.field("MAN_DV_2", &self.MAN_DV_2());
+        ds.field("MAN_DV_3", &self.MAN_DV_3());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OPMManeuverT {
+    pub COMMENT: Option<alloc::string::String>,
+    pub MAN_EPOCH_IGNITION: Option<alloc::string::String>,
+    pub MAN_DURATION: f64,
+    pub MAN_DELTA_MASS: f64,
+    pub MAN_REF_FRAME: Option<alloc::string::String>,
+    pub MAN_DV_1: f64,
+    pub MAN_DV_2: f64,
+    pub MAN_DV_3: f64,
+}
+
+impl Default for OPMManeuverT {
+    fn default() -> Self {
+        Self {
+            COMMENT: None,
+            MAN_EPOCH_IGNITION: None,
+            MAN_DURATION: 0.0,
+            MAN_DELTA_MASS: 0.0,
+            MAN_REF_FRAME: None,
+            MAN_DV_1: 0.0,
+            MAN_DV_2: 0.0,
+            MAN_DV_3: 0.0,
+        }
+    }
+}
+
+impl OPMManeuverT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OPMManeuver<'b>> {
+        let COMMENT = self.COMMENT.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MAN_EPOCH_IGNITION = self.MAN_EPOCH_IGNITION.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MAN_DURATION = self.MAN_DURATION;
+        let MAN_DELTA_MASS = self.MAN_DELTA_MASS;
+        let MAN_REF_FRAME = self.MAN_REF_FRAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MAN_DV_1 = self.MAN_DV_1;
+        let MAN_DV_2 = self.MAN_DV_2;
+        let MAN_DV_3 = self.MAN_DV_3;
+        OPMManeuver::create(_fbb, &OPMManeuverArgs{
+            COMMENT,
+            MAN_EPOCH_IGNITION,
+            MAN_DURATION,
+            MAN_DELTA_MASS,
+            MAN_REF_FRAME,
+            MAN_DV_1,
+            MAN_DV_2,
+            MAN_DV_3,
+        })
+    }
+}
+
+pub enum OPMUserDefinedParameterOffset {}
+
+/// One USER_DEFINED_x keyword of an OPM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+#[derive(Copy, Clone, PartialEq)]
+pub struct OPMUserDefinedParameter<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OPMUserDefinedParameter<'a> {
+    type Inner = OPMUserDefinedParameter<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OPMUserDefinedParameter<'a> {
+    pub const VT_PARAM_NAME: ::flatbuffers::VOffsetT = 4;
+    pub const VT_PARAM_VALUE: ::flatbuffers::VOffsetT = 6;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OPMUserDefinedParameter { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OPMUserDefinedParameterArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OPMUserDefinedParameter<'bldr>> {
+        let mut builder = OPMUserDefinedParameterBuilder::new(_fbb);
+        if let Some(x) = args.PARAM_VALUE { builder.add_PARAM_VALUE(x); }
+        if let Some(x) = args.PARAM_NAME { builder.add_PARAM_NAME(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OPMUserDefinedParameterT {
+        let PARAM_NAME = self.PARAM_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let PARAM_VALUE = self.PARAM_VALUE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        OPMUserDefinedParameterT {
+            PARAM_NAME,
+            PARAM_VALUE,
+        }
+    }
+
+    /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+    #[inline]
+    pub fn PARAM_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OPMUserDefinedParameter::VT_PARAM_NAME, None)}
+    }
+
+    /// The value as written
+    #[inline]
+    pub fn PARAM_VALUE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OPMUserDefinedParameter::VT_PARAM_VALUE, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OPMUserDefinedParameter<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARAM_NAME", Self::VT_PARAM_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARAM_VALUE", Self::VT_PARAM_VALUE, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OPMUserDefinedParameterArgs<'a> {
+    pub PARAM_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PARAM_VALUE: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+
+impl<'a> Default for OPMUserDefinedParameterArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OPMUserDefinedParameterArgs {
+            PARAM_NAME: None,
+            PARAM_VALUE: None,
+        }
+    }
+}
+
+pub struct OPMUserDefinedParameterBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OPMUserDefinedParameterBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_PARAM_NAME(&mut self, PARAM_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPMUserDefinedParameter::VT_PARAM_NAME, PARAM_NAME);
+    }
+
+    #[inline]
+    pub fn add_PARAM_VALUE(&mut self, PARAM_VALUE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OPMUserDefinedParameter::VT_PARAM_VALUE, PARAM_VALUE);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OPMUserDefinedParameterBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OPMUserDefinedParameterBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OPMUserDefinedParameter<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OPMUserDefinedParameter<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OPMUserDefinedParameter");
+        ds.field("PARAM_NAME", &self.PARAM_NAME());
+        ds.field("PARAM_VALUE", &self.PARAM_VALUE());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OPMUserDefinedParameterT {
+    pub PARAM_NAME: Option<alloc::string::String>,
+    pub PARAM_VALUE: Option<alloc::string::String>,
+}
+
+impl Default for OPMUserDefinedParameterT {
+    fn default() -> Self {
+        Self {
+            PARAM_NAME: None,
+            PARAM_VALUE: None,
+        }
+    }
+}
+
+impl OPMUserDefinedParameterT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OPMUserDefinedParameter<'b>> {
+        let PARAM_NAME = self.PARAM_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let PARAM_VALUE = self.PARAM_VALUE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        OPMUserDefinedParameter::create(_fbb, &OPMUserDefinedParameterArgs{
+            PARAM_NAME,
+            PARAM_VALUE,
         })
     }
 }

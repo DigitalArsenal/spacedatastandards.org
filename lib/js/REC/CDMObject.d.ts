@@ -2,6 +2,7 @@ import * as flatbuffers from 'flatbuffers';
 import { CAT, CATT } from './CAT.js';
 import { EPM, EPMT } from './EPM.js';
 import { RFM, RFMT } from './RFM.js';
+import { cdmManeuverable } from './cdmManeuverable.js';
 import { covarianceAlgorithm } from './covarianceAlgorithm.js';
 export declare class CDMObject implements flatbuffers.IUnpackableObject<CDMObjectT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -171,6 +172,26 @@ export declare class CDMObject implements flatbuffers.IUnpackableObject<CDMObjec
     COVARIANCE(index: number): number | null;
     covarianceLength(): number;
     covarianceArray(): Float64Array | null;
+    /**
+     * OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+     * as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+     */
+    OBJECT_DESIGNATOR(): string | null;
+    OBJECT_DESIGNATOR(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+     */
+    CATALOG_NAME(): string | null;
+    CATALOG_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+     * same fact as a flag, true for YES.
+     */
+    MANEUVERABLE(): cdmManeuverable;
+    /**
+     * CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+     */
+    CD_AREA_OVER_MASS(): number;
     static startCDMObject(builder: flatbuffers.Builder): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static addObject(builder: flatbuffers.Builder, OBJECTOffset: flatbuffers.Offset): void;
@@ -215,6 +236,10 @@ export declare class CDMObject implements flatbuffers.IUnpackableObject<CDMObjec
      */
     static createCovarianceVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startCovarianceVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addObjectDesignator(builder: flatbuffers.Builder, OBJECT_DESIGNATOROffset: flatbuffers.Offset): void;
+    static addCatalogName(builder: flatbuffers.Builder, CATALOG_NAMEOffset: flatbuffers.Offset): void;
+    static addManeuverable(builder: flatbuffers.Builder, MANEUVERABLE: cdmManeuverable): void;
+    static addCdAreaOverMass(builder: flatbuffers.Builder, CD_AREA_OVER_MASS: number): void;
     static endCDMObject(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): CDMObjectT;
     unpackTo(_o: CDMObjectT): void;
@@ -257,7 +282,11 @@ export declare class CDMObjectT implements flatbuffers.IGeneratedObject {
     Y_DOT: number;
     Z_DOT: number;
     COVARIANCE: (number)[];
-    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, POC?: EPMT | null, OPERATOR_CONTACT_POSITION?: string | Uint8Array | null, OPERATOR_ORGANIZATION?: string | Uint8Array | null, EPHEMERIS_NAME?: string | Uint8Array | null, COVARIANCE_METHOD?: covarianceAlgorithm, REFERENCE_FRAME?: RFMT | null, GRAVITY_MODEL?: string | Uint8Array | null, ATMOSPHERIC_MODEL?: string | Uint8Array | null, N_BODY_PERTURBATIONS?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: boolean, EARTH_TIDES?: boolean, INTRACK_THRUST?: boolean, TIME_LASTOB_START?: string | Uint8Array | null, TIME_LASTOB_END?: string | Uint8Array | null, RECOMMENDED_OD_SPAN?: number, ACTUAL_OD_SPAN?: number, OBS_AVAILABLE?: number, OBS_USED?: number, TRACKS_AVAILABLE?: number, TRACKS_USED?: number, RESIDUALS_ACCEPTED?: number, WEIGHTED_RMS?: number, AREA_PC?: number, AREA_DRG?: number, AREA_SRP?: number, CR_AREA_OVER_MASS?: number, THRUST_ACCELERATION?: number, SEDR?: number, X?: number, Y?: number, Z?: number, X_DOT?: number, Y_DOT?: number, Z_DOT?: number, COVARIANCE?: (number)[]);
+    OBJECT_DESIGNATOR: string | Uint8Array | null;
+    CATALOG_NAME: string | Uint8Array | null;
+    MANEUVERABLE: cdmManeuverable;
+    CD_AREA_OVER_MASS: number;
+    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, POC?: EPMT | null, OPERATOR_CONTACT_POSITION?: string | Uint8Array | null, OPERATOR_ORGANIZATION?: string | Uint8Array | null, EPHEMERIS_NAME?: string | Uint8Array | null, COVARIANCE_METHOD?: covarianceAlgorithm, REFERENCE_FRAME?: RFMT | null, GRAVITY_MODEL?: string | Uint8Array | null, ATMOSPHERIC_MODEL?: string | Uint8Array | null, N_BODY_PERTURBATIONS?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: boolean, EARTH_TIDES?: boolean, INTRACK_THRUST?: boolean, TIME_LASTOB_START?: string | Uint8Array | null, TIME_LASTOB_END?: string | Uint8Array | null, RECOMMENDED_OD_SPAN?: number, ACTUAL_OD_SPAN?: number, OBS_AVAILABLE?: number, OBS_USED?: number, TRACKS_AVAILABLE?: number, TRACKS_USED?: number, RESIDUALS_ACCEPTED?: number, WEIGHTED_RMS?: number, AREA_PC?: number, AREA_DRG?: number, AREA_SRP?: number, CR_AREA_OVER_MASS?: number, THRUST_ACCELERATION?: number, SEDR?: number, X?: number, Y?: number, Z?: number, X_DOT?: number, Y_DOT?: number, Z_DOT?: number, COVARIANCE?: (number)[], OBJECT_DESIGNATOR?: string | Uint8Array | null, CATALOG_NAME?: string | Uint8Array | null, MANEUVERABLE?: cdmManeuverable, CD_AREA_OVER_MASS?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CDMObject.d.ts.map

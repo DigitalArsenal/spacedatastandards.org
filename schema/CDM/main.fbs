@@ -1,5 +1,5 @@
-// Hash: 144be2a09eaf7c053f4ea7f1296037961050e94a44041326089128b0e40ecb8f
-// Version: 2.0.2
+// Hash: f60012b5d307a70a9cdd1ebcdb6c1d08f112da858810b248f14409ea49fcceb6
+// Version: 2.0.3
 // -----------------------------------END_HEADER
 include "../PNM/main.fbs";
 include "../CAT/main.fbs";
@@ -14,6 +14,15 @@ enum screeningVolumeShape : byte {
 enum covarianceAlgorithm : byte {
   CALCULATED,
   DEFAULT
+}
+
+/// MANEUVERABLE of a CDM object (CCSDS 508.0-B-1): whether it can maneuver.
+/// UNSPECIFIED is the zero value: the record does not state it.
+enum cdmManeuverable : byte {
+  UNSPECIFIED = 0,
+  YES = 1,
+  NO = 2,
+  NOT_APPLICABLE = 3
 }
 
 table CDMObject {
@@ -97,9 +106,28 @@ table CDMObject {
   ///         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
   ///         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
   COVARIANCE:[double];
+
+  /// OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+  /// as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+  OBJECT_DESIGNATOR:string;
+  /// CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+  CATALOG_NAME:string;
+  /// MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+  /// same fact as a flag, true for YES.
+  MANEUVERABLE:cdmManeuverable;
+  /// CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+  CD_AREA_OVER_MASS:double;
 }
 
 /// Conjunction Data Message
+///
+/// Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+/// SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+/// of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+/// km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+/// MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+/// COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+/// terms) are held as the message states them.
 table CDM {
   /// The version of the CCSDS CDM standard used
   CCSDS_CDM_VERS:double;
@@ -159,6 +187,9 @@ table CDM {
   OBJECT1_DATASOURCE:PNM;
   /// Data Source for the positional information for Object 2
   OBJECT2_DATASOURCE:PNM;
+  /// COMMENT lines of the message header and of its relative metadata and data
+  /// (CCSDS 508.0-B-1), in message order, joined by a line feed.
+  COMMENT:string;
 }
 
 

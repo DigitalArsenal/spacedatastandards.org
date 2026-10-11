@@ -49,15 +49,36 @@ public struct OEM : IFlatbufferObject
   /// Array of ephemeris data blocks
   public ephemerisDataBlock? EPHEMERIS_DATA_BLOCK(int j) { int o = __p.__offset(12); return o != 0 ? (ephemerisDataBlock?)(new ephemerisDataBlock()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int EPHEMERIS_DATA_BLOCKLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.
+  public string COMMENT { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOMMENTBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(14); }
+  /// MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator
+  /// makes unique for this message.
+  public string MESSAGE_ID { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMESSAGE_IDBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetMESSAGE_IDBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetMESSAGE_IDArray() { return __p.__vector_as_array<byte>(16); }
 
   public static Offset<OEM> CreateOEM(FlatBufferBuilder builder,
       StringOffset CLASSIFICATIONOffset = default(StringOffset),
       double CCSDS_OEM_VERS = 0.0,
       StringOffset CREATION_DATEOffset = default(StringOffset),
       StringOffset ORIGINATOROffset = default(StringOffset),
-      VectorOffset EPHEMERIS_DATA_BLOCKOffset = default(VectorOffset)) {
-    builder.StartTable(5);
+      VectorOffset EPHEMERIS_DATA_BLOCKOffset = default(VectorOffset),
+      StringOffset COMMENTOffset = default(StringOffset),
+      StringOffset MESSAGE_IDOffset = default(StringOffset)) {
+    builder.StartTable(7);
     OEM.AddCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS);
+    OEM.AddMESSAGE_ID(builder, MESSAGE_IDOffset);
+    OEM.AddCOMMENT(builder, COMMENTOffset);
     OEM.AddEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCKOffset);
     OEM.AddORIGINATOR(builder, ORIGINATOROffset);
     OEM.AddCREATION_DATE(builder, CREATION_DATEOffset);
@@ -65,7 +86,7 @@ public struct OEM : IFlatbufferObject
     return OEM.EndOEM(builder);
   }
 
-  public static void StartOEM(FlatBufferBuilder builder) { builder.StartTable(5); }
+  public static void StartOEM(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddCLASSIFICATION(FlatBufferBuilder builder, StringOffset CLASSIFICATIONOffset) { builder.AddOffset(0, CLASSIFICATIONOffset.Value, 0); }
   public static void AddCCSDS_OEM_VERS(FlatBufferBuilder builder, double CCSDS_OEM_VERS) { builder.AddDouble(1, CCSDS_OEM_VERS, 0.0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(2, CREATION_DATEOffset.Value, 0); }
@@ -76,6 +97,8 @@ public struct OEM : IFlatbufferObject
   public static VectorOffset CreateEPHEMERIS_DATA_BLOCKVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ephemerisDataBlock>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateEPHEMERIS_DATA_BLOCKVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ephemerisDataBlock>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartEPHEMERIS_DATA_BLOCKVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(5, COMMENTOffset.Value, 0); }
+  public static void AddMESSAGE_ID(FlatBufferBuilder builder, StringOffset MESSAGE_IDOffset) { builder.AddOffset(6, MESSAGE_IDOffset.Value, 0); }
   public static Offset<OEM> EndOEM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OEM>(o);
@@ -94,6 +117,8 @@ public struct OEM : IFlatbufferObject
     _o.ORIGINATOR = this.ORIGINATOR;
     _o.EPHEMERIS_DATA_BLOCK = new List<ephemerisDataBlockT>();
     for (var _j = 0; _j < this.EPHEMERIS_DATA_BLOCKLength; ++_j) {_o.EPHEMERIS_DATA_BLOCK.Add(this.EPHEMERIS_DATA_BLOCK(_j).HasValue ? this.EPHEMERIS_DATA_BLOCK(_j).Value.UnPack() : null);}
+    _o.COMMENT = this.COMMENT;
+    _o.MESSAGE_ID = this.MESSAGE_ID;
   }
   public static Offset<OEM> Pack(FlatBufferBuilder builder, OEMT _o) {
     if (_o == null) return default(Offset<OEM>);
@@ -106,13 +131,17 @@ public struct OEM : IFlatbufferObject
       for (var _j = 0; _j < __EPHEMERIS_DATA_BLOCK.Length; ++_j) { __EPHEMERIS_DATA_BLOCK[_j] = ephemerisDataBlock.Pack(builder, _o.EPHEMERIS_DATA_BLOCK[_j]); }
       _EPHEMERIS_DATA_BLOCK = CreateEPHEMERIS_DATA_BLOCKVector(builder, __EPHEMERIS_DATA_BLOCK);
     }
+    var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
+    var _MESSAGE_ID = _o.MESSAGE_ID == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE_ID);
     return CreateOEM(
       builder,
       _CLASSIFICATION,
       _o.CCSDS_OEM_VERS,
       _CREATION_DATE,
       _ORIGINATOR,
-      _EPHEMERIS_DATA_BLOCK);
+      _EPHEMERIS_DATA_BLOCK,
+      _COMMENT,
+      _MESSAGE_ID);
   }
 }
 
@@ -123,6 +152,8 @@ public class OEMT
   public string CREATION_DATE { get; set; }
   public string ORIGINATOR { get; set; }
   public List<ephemerisDataBlockT> EPHEMERIS_DATA_BLOCK { get; set; }
+  public string COMMENT { get; set; }
+  public string MESSAGE_ID { get; set; }
 
   public OEMT() {
     this.CLASSIFICATION = null;
@@ -130,6 +161,8 @@ public class OEMT
     this.CREATION_DATE = null;
     this.ORIGINATOR = null;
     this.EPHEMERIS_DATA_BLOCK = null;
+    this.COMMENT = null;
+    this.MESSAGE_ID = null;
   }
   public static OEMT DeserializeFromBinary(byte[] fbBuffer) {
     return OEM.GetRootAsOEM(new ByteBuffer(fbBuffer)).UnPack();
@@ -152,6 +185,8 @@ static public class OEMVerify
       && verifier.VerifyString(tablePos, 8 /*CREATION_DATE*/, false)
       && verifier.VerifyString(tablePos, 10 /*ORIGINATOR*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 12 /*EPHEMERIS_DATA_BLOCK*/, ephemerisDataBlockVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 14 /*COMMENT*/, false)
+      && verifier.VerifyString(tablePos, 16 /*MESSAGE_ID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

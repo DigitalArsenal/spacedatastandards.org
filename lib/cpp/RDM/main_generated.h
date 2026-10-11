@@ -25,6 +25,9 @@ struct survivingDebrisBuilder;
 struct RDM;
 struct RDMBuilder;
 
+struct RDMUserDefinedParameter;
+struct RDMUserDefinedParameterBuilder;
+
 enum reentryDisposition : int8_t {
   reentryDisposition_CONTROLLED = 0,
   reentryDisposition_UNCONTROLLED = 1,
@@ -56,6 +59,44 @@ inline const char *EnumNamereentryDisposition(reentryDisposition e) {
   if (::flatbuffers::IsOutRange(e, reentryDisposition_CONTROLLED, reentryDisposition_SEMI_CONTROLLED)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesreentryDisposition()[index];
+}
+
+/// CONTROLLED_REENTRY of an RDM (CCSDS 508.1-B-1): whether the re-entry is
+/// controlled. UNSPECIFIED is the zero value: the record does not state it.
+enum rdmControlledReentry : int8_t {
+  rdmControlledReentry_UNSPECIFIED = 0,
+  rdmControlledReentry_YES = 1,
+  rdmControlledReentry_NO = 2,
+  rdmControlledReentry_UNKNOWN = 3,
+  rdmControlledReentry_MIN = rdmControlledReentry_UNSPECIFIED,
+  rdmControlledReentry_MAX = rdmControlledReentry_UNKNOWN
+};
+
+inline const rdmControlledReentry (&EnumValuesrdmControlledReentry())[4] {
+  static const rdmControlledReentry values[] = {
+    rdmControlledReentry_UNSPECIFIED,
+    rdmControlledReentry_YES,
+    rdmControlledReentry_NO,
+    rdmControlledReentry_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesrdmControlledReentry() {
+  static const char * const names[5] = {
+    "UNSPECIFIED",
+    "YES",
+    "NO",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamerdmControlledReentry(rdmControlledReentry e) {
+  if (::flatbuffers::IsOutRange(e, rdmControlledReentry_UNSPECIFIED, rdmControlledReentry_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesrdmControlledReentry()[index];
 }
 
 enum reentryReason : int8_t {
@@ -517,7 +558,87 @@ struct RDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CASUALTY_EXPECTATION = 50,
     VT_NUM_FRAGMENTS = 52,
     VT_SURVIVING_MASS = 54,
-    VT_COMMENT = 56
+    VT_COMMENT = 56,
+    VT_MESSAGE_ID = 58,
+    VT_CATALOG_NAME = 60,
+    VT_OBJECT_DESIGNATOR = 62,
+    VT_OBJECT_OWNER = 64,
+    VT_OBJECT_OPERATOR = 66,
+    VT_CONTROLLED_REENTRY = 68,
+    VT_CENTER_NAME = 70,
+    VT_EPOCH_TZERO = 72,
+    VT_REF_FRAME = 74,
+    VT_REF_FRAME_EPOCH = 76,
+    VT_EPHEMERIS_NAME = 78,
+    VT_GRAVITY_MODEL = 80,
+    VT_ATMOSPHERIC_MODEL = 82,
+    VT_SOLAR_FLUX_PREDICTION = 84,
+    VT_N_BODY_PERTURBATIONS = 86,
+    VT_SOLAR_RAD_PRESSURE = 88,
+    VT_EARTH_TIDES = 90,
+    VT_INTRACK_THRUST = 92,
+    VT_DRAG_PARAMETERS_SOURCE = 94,
+    VT_DRAG_PARAMETERS_ALTITUDE = 96,
+    VT_REENTRY_UNCERTAINTY_METHOD = 98,
+    VT_REENTRY_DISINTEGRATION = 100,
+    VT_IMPACT_UNCERTAINTY_METHOD = 102,
+    VT_PREVIOUS_MESSAGE_ID = 104,
+    VT_NEXT_MESSAGE_EPOCH = 106,
+    VT_ORBIT_LIFETIME = 108,
+    VT_ORBIT_LIFETIME_WINDOW_START = 110,
+    VT_ORBIT_LIFETIME_WINDOW_END = 112,
+    VT_REENTRY_WINDOW_START = 114,
+    VT_REENTRY_WINDOW_END = 116,
+    VT_ORBIT_LIFETIME_CONFIDENCE_LEVEL = 118,
+    VT_PROBABILITY_OF_IMPACT = 120,
+    VT_PROBABILITY_OF_BURN_UP = 122,
+    VT_PROBABILITY_OF_BREAK_UP = 124,
+    VT_PROBABILITY_OF_LAND_IMPACT = 126,
+    VT_PROBABILITY_OF_CASUALTY = 128,
+    VT_NOMINAL_IMPACT_EPOCH = 130,
+    VT_IMPACT_WINDOW_START = 132,
+    VT_IMPACT_WINDOW_END = 134,
+    VT_IMPACT_REF_FRAME = 136,
+    VT_NOMINAL_IMPACT_LON = 138,
+    VT_NOMINAL_IMPACT_LAT = 140,
+    VT_NOMINAL_IMPACT_ALT = 142,
+    VT_IMPACT_1_CONFIDENCE = 144,
+    VT_IMPACT_1_START_LON = 146,
+    VT_IMPACT_1_START_LAT = 148,
+    VT_IMPACT_1_STOP_LON = 150,
+    VT_IMPACT_1_STOP_LAT = 152,
+    VT_IMPACT_1_CROSS_TRACK = 154,
+    VT_IMPACT_2_CONFIDENCE = 156,
+    VT_IMPACT_2_START_LON = 158,
+    VT_IMPACT_2_START_LAT = 160,
+    VT_IMPACT_2_STOP_LON = 162,
+    VT_IMPACT_2_STOP_LAT = 164,
+    VT_IMPACT_2_CROSS_TRACK = 166,
+    VT_IMPACT_3_CONFIDENCE = 168,
+    VT_IMPACT_3_START_LON = 170,
+    VT_IMPACT_3_START_LAT = 172,
+    VT_IMPACT_3_STOP_LON = 174,
+    VT_IMPACT_3_STOP_LAT = 176,
+    VT_IMPACT_3_CROSS_TRACK = 178,
+    VT_COV_REF_FRAME = 180,
+    VT_COVARIANCE = 182,
+    VT_DRY_MASS = 184,
+    VT_HAZARDOUS_SUBSTANCES = 186,
+    VT_SOLAR_RAD_COEFF = 188,
+    VT_DRAG_COEFF = 190,
+    VT_RCS = 192,
+    VT_THRUST_ACCELERATION = 194,
+    VT_TIME_LASTOB_START = 196,
+    VT_TIME_LASTOB_END = 198,
+    VT_RECOMMENDED_OD_SPAN = 200,
+    VT_ACTUAL_OD_SPAN = 202,
+    VT_OBS_AVAILABLE = 204,
+    VT_OBS_USED = 206,
+    VT_TRACKS_AVAILABLE = 208,
+    VT_TRACKS_USED = 210,
+    VT_RESIDUALS_ACCEPTED = 212,
+    VT_WEIGHTED_RMS = 214,
+    VT_USER_DEFINED_PARAMETERS = 216
   };
   /// CCSDS RDM version
   const ::flatbuffers::String *CCSDS_RDM_VERS() const {
@@ -623,9 +744,342 @@ struct RDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double SURVIVING_MASS() const {
     return GetField<double>(VT_SURVIVING_MASS, 0.0);
   }
-  /// Additional comments
+  /// COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+  /// data groups, in message order, joined by a line feed.
   const ::flatbuffers::String *COMMENT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
+  }
+  /// The fields below, with the earlier ones that say so, are the keywords of
+  /// CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+  /// NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+  /// NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+  /// WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+  /// REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+  /// SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+  /// not keywords of the message.
+  /// MESSAGE_ID: an identifier the originator makes unique for this message.
+  const ::flatbuffers::String *MESSAGE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE_ID);
+  }
+  /// CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+  const ::flatbuffers::String *CATALOG_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CATALOG_NAME);
+  }
+  /// OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+  const ::flatbuffers::String *OBJECT_DESIGNATOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_DESIGNATOR);
+  }
+  /// OBJECT_OWNER.
+  const ::flatbuffers::String *OBJECT_OWNER() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_OWNER);
+  }
+  /// OBJECT_OPERATOR.
+  const ::flatbuffers::String *OBJECT_OPERATOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_OPERATOR);
+  }
+  /// CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+  rdmControlledReentry CONTROLLED_REENTRY() const {
+    return static_cast<rdmControlledReentry>(GetField<int8_t>(VT_CONTROLLED_REENTRY, 0));
+  }
+  /// CENTER_NAME: the body being re-entered.
+  const ::flatbuffers::String *CENTER_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CENTER_NAME);
+  }
+  /// EPOCH_TZERO: the epoch the message's relative times are measured from.
+  const ::flatbuffers::String *EPOCH_TZERO() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH_TZERO);
+  }
+  /// REF_FRAME: the frame of the state vector.
+  const ::flatbuffers::String *REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME);
+  }
+  /// REF_FRAME_EPOCH.
+  const ::flatbuffers::String *REF_FRAME_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME_EPOCH);
+  }
+  /// EPHEMERIS_NAME.
+  const ::flatbuffers::String *EPHEMERIS_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_NAME);
+  }
+  /// GRAVITY_MODEL.
+  const ::flatbuffers::String *GRAVITY_MODEL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_GRAVITY_MODEL);
+  }
+  /// ATMOSPHERIC_MODEL.
+  const ::flatbuffers::String *ATMOSPHERIC_MODEL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ATMOSPHERIC_MODEL);
+  }
+  /// SOLAR_FLUX_PREDICTION.
+  const ::flatbuffers::String *SOLAR_FLUX_PREDICTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOLAR_FLUX_PREDICTION);
+  }
+  /// N_BODY_PERTURBATIONS.
+  const ::flatbuffers::String *N_BODY_PERTURBATIONS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_N_BODY_PERTURBATIONS);
+  }
+  /// SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+  const ::flatbuffers::String *SOLAR_RAD_PRESSURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOLAR_RAD_PRESSURE);
+  }
+  /// EARTH_TIDES: a model name.
+  const ::flatbuffers::String *EARTH_TIDES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EARTH_TIDES);
+  }
+  /// INTRACK_THRUST: YES or NO.
+  const ::flatbuffers::String *INTRACK_THRUST() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INTRACK_THRUST);
+  }
+  /// DRAG_PARAMETERS_SOURCE.
+  const ::flatbuffers::String *DRAG_PARAMETERS_SOURCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DRAG_PARAMETERS_SOURCE);
+  }
+  /// DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+  double DRAG_PARAMETERS_ALTITUDE() const {
+    return GetField<double>(VT_DRAG_PARAMETERS_ALTITUDE, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+  const ::flatbuffers::String *REENTRY_UNCERTAINTY_METHOD() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REENTRY_UNCERTAINTY_METHOD);
+  }
+  /// REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+  const ::flatbuffers::String *REENTRY_DISINTEGRATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REENTRY_DISINTEGRATION);
+  }
+  /// IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+  const ::flatbuffers::String *IMPACT_UNCERTAINTY_METHOD() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IMPACT_UNCERTAINTY_METHOD);
+  }
+  /// PREVIOUS_MESSAGE_ID.
+  const ::flatbuffers::String *PREVIOUS_MESSAGE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PREVIOUS_MESSAGE_ID);
+  }
+  /// NEXT_MESSAGE_EPOCH.
+  const ::flatbuffers::String *NEXT_MESSAGE_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NEXT_MESSAGE_EPOCH);
+  }
+  /// ORBIT_LIFETIME in days.
+  double ORBIT_LIFETIME() const {
+    return GetField<double>(VT_ORBIT_LIFETIME, 0.0);
+  }
+  /// ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+  double ORBIT_LIFETIME_WINDOW_START() const {
+    return GetField<double>(VT_ORBIT_LIFETIME_WINDOW_START, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+  double ORBIT_LIFETIME_WINDOW_END() const {
+    return GetField<double>(VT_ORBIT_LIFETIME_WINDOW_END, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// REENTRY_WINDOW_START.
+  const ::flatbuffers::String *REENTRY_WINDOW_START() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REENTRY_WINDOW_START);
+  }
+  /// REENTRY_WINDOW_END.
+  const ::flatbuffers::String *REENTRY_WINDOW_END() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REENTRY_WINDOW_END);
+  }
+  /// ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+  double ORBIT_LIFETIME_CONFIDENCE_LEVEL() const {
+    return GetField<double>(VT_ORBIT_LIFETIME_CONFIDENCE_LEVEL, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// PROBABILITY_OF_IMPACT, NaN when not stated.
+  double PROBABILITY_OF_IMPACT() const {
+    return GetField<double>(VT_PROBABILITY_OF_IMPACT, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// PROBABILITY_OF_BURN_UP, NaN when not stated.
+  double PROBABILITY_OF_BURN_UP() const {
+    return GetField<double>(VT_PROBABILITY_OF_BURN_UP, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// PROBABILITY_OF_BREAK_UP, NaN when not stated.
+  double PROBABILITY_OF_BREAK_UP() const {
+    return GetField<double>(VT_PROBABILITY_OF_BREAK_UP, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+  double PROBABILITY_OF_LAND_IMPACT() const {
+    return GetField<double>(VT_PROBABILITY_OF_LAND_IMPACT, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// PROBABILITY_OF_CASUALTY, NaN when not stated.
+  double PROBABILITY_OF_CASUALTY() const {
+    return GetField<double>(VT_PROBABILITY_OF_CASUALTY, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// NOMINAL_IMPACT_EPOCH.
+  const ::flatbuffers::String *NOMINAL_IMPACT_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NOMINAL_IMPACT_EPOCH);
+  }
+  /// IMPACT_WINDOW_START.
+  const ::flatbuffers::String *IMPACT_WINDOW_START() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IMPACT_WINDOW_START);
+  }
+  /// IMPACT_WINDOW_END.
+  const ::flatbuffers::String *IMPACT_WINDOW_END() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IMPACT_WINDOW_END);
+  }
+  /// IMPACT_REF_FRAME.
+  const ::flatbuffers::String *IMPACT_REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IMPACT_REF_FRAME);
+  }
+  /// NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+  double NOMINAL_IMPACT_LON() const {
+    return GetField<double>(VT_NOMINAL_IMPACT_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+  double NOMINAL_IMPACT_LAT() const {
+    return GetField<double>(VT_NOMINAL_IMPACT_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+  double NOMINAL_IMPACT_ALT() const {
+    return GetField<double>(VT_NOMINAL_IMPACT_ALT, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+  double IMPACT_1_CONFIDENCE() const {
+    return GetField<double>(VT_IMPACT_1_CONFIDENCE, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_1_START_LON in degrees, NaN when not stated.
+  double IMPACT_1_START_LON() const {
+    return GetField<double>(VT_IMPACT_1_START_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_1_START_LAT in degrees, NaN when not stated.
+  double IMPACT_1_START_LAT() const {
+    return GetField<double>(VT_IMPACT_1_START_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_1_STOP_LON in degrees, NaN when not stated.
+  double IMPACT_1_STOP_LON() const {
+    return GetField<double>(VT_IMPACT_1_STOP_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+  double IMPACT_1_STOP_LAT() const {
+    return GetField<double>(VT_IMPACT_1_STOP_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+  double IMPACT_1_CROSS_TRACK() const {
+    return GetField<double>(VT_IMPACT_1_CROSS_TRACK, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+  double IMPACT_2_CONFIDENCE() const {
+    return GetField<double>(VT_IMPACT_2_CONFIDENCE, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_2_START_LON in degrees, NaN when not stated.
+  double IMPACT_2_START_LON() const {
+    return GetField<double>(VT_IMPACT_2_START_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_2_START_LAT in degrees, NaN when not stated.
+  double IMPACT_2_START_LAT() const {
+    return GetField<double>(VT_IMPACT_2_START_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_2_STOP_LON in degrees, NaN when not stated.
+  double IMPACT_2_STOP_LON() const {
+    return GetField<double>(VT_IMPACT_2_STOP_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+  double IMPACT_2_STOP_LAT() const {
+    return GetField<double>(VT_IMPACT_2_STOP_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+  double IMPACT_2_CROSS_TRACK() const {
+    return GetField<double>(VT_IMPACT_2_CROSS_TRACK, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+  double IMPACT_3_CONFIDENCE() const {
+    return GetField<double>(VT_IMPACT_3_CONFIDENCE, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_3_START_LON in degrees, NaN when not stated.
+  double IMPACT_3_START_LON() const {
+    return GetField<double>(VT_IMPACT_3_START_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_3_START_LAT in degrees, NaN when not stated.
+  double IMPACT_3_START_LAT() const {
+    return GetField<double>(VT_IMPACT_3_START_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_3_STOP_LON in degrees, NaN when not stated.
+  double IMPACT_3_STOP_LON() const {
+    return GetField<double>(VT_IMPACT_3_STOP_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+  double IMPACT_3_STOP_LAT() const {
+    return GetField<double>(VT_IMPACT_3_STOP_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+  double IMPACT_3_CROSS_TRACK() const {
+    return GetField<double>(VT_IMPACT_3_CROSS_TRACK, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// COV_REF_FRAME: the frame of COVARIANCE.
+  const ::flatbuffers::String *COV_REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_REF_FRAME);
+  }
+  /// Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+  /// triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+  /// CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+  /// CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+  /// CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+  const ::flatbuffers::Vector<double> *COVARIANCE() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COVARIANCE);
+  }
+  /// WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+  double DRY_MASS() const {
+    return GetField<double>(VT_DRY_MASS, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// HAZARDOUS_SUBSTANCES.
+  const ::flatbuffers::String *HAZARDOUS_SUBSTANCES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_HAZARDOUS_SUBSTANCES);
+  }
+  /// SOLAR_RAD_COEFF, NaN when not stated.
+  double SOLAR_RAD_COEFF() const {
+    return GetField<double>(VT_SOLAR_RAD_COEFF, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// DRAG_COEFF, NaN when not stated.
+  double DRAG_COEFF() const {
+    return GetField<double>(VT_DRAG_COEFF, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// RCS in m**2, NaN when not stated.
+  double RCS() const {
+    return GetField<double>(VT_RCS, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// THRUST_ACCELERATION in m/s**2, NaN when not stated.
+  double THRUST_ACCELERATION() const {
+    return GetField<double>(VT_THRUST_ACCELERATION, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// TIME_LASTOB_START.
+  const ::flatbuffers::String *TIME_LASTOB_START() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TIME_LASTOB_START);
+  }
+  /// TIME_LASTOB_END.
+  const ::flatbuffers::String *TIME_LASTOB_END() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TIME_LASTOB_END);
+  }
+  /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+  double RECOMMENDED_OD_SPAN() const {
+    return GetField<double>(VT_RECOMMENDED_OD_SPAN, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// ACTUAL_OD_SPAN in days, NaN when not stated.
+  double ACTUAL_OD_SPAN() const {
+    return GetField<double>(VT_ACTUAL_OD_SPAN, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// OBS_AVAILABLE.
+  uint32_t OBS_AVAILABLE() const {
+    return GetField<uint32_t>(VT_OBS_AVAILABLE, 0);
+  }
+  /// OBS_USED.
+  uint32_t OBS_USED() const {
+    return GetField<uint32_t>(VT_OBS_USED, 0);
+  }
+  /// TRACKS_AVAILABLE.
+  uint32_t TRACKS_AVAILABLE() const {
+    return GetField<uint32_t>(VT_TRACKS_AVAILABLE, 0);
+  }
+  /// TRACKS_USED.
+  uint32_t TRACKS_USED() const {
+    return GetField<uint32_t>(VT_TRACKS_USED, 0);
+  }
+  /// RESIDUALS_ACCEPTED in percent, NaN when not stated.
+  double RESIDUALS_ACCEPTED() const {
+    return GetField<double>(VT_RESIDUALS_ACCEPTED, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// WEIGHTED_RMS, NaN when not stated.
+  double WEIGHTED_RMS() const {
+    return GetField<double>(VT_WEIGHTED_RMS, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Every USER_DEFINED keyword of the message, in message order.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<RDMUserDefinedParameter>> *USER_DEFINED_PARAMETERS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<RDMUserDefinedParameter>> *>(VT_USER_DEFINED_PARAMETERS);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -672,6 +1126,122 @@ struct RDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_SURVIVING_MASS, 8) &&
            VerifyOffset(verifier, VT_COMMENT) &&
            verifier.VerifyString(COMMENT()) &&
+           VerifyOffset(verifier, VT_MESSAGE_ID) &&
+           verifier.VerifyString(MESSAGE_ID()) &&
+           VerifyOffset(verifier, VT_CATALOG_NAME) &&
+           verifier.VerifyString(CATALOG_NAME()) &&
+           VerifyOffset(verifier, VT_OBJECT_DESIGNATOR) &&
+           verifier.VerifyString(OBJECT_DESIGNATOR()) &&
+           VerifyOffset(verifier, VT_OBJECT_OWNER) &&
+           verifier.VerifyString(OBJECT_OWNER()) &&
+           VerifyOffset(verifier, VT_OBJECT_OPERATOR) &&
+           verifier.VerifyString(OBJECT_OPERATOR()) &&
+           VerifyField<int8_t>(verifier, VT_CONTROLLED_REENTRY, 1) &&
+           VerifyOffset(verifier, VT_CENTER_NAME) &&
+           verifier.VerifyString(CENTER_NAME()) &&
+           VerifyOffset(verifier, VT_EPOCH_TZERO) &&
+           verifier.VerifyString(EPOCH_TZERO()) &&
+           VerifyOffset(verifier, VT_REF_FRAME) &&
+           verifier.VerifyString(REF_FRAME()) &&
+           VerifyOffset(verifier, VT_REF_FRAME_EPOCH) &&
+           verifier.VerifyString(REF_FRAME_EPOCH()) &&
+           VerifyOffset(verifier, VT_EPHEMERIS_NAME) &&
+           verifier.VerifyString(EPHEMERIS_NAME()) &&
+           VerifyOffset(verifier, VT_GRAVITY_MODEL) &&
+           verifier.VerifyString(GRAVITY_MODEL()) &&
+           VerifyOffset(verifier, VT_ATMOSPHERIC_MODEL) &&
+           verifier.VerifyString(ATMOSPHERIC_MODEL()) &&
+           VerifyOffset(verifier, VT_SOLAR_FLUX_PREDICTION) &&
+           verifier.VerifyString(SOLAR_FLUX_PREDICTION()) &&
+           VerifyOffset(verifier, VT_N_BODY_PERTURBATIONS) &&
+           verifier.VerifyString(N_BODY_PERTURBATIONS()) &&
+           VerifyOffset(verifier, VT_SOLAR_RAD_PRESSURE) &&
+           verifier.VerifyString(SOLAR_RAD_PRESSURE()) &&
+           VerifyOffset(verifier, VT_EARTH_TIDES) &&
+           verifier.VerifyString(EARTH_TIDES()) &&
+           VerifyOffset(verifier, VT_INTRACK_THRUST) &&
+           verifier.VerifyString(INTRACK_THRUST()) &&
+           VerifyOffset(verifier, VT_DRAG_PARAMETERS_SOURCE) &&
+           verifier.VerifyString(DRAG_PARAMETERS_SOURCE()) &&
+           VerifyField<double>(verifier, VT_DRAG_PARAMETERS_ALTITUDE, 8) &&
+           VerifyOffset(verifier, VT_REENTRY_UNCERTAINTY_METHOD) &&
+           verifier.VerifyString(REENTRY_UNCERTAINTY_METHOD()) &&
+           VerifyOffset(verifier, VT_REENTRY_DISINTEGRATION) &&
+           verifier.VerifyString(REENTRY_DISINTEGRATION()) &&
+           VerifyOffset(verifier, VT_IMPACT_UNCERTAINTY_METHOD) &&
+           verifier.VerifyString(IMPACT_UNCERTAINTY_METHOD()) &&
+           VerifyOffset(verifier, VT_PREVIOUS_MESSAGE_ID) &&
+           verifier.VerifyString(PREVIOUS_MESSAGE_ID()) &&
+           VerifyOffset(verifier, VT_NEXT_MESSAGE_EPOCH) &&
+           verifier.VerifyString(NEXT_MESSAGE_EPOCH()) &&
+           VerifyField<double>(verifier, VT_ORBIT_LIFETIME, 8) &&
+           VerifyField<double>(verifier, VT_ORBIT_LIFETIME_WINDOW_START, 8) &&
+           VerifyField<double>(verifier, VT_ORBIT_LIFETIME_WINDOW_END, 8) &&
+           VerifyOffset(verifier, VT_REENTRY_WINDOW_START) &&
+           verifier.VerifyString(REENTRY_WINDOW_START()) &&
+           VerifyOffset(verifier, VT_REENTRY_WINDOW_END) &&
+           verifier.VerifyString(REENTRY_WINDOW_END()) &&
+           VerifyField<double>(verifier, VT_ORBIT_LIFETIME_CONFIDENCE_LEVEL, 8) &&
+           VerifyField<double>(verifier, VT_PROBABILITY_OF_IMPACT, 8) &&
+           VerifyField<double>(verifier, VT_PROBABILITY_OF_BURN_UP, 8) &&
+           VerifyField<double>(verifier, VT_PROBABILITY_OF_BREAK_UP, 8) &&
+           VerifyField<double>(verifier, VT_PROBABILITY_OF_LAND_IMPACT, 8) &&
+           VerifyField<double>(verifier, VT_PROBABILITY_OF_CASUALTY, 8) &&
+           VerifyOffset(verifier, VT_NOMINAL_IMPACT_EPOCH) &&
+           verifier.VerifyString(NOMINAL_IMPACT_EPOCH()) &&
+           VerifyOffset(verifier, VT_IMPACT_WINDOW_START) &&
+           verifier.VerifyString(IMPACT_WINDOW_START()) &&
+           VerifyOffset(verifier, VT_IMPACT_WINDOW_END) &&
+           verifier.VerifyString(IMPACT_WINDOW_END()) &&
+           VerifyOffset(verifier, VT_IMPACT_REF_FRAME) &&
+           verifier.VerifyString(IMPACT_REF_FRAME()) &&
+           VerifyField<double>(verifier, VT_NOMINAL_IMPACT_LON, 8) &&
+           VerifyField<double>(verifier, VT_NOMINAL_IMPACT_LAT, 8) &&
+           VerifyField<double>(verifier, VT_NOMINAL_IMPACT_ALT, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_1_CONFIDENCE, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_1_START_LON, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_1_START_LAT, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_1_STOP_LON, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_1_STOP_LAT, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_1_CROSS_TRACK, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_2_CONFIDENCE, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_2_START_LON, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_2_START_LAT, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_2_STOP_LON, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_2_STOP_LAT, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_2_CROSS_TRACK, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_3_CONFIDENCE, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_3_START_LON, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_3_START_LAT, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_3_STOP_LON, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_3_STOP_LAT, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_3_CROSS_TRACK, 8) &&
+           VerifyOffset(verifier, VT_COV_REF_FRAME) &&
+           verifier.VerifyString(COV_REF_FRAME()) &&
+           VerifyOffset(verifier, VT_COVARIANCE) &&
+           verifier.VerifyVector(COVARIANCE()) &&
+           VerifyField<double>(verifier, VT_DRY_MASS, 8) &&
+           VerifyOffset(verifier, VT_HAZARDOUS_SUBSTANCES) &&
+           verifier.VerifyString(HAZARDOUS_SUBSTANCES()) &&
+           VerifyField<double>(verifier, VT_SOLAR_RAD_COEFF, 8) &&
+           VerifyField<double>(verifier, VT_DRAG_COEFF, 8) &&
+           VerifyField<double>(verifier, VT_RCS, 8) &&
+           VerifyField<double>(verifier, VT_THRUST_ACCELERATION, 8) &&
+           VerifyOffset(verifier, VT_TIME_LASTOB_START) &&
+           verifier.VerifyString(TIME_LASTOB_START()) &&
+           VerifyOffset(verifier, VT_TIME_LASTOB_END) &&
+           verifier.VerifyString(TIME_LASTOB_END()) &&
+           VerifyField<double>(verifier, VT_RECOMMENDED_OD_SPAN, 8) &&
+           VerifyField<double>(verifier, VT_ACTUAL_OD_SPAN, 8) &&
+           VerifyField<uint32_t>(verifier, VT_OBS_AVAILABLE, 4) &&
+           VerifyField<uint32_t>(verifier, VT_OBS_USED, 4) &&
+           VerifyField<uint32_t>(verifier, VT_TRACKS_AVAILABLE, 4) &&
+           VerifyField<uint32_t>(verifier, VT_TRACKS_USED, 4) &&
+           VerifyField<double>(verifier, VT_RESIDUALS_ACCEPTED, 8) &&
+           VerifyField<double>(verifier, VT_WEIGHTED_RMS, 8) &&
+           VerifyOffset(verifier, VT_USER_DEFINED_PARAMETERS) &&
+           verifier.VerifyVector(USER_DEFINED_PARAMETERS()) &&
+           verifier.VerifyVectorOfTables(USER_DEFINED_PARAMETERS()) &&
            verifier.EndTable();
   }
 };
@@ -761,6 +1331,246 @@ struct RDMBuilder {
   void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
     fbb_.AddOffset(RDM::VT_COMMENT, COMMENT);
   }
+  void add_MESSAGE_ID(::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID) {
+    fbb_.AddOffset(RDM::VT_MESSAGE_ID, MESSAGE_ID);
+  }
+  void add_CATALOG_NAME(::flatbuffers::Offset<::flatbuffers::String> CATALOG_NAME) {
+    fbb_.AddOffset(RDM::VT_CATALOG_NAME, CATALOG_NAME);
+  }
+  void add_OBJECT_DESIGNATOR(::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR) {
+    fbb_.AddOffset(RDM::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
+  }
+  void add_OBJECT_OWNER(::flatbuffers::Offset<::flatbuffers::String> OBJECT_OWNER) {
+    fbb_.AddOffset(RDM::VT_OBJECT_OWNER, OBJECT_OWNER);
+  }
+  void add_OBJECT_OPERATOR(::flatbuffers::Offset<::flatbuffers::String> OBJECT_OPERATOR) {
+    fbb_.AddOffset(RDM::VT_OBJECT_OPERATOR, OBJECT_OPERATOR);
+  }
+  void add_CONTROLLED_REENTRY(rdmControlledReentry CONTROLLED_REENTRY) {
+    fbb_.AddElement<int8_t>(RDM::VT_CONTROLLED_REENTRY, static_cast<int8_t>(CONTROLLED_REENTRY), 0);
+  }
+  void add_CENTER_NAME(::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME) {
+    fbb_.AddOffset(RDM::VT_CENTER_NAME, CENTER_NAME);
+  }
+  void add_EPOCH_TZERO(::flatbuffers::Offset<::flatbuffers::String> EPOCH_TZERO) {
+    fbb_.AddOffset(RDM::VT_EPOCH_TZERO, EPOCH_TZERO);
+  }
+  void add_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME) {
+    fbb_.AddOffset(RDM::VT_REF_FRAME, REF_FRAME);
+  }
+  void add_REF_FRAME_EPOCH(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_EPOCH) {
+    fbb_.AddOffset(RDM::VT_REF_FRAME_EPOCH, REF_FRAME_EPOCH);
+  }
+  void add_EPHEMERIS_NAME(::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME) {
+    fbb_.AddOffset(RDM::VT_EPHEMERIS_NAME, EPHEMERIS_NAME);
+  }
+  void add_GRAVITY_MODEL(::flatbuffers::Offset<::flatbuffers::String> GRAVITY_MODEL) {
+    fbb_.AddOffset(RDM::VT_GRAVITY_MODEL, GRAVITY_MODEL);
+  }
+  void add_ATMOSPHERIC_MODEL(::flatbuffers::Offset<::flatbuffers::String> ATMOSPHERIC_MODEL) {
+    fbb_.AddOffset(RDM::VT_ATMOSPHERIC_MODEL, ATMOSPHERIC_MODEL);
+  }
+  void add_SOLAR_FLUX_PREDICTION(::flatbuffers::Offset<::flatbuffers::String> SOLAR_FLUX_PREDICTION) {
+    fbb_.AddOffset(RDM::VT_SOLAR_FLUX_PREDICTION, SOLAR_FLUX_PREDICTION);
+  }
+  void add_N_BODY_PERTURBATIONS(::flatbuffers::Offset<::flatbuffers::String> N_BODY_PERTURBATIONS) {
+    fbb_.AddOffset(RDM::VT_N_BODY_PERTURBATIONS, N_BODY_PERTURBATIONS);
+  }
+  void add_SOLAR_RAD_PRESSURE(::flatbuffers::Offset<::flatbuffers::String> SOLAR_RAD_PRESSURE) {
+    fbb_.AddOffset(RDM::VT_SOLAR_RAD_PRESSURE, SOLAR_RAD_PRESSURE);
+  }
+  void add_EARTH_TIDES(::flatbuffers::Offset<::flatbuffers::String> EARTH_TIDES) {
+    fbb_.AddOffset(RDM::VT_EARTH_TIDES, EARTH_TIDES);
+  }
+  void add_INTRACK_THRUST(::flatbuffers::Offset<::flatbuffers::String> INTRACK_THRUST) {
+    fbb_.AddOffset(RDM::VT_INTRACK_THRUST, INTRACK_THRUST);
+  }
+  void add_DRAG_PARAMETERS_SOURCE(::flatbuffers::Offset<::flatbuffers::String> DRAG_PARAMETERS_SOURCE) {
+    fbb_.AddOffset(RDM::VT_DRAG_PARAMETERS_SOURCE, DRAG_PARAMETERS_SOURCE);
+  }
+  void add_DRAG_PARAMETERS_ALTITUDE(double DRAG_PARAMETERS_ALTITUDE) {
+    fbb_.AddElement<double>(RDM::VT_DRAG_PARAMETERS_ALTITUDE, DRAG_PARAMETERS_ALTITUDE, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_REENTRY_UNCERTAINTY_METHOD(::flatbuffers::Offset<::flatbuffers::String> REENTRY_UNCERTAINTY_METHOD) {
+    fbb_.AddOffset(RDM::VT_REENTRY_UNCERTAINTY_METHOD, REENTRY_UNCERTAINTY_METHOD);
+  }
+  void add_REENTRY_DISINTEGRATION(::flatbuffers::Offset<::flatbuffers::String> REENTRY_DISINTEGRATION) {
+    fbb_.AddOffset(RDM::VT_REENTRY_DISINTEGRATION, REENTRY_DISINTEGRATION);
+  }
+  void add_IMPACT_UNCERTAINTY_METHOD(::flatbuffers::Offset<::flatbuffers::String> IMPACT_UNCERTAINTY_METHOD) {
+    fbb_.AddOffset(RDM::VT_IMPACT_UNCERTAINTY_METHOD, IMPACT_UNCERTAINTY_METHOD);
+  }
+  void add_PREVIOUS_MESSAGE_ID(::flatbuffers::Offset<::flatbuffers::String> PREVIOUS_MESSAGE_ID) {
+    fbb_.AddOffset(RDM::VT_PREVIOUS_MESSAGE_ID, PREVIOUS_MESSAGE_ID);
+  }
+  void add_NEXT_MESSAGE_EPOCH(::flatbuffers::Offset<::flatbuffers::String> NEXT_MESSAGE_EPOCH) {
+    fbb_.AddOffset(RDM::VT_NEXT_MESSAGE_EPOCH, NEXT_MESSAGE_EPOCH);
+  }
+  void add_ORBIT_LIFETIME(double ORBIT_LIFETIME) {
+    fbb_.AddElement<double>(RDM::VT_ORBIT_LIFETIME, ORBIT_LIFETIME, 0.0);
+  }
+  void add_ORBIT_LIFETIME_WINDOW_START(double ORBIT_LIFETIME_WINDOW_START) {
+    fbb_.AddElement<double>(RDM::VT_ORBIT_LIFETIME_WINDOW_START, ORBIT_LIFETIME_WINDOW_START, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_ORBIT_LIFETIME_WINDOW_END(double ORBIT_LIFETIME_WINDOW_END) {
+    fbb_.AddElement<double>(RDM::VT_ORBIT_LIFETIME_WINDOW_END, ORBIT_LIFETIME_WINDOW_END, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_REENTRY_WINDOW_START(::flatbuffers::Offset<::flatbuffers::String> REENTRY_WINDOW_START) {
+    fbb_.AddOffset(RDM::VT_REENTRY_WINDOW_START, REENTRY_WINDOW_START);
+  }
+  void add_REENTRY_WINDOW_END(::flatbuffers::Offset<::flatbuffers::String> REENTRY_WINDOW_END) {
+    fbb_.AddOffset(RDM::VT_REENTRY_WINDOW_END, REENTRY_WINDOW_END);
+  }
+  void add_ORBIT_LIFETIME_CONFIDENCE_LEVEL(double ORBIT_LIFETIME_CONFIDENCE_LEVEL) {
+    fbb_.AddElement<double>(RDM::VT_ORBIT_LIFETIME_CONFIDENCE_LEVEL, ORBIT_LIFETIME_CONFIDENCE_LEVEL, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_PROBABILITY_OF_IMPACT(double PROBABILITY_OF_IMPACT) {
+    fbb_.AddElement<double>(RDM::VT_PROBABILITY_OF_IMPACT, PROBABILITY_OF_IMPACT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_PROBABILITY_OF_BURN_UP(double PROBABILITY_OF_BURN_UP) {
+    fbb_.AddElement<double>(RDM::VT_PROBABILITY_OF_BURN_UP, PROBABILITY_OF_BURN_UP, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_PROBABILITY_OF_BREAK_UP(double PROBABILITY_OF_BREAK_UP) {
+    fbb_.AddElement<double>(RDM::VT_PROBABILITY_OF_BREAK_UP, PROBABILITY_OF_BREAK_UP, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_PROBABILITY_OF_LAND_IMPACT(double PROBABILITY_OF_LAND_IMPACT) {
+    fbb_.AddElement<double>(RDM::VT_PROBABILITY_OF_LAND_IMPACT, PROBABILITY_OF_LAND_IMPACT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_PROBABILITY_OF_CASUALTY(double PROBABILITY_OF_CASUALTY) {
+    fbb_.AddElement<double>(RDM::VT_PROBABILITY_OF_CASUALTY, PROBABILITY_OF_CASUALTY, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_NOMINAL_IMPACT_EPOCH(::flatbuffers::Offset<::flatbuffers::String> NOMINAL_IMPACT_EPOCH) {
+    fbb_.AddOffset(RDM::VT_NOMINAL_IMPACT_EPOCH, NOMINAL_IMPACT_EPOCH);
+  }
+  void add_IMPACT_WINDOW_START(::flatbuffers::Offset<::flatbuffers::String> IMPACT_WINDOW_START) {
+    fbb_.AddOffset(RDM::VT_IMPACT_WINDOW_START, IMPACT_WINDOW_START);
+  }
+  void add_IMPACT_WINDOW_END(::flatbuffers::Offset<::flatbuffers::String> IMPACT_WINDOW_END) {
+    fbb_.AddOffset(RDM::VT_IMPACT_WINDOW_END, IMPACT_WINDOW_END);
+  }
+  void add_IMPACT_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> IMPACT_REF_FRAME) {
+    fbb_.AddOffset(RDM::VT_IMPACT_REF_FRAME, IMPACT_REF_FRAME);
+  }
+  void add_NOMINAL_IMPACT_LON(double NOMINAL_IMPACT_LON) {
+    fbb_.AddElement<double>(RDM::VT_NOMINAL_IMPACT_LON, NOMINAL_IMPACT_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_NOMINAL_IMPACT_LAT(double NOMINAL_IMPACT_LAT) {
+    fbb_.AddElement<double>(RDM::VT_NOMINAL_IMPACT_LAT, NOMINAL_IMPACT_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_NOMINAL_IMPACT_ALT(double NOMINAL_IMPACT_ALT) {
+    fbb_.AddElement<double>(RDM::VT_NOMINAL_IMPACT_ALT, NOMINAL_IMPACT_ALT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_1_CONFIDENCE(double IMPACT_1_CONFIDENCE) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_1_CONFIDENCE, IMPACT_1_CONFIDENCE, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_1_START_LON(double IMPACT_1_START_LON) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_1_START_LON, IMPACT_1_START_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_1_START_LAT(double IMPACT_1_START_LAT) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_1_START_LAT, IMPACT_1_START_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_1_STOP_LON(double IMPACT_1_STOP_LON) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_1_STOP_LON, IMPACT_1_STOP_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_1_STOP_LAT(double IMPACT_1_STOP_LAT) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_1_STOP_LAT, IMPACT_1_STOP_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_1_CROSS_TRACK(double IMPACT_1_CROSS_TRACK) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_1_CROSS_TRACK, IMPACT_1_CROSS_TRACK, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_2_CONFIDENCE(double IMPACT_2_CONFIDENCE) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_2_CONFIDENCE, IMPACT_2_CONFIDENCE, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_2_START_LON(double IMPACT_2_START_LON) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_2_START_LON, IMPACT_2_START_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_2_START_LAT(double IMPACT_2_START_LAT) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_2_START_LAT, IMPACT_2_START_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_2_STOP_LON(double IMPACT_2_STOP_LON) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_2_STOP_LON, IMPACT_2_STOP_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_2_STOP_LAT(double IMPACT_2_STOP_LAT) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_2_STOP_LAT, IMPACT_2_STOP_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_2_CROSS_TRACK(double IMPACT_2_CROSS_TRACK) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_2_CROSS_TRACK, IMPACT_2_CROSS_TRACK, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_3_CONFIDENCE(double IMPACT_3_CONFIDENCE) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_3_CONFIDENCE, IMPACT_3_CONFIDENCE, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_3_START_LON(double IMPACT_3_START_LON) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_3_START_LON, IMPACT_3_START_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_3_START_LAT(double IMPACT_3_START_LAT) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_3_START_LAT, IMPACT_3_START_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_3_STOP_LON(double IMPACT_3_STOP_LON) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_3_STOP_LON, IMPACT_3_STOP_LON, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_3_STOP_LAT(double IMPACT_3_STOP_LAT) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_3_STOP_LAT, IMPACT_3_STOP_LAT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_IMPACT_3_CROSS_TRACK(double IMPACT_3_CROSS_TRACK) {
+    fbb_.AddElement<double>(RDM::VT_IMPACT_3_CROSS_TRACK, IMPACT_3_CROSS_TRACK, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_COV_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> COV_REF_FRAME) {
+    fbb_.AddOffset(RDM::VT_COV_REF_FRAME, COV_REF_FRAME);
+  }
+  void add_COVARIANCE(::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE) {
+    fbb_.AddOffset(RDM::VT_COVARIANCE, COVARIANCE);
+  }
+  void add_DRY_MASS(double DRY_MASS) {
+    fbb_.AddElement<double>(RDM::VT_DRY_MASS, DRY_MASS, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_HAZARDOUS_SUBSTANCES(::flatbuffers::Offset<::flatbuffers::String> HAZARDOUS_SUBSTANCES) {
+    fbb_.AddOffset(RDM::VT_HAZARDOUS_SUBSTANCES, HAZARDOUS_SUBSTANCES);
+  }
+  void add_SOLAR_RAD_COEFF(double SOLAR_RAD_COEFF) {
+    fbb_.AddElement<double>(RDM::VT_SOLAR_RAD_COEFF, SOLAR_RAD_COEFF, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_DRAG_COEFF(double DRAG_COEFF) {
+    fbb_.AddElement<double>(RDM::VT_DRAG_COEFF, DRAG_COEFF, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_RCS(double RCS) {
+    fbb_.AddElement<double>(RDM::VT_RCS, RCS, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_THRUST_ACCELERATION(double THRUST_ACCELERATION) {
+    fbb_.AddElement<double>(RDM::VT_THRUST_ACCELERATION, THRUST_ACCELERATION, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_TIME_LASTOB_START(::flatbuffers::Offset<::flatbuffers::String> TIME_LASTOB_START) {
+    fbb_.AddOffset(RDM::VT_TIME_LASTOB_START, TIME_LASTOB_START);
+  }
+  void add_TIME_LASTOB_END(::flatbuffers::Offset<::flatbuffers::String> TIME_LASTOB_END) {
+    fbb_.AddOffset(RDM::VT_TIME_LASTOB_END, TIME_LASTOB_END);
+  }
+  void add_RECOMMENDED_OD_SPAN(double RECOMMENDED_OD_SPAN) {
+    fbb_.AddElement<double>(RDM::VT_RECOMMENDED_OD_SPAN, RECOMMENDED_OD_SPAN, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_ACTUAL_OD_SPAN(double ACTUAL_OD_SPAN) {
+    fbb_.AddElement<double>(RDM::VT_ACTUAL_OD_SPAN, ACTUAL_OD_SPAN, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_OBS_AVAILABLE(uint32_t OBS_AVAILABLE) {
+    fbb_.AddElement<uint32_t>(RDM::VT_OBS_AVAILABLE, OBS_AVAILABLE, 0);
+  }
+  void add_OBS_USED(uint32_t OBS_USED) {
+    fbb_.AddElement<uint32_t>(RDM::VT_OBS_USED, OBS_USED, 0);
+  }
+  void add_TRACKS_AVAILABLE(uint32_t TRACKS_AVAILABLE) {
+    fbb_.AddElement<uint32_t>(RDM::VT_TRACKS_AVAILABLE, TRACKS_AVAILABLE, 0);
+  }
+  void add_TRACKS_USED(uint32_t TRACKS_USED) {
+    fbb_.AddElement<uint32_t>(RDM::VT_TRACKS_USED, TRACKS_USED, 0);
+  }
+  void add_RESIDUALS_ACCEPTED(double RESIDUALS_ACCEPTED) {
+    fbb_.AddElement<double>(RDM::VT_RESIDUALS_ACCEPTED, RESIDUALS_ACCEPTED, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_WEIGHTED_RMS(double WEIGHTED_RMS) {
+    fbb_.AddElement<double>(RDM::VT_WEIGHTED_RMS, WEIGHTED_RMS, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_USER_DEFINED_PARAMETERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<RDMUserDefinedParameter>>> USER_DEFINED_PARAMETERS) {
+    fbb_.AddOffset(RDM::VT_USER_DEFINED_PARAMETERS, USER_DEFINED_PARAMETERS);
+  }
   explicit RDMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -800,8 +1610,128 @@ inline ::flatbuffers::Offset<RDM> CreateRDM(
     double CASUALTY_EXPECTATION = 0.0,
     uint32_t NUM_FRAGMENTS = 0,
     double SURVIVING_MASS = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CATALOG_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_OWNER = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_OPERATOR = 0,
+    rdmControlledReentry CONTROLLED_REENTRY = rdmControlledReentry_UNSPECIFIED,
+    ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH_TZERO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> GRAVITY_MODEL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ATMOSPHERIC_MODEL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SOLAR_FLUX_PREDICTION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> N_BODY_PERTURBATIONS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SOLAR_RAD_PRESSURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EARTH_TIDES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> INTRACK_THRUST = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DRAG_PARAMETERS_SOURCE = 0,
+    double DRAG_PARAMETERS_ALTITUDE = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> REENTRY_UNCERTAINTY_METHOD = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REENTRY_DISINTEGRATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> IMPACT_UNCERTAINTY_METHOD = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PREVIOUS_MESSAGE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NEXT_MESSAGE_EPOCH = 0,
+    double ORBIT_LIFETIME = 0.0,
+    double ORBIT_LIFETIME_WINDOW_START = std::numeric_limits<double>::quiet_NaN(),
+    double ORBIT_LIFETIME_WINDOW_END = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> REENTRY_WINDOW_START = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REENTRY_WINDOW_END = 0,
+    double ORBIT_LIFETIME_CONFIDENCE_LEVEL = std::numeric_limits<double>::quiet_NaN(),
+    double PROBABILITY_OF_IMPACT = std::numeric_limits<double>::quiet_NaN(),
+    double PROBABILITY_OF_BURN_UP = std::numeric_limits<double>::quiet_NaN(),
+    double PROBABILITY_OF_BREAK_UP = std::numeric_limits<double>::quiet_NaN(),
+    double PROBABILITY_OF_LAND_IMPACT = std::numeric_limits<double>::quiet_NaN(),
+    double PROBABILITY_OF_CASUALTY = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> NOMINAL_IMPACT_EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> IMPACT_WINDOW_START = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> IMPACT_WINDOW_END = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> IMPACT_REF_FRAME = 0,
+    double NOMINAL_IMPACT_LON = std::numeric_limits<double>::quiet_NaN(),
+    double NOMINAL_IMPACT_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double NOMINAL_IMPACT_ALT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_1_CONFIDENCE = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_1_START_LON = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_1_START_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_1_STOP_LON = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_1_STOP_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_1_CROSS_TRACK = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_2_CONFIDENCE = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_2_START_LON = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_2_START_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_2_STOP_LON = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_2_STOP_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_2_CROSS_TRACK = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_3_CONFIDENCE = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_3_START_LON = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_3_START_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_3_STOP_LON = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_3_STOP_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_3_CROSS_TRACK = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> COV_REF_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE = 0,
+    double DRY_MASS = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> HAZARDOUS_SUBSTANCES = 0,
+    double SOLAR_RAD_COEFF = std::numeric_limits<double>::quiet_NaN(),
+    double DRAG_COEFF = std::numeric_limits<double>::quiet_NaN(),
+    double RCS = std::numeric_limits<double>::quiet_NaN(),
+    double THRUST_ACCELERATION = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> TIME_LASTOB_START = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TIME_LASTOB_END = 0,
+    double RECOMMENDED_OD_SPAN = std::numeric_limits<double>::quiet_NaN(),
+    double ACTUAL_OD_SPAN = std::numeric_limits<double>::quiet_NaN(),
+    uint32_t OBS_AVAILABLE = 0,
+    uint32_t OBS_USED = 0,
+    uint32_t TRACKS_AVAILABLE = 0,
+    uint32_t TRACKS_USED = 0,
+    double RESIDUALS_ACCEPTED = std::numeric_limits<double>::quiet_NaN(),
+    double WEIGHTED_RMS = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<RDMUserDefinedParameter>>> USER_DEFINED_PARAMETERS = 0) {
   RDMBuilder builder_(_fbb);
+  builder_.add_WEIGHTED_RMS(WEIGHTED_RMS);
+  builder_.add_RESIDUALS_ACCEPTED(RESIDUALS_ACCEPTED);
+  builder_.add_ACTUAL_OD_SPAN(ACTUAL_OD_SPAN);
+  builder_.add_RECOMMENDED_OD_SPAN(RECOMMENDED_OD_SPAN);
+  builder_.add_THRUST_ACCELERATION(THRUST_ACCELERATION);
+  builder_.add_RCS(RCS);
+  builder_.add_DRAG_COEFF(DRAG_COEFF);
+  builder_.add_SOLAR_RAD_COEFF(SOLAR_RAD_COEFF);
+  builder_.add_DRY_MASS(DRY_MASS);
+  builder_.add_IMPACT_3_CROSS_TRACK(IMPACT_3_CROSS_TRACK);
+  builder_.add_IMPACT_3_STOP_LAT(IMPACT_3_STOP_LAT);
+  builder_.add_IMPACT_3_STOP_LON(IMPACT_3_STOP_LON);
+  builder_.add_IMPACT_3_START_LAT(IMPACT_3_START_LAT);
+  builder_.add_IMPACT_3_START_LON(IMPACT_3_START_LON);
+  builder_.add_IMPACT_3_CONFIDENCE(IMPACT_3_CONFIDENCE);
+  builder_.add_IMPACT_2_CROSS_TRACK(IMPACT_2_CROSS_TRACK);
+  builder_.add_IMPACT_2_STOP_LAT(IMPACT_2_STOP_LAT);
+  builder_.add_IMPACT_2_STOP_LON(IMPACT_2_STOP_LON);
+  builder_.add_IMPACT_2_START_LAT(IMPACT_2_START_LAT);
+  builder_.add_IMPACT_2_START_LON(IMPACT_2_START_LON);
+  builder_.add_IMPACT_2_CONFIDENCE(IMPACT_2_CONFIDENCE);
+  builder_.add_IMPACT_1_CROSS_TRACK(IMPACT_1_CROSS_TRACK);
+  builder_.add_IMPACT_1_STOP_LAT(IMPACT_1_STOP_LAT);
+  builder_.add_IMPACT_1_STOP_LON(IMPACT_1_STOP_LON);
+  builder_.add_IMPACT_1_START_LAT(IMPACT_1_START_LAT);
+  builder_.add_IMPACT_1_START_LON(IMPACT_1_START_LON);
+  builder_.add_IMPACT_1_CONFIDENCE(IMPACT_1_CONFIDENCE);
+  builder_.add_NOMINAL_IMPACT_ALT(NOMINAL_IMPACT_ALT);
+  builder_.add_NOMINAL_IMPACT_LAT(NOMINAL_IMPACT_LAT);
+  builder_.add_NOMINAL_IMPACT_LON(NOMINAL_IMPACT_LON);
+  builder_.add_PROBABILITY_OF_CASUALTY(PROBABILITY_OF_CASUALTY);
+  builder_.add_PROBABILITY_OF_LAND_IMPACT(PROBABILITY_OF_LAND_IMPACT);
+  builder_.add_PROBABILITY_OF_BREAK_UP(PROBABILITY_OF_BREAK_UP);
+  builder_.add_PROBABILITY_OF_BURN_UP(PROBABILITY_OF_BURN_UP);
+  builder_.add_PROBABILITY_OF_IMPACT(PROBABILITY_OF_IMPACT);
+  builder_.add_ORBIT_LIFETIME_CONFIDENCE_LEVEL(ORBIT_LIFETIME_CONFIDENCE_LEVEL);
+  builder_.add_ORBIT_LIFETIME_WINDOW_END(ORBIT_LIFETIME_WINDOW_END);
+  builder_.add_ORBIT_LIFETIME_WINDOW_START(ORBIT_LIFETIME_WINDOW_START);
+  builder_.add_ORBIT_LIFETIME(ORBIT_LIFETIME);
+  builder_.add_DRAG_PARAMETERS_ALTITUDE(DRAG_PARAMETERS_ALTITUDE);
   builder_.add_SURVIVING_MASS(SURVIVING_MASS);
   builder_.add_CASUALTY_EXPECTATION(CASUALTY_EXPECTATION);
   builder_.add_DRAG_AREA(DRAG_AREA);
@@ -812,6 +1742,45 @@ inline ::flatbuffers::Offset<RDM> CreateRDM(
   builder_.add_REENTRY_LONGITUDE(REENTRY_LONGITUDE);
   builder_.add_REENTRY_LATITUDE(REENTRY_LATITUDE);
   builder_.add_REENTRY_EPOCH_UNC(REENTRY_EPOCH_UNC);
+  builder_.add_USER_DEFINED_PARAMETERS(USER_DEFINED_PARAMETERS);
+  builder_.add_TRACKS_USED(TRACKS_USED);
+  builder_.add_TRACKS_AVAILABLE(TRACKS_AVAILABLE);
+  builder_.add_OBS_USED(OBS_USED);
+  builder_.add_OBS_AVAILABLE(OBS_AVAILABLE);
+  builder_.add_TIME_LASTOB_END(TIME_LASTOB_END);
+  builder_.add_TIME_LASTOB_START(TIME_LASTOB_START);
+  builder_.add_HAZARDOUS_SUBSTANCES(HAZARDOUS_SUBSTANCES);
+  builder_.add_COVARIANCE(COVARIANCE);
+  builder_.add_COV_REF_FRAME(COV_REF_FRAME);
+  builder_.add_IMPACT_REF_FRAME(IMPACT_REF_FRAME);
+  builder_.add_IMPACT_WINDOW_END(IMPACT_WINDOW_END);
+  builder_.add_IMPACT_WINDOW_START(IMPACT_WINDOW_START);
+  builder_.add_NOMINAL_IMPACT_EPOCH(NOMINAL_IMPACT_EPOCH);
+  builder_.add_REENTRY_WINDOW_END(REENTRY_WINDOW_END);
+  builder_.add_REENTRY_WINDOW_START(REENTRY_WINDOW_START);
+  builder_.add_NEXT_MESSAGE_EPOCH(NEXT_MESSAGE_EPOCH);
+  builder_.add_PREVIOUS_MESSAGE_ID(PREVIOUS_MESSAGE_ID);
+  builder_.add_IMPACT_UNCERTAINTY_METHOD(IMPACT_UNCERTAINTY_METHOD);
+  builder_.add_REENTRY_DISINTEGRATION(REENTRY_DISINTEGRATION);
+  builder_.add_REENTRY_UNCERTAINTY_METHOD(REENTRY_UNCERTAINTY_METHOD);
+  builder_.add_DRAG_PARAMETERS_SOURCE(DRAG_PARAMETERS_SOURCE);
+  builder_.add_INTRACK_THRUST(INTRACK_THRUST);
+  builder_.add_EARTH_TIDES(EARTH_TIDES);
+  builder_.add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE);
+  builder_.add_N_BODY_PERTURBATIONS(N_BODY_PERTURBATIONS);
+  builder_.add_SOLAR_FLUX_PREDICTION(SOLAR_FLUX_PREDICTION);
+  builder_.add_ATMOSPHERIC_MODEL(ATMOSPHERIC_MODEL);
+  builder_.add_GRAVITY_MODEL(GRAVITY_MODEL);
+  builder_.add_EPHEMERIS_NAME(EPHEMERIS_NAME);
+  builder_.add_REF_FRAME_EPOCH(REF_FRAME_EPOCH);
+  builder_.add_REF_FRAME(REF_FRAME);
+  builder_.add_EPOCH_TZERO(EPOCH_TZERO);
+  builder_.add_CENTER_NAME(CENTER_NAME);
+  builder_.add_OBJECT_OPERATOR(OBJECT_OPERATOR);
+  builder_.add_OBJECT_OWNER(OBJECT_OWNER);
+  builder_.add_OBJECT_DESIGNATOR(OBJECT_DESIGNATOR);
+  builder_.add_CATALOG_NAME(CATALOG_NAME);
+  builder_.add_MESSAGE_ID(MESSAGE_ID);
   builder_.add_COMMENT(COMMENT);
   builder_.add_NUM_FRAGMENTS(NUM_FRAGMENTS);
   builder_.add_SURVIVING_DEBRIS(SURVIVING_DEBRIS);
@@ -827,6 +1796,7 @@ inline ::flatbuffers::Offset<RDM> CreateRDM(
   builder_.add_ORIGINATOR(ORIGINATOR);
   builder_.add_CREATION_DATE(CREATION_DATE);
   builder_.add_CCSDS_RDM_VERS(CCSDS_RDM_VERS);
+  builder_.add_CONTROLLED_REENTRY(CONTROLLED_REENTRY);
   builder_.add_REASON(REASON);
   builder_.add_DISPOSITION(DISPOSITION);
   return builder_.Finish();
@@ -860,7 +1830,87 @@ inline ::flatbuffers::Offset<RDM> CreateRDMDirect(
     double CASUALTY_EXPECTATION = 0.0,
     uint32_t NUM_FRAGMENTS = 0,
     double SURVIVING_MASS = 0.0,
-    const char *COMMENT = nullptr) {
+    const char *COMMENT = nullptr,
+    const char *MESSAGE_ID = nullptr,
+    const char *CATALOG_NAME = nullptr,
+    const char *OBJECT_DESIGNATOR = nullptr,
+    const char *OBJECT_OWNER = nullptr,
+    const char *OBJECT_OPERATOR = nullptr,
+    rdmControlledReentry CONTROLLED_REENTRY = rdmControlledReentry_UNSPECIFIED,
+    const char *CENTER_NAME = nullptr,
+    const char *EPOCH_TZERO = nullptr,
+    const char *REF_FRAME = nullptr,
+    const char *REF_FRAME_EPOCH = nullptr,
+    const char *EPHEMERIS_NAME = nullptr,
+    const char *GRAVITY_MODEL = nullptr,
+    const char *ATMOSPHERIC_MODEL = nullptr,
+    const char *SOLAR_FLUX_PREDICTION = nullptr,
+    const char *N_BODY_PERTURBATIONS = nullptr,
+    const char *SOLAR_RAD_PRESSURE = nullptr,
+    const char *EARTH_TIDES = nullptr,
+    const char *INTRACK_THRUST = nullptr,
+    const char *DRAG_PARAMETERS_SOURCE = nullptr,
+    double DRAG_PARAMETERS_ALTITUDE = std::numeric_limits<double>::quiet_NaN(),
+    const char *REENTRY_UNCERTAINTY_METHOD = nullptr,
+    const char *REENTRY_DISINTEGRATION = nullptr,
+    const char *IMPACT_UNCERTAINTY_METHOD = nullptr,
+    const char *PREVIOUS_MESSAGE_ID = nullptr,
+    const char *NEXT_MESSAGE_EPOCH = nullptr,
+    double ORBIT_LIFETIME = 0.0,
+    double ORBIT_LIFETIME_WINDOW_START = std::numeric_limits<double>::quiet_NaN(),
+    double ORBIT_LIFETIME_WINDOW_END = std::numeric_limits<double>::quiet_NaN(),
+    const char *REENTRY_WINDOW_START = nullptr,
+    const char *REENTRY_WINDOW_END = nullptr,
+    double ORBIT_LIFETIME_CONFIDENCE_LEVEL = std::numeric_limits<double>::quiet_NaN(),
+    double PROBABILITY_OF_IMPACT = std::numeric_limits<double>::quiet_NaN(),
+    double PROBABILITY_OF_BURN_UP = std::numeric_limits<double>::quiet_NaN(),
+    double PROBABILITY_OF_BREAK_UP = std::numeric_limits<double>::quiet_NaN(),
+    double PROBABILITY_OF_LAND_IMPACT = std::numeric_limits<double>::quiet_NaN(),
+    double PROBABILITY_OF_CASUALTY = std::numeric_limits<double>::quiet_NaN(),
+    const char *NOMINAL_IMPACT_EPOCH = nullptr,
+    const char *IMPACT_WINDOW_START = nullptr,
+    const char *IMPACT_WINDOW_END = nullptr,
+    const char *IMPACT_REF_FRAME = nullptr,
+    double NOMINAL_IMPACT_LON = std::numeric_limits<double>::quiet_NaN(),
+    double NOMINAL_IMPACT_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double NOMINAL_IMPACT_ALT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_1_CONFIDENCE = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_1_START_LON = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_1_START_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_1_STOP_LON = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_1_STOP_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_1_CROSS_TRACK = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_2_CONFIDENCE = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_2_START_LON = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_2_START_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_2_STOP_LON = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_2_STOP_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_2_CROSS_TRACK = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_3_CONFIDENCE = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_3_START_LON = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_3_START_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_3_STOP_LON = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_3_STOP_LAT = std::numeric_limits<double>::quiet_NaN(),
+    double IMPACT_3_CROSS_TRACK = std::numeric_limits<double>::quiet_NaN(),
+    const char *COV_REF_FRAME = nullptr,
+    const std::vector<double> *COVARIANCE = nullptr,
+    double DRY_MASS = std::numeric_limits<double>::quiet_NaN(),
+    const char *HAZARDOUS_SUBSTANCES = nullptr,
+    double SOLAR_RAD_COEFF = std::numeric_limits<double>::quiet_NaN(),
+    double DRAG_COEFF = std::numeric_limits<double>::quiet_NaN(),
+    double RCS = std::numeric_limits<double>::quiet_NaN(),
+    double THRUST_ACCELERATION = std::numeric_limits<double>::quiet_NaN(),
+    const char *TIME_LASTOB_START = nullptr,
+    const char *TIME_LASTOB_END = nullptr,
+    double RECOMMENDED_OD_SPAN = std::numeric_limits<double>::quiet_NaN(),
+    double ACTUAL_OD_SPAN = std::numeric_limits<double>::quiet_NaN(),
+    uint32_t OBS_AVAILABLE = 0,
+    uint32_t OBS_USED = 0,
+    uint32_t TRACKS_AVAILABLE = 0,
+    uint32_t TRACKS_USED = 0,
+    double RESIDUALS_ACCEPTED = std::numeric_limits<double>::quiet_NaN(),
+    double WEIGHTED_RMS = std::numeric_limits<double>::quiet_NaN(),
+    const std::vector<::flatbuffers::Offset<RDMUserDefinedParameter>> *USER_DEFINED_PARAMETERS = nullptr) {
   auto CCSDS_RDM_VERS__ = CCSDS_RDM_VERS ? _fbb.CreateString(CCSDS_RDM_VERS) : 0;
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
@@ -873,6 +1923,41 @@ inline ::flatbuffers::Offset<RDM> CreateRDMDirect(
   auto IMPACT_PREDICTIONS__ = IMPACT_PREDICTIONS ? _fbb.CreateVector<::flatbuffers::Offset<reentryImpact>>(*IMPACT_PREDICTIONS) : 0;
   auto SURVIVING_DEBRIS__ = SURVIVING_DEBRIS ? _fbb.CreateVector<::flatbuffers::Offset<survivingDebris>>(*SURVIVING_DEBRIS) : 0;
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
+  auto MESSAGE_ID__ = MESSAGE_ID ? _fbb.CreateString(MESSAGE_ID) : 0;
+  auto CATALOG_NAME__ = CATALOG_NAME ? _fbb.CreateString(CATALOG_NAME) : 0;
+  auto OBJECT_DESIGNATOR__ = OBJECT_DESIGNATOR ? _fbb.CreateString(OBJECT_DESIGNATOR) : 0;
+  auto OBJECT_OWNER__ = OBJECT_OWNER ? _fbb.CreateString(OBJECT_OWNER) : 0;
+  auto OBJECT_OPERATOR__ = OBJECT_OPERATOR ? _fbb.CreateString(OBJECT_OPERATOR) : 0;
+  auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
+  auto EPOCH_TZERO__ = EPOCH_TZERO ? _fbb.CreateString(EPOCH_TZERO) : 0;
+  auto REF_FRAME__ = REF_FRAME ? _fbb.CreateString(REF_FRAME) : 0;
+  auto REF_FRAME_EPOCH__ = REF_FRAME_EPOCH ? _fbb.CreateString(REF_FRAME_EPOCH) : 0;
+  auto EPHEMERIS_NAME__ = EPHEMERIS_NAME ? _fbb.CreateString(EPHEMERIS_NAME) : 0;
+  auto GRAVITY_MODEL__ = GRAVITY_MODEL ? _fbb.CreateString(GRAVITY_MODEL) : 0;
+  auto ATMOSPHERIC_MODEL__ = ATMOSPHERIC_MODEL ? _fbb.CreateString(ATMOSPHERIC_MODEL) : 0;
+  auto SOLAR_FLUX_PREDICTION__ = SOLAR_FLUX_PREDICTION ? _fbb.CreateString(SOLAR_FLUX_PREDICTION) : 0;
+  auto N_BODY_PERTURBATIONS__ = N_BODY_PERTURBATIONS ? _fbb.CreateString(N_BODY_PERTURBATIONS) : 0;
+  auto SOLAR_RAD_PRESSURE__ = SOLAR_RAD_PRESSURE ? _fbb.CreateString(SOLAR_RAD_PRESSURE) : 0;
+  auto EARTH_TIDES__ = EARTH_TIDES ? _fbb.CreateString(EARTH_TIDES) : 0;
+  auto INTRACK_THRUST__ = INTRACK_THRUST ? _fbb.CreateString(INTRACK_THRUST) : 0;
+  auto DRAG_PARAMETERS_SOURCE__ = DRAG_PARAMETERS_SOURCE ? _fbb.CreateString(DRAG_PARAMETERS_SOURCE) : 0;
+  auto REENTRY_UNCERTAINTY_METHOD__ = REENTRY_UNCERTAINTY_METHOD ? _fbb.CreateString(REENTRY_UNCERTAINTY_METHOD) : 0;
+  auto REENTRY_DISINTEGRATION__ = REENTRY_DISINTEGRATION ? _fbb.CreateString(REENTRY_DISINTEGRATION) : 0;
+  auto IMPACT_UNCERTAINTY_METHOD__ = IMPACT_UNCERTAINTY_METHOD ? _fbb.CreateString(IMPACT_UNCERTAINTY_METHOD) : 0;
+  auto PREVIOUS_MESSAGE_ID__ = PREVIOUS_MESSAGE_ID ? _fbb.CreateString(PREVIOUS_MESSAGE_ID) : 0;
+  auto NEXT_MESSAGE_EPOCH__ = NEXT_MESSAGE_EPOCH ? _fbb.CreateString(NEXT_MESSAGE_EPOCH) : 0;
+  auto REENTRY_WINDOW_START__ = REENTRY_WINDOW_START ? _fbb.CreateString(REENTRY_WINDOW_START) : 0;
+  auto REENTRY_WINDOW_END__ = REENTRY_WINDOW_END ? _fbb.CreateString(REENTRY_WINDOW_END) : 0;
+  auto NOMINAL_IMPACT_EPOCH__ = NOMINAL_IMPACT_EPOCH ? _fbb.CreateString(NOMINAL_IMPACT_EPOCH) : 0;
+  auto IMPACT_WINDOW_START__ = IMPACT_WINDOW_START ? _fbb.CreateString(IMPACT_WINDOW_START) : 0;
+  auto IMPACT_WINDOW_END__ = IMPACT_WINDOW_END ? _fbb.CreateString(IMPACT_WINDOW_END) : 0;
+  auto IMPACT_REF_FRAME__ = IMPACT_REF_FRAME ? _fbb.CreateString(IMPACT_REF_FRAME) : 0;
+  auto COV_REF_FRAME__ = COV_REF_FRAME ? _fbb.CreateString(COV_REF_FRAME) : 0;
+  auto COVARIANCE__ = COVARIANCE ? _fbb.CreateVector<double>(*COVARIANCE) : 0;
+  auto HAZARDOUS_SUBSTANCES__ = HAZARDOUS_SUBSTANCES ? _fbb.CreateString(HAZARDOUS_SUBSTANCES) : 0;
+  auto TIME_LASTOB_START__ = TIME_LASTOB_START ? _fbb.CreateString(TIME_LASTOB_START) : 0;
+  auto TIME_LASTOB_END__ = TIME_LASTOB_END ? _fbb.CreateString(TIME_LASTOB_END) : 0;
+  auto USER_DEFINED_PARAMETERS__ = USER_DEFINED_PARAMETERS ? _fbb.CreateVector<::flatbuffers::Offset<RDMUserDefinedParameter>>(*USER_DEFINED_PARAMETERS) : 0;
   return CreateRDM(
       _fbb,
       CCSDS_RDM_VERS__,
@@ -901,7 +1986,157 @@ inline ::flatbuffers::Offset<RDM> CreateRDMDirect(
       CASUALTY_EXPECTATION,
       NUM_FRAGMENTS,
       SURVIVING_MASS,
-      COMMENT__);
+      COMMENT__,
+      MESSAGE_ID__,
+      CATALOG_NAME__,
+      OBJECT_DESIGNATOR__,
+      OBJECT_OWNER__,
+      OBJECT_OPERATOR__,
+      CONTROLLED_REENTRY,
+      CENTER_NAME__,
+      EPOCH_TZERO__,
+      REF_FRAME__,
+      REF_FRAME_EPOCH__,
+      EPHEMERIS_NAME__,
+      GRAVITY_MODEL__,
+      ATMOSPHERIC_MODEL__,
+      SOLAR_FLUX_PREDICTION__,
+      N_BODY_PERTURBATIONS__,
+      SOLAR_RAD_PRESSURE__,
+      EARTH_TIDES__,
+      INTRACK_THRUST__,
+      DRAG_PARAMETERS_SOURCE__,
+      DRAG_PARAMETERS_ALTITUDE,
+      REENTRY_UNCERTAINTY_METHOD__,
+      REENTRY_DISINTEGRATION__,
+      IMPACT_UNCERTAINTY_METHOD__,
+      PREVIOUS_MESSAGE_ID__,
+      NEXT_MESSAGE_EPOCH__,
+      ORBIT_LIFETIME,
+      ORBIT_LIFETIME_WINDOW_START,
+      ORBIT_LIFETIME_WINDOW_END,
+      REENTRY_WINDOW_START__,
+      REENTRY_WINDOW_END__,
+      ORBIT_LIFETIME_CONFIDENCE_LEVEL,
+      PROBABILITY_OF_IMPACT,
+      PROBABILITY_OF_BURN_UP,
+      PROBABILITY_OF_BREAK_UP,
+      PROBABILITY_OF_LAND_IMPACT,
+      PROBABILITY_OF_CASUALTY,
+      NOMINAL_IMPACT_EPOCH__,
+      IMPACT_WINDOW_START__,
+      IMPACT_WINDOW_END__,
+      IMPACT_REF_FRAME__,
+      NOMINAL_IMPACT_LON,
+      NOMINAL_IMPACT_LAT,
+      NOMINAL_IMPACT_ALT,
+      IMPACT_1_CONFIDENCE,
+      IMPACT_1_START_LON,
+      IMPACT_1_START_LAT,
+      IMPACT_1_STOP_LON,
+      IMPACT_1_STOP_LAT,
+      IMPACT_1_CROSS_TRACK,
+      IMPACT_2_CONFIDENCE,
+      IMPACT_2_START_LON,
+      IMPACT_2_START_LAT,
+      IMPACT_2_STOP_LON,
+      IMPACT_2_STOP_LAT,
+      IMPACT_2_CROSS_TRACK,
+      IMPACT_3_CONFIDENCE,
+      IMPACT_3_START_LON,
+      IMPACT_3_START_LAT,
+      IMPACT_3_STOP_LON,
+      IMPACT_3_STOP_LAT,
+      IMPACT_3_CROSS_TRACK,
+      COV_REF_FRAME__,
+      COVARIANCE__,
+      DRY_MASS,
+      HAZARDOUS_SUBSTANCES__,
+      SOLAR_RAD_COEFF,
+      DRAG_COEFF,
+      RCS,
+      THRUST_ACCELERATION,
+      TIME_LASTOB_START__,
+      TIME_LASTOB_END__,
+      RECOMMENDED_OD_SPAN,
+      ACTUAL_OD_SPAN,
+      OBS_AVAILABLE,
+      OBS_USED,
+      TRACKS_AVAILABLE,
+      TRACKS_USED,
+      RESIDUALS_ACCEPTED,
+      WEIGHTED_RMS,
+      USER_DEFINED_PARAMETERS__);
+}
+
+/// One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+struct RDMUserDefinedParameter FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RDMUserDefinedParameterBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PARAM_NAME = 4,
+    VT_PARAM_VALUE = 6
+  };
+  /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  const ::flatbuffers::String *PARAM_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARAM_NAME);
+  }
+  /// The value as written
+  const ::flatbuffers::String *PARAM_VALUE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PARAM_VALUE);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_PARAM_NAME) &&
+           verifier.VerifyString(PARAM_NAME()) &&
+           VerifyOffset(verifier, VT_PARAM_VALUE) &&
+           verifier.VerifyString(PARAM_VALUE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct RDMUserDefinedParameterBuilder {
+  typedef RDMUserDefinedParameter Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_PARAM_NAME(::flatbuffers::Offset<::flatbuffers::String> PARAM_NAME) {
+    fbb_.AddOffset(RDMUserDefinedParameter::VT_PARAM_NAME, PARAM_NAME);
+  }
+  void add_PARAM_VALUE(::flatbuffers::Offset<::flatbuffers::String> PARAM_VALUE) {
+    fbb_.AddOffset(RDMUserDefinedParameter::VT_PARAM_VALUE, PARAM_VALUE);
+  }
+  explicit RDMUserDefinedParameterBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<RDMUserDefinedParameter> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<RDMUserDefinedParameter>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<RDMUserDefinedParameter> CreateRDMUserDefinedParameter(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> PARAM_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PARAM_VALUE = 0) {
+  RDMUserDefinedParameterBuilder builder_(_fbb);
+  builder_.add_PARAM_VALUE(PARAM_VALUE);
+  builder_.add_PARAM_NAME(PARAM_NAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<RDMUserDefinedParameter> CreateRDMUserDefinedParameterDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *PARAM_NAME = nullptr,
+    const char *PARAM_VALUE = nullptr) {
+  auto PARAM_NAME__ = PARAM_NAME ? _fbb.CreateString(PARAM_NAME) : 0;
+  auto PARAM_VALUE__ = PARAM_VALUE ? _fbb.CreateString(PARAM_VALUE) : 0;
+  return CreateRDMUserDefinedParameter(
+      _fbb,
+      PARAM_NAME__,
+      PARAM_VALUE__);
 }
 
 inline const RDM *GetRDM(const void *buf) {

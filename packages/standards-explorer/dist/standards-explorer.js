@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.244.0+1791733545355",
+  version: "1.245.0+1791742574195",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -1138,8 +1138,8 @@ file_identifier "$RFO";`,
       ]
     },
     CDM: {
-      IDL: `// Hash: 144be2a09eaf7c053f4ea7f1296037961050e94a44041326089128b0e40ecb8f
-// Version: 2.0.2
+      IDL: `// Hash: f60012b5d307a70a9cdd1ebcdb6c1d08f112da858810b248f14409ea49fcceb6
+// Version: 2.0.3
 // -----------------------------------END_HEADER
 include "../PNM/main.fbs";
 include "../CAT/main.fbs";
@@ -1154,6 +1154,15 @@ enum screeningVolumeShape : byte {
 enum covarianceAlgorithm : byte {
   CALCULATED,
   DEFAULT
+}
+
+/// MANEUVERABLE of a CDM object (CCSDS 508.0-B-1): whether it can maneuver.
+/// UNSPECIFIED is the zero value: the record does not state it.
+enum cdmManeuverable : byte {
+  UNSPECIFIED = 0,
+  YES = 1,
+  NO = 2,
+  NOT_APPLICABLE = 3
 }
 
 table CDMObject {
@@ -1237,9 +1246,28 @@ table CDMObject {
   ///         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
   ///         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
   COVARIANCE:[double];
+
+  /// OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+  /// as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+  OBJECT_DESIGNATOR:string;
+  /// CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+  CATALOG_NAME:string;
+  /// MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+  /// same fact as a flag, true for YES.
+  MANEUVERABLE:cdmManeuverable;
+  /// CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+  CD_AREA_OVER_MASS:double;
 }
 
 /// Conjunction Data Message
+///
+/// Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+/// SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+/// of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+/// km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+/// MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+/// COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+/// terms) are held as the message states them.
 table CDM {
   /// The version of the CCSDS CDM standard used
   CCSDS_CDM_VERS:double;
@@ -1299,6 +1327,9 @@ table CDM {
   OBJECT1_DATASOURCE:PNM;
   /// Data Source for the positional information for Object 2
   OBJECT2_DATASOURCE:PNM;
+  /// COMMENT lines of the message header and of its relative metadata and data
+  /// (CCSDS 508.0-B-1), in message order, joined by a line feed.
+  COMMENT:string;
 }
 
 
@@ -2392,8 +2423,8 @@ file_identifier "$SBM";`,
       ]
     },
     NCD: {
-      IDL: `// Hash: 69f45a0409d81a1d57267d3667a42f1733091ffa7f779b3c6778080783a376c5
-// Version: 0.0.1
+      IDL: `// Hash: 230ff7c03e76a03bf7e80f51e492032dfc22872d95dc09fb983f088739234f19
+// Version: 0.0.2
 // -----------------------------------END_HEADER
 /// Native container format class.
 ///
@@ -2447,6 +2478,34 @@ enum ncdContainerFormat : ubyte {
   CCSDS_TDM_KVN = 11,
   /// CCSDS Tracking Data Message, XML.
   CCSDS_TDM_XML = 12,
+  /// CCSDS Orbit Mean-Elements Message, keyword-value notation.
+  CCSDS_OMM_KVN = 13,
+  /// CCSDS Orbit Mean-Elements Message, XML.
+  CCSDS_OMM_XML = 14,
+  /// CCSDS Orbit Parameter Message, keyword-value notation.
+  CCSDS_OPM_KVN = 15,
+  /// CCSDS Orbit Parameter Message, XML.
+  CCSDS_OPM_XML = 16,
+  /// CCSDS Orbit Comprehensive Message, keyword-value notation.
+  CCSDS_OCM_KVN = 17,
+  /// CCSDS Orbit Comprehensive Message, XML.
+  CCSDS_OCM_XML = 18,
+  /// CCSDS Conjunction Data Message, keyword-value notation.
+  CCSDS_CDM_KVN = 19,
+  /// CCSDS Conjunction Data Message, XML.
+  CCSDS_CDM_XML = 20,
+  /// CCSDS Attitude Parameter Message, keyword-value notation.
+  CCSDS_APM_KVN = 21,
+  /// CCSDS Attitude Parameter Message, XML.
+  CCSDS_APM_XML = 22,
+  /// CCSDS Attitude Comprehensive Message, keyword-value notation.
+  CCSDS_ACM_KVN = 23,
+  /// CCSDS Attitude Comprehensive Message, XML.
+  CCSDS_ACM_XML = 24,
+  /// CCSDS Reentry Data Message, keyword-value notation.
+  CCSDS_RDM_KVN = 25,
+  /// CCSDS Reentry Data Message, XML.
+  CCSDS_RDM_XML = 26,
 
   /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
   /// which; a producer never reuses a neighbouring member instead.
@@ -3018,7 +3077,97 @@ file_identifier "$SHC";`,
       ]
     },
     OPM: {
-      IDL: '// Hash: 69c179e20f32f2326222df05a60d3c6f89af21308075b7fc6b6a66a2cd949efa\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Orbit Parameter Message\ntable OPM {\n  CCSDS_OPM_VERS:string;\n  CREATION_DATE:string;\n  ORIGINATOR:string;\n  OBJECT_NAME:string;\n  OBJECT_ID:string;\n  CENTER_NAME:string;\n  REF_FRAME:string;\n  TIME_SYSTEM:string;\n  EPOCH:string;\n  X:double;\n  Y:double;\n  Z:double;\n  X_DOT:double;\n  Y_DOT:double;\n  Z_DOT:double;\n  SEMI_MAJOR_AXIS:double;\n  ECCENTRICITY:double;\n  INCLINATION:double;\n  RA_OF_ASC_NODE:double;\n  ARG_OF_PERICENTER:double;\n  TRUE_ANOMALY:double;\n  MEAN_ANOMALY:double;\n  GM:double;\n  MASS:double;\n  SOLAR_RAD_AREA:double;\n  SOLAR_RAD_COEFF:double;\n  DRAG_AREA:double;\n  DRAG_COEFF:double;\n}\n\nroot_type OPM;\nfile_identifier "$OPM";',
+      IDL: `// Hash: 696b17942ff05c9ec0c7d1766f7ad39a39c5145bd9a3b08e02a329a46310fd5a
+// Version: 0.0.3
+// -----------------------------------END_HEADER
+/// Orbit Parameter Message
+table OPM {
+  CCSDS_OPM_VERS:string;
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
+  CENTER_NAME:string;
+  REF_FRAME:string;
+  TIME_SYSTEM:string;
+  EPOCH:string;
+  X:double;
+  Y:double;
+  Z:double;
+  X_DOT:double;
+  Y_DOT:double;
+  Z_DOT:double;
+  SEMI_MAJOR_AXIS:double;
+  ECCENTRICITY:double;
+  INCLINATION:double;
+  RA_OF_ASC_NODE:double;
+  ARG_OF_PERICENTER:double;
+  TRUE_ANOMALY:double;
+  MEAN_ANOMALY:double;
+  GM:double;
+  MASS:double;
+  SOLAR_RAD_AREA:double;
+  SOLAR_RAD_COEFF:double;
+  DRAG_AREA:double;
+  DRAG_COEFF:double;
+
+  /// COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+  /// and data groups, in message order, joined by a line feed.
+  COMMENT:string;
+  /// CLASSIFICATION of the message: the optional header keyword stating its
+  /// security classification or handling caveat.
+  CLASSIFICATION:string;
+  /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  /// unique for this message.
+  MESSAGE_ID:string;
+  /// REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+  REF_FRAME_EPOCH:string;
+  /// COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+  /// when it is REF_FRAME.
+  COV_REF_FRAME:string;
+  /// Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+  /// CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+  /// CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  /// CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+  /// Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+  COVARIANCE:[double];
+  /// The message's maneuvers, in message order.
+  MANEUVERS:[OPMManeuver];
+  /// Every USER_DEFINED_x keyword of the message, in message order.
+  USER_DEFINED_PARAMETERS:[OPMUserDefinedParameter];
+}
+
+/// One maneuver of an OPM (CCSDS 502.0-B-3 Table 3-7).
+table OPMManeuver {
+  /// COMMENT lines of this maneuver, joined by a line feed.
+  COMMENT:string;
+  /// MAN_EPOCH_IGNITION: epoch of ignition.
+  MAN_EPOCH_IGNITION:string;
+  /// MAN_DURATION: duration of the burn in seconds; zero for an impulsive maneuver.
+  MAN_DURATION:double;
+  /// MAN_DELTA_MASS: mass change during the maneuver in kg, negative or zero.
+  MAN_DELTA_MASS:double;
+  /// MAN_REF_FRAME: frame of MAN_DV_1..3 (for example RTN, TNW, or REF_FRAME's).
+  MAN_REF_FRAME:string;
+  /// MAN_DV_1: first component of the velocity increment in km/s.
+  MAN_DV_1:double;
+  /// MAN_DV_2: second component of the velocity increment in km/s.
+  MAN_DV_2:double;
+  /// MAN_DV_3: third component of the velocity increment in km/s.
+  MAN_DV_3:double;
+}
+
+/// One USER_DEFINED_x keyword of an OPM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+table OPMUserDefinedParameter {
+  /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  PARAM_NAME:string;
+  /// The value as written
+  PARAM_VALUE:string;
+}
+
+root_type OPM;
+file_identifier "$OPM";`,
       files: [
         "./dist/OPM/OPM.sw.tar.gz",
         "./dist/OPM/OPM.py.tar.gz",
@@ -3642,7 +3791,199 @@ file_identifier "$APP";`,
       ]
     },
     APM: {
-      IDL: '// Hash: 8786facdc073384acf17eebb6f7f28c49a88140fe1b5dfdbd645f5b525311716\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Attitude Parameter Message\ntable APM {\n  CCSDS_APM_VERS:string;\n  CREATION_DATE:string;\n  ORIGINATOR:string;\n  OBJECT_NAME:string;\n  OBJECT_ID:string;\n  EPOCH:string;\n  Q1:double;\n  Q2:double;\n  Q3:double;\n  QC:double;\n}\n\nroot_type APM;\nfile_identifier "$APM";',
+      IDL: `// Hash: bb5dabf1092596e1582bdd99d2d0af721692c57f8a672800aa80ab926f273191
+// Version: 0.0.3
+// -----------------------------------END_HEADER
+/// Attitude Parameter Message
+table APM {
+  CCSDS_APM_VERS:string;
+  CREATION_DATE:string;
+  ORIGINATOR:string;
+  OBJECT_NAME:string;
+  OBJECT_ID:string;
+  EPOCH:string;
+  Q1:double;
+  Q2:double;
+  Q3:double;
+  QC:double;
+
+  /// COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and
+  /// data groups, in message order, joined by a line feed. A state group's own
+  /// comments stay with it.
+  COMMENT:string;
+  /// CLASSIFICATION of the message: the optional header keyword stating its
+  /// security classification or handling caveat.
+  CLASSIFICATION:string;
+  /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  /// unique for this message.
+  MESSAGE_ID:string;
+  /// CENTER_NAME: the orbit center, when the message states one.
+  CENTER_NAME:string;
+  /// TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.
+  TIME_SYSTEM:string;
+  /// Quaternion states (QUAT_START block), in message order. Q1..QC above are the
+  /// single frameless quaternion of the earlier form of this record; a message is
+  /// read into and written from these lists.
+  QUATERNION_STATES:[APMQuaternionState];
+  /// Euler angle states (EULER_START block), in message order.
+  EULER_ANGLE_STATES:[APMEulerAngleState];
+  /// Angular velocities (ANGVEL_START block), in message order.
+  ANGULAR_VELOCITIES:[APMAngularVelocity];
+  /// Spin states (SPIN_START block), in message order.
+  SPIN_STATES:[APMSpinState];
+  /// Inertia tensors (INERTIA_START block), in message order.
+  INERTIAS:[APMInertia];
+  /// Attitude maneuvers (MAN_START block), in message order.
+  MANEUVERS:[APMManeuver];
+}
+
+/// A quaternion state of an APM (CCSDS 504.0-B-2 Table 3-3): rotation from
+/// REF_FRAME_A to REF_FRAME_B. The derivative is NaN when the message states none.
+table APMQuaternionState {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// REF_FRAME_A: the frame the rotation starts from.
+  REF_FRAME_A:string;
+  /// REF_FRAME_B: the frame the rotation ends in.
+  REF_FRAME_B:string;
+  /// Q1 (vector part, x).
+  Q1:double;
+  /// Q2 (vector part, y).
+  Q2:double;
+  /// Q3 (vector part, z).
+  Q3:double;
+  /// QC (scalar part).
+  QC:double;
+  /// Q1_DOT in 1/s, NaN when not stated.
+  Q1_DOT:double = nan;
+  /// Q2_DOT in 1/s, NaN when not stated.
+  Q2_DOT:double = nan;
+  /// Q3_DOT in 1/s, NaN when not stated.
+  Q3_DOT:double = nan;
+  /// QC_DOT in 1/s, NaN when not stated.
+  QC_DOT:double = nan;
+}
+
+/// An Euler angle state of an APM (EULER_START block). Angles in degrees; a rate
+/// is NaN when the message states none.
+table APMEulerAngleState {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// REF_FRAME_A: the frame the rotation starts from.
+  REF_FRAME_A:string;
+  /// REF_FRAME_B: the frame the rotation ends in.
+  REF_FRAME_B:string;
+  /// EULER_ROT_SEQ: the rotation sequence, for example ZXZ.
+  EULER_ROT_SEQ:string;
+  /// ANGLE_1 in degrees.
+  ANGLE_1:double;
+  /// ANGLE_2 in degrees.
+  ANGLE_2:double;
+  /// ANGLE_3 in degrees.
+  ANGLE_3:double;
+  /// ANGLE_1_DOT in deg/s, NaN when not stated.
+  ANGLE_1_DOT:double = nan;
+  /// ANGLE_2_DOT in deg/s, NaN when not stated.
+  ANGLE_2_DOT:double = nan;
+  /// ANGLE_3_DOT in deg/s, NaN when not stated.
+  ANGLE_3_DOT:double = nan;
+}
+
+/// An angular velocity of an APM (ANGVEL_START block), in deg/s.
+table APMAngularVelocity {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// REF_FRAME_A: the frame the rotation starts from.
+  REF_FRAME_A:string;
+  /// REF_FRAME_B: the frame the rotation ends in.
+  REF_FRAME_B:string;
+  /// ANGVEL_FRAME: the frame the components are in.
+  ANGVEL_FRAME:string;
+  /// ANGVEL_X in deg/s.
+  ANGVEL_X:double;
+  /// ANGVEL_Y in deg/s.
+  ANGVEL_Y:double;
+  /// ANGVEL_Z in deg/s.
+  ANGVEL_Z:double;
+}
+
+/// A spin state of an APM (SPIN_START block). The nutation terms come as either of
+/// two groups, nutation angle, period and phase or the momentum direction and the
+/// velocity around it; those not stated are NaN.
+table APMSpinState {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// REF_FRAME_A: the frame the rotation starts from.
+  REF_FRAME_A:string;
+  /// REF_FRAME_B: the frame the rotation ends in.
+  REF_FRAME_B:string;
+  /// SPIN_ALPHA: right ascension of the spin axis in degrees.
+  SPIN_ALPHA:double;
+  /// SPIN_DELTA: declination of the spin axis in degrees.
+  SPIN_DELTA:double;
+  /// SPIN_ANGLE: phase in degrees.
+  SPIN_ANGLE:double;
+  /// SPIN_ANGLE_VEL: angular velocity in deg/s.
+  SPIN_ANGLE_VEL:double;
+  /// NUTATION: nutation angle in degrees, NaN when not stated.
+  NUTATION:double = nan;
+  /// NUTATION_PER: nutation period in seconds, NaN when not stated.
+  NUTATION_PER:double = nan;
+  /// NUTATION_PHASE: nutation phase in degrees, NaN when not stated.
+  NUTATION_PHASE:double = nan;
+  /// MOMENTUM_ALPHA: right ascension of the angular momentum vector in degrees,
+  /// NaN when not stated.
+  MOMENTUM_ALPHA:double = nan;
+  /// MOMENTUM_DELTA: declination of the angular momentum vector in degrees, NaN
+  /// when not stated.
+  MOMENTUM_DELTA:double = nan;
+  /// NUTATION_VEL: angular velocity around the momentum vector in deg/s, NaN when
+  /// not stated.
+  NUTATION_VEL:double = nan;
+}
+
+/// An inertia tensor of an APM (INERTIA_START block), in kg*m**2.
+table APMInertia {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// INERTIA_REF_FRAME: the frame the tensor is in.
+  INERTIA_REF_FRAME:string;
+  /// IXX: moment about X.
+  IXX:double;
+  /// IYY: moment about Y.
+  IYY:double;
+  /// IZZ: moment about Z.
+  IZZ:double;
+  /// IXY: cross product X-Y.
+  IXY:double;
+  /// IXZ: cross product X-Z.
+  IXZ:double;
+  /// IYZ: cross product Y-Z.
+  IYZ:double;
+}
+
+/// An attitude maneuver of an APM (MAN_START block).
+table APMManeuver {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// MAN_EPOCH_START: epoch of the start of the maneuver.
+  MAN_EPOCH_START:string;
+  /// MAN_DURATION in seconds.
+  MAN_DURATION:double;
+  /// MAN_REF_FRAME: the frame the torque is in.
+  MAN_REF_FRAME:string;
+  /// MAN_TOR_X in N*m.
+  MAN_TOR_X:double;
+  /// MAN_TOR_Y in N*m.
+  MAN_TOR_Y:double;
+  /// MAN_TOR_Z in N*m.
+  MAN_TOR_Z:double;
+  /// MAN_DELTA_MASS in kg (negative or zero), NaN when not stated.
+  MAN_DELTA_MASS:double = nan;
+}
+
+root_type APM;
+file_identifier "$APM";`,
       files: [
         "./dist/APM/APM.sw.tar.gz",
         "./dist/APM/APM.py.tar.gz",
@@ -7157,7 +7498,335 @@ file_identifier "$AEM";`,
       ]
     },
     RDM: {
-      IDL: '// Hash: 9a425c8ea5da3d0c597c7ef01b8d7f05d6f7fc64c9feaf67b29d42c97487404e\n// Version: 0.0.3\n// -----------------------------------END_HEADER\nenum reentryDisposition : byte {\n  CONTROLLED,\n  UNCONTROLLED,\n  SEMI_CONTROLLED\n}\n\nenum reentryReason : byte {\n  NATURAL_DECAY,\n  COMMANDED_DEORBIT,\n  PROPULSION_FAILURE,\n  COLLISION,\n  FRAGMENTATION,\n  UNKNOWN\n}\n\n/// Reentry State Vector\ntable reentryStateVector {\n  /// Epoch (ISO 8601)\n  EPOCH:string;\n  /// Reference frame\n  REF_FRAME:string;\n  /// Position X in km\n  X:double;\n  /// Position Y in km\n  Y:double;\n  /// Position Z in km\n  Z:double;\n  /// Velocity X in km/s\n  X_DOT:double;\n  /// Velocity Y in km/s\n  Y_DOT:double;\n  /// Velocity Z in km/s\n  Z_DOT:double;\n}\n\n/// Reentry Ground Impact Prediction\ntable reentryImpact {\n  /// Predicted impact epoch (ISO 8601)\n  IMPACT_EPOCH:string;\n  /// Epoch uncertainty window in seconds\n  EPOCH_UNCERTAINTY:double;\n  /// Impact latitude in degrees\n  LATITUDE:double;\n  /// Impact longitude in degrees\n  LONGITUDE:double;\n  /// Along-track uncertainty in km\n  ALONG_TRACK_UNC:double;\n  /// Cross-track uncertainty in km\n  CROSS_TRACK_UNC:double;\n  /// Impact probability (0.0-1.0)\n  IMPACT_PROBABILITY:double;\n}\n\n/// Surviving Debris Prediction\ntable survivingDebris {\n  /// Fragment identifier\n  FRAGMENT_ID:string;\n  /// Material type\n  MATERIAL:string;\n  /// Fragment mass in kg\n  MASS:double;\n  /// Casualty area in m^2\n  CASUALTY_AREA:double;\n  /// Survival probability (0.0-1.0)\n  SURVIVAL_PROBABILITY:double;\n}\n\n/// Reentry Data Message\ntable RDM {\n  /// CCSDS RDM version\n  CCSDS_RDM_VERS:string;\n  /// Message creation date (ISO 8601)\n  CREATION_DATE:string;\n  /// Creating organization\n  ORIGINATOR:string;\n  /// Object name\n  OBJECT_NAME:string;\n  /// International designator\n  OBJECT_ID:string;\n  /// NORAD catalog number\n  NORAD_CAT_ID:uint32;\n  /// Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)\n  OBJECT_TYPE:string;\n  /// Reentry disposition\n  DISPOSITION:reentryDisposition;\n  /// Reentry reason\n  REASON:reentryReason;\n  /// Predicted reentry epoch (ISO 8601)\n  REENTRY_EPOCH:string;\n  /// Reentry epoch uncertainty window in hours\n  REENTRY_EPOCH_UNC:double;\n  /// Reentry latitude in degrees\n  REENTRY_LATITUDE:double;\n  /// Reentry longitude in degrees\n  REENTRY_LONGITUDE:double;\n  /// Reentry altitude in km\n  REENTRY_ALTITUDE:double;\n  /// Time system\n  TIME_SYSTEM:string;\n  /// Previous predicted reentry epoch for comparison (ISO 8601)\n  PREV_PREDICTION_EPOCH:string;\n  /// Ballistic coefficient in kg/m^2\n  BALLISTIC_COEFF:double;\n  /// Object mass in kg\n  MASS:double;\n  /// Solar radiation pressure area in m^2\n  SOLAR_RAD_AREA:double;\n  /// Drag area in m^2\n  DRAG_AREA:double;\n  /// Initial state vector\n  INITIAL_STATE:reentryStateVector;\n  /// Ground impact predictions\n  IMPACT_PREDICTIONS:[reentryImpact];\n  /// Predicted surviving debris\n  SURVIVING_DEBRIS:[survivingDebris];\n  /// Casualty expectation\n  CASUALTY_EXPECTATION:double;\n  /// Number of breakup fragments predicted\n  NUM_FRAGMENTS:uint;\n  /// Total surviving mass in kg\n  SURVIVING_MASS:double;\n  /// Additional comments\n  COMMENT:string;\n}\n\nroot_type RDM;\nfile_identifier "$RDM";',
+      IDL: `// Hash: 6476591a3309ef2e7b7b6f93e070bcfc82e7bf8b97c40f30702c7ad5de1d4780
+// Version: 0.0.4
+// -----------------------------------END_HEADER
+enum reentryDisposition : byte {
+  CONTROLLED,
+  UNCONTROLLED,
+  SEMI_CONTROLLED
+}
+
+/// CONTROLLED_REENTRY of an RDM (CCSDS 508.1-B-1): whether the re-entry is
+/// controlled. UNSPECIFIED is the zero value: the record does not state it.
+enum rdmControlledReentry : byte {
+  UNSPECIFIED = 0,
+  YES = 1,
+  NO = 2,
+  UNKNOWN = 3
+}
+
+enum reentryReason : byte {
+  NATURAL_DECAY,
+  COMMANDED_DEORBIT,
+  PROPULSION_FAILURE,
+  COLLISION,
+  FRAGMENTATION,
+  UNKNOWN
+}
+
+/// Reentry State Vector
+table reentryStateVector {
+  /// Epoch (ISO 8601)
+  EPOCH:string;
+  /// Reference frame
+  REF_FRAME:string;
+  /// Position X in km
+  X:double;
+  /// Position Y in km
+  Y:double;
+  /// Position Z in km
+  Z:double;
+  /// Velocity X in km/s
+  X_DOT:double;
+  /// Velocity Y in km/s
+  Y_DOT:double;
+  /// Velocity Z in km/s
+  Z_DOT:double;
+}
+
+/// Reentry Ground Impact Prediction
+table reentryImpact {
+  /// Predicted impact epoch (ISO 8601)
+  IMPACT_EPOCH:string;
+  /// Epoch uncertainty window in seconds
+  EPOCH_UNCERTAINTY:double;
+  /// Impact latitude in degrees
+  LATITUDE:double;
+  /// Impact longitude in degrees
+  LONGITUDE:double;
+  /// Along-track uncertainty in km
+  ALONG_TRACK_UNC:double;
+  /// Cross-track uncertainty in km
+  CROSS_TRACK_UNC:double;
+  /// Impact probability (0.0-1.0)
+  IMPACT_PROBABILITY:double;
+}
+
+/// Surviving Debris Prediction
+table survivingDebris {
+  /// Fragment identifier
+  FRAGMENT_ID:string;
+  /// Material type
+  MATERIAL:string;
+  /// Fragment mass in kg
+  MASS:double;
+  /// Casualty area in m^2
+  CASUALTY_AREA:double;
+  /// Survival probability (0.0-1.0)
+  SURVIVAL_PROBABILITY:double;
+}
+
+/// Reentry Data Message
+table RDM {
+  /// CCSDS RDM version
+  CCSDS_RDM_VERS:string;
+  /// Message creation date (ISO 8601)
+  CREATION_DATE:string;
+  /// Creating organization
+  ORIGINATOR:string;
+  /// Object name
+  OBJECT_NAME:string;
+  /// International designator
+  OBJECT_ID:string;
+  /// NORAD catalog number
+  NORAD_CAT_ID:uint32;
+  /// Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+  OBJECT_TYPE:string;
+  /// Reentry disposition
+  DISPOSITION:reentryDisposition;
+  /// Reentry reason
+  REASON:reentryReason;
+  /// Predicted reentry epoch (ISO 8601)
+  REENTRY_EPOCH:string;
+  /// Reentry epoch uncertainty window in hours
+  REENTRY_EPOCH_UNC:double;
+  /// Reentry latitude in degrees
+  REENTRY_LATITUDE:double;
+  /// Reentry longitude in degrees
+  REENTRY_LONGITUDE:double;
+  /// Reentry altitude in km
+  REENTRY_ALTITUDE:double;
+  /// Time system
+  TIME_SYSTEM:string;
+  /// Previous predicted reentry epoch for comparison (ISO 8601)
+  PREV_PREDICTION_EPOCH:string;
+  /// Ballistic coefficient in kg/m^2
+  BALLISTIC_COEFF:double;
+  /// Object mass in kg
+  MASS:double;
+  /// Solar radiation pressure area in m^2
+  SOLAR_RAD_AREA:double;
+  /// Drag area in m^2
+  DRAG_AREA:double;
+  /// Initial state vector
+  INITIAL_STATE:reentryStateVector;
+  /// Ground impact predictions
+  IMPACT_PREDICTIONS:[reentryImpact];
+  /// Predicted surviving debris
+  SURVIVING_DEBRIS:[survivingDebris];
+  /// Casualty expectation
+  CASUALTY_EXPECTATION:double;
+  /// Number of breakup fragments predicted
+  NUM_FRAGMENTS:uint;
+  /// Total surviving mass in kg
+  SURVIVING_MASS:double;
+  /// COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+  /// data groups, in message order, joined by a line feed.
+  COMMENT:string;
+
+  /// The fields below, with the earlier ones that say so, are the keywords of
+  /// CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+  /// NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+  /// NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+  /// WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+  /// REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+  /// SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+  /// not keywords of the message.
+
+  /// MESSAGE_ID: an identifier the originator makes unique for this message.
+  MESSAGE_ID:string;
+  /// CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+  CATALOG_NAME:string;
+  /// OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+  OBJECT_DESIGNATOR:string;
+  /// OBJECT_OWNER.
+  OBJECT_OWNER:string;
+  /// OBJECT_OPERATOR.
+  OBJECT_OPERATOR:string;
+  /// CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+  CONTROLLED_REENTRY:rdmControlledReentry;
+  /// CENTER_NAME: the body being re-entered.
+  CENTER_NAME:string;
+  /// EPOCH_TZERO: the epoch the message's relative times are measured from.
+  EPOCH_TZERO:string;
+  /// REF_FRAME: the frame of the state vector.
+  REF_FRAME:string;
+  /// REF_FRAME_EPOCH.
+  REF_FRAME_EPOCH:string;
+  /// EPHEMERIS_NAME.
+  EPHEMERIS_NAME:string;
+  /// GRAVITY_MODEL.
+  GRAVITY_MODEL:string;
+  /// ATMOSPHERIC_MODEL.
+  ATMOSPHERIC_MODEL:string;
+  /// SOLAR_FLUX_PREDICTION.
+  SOLAR_FLUX_PREDICTION:string;
+  /// N_BODY_PERTURBATIONS.
+  N_BODY_PERTURBATIONS:string;
+  /// SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+  SOLAR_RAD_PRESSURE:string;
+  /// EARTH_TIDES: a model name.
+  EARTH_TIDES:string;
+  /// INTRACK_THRUST: YES or NO.
+  INTRACK_THRUST:string;
+  /// DRAG_PARAMETERS_SOURCE.
+  DRAG_PARAMETERS_SOURCE:string;
+  /// DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+  DRAG_PARAMETERS_ALTITUDE:double = nan;
+  /// REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+  REENTRY_UNCERTAINTY_METHOD:string;
+  /// REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+  REENTRY_DISINTEGRATION:string;
+  /// IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+  IMPACT_UNCERTAINTY_METHOD:string;
+  /// PREVIOUS_MESSAGE_ID.
+  PREVIOUS_MESSAGE_ID:string;
+  /// NEXT_MESSAGE_EPOCH.
+  NEXT_MESSAGE_EPOCH:string;
+
+  /// ORBIT_LIFETIME in days.
+  ORBIT_LIFETIME:double;
+  /// ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+  ORBIT_LIFETIME_WINDOW_START:double = nan;
+  /// ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+  ORBIT_LIFETIME_WINDOW_END:double = nan;
+  /// REENTRY_WINDOW_START.
+  REENTRY_WINDOW_START:string;
+  /// REENTRY_WINDOW_END.
+  REENTRY_WINDOW_END:string;
+  /// ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+  ORBIT_LIFETIME_CONFIDENCE_LEVEL:double = nan;
+
+  /// PROBABILITY_OF_IMPACT, NaN when not stated.
+  PROBABILITY_OF_IMPACT:double = nan;
+  /// PROBABILITY_OF_BURN_UP, NaN when not stated.
+  PROBABILITY_OF_BURN_UP:double = nan;
+  /// PROBABILITY_OF_BREAK_UP, NaN when not stated.
+  PROBABILITY_OF_BREAK_UP:double = nan;
+  /// PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+  PROBABILITY_OF_LAND_IMPACT:double = nan;
+  /// PROBABILITY_OF_CASUALTY, NaN when not stated.
+  PROBABILITY_OF_CASUALTY:double = nan;
+  /// NOMINAL_IMPACT_EPOCH.
+  NOMINAL_IMPACT_EPOCH:string;
+  /// IMPACT_WINDOW_START.
+  IMPACT_WINDOW_START:string;
+  /// IMPACT_WINDOW_END.
+  IMPACT_WINDOW_END:string;
+  /// IMPACT_REF_FRAME.
+  IMPACT_REF_FRAME:string;
+  /// NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+  NOMINAL_IMPACT_LON:double = nan;
+  /// NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+  NOMINAL_IMPACT_LAT:double = nan;
+  /// NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+  NOMINAL_IMPACT_ALT:double = nan;
+  /// IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+  IMPACT_1_CONFIDENCE:double = nan;
+  /// IMPACT_1_START_LON in degrees, NaN when not stated.
+  IMPACT_1_START_LON:double = nan;
+  /// IMPACT_1_START_LAT in degrees, NaN when not stated.
+  IMPACT_1_START_LAT:double = nan;
+  /// IMPACT_1_STOP_LON in degrees, NaN when not stated.
+  IMPACT_1_STOP_LON:double = nan;
+  /// IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+  IMPACT_1_STOP_LAT:double = nan;
+  /// IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+  IMPACT_1_CROSS_TRACK:double = nan;
+  /// IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+  IMPACT_2_CONFIDENCE:double = nan;
+  /// IMPACT_2_START_LON in degrees, NaN when not stated.
+  IMPACT_2_START_LON:double = nan;
+  /// IMPACT_2_START_LAT in degrees, NaN when not stated.
+  IMPACT_2_START_LAT:double = nan;
+  /// IMPACT_2_STOP_LON in degrees, NaN when not stated.
+  IMPACT_2_STOP_LON:double = nan;
+  /// IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+  IMPACT_2_STOP_LAT:double = nan;
+  /// IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+  IMPACT_2_CROSS_TRACK:double = nan;
+  /// IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+  IMPACT_3_CONFIDENCE:double = nan;
+  /// IMPACT_3_START_LON in degrees, NaN when not stated.
+  IMPACT_3_START_LON:double = nan;
+  /// IMPACT_3_START_LAT in degrees, NaN when not stated.
+  IMPACT_3_START_LAT:double = nan;
+  /// IMPACT_3_STOP_LON in degrees, NaN when not stated.
+  IMPACT_3_STOP_LON:double = nan;
+  /// IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+  IMPACT_3_STOP_LAT:double = nan;
+  /// IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+  IMPACT_3_CROSS_TRACK:double = nan;
+
+  /// COV_REF_FRAME: the frame of COVARIANCE.
+  COV_REF_FRAME:string;
+  /// Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+  /// triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+  /// CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+  /// CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+  /// CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+  COVARIANCE:[double];
+
+  /// WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+  DRY_MASS:double = nan;
+  /// HAZARDOUS_SUBSTANCES.
+  HAZARDOUS_SUBSTANCES:string;
+  /// SOLAR_RAD_COEFF, NaN when not stated.
+  SOLAR_RAD_COEFF:double = nan;
+  /// DRAG_COEFF, NaN when not stated.
+  DRAG_COEFF:double = nan;
+  /// RCS in m**2, NaN when not stated.
+  RCS:double = nan;
+  /// THRUST_ACCELERATION in m/s**2, NaN when not stated.
+  THRUST_ACCELERATION:double = nan;
+
+  /// TIME_LASTOB_START.
+  TIME_LASTOB_START:string;
+  /// TIME_LASTOB_END.
+  TIME_LASTOB_END:string;
+  /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+  RECOMMENDED_OD_SPAN:double = nan;
+  /// ACTUAL_OD_SPAN in days, NaN when not stated.
+  ACTUAL_OD_SPAN:double = nan;
+  /// OBS_AVAILABLE.
+  OBS_AVAILABLE:uint;
+  /// OBS_USED.
+  OBS_USED:uint;
+  /// TRACKS_AVAILABLE.
+  TRACKS_AVAILABLE:uint;
+  /// TRACKS_USED.
+  TRACKS_USED:uint;
+  /// RESIDUALS_ACCEPTED in percent, NaN when not stated.
+  RESIDUALS_ACCEPTED:double = nan;
+  /// WEIGHTED_RMS, NaN when not stated.
+  WEIGHTED_RMS:double = nan;
+
+  /// Every USER_DEFINED keyword of the message, in message order.
+  USER_DEFINED_PARAMETERS:[RDMUserDefinedParameter];
+}
+
+/// One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+table RDMUserDefinedParameter {
+  /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  PARAM_NAME:string;
+  /// The value as written
+  PARAM_VALUE:string;
+}
+
+root_type RDM;
+file_identifier "$RDM";`,
       files: [
         "./dist/RDM/RDM.sw.tar.gz",
         "./dist/RDM/RDM.py.tar.gz",
@@ -7699,7 +8368,347 @@ file_identifier "$WXF";`,
       ]
     },
     OEM: {
-      IDL: '// Hash: 7a7c258d63755676bc73a25f858ec8636a9797f3bcd7c09dfafa16d359135289\n// Version: 1.1.4\n// -----------------------------------END_HEADER\ninclude "../RFM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../PPE/main.fbs";\n\n// Orbit Ephemeris Message (OEM)\n// Description\n// Orbit information may be exchanged between two participants by sending an\n// ephemeris in the form of a series of state vectors (Cartesian vectors providing position and\n// velocity, and optionally accelerations) using an Orbit Ephemeris Message (OEM). The\n// message recipient must have a means of interpolating across these state vectors to obtain the\n// state at an arbitrary time contained within the span of the ephemeris.\n// CCSDS Reference documentation: 502x0b2c1e2.\n\n// =============================================================================\n// EPHEMERIS DATA FORMAT OPTIONS\n// =============================================================================\n//\n// The OEM supports TWO mutually exclusive formats for ephemeris data:\n//\n// \u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n// \u2502 OPTION 1: COMPACT FORMAT (Row-Major Array) - RECOMMENDED FOR UNIFORM STEPS \u2502\n// \u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n// \u2502 Use when: Time steps are uniform (constant interval between epochs)        \u2502\n// \u2502                                                                             \u2502\n// \u2502 Required fields:                                                            \u2502\n// \u2502   - START_TIME: Epoch of first state vector (ISO 8601)                     \u2502\n// \u2502   - STEP_SIZE: Time interval between states in seconds (must be > 0)       \u2502\n// \u2502   - EPHEMERIS_DATA: Flat array of doubles in row-major order               \u2502\n// \u2502   - STATE_VECTOR_SIZE: Number of components per state (6 or 9)             \u2502\n// \u2502                                                                             \u2502\n// \u2502 Array layout (row-major):                                                   \u2502\n// \u2502   [x0, y0, z0, xdot0, ydot0, zdot0,  \u2190 State at START_TIME                 \u2502\n// \u2502    x1, y1, z1, xdot1, ydot1, zdot1,  \u2190 State at START_TIME + STEP_SIZE     \u2502\n// \u2502    x2, y2, z2, xdot2, ydot2, zdot2,  \u2190 State at START_TIME + 2*STEP_SIZE   \u2502\n// \u2502    ...]                                                                     \u2502\n// \u2502                                                                             \u2502\n// \u2502 With acceleration (STATE_VECTOR_SIZE = 9):                                  \u2502\n// \u2502   [x0, y0, z0, xdot0, ydot0, zdot0, xddot0, yddot0, zddot0,                \u2502\n// \u2502    x1, y1, z1, xdot1, ydot1, zdot1, xddot1, yddot1, zddot1,                \u2502\n// \u2502    ...]                                                                     \u2502\n// \u2502                                                                             \u2502\n// \u2502 Time reconstruction:                                                        \u2502\n// \u2502   epoch[i] = START_TIME + (i * STEP_SIZE)                                  \u2502\n// \u2502   where i = 0, 1, 2, ... (length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE - 1)  \u2502\n// \u2502                                                                             \u2502\n// \u2502 Benefits: ~10x smaller payload, faster parsing, cache-friendly iteration   \u2502\n// \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n//\n// \u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n// \u2502 OPTION 2: VERBOSE FORMAT (Structured Lines) - FOR NON-UNIFORM STEPS        \u2502\n// \u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n// \u2502 Use when: Time steps are irregular or you need self-describing data        \u2502\n// \u2502                                                                             \u2502\n// \u2502 Required fields:                                                            \u2502\n// \u2502   - EPHEMERIS_DATA_LINES: Array of ephemerisDataLine tables                \u2502\n// \u2502   - STEP_SIZE: Should be 0 or omitted to indicate non-uniform steps        \u2502\n// \u2502                                                                             \u2502\n// \u2502 Each ephemerisDataLine contains:                                            \u2502\n// \u2502   - EPOCH: Explicit timestamp for this state (ISO 8601)                    \u2502\n// \u2502   - X, Y, Z: Position components (km)                                      \u2502\n// \u2502   - X_DOT, Y_DOT, Z_DOT: Velocity components (km/s)                        \u2502\n// \u2502   - X_DDOT, Y_DDOT, Z_DDOT: Optional acceleration (km/s\xB2)                  \u2502\n// \u2502                                                                             \u2502\n// \u2502 Benefits: Self-describing, supports irregular time spacing, easier debug   \u2502\n// \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n//\n// VALIDATION RULES:\n// 1. If STEP_SIZE > 0, EPHEMERIS_DATA must be populated and EPHEMERIS_DATA_LINES\n//    should be empty or ignored by parsers.\n// 2. If STEP_SIZE == 0 or is omitted, EPHEMERIS_DATA_LINES must be populated\n//    and EPHEMERIS_DATA should be empty or ignored by parsers.\n// 3. Do NOT populate both formats simultaneously.\n// 4. EPHEMERIS_DATA length must be divisible by STATE_VECTOR_SIZE.\n// 5. STATE_VECTOR_SIZE must be 6 (pos+vel) or 9 (pos+vel+accel).\n//\n// =============================================================================\n\n/// A single ephemeris data line (for non-uniform time steps only)\n/// Use this format when time intervals between states are irregular.\n/// For uniform time steps, use the compact EPHEMERIS_DATA array instead.\ntable ephemerisDataLine {\n  /// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)\n  EPOCH:string;\n  /// Position vector X-component km\n  X:double;\n  /// Position vector Y-component km\n  Y:double;\n  /// Position vector Z-component km\n  Z:double;\n  /// Velocity vector X-component km/s\n  X_DOT:double;\n  /// Velocity vector Y-component km/s\n  Y_DOT:double;\n  /// Velocity vector Z-component km/s\n  Z_DOT:double;\n  /// Optional: Acceleration vector X-component km/s\xB2\n  X_DDOT:double;\n  /// Optional: Acceleration vector Y-component km/s\xB2\n  Y_DDOT:double;\n  /// Optional: Acceleration vector Z-component km/s\xB2\n  Z_DDOT:double;\n\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  // APPENDED. Per-state clock and accuracy columns. Append-only: never reorder.\n  //\n  // These are the SP3-d position/velocity record columns that have no CCSDS OEM\n  // equivalent. An OEM alone cannot be written back out as an SP3 file without\n  // them: the clock column is mandatory in every SP3 position record, and the\n  // per-coordinate standard-deviation exponents are how SP3 states accuracy.\n  // All are optional; an OEM that omits them is unchanged.\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n  /// Satellite clock bias (offset), microseconds. SP3 position-record clock\n  /// column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the\n  /// field instead.\n  CLOCK_BIAS_MICROSECONDS:double;\n  /// Satellite clock rate of change, 1e-4 microseconds per second. SP3\n  /// velocity-record clock-rate column. Sentinel 999999.999999 is not stored.\n  CLOCK_RATE_MICROSECONDS_PER_SECOND:double;\n  /// Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.\n  CLOCK_BIAS_SIGMA_PICOSECONDS:double;\n  /// Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,\n  /// 1e-4 picoseconds per second.\n  CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND:double;\n\n  /// Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:\n  /// sigma = POS_VEL_BASE**n, with the position base from the SP3 header and\n  /// the result in mm. These are the raw SP3 exponent columns, kept as\n  /// exponents so an SP3 round-trip is exact; a consumer that wants a linear\n  /// sigma raises the header base to this power.\n  X_SIGMA_EXPONENT:int8;\n  Y_SIGMA_EXPONENT:int8;\n  Z_SIGMA_EXPONENT:int8;\n  /// Per-coordinate velocity standard-deviation exponents, result in\n  /// 1e-4 mm/s. Same base**n rule.\n  X_DOT_SIGMA_EXPONENT:int8;\n  Y_DOT_SIGMA_EXPONENT:int8;\n  Z_DOT_SIGMA_EXPONENT:int8;\n}\n\n/// Position/Velocity Covariance Matrix Line\ntable covarianceMatrixLine {\n  /// Epoch\n  EPOCH:string;\n  /// Covariance matrix [1,1] km**2\n  CX_X:double;\n  /// Covariance matrix [2,1] km**2\n  CY_X:double;\n  /// Covariance matrix [2,2] km**2\n  CY_Y:double;\n  /// Covariance matrix [3,1] km**2\n  CZ_X:double;\n  /// Covariance matrix [3,2] km**2\n  CZ_Y:double;\n  /// Covariance matrix [3,3] km**2\n  CZ_Z:double;\n  /// Covariance matrix [4,1] km**2/s\n  CX_DOT_X:double;\n  /// Covariance matrix [4,2] km**2/s\n  CX_DOT_Y:double;\n  /// Covariance matrix [4,3] km**2/s\n  CX_DOT_Z:double;\n  /// Covariance matrix [4,4] km**2/s**2\n  CX_DOT_X_DOT:double;\n  /// Covariance matrix [5,1] km**2/s\n  CY_DOT_X:double;\n  /// Covariance matrix [5,2] km**2/s\n  CY_DOT_Y:double;\n  /// Covariance matrix [5,3] km**2/s\n  CY_DOT_Z:double;\n  /// Covariance matrix [5,4] km**2/s**2\n  CY_DOT_X_DOT:double;\n  /// Covariance matrix [5,5] km**2/s**2\n  CY_DOT_Y_DOT:double;\n  /// Covariance matrix [6,1] km**2/s\n  CZ_DOT_X:double;\n  /// Covariance matrix [6,2] km**2/s\n  CZ_DOT_Y:double;\n  /// Covariance matrix [6,3] km**2/s\n  CZ_DOT_Z:double;\n  /// Covariance matrix [6,4] km**2/s**2\n  CZ_DOT_X_DOT:double;\n  /// Covariance matrix [6,5] km**2/s**2\n  CZ_DOT_Y_DOT:double;\n  /// Covariance matrix [6,6] km**2/s**2\n  CZ_DOT_Z_DOT:double;\n}\n\n/// OEM Ephemeris Data Block\ntable ephemerisDataBlock {\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  // METADATA SECTION (common to both formats)\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n  /// Plain-Text Comment\n  COMMENT:string;\n  /// Satellite name for the first object\n  OBJECT: CAT;\n  /// Origin of reference frame (EARTH, MARS, MOON, etc.)\n  CENTER_NAME:string;\n  /// Name of the reference frame (TEME, EME2000, etc.)\n  REFERENCE_FRAME:RFM;\n  /// Epoch of reference frame, if not intrinsic to the definition of the reference frame\n  REFERENCE_FRAME_EPOCH:string;\n  /// Reference frame for the covariance matrix\n  COV_REFERENCE_FRAME:RFM;\n  /// Time system used for the orbit state and covariance matrix. (UTC)\n  TIME_SYSTEM:timingStandard;\n  /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)\n  START_TIME:string;\n  /// Optional start USEABLE time span covered by ephemeris data (ISO 8601)\n  USEABLE_START_TIME:string;\n  /// Optional end of USEABLE time span covered by ephemeris data (ISO 8601)\n  USEABLE_STOP_TIME:string;\n  /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)\n  STOP_TIME:string;\n  /// Recommended interpolation method for ephemeris data.\n  /// Supported methods: Hermite, Linear, Lagrange, Chebyshev.\n  /// When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS\n  /// for high-fidelity polynomial interpolation instead of interpolating across\n  /// discrete state vectors.\n  INTERPOLATION:string;\n  /// Recommended interpolation degree for ephemeris data\n  INTERPOLATION_DEGREE:uint;\n\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  // COMPACT FORMAT (Row-Major Array) - Use when STEP_SIZE > 0\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  // For uniform time steps, use this efficient representation.\n  // Time for state i: epoch[i] = START_TIME + (i * STEP_SIZE)\n  // Array layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n  /// Time interval between ephemeris states in seconds.\n  /// If > 0: Use compact EPHEMERIS_DATA array (times are implicit).\n  /// If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.\n  STEP_SIZE:double;\n\n  /// Number of components per state vector in EPHEMERIS_DATA array.\n  /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n  /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)\n  /// Only used when STEP_SIZE > 0. Default is 6.\n  STATE_VECTOR_SIZE:uint8 = 6;\n\n  /// Compact ephemeris data as row-major array of doubles.\n  /// Only used when STEP_SIZE > 0.\n  /// Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]\n  /// Units: position in km, velocity in km/s, acceleration in km/s\xB2\n  /// Length must be divisible by STATE_VECTOR_SIZE.\n  /// Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE\n  EPHEMERIS_DATA:[double];\n\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  // VERBOSE FORMAT (Structured Lines) - Use when STEP_SIZE == 0 or omitted\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  // For non-uniform time steps, use this self-describing format where each\n  // state vector includes its own timestamp.\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n  /// Array of ephemeris data lines with explicit epochs.\n  /// Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).\n  /// Each line contains its own EPOCH timestamp.\n  EPHEMERIS_DATA_LINES:[ephemerisDataLine];\n\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  // COVARIANCE DATA (optional, applies to both formats)\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n  /// Array of covariance matrix lines (optional)\n  COVARIANCE_MATRIX_LINES:[covarianceMatrixLine];\n\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  // POLYNOMIAL INTERPOLATION (optional, supplements both formats)\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  // When INTERPOLATION is set to "Chebyshev", these records provide polynomial\n  // coefficients for continuous, high-fidelity position evaluation between\n  // discrete state vectors. Each record covers a time segment; together they\n  // should span [START_TIME, STOP_TIME].\n  //\n  // This is an alternative to interpolating across discrete state vectors and\n  // is especially useful for high-precision applications where the generating\n  // ephemeris was produced by numerical integration (e.g., HPOP).\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n  /// Optional polynomial position records for high-fidelity interpolation.\n  /// Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with\n  /// polynomial coefficients for continuous position (and optionally velocity) evaluation.\n  /// See PPE schema for record structure and evaluation procedure.\n  POLYNOMIAL_POSITION_RECORDS:[PPEPositionRecord];\n\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  // APPENDED. NAIF integer body codes. Append-only: never reorder.\n  //\n  // OBJECT and CENTER_NAME are text. An SPK segment descriptor is not: it\n  // stores INTEGER NAIF codes for the target and the centre, and there is no\n  // ratified text-to-code mapping to recover them from a name ($CAT carries no\n  // NAIF id). Without these an OEM cannot be written to an SPK at all, and a\n  // read SPK cannot state which bodies it referenced without guessing.\n  // Precedent: BODY_NAIF_ID (schema/MDS/main.fbs),\n  // CENTRAL_BODY_NAIF_ID (schema/SHC/main.fbs).\n  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n  /// NAIF integer code of the ephemeris target (SPK segment target).\n  OBJECT_NAIF_ID:int;\n  /// NAIF integer code of the ephemeris centre, matching CENTER_NAME\n  /// (SPK segment centre).\n  CENTER_NAIF_ID:int;\n}\n\n/// Orbit Ephemeris Message\ntable OEM {\n  /// OEM Header\n  /// Classification marking of the data in IC/CAPCO Portion-marked format.\n  CLASSIFICATION: string;\n  /// OEM Version\n  CCSDS_OEM_VERS:double;\n  /// Creation Date\n  CREATION_DATE:string;\n  /// Originator\n  ORIGINATOR:string;\n\n  /// Array of ephemeris data blocks\n  EPHEMERIS_DATA_BLOCK:[ephemerisDataBlock];\n}\n\nroot_type OEM;\nfile_identifier "$OEM";',
+      IDL: `// Hash: 036289aeca3015e926e02c42655f7ce693decec4cdc7d580647d6b201acf67a0
+// Version: 1.1.5
+// -----------------------------------END_HEADER
+include "../RFM/main.fbs";
+include "../TIM/main.fbs";
+include "../CAT/main.fbs";
+include "../PPE/main.fbs";
+
+// Orbit Ephemeris Message (OEM)
+// Description
+// Orbit information may be exchanged between two participants by sending an
+// ephemeris in the form of a series of state vectors (Cartesian vectors providing position and
+// velocity, and optionally accelerations) using an Orbit Ephemeris Message (OEM). The
+// message recipient must have a means of interpolating across these state vectors to obtain the
+// state at an arbitrary time contained within the span of the ephemeris.
+// CCSDS Reference documentation: 502x0b2c1e2.
+
+// =============================================================================
+// EPHEMERIS DATA FORMAT OPTIONS
+// =============================================================================
+//
+// The OEM supports TWO mutually exclusive formats for ephemeris data:
+//
+// \u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510
+// \u2502 OPTION 1: COMPACT FORMAT (Row-Major Array) - RECOMMENDED FOR UNIFORM STEPS \u2502
+// \u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524
+// \u2502 Use when: Time steps are uniform (constant interval between epochs)        \u2502
+// \u2502                                                                             \u2502
+// \u2502 Required fields:                                                            \u2502
+// \u2502   - START_TIME: Epoch of first state vector (ISO 8601)                     \u2502
+// \u2502   - STEP_SIZE: Time interval between states in seconds (must be > 0)       \u2502
+// \u2502   - EPHEMERIS_DATA: Flat array of doubles in row-major order               \u2502
+// \u2502   - STATE_VECTOR_SIZE: Number of components per state (6 or 9)             \u2502
+// \u2502                                                                             \u2502
+// \u2502 Array layout (row-major):                                                   \u2502
+// \u2502   [x0, y0, z0, xdot0, ydot0, zdot0,  \u2190 State at START_TIME                 \u2502
+// \u2502    x1, y1, z1, xdot1, ydot1, zdot1,  \u2190 State at START_TIME + STEP_SIZE     \u2502
+// \u2502    x2, y2, z2, xdot2, ydot2, zdot2,  \u2190 State at START_TIME + 2*STEP_SIZE   \u2502
+// \u2502    ...]                                                                     \u2502
+// \u2502                                                                             \u2502
+// \u2502 With acceleration (STATE_VECTOR_SIZE = 9):                                  \u2502
+// \u2502   [x0, y0, z0, xdot0, ydot0, zdot0, xddot0, yddot0, zddot0,                \u2502
+// \u2502    x1, y1, z1, xdot1, ydot1, zdot1, xddot1, yddot1, zddot1,                \u2502
+// \u2502    ...]                                                                     \u2502
+// \u2502                                                                             \u2502
+// \u2502 Time reconstruction:                                                        \u2502
+// \u2502   epoch[i] = START_TIME + (i * STEP_SIZE)                                  \u2502
+// \u2502   where i = 0, 1, 2, ... (length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE - 1)  \u2502
+// \u2502                                                                             \u2502
+// \u2502 Benefits: ~10x smaller payload, faster parsing, cache-friendly iteration   \u2502
+// \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518
+//
+// \u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510
+// \u2502 OPTION 2: VERBOSE FORMAT (Structured Lines) - FOR NON-UNIFORM STEPS        \u2502
+// \u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524
+// \u2502 Use when: Time steps are irregular or you need self-describing data        \u2502
+// \u2502                                                                             \u2502
+// \u2502 Required fields:                                                            \u2502
+// \u2502   - EPHEMERIS_DATA_LINES: Array of ephemerisDataLine tables                \u2502
+// \u2502   - STEP_SIZE: Should be 0 or omitted to indicate non-uniform steps        \u2502
+// \u2502                                                                             \u2502
+// \u2502 Each ephemerisDataLine contains:                                            \u2502
+// \u2502   - EPOCH: Explicit timestamp for this state (ISO 8601)                    \u2502
+// \u2502   - X, Y, Z: Position components (km)                                      \u2502
+// \u2502   - X_DOT, Y_DOT, Z_DOT: Velocity components (km/s)                        \u2502
+// \u2502   - X_DDOT, Y_DDOT, Z_DDOT: Optional acceleration (km/s\xB2)                  \u2502
+// \u2502                                                                             \u2502
+// \u2502 Benefits: Self-describing, supports irregular time spacing, easier debug   \u2502
+// \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518
+//
+// VALIDATION RULES:
+// 1. If STEP_SIZE > 0, EPHEMERIS_DATA must be populated and EPHEMERIS_DATA_LINES
+//    should be empty or ignored by parsers.
+// 2. If STEP_SIZE == 0 or is omitted, EPHEMERIS_DATA_LINES must be populated
+//    and EPHEMERIS_DATA should be empty or ignored by parsers.
+// 3. Do NOT populate both formats simultaneously.
+// 4. EPHEMERIS_DATA length must be divisible by STATE_VECTOR_SIZE.
+// 5. STATE_VECTOR_SIZE must be 6 (pos+vel) or 9 (pos+vel+accel).
+//
+// =============================================================================
+
+/// A single ephemeris data line (for non-uniform time steps only)
+/// Use this format when time intervals between states are irregular.
+/// For uniform time steps, use the compact EPHEMERIS_DATA array instead.
+table ephemerisDataLine {
+  /// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
+  EPOCH:string;
+  /// Position vector X-component km
+  X:double;
+  /// Position vector Y-component km
+  Y:double;
+  /// Position vector Z-component km
+  Z:double;
+  /// Velocity vector X-component km/s
+  X_DOT:double;
+  /// Velocity vector Y-component km/s
+  Y_DOT:double;
+  /// Velocity vector Z-component km/s
+  Z_DOT:double;
+  /// Optional: Acceleration vector X-component km/s\xB2
+  X_DDOT:double;
+  /// Optional: Acceleration vector Y-component km/s\xB2
+  Y_DDOT:double;
+  /// Optional: Acceleration vector Z-component km/s\xB2
+  Z_DDOT:double;
+
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // APPENDED. Per-state clock and accuracy columns. Append-only: never reorder.
+  //
+  // These are the SP3-d position/velocity record columns that have no CCSDS OEM
+  // equivalent. An OEM alone cannot be written back out as an SP3 file without
+  // them: the clock column is mandatory in every SP3 position record, and the
+  // per-coordinate standard-deviation exponents are how SP3 states accuracy.
+  // All are optional; an OEM that omits them is unchanged.
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+
+  /// Satellite clock bias (offset), microseconds. SP3 position-record clock
+  /// column. The SP3 bad/absent sentinel 999999.999999 is NOT stored; omit the
+  /// field instead.
+  CLOCK_BIAS_MICROSECONDS:double;
+  /// Satellite clock rate of change, 1e-4 microseconds per second. SP3
+  /// velocity-record clock-rate column. Sentinel 999999.999999 is not stored.
+  CLOCK_RATE_MICROSECONDS_PER_SECOND:double;
+  /// Standard deviation of CLOCK_BIAS_MICROSECONDS, picoseconds.
+  CLOCK_BIAS_SIGMA_PICOSECONDS:double;
+  /// Standard deviation of CLOCK_RATE_MICROSECONDS_PER_SECOND,
+  /// 1e-4 picoseconds per second.
+  CLOCK_RATE_SIGMA_PICOSECONDS_PER_SECOND:double;
+
+  /// Per-coordinate position standard-deviation EXPONENTS, SP3 base**n form:
+  /// sigma = POS_VEL_BASE**n, with the position base from the SP3 header and
+  /// the result in mm. These are the raw SP3 exponent columns, kept as
+  /// exponents so an SP3 round-trip is exact; a consumer that wants a linear
+  /// sigma raises the header base to this power.
+  X_SIGMA_EXPONENT:int8;
+  Y_SIGMA_EXPONENT:int8;
+  Z_SIGMA_EXPONENT:int8;
+  /// Per-coordinate velocity standard-deviation exponents, result in
+  /// 1e-4 mm/s. Same base**n rule.
+  X_DOT_SIGMA_EXPONENT:int8;
+  Y_DOT_SIGMA_EXPONENT:int8;
+  Z_DOT_SIGMA_EXPONENT:int8;
+}
+
+/// Position/Velocity Covariance Matrix Line
+table covarianceMatrixLine {
+  /// Epoch
+  EPOCH:string;
+  /// Covariance matrix [1,1] km**2
+  CX_X:double;
+  /// Covariance matrix [2,1] km**2
+  CY_X:double;
+  /// Covariance matrix [2,2] km**2
+  CY_Y:double;
+  /// Covariance matrix [3,1] km**2
+  CZ_X:double;
+  /// Covariance matrix [3,2] km**2
+  CZ_Y:double;
+  /// Covariance matrix [3,3] km**2
+  CZ_Z:double;
+  /// Covariance matrix [4,1] km**2/s
+  CX_DOT_X:double;
+  /// Covariance matrix [4,2] km**2/s
+  CX_DOT_Y:double;
+  /// Covariance matrix [4,3] km**2/s
+  CX_DOT_Z:double;
+  /// Covariance matrix [4,4] km**2/s**2
+  CX_DOT_X_DOT:double;
+  /// Covariance matrix [5,1] km**2/s
+  CY_DOT_X:double;
+  /// Covariance matrix [5,2] km**2/s
+  CY_DOT_Y:double;
+  /// Covariance matrix [5,3] km**2/s
+  CY_DOT_Z:double;
+  /// Covariance matrix [5,4] km**2/s**2
+  CY_DOT_X_DOT:double;
+  /// Covariance matrix [5,5] km**2/s**2
+  CY_DOT_Y_DOT:double;
+  /// Covariance matrix [6,1] km**2/s
+  CZ_DOT_X:double;
+  /// Covariance matrix [6,2] km**2/s
+  CZ_DOT_Y:double;
+  /// Covariance matrix [6,3] km**2/s
+  CZ_DOT_Z:double;
+  /// Covariance matrix [6,4] km**2/s**2
+  CZ_DOT_X_DOT:double;
+  /// Covariance matrix [6,5] km**2/s**2
+  CZ_DOT_Y_DOT:double;
+  /// Covariance matrix [6,6] km**2/s**2
+  CZ_DOT_Z_DOT:double;
+  /// COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.
+  COMMENT:string;
+  /// COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix
+  /// is expressed in, when it differs from the block's COV_REFERENCE_FRAME.
+  COV_REFERENCE_FRAME:RFM;
+}
+
+/// OEM Ephemeris Data Block
+table ephemerisDataBlock {
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // METADATA SECTION (common to both formats)
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+
+  /// Plain-Text Comment
+  COMMENT:string;
+  /// Satellite name for the first object
+  OBJECT: CAT;
+  /// Origin of reference frame (EARTH, MARS, MOON, etc.)
+  CENTER_NAME:string;
+  /// Name of the reference frame (TEME, EME2000, etc.)
+  REFERENCE_FRAME:RFM;
+  /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
+  REFERENCE_FRAME_EPOCH:string;
+  /// Reference frame for the covariance matrix
+  COV_REFERENCE_FRAME:RFM;
+  /// Time system used for the orbit state and covariance matrix. (UTC)
+  TIME_SYSTEM:timingStandard;
+  /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
+  START_TIME:string;
+  /// Optional start USEABLE time span covered by ephemeris data (ISO 8601)
+  USEABLE_START_TIME:string;
+  /// Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
+  USEABLE_STOP_TIME:string;
+  /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
+  STOP_TIME:string;
+  /// Recommended interpolation method for ephemeris data.
+  /// Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+  /// When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+  /// for high-fidelity polynomial interpolation instead of interpolating across
+  /// discrete state vectors.
+  INTERPOLATION:string;
+  /// Recommended interpolation degree for ephemeris data
+  INTERPOLATION_DEGREE:uint;
+
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // COMPACT FORMAT (Row-Major Array) - Use when STEP_SIZE > 0
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // For uniform time steps, use this efficient representation.
+  // Time for state i: epoch[i] = START_TIME + (i * STEP_SIZE)
+  // Array layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+
+  /// Time interval between ephemeris states in seconds.
+  /// If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
+  /// If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
+  STEP_SIZE:double;
+
+  /// Number of components per state vector in EPHEMERIS_DATA array.
+  /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  /// Only used when STEP_SIZE > 0. Default is 6.
+  STATE_VECTOR_SIZE:uint8 = 6;
+
+  /// Compact ephemeris data as row-major array of doubles.
+  /// Only used when STEP_SIZE > 0.
+  /// Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
+  /// Units: position in km, velocity in km/s, acceleration in km/s\xB2
+  /// Length must be divisible by STATE_VECTOR_SIZE.
+  /// Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
+  EPHEMERIS_DATA:[double];
+
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // VERBOSE FORMAT (Structured Lines) - Use when STEP_SIZE == 0 or omitted
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // For non-uniform time steps, use this self-describing format where each
+  // state vector includes its own timestamp.
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+
+  /// Array of ephemeris data lines with explicit epochs.
+  /// Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
+  /// Each line contains its own EPOCH timestamp.
+  EPHEMERIS_DATA_LINES:[ephemerisDataLine];
+
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // COVARIANCE DATA (optional, applies to both formats)
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+
+  /// Array of covariance matrix lines (optional)
+  COVARIANCE_MATRIX_LINES:[covarianceMatrixLine];
+
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // POLYNOMIAL INTERPOLATION (optional, supplements both formats)
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // When INTERPOLATION is set to "Chebyshev", these records provide polynomial
+  // coefficients for continuous, high-fidelity position evaluation between
+  // discrete state vectors. Each record covers a time segment; together they
+  // should span [START_TIME, STOP_TIME].
+  //
+  // This is an alternative to interpolating across discrete state vectors and
+  // is especially useful for high-precision applications where the generating
+  // ephemeris was produced by numerical integration (e.g., HPOP).
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+
+  /// Optional polynomial position records for high-fidelity interpolation.
+  /// Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+  /// polynomial coefficients for continuous position (and optionally velocity) evaluation.
+  /// See PPE schema for record structure and evaluation procedure.
+  POLYNOMIAL_POSITION_RECORDS:[PPEPositionRecord];
+
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // APPENDED. NAIF integer body codes. Append-only: never reorder.
+  //
+  // OBJECT and CENTER_NAME are text. An SPK segment descriptor is not: it
+  // stores INTEGER NAIF codes for the target and the centre, and there is no
+  // ratified text-to-code mapping to recover them from a name ($CAT carries no
+  // NAIF id). Without these an OEM cannot be written to an SPK at all, and a
+  // read SPK cannot state which bodies it referenced without guessing.
+  // Precedent: BODY_NAIF_ID (schema/MDS/main.fbs),
+  // CENTRAL_BODY_NAIF_ID (schema/SHC/main.fbs).
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+
+  /// NAIF integer code of the ephemeris target (SPK segment target).
+  OBJECT_NAIF_ID:int;
+  /// NAIF integer code of the ephemeris centre, matching CENTER_NAME
+  /// (SPK segment centre).
+  CENTER_NAIF_ID:int;
+}
+
+/// Orbit Ephemeris Message
+table OEM {
+  /// OEM Header
+  /// Classification marking of the data in IC/CAPCO Portion-marked format.
+  CLASSIFICATION: string;
+  /// OEM Version
+  CCSDS_OEM_VERS:double;
+  /// Creation Date
+  CREATION_DATE:string;
+  /// Originator
+  ORIGINATOR:string;
+
+  /// Array of ephemeris data blocks
+  EPHEMERIS_DATA_BLOCK:[ephemerisDataBlock];
+  /// COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.
+  COMMENT:string;
+  /// MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator
+  /// makes unique for this message.
+  MESSAGE_ID:string;
+}
+
+root_type OEM;
+file_identifier "$OEM";`,
       files: [
         "./dist/OEM/OEM.sw.tar.gz",
         "./dist/OEM/OEM.py.tar.gz",
@@ -10796,7 +11805,160 @@ file_identifier "$ABA";`,
       ]
     },
     OMM: {
-      IDL: '// Hash: 41119da85431e9a18dd1e943e90a052668c13cf8840268356051fedc4890678d\n// Version: 2.0.3\n// -----------------------------------END_HEADER\ninclude "../RFM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../MET/main.fbs";\n\n// Orbit Mean Elements Message (OMM)\n//\n// Orbit information may be exchanged between two participants by sending an orbital\n// state based on mean Keplerian elements for a specified epoch using an\n// Orbit Mean-Elements Message (OMM). The message recipient must use appropriate orbit\n// propagator algorithms in order to correctly propagate the OMM state to compute the orbit at\n// other desired epochs.\n// Legacy format description can be found here.\n// CCSDS Reference documentation: 502x0b2c1e2.\n\nenum ephemerisFormat : byte {\n  /// Simplified General Perturbation Model\n  SGP,\n  /// Simplified General Perturbation Model 4\n  SGP4,\n  /// Simplified Deep Space Perturbation Model 4\n  SDP4,\n  /// Simplified General Perturbation Model 8\n  SGP8,\n  /// Simplified Deep Space Perturbation Model 8\n  SDP8\n}\n\n/// Orbit Mean Elements Message\ntable OMM {\n  /// CCSDS OMM Version\n  CCSDS_OMM_VERS:double;\n  /// Creation Date (ISO 8601 UTC format)\n  CREATION_DATE:string;\n  /// Originator\n  ORIGINATOR:string;\n\n  /// Satellite Name(s)\n  OBJECT_NAME:string;\n  /// International Designator (YYYY-NNNAAA)\n  OBJECT_ID:string;\n  /// Center Name (e.g. EARTH, MARS)\n  CENTER_NAME:string;\n  /// Reference Frame\n  /// Typically TEMEOFDATE\n  REFERENCE_FRAME:RFM;\n  /// Reference Frame Epoch (ISO 8601 UTC format)\n  REFERENCE_FRAME_EPOCH:string;\n  /// Time System [M, UTC]\n  TIME_SYSTEM:timingStandard = UTC;\n  /// Mean Element Theory\n  MEAN_ELEMENT_THEORY:meanElementSource = SGP4;\n\n  /// COMMENT (O)\n  COMMENT:string;\n  /// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)\n  EPOCH:string;\n  /// Semi-major axis in km or Mean Motion in rev/day\n  SEMI_MAJOR_AXIS:double;\n  /// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused\n  MEAN_MOTION:double;\n  /// Eccentricity (unitless)\n  ECCENTRICITY:double;\n  /// Inclination in degrees\n  INCLINATION:double;\n  /// RA_OF_ASC_NODE in degrees\n  RA_OF_ASC_NODE:double;\n  /// ARG_OF_PERICENTER in degrees\n  ARG_OF_PERICENTER:double;\n  /// MEAN_ANOMALY in degrees\n  MEAN_ANOMALY:double;\n  /// GM in km**3/s**2\n  GM:double;\n\n  /// MASS in kg\n  MASS:double;\n  /// SOLAR_RAD_AREA in m**2\n  SOLAR_RAD_AREA:double;\n  /// SOLAR_RAD_COEFF (unitless)\n  SOLAR_RAD_COEFF:double;\n  /// DRAG_AREA in m**2\n  DRAG_AREA:double;\n  /// DRAG_COEFF (unitless)\n  DRAG_COEFF:double;\n\n  /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)\n  /// EPHEMERIS_TYPE Default=0\n  EPHEMERIS_TYPE:ephemerisFormat = SGP4;\n  /// CLASSIFICATION_TYPE Default=U\n  CLASSIFICATION_TYPE:string;\n  /// NORAD_CAT_ID (integer) [O if SGP/SGP4]\n  NORAD_CAT_ID:uint32;\n  /// ELEMENT_SET_NO [O if SGP/SGP4]\n  ELEMENT_SET_NO:uint32;\n  /// REV_AT_EPOCH [O if SGP/SGP4]\n  REV_AT_EPOCH:double;\n  /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]\n  BSTAR:double;\n  /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]\n  MEAN_MOTION_DOT:double;\n  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]\n  MEAN_MOTION_DDOT:double;\n\n  /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\n  /// COV_REF_FRAME reference frame for covariance [C if covariance given]\n  /// Typically RSW\n  COV_REFERENCE_FRAME:RFM;\n  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).\n  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\n  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\n  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\n  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\n  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s\n  COVARIANCE:[double];\n\n  /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]\n  USER_DEFINED_BIP_0044_TYPE:uint;\n  /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]\n  USER_DEFINED_OBJECT_DESIGNATOR:string;\n  /// USER_DEFINED_EARTH_MODEL [O, units per ICD]\n  USER_DEFINED_EARTH_MODEL:string;\n  /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]\n  USER_DEFINED_EPOCH_TIMESTAMP: double;\n  /// USER_DEFINED_MICROSECONDS [O, units per ICD]\n  USER_DEFINED_MICROSECONDS: double;\n}\n\nroot_type OMM;\nfile_identifier "$OMM";',
+      IDL: `// Hash: 1c37f690faccf43ab53626283dc07431c57c903cbf4bf4bd96d80fe1ab629e0b
+// Version: 2.0.4
+// -----------------------------------END_HEADER
+include "../RFM/main.fbs";
+include "../TIM/main.fbs";
+include "../MET/main.fbs";
+
+// Orbit Mean Elements Message (OMM)
+//
+// Orbit information may be exchanged between two participants by sending an orbital
+// state based on mean Keplerian elements for a specified epoch using an
+// Orbit Mean-Elements Message (OMM). The message recipient must use appropriate orbit
+// propagator algorithms in order to correctly propagate the OMM state to compute the orbit at
+// other desired epochs.
+// Legacy format description can be found here.
+// CCSDS Reference documentation: 502x0b2c1e2.
+
+enum ephemerisFormat : byte {
+  /// Simplified General Perturbation Model
+  SGP,
+  /// Simplified General Perturbation Model 4
+  SGP4,
+  /// Simplified Deep Space Perturbation Model 4
+  SDP4,
+  /// Simplified General Perturbation Model 8
+  SGP8,
+  /// Simplified Deep Space Perturbation Model 8
+  SDP8
+}
+
+/// Orbit Mean Elements Message
+table OMM {
+  /// CCSDS OMM Version
+  CCSDS_OMM_VERS:double;
+  /// Creation Date (ISO 8601 UTC format)
+  CREATION_DATE:string;
+  /// Originator
+  ORIGINATOR:string;
+
+  /// Satellite Name(s)
+  OBJECT_NAME:string;
+  /// International Designator (YYYY-NNNAAA)
+  OBJECT_ID:string;
+  /// Center Name (e.g. EARTH, MARS)
+  CENTER_NAME:string;
+  /// Reference Frame
+  /// Typically TEMEOFDATE
+  REFERENCE_FRAME:RFM;
+  /// Reference Frame Epoch (ISO 8601 UTC format)
+  REFERENCE_FRAME_EPOCH:string;
+  /// Time System [M, UTC]
+  TIME_SYSTEM:timingStandard = UTC;
+  /// Mean Element Theory
+  MEAN_ELEMENT_THEORY:meanElementSource = SGP4;
+
+  /// COMMENT (O): every COMMENT line of the message, in message order, joined by
+  /// a line feed. A message states comments in its header, its metadata and each
+  /// data group; this field holds them all, so a message written from the record
+  /// states them together in its header.
+  COMMENT:string;
+  /// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
+  EPOCH:string;
+  /// Semi-major axis in km or Mean Motion in rev/day
+  SEMI_MAJOR_AXIS:double;
+  /// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
+  MEAN_MOTION:double;
+  /// Eccentricity (unitless)
+  ECCENTRICITY:double;
+  /// Inclination in degrees
+  INCLINATION:double;
+  /// RA_OF_ASC_NODE in degrees
+  RA_OF_ASC_NODE:double;
+  /// ARG_OF_PERICENTER in degrees
+  ARG_OF_PERICENTER:double;
+  /// MEAN_ANOMALY in degrees
+  MEAN_ANOMALY:double;
+  /// GM in km**3/s**2
+  GM:double;
+
+  /// MASS in kg
+  MASS:double;
+  /// SOLAR_RAD_AREA in m**2
+  SOLAR_RAD_AREA:double;
+  /// SOLAR_RAD_COEFF (unitless)
+  SOLAR_RAD_COEFF:double;
+  /// DRAG_AREA in m**2
+  DRAG_AREA:double;
+  /// DRAG_COEFF (unitless)
+  DRAG_COEFF:double;
+
+  /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
+  /// EPHEMERIS_TYPE Default=0
+  EPHEMERIS_TYPE:ephemerisFormat = SGP4;
+  /// CLASSIFICATION_TYPE Default=U
+  CLASSIFICATION_TYPE:string;
+  /// NORAD_CAT_ID (integer) [O if SGP/SGP4]
+  NORAD_CAT_ID:uint32;
+  /// ELEMENT_SET_NO [O if SGP/SGP4]
+  ELEMENT_SET_NO:uint32;
+  /// REV_AT_EPOCH [O if SGP/SGP4]
+  REV_AT_EPOCH:double;
+  /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
+  BSTAR:double;
+  /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
+  MEAN_MOTION_DOT:double;
+  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  MEAN_MOTION_DDOT:double;
+
+  /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
+  /// COV_REF_FRAME reference frame for covariance [C if covariance given]
+  /// Typically RSW
+  COV_REFERENCE_FRAME:RFM;
+  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
+  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,
+  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,
+  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
+  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
+  COVARIANCE:[double];
+
+  /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
+  USER_DEFINED_BIP_0044_TYPE:uint;
+  /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
+  USER_DEFINED_OBJECT_DESIGNATOR:string;
+  /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
+  USER_DEFINED_EARTH_MODEL:string;
+  /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
+  USER_DEFINED_EPOCH_TIMESTAMP: double;
+  /// USER_DEFINED_MICROSECONDS [O, units per ICD]
+  USER_DEFINED_MICROSECONDS: double;
+
+  /// CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+  /// that states its security classification or handling caveat. Not
+  /// CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+  CLASSIFICATION:string;
+  /// MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+  /// originator makes unique for this message.
+  MESSAGE_ID:string;
+  /// Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+  /// message that has no dedicated field above, in message order.
+  USER_DEFINED_PARAMETERS:[OMMUserDefinedParameter];
+}
+
+/// One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+table OMMUserDefinedParameter {
+  /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  PARAM_NAME:string;
+  /// The value as written, unit-less text
+  PARAM_VALUE:string;
+}
+
+root_type OMM;
+file_identifier "$OMM";`,
       files: [
         "./dist/OMM/OMM.sw.tar.gz",
         "./dist/OMM/OMM.py.tar.gz",
@@ -17668,8 +18830,8 @@ file_identifier "$TDM";`,
       ]
     },
     OCM: {
-      IDL: `// Hash: 89387c660ecc1dd8f098990ce2b32b6ebba4ca881617ab2f52c624c1285386a6
-// Version: 2.1.6
+      IDL: `// Hash: c334c75a3a9e57a8e7a956eee0c03113b66e753033daa04844c9c0038aa83305
+// Version: 2.1.7
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../PPE/main.fbs";
@@ -17925,6 +19087,70 @@ table PhysicalProperties {
   SOLAR_RAD_COEFF: double;
   /// Uncertainty in the solar radiation pressure coefficient.
   SRP_UNCERTAINTY: double;
+  /// MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+  MANUFACTURER: string;
+  /// BUS_MODEL: the object's bus model.
+  BUS_MODEL: string;
+  /// DOCKED_WITH: comma-separated names of the objects it is docked with.
+  DOCKED_WITH: string;
+  /// INITIAL_WET_MASS in kg, NaN when not stated.
+  INITIAL_WET_MASS: double = nan;
+  /// OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+  OEB_PARENT_FRAME: string;
+  /// OEB_PARENT_FRAME_EPOCH.
+  OEB_PARENT_FRAME_EPOCH: string;
+  /// AREA_MIN_FOR_PC in m**2, NaN when not stated.
+  AREA_MIN_FOR_PC: double = nan;
+  /// AREA_MAX_FOR_PC in m**2, NaN when not stated.
+  AREA_MAX_FOR_PC: double = nan;
+  /// AREA_TYP_FOR_PC in m**2, NaN when not stated.
+  AREA_TYP_FOR_PC: double = nan;
+  /// RCS in m**2, NaN when not stated.
+  RCS: double = nan;
+  /// RCS_MIN in m**2, NaN when not stated.
+  RCS_MIN: double = nan;
+  /// RCS_MAX in m**2, NaN when not stated.
+  RCS_MAX: double = nan;
+  /// VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+  VM_ABSOLUTE: double = nan;
+  /// VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+  VM_APPARENT_MIN: double = nan;
+  /// VM_APPARENT: apparent visual magnitude, NaN when not stated.
+  VM_APPARENT: double = nan;
+  /// VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+  VM_APPARENT_MAX: double = nan;
+  /// REFLECTANCE: typical reflectivity, NaN when not stated.
+  REFLECTANCE: double = nan;
+  /// ATT_CONTROL_MODE.
+  ATT_CONTROL_MODE: string;
+  /// ATT_ACTUATOR_TYPE.
+  ATT_ACTUATOR_TYPE: string;
+  /// ATT_KNOWLEDGE in degrees, NaN when not stated.
+  ATT_KNOWLEDGE: double = nan;
+  /// ATT_CONTROL in degrees, NaN when not stated.
+  ATT_CONTROL: double = nan;
+  /// ATT_POINTING in degrees, NaN when not stated.
+  ATT_POINTING: double = nan;
+  /// AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+  AVG_MANEUVER_FREQ: double = nan;
+  /// MAX_THRUST in N, NaN when not stated.
+  MAX_THRUST: double = nan;
+  /// DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+  DV_BOL: double = nan;
+  /// DV_REMAINING in km/s, NaN when not stated.
+  DV_REMAINING: double = nan;
+  /// IXX in kg*m**2, NaN when not stated.
+  IXX: double = nan;
+  /// IYY in kg*m**2, NaN when not stated.
+  IYY: double = nan;
+  /// IZZ in kg*m**2, NaN when not stated.
+  IZZ: double = nan;
+  /// IXY in kg*m**2, NaN when not stated.
+  IXY: double = nan;
+  /// IXZ in kg*m**2, NaN when not stated.
+  IXZ: double = nan;
+  /// IYZ in kg*m**2, NaN when not stated.
+  IYZ: double = nan;
 }
 
 table Perturbations {
@@ -17969,6 +19195,43 @@ table Perturbations {
   /// Fixed (time-invariant) geomagnetic index ap used in place of the normal
   /// time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
   FIXED_GEOMAG_AP: double;
+  /// ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+  /// above is the model family when the text names one.
+  ATMOSPHERIC_MODEL_NAME: string;
+  /// EQUATORIAL_RADIUS in km, NaN when not stated.
+  EQUATORIAL_RADIUS: double = nan;
+  /// CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+  CENTRAL_BODY_ROTATION: double = nan;
+  /// OBLATE_FLATTENING, NaN when not stated.
+  OBLATE_FLATTENING: double = nan;
+  /// REDUCTION_THEORY.
+  REDUCTION_THEORY: string;
+  /// ALBEDO_GRID_SIZE.
+  ALBEDO_GRID_SIZE: uint;
+  /// SHADOW_MODEL.
+  SHADOW_MODEL: string;
+  /// SHADOW_BODIES.
+  SHADOW_BODIES: string;
+  /// SW_DATA_SOURCE: the space weather data source.
+  SW_DATA_SOURCE: string;
+  /// SW_DATA_EPOCH.
+  SW_DATA_EPOCH: string;
+  /// SW_INTERP_METHOD.
+  SW_INTERP_METHOD: string;
+  /// FIXED_GEOMAG_DST in nT, NaN when not stated.
+  FIXED_GEOMAG_DST: double = nan;
+  /// FIXED_M10P7, NaN when not stated.
+  FIXED_M10P7: double = nan;
+  /// FIXED_M10P7_MEAN, NaN when not stated.
+  FIXED_M10P7_MEAN: double = nan;
+  /// FIXED_S10P7, NaN when not stated.
+  FIXED_S10P7: double = nan;
+  /// FIXED_S10P7_MEAN, NaN when not stated.
+  FIXED_S10P7_MEAN: double = nan;
+  /// FIXED_Y10P7, NaN when not stated.
+  FIXED_Y10P7: double = nan;
+  /// FIXED_Y10P7_MEAN, NaN when not stated.
+  FIXED_Y10P7_MEAN: double = nan;
 }
 
 table Maneuver {
@@ -18169,6 +19432,132 @@ table OrbitDetermination {
   /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
   /// COV_PARAMETERS names in the covariance are entries of this list.
   OD_DYNAMIC_PARAMETERS: [OCMDynamicParameter];
+  /// DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+  DAYS_SINCE_FIRST_OBS: double = nan;
+  /// DAYS_SINCE_LAST_OBS, NaN when not stated.
+  DAYS_SINCE_LAST_OBS: double = nan;
+  /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+  RECOMMENDED_OD_SPAN: double = nan;
+  /// ACTUAL_OD_SPAN in days, NaN when not stated.
+  ACTUAL_OD_SPAN: double = nan;
+  /// OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+  OBS_AVAILABLE: uint;
+  /// TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+  TRACKS_AVAILABLE: uint;
+  /// MAXIMUM_OBS_GAP in days, NaN when not stated.
+  MAXIMUM_OBS_GAP: double = nan;
+  /// OD_EPOCH_EIGMAJ in m, NaN when not stated.
+  OD_EPOCH_EIGMAJ: double = nan;
+  /// OD_EPOCH_EIGINT in m, NaN when not stated.
+  OD_EPOCH_EIGINT: double = nan;
+  /// OD_EPOCH_EIGMIN in m, NaN when not stated.
+  OD_EPOCH_EIGMIN: double = nan;
+  /// OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+  OD_MAX_PRED_EIGMAJ: double = nan;
+  /// OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+  OD_MIN_PRED_EIGMIN: double = nan;
+  /// OD_CONFIDENCE in percent, NaN when not stated.
+  OD_CONFIDENCE: double = nan;
+  /// GDOP, NaN when not stated.
+  GDOP: double = nan;
+  /// SOLVE_N: the number of solved-for states.
+  SOLVE_N: uint;
+  /// SOLVE_STATES: the solved-for states, as written.
+  SOLVE_STATES: string;
+  /// CONSIDER_N: the number of consider parameters.
+  CONSIDER_N: uint;
+  /// CONSIDER_PARAMS: the consider parameters, as written.
+  CONSIDER_PARAMS: string;
+  /// SENSORS_N: the number of sensors.
+  SENSORS_N: uint;
+  /// SENSORS: the sensors, as written.
+  SENSORS: string;
+  /// COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+  COMMENT: [string];
+}
+
+/// One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):
+/// the block's keywords, and its data lines as written (a time tag, then the
+/// numbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state
+/// the first block's CARTPV or CARTPVA states for the modules that read those.
+table OCMTrajectoryBlock {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT: string;
+  /// TRAJ_ID.
+  TRAJ_ID: string;
+  /// TRAJ_PREV_ID.
+  TRAJ_PREV_ID: string;
+  /// TRAJ_NEXT_ID.
+  TRAJ_NEXT_ID: string;
+  /// TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.
+  TRAJ_BASIS: string;
+  /// TRAJ_BASIS_ID.
+  TRAJ_BASIS_ID: string;
+  /// INTERPOLATION: the recommended interpolation method.
+  INTERPOLATION: string;
+  /// INTERPOLATION_DEGREE.
+  INTERPOLATION_DEGREE: uint;
+  /// PROPAGATOR.
+  PROPAGATOR: string;
+  /// CENTER_NAME.
+  CENTER_NAME: string;
+  /// TRAJ_REF_FRAME.
+  TRAJ_REF_FRAME: string;
+  /// TRAJ_FRAME_EPOCH.
+  TRAJ_FRAME_EPOCH: string;
+  /// USEABLE_START_TIME.
+  USEABLE_START_TIME: string;
+  /// USEABLE_STOP_TIME.
+  USEABLE_STOP_TIME: string;
+  /// ORB_REVNUM, NaN when not stated.
+  ORB_REVNUM: double = nan;
+  /// ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.
+  ORB_REVNUM_BASIS: int = -1;
+  /// TRAJ_TYPE as written, for example CARTPV.
+  TRAJ_TYPE: string;
+  /// ORB_AVERAGING.
+  ORB_AVERAGING: string;
+  /// TRAJ_UNITS.
+  TRAJ_UNITS: string;
+  /// The data lines, as written.
+  LINES: [string];
+}
+
+/// One covariance time history of an OCM (Table 6-6): the block's keywords and its
+/// data lines as written (a time tag, then the covariance in COV_ORDERING). The
+/// single-covariance fields of the OCM above state the first block when it is one
+/// line.
+table OCMCovarianceBlock {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT: string;
+  /// COV_ID.
+  COV_ID: string;
+  /// COV_PREV_ID.
+  COV_PREV_ID: string;
+  /// COV_NEXT_ID.
+  COV_NEXT_ID: string;
+  /// COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.
+  COV_BASIS: string;
+  /// COV_BASIS_ID.
+  COV_BASIS_ID: string;
+  /// COV_REF_FRAME.
+  COV_REF_FRAME: string;
+  /// COV_FRAME_EPOCH.
+  COV_FRAME_EPOCH: string;
+  /// COV_SCALE_MIN, NaN when not stated.
+  COV_SCALE_MIN: double = nan;
+  /// COV_SCALE_MAX, NaN when not stated.
+  COV_SCALE_MAX: double = nan;
+  /// COV_CONFIDENCE in percent, NaN when not stated.
+  COV_CONFIDENCE: double = nan;
+  /// COV_TYPE as written, for example CARTPV.
+  COV_TYPE: string;
+  /// COV_ORDERING.
+  COV_ORDERING: covarianceOrdering = LTM;
+  /// COV_UNITS.
+  COV_UNITS: string;
+  /// The data lines, as written.
+  LINES: [string];
 }
 
 table UserDefinedParameters {
@@ -18280,6 +19669,14 @@ table OCM {
   /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
   /// dimensionless one.
   COV_UNITS: [string];
+  /// Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+  /// blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+  /// them above state the first block's CARTPV or CARTPVA states.
+  TRAJECTORY_BLOCKS: [OCMTrajectoryBlock];
+  /// Every covariance time history of the message (COV_START blocks), in message
+  /// order. COVARIANCE_DATA and the fields that go with it above state the first
+  /// block when it is one line.
+  COVARIANCE_BLOCKS: [OCMCovarianceBlock];
 }
 
 root_type OCM;
@@ -20375,7 +21772,371 @@ file_identifier "$MEM";`,
       ]
     },
     ACM: {
-      IDL: '// Hash: f61049f0e4e2716f4830875da5d91be9d7cd745e116c687dce05288b660ce387\n// Version: 0.0.3\n// -----------------------------------END_HEADER\nenum attitudeStateType : byte {\n  QUATERNION,\n  EULER_ANGLES,\n  SPIN,\n  DIRECTION_COSINE\n}\n\nenum attCovType : byte {\n  ANGLE,\n  ANGLE_GYROBIAS,\n  ANGLE_ANGVEL,\n  QUATERNION_COV\n}\n\nenum maneuverableFlag : byte {\n  YES,\n  NO,\n  UNKNOWN\n}\n\n/// Attitude State Data\ntable attitudeState {\n  /// Attitude state type\n  ATT_TYPE:attitudeStateType;\n  /// Reference frame A\n  REF_FRAME_A:string;\n  /// Reference frame B\n  REF_FRAME_B:string;\n  /// Attitude direction (A2B or B2A)\n  ATT_DIR:string;\n  /// Epoch (ISO 8601)\n  EPOCH:string;\n  /// Quaternion scalar component (q0 or qc)\n  Q1:double;\n  /// Quaternion vector component i\n  Q2:double;\n  /// Quaternion vector component j\n  Q3:double;\n  /// Quaternion vector component k\n  QC:double;\n  /// Euler angle X in degrees\n  ANGLE_1:double;\n  /// Euler angle Y in degrees\n  ANGLE_2:double;\n  /// Euler angle Z in degrees\n  ANGLE_3:double;\n  /// Euler rotation sequence (e.g., 321, 313)\n  EULER_ROT_SEQ:string;\n  /// Angular velocity X in deg/s\n  ANGVEL_X:double;\n  /// Angular velocity Y in deg/s\n  ANGVEL_Y:double;\n  /// Angular velocity Z in deg/s\n  ANGVEL_Z:double;\n  /// Spin alpha in degrees\n  SPIN_ALPHA:double;\n  /// Spin delta in degrees\n  SPIN_DELTA:double;\n  /// Spin angle in degrees\n  SPIN_ANGLE:double;\n  /// Spin angle velocity in deg/s\n  SPIN_ANGLE_VEL:double;\n  /// Nutation angle in degrees\n  NUTATION:double;\n  /// Nutation period in seconds\n  NUTATION_PERIOD:double;\n  /// Nutation phase in degrees\n  NUTATION_PHASE:double;\n}\n\n/// Attitude Physical Characteristics\ntable attPhysicalProperties {\n  /// Drag coefficient\n  DRAG_COEFF:double;\n  /// Wet mass in kg\n  WET_MASS:double;\n  /// Dry mass in kg\n  DRY_MASS:double;\n  /// Center of pressure reference frame\n  CP_REF_FRAME:string;\n  /// Center of pressure X in m\n  CP_X:double;\n  /// Center of pressure Y in m\n  CP_Y:double;\n  /// Center of pressure Z in m\n  CP_Z:double;\n  /// Inertia reference frame\n  INERTIA_REF_FRAME:string;\n  /// Moment of inertia about X axis in kg*m^2\n  IXX:double;\n  /// Moment of inertia about Y axis in kg*m^2\n  IYY:double;\n  /// Moment of inertia about Z axis in kg*m^2\n  IZZ:double;\n  /// Product of inertia XY in kg*m^2\n  IXY:double;\n  /// Product of inertia XZ in kg*m^2\n  IXZ:double;\n  /// Product of inertia YZ in kg*m^2\n  IYZ:double;\n}\n\n/// Attitude Covariance\ntable attCovariance {\n  /// Covariance type\n  COV_TYPE:attCovType;\n  /// Reference frame\n  COV_REF_FRAME:string;\n  /// Epoch (ISO 8601)\n  EPOCH:string;\n  /// Upper-triangular covariance matrix elements (row-major)\n  COV:[double];\n}\n\n/// Attitude Maneuver\ntable attManeuver {\n  /// Maneuver epoch start (ISO 8601)\n  MAN_EPOCH_START:string;\n  /// Duration in seconds\n  DURATION:double;\n  /// Reference frame\n  REF_FRAME:string;\n  /// Torque about body X in N*m\n  TOR_1:double;\n  /// Torque about body Y in N*m\n  TOR_2:double;\n  /// Torque about body Z in N*m\n  TOR_3:double;\n}\n\n/// Attitude Comprehensive Message\ntable ACM {\n  /// CCSDS ACM version\n  CCSDS_ACM_VERS:string;\n  /// Message creation date (ISO 8601)\n  CREATION_DATE:string;\n  /// Creating organization\n  ORIGINATOR:string;\n  /// Object name\n  OBJECT_NAME:string;\n  /// International designator\n  OBJECT_ID:string;\n  /// Catalog name\n  CATALOG_NAME:string;\n  /// Epoch of state (ISO 8601)\n  EPOCH:string;\n  /// Time system\n  TIME_SYSTEM:string;\n  /// Attitude states\n  ATT_STATES:[attitudeState];\n  /// Physical properties\n  PHYS_PROPERTIES:attPhysicalProperties;\n  /// Attitude covariance data\n  COV_DATA:[attCovariance];\n  /// Attitude maneuvers\n  MANEUVERS:[attManeuver];\n  /// Maneuverability status\n  MANEUVERABLE:maneuverableFlag;\n  /// Additional comments\n  COMMENT:string;\n}\n\nroot_type ACM;\nfile_identifier "$ACM";',
+      IDL: `// Hash: 2598961374505d016dc23a69f842c76c736efe967953c1fa70c33d9c6c830a57
+// Version: 0.0.4
+// -----------------------------------END_HEADER
+enum attitudeStateType : byte {
+  QUATERNION,
+  EULER_ANGLES,
+  SPIN,
+  DIRECTION_COSINE
+}
+
+enum attCovType : byte {
+  ANGLE,
+  ANGLE_GYROBIAS,
+  ANGLE_ANGVEL,
+  QUATERNION_COV
+}
+
+enum maneuverableFlag : byte {
+  YES,
+  NO,
+  UNKNOWN
+}
+
+/// Attitude State Data
+table attitudeState {
+  /// Attitude state type
+  ATT_TYPE:attitudeStateType;
+  /// Reference frame A
+  REF_FRAME_A:string;
+  /// Reference frame B
+  REF_FRAME_B:string;
+  /// Attitude direction (A2B or B2A)
+  ATT_DIR:string;
+  /// Epoch (ISO 8601)
+  EPOCH:string;
+  /// Quaternion scalar component (q0 or qc)
+  Q1:double;
+  /// Quaternion vector component i
+  Q2:double;
+  /// Quaternion vector component j
+  Q3:double;
+  /// Quaternion vector component k
+  QC:double;
+  /// Euler angle X in degrees
+  ANGLE_1:double;
+  /// Euler angle Y in degrees
+  ANGLE_2:double;
+  /// Euler angle Z in degrees
+  ANGLE_3:double;
+  /// Euler rotation sequence (e.g., 321, 313)
+  EULER_ROT_SEQ:string;
+  /// Angular velocity X in deg/s
+  ANGVEL_X:double;
+  /// Angular velocity Y in deg/s
+  ANGVEL_Y:double;
+  /// Angular velocity Z in deg/s
+  ANGVEL_Z:double;
+  /// Spin alpha in degrees
+  SPIN_ALPHA:double;
+  /// Spin delta in degrees
+  SPIN_DELTA:double;
+  /// Spin angle in degrees
+  SPIN_ANGLE:double;
+  /// Spin angle velocity in deg/s
+  SPIN_ANGLE_VEL:double;
+  /// Nutation angle in degrees
+  NUTATION:double;
+  /// Nutation period in seconds
+  NUTATION_PERIOD:double;
+  /// Nutation phase in degrees
+  NUTATION_PHASE:double;
+}
+
+/// Attitude Physical Characteristics
+table attPhysicalProperties {
+  /// Drag coefficient
+  DRAG_COEFF:double;
+  /// Wet mass in kg
+  WET_MASS:double;
+  /// Dry mass in kg
+  DRY_MASS:double;
+  /// Center of pressure reference frame
+  CP_REF_FRAME:string;
+  /// Center of pressure X in m
+  CP_X:double;
+  /// Center of pressure Y in m
+  CP_Y:double;
+  /// Center of pressure Z in m
+  CP_Z:double;
+  /// Inertia reference frame
+  INERTIA_REF_FRAME:string;
+  /// Moment of inertia about X axis in kg*m^2
+  IXX:double;
+  /// Moment of inertia about Y axis in kg*m^2
+  IYY:double;
+  /// Moment of inertia about Z axis in kg*m^2
+  IZZ:double;
+  /// Product of inertia XY in kg*m^2
+  IXY:double;
+  /// Product of inertia XZ in kg*m^2
+  IXZ:double;
+  /// Product of inertia YZ in kg*m^2
+  IYZ:double;
+  /// COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+  /// joined by a line feed.
+  COMMENT:string;
+}
+
+/// Attitude Covariance
+table attCovariance {
+  /// Covariance type
+  COV_TYPE:attCovType;
+  /// Reference frame
+  COV_REF_FRAME:string;
+  /// Epoch (ISO 8601)
+  EPOCH:string;
+  /// Upper-triangular covariance matrix elements (row-major)
+  COV:[double];
+}
+
+/// Attitude Maneuver
+table attManeuver {
+  /// Maneuver epoch start (ISO 8601)
+  MAN_EPOCH_START:string;
+  /// Duration in seconds
+  DURATION:double;
+  /// Reference frame
+  REF_FRAME:string;
+  /// Torque about body X in N*m
+  TOR_1:double;
+  /// Torque about body Y in N*m
+  TOR_2:double;
+  /// Torque about body Z in N*m
+  TOR_3:double;
+}
+
+/// Attitude Comprehensive Message
+table ACM {
+  /// CCSDS ACM version
+  CCSDS_ACM_VERS:string;
+  /// Message creation date (ISO 8601)
+  CREATION_DATE:string;
+  /// Creating organization
+  ORIGINATOR:string;
+  /// Object name
+  OBJECT_NAME:string;
+  /// International designator
+  OBJECT_ID:string;
+  /// Catalog name
+  CATALOG_NAME:string;
+  /// Epoch of state (ISO 8601)
+  EPOCH:string;
+  /// Time system
+  TIME_SYSTEM:string;
+  /// Attitude states
+  ATT_STATES:[attitudeState];
+  /// Physical properties
+  PHYS_PROPERTIES:attPhysicalProperties;
+  /// Attitude covariance data
+  COV_DATA:[attCovariance];
+  /// Attitude maneuvers
+  MANEUVERS:[attManeuver];
+  /// Maneuverability status
+  MANEUVERABLE:maneuverableFlag;
+  /// COMMENT lines of the message header, metadata and user-defined data
+  /// (CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,
+  /// covariance, maneuver or determination block's own comments stay with it.
+  COMMENT:string;
+
+  /// CLASSIFICATION of the message: the optional header keyword stating its
+  /// security classification or handling caveat.
+  CLASSIFICATION:string;
+  /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  /// unique for this message.
+  MESSAGE_ID:string;
+  /// OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.
+  /// OBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH
+  /// above its EPOCH_TZERO, the epoch every relative time is measured from.
+  OBJECT_DESIGNATOR:string;
+  /// ORIGINATOR_POC: point of contact at the originator.
+  ORIGINATOR_POC:string;
+  /// ORIGINATOR_POSITION: position of the point of contact.
+  ORIGINATOR_POSITION:string;
+  /// ORIGINATOR_PHONE: telephone number of the point of contact.
+  ORIGINATOR_PHONE:string;
+  /// ORIGINATOR_EMAIL: email address of the point of contact.
+  ORIGINATOR_EMAIL:string;
+  /// ORIGINATOR_ADDRESS: postal address of the point of contact.
+  ORIGINATOR_ADDRESS:string;
+  /// ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.
+  ODM_MSG_LINK:string;
+  /// CENTER_NAME: the orbit center, when the message states one.
+  CENTER_NAME:string;
+  /// ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.
+  ACM_DATA_ELEMENTS:string;
+  /// START_TIME: start of the total time span the message covers.
+  START_TIME:string;
+  /// STOP_TIME: end of the total time span the message covers.
+  STOP_TIME:string;
+  /// TAIMUTC_AT_TZERO in seconds, NaN when not stated.
+  TAIMUTC_AT_TZERO:double = nan;
+  /// NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.
+  NEXT_LEAP_EPOCH:string;
+  /// NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.
+  NEXT_LEAP_TAIMUTC:double = nan;
+  /// Attitude state time histories (ATT_START blocks), in message order.
+  ATT_BLOCKS:[ACMAttitudeBlock];
+  /// Covariance time histories (COV_START blocks), in message order.
+  COV_BLOCKS:[ACMCovarianceBlock];
+  /// Maneuver specifications (MAN_START blocks), in message order.
+  MAN_BLOCKS:[ACMManeuverBlock];
+  /// The attitude determination data (AD_START block), when the message has them.
+  DETERMINATION:ACMDetermination;
+  /// Every USER_DEFINED parameter of the message, in message order.
+  USER_DEFINED_PARAMETERS:[ACMUserDefinedParameter];
+}
+
+/// One attitude state time history of an ACM (CCSDS 504.0-B-2 Table 5-4): the
+/// block's keywords, then its data lines as TIMES (the first column of each line,
+/// elapsed seconds from EPOCH_TZERO or an epoch, as written) and VALUES (the other
+/// columns, NUMBER_STATES per line, row by row).
+table ACMAttitudeBlock {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// ATT_ID.
+  ATT_ID:string;
+  /// ATT_PREV_ID.
+  ATT_PREV_ID:string;
+  /// ATT_BASIS: PREDICTED, DETERMINED_GND, DETERMINED_OBC or SIMULATED.
+  ATT_BASIS:string;
+  /// ATT_BASIS_ID.
+  ATT_BASIS_ID:string;
+  /// REF_FRAME_A: the frame the transformation starts from.
+  REF_FRAME_A:string;
+  /// REF_FRAME_B: the frame the transformation ends in.
+  REF_FRAME_B:string;
+  /// NUMBER_STATES: the data columns on each line (attitude, then rate).
+  NUMBER_STATES:uint;
+  /// ATT_TYPE: QUATERNION, EULER_ANGLES, DCM or ANGVEL.
+  ATT_TYPE:string;
+  /// EULER_ROT_SEQ, when ATT_TYPE is EULER_ANGLES.
+  EULER_ROT_SEQ:string;
+  /// RATE_TYPE: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS, when the lines carry rates.
+  RATE_TYPE:string;
+  /// The first column of each data line, as written.
+  TIMES:[string];
+  /// The other columns of the data lines, NUMBER_STATES per line.
+  VALUES:[double];
+}
+
+/// One covariance time history of an ACM (Table 5-6): the diagonal terms of the
+/// covariance on each line, as TIMES and VALUES like ACMAttitudeBlock; every line
+/// has the same number of values.
+table ACMCovarianceBlock {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// COV_ID.
+  COV_ID:string;
+  /// COV_PREV_ID.
+  COV_PREV_ID:string;
+  /// COV_BASIS.
+  COV_BASIS:string;
+  /// COV_BASIS_ID.
+  COV_BASIS_ID:string;
+  /// COV_REF_FRAME.
+  COV_REF_FRAME:string;
+  /// COV_TYPE: ANGLE, ANGLE_GYROBIAS, ANGLE_ANGVEL, QUATERNION, QUATERNION_GYROBIAS
+  /// or QUATERNION_ANGVEL.
+  COV_TYPE:string;
+  /// The first column of each data line, as written.
+  TIMES:[string];
+  /// The diagonal terms of each line, row by row.
+  VALUES:[double];
+}
+
+/// One maneuver specification of an ACM (Table 5-7).
+table ACMManeuverBlock {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// MAN_ID.
+  MAN_ID:string;
+  /// MAN_PREV_ID.
+  MAN_PREV_ID:string;
+  /// MAN_PURPOSE: for example MOM_DESAT.
+  MAN_PURPOSE:string;
+  /// MAN_BEGIN_TIME in seconds from EPOCH_TZERO.
+  MAN_BEGIN_TIME:double;
+  /// MAN_END_TIME in seconds from EPOCH_TZERO; NaN when the message states
+  /// MAN_DURATION instead (a message states one of the two).
+  MAN_END_TIME:double = nan;
+  /// MAN_DURATION in seconds; NaN when the message states MAN_END_TIME instead.
+  MAN_DURATION:double = nan;
+  /// ACTUATOR_USED.
+  ACTUATOR_USED:string;
+  /// TARGET_MOMENTUM: three components in N*m*s; empty when not stated.
+  TARGET_MOMENTUM:[double];
+  /// TARGET_MOM_FRAME.
+  TARGET_MOM_FRAME:string;
+  /// TARGET_ATTITUDE: the target attitude components; empty when not stated.
+  TARGET_ATTITUDE:[double];
+  /// TARGET_SPINRATE in deg/s, NaN when not stated.
+  TARGET_SPINRATE:double = nan;
+}
+
+/// The attitude determination data of an ACM (Table 5-8).
+table ACMDetermination {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT:string;
+  /// AD_ID.
+  AD_ID:string;
+  /// AD_PREV_ID.
+  AD_PREV_ID:string;
+  /// AD_METHOD: for example EKF, TRIAD or QUEST.
+  AD_METHOD:string;
+  /// ATTITUDE_SOURCE.
+  ATTITUDE_SOURCE:string;
+  /// NUMBER_STATES.
+  NUMBER_STATES:uint;
+  /// ATTITUDE_STATES: QUATERNION, EULER_ANGLES, DCM or ANGVEL.
+  ATTITUDE_STATES:string;
+  /// EULER_ROT_SEQ.
+  EULER_ROT_SEQ:string;
+  /// COV_TYPE.
+  COV_TYPE:string;
+  /// REF_FRAME_A.
+  REF_FRAME_A:string;
+  /// REF_FRAME_B.
+  REF_FRAME_B:string;
+  /// RATE_STATES: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS.
+  RATE_STATES:string;
+  /// SIGMA_U in deg/s**1.5, NaN when not stated.
+  SIGMA_U:double = nan;
+  /// SIGMA_V in deg/s**0.5, NaN when not stated.
+  SIGMA_V:double = nan;
+  /// RATE_PROCESS_NOISE_STDDEV in deg/s**1.5, NaN when not stated.
+  RATE_PROCESS_NOISE_STDDEV:double = nan;
+  /// The sensors, in message order.
+  SENSORS:[ACMSensor];
+}
+
+/// One sensor block of an ACM's attitude determination data.
+table ACMSensor {
+  /// SENSOR_NUMBER; it need not be sequential.
+  SENSOR_NUMBER:uint;
+  /// SENSOR_USED: for example AST, DSS or IMU.
+  SENSOR_USED:string;
+  /// NUMBER_SENSOR_NOISE_COVARIANCE.
+  NUMBER_SENSOR_NOISE_COVARIANCE:uint;
+  /// SENSOR_NOISE_STDDEV in deg: one value per noise covariance.
+  SENSOR_NOISE_STDDEV:[double];
+  /// SENSOR_FREQUENCY in Hz, NaN when not stated.
+  SENSOR_FREQUENCY:double = nan;
+}
+
+/// One USER_DEFINED_x keyword of an ACM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+table ACMUserDefinedParameter {
+  /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  PARAM_NAME:string;
+  /// The value as written
+  PARAM_VALUE:string;
+}
+
+root_type ACM;
+file_identifier "$ACM";`,
       files: [
         "./dist/ACM/ACM.sw.tar.gz",
         "./dist/ACM/ACM.py.tar.gz",
@@ -27775,6 +29536,15 @@ var json_default = {
             "DEFAULT"
           ]
         },
+        cdmManeuverable: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "YES",
+            "NO",
+            "NOT_APPLICABLE"
+          ]
+        },
         PNM: {
           type: "object",
           description: "Publish Notification Message.\n\nPNM is the compact network announcement for a published record, manifest, or\ndataset update. For dataset updates, FILE_ID is the complete canonical\nidentity for the published update and CID usually points to a small DPM\nmanifest or digest. The DPM carries the full verification contract:\nprovider identity, retrieval protocol, canonical query, result hash, Merkle\nroots, completeness-capable indexes, file_id partition key, and signature.\nLarge or paid dataset updates do not need to be published as globally\ndiscoverable IPFS files; a PNM may instead advertise a provider-mediated SDN\nquery protocol. In that mode the PNM is only the announcement. The DPM is\nthe signed commitment, and each provider response carries records plus\nMerkle proof material that the subscriber verifies against the DPM roots and\nthe announced FILE_ID before import.",
@@ -28865,13 +30635,29 @@ to the wallet, not to a published record. ABSENT from published records.`
                 type: "number"
               },
               description: "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]"
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,\nas written. A numeric designator is also OBJECT.NORAD_CAT_ID."
+            },
+            CATALOG_NAME: {
+              type: "string",
+              description: "CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in."
+            },
+            MANEUVERABLE: {
+              $ref: "#/definitions/cdmManeuverable",
+              description: "MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the\nsame fact as a flag, true for YES."
+            },
+            CD_AREA_OVER_MASS: {
+              type: "number",
+              description: "CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg."
             }
           },
           additionalProperties: false
         },
         CDM: {
           type: "object",
-          description: "Conjunction Data Message",
+          description: "Conjunction Data Message\n\nUnits of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,\nSCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part\nof each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and\nkm**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives\nMISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of\nCOVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust\nterms) are held as the message states them.",
           properties: {
             CCSDS_CDM_VERS: {
               type: "number",
@@ -28988,6 +30774,10 @@ to the wallet, not to a published record. ABSENT from published records.`
             OBJECT2_DATASOURCE: {
               $ref: "#/definitions/PNM",
               description: "Data Source for the positional information for Object 2"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message header and of its relative metadata and data\n(CCSDS 508.0-B-1), in message order, joined by a line feed."
             }
           },
           additionalProperties: false
@@ -32060,6 +33850,20 @@ Decoding applies the inverses from the last back.`
             "CCSDS_AEM_XML",
             "CCSDS_TDM_KVN",
             "CCSDS_TDM_XML",
+            "CCSDS_OMM_KVN",
+            "CCSDS_OMM_XML",
+            "CCSDS_OPM_KVN",
+            "CCSDS_OPM_XML",
+            "CCSDS_OCM_KVN",
+            "CCSDS_OCM_XML",
+            "CCSDS_CDM_KVN",
+            "CCSDS_CDM_XML",
+            "CCSDS_APM_KVN",
+            "CCSDS_APM_XML",
+            "CCSDS_ACM_KVN",
+            "CCSDS_ACM_XML",
+            "CCSDS_RDM_KVN",
+            "CCSDS_RDM_XML",
             "PROVIDER_DEFINED"
           ]
         },
@@ -35144,6 +36948,101 @@ Decoding applies the inverses from the last back.`
             },
             DRAG_COEFF: {
               type: "number"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata\nand data groups, in message order, joined by a line feed."
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message."
+            },
+            REF_FRAME_EPOCH: {
+              type: "string",
+              description: "REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty\nwhen it is REF_FRAME."
+            },
+            COVARIANCE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:\nCX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,\nCX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.\nUnits km**2, km**2/s, km**2/s**2. Empty when the message states none."
+            },
+            MANEUVERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPMManeuver"
+              },
+              description: "The message's maneuvers, in message order."
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword of the message, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        OPMManeuver: {
+          type: "object",
+          description: "One maneuver of an OPM (CCSDS 502.0-B-3 Table 3-7).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this maneuver, joined by a line feed."
+            },
+            MAN_EPOCH_IGNITION: {
+              type: "string",
+              description: "MAN_EPOCH_IGNITION: epoch of ignition."
+            },
+            MAN_DURATION: {
+              type: "number",
+              description: "MAN_DURATION: duration of the burn in seconds; zero for an impulsive maneuver."
+            },
+            MAN_DELTA_MASS: {
+              type: "number",
+              description: "MAN_DELTA_MASS: mass change during the maneuver in kg, negative or zero."
+            },
+            MAN_REF_FRAME: {
+              type: "string",
+              description: "MAN_REF_FRAME: frame of MAN_DV_1..3 (for example RTN, TNW, or REF_FRAME's)."
+            },
+            MAN_DV_1: {
+              type: "number",
+              description: "MAN_DV_1: first component of the velocity increment in km/s."
+            },
+            MAN_DV_2: {
+              type: "number",
+              description: "MAN_DV_2: second component of the velocity increment in km/s."
+            },
+            MAN_DV_3: {
+              type: "number",
+              description: "MAN_DV_3: third component of the velocity increment in km/s."
+            }
+          },
+          additionalProperties: false
+        },
+        OPMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OPM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written"
             }
           },
           additionalProperties: false
@@ -36792,6 +38691,338 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             QC: {
               type: "number"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and\ndata groups, in message order, joined by a line feed. A state group's own\ncomments stay with it."
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the orbit center, when the message states one."
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in."
+            },
+            QUATERNION_STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMQuaternionState"
+              },
+              description: "Quaternion states (QUAT_START block), in message order. Q1..QC above are the\nsingle frameless quaternion of the earlier form of this record; a message is\nread into and written from these lists."
+            },
+            EULER_ANGLE_STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMEulerAngleState"
+              },
+              description: "Euler angle states (EULER_START block), in message order."
+            },
+            ANGULAR_VELOCITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMAngularVelocity"
+              },
+              description: "Angular velocities (ANGVEL_START block), in message order."
+            },
+            SPIN_STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMSpinState"
+              },
+              description: "Spin states (SPIN_START block), in message order."
+            },
+            INERTIAS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMInertia"
+              },
+              description: "Inertia tensors (INERTIA_START block), in message order."
+            },
+            MANEUVERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMManeuver"
+              },
+              description: "Attitude maneuvers (MAN_START block), in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        APMQuaternionState: {
+          type: "object",
+          description: "A quaternion state of an APM (CCSDS 504.0-B-2 Table 3-3): rotation from\nREF_FRAME_A to REF_FRAME_B. The derivative is NaN when the message states none.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from."
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in."
+            },
+            Q1: {
+              type: "number",
+              description: "Q1 (vector part, x)."
+            },
+            Q2: {
+              type: "number",
+              description: "Q2 (vector part, y)."
+            },
+            Q3: {
+              type: "number",
+              description: "Q3 (vector part, z)."
+            },
+            QC: {
+              type: "number",
+              description: "QC (scalar part)."
+            },
+            Q1_DOT: {
+              type: "number",
+              description: "Q1_DOT in 1/s, NaN when not stated."
+            },
+            Q2_DOT: {
+              type: "number",
+              description: "Q2_DOT in 1/s, NaN when not stated."
+            },
+            Q3_DOT: {
+              type: "number",
+              description: "Q3_DOT in 1/s, NaN when not stated."
+            },
+            QC_DOT: {
+              type: "number",
+              description: "QC_DOT in 1/s, NaN when not stated."
+            }
+          },
+          additionalProperties: false
+        },
+        APMEulerAngleState: {
+          type: "object",
+          description: "An Euler angle state of an APM (EULER_START block). Angles in degrees; a rate\nis NaN when the message states none.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from."
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in."
+            },
+            EULER_ROT_SEQ: {
+              type: "string",
+              description: "EULER_ROT_SEQ: the rotation sequence, for example ZXZ."
+            },
+            ANGLE_1: {
+              type: "number",
+              description: "ANGLE_1 in degrees."
+            },
+            ANGLE_2: {
+              type: "number",
+              description: "ANGLE_2 in degrees."
+            },
+            ANGLE_3: {
+              type: "number",
+              description: "ANGLE_3 in degrees."
+            },
+            ANGLE_1_DOT: {
+              type: "number",
+              description: "ANGLE_1_DOT in deg/s, NaN when not stated."
+            },
+            ANGLE_2_DOT: {
+              type: "number",
+              description: "ANGLE_2_DOT in deg/s, NaN when not stated."
+            },
+            ANGLE_3_DOT: {
+              type: "number",
+              description: "ANGLE_3_DOT in deg/s, NaN when not stated."
+            }
+          },
+          additionalProperties: false
+        },
+        APMAngularVelocity: {
+          type: "object",
+          description: "An angular velocity of an APM (ANGVEL_START block), in deg/s.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from."
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in."
+            },
+            ANGVEL_FRAME: {
+              type: "string",
+              description: "ANGVEL_FRAME: the frame the components are in."
+            },
+            ANGVEL_X: {
+              type: "number",
+              description: "ANGVEL_X in deg/s."
+            },
+            ANGVEL_Y: {
+              type: "number",
+              description: "ANGVEL_Y in deg/s."
+            },
+            ANGVEL_Z: {
+              type: "number",
+              description: "ANGVEL_Z in deg/s."
+            }
+          },
+          additionalProperties: false
+        },
+        APMSpinState: {
+          type: "object",
+          description: "A spin state of an APM (SPIN_START block). The nutation terms come as either of\ntwo groups, nutation angle, period and phase or the momentum direction and the\nvelocity around it; those not stated are NaN.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from."
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in."
+            },
+            SPIN_ALPHA: {
+              type: "number",
+              description: "SPIN_ALPHA: right ascension of the spin axis in degrees."
+            },
+            SPIN_DELTA: {
+              type: "number",
+              description: "SPIN_DELTA: declination of the spin axis in degrees."
+            },
+            SPIN_ANGLE: {
+              type: "number",
+              description: "SPIN_ANGLE: phase in degrees."
+            },
+            SPIN_ANGLE_VEL: {
+              type: "number",
+              description: "SPIN_ANGLE_VEL: angular velocity in deg/s."
+            },
+            NUTATION: {
+              type: "number",
+              description: "NUTATION: nutation angle in degrees, NaN when not stated."
+            },
+            NUTATION_PER: {
+              type: "number",
+              description: "NUTATION_PER: nutation period in seconds, NaN when not stated."
+            },
+            NUTATION_PHASE: {
+              type: "number",
+              description: "NUTATION_PHASE: nutation phase in degrees, NaN when not stated."
+            },
+            MOMENTUM_ALPHA: {
+              type: "number",
+              description: "MOMENTUM_ALPHA: right ascension of the angular momentum vector in degrees,\nNaN when not stated."
+            },
+            MOMENTUM_DELTA: {
+              type: "number",
+              description: "MOMENTUM_DELTA: declination of the angular momentum vector in degrees, NaN\nwhen not stated."
+            },
+            NUTATION_VEL: {
+              type: "number",
+              description: "NUTATION_VEL: angular velocity around the momentum vector in deg/s, NaN when\nnot stated."
+            }
+          },
+          additionalProperties: false
+        },
+        APMInertia: {
+          type: "object",
+          description: "An inertia tensor of an APM (INERTIA_START block), in kg*m**2.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            INERTIA_REF_FRAME: {
+              type: "string",
+              description: "INERTIA_REF_FRAME: the frame the tensor is in."
+            },
+            IXX: {
+              type: "number",
+              description: "IXX: moment about X."
+            },
+            IYY: {
+              type: "number",
+              description: "IYY: moment about Y."
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ: moment about Z."
+            },
+            IXY: {
+              type: "number",
+              description: "IXY: cross product X-Y."
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ: cross product X-Z."
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ: cross product Y-Z."
+            }
+          },
+          additionalProperties: false
+        },
+        APMManeuver: {
+          type: "object",
+          description: "An attitude maneuver of an APM (MAN_START block).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            MAN_EPOCH_START: {
+              type: "string",
+              description: "MAN_EPOCH_START: epoch of the start of the maneuver."
+            },
+            MAN_DURATION: {
+              type: "number",
+              description: "MAN_DURATION in seconds."
+            },
+            MAN_REF_FRAME: {
+              type: "string",
+              description: "MAN_REF_FRAME: the frame the torque is in."
+            },
+            MAN_TOR_X: {
+              type: "number",
+              description: "MAN_TOR_X in N*m."
+            },
+            MAN_TOR_Y: {
+              type: "number",
+              description: "MAN_TOR_Y in N*m."
+            },
+            MAN_TOR_Z: {
+              type: "number",
+              description: "MAN_TOR_Z in N*m."
+            },
+            MAN_DELTA_MASS: {
+              type: "number",
+              description: "MAN_DELTA_MASS in kg (negative or zero), NaN when not stated."
             }
           },
           additionalProperties: false
@@ -41002,6 +43233,14 @@ turned into a number.`
             CZ_DOT_Z_DOT: {
               type: "number",
               description: "Covariance matrix [6,6] km**2/s**2"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed."
+            },
+            COV_REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME."
             }
           },
           additionalProperties: false
@@ -41143,6 +43382,14 @@ turned into a number.`
                 $ref: "#/definitions/ephemerisDataBlock"
               },
               description: "Array of ephemeris data blocks"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
             }
           },
           additionalProperties: false
@@ -41525,6 +43772,134 @@ turned into a number.`
             SRP_UNCERTAINTY: {
               type: "number",
               description: "Uncertainty in the solar radiation pressure coefficient."
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer."
+            },
+            BUS_MODEL: {
+              type: "string",
+              description: "BUS_MODEL: the object's bus model."
+            },
+            DOCKED_WITH: {
+              type: "string",
+              description: "DOCKED_WITH: comma-separated names of the objects it is docked with."
+            },
+            INITIAL_WET_MASS: {
+              type: "number",
+              description: "INITIAL_WET_MASS in kg, NaN when not stated."
+            },
+            OEB_PARENT_FRAME: {
+              type: "string",
+              description: "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in."
+            },
+            OEB_PARENT_FRAME_EPOCH: {
+              type: "string",
+              description: "OEB_PARENT_FRAME_EPOCH."
+            },
+            AREA_MIN_FOR_PC: {
+              type: "number",
+              description: "AREA_MIN_FOR_PC in m**2, NaN when not stated."
+            },
+            AREA_MAX_FOR_PC: {
+              type: "number",
+              description: "AREA_MAX_FOR_PC in m**2, NaN when not stated."
+            },
+            AREA_TYP_FOR_PC: {
+              type: "number",
+              description: "AREA_TYP_FOR_PC in m**2, NaN when not stated."
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated."
+            },
+            RCS_MIN: {
+              type: "number",
+              description: "RCS_MIN in m**2, NaN when not stated."
+            },
+            RCS_MAX: {
+              type: "number",
+              description: "RCS_MAX in m**2, NaN when not stated."
+            },
+            VM_ABSOLUTE: {
+              type: "number",
+              description: "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT_MIN: {
+              type: "number",
+              description: "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT: {
+              type: "number",
+              description: "VM_APPARENT: apparent visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT_MAX: {
+              type: "number",
+              description: "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated."
+            },
+            REFLECTANCE: {
+              type: "number",
+              description: "REFLECTANCE: typical reflectivity, NaN when not stated."
+            },
+            ATT_CONTROL_MODE: {
+              type: "string",
+              description: "ATT_CONTROL_MODE."
+            },
+            ATT_ACTUATOR_TYPE: {
+              type: "string",
+              description: "ATT_ACTUATOR_TYPE."
+            },
+            ATT_KNOWLEDGE: {
+              type: "number",
+              description: "ATT_KNOWLEDGE in degrees, NaN when not stated."
+            },
+            ATT_CONTROL: {
+              type: "number",
+              description: "ATT_CONTROL in degrees, NaN when not stated."
+            },
+            ATT_POINTING: {
+              type: "number",
+              description: "ATT_POINTING in degrees, NaN when not stated."
+            },
+            AVG_MANEUVER_FREQ: {
+              type: "number",
+              description: "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated."
+            },
+            MAX_THRUST: {
+              type: "number",
+              description: "MAX_THRUST in N, NaN when not stated."
+            },
+            DV_BOL: {
+              type: "number",
+              description: "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated."
+            },
+            DV_REMAINING: {
+              type: "number",
+              description: "DV_REMAINING in km/s, NaN when not stated."
+            },
+            IXX: {
+              type: "number",
+              description: "IXX in kg*m**2, NaN when not stated."
+            },
+            IYY: {
+              type: "number",
+              description: "IYY in kg*m**2, NaN when not stated."
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ in kg*m**2, NaN when not stated."
+            },
+            IXY: {
+              type: "number",
+              description: "IXY in kg*m**2, NaN when not stated."
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ in kg*m**2, NaN when not stated."
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ in kg*m**2, NaN when not stated."
             }
           },
           additionalProperties: false
@@ -41621,6 +43996,80 @@ turned into a number.`
             FIXED_GEOMAG_AP: {
               type: "number",
               description: "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP)."
+            },
+            ATMOSPHERIC_MODEL_NAME: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one."
+            },
+            EQUATORIAL_RADIUS: {
+              type: "number",
+              description: "EQUATORIAL_RADIUS in km, NaN when not stated."
+            },
+            CENTRAL_BODY_ROTATION: {
+              type: "number",
+              description: "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated."
+            },
+            OBLATE_FLATTENING: {
+              type: "number",
+              description: "OBLATE_FLATTENING, NaN when not stated."
+            },
+            REDUCTION_THEORY: {
+              type: "string",
+              description: "REDUCTION_THEORY."
+            },
+            ALBEDO_GRID_SIZE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "ALBEDO_GRID_SIZE."
+            },
+            SHADOW_MODEL: {
+              type: "string",
+              description: "SHADOW_MODEL."
+            },
+            SHADOW_BODIES: {
+              type: "string",
+              description: "SHADOW_BODIES."
+            },
+            SW_DATA_SOURCE: {
+              type: "string",
+              description: "SW_DATA_SOURCE: the space weather data source."
+            },
+            SW_DATA_EPOCH: {
+              type: "string",
+              description: "SW_DATA_EPOCH."
+            },
+            SW_INTERP_METHOD: {
+              type: "string",
+              description: "SW_INTERP_METHOD."
+            },
+            FIXED_GEOMAG_DST: {
+              type: "number",
+              description: "FIXED_GEOMAG_DST in nT, NaN when not stated."
+            },
+            FIXED_M10P7: {
+              type: "number",
+              description: "FIXED_M10P7, NaN when not stated."
+            },
+            FIXED_M10P7_MEAN: {
+              type: "number",
+              description: "FIXED_M10P7_MEAN, NaN when not stated."
+            },
+            FIXED_S10P7: {
+              type: "number",
+              description: "FIXED_S10P7, NaN when not stated."
+            },
+            FIXED_S10P7_MEAN: {
+              type: "number",
+              description: "FIXED_S10P7_MEAN, NaN when not stated."
+            },
+            FIXED_Y10P7: {
+              type: "number",
+              description: "FIXED_Y10P7, NaN when not stated."
+            },
+            FIXED_Y10P7_MEAN: {
+              type: "number",
+              description: "FIXED_Y10P7_MEAN, NaN when not stated."
             }
           },
           additionalProperties: false
@@ -41944,6 +44393,267 @@ turned into a number.`
                 $ref: "#/definitions/OCMDynamicParameter"
               },
               description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+            },
+            DAYS_SINCE_FIRST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated."
+            },
+            DAYS_SINCE_LAST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_LAST_OBS, NaN when not stated."
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated."
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated."
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED."
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED."
+            },
+            MAXIMUM_OBS_GAP: {
+              type: "number",
+              description: "MAXIMUM_OBS_GAP in days, NaN when not stated."
+            },
+            OD_EPOCH_EIGMAJ: {
+              type: "number",
+              description: "OD_EPOCH_EIGMAJ in m, NaN when not stated."
+            },
+            OD_EPOCH_EIGINT: {
+              type: "number",
+              description: "OD_EPOCH_EIGINT in m, NaN when not stated."
+            },
+            OD_EPOCH_EIGMIN: {
+              type: "number",
+              description: "OD_EPOCH_EIGMIN in m, NaN when not stated."
+            },
+            OD_MAX_PRED_EIGMAJ: {
+              type: "number",
+              description: "OD_MAX_PRED_EIGMAJ in m, NaN when not stated."
+            },
+            OD_MIN_PRED_EIGMIN: {
+              type: "number",
+              description: "OD_MIN_PRED_EIGMIN in m, NaN when not stated."
+            },
+            OD_CONFIDENCE: {
+              type: "number",
+              description: "OD_CONFIDENCE in percent, NaN when not stated."
+            },
+            GDOP: {
+              type: "number",
+              description: "GDOP, NaN when not stated."
+            },
+            SOLVE_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SOLVE_N: the number of solved-for states."
+            },
+            SOLVE_STATES: {
+              type: "string",
+              description: "SOLVE_STATES: the solved-for states, as written."
+            },
+            CONSIDER_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CONSIDER_N: the number of consider parameters."
+            },
+            CONSIDER_PARAMS: {
+              type: "string",
+              description: "CONSIDER_PARAMS: the consider parameters, as written."
+            },
+            SENSORS_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSORS_N: the number of sensors."
+            },
+            SENSORS: {
+              type: "string",
+              description: "SENSORS: the sensors, as written."
+            },
+            COMMENT: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line."
+            }
+          },
+          additionalProperties: false
+        },
+        OCMTrajectoryBlock: {
+          type: "object",
+          description: "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            TRAJ_ID: {
+              type: "string",
+              description: "TRAJ_ID."
+            },
+            TRAJ_PREV_ID: {
+              type: "string",
+              description: "TRAJ_PREV_ID."
+            },
+            TRAJ_NEXT_ID: {
+              type: "string",
+              description: "TRAJ_NEXT_ID."
+            },
+            TRAJ_BASIS: {
+              type: "string",
+              description: "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER."
+            },
+            TRAJ_BASIS_ID: {
+              type: "string",
+              description: "TRAJ_BASIS_ID."
+            },
+            INTERPOLATION: {
+              type: "string",
+              description: "INTERPOLATION: the recommended interpolation method."
+            },
+            INTERPOLATION_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "INTERPOLATION_DEGREE."
+            },
+            PROPAGATOR: {
+              type: "string",
+              description: "PROPAGATOR."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME."
+            },
+            TRAJ_REF_FRAME: {
+              type: "string",
+              description: "TRAJ_REF_FRAME."
+            },
+            TRAJ_FRAME_EPOCH: {
+              type: "string",
+              description: "TRAJ_FRAME_EPOCH."
+            },
+            USEABLE_START_TIME: {
+              type: "string",
+              description: "USEABLE_START_TIME."
+            },
+            USEABLE_STOP_TIME: {
+              type: "string",
+              description: "USEABLE_STOP_TIME."
+            },
+            ORB_REVNUM: {
+              type: "number",
+              description: "ORB_REVNUM, NaN when not stated."
+            },
+            ORB_REVNUM_BASIS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated."
+            },
+            TRAJ_TYPE: {
+              type: "string",
+              description: "TRAJ_TYPE as written, for example CARTPV."
+            },
+            ORB_AVERAGING: {
+              type: "string",
+              description: "ORB_AVERAGING."
+            },
+            TRAJ_UNITS: {
+              type: "string",
+              description: "TRAJ_UNITS."
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written."
+            }
+          },
+          additionalProperties: false
+        },
+        OCMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID."
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID."
+            },
+            COV_NEXT_ID: {
+              type: "string",
+              description: "COV_NEXT_ID."
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER."
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME."
+            },
+            COV_FRAME_EPOCH: {
+              type: "string",
+              description: "COV_FRAME_EPOCH."
+            },
+            COV_SCALE_MIN: {
+              type: "number",
+              description: "COV_SCALE_MIN, NaN when not stated."
+            },
+            COV_SCALE_MAX: {
+              type: "number",
+              description: "COV_SCALE_MAX, NaN when not stated."
+            },
+            COV_CONFIDENCE: {
+              type: "number",
+              description: "COV_CONFIDENCE in percent, NaN when not stated."
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE as written, for example CARTPV."
+            },
+            COV_ORDERING: {
+              $ref: "#/definitions/covarianceOrdering",
+              description: "COV_ORDERING."
+            },
+            COV_UNITS: {
+              type: "string",
+              description: "COV_UNITS."
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written."
             }
           },
           additionalProperties: false
@@ -42114,6 +44824,20 @@ turned into a number.`
                 type: "string"
               },
               description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+            },
+            TRAJECTORY_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMTrajectoryBlock"
+              },
+              description: "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states."
+            },
+            COVARIANCE_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMCovarianceBlock"
+              },
+              description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
             }
           },
           additionalProperties: false
@@ -52949,6 +55673,14 @@ verbatim what that source states about itself.`,
             CZ_DOT_Z_DOT: {
               type: "number",
               description: "Covariance matrix [6,6] km**2/s**2"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed."
+            },
+            COV_REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME."
             }
           },
           additionalProperties: false
@@ -53090,6 +55822,14 @@ verbatim what that source states about itself.`,
                 $ref: "#/definitions/ephemerisDataBlock"
               },
               description: "Array of ephemeris data blocks"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
             }
           },
           additionalProperties: false
@@ -53472,6 +56212,134 @@ verbatim what that source states about itself.`,
             SRP_UNCERTAINTY: {
               type: "number",
               description: "Uncertainty in the solar radiation pressure coefficient."
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer."
+            },
+            BUS_MODEL: {
+              type: "string",
+              description: "BUS_MODEL: the object's bus model."
+            },
+            DOCKED_WITH: {
+              type: "string",
+              description: "DOCKED_WITH: comma-separated names of the objects it is docked with."
+            },
+            INITIAL_WET_MASS: {
+              type: "number",
+              description: "INITIAL_WET_MASS in kg, NaN when not stated."
+            },
+            OEB_PARENT_FRAME: {
+              type: "string",
+              description: "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in."
+            },
+            OEB_PARENT_FRAME_EPOCH: {
+              type: "string",
+              description: "OEB_PARENT_FRAME_EPOCH."
+            },
+            AREA_MIN_FOR_PC: {
+              type: "number",
+              description: "AREA_MIN_FOR_PC in m**2, NaN when not stated."
+            },
+            AREA_MAX_FOR_PC: {
+              type: "number",
+              description: "AREA_MAX_FOR_PC in m**2, NaN when not stated."
+            },
+            AREA_TYP_FOR_PC: {
+              type: "number",
+              description: "AREA_TYP_FOR_PC in m**2, NaN when not stated."
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated."
+            },
+            RCS_MIN: {
+              type: "number",
+              description: "RCS_MIN in m**2, NaN when not stated."
+            },
+            RCS_MAX: {
+              type: "number",
+              description: "RCS_MAX in m**2, NaN when not stated."
+            },
+            VM_ABSOLUTE: {
+              type: "number",
+              description: "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT_MIN: {
+              type: "number",
+              description: "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT: {
+              type: "number",
+              description: "VM_APPARENT: apparent visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT_MAX: {
+              type: "number",
+              description: "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated."
+            },
+            REFLECTANCE: {
+              type: "number",
+              description: "REFLECTANCE: typical reflectivity, NaN when not stated."
+            },
+            ATT_CONTROL_MODE: {
+              type: "string",
+              description: "ATT_CONTROL_MODE."
+            },
+            ATT_ACTUATOR_TYPE: {
+              type: "string",
+              description: "ATT_ACTUATOR_TYPE."
+            },
+            ATT_KNOWLEDGE: {
+              type: "number",
+              description: "ATT_KNOWLEDGE in degrees, NaN when not stated."
+            },
+            ATT_CONTROL: {
+              type: "number",
+              description: "ATT_CONTROL in degrees, NaN when not stated."
+            },
+            ATT_POINTING: {
+              type: "number",
+              description: "ATT_POINTING in degrees, NaN when not stated."
+            },
+            AVG_MANEUVER_FREQ: {
+              type: "number",
+              description: "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated."
+            },
+            MAX_THRUST: {
+              type: "number",
+              description: "MAX_THRUST in N, NaN when not stated."
+            },
+            DV_BOL: {
+              type: "number",
+              description: "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated."
+            },
+            DV_REMAINING: {
+              type: "number",
+              description: "DV_REMAINING in km/s, NaN when not stated."
+            },
+            IXX: {
+              type: "number",
+              description: "IXX in kg*m**2, NaN when not stated."
+            },
+            IYY: {
+              type: "number",
+              description: "IYY in kg*m**2, NaN when not stated."
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ in kg*m**2, NaN when not stated."
+            },
+            IXY: {
+              type: "number",
+              description: "IXY in kg*m**2, NaN when not stated."
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ in kg*m**2, NaN when not stated."
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ in kg*m**2, NaN when not stated."
             }
           },
           additionalProperties: false
@@ -53568,6 +56436,80 @@ verbatim what that source states about itself.`,
             FIXED_GEOMAG_AP: {
               type: "number",
               description: "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP)."
+            },
+            ATMOSPHERIC_MODEL_NAME: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one."
+            },
+            EQUATORIAL_RADIUS: {
+              type: "number",
+              description: "EQUATORIAL_RADIUS in km, NaN when not stated."
+            },
+            CENTRAL_BODY_ROTATION: {
+              type: "number",
+              description: "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated."
+            },
+            OBLATE_FLATTENING: {
+              type: "number",
+              description: "OBLATE_FLATTENING, NaN when not stated."
+            },
+            REDUCTION_THEORY: {
+              type: "string",
+              description: "REDUCTION_THEORY."
+            },
+            ALBEDO_GRID_SIZE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "ALBEDO_GRID_SIZE."
+            },
+            SHADOW_MODEL: {
+              type: "string",
+              description: "SHADOW_MODEL."
+            },
+            SHADOW_BODIES: {
+              type: "string",
+              description: "SHADOW_BODIES."
+            },
+            SW_DATA_SOURCE: {
+              type: "string",
+              description: "SW_DATA_SOURCE: the space weather data source."
+            },
+            SW_DATA_EPOCH: {
+              type: "string",
+              description: "SW_DATA_EPOCH."
+            },
+            SW_INTERP_METHOD: {
+              type: "string",
+              description: "SW_INTERP_METHOD."
+            },
+            FIXED_GEOMAG_DST: {
+              type: "number",
+              description: "FIXED_GEOMAG_DST in nT, NaN when not stated."
+            },
+            FIXED_M10P7: {
+              type: "number",
+              description: "FIXED_M10P7, NaN when not stated."
+            },
+            FIXED_M10P7_MEAN: {
+              type: "number",
+              description: "FIXED_M10P7_MEAN, NaN when not stated."
+            },
+            FIXED_S10P7: {
+              type: "number",
+              description: "FIXED_S10P7, NaN when not stated."
+            },
+            FIXED_S10P7_MEAN: {
+              type: "number",
+              description: "FIXED_S10P7_MEAN, NaN when not stated."
+            },
+            FIXED_Y10P7: {
+              type: "number",
+              description: "FIXED_Y10P7, NaN when not stated."
+            },
+            FIXED_Y10P7_MEAN: {
+              type: "number",
+              description: "FIXED_Y10P7_MEAN, NaN when not stated."
             }
           },
           additionalProperties: false
@@ -53891,6 +56833,267 @@ verbatim what that source states about itself.`,
                 $ref: "#/definitions/OCMDynamicParameter"
               },
               description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+            },
+            DAYS_SINCE_FIRST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated."
+            },
+            DAYS_SINCE_LAST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_LAST_OBS, NaN when not stated."
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated."
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated."
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED."
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED."
+            },
+            MAXIMUM_OBS_GAP: {
+              type: "number",
+              description: "MAXIMUM_OBS_GAP in days, NaN when not stated."
+            },
+            OD_EPOCH_EIGMAJ: {
+              type: "number",
+              description: "OD_EPOCH_EIGMAJ in m, NaN when not stated."
+            },
+            OD_EPOCH_EIGINT: {
+              type: "number",
+              description: "OD_EPOCH_EIGINT in m, NaN when not stated."
+            },
+            OD_EPOCH_EIGMIN: {
+              type: "number",
+              description: "OD_EPOCH_EIGMIN in m, NaN when not stated."
+            },
+            OD_MAX_PRED_EIGMAJ: {
+              type: "number",
+              description: "OD_MAX_PRED_EIGMAJ in m, NaN when not stated."
+            },
+            OD_MIN_PRED_EIGMIN: {
+              type: "number",
+              description: "OD_MIN_PRED_EIGMIN in m, NaN when not stated."
+            },
+            OD_CONFIDENCE: {
+              type: "number",
+              description: "OD_CONFIDENCE in percent, NaN when not stated."
+            },
+            GDOP: {
+              type: "number",
+              description: "GDOP, NaN when not stated."
+            },
+            SOLVE_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SOLVE_N: the number of solved-for states."
+            },
+            SOLVE_STATES: {
+              type: "string",
+              description: "SOLVE_STATES: the solved-for states, as written."
+            },
+            CONSIDER_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CONSIDER_N: the number of consider parameters."
+            },
+            CONSIDER_PARAMS: {
+              type: "string",
+              description: "CONSIDER_PARAMS: the consider parameters, as written."
+            },
+            SENSORS_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSORS_N: the number of sensors."
+            },
+            SENSORS: {
+              type: "string",
+              description: "SENSORS: the sensors, as written."
+            },
+            COMMENT: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line."
+            }
+          },
+          additionalProperties: false
+        },
+        OCMTrajectoryBlock: {
+          type: "object",
+          description: "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            TRAJ_ID: {
+              type: "string",
+              description: "TRAJ_ID."
+            },
+            TRAJ_PREV_ID: {
+              type: "string",
+              description: "TRAJ_PREV_ID."
+            },
+            TRAJ_NEXT_ID: {
+              type: "string",
+              description: "TRAJ_NEXT_ID."
+            },
+            TRAJ_BASIS: {
+              type: "string",
+              description: "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER."
+            },
+            TRAJ_BASIS_ID: {
+              type: "string",
+              description: "TRAJ_BASIS_ID."
+            },
+            INTERPOLATION: {
+              type: "string",
+              description: "INTERPOLATION: the recommended interpolation method."
+            },
+            INTERPOLATION_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "INTERPOLATION_DEGREE."
+            },
+            PROPAGATOR: {
+              type: "string",
+              description: "PROPAGATOR."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME."
+            },
+            TRAJ_REF_FRAME: {
+              type: "string",
+              description: "TRAJ_REF_FRAME."
+            },
+            TRAJ_FRAME_EPOCH: {
+              type: "string",
+              description: "TRAJ_FRAME_EPOCH."
+            },
+            USEABLE_START_TIME: {
+              type: "string",
+              description: "USEABLE_START_TIME."
+            },
+            USEABLE_STOP_TIME: {
+              type: "string",
+              description: "USEABLE_STOP_TIME."
+            },
+            ORB_REVNUM: {
+              type: "number",
+              description: "ORB_REVNUM, NaN when not stated."
+            },
+            ORB_REVNUM_BASIS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated."
+            },
+            TRAJ_TYPE: {
+              type: "string",
+              description: "TRAJ_TYPE as written, for example CARTPV."
+            },
+            ORB_AVERAGING: {
+              type: "string",
+              description: "ORB_AVERAGING."
+            },
+            TRAJ_UNITS: {
+              type: "string",
+              description: "TRAJ_UNITS."
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written."
+            }
+          },
+          additionalProperties: false
+        },
+        OCMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID."
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID."
+            },
+            COV_NEXT_ID: {
+              type: "string",
+              description: "COV_NEXT_ID."
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER."
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME."
+            },
+            COV_FRAME_EPOCH: {
+              type: "string",
+              description: "COV_FRAME_EPOCH."
+            },
+            COV_SCALE_MIN: {
+              type: "number",
+              description: "COV_SCALE_MIN, NaN when not stated."
+            },
+            COV_SCALE_MAX: {
+              type: "number",
+              description: "COV_SCALE_MAX, NaN when not stated."
+            },
+            COV_CONFIDENCE: {
+              type: "number",
+              description: "COV_CONFIDENCE in percent, NaN when not stated."
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE as written, for example CARTPV."
+            },
+            COV_ORDERING: {
+              $ref: "#/definitions/covarianceOrdering",
+              description: "COV_ORDERING."
+            },
+            COV_UNITS: {
+              type: "string",
+              description: "COV_UNITS."
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written."
             }
           },
           additionalProperties: false
@@ -54061,6 +57264,20 @@ verbatim what that source states about itself.`,
                 type: "string"
               },
               description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+            },
+            TRAJECTORY_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMTrajectoryBlock"
+              },
+              description: "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states."
+            },
+            COVARIANCE_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMCovarianceBlock"
+              },
+              description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
             }
           },
           additionalProperties: false
@@ -59942,7 +63159,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             COMMENT: {
               type: "string",
-              description: "COMMENT (O)"
+              description: "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header."
             },
             EPOCH: {
               type: "string",
@@ -60068,6 +63285,36 @@ to the wallet, not to a published record. ABSENT from published records.`
             USER_DEFINED_MICROSECONDS: {
               type: "number",
               description: "USER_DEFINED_MICROSECONDS [O, units per ICD]"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message."
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OMMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        OMMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written, unit-less text"
             }
           },
           additionalProperties: false
@@ -70885,6 +74132,15 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
             "SEMI_CONTROLLED"
           ]
         },
+        rdmControlledReentry: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "YES",
+            "NO",
+            "UNKNOWN"
+          ]
+        },
         reentryReason: {
           type: "string",
           enum: [
@@ -71117,7 +74373,356 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
             },
             COMMENT: {
               type: "string",
-              description: "Additional comments"
+              description: "COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and\ndata groups, in message order, joined by a line feed."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "The fields below, with the earlier ones that say so, are the keywords of\nCCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,\nNORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH\nNOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS\nWET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,\nREENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,\nSURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are\nnot keywords of the message.\nMESSAGE_ID: an identifier the originator makes unique for this message."
+            },
+            CATALOG_NAME: {
+              type: "string",
+              description: "CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in."
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written."
+            },
+            OBJECT_OWNER: {
+              type: "string",
+              description: "OBJECT_OWNER."
+            },
+            OBJECT_OPERATOR: {
+              type: "string",
+              description: "OBJECT_OPERATOR."
+            },
+            CONTROLLED_REENTRY: {
+              $ref: "#/definitions/rdmControlledReentry",
+              description: "CONTROLLED_REENTRY: YES, NO or UNKNOWN."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the body being re-entered."
+            },
+            EPOCH_TZERO: {
+              type: "string",
+              description: "EPOCH_TZERO: the epoch the message's relative times are measured from."
+            },
+            REF_FRAME: {
+              type: "string",
+              description: "REF_FRAME: the frame of the state vector."
+            },
+            REF_FRAME_EPOCH: {
+              type: "string",
+              description: "REF_FRAME_EPOCH."
+            },
+            EPHEMERIS_NAME: {
+              type: "string",
+              description: "EPHEMERIS_NAME."
+            },
+            GRAVITY_MODEL: {
+              type: "string",
+              description: "GRAVITY_MODEL."
+            },
+            ATMOSPHERIC_MODEL: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL."
+            },
+            SOLAR_FLUX_PREDICTION: {
+              type: "string",
+              description: "SOLAR_FLUX_PREDICTION."
+            },
+            N_BODY_PERTURBATIONS: {
+              type: "string",
+              description: "N_BODY_PERTURBATIONS."
+            },
+            SOLAR_RAD_PRESSURE: {
+              type: "string",
+              description: "SOLAR_RAD_PRESSURE: a model name, or YES or NO."
+            },
+            EARTH_TIDES: {
+              type: "string",
+              description: "EARTH_TIDES: a model name."
+            },
+            INTRACK_THRUST: {
+              type: "string",
+              description: "INTRACK_THRUST: YES or NO."
+            },
+            DRAG_PARAMETERS_SOURCE: {
+              type: "string",
+              description: "DRAG_PARAMETERS_SOURCE."
+            },
+            DRAG_PARAMETERS_ALTITUDE: {
+              type: "number",
+              description: "DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated."
+            },
+            REENTRY_UNCERTAINTY_METHOD: {
+              type: "string",
+              description: "REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL."
+            },
+            REENTRY_DISINTEGRATION: {
+              type: "string",
+              description: "REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP."
+            },
+            IMPACT_UNCERTAINTY_METHOD: {
+              type: "string",
+              description: "IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL."
+            },
+            PREVIOUS_MESSAGE_ID: {
+              type: "string",
+              description: "PREVIOUS_MESSAGE_ID."
+            },
+            NEXT_MESSAGE_EPOCH: {
+              type: "string",
+              description: "NEXT_MESSAGE_EPOCH."
+            },
+            ORBIT_LIFETIME: {
+              type: "number",
+              description: "ORBIT_LIFETIME in days."
+            },
+            ORBIT_LIFETIME_WINDOW_START: {
+              type: "number",
+              description: "ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated."
+            },
+            ORBIT_LIFETIME_WINDOW_END: {
+              type: "number",
+              description: "ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated."
+            },
+            REENTRY_WINDOW_START: {
+              type: "string",
+              description: "REENTRY_WINDOW_START."
+            },
+            REENTRY_WINDOW_END: {
+              type: "string",
+              description: "REENTRY_WINDOW_END."
+            },
+            ORBIT_LIFETIME_CONFIDENCE_LEVEL: {
+              type: "number",
+              description: "ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated."
+            },
+            PROBABILITY_OF_IMPACT: {
+              type: "number",
+              description: "PROBABILITY_OF_IMPACT, NaN when not stated."
+            },
+            PROBABILITY_OF_BURN_UP: {
+              type: "number",
+              description: "PROBABILITY_OF_BURN_UP, NaN when not stated."
+            },
+            PROBABILITY_OF_BREAK_UP: {
+              type: "number",
+              description: "PROBABILITY_OF_BREAK_UP, NaN when not stated."
+            },
+            PROBABILITY_OF_LAND_IMPACT: {
+              type: "number",
+              description: "PROBABILITY_OF_LAND_IMPACT, NaN when not stated."
+            },
+            PROBABILITY_OF_CASUALTY: {
+              type: "number",
+              description: "PROBABILITY_OF_CASUALTY, NaN when not stated."
+            },
+            NOMINAL_IMPACT_EPOCH: {
+              type: "string",
+              description: "NOMINAL_IMPACT_EPOCH."
+            },
+            IMPACT_WINDOW_START: {
+              type: "string",
+              description: "IMPACT_WINDOW_START."
+            },
+            IMPACT_WINDOW_END: {
+              type: "string",
+              description: "IMPACT_WINDOW_END."
+            },
+            IMPACT_REF_FRAME: {
+              type: "string",
+              description: "IMPACT_REF_FRAME."
+            },
+            NOMINAL_IMPACT_LON: {
+              type: "number",
+              description: "NOMINAL_IMPACT_LON in degrees, NaN when not stated."
+            },
+            NOMINAL_IMPACT_LAT: {
+              type: "number",
+              description: "NOMINAL_IMPACT_LAT in degrees, NaN when not stated."
+            },
+            NOMINAL_IMPACT_ALT: {
+              type: "number",
+              description: "NOMINAL_IMPACT_ALT in metres, NaN when not stated."
+            },
+            IMPACT_1_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_1_CONFIDENCE in percent, NaN when not stated."
+            },
+            IMPACT_1_START_LON: {
+              type: "number",
+              description: "IMPACT_1_START_LON in degrees, NaN when not stated."
+            },
+            IMPACT_1_START_LAT: {
+              type: "number",
+              description: "IMPACT_1_START_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_1_STOP_LON: {
+              type: "number",
+              description: "IMPACT_1_STOP_LON in degrees, NaN when not stated."
+            },
+            IMPACT_1_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_1_STOP_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_1_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_1_CROSS_TRACK in km, NaN when not stated."
+            },
+            IMPACT_2_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_2_CONFIDENCE in percent, NaN when not stated."
+            },
+            IMPACT_2_START_LON: {
+              type: "number",
+              description: "IMPACT_2_START_LON in degrees, NaN when not stated."
+            },
+            IMPACT_2_START_LAT: {
+              type: "number",
+              description: "IMPACT_2_START_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_2_STOP_LON: {
+              type: "number",
+              description: "IMPACT_2_STOP_LON in degrees, NaN when not stated."
+            },
+            IMPACT_2_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_2_STOP_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_2_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_2_CROSS_TRACK in km, NaN when not stated."
+            },
+            IMPACT_3_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_3_CONFIDENCE in percent, NaN when not stated."
+            },
+            IMPACT_3_START_LON: {
+              type: "number",
+              description: "IMPACT_3_START_LON in degrees, NaN when not stated."
+            },
+            IMPACT_3_START_LAT: {
+              type: "number",
+              description: "IMPACT_3_START_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_3_STOP_LON: {
+              type: "number",
+              description: "IMPACT_3_STOP_LON in degrees, NaN when not stated."
+            },
+            IMPACT_3_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_3_STOP_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_3_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_3_CROSS_TRACK in km, NaN when not stated."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME: the frame of COVARIANCE."
+            },
+            COVARIANCE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Position/velocity covariance matrix at the state vector's epoch, 6x6 lower\ntriangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,\nCX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,\nCY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,\nCZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated."
+            },
+            DRY_MASS: {
+              type: "number",
+              description: "WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated."
+            },
+            HAZARDOUS_SUBSTANCES: {
+              type: "string",
+              description: "HAZARDOUS_SUBSTANCES."
+            },
+            SOLAR_RAD_COEFF: {
+              type: "number",
+              description: "SOLAR_RAD_COEFF, NaN when not stated."
+            },
+            DRAG_COEFF: {
+              type: "number",
+              description: "DRAG_COEFF, NaN when not stated."
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated."
+            },
+            THRUST_ACCELERATION: {
+              type: "number",
+              description: "THRUST_ACCELERATION in m/s**2, NaN when not stated."
+            },
+            TIME_LASTOB_START: {
+              type: "string",
+              description: "TIME_LASTOB_START."
+            },
+            TIME_LASTOB_END: {
+              type: "string",
+              description: "TIME_LASTOB_END."
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated."
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated."
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE."
+            },
+            OBS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_USED."
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE."
+            },
+            TRACKS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_USED."
+            },
+            RESIDUALS_ACCEPTED: {
+              type: "number",
+              description: "RESIDUALS_ACCEPTED in percent, NaN when not stated."
+            },
+            WEIGHTED_RMS: {
+              type: "number",
+              description: "WEIGHTED_RMS, NaN when not stated."
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/RDMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED keyword of the message, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        RDMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written"
             }
           },
           additionalProperties: false
@@ -75641,6 +79246,14 @@ Decoding applies the inverses from the last back.`
             CZ_DOT_Z_DOT: {
               type: "number",
               description: "Covariance matrix [6,6] km**2/s**2"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed."
+            },
+            COV_REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME."
             }
           },
           additionalProperties: false
@@ -75782,6 +79395,14 @@ Decoding applies the inverses from the last back.`
                 $ref: "#/definitions/ephemerisDataBlock"
               },
               description: "Array of ephemeris data blocks"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
             }
           },
           additionalProperties: false
@@ -77810,6 +81431,15 @@ Decoding applies the inverses from the last back.`
             "SEMI_CONTROLLED"
           ]
         },
+        rdmControlledReentry: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "YES",
+            "NO",
+            "UNKNOWN"
+          ]
+        },
         reentryReason: {
           type: "string",
           enum: [
@@ -79101,6 +82731,14 @@ Decoding applies the inverses from the last back.`
             CZ_DOT_Z_DOT: {
               type: "number",
               description: "Covariance matrix [6,6] km**2/s**2"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed."
+            },
+            COV_REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME."
             }
           },
           additionalProperties: false
@@ -79242,6 +82880,14 @@ Decoding applies the inverses from the last back.`
                 $ref: "#/definitions/ephemerisDataBlock"
               },
               description: "Array of ephemeris data blocks"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
             }
           },
           additionalProperties: false
@@ -79624,6 +83270,134 @@ Decoding applies the inverses from the last back.`
             SRP_UNCERTAINTY: {
               type: "number",
               description: "Uncertainty in the solar radiation pressure coefficient."
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer."
+            },
+            BUS_MODEL: {
+              type: "string",
+              description: "BUS_MODEL: the object's bus model."
+            },
+            DOCKED_WITH: {
+              type: "string",
+              description: "DOCKED_WITH: comma-separated names of the objects it is docked with."
+            },
+            INITIAL_WET_MASS: {
+              type: "number",
+              description: "INITIAL_WET_MASS in kg, NaN when not stated."
+            },
+            OEB_PARENT_FRAME: {
+              type: "string",
+              description: "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in."
+            },
+            OEB_PARENT_FRAME_EPOCH: {
+              type: "string",
+              description: "OEB_PARENT_FRAME_EPOCH."
+            },
+            AREA_MIN_FOR_PC: {
+              type: "number",
+              description: "AREA_MIN_FOR_PC in m**2, NaN when not stated."
+            },
+            AREA_MAX_FOR_PC: {
+              type: "number",
+              description: "AREA_MAX_FOR_PC in m**2, NaN when not stated."
+            },
+            AREA_TYP_FOR_PC: {
+              type: "number",
+              description: "AREA_TYP_FOR_PC in m**2, NaN when not stated."
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated."
+            },
+            RCS_MIN: {
+              type: "number",
+              description: "RCS_MIN in m**2, NaN when not stated."
+            },
+            RCS_MAX: {
+              type: "number",
+              description: "RCS_MAX in m**2, NaN when not stated."
+            },
+            VM_ABSOLUTE: {
+              type: "number",
+              description: "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT_MIN: {
+              type: "number",
+              description: "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT: {
+              type: "number",
+              description: "VM_APPARENT: apparent visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT_MAX: {
+              type: "number",
+              description: "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated."
+            },
+            REFLECTANCE: {
+              type: "number",
+              description: "REFLECTANCE: typical reflectivity, NaN when not stated."
+            },
+            ATT_CONTROL_MODE: {
+              type: "string",
+              description: "ATT_CONTROL_MODE."
+            },
+            ATT_ACTUATOR_TYPE: {
+              type: "string",
+              description: "ATT_ACTUATOR_TYPE."
+            },
+            ATT_KNOWLEDGE: {
+              type: "number",
+              description: "ATT_KNOWLEDGE in degrees, NaN when not stated."
+            },
+            ATT_CONTROL: {
+              type: "number",
+              description: "ATT_CONTROL in degrees, NaN when not stated."
+            },
+            ATT_POINTING: {
+              type: "number",
+              description: "ATT_POINTING in degrees, NaN when not stated."
+            },
+            AVG_MANEUVER_FREQ: {
+              type: "number",
+              description: "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated."
+            },
+            MAX_THRUST: {
+              type: "number",
+              description: "MAX_THRUST in N, NaN when not stated."
+            },
+            DV_BOL: {
+              type: "number",
+              description: "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated."
+            },
+            DV_REMAINING: {
+              type: "number",
+              description: "DV_REMAINING in km/s, NaN when not stated."
+            },
+            IXX: {
+              type: "number",
+              description: "IXX in kg*m**2, NaN when not stated."
+            },
+            IYY: {
+              type: "number",
+              description: "IYY in kg*m**2, NaN when not stated."
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ in kg*m**2, NaN when not stated."
+            },
+            IXY: {
+              type: "number",
+              description: "IXY in kg*m**2, NaN when not stated."
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ in kg*m**2, NaN when not stated."
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ in kg*m**2, NaN when not stated."
             }
           },
           additionalProperties: false
@@ -79720,6 +83494,80 @@ Decoding applies the inverses from the last back.`
             FIXED_GEOMAG_AP: {
               type: "number",
               description: "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP)."
+            },
+            ATMOSPHERIC_MODEL_NAME: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one."
+            },
+            EQUATORIAL_RADIUS: {
+              type: "number",
+              description: "EQUATORIAL_RADIUS in km, NaN when not stated."
+            },
+            CENTRAL_BODY_ROTATION: {
+              type: "number",
+              description: "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated."
+            },
+            OBLATE_FLATTENING: {
+              type: "number",
+              description: "OBLATE_FLATTENING, NaN when not stated."
+            },
+            REDUCTION_THEORY: {
+              type: "string",
+              description: "REDUCTION_THEORY."
+            },
+            ALBEDO_GRID_SIZE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "ALBEDO_GRID_SIZE."
+            },
+            SHADOW_MODEL: {
+              type: "string",
+              description: "SHADOW_MODEL."
+            },
+            SHADOW_BODIES: {
+              type: "string",
+              description: "SHADOW_BODIES."
+            },
+            SW_DATA_SOURCE: {
+              type: "string",
+              description: "SW_DATA_SOURCE: the space weather data source."
+            },
+            SW_DATA_EPOCH: {
+              type: "string",
+              description: "SW_DATA_EPOCH."
+            },
+            SW_INTERP_METHOD: {
+              type: "string",
+              description: "SW_INTERP_METHOD."
+            },
+            FIXED_GEOMAG_DST: {
+              type: "number",
+              description: "FIXED_GEOMAG_DST in nT, NaN when not stated."
+            },
+            FIXED_M10P7: {
+              type: "number",
+              description: "FIXED_M10P7, NaN when not stated."
+            },
+            FIXED_M10P7_MEAN: {
+              type: "number",
+              description: "FIXED_M10P7_MEAN, NaN when not stated."
+            },
+            FIXED_S10P7: {
+              type: "number",
+              description: "FIXED_S10P7, NaN when not stated."
+            },
+            FIXED_S10P7_MEAN: {
+              type: "number",
+              description: "FIXED_S10P7_MEAN, NaN when not stated."
+            },
+            FIXED_Y10P7: {
+              type: "number",
+              description: "FIXED_Y10P7, NaN when not stated."
+            },
+            FIXED_Y10P7_MEAN: {
+              type: "number",
+              description: "FIXED_Y10P7_MEAN, NaN when not stated."
             }
           },
           additionalProperties: false
@@ -80043,6 +83891,267 @@ Decoding applies the inverses from the last back.`
                 $ref: "#/definitions/OCMDynamicParameter"
               },
               description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+            },
+            DAYS_SINCE_FIRST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated."
+            },
+            DAYS_SINCE_LAST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_LAST_OBS, NaN when not stated."
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated."
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated."
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED."
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED."
+            },
+            MAXIMUM_OBS_GAP: {
+              type: "number",
+              description: "MAXIMUM_OBS_GAP in days, NaN when not stated."
+            },
+            OD_EPOCH_EIGMAJ: {
+              type: "number",
+              description: "OD_EPOCH_EIGMAJ in m, NaN when not stated."
+            },
+            OD_EPOCH_EIGINT: {
+              type: "number",
+              description: "OD_EPOCH_EIGINT in m, NaN when not stated."
+            },
+            OD_EPOCH_EIGMIN: {
+              type: "number",
+              description: "OD_EPOCH_EIGMIN in m, NaN when not stated."
+            },
+            OD_MAX_PRED_EIGMAJ: {
+              type: "number",
+              description: "OD_MAX_PRED_EIGMAJ in m, NaN when not stated."
+            },
+            OD_MIN_PRED_EIGMIN: {
+              type: "number",
+              description: "OD_MIN_PRED_EIGMIN in m, NaN when not stated."
+            },
+            OD_CONFIDENCE: {
+              type: "number",
+              description: "OD_CONFIDENCE in percent, NaN when not stated."
+            },
+            GDOP: {
+              type: "number",
+              description: "GDOP, NaN when not stated."
+            },
+            SOLVE_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SOLVE_N: the number of solved-for states."
+            },
+            SOLVE_STATES: {
+              type: "string",
+              description: "SOLVE_STATES: the solved-for states, as written."
+            },
+            CONSIDER_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CONSIDER_N: the number of consider parameters."
+            },
+            CONSIDER_PARAMS: {
+              type: "string",
+              description: "CONSIDER_PARAMS: the consider parameters, as written."
+            },
+            SENSORS_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSORS_N: the number of sensors."
+            },
+            SENSORS: {
+              type: "string",
+              description: "SENSORS: the sensors, as written."
+            },
+            COMMENT: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line."
+            }
+          },
+          additionalProperties: false
+        },
+        OCMTrajectoryBlock: {
+          type: "object",
+          description: "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            TRAJ_ID: {
+              type: "string",
+              description: "TRAJ_ID."
+            },
+            TRAJ_PREV_ID: {
+              type: "string",
+              description: "TRAJ_PREV_ID."
+            },
+            TRAJ_NEXT_ID: {
+              type: "string",
+              description: "TRAJ_NEXT_ID."
+            },
+            TRAJ_BASIS: {
+              type: "string",
+              description: "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER."
+            },
+            TRAJ_BASIS_ID: {
+              type: "string",
+              description: "TRAJ_BASIS_ID."
+            },
+            INTERPOLATION: {
+              type: "string",
+              description: "INTERPOLATION: the recommended interpolation method."
+            },
+            INTERPOLATION_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "INTERPOLATION_DEGREE."
+            },
+            PROPAGATOR: {
+              type: "string",
+              description: "PROPAGATOR."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME."
+            },
+            TRAJ_REF_FRAME: {
+              type: "string",
+              description: "TRAJ_REF_FRAME."
+            },
+            TRAJ_FRAME_EPOCH: {
+              type: "string",
+              description: "TRAJ_FRAME_EPOCH."
+            },
+            USEABLE_START_TIME: {
+              type: "string",
+              description: "USEABLE_START_TIME."
+            },
+            USEABLE_STOP_TIME: {
+              type: "string",
+              description: "USEABLE_STOP_TIME."
+            },
+            ORB_REVNUM: {
+              type: "number",
+              description: "ORB_REVNUM, NaN when not stated."
+            },
+            ORB_REVNUM_BASIS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated."
+            },
+            TRAJ_TYPE: {
+              type: "string",
+              description: "TRAJ_TYPE as written, for example CARTPV."
+            },
+            ORB_AVERAGING: {
+              type: "string",
+              description: "ORB_AVERAGING."
+            },
+            TRAJ_UNITS: {
+              type: "string",
+              description: "TRAJ_UNITS."
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written."
+            }
+          },
+          additionalProperties: false
+        },
+        OCMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID."
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID."
+            },
+            COV_NEXT_ID: {
+              type: "string",
+              description: "COV_NEXT_ID."
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER."
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME."
+            },
+            COV_FRAME_EPOCH: {
+              type: "string",
+              description: "COV_FRAME_EPOCH."
+            },
+            COV_SCALE_MIN: {
+              type: "number",
+              description: "COV_SCALE_MIN, NaN when not stated."
+            },
+            COV_SCALE_MAX: {
+              type: "number",
+              description: "COV_SCALE_MAX, NaN when not stated."
+            },
+            COV_CONFIDENCE: {
+              type: "number",
+              description: "COV_CONFIDENCE in percent, NaN when not stated."
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE as written, for example CARTPV."
+            },
+            COV_ORDERING: {
+              $ref: "#/definitions/covarianceOrdering",
+              description: "COV_ORDERING."
+            },
+            COV_UNITS: {
+              type: "string",
+              description: "COV_UNITS."
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written."
             }
           },
           additionalProperties: false
@@ -80213,6 +84322,20 @@ Decoding applies the inverses from the last back.`
                 type: "string"
               },
               description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+            },
+            TRAJECTORY_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMTrajectoryBlock"
+              },
+              description: "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states."
+            },
+            COVARIANCE_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMCovarianceBlock"
+              },
+              description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
             }
           },
           additionalProperties: false
@@ -80719,7 +84842,356 @@ Decoding applies the inverses from the last back.`
             },
             COMMENT: {
               type: "string",
-              description: "Additional comments"
+              description: "COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and\ndata groups, in message order, joined by a line feed."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "The fields below, with the earlier ones that say so, are the keywords of\nCCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,\nNORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH\nNOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS\nWET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,\nREENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,\nSURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are\nnot keywords of the message.\nMESSAGE_ID: an identifier the originator makes unique for this message."
+            },
+            CATALOG_NAME: {
+              type: "string",
+              description: "CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in."
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written."
+            },
+            OBJECT_OWNER: {
+              type: "string",
+              description: "OBJECT_OWNER."
+            },
+            OBJECT_OPERATOR: {
+              type: "string",
+              description: "OBJECT_OPERATOR."
+            },
+            CONTROLLED_REENTRY: {
+              $ref: "#/definitions/rdmControlledReentry",
+              description: "CONTROLLED_REENTRY: YES, NO or UNKNOWN."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the body being re-entered."
+            },
+            EPOCH_TZERO: {
+              type: "string",
+              description: "EPOCH_TZERO: the epoch the message's relative times are measured from."
+            },
+            REF_FRAME: {
+              type: "string",
+              description: "REF_FRAME: the frame of the state vector."
+            },
+            REF_FRAME_EPOCH: {
+              type: "string",
+              description: "REF_FRAME_EPOCH."
+            },
+            EPHEMERIS_NAME: {
+              type: "string",
+              description: "EPHEMERIS_NAME."
+            },
+            GRAVITY_MODEL: {
+              type: "string",
+              description: "GRAVITY_MODEL."
+            },
+            ATMOSPHERIC_MODEL: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL."
+            },
+            SOLAR_FLUX_PREDICTION: {
+              type: "string",
+              description: "SOLAR_FLUX_PREDICTION."
+            },
+            N_BODY_PERTURBATIONS: {
+              type: "string",
+              description: "N_BODY_PERTURBATIONS."
+            },
+            SOLAR_RAD_PRESSURE: {
+              type: "string",
+              description: "SOLAR_RAD_PRESSURE: a model name, or YES or NO."
+            },
+            EARTH_TIDES: {
+              type: "string",
+              description: "EARTH_TIDES: a model name."
+            },
+            INTRACK_THRUST: {
+              type: "string",
+              description: "INTRACK_THRUST: YES or NO."
+            },
+            DRAG_PARAMETERS_SOURCE: {
+              type: "string",
+              description: "DRAG_PARAMETERS_SOURCE."
+            },
+            DRAG_PARAMETERS_ALTITUDE: {
+              type: "number",
+              description: "DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated."
+            },
+            REENTRY_UNCERTAINTY_METHOD: {
+              type: "string",
+              description: "REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL."
+            },
+            REENTRY_DISINTEGRATION: {
+              type: "string",
+              description: "REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP."
+            },
+            IMPACT_UNCERTAINTY_METHOD: {
+              type: "string",
+              description: "IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL."
+            },
+            PREVIOUS_MESSAGE_ID: {
+              type: "string",
+              description: "PREVIOUS_MESSAGE_ID."
+            },
+            NEXT_MESSAGE_EPOCH: {
+              type: "string",
+              description: "NEXT_MESSAGE_EPOCH."
+            },
+            ORBIT_LIFETIME: {
+              type: "number",
+              description: "ORBIT_LIFETIME in days."
+            },
+            ORBIT_LIFETIME_WINDOW_START: {
+              type: "number",
+              description: "ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated."
+            },
+            ORBIT_LIFETIME_WINDOW_END: {
+              type: "number",
+              description: "ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated."
+            },
+            REENTRY_WINDOW_START: {
+              type: "string",
+              description: "REENTRY_WINDOW_START."
+            },
+            REENTRY_WINDOW_END: {
+              type: "string",
+              description: "REENTRY_WINDOW_END."
+            },
+            ORBIT_LIFETIME_CONFIDENCE_LEVEL: {
+              type: "number",
+              description: "ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated."
+            },
+            PROBABILITY_OF_IMPACT: {
+              type: "number",
+              description: "PROBABILITY_OF_IMPACT, NaN when not stated."
+            },
+            PROBABILITY_OF_BURN_UP: {
+              type: "number",
+              description: "PROBABILITY_OF_BURN_UP, NaN when not stated."
+            },
+            PROBABILITY_OF_BREAK_UP: {
+              type: "number",
+              description: "PROBABILITY_OF_BREAK_UP, NaN when not stated."
+            },
+            PROBABILITY_OF_LAND_IMPACT: {
+              type: "number",
+              description: "PROBABILITY_OF_LAND_IMPACT, NaN when not stated."
+            },
+            PROBABILITY_OF_CASUALTY: {
+              type: "number",
+              description: "PROBABILITY_OF_CASUALTY, NaN when not stated."
+            },
+            NOMINAL_IMPACT_EPOCH: {
+              type: "string",
+              description: "NOMINAL_IMPACT_EPOCH."
+            },
+            IMPACT_WINDOW_START: {
+              type: "string",
+              description: "IMPACT_WINDOW_START."
+            },
+            IMPACT_WINDOW_END: {
+              type: "string",
+              description: "IMPACT_WINDOW_END."
+            },
+            IMPACT_REF_FRAME: {
+              type: "string",
+              description: "IMPACT_REF_FRAME."
+            },
+            NOMINAL_IMPACT_LON: {
+              type: "number",
+              description: "NOMINAL_IMPACT_LON in degrees, NaN when not stated."
+            },
+            NOMINAL_IMPACT_LAT: {
+              type: "number",
+              description: "NOMINAL_IMPACT_LAT in degrees, NaN when not stated."
+            },
+            NOMINAL_IMPACT_ALT: {
+              type: "number",
+              description: "NOMINAL_IMPACT_ALT in metres, NaN when not stated."
+            },
+            IMPACT_1_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_1_CONFIDENCE in percent, NaN when not stated."
+            },
+            IMPACT_1_START_LON: {
+              type: "number",
+              description: "IMPACT_1_START_LON in degrees, NaN when not stated."
+            },
+            IMPACT_1_START_LAT: {
+              type: "number",
+              description: "IMPACT_1_START_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_1_STOP_LON: {
+              type: "number",
+              description: "IMPACT_1_STOP_LON in degrees, NaN when not stated."
+            },
+            IMPACT_1_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_1_STOP_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_1_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_1_CROSS_TRACK in km, NaN when not stated."
+            },
+            IMPACT_2_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_2_CONFIDENCE in percent, NaN when not stated."
+            },
+            IMPACT_2_START_LON: {
+              type: "number",
+              description: "IMPACT_2_START_LON in degrees, NaN when not stated."
+            },
+            IMPACT_2_START_LAT: {
+              type: "number",
+              description: "IMPACT_2_START_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_2_STOP_LON: {
+              type: "number",
+              description: "IMPACT_2_STOP_LON in degrees, NaN when not stated."
+            },
+            IMPACT_2_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_2_STOP_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_2_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_2_CROSS_TRACK in km, NaN when not stated."
+            },
+            IMPACT_3_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_3_CONFIDENCE in percent, NaN when not stated."
+            },
+            IMPACT_3_START_LON: {
+              type: "number",
+              description: "IMPACT_3_START_LON in degrees, NaN when not stated."
+            },
+            IMPACT_3_START_LAT: {
+              type: "number",
+              description: "IMPACT_3_START_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_3_STOP_LON: {
+              type: "number",
+              description: "IMPACT_3_STOP_LON in degrees, NaN when not stated."
+            },
+            IMPACT_3_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_3_STOP_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_3_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_3_CROSS_TRACK in km, NaN when not stated."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME: the frame of COVARIANCE."
+            },
+            COVARIANCE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Position/velocity covariance matrix at the state vector's epoch, 6x6 lower\ntriangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,\nCX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,\nCY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,\nCZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated."
+            },
+            DRY_MASS: {
+              type: "number",
+              description: "WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated."
+            },
+            HAZARDOUS_SUBSTANCES: {
+              type: "string",
+              description: "HAZARDOUS_SUBSTANCES."
+            },
+            SOLAR_RAD_COEFF: {
+              type: "number",
+              description: "SOLAR_RAD_COEFF, NaN when not stated."
+            },
+            DRAG_COEFF: {
+              type: "number",
+              description: "DRAG_COEFF, NaN when not stated."
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated."
+            },
+            THRUST_ACCELERATION: {
+              type: "number",
+              description: "THRUST_ACCELERATION in m/s**2, NaN when not stated."
+            },
+            TIME_LASTOB_START: {
+              type: "string",
+              description: "TIME_LASTOB_START."
+            },
+            TIME_LASTOB_END: {
+              type: "string",
+              description: "TIME_LASTOB_END."
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated."
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated."
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE."
+            },
+            OBS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_USED."
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE."
+            },
+            TRACKS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_USED."
+            },
+            RESIDUALS_ACCEPTED: {
+              type: "number",
+              description: "RESIDUALS_ACCEPTED in percent, NaN when not stated."
+            },
+            WEIGHTED_RMS: {
+              type: "number",
+              description: "WEIGHTED_RMS, NaN when not stated."
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/RDMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED keyword of the message, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        RDMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written"
             }
           },
           additionalProperties: false
@@ -85744,6 +90216,15 @@ Decoding applies the inverses from the last back.`
             "DEFAULT"
           ]
         },
+        cdmManeuverable: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "YES",
+            "NO",
+            "NOT_APPLICABLE"
+          ]
+        },
         cesVectorEncoding: {
           type: "string",
           enum: [
@@ -86524,6 +91005,20 @@ Decoding applies the inverses from the last back.`
             "CCSDS_AEM_XML",
             "CCSDS_TDM_KVN",
             "CCSDS_TDM_XML",
+            "CCSDS_OMM_KVN",
+            "CCSDS_OMM_XML",
+            "CCSDS_OPM_KVN",
+            "CCSDS_OPM_XML",
+            "CCSDS_OCM_KVN",
+            "CCSDS_OCM_XML",
+            "CCSDS_CDM_KVN",
+            "CCSDS_CDM_XML",
+            "CCSDS_APM_KVN",
+            "CCSDS_APM_XML",
+            "CCSDS_ACM_KVN",
+            "CCSDS_ACM_XML",
+            "CCSDS_RDM_KVN",
+            "CCSDS_RDM_XML",
             "PROVIDER_DEFINED"
           ]
         },
@@ -89867,6 +94362,15 @@ Decoding applies the inverses from the last back.`
             "CONTROLLED",
             "UNCONTROLLED",
             "SEMI_CONTROLLED"
+          ]
+        },
+        rdmControlledReentry: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "YES",
+            "NO",
+            "UNKNOWN"
           ]
         },
         reentryReason: {
@@ -94845,6 +99349,10 @@ Decoding applies the inverses from the last back.`
             IYZ: {
               type: "number",
               description: "Product of inertia YZ in kg*m^2"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),\njoined by a line feed."
             }
           },
           additionalProperties: false
@@ -94973,7 +99481,405 @@ Decoding applies the inverses from the last back.`
             },
             COMMENT: {
               type: "string",
-              description: "Additional comments"
+              description: "COMMENT lines of the message header, metadata and user-defined data\n(CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,\ncovariance, maneuver or determination block's own comments stay with it."
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message."
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.\nOBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH\nabove its EPOCH_TZERO, the epoch every relative time is measured from."
+            },
+            ORIGINATOR_POC: {
+              type: "string",
+              description: "ORIGINATOR_POC: point of contact at the originator."
+            },
+            ORIGINATOR_POSITION: {
+              type: "string",
+              description: "ORIGINATOR_POSITION: position of the point of contact."
+            },
+            ORIGINATOR_PHONE: {
+              type: "string",
+              description: "ORIGINATOR_PHONE: telephone number of the point of contact."
+            },
+            ORIGINATOR_EMAIL: {
+              type: "string",
+              description: "ORIGINATOR_EMAIL: email address of the point of contact."
+            },
+            ORIGINATOR_ADDRESS: {
+              type: "string",
+              description: "ORIGINATOR_ADDRESS: postal address of the point of contact."
+            },
+            ODM_MSG_LINK: {
+              type: "string",
+              description: "ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the orbit center, when the message states one."
+            },
+            ACM_DATA_ELEMENTS: {
+              type: "string",
+              description: "ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds."
+            },
+            START_TIME: {
+              type: "string",
+              description: "START_TIME: start of the total time span the message covers."
+            },
+            STOP_TIME: {
+              type: "string",
+              description: "STOP_TIME: end of the total time span the message covers."
+            },
+            TAIMUTC_AT_TZERO: {
+              type: "number",
+              description: "TAIMUTC_AT_TZERO in seconds, NaN when not stated."
+            },
+            NEXT_LEAP_EPOCH: {
+              type: "string",
+              description: "NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO."
+            },
+            NEXT_LEAP_TAIMUTC: {
+              type: "number",
+              description: "NEXT_LEAP_TAIMUTC in seconds, NaN when not stated."
+            },
+            ATT_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMAttitudeBlock"
+              },
+              description: "Attitude state time histories (ATT_START blocks), in message order."
+            },
+            COV_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMCovarianceBlock"
+              },
+              description: "Covariance time histories (COV_START blocks), in message order."
+            },
+            MAN_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMManeuverBlock"
+              },
+              description: "Maneuver specifications (MAN_START blocks), in message order."
+            },
+            DETERMINATION: {
+              $ref: "#/definitions/ACMDetermination",
+              description: "The attitude determination data (AD_START block), when the message has them."
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED parameter of the message, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        ACMAttitudeBlock: {
+          type: "object",
+          description: "One attitude state time history of an ACM (CCSDS 504.0-B-2 Table 5-4): the\nblock's keywords, then its data lines as TIMES (the first column of each line,\nelapsed seconds from EPOCH_TZERO or an epoch, as written) and VALUES (the other\ncolumns, NUMBER_STATES per line, row by row).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            ATT_ID: {
+              type: "string",
+              description: "ATT_ID."
+            },
+            ATT_PREV_ID: {
+              type: "string",
+              description: "ATT_PREV_ID."
+            },
+            ATT_BASIS: {
+              type: "string",
+              description: "ATT_BASIS: PREDICTED, DETERMINED_GND, DETERMINED_OBC or SIMULATED."
+            },
+            ATT_BASIS_ID: {
+              type: "string",
+              description: "ATT_BASIS_ID."
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the transformation starts from."
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the transformation ends in."
+            },
+            NUMBER_STATES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "NUMBER_STATES: the data columns on each line (attitude, then rate)."
+            },
+            ATT_TYPE: {
+              type: "string",
+              description: "ATT_TYPE: QUATERNION, EULER_ANGLES, DCM or ANGVEL."
+            },
+            EULER_ROT_SEQ: {
+              type: "string",
+              description: "EULER_ROT_SEQ, when ATT_TYPE is EULER_ANGLES."
+            },
+            RATE_TYPE: {
+              type: "string",
+              description: "RATE_TYPE: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS, when the lines carry rates."
+            },
+            TIMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The first column of each data line, as written."
+            },
+            VALUES: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The other columns of the data lines, NUMBER_STATES per line."
+            }
+          },
+          additionalProperties: false
+        },
+        ACMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an ACM (Table 5-6): the diagonal terms of the\ncovariance on each line, as TIMES and VALUES like ACMAttitudeBlock; every line\nhas the same number of values.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID."
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID."
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS."
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME."
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE: ANGLE, ANGLE_GYROBIAS, ANGLE_ANGVEL, QUATERNION, QUATERNION_GYROBIAS\nor QUATERNION_ANGVEL."
+            },
+            TIMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The first column of each data line, as written."
+            },
+            VALUES: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The diagonal terms of each line, row by row."
+            }
+          },
+          additionalProperties: false
+        },
+        ACMManeuverBlock: {
+          type: "object",
+          description: "One maneuver specification of an ACM (Table 5-7).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            MAN_ID: {
+              type: "string",
+              description: "MAN_ID."
+            },
+            MAN_PREV_ID: {
+              type: "string",
+              description: "MAN_PREV_ID."
+            },
+            MAN_PURPOSE: {
+              type: "string",
+              description: "MAN_PURPOSE: for example MOM_DESAT."
+            },
+            MAN_BEGIN_TIME: {
+              type: "number",
+              description: "MAN_BEGIN_TIME in seconds from EPOCH_TZERO."
+            },
+            MAN_END_TIME: {
+              type: "number",
+              description: "MAN_END_TIME in seconds from EPOCH_TZERO; NaN when the message states\nMAN_DURATION instead (a message states one of the two)."
+            },
+            MAN_DURATION: {
+              type: "number",
+              description: "MAN_DURATION in seconds; NaN when the message states MAN_END_TIME instead."
+            },
+            ACTUATOR_USED: {
+              type: "string",
+              description: "ACTUATOR_USED."
+            },
+            TARGET_MOMENTUM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "TARGET_MOMENTUM: three components in N*m*s; empty when not stated."
+            },
+            TARGET_MOM_FRAME: {
+              type: "string",
+              description: "TARGET_MOM_FRAME."
+            },
+            TARGET_ATTITUDE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "TARGET_ATTITUDE: the target attitude components; empty when not stated."
+            },
+            TARGET_SPINRATE: {
+              type: "number",
+              description: "TARGET_SPINRATE in deg/s, NaN when not stated."
+            }
+          },
+          additionalProperties: false
+        },
+        ACMDetermination: {
+          type: "object",
+          description: "The attitude determination data of an ACM (Table 5-8).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            AD_ID: {
+              type: "string",
+              description: "AD_ID."
+            },
+            AD_PREV_ID: {
+              type: "string",
+              description: "AD_PREV_ID."
+            },
+            AD_METHOD: {
+              type: "string",
+              description: "AD_METHOD: for example EKF, TRIAD or QUEST."
+            },
+            ATTITUDE_SOURCE: {
+              type: "string",
+              description: "ATTITUDE_SOURCE."
+            },
+            NUMBER_STATES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "NUMBER_STATES."
+            },
+            ATTITUDE_STATES: {
+              type: "string",
+              description: "ATTITUDE_STATES: QUATERNION, EULER_ANGLES, DCM or ANGVEL."
+            },
+            EULER_ROT_SEQ: {
+              type: "string",
+              description: "EULER_ROT_SEQ."
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE."
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A."
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B."
+            },
+            RATE_STATES: {
+              type: "string",
+              description: "RATE_STATES: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS."
+            },
+            SIGMA_U: {
+              type: "number",
+              description: "SIGMA_U in deg/s**1.5, NaN when not stated."
+            },
+            SIGMA_V: {
+              type: "number",
+              description: "SIGMA_V in deg/s**0.5, NaN when not stated."
+            },
+            RATE_PROCESS_NOISE_STDDEV: {
+              type: "number",
+              description: "RATE_PROCESS_NOISE_STDDEV in deg/s**1.5, NaN when not stated."
+            },
+            SENSORS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMSensor"
+              },
+              description: "The sensors, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        ACMSensor: {
+          type: "object",
+          description: "One sensor block of an ACM's attitude determination data.",
+          properties: {
+            SENSOR_NUMBER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSOR_NUMBER; it need not be sequential."
+            },
+            SENSOR_USED: {
+              type: "string",
+              description: "SENSOR_USED: for example AST, DSS or IMU."
+            },
+            NUMBER_SENSOR_NOISE_COVARIANCE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "NUMBER_SENSOR_NOISE_COVARIANCE."
+            },
+            SENSOR_NOISE_STDDEV: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "SENSOR_NOISE_STDDEV in deg: one value per noise covariance."
+            },
+            SENSOR_FREQUENCY: {
+              type: "number",
+              description: "SENSOR_FREQUENCY in Hz, NaN when not stated."
+            }
+          },
+          additionalProperties: false
+        },
+        ACMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an ACM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written"
             }
           },
           additionalProperties: false
@@ -97099,6 +102005,338 @@ Decoding applies the inverses from the last back.`
             },
             QC: {
               type: "number"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and\ndata groups, in message order, joined by a line feed. A state group's own\ncomments stay with it."
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the orbit center, when the message states one."
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in."
+            },
+            QUATERNION_STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMQuaternionState"
+              },
+              description: "Quaternion states (QUAT_START block), in message order. Q1..QC above are the\nsingle frameless quaternion of the earlier form of this record; a message is\nread into and written from these lists."
+            },
+            EULER_ANGLE_STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMEulerAngleState"
+              },
+              description: "Euler angle states (EULER_START block), in message order."
+            },
+            ANGULAR_VELOCITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMAngularVelocity"
+              },
+              description: "Angular velocities (ANGVEL_START block), in message order."
+            },
+            SPIN_STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMSpinState"
+              },
+              description: "Spin states (SPIN_START block), in message order."
+            },
+            INERTIAS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMInertia"
+              },
+              description: "Inertia tensors (INERTIA_START block), in message order."
+            },
+            MANEUVERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMManeuver"
+              },
+              description: "Attitude maneuvers (MAN_START block), in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        APMQuaternionState: {
+          type: "object",
+          description: "A quaternion state of an APM (CCSDS 504.0-B-2 Table 3-3): rotation from\nREF_FRAME_A to REF_FRAME_B. The derivative is NaN when the message states none.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from."
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in."
+            },
+            Q1: {
+              type: "number",
+              description: "Q1 (vector part, x)."
+            },
+            Q2: {
+              type: "number",
+              description: "Q2 (vector part, y)."
+            },
+            Q3: {
+              type: "number",
+              description: "Q3 (vector part, z)."
+            },
+            QC: {
+              type: "number",
+              description: "QC (scalar part)."
+            },
+            Q1_DOT: {
+              type: "number",
+              description: "Q1_DOT in 1/s, NaN when not stated."
+            },
+            Q2_DOT: {
+              type: "number",
+              description: "Q2_DOT in 1/s, NaN when not stated."
+            },
+            Q3_DOT: {
+              type: "number",
+              description: "Q3_DOT in 1/s, NaN when not stated."
+            },
+            QC_DOT: {
+              type: "number",
+              description: "QC_DOT in 1/s, NaN when not stated."
+            }
+          },
+          additionalProperties: false
+        },
+        APMEulerAngleState: {
+          type: "object",
+          description: "An Euler angle state of an APM (EULER_START block). Angles in degrees; a rate\nis NaN when the message states none.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from."
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in."
+            },
+            EULER_ROT_SEQ: {
+              type: "string",
+              description: "EULER_ROT_SEQ: the rotation sequence, for example ZXZ."
+            },
+            ANGLE_1: {
+              type: "number",
+              description: "ANGLE_1 in degrees."
+            },
+            ANGLE_2: {
+              type: "number",
+              description: "ANGLE_2 in degrees."
+            },
+            ANGLE_3: {
+              type: "number",
+              description: "ANGLE_3 in degrees."
+            },
+            ANGLE_1_DOT: {
+              type: "number",
+              description: "ANGLE_1_DOT in deg/s, NaN when not stated."
+            },
+            ANGLE_2_DOT: {
+              type: "number",
+              description: "ANGLE_2_DOT in deg/s, NaN when not stated."
+            },
+            ANGLE_3_DOT: {
+              type: "number",
+              description: "ANGLE_3_DOT in deg/s, NaN when not stated."
+            }
+          },
+          additionalProperties: false
+        },
+        APMAngularVelocity: {
+          type: "object",
+          description: "An angular velocity of an APM (ANGVEL_START block), in deg/s.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from."
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in."
+            },
+            ANGVEL_FRAME: {
+              type: "string",
+              description: "ANGVEL_FRAME: the frame the components are in."
+            },
+            ANGVEL_X: {
+              type: "number",
+              description: "ANGVEL_X in deg/s."
+            },
+            ANGVEL_Y: {
+              type: "number",
+              description: "ANGVEL_Y in deg/s."
+            },
+            ANGVEL_Z: {
+              type: "number",
+              description: "ANGVEL_Z in deg/s."
+            }
+          },
+          additionalProperties: false
+        },
+        APMSpinState: {
+          type: "object",
+          description: "A spin state of an APM (SPIN_START block). The nutation terms come as either of\ntwo groups, nutation angle, period and phase or the momentum direction and the\nvelocity around it; those not stated are NaN.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from."
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in."
+            },
+            SPIN_ALPHA: {
+              type: "number",
+              description: "SPIN_ALPHA: right ascension of the spin axis in degrees."
+            },
+            SPIN_DELTA: {
+              type: "number",
+              description: "SPIN_DELTA: declination of the spin axis in degrees."
+            },
+            SPIN_ANGLE: {
+              type: "number",
+              description: "SPIN_ANGLE: phase in degrees."
+            },
+            SPIN_ANGLE_VEL: {
+              type: "number",
+              description: "SPIN_ANGLE_VEL: angular velocity in deg/s."
+            },
+            NUTATION: {
+              type: "number",
+              description: "NUTATION: nutation angle in degrees, NaN when not stated."
+            },
+            NUTATION_PER: {
+              type: "number",
+              description: "NUTATION_PER: nutation period in seconds, NaN when not stated."
+            },
+            NUTATION_PHASE: {
+              type: "number",
+              description: "NUTATION_PHASE: nutation phase in degrees, NaN when not stated."
+            },
+            MOMENTUM_ALPHA: {
+              type: "number",
+              description: "MOMENTUM_ALPHA: right ascension of the angular momentum vector in degrees,\nNaN when not stated."
+            },
+            MOMENTUM_DELTA: {
+              type: "number",
+              description: "MOMENTUM_DELTA: declination of the angular momentum vector in degrees, NaN\nwhen not stated."
+            },
+            NUTATION_VEL: {
+              type: "number",
+              description: "NUTATION_VEL: angular velocity around the momentum vector in deg/s, NaN when\nnot stated."
+            }
+          },
+          additionalProperties: false
+        },
+        APMInertia: {
+          type: "object",
+          description: "An inertia tensor of an APM (INERTIA_START block), in kg*m**2.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            INERTIA_REF_FRAME: {
+              type: "string",
+              description: "INERTIA_REF_FRAME: the frame the tensor is in."
+            },
+            IXX: {
+              type: "number",
+              description: "IXX: moment about X."
+            },
+            IYY: {
+              type: "number",
+              description: "IYY: moment about Y."
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ: moment about Z."
+            },
+            IXY: {
+              type: "number",
+              description: "IXY: cross product X-Y."
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ: cross product X-Z."
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ: cross product Y-Z."
+            }
+          },
+          additionalProperties: false
+        },
+        APMManeuver: {
+          type: "object",
+          description: "An attitude maneuver of an APM (MAN_START block).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            MAN_EPOCH_START: {
+              type: "string",
+              description: "MAN_EPOCH_START: epoch of the start of the maneuver."
+            },
+            MAN_DURATION: {
+              type: "number",
+              description: "MAN_DURATION in seconds."
+            },
+            MAN_REF_FRAME: {
+              type: "string",
+              description: "MAN_REF_FRAME: the frame the torque is in."
+            },
+            MAN_TOR_X: {
+              type: "number",
+              description: "MAN_TOR_X in N*m."
+            },
+            MAN_TOR_Y: {
+              type: "number",
+              description: "MAN_TOR_Y in N*m."
+            },
+            MAN_TOR_Z: {
+              type: "number",
+              description: "MAN_TOR_Z in N*m."
+            },
+            MAN_DELTA_MASS: {
+              type: "number",
+              description: "MAN_DELTA_MASS in kg (negative or zero), NaN when not stated."
             }
           },
           additionalProperties: false
@@ -101011,13 +106249,29 @@ to the wallet, not to a published record. ABSENT from published records.`
                 type: "number"
               },
               description: "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]"
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,\nas written. A numeric designator is also OBJECT.NORAD_CAT_ID."
+            },
+            CATALOG_NAME: {
+              type: "string",
+              description: "CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in."
+            },
+            MANEUVERABLE: {
+              $ref: "#/definitions/cdmManeuverable",
+              description: "MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the\nsame fact as a flag, true for YES."
+            },
+            CD_AREA_OVER_MASS: {
+              type: "number",
+              description: "CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg."
             }
           },
           additionalProperties: false
         },
         CDM: {
           type: "object",
-          description: "Conjunction Data Message",
+          description: "Conjunction Data Message\n\nUnits of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,\nSCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part\nof each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and\nkm**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives\nMISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of\nCOVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust\nterms) are held as the message states them.",
           properties: {
             CCSDS_CDM_VERS: {
               type: "number",
@@ -101134,6 +106388,10 @@ to the wallet, not to a published record. ABSENT from published records.`
             OBJECT2_DATASOURCE: {
               $ref: "#/definitions/PNM",
               description: "Data Source for the positional information for Object 2"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message header and of its relative metadata and data\n(CCSDS 508.0-B-1), in message order, joined by a line feed."
             }
           },
           additionalProperties: false
@@ -105694,7 +110952,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             },
             COMMENT: {
               type: "string",
-              description: "COMMENT (O)"
+              description: "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header."
             },
             EPOCH: {
               type: "string",
@@ -105820,6 +111078,36 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             USER_DEFINED_MICROSECONDS: {
               type: "number",
               description: "USER_DEFINED_MICROSECONDS [O, units per ICD]"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message."
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OMMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        OMMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written, unit-less text"
             }
           },
           additionalProperties: false
@@ -106010,6 +111298,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             CZ_DOT_Z_DOT: {
               type: "number",
               description: "Covariance matrix [6,6] km**2/s**2"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed."
+            },
+            COV_REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME."
             }
           },
           additionalProperties: false
@@ -106151,6 +111447,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 $ref: "#/definitions/ephemerisDataBlock"
               },
               description: "Array of ephemeris data blocks"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
             }
           },
           additionalProperties: false
@@ -106533,6 +111837,134 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             SRP_UNCERTAINTY: {
               type: "number",
               description: "Uncertainty in the solar radiation pressure coefficient."
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer."
+            },
+            BUS_MODEL: {
+              type: "string",
+              description: "BUS_MODEL: the object's bus model."
+            },
+            DOCKED_WITH: {
+              type: "string",
+              description: "DOCKED_WITH: comma-separated names of the objects it is docked with."
+            },
+            INITIAL_WET_MASS: {
+              type: "number",
+              description: "INITIAL_WET_MASS in kg, NaN when not stated."
+            },
+            OEB_PARENT_FRAME: {
+              type: "string",
+              description: "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in."
+            },
+            OEB_PARENT_FRAME_EPOCH: {
+              type: "string",
+              description: "OEB_PARENT_FRAME_EPOCH."
+            },
+            AREA_MIN_FOR_PC: {
+              type: "number",
+              description: "AREA_MIN_FOR_PC in m**2, NaN when not stated."
+            },
+            AREA_MAX_FOR_PC: {
+              type: "number",
+              description: "AREA_MAX_FOR_PC in m**2, NaN when not stated."
+            },
+            AREA_TYP_FOR_PC: {
+              type: "number",
+              description: "AREA_TYP_FOR_PC in m**2, NaN when not stated."
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated."
+            },
+            RCS_MIN: {
+              type: "number",
+              description: "RCS_MIN in m**2, NaN when not stated."
+            },
+            RCS_MAX: {
+              type: "number",
+              description: "RCS_MAX in m**2, NaN when not stated."
+            },
+            VM_ABSOLUTE: {
+              type: "number",
+              description: "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT_MIN: {
+              type: "number",
+              description: "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT: {
+              type: "number",
+              description: "VM_APPARENT: apparent visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT_MAX: {
+              type: "number",
+              description: "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated."
+            },
+            REFLECTANCE: {
+              type: "number",
+              description: "REFLECTANCE: typical reflectivity, NaN when not stated."
+            },
+            ATT_CONTROL_MODE: {
+              type: "string",
+              description: "ATT_CONTROL_MODE."
+            },
+            ATT_ACTUATOR_TYPE: {
+              type: "string",
+              description: "ATT_ACTUATOR_TYPE."
+            },
+            ATT_KNOWLEDGE: {
+              type: "number",
+              description: "ATT_KNOWLEDGE in degrees, NaN when not stated."
+            },
+            ATT_CONTROL: {
+              type: "number",
+              description: "ATT_CONTROL in degrees, NaN when not stated."
+            },
+            ATT_POINTING: {
+              type: "number",
+              description: "ATT_POINTING in degrees, NaN when not stated."
+            },
+            AVG_MANEUVER_FREQ: {
+              type: "number",
+              description: "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated."
+            },
+            MAX_THRUST: {
+              type: "number",
+              description: "MAX_THRUST in N, NaN when not stated."
+            },
+            DV_BOL: {
+              type: "number",
+              description: "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated."
+            },
+            DV_REMAINING: {
+              type: "number",
+              description: "DV_REMAINING in km/s, NaN when not stated."
+            },
+            IXX: {
+              type: "number",
+              description: "IXX in kg*m**2, NaN when not stated."
+            },
+            IYY: {
+              type: "number",
+              description: "IYY in kg*m**2, NaN when not stated."
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ in kg*m**2, NaN when not stated."
+            },
+            IXY: {
+              type: "number",
+              description: "IXY in kg*m**2, NaN when not stated."
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ in kg*m**2, NaN when not stated."
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ in kg*m**2, NaN when not stated."
             }
           },
           additionalProperties: false
@@ -106629,6 +112061,80 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             FIXED_GEOMAG_AP: {
               type: "number",
               description: "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP)."
+            },
+            ATMOSPHERIC_MODEL_NAME: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one."
+            },
+            EQUATORIAL_RADIUS: {
+              type: "number",
+              description: "EQUATORIAL_RADIUS in km, NaN when not stated."
+            },
+            CENTRAL_BODY_ROTATION: {
+              type: "number",
+              description: "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated."
+            },
+            OBLATE_FLATTENING: {
+              type: "number",
+              description: "OBLATE_FLATTENING, NaN when not stated."
+            },
+            REDUCTION_THEORY: {
+              type: "string",
+              description: "REDUCTION_THEORY."
+            },
+            ALBEDO_GRID_SIZE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "ALBEDO_GRID_SIZE."
+            },
+            SHADOW_MODEL: {
+              type: "string",
+              description: "SHADOW_MODEL."
+            },
+            SHADOW_BODIES: {
+              type: "string",
+              description: "SHADOW_BODIES."
+            },
+            SW_DATA_SOURCE: {
+              type: "string",
+              description: "SW_DATA_SOURCE: the space weather data source."
+            },
+            SW_DATA_EPOCH: {
+              type: "string",
+              description: "SW_DATA_EPOCH."
+            },
+            SW_INTERP_METHOD: {
+              type: "string",
+              description: "SW_INTERP_METHOD."
+            },
+            FIXED_GEOMAG_DST: {
+              type: "number",
+              description: "FIXED_GEOMAG_DST in nT, NaN when not stated."
+            },
+            FIXED_M10P7: {
+              type: "number",
+              description: "FIXED_M10P7, NaN when not stated."
+            },
+            FIXED_M10P7_MEAN: {
+              type: "number",
+              description: "FIXED_M10P7_MEAN, NaN when not stated."
+            },
+            FIXED_S10P7: {
+              type: "number",
+              description: "FIXED_S10P7, NaN when not stated."
+            },
+            FIXED_S10P7_MEAN: {
+              type: "number",
+              description: "FIXED_S10P7_MEAN, NaN when not stated."
+            },
+            FIXED_Y10P7: {
+              type: "number",
+              description: "FIXED_Y10P7, NaN when not stated."
+            },
+            FIXED_Y10P7_MEAN: {
+              type: "number",
+              description: "FIXED_Y10P7_MEAN, NaN when not stated."
             }
           },
           additionalProperties: false
@@ -106952,6 +112458,267 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 $ref: "#/definitions/OCMDynamicParameter"
               },
               description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+            },
+            DAYS_SINCE_FIRST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated."
+            },
+            DAYS_SINCE_LAST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_LAST_OBS, NaN when not stated."
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated."
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated."
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED."
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED."
+            },
+            MAXIMUM_OBS_GAP: {
+              type: "number",
+              description: "MAXIMUM_OBS_GAP in days, NaN when not stated."
+            },
+            OD_EPOCH_EIGMAJ: {
+              type: "number",
+              description: "OD_EPOCH_EIGMAJ in m, NaN when not stated."
+            },
+            OD_EPOCH_EIGINT: {
+              type: "number",
+              description: "OD_EPOCH_EIGINT in m, NaN when not stated."
+            },
+            OD_EPOCH_EIGMIN: {
+              type: "number",
+              description: "OD_EPOCH_EIGMIN in m, NaN when not stated."
+            },
+            OD_MAX_PRED_EIGMAJ: {
+              type: "number",
+              description: "OD_MAX_PRED_EIGMAJ in m, NaN when not stated."
+            },
+            OD_MIN_PRED_EIGMIN: {
+              type: "number",
+              description: "OD_MIN_PRED_EIGMIN in m, NaN when not stated."
+            },
+            OD_CONFIDENCE: {
+              type: "number",
+              description: "OD_CONFIDENCE in percent, NaN when not stated."
+            },
+            GDOP: {
+              type: "number",
+              description: "GDOP, NaN when not stated."
+            },
+            SOLVE_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SOLVE_N: the number of solved-for states."
+            },
+            SOLVE_STATES: {
+              type: "string",
+              description: "SOLVE_STATES: the solved-for states, as written."
+            },
+            CONSIDER_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CONSIDER_N: the number of consider parameters."
+            },
+            CONSIDER_PARAMS: {
+              type: "string",
+              description: "CONSIDER_PARAMS: the consider parameters, as written."
+            },
+            SENSORS_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSORS_N: the number of sensors."
+            },
+            SENSORS: {
+              type: "string",
+              description: "SENSORS: the sensors, as written."
+            },
+            COMMENT: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line."
+            }
+          },
+          additionalProperties: false
+        },
+        OCMTrajectoryBlock: {
+          type: "object",
+          description: "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            TRAJ_ID: {
+              type: "string",
+              description: "TRAJ_ID."
+            },
+            TRAJ_PREV_ID: {
+              type: "string",
+              description: "TRAJ_PREV_ID."
+            },
+            TRAJ_NEXT_ID: {
+              type: "string",
+              description: "TRAJ_NEXT_ID."
+            },
+            TRAJ_BASIS: {
+              type: "string",
+              description: "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER."
+            },
+            TRAJ_BASIS_ID: {
+              type: "string",
+              description: "TRAJ_BASIS_ID."
+            },
+            INTERPOLATION: {
+              type: "string",
+              description: "INTERPOLATION: the recommended interpolation method."
+            },
+            INTERPOLATION_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "INTERPOLATION_DEGREE."
+            },
+            PROPAGATOR: {
+              type: "string",
+              description: "PROPAGATOR."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME."
+            },
+            TRAJ_REF_FRAME: {
+              type: "string",
+              description: "TRAJ_REF_FRAME."
+            },
+            TRAJ_FRAME_EPOCH: {
+              type: "string",
+              description: "TRAJ_FRAME_EPOCH."
+            },
+            USEABLE_START_TIME: {
+              type: "string",
+              description: "USEABLE_START_TIME."
+            },
+            USEABLE_STOP_TIME: {
+              type: "string",
+              description: "USEABLE_STOP_TIME."
+            },
+            ORB_REVNUM: {
+              type: "number",
+              description: "ORB_REVNUM, NaN when not stated."
+            },
+            ORB_REVNUM_BASIS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated."
+            },
+            TRAJ_TYPE: {
+              type: "string",
+              description: "TRAJ_TYPE as written, for example CARTPV."
+            },
+            ORB_AVERAGING: {
+              type: "string",
+              description: "ORB_AVERAGING."
+            },
+            TRAJ_UNITS: {
+              type: "string",
+              description: "TRAJ_UNITS."
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written."
+            }
+          },
+          additionalProperties: false
+        },
+        OCMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID."
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID."
+            },
+            COV_NEXT_ID: {
+              type: "string",
+              description: "COV_NEXT_ID."
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER."
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME."
+            },
+            COV_FRAME_EPOCH: {
+              type: "string",
+              description: "COV_FRAME_EPOCH."
+            },
+            COV_SCALE_MIN: {
+              type: "number",
+              description: "COV_SCALE_MIN, NaN when not stated."
+            },
+            COV_SCALE_MAX: {
+              type: "number",
+              description: "COV_SCALE_MAX, NaN when not stated."
+            },
+            COV_CONFIDENCE: {
+              type: "number",
+              description: "COV_CONFIDENCE in percent, NaN when not stated."
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE as written, for example CARTPV."
+            },
+            COV_ORDERING: {
+              $ref: "#/definitions/covarianceOrdering",
+              description: "COV_ORDERING."
+            },
+            COV_UNITS: {
+              type: "string",
+              description: "COV_UNITS."
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written."
             }
           },
           additionalProperties: false
@@ -107122,6 +112889,20 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 type: "string"
               },
               description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+            },
+            TRAJECTORY_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMTrajectoryBlock"
+              },
+              description: "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states."
+            },
+            COVARIANCE_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMCovarianceBlock"
+              },
+              description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
             }
           },
           additionalProperties: false
@@ -129067,6 +134848,101 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
             },
             DRAG_COEFF: {
               type: "number"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata\nand data groups, in message order, joined by a line feed."
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message."
+            },
+            REF_FRAME_EPOCH: {
+              type: "string",
+              description: "REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty\nwhen it is REF_FRAME."
+            },
+            COVARIANCE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:\nCX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,\nCX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.\nUnits km**2, km**2/s, km**2/s**2. Empty when the message states none."
+            },
+            MANEUVERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPMManeuver"
+              },
+              description: "The message's maneuvers, in message order."
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword of the message, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        OPMManeuver: {
+          type: "object",
+          description: "One maneuver of an OPM (CCSDS 502.0-B-3 Table 3-7).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this maneuver, joined by a line feed."
+            },
+            MAN_EPOCH_IGNITION: {
+              type: "string",
+              description: "MAN_EPOCH_IGNITION: epoch of ignition."
+            },
+            MAN_DURATION: {
+              type: "number",
+              description: "MAN_DURATION: duration of the burn in seconds; zero for an impulsive maneuver."
+            },
+            MAN_DELTA_MASS: {
+              type: "number",
+              description: "MAN_DELTA_MASS: mass change during the maneuver in kg, negative or zero."
+            },
+            MAN_REF_FRAME: {
+              type: "string",
+              description: "MAN_REF_FRAME: frame of MAN_DV_1..3 (for example RTN, TNW, or REF_FRAME's)."
+            },
+            MAN_DV_1: {
+              type: "number",
+              description: "MAN_DV_1: first component of the velocity increment in km/s."
+            },
+            MAN_DV_2: {
+              type: "number",
+              description: "MAN_DV_2: second component of the velocity increment in km/s."
+            },
+            MAN_DV_3: {
+              type: "number",
+              description: "MAN_DV_3: third component of the velocity increment in km/s."
+            }
+          },
+          additionalProperties: false
+        },
+        OPMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OPM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written"
             }
           },
           additionalProperties: false
@@ -131902,7 +137778,356 @@ turned into a number.`
             },
             COMMENT: {
               type: "string",
-              description: "Additional comments"
+              description: "COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and\ndata groups, in message order, joined by a line feed."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "The fields below, with the earlier ones that say so, are the keywords of\nCCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,\nNORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH\nNOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS\nWET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,\nREENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,\nSURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are\nnot keywords of the message.\nMESSAGE_ID: an identifier the originator makes unique for this message."
+            },
+            CATALOG_NAME: {
+              type: "string",
+              description: "CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in."
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written."
+            },
+            OBJECT_OWNER: {
+              type: "string",
+              description: "OBJECT_OWNER."
+            },
+            OBJECT_OPERATOR: {
+              type: "string",
+              description: "OBJECT_OPERATOR."
+            },
+            CONTROLLED_REENTRY: {
+              $ref: "#/definitions/rdmControlledReentry",
+              description: "CONTROLLED_REENTRY: YES, NO or UNKNOWN."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the body being re-entered."
+            },
+            EPOCH_TZERO: {
+              type: "string",
+              description: "EPOCH_TZERO: the epoch the message's relative times are measured from."
+            },
+            REF_FRAME: {
+              type: "string",
+              description: "REF_FRAME: the frame of the state vector."
+            },
+            REF_FRAME_EPOCH: {
+              type: "string",
+              description: "REF_FRAME_EPOCH."
+            },
+            EPHEMERIS_NAME: {
+              type: "string",
+              description: "EPHEMERIS_NAME."
+            },
+            GRAVITY_MODEL: {
+              type: "string",
+              description: "GRAVITY_MODEL."
+            },
+            ATMOSPHERIC_MODEL: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL."
+            },
+            SOLAR_FLUX_PREDICTION: {
+              type: "string",
+              description: "SOLAR_FLUX_PREDICTION."
+            },
+            N_BODY_PERTURBATIONS: {
+              type: "string",
+              description: "N_BODY_PERTURBATIONS."
+            },
+            SOLAR_RAD_PRESSURE: {
+              type: "string",
+              description: "SOLAR_RAD_PRESSURE: a model name, or YES or NO."
+            },
+            EARTH_TIDES: {
+              type: "string",
+              description: "EARTH_TIDES: a model name."
+            },
+            INTRACK_THRUST: {
+              type: "string",
+              description: "INTRACK_THRUST: YES or NO."
+            },
+            DRAG_PARAMETERS_SOURCE: {
+              type: "string",
+              description: "DRAG_PARAMETERS_SOURCE."
+            },
+            DRAG_PARAMETERS_ALTITUDE: {
+              type: "number",
+              description: "DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated."
+            },
+            REENTRY_UNCERTAINTY_METHOD: {
+              type: "string",
+              description: "REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL."
+            },
+            REENTRY_DISINTEGRATION: {
+              type: "string",
+              description: "REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP."
+            },
+            IMPACT_UNCERTAINTY_METHOD: {
+              type: "string",
+              description: "IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL."
+            },
+            PREVIOUS_MESSAGE_ID: {
+              type: "string",
+              description: "PREVIOUS_MESSAGE_ID."
+            },
+            NEXT_MESSAGE_EPOCH: {
+              type: "string",
+              description: "NEXT_MESSAGE_EPOCH."
+            },
+            ORBIT_LIFETIME: {
+              type: "number",
+              description: "ORBIT_LIFETIME in days."
+            },
+            ORBIT_LIFETIME_WINDOW_START: {
+              type: "number",
+              description: "ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated."
+            },
+            ORBIT_LIFETIME_WINDOW_END: {
+              type: "number",
+              description: "ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated."
+            },
+            REENTRY_WINDOW_START: {
+              type: "string",
+              description: "REENTRY_WINDOW_START."
+            },
+            REENTRY_WINDOW_END: {
+              type: "string",
+              description: "REENTRY_WINDOW_END."
+            },
+            ORBIT_LIFETIME_CONFIDENCE_LEVEL: {
+              type: "number",
+              description: "ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated."
+            },
+            PROBABILITY_OF_IMPACT: {
+              type: "number",
+              description: "PROBABILITY_OF_IMPACT, NaN when not stated."
+            },
+            PROBABILITY_OF_BURN_UP: {
+              type: "number",
+              description: "PROBABILITY_OF_BURN_UP, NaN when not stated."
+            },
+            PROBABILITY_OF_BREAK_UP: {
+              type: "number",
+              description: "PROBABILITY_OF_BREAK_UP, NaN when not stated."
+            },
+            PROBABILITY_OF_LAND_IMPACT: {
+              type: "number",
+              description: "PROBABILITY_OF_LAND_IMPACT, NaN when not stated."
+            },
+            PROBABILITY_OF_CASUALTY: {
+              type: "number",
+              description: "PROBABILITY_OF_CASUALTY, NaN when not stated."
+            },
+            NOMINAL_IMPACT_EPOCH: {
+              type: "string",
+              description: "NOMINAL_IMPACT_EPOCH."
+            },
+            IMPACT_WINDOW_START: {
+              type: "string",
+              description: "IMPACT_WINDOW_START."
+            },
+            IMPACT_WINDOW_END: {
+              type: "string",
+              description: "IMPACT_WINDOW_END."
+            },
+            IMPACT_REF_FRAME: {
+              type: "string",
+              description: "IMPACT_REF_FRAME."
+            },
+            NOMINAL_IMPACT_LON: {
+              type: "number",
+              description: "NOMINAL_IMPACT_LON in degrees, NaN when not stated."
+            },
+            NOMINAL_IMPACT_LAT: {
+              type: "number",
+              description: "NOMINAL_IMPACT_LAT in degrees, NaN when not stated."
+            },
+            NOMINAL_IMPACT_ALT: {
+              type: "number",
+              description: "NOMINAL_IMPACT_ALT in metres, NaN when not stated."
+            },
+            IMPACT_1_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_1_CONFIDENCE in percent, NaN when not stated."
+            },
+            IMPACT_1_START_LON: {
+              type: "number",
+              description: "IMPACT_1_START_LON in degrees, NaN when not stated."
+            },
+            IMPACT_1_START_LAT: {
+              type: "number",
+              description: "IMPACT_1_START_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_1_STOP_LON: {
+              type: "number",
+              description: "IMPACT_1_STOP_LON in degrees, NaN when not stated."
+            },
+            IMPACT_1_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_1_STOP_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_1_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_1_CROSS_TRACK in km, NaN when not stated."
+            },
+            IMPACT_2_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_2_CONFIDENCE in percent, NaN when not stated."
+            },
+            IMPACT_2_START_LON: {
+              type: "number",
+              description: "IMPACT_2_START_LON in degrees, NaN when not stated."
+            },
+            IMPACT_2_START_LAT: {
+              type: "number",
+              description: "IMPACT_2_START_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_2_STOP_LON: {
+              type: "number",
+              description: "IMPACT_2_STOP_LON in degrees, NaN when not stated."
+            },
+            IMPACT_2_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_2_STOP_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_2_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_2_CROSS_TRACK in km, NaN when not stated."
+            },
+            IMPACT_3_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_3_CONFIDENCE in percent, NaN when not stated."
+            },
+            IMPACT_3_START_LON: {
+              type: "number",
+              description: "IMPACT_3_START_LON in degrees, NaN when not stated."
+            },
+            IMPACT_3_START_LAT: {
+              type: "number",
+              description: "IMPACT_3_START_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_3_STOP_LON: {
+              type: "number",
+              description: "IMPACT_3_STOP_LON in degrees, NaN when not stated."
+            },
+            IMPACT_3_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_3_STOP_LAT in degrees, NaN when not stated."
+            },
+            IMPACT_3_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_3_CROSS_TRACK in km, NaN when not stated."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME: the frame of COVARIANCE."
+            },
+            COVARIANCE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Position/velocity covariance matrix at the state vector's epoch, 6x6 lower\ntriangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,\nCX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,\nCY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,\nCZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated."
+            },
+            DRY_MASS: {
+              type: "number",
+              description: "WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated."
+            },
+            HAZARDOUS_SUBSTANCES: {
+              type: "string",
+              description: "HAZARDOUS_SUBSTANCES."
+            },
+            SOLAR_RAD_COEFF: {
+              type: "number",
+              description: "SOLAR_RAD_COEFF, NaN when not stated."
+            },
+            DRAG_COEFF: {
+              type: "number",
+              description: "DRAG_COEFF, NaN when not stated."
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated."
+            },
+            THRUST_ACCELERATION: {
+              type: "number",
+              description: "THRUST_ACCELERATION in m/s**2, NaN when not stated."
+            },
+            TIME_LASTOB_START: {
+              type: "string",
+              description: "TIME_LASTOB_START."
+            },
+            TIME_LASTOB_END: {
+              type: "string",
+              description: "TIME_LASTOB_END."
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated."
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated."
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE."
+            },
+            OBS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_USED."
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE."
+            },
+            TRACKS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_USED."
+            },
+            RESIDUALS_ACCEPTED: {
+              type: "number",
+              description: "RESIDUALS_ACCEPTED in percent, NaN when not stated."
+            },
+            WEIGHTED_RMS: {
+              type: "number",
+              description: "WEIGHTED_RMS, NaN when not stated."
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/RDMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED keyword of the message, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        RDMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written"
             }
           },
           additionalProperties: false
@@ -156473,7 +162698,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             COMMENT: {
               type: "string",
-              description: "COMMENT (O)"
+              description: "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header."
             },
             EPOCH: {
               type: "string",
@@ -156599,6 +162824,36 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             USER_DEFINED_MICROSECONDS: {
               type: "number",
               description: "USER_DEFINED_MICROSECONDS [O, units per ICD]"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message."
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OMMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        OMMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written, unit-less text"
             }
           },
           additionalProperties: false
@@ -166597,6 +172852,20 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "CCSDS_AEM_XML",
             "CCSDS_TDM_KVN",
             "CCSDS_TDM_XML",
+            "CCSDS_OMM_KVN",
+            "CCSDS_OMM_XML",
+            "CCSDS_OPM_KVN",
+            "CCSDS_OPM_XML",
+            "CCSDS_OCM_KVN",
+            "CCSDS_OCM_XML",
+            "CCSDS_CDM_KVN",
+            "CCSDS_CDM_XML",
+            "CCSDS_APM_KVN",
+            "CCSDS_APM_XML",
+            "CCSDS_ACM_KVN",
+            "CCSDS_ACM_XML",
+            "CCSDS_RDM_KVN",
+            "CCSDS_RDM_XML",
             "PROVIDER_DEFINED"
           ]
         },
@@ -189792,6 +196061,20 @@ to the wallet, not to a published record. ABSENT from published records.`
             "CCSDS_AEM_XML",
             "CCSDS_TDM_KVN",
             "CCSDS_TDM_XML",
+            "CCSDS_OMM_KVN",
+            "CCSDS_OMM_XML",
+            "CCSDS_OPM_KVN",
+            "CCSDS_OPM_XML",
+            "CCSDS_OCM_KVN",
+            "CCSDS_OCM_XML",
+            "CCSDS_CDM_KVN",
+            "CCSDS_CDM_XML",
+            "CCSDS_APM_KVN",
+            "CCSDS_APM_XML",
+            "CCSDS_ACM_KVN",
+            "CCSDS_ACM_XML",
+            "CCSDS_RDM_KVN",
+            "CCSDS_RDM_XML",
             "PROVIDER_DEFINED"
           ]
         },
@@ -190167,6 +196450,15 @@ to the wallet, not to a published record. ABSENT from published records.`
           enum: [
             "CALCULATED",
             "DEFAULT"
+          ]
+        },
+        cdmManeuverable: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "YES",
+            "NO",
+            "NOT_APPLICABLE"
           ]
         },
         cqrProbabilityAlgorithm: {
@@ -194312,7 +200604,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             },
             COMMENT: {
               type: "string",
-              description: "COMMENT (O)"
+              description: "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header."
             },
             EPOCH: {
               type: "string",
@@ -194438,6 +200730,36 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             USER_DEFINED_MICROSECONDS: {
               type: "number",
               description: "USER_DEFINED_MICROSECONDS [O, units per ICD]"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message."
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OMMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        OMMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written, unit-less text"
             }
           },
           additionalProperties: false
@@ -194628,6 +200950,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             CZ_DOT_Z_DOT: {
               type: "number",
               description: "Covariance matrix [6,6] km**2/s**2"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed."
+            },
+            COV_REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME."
             }
           },
           additionalProperties: false
@@ -194769,6 +201099,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 $ref: "#/definitions/ephemerisDataBlock"
               },
               description: "Array of ephemeris data blocks"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
             }
           },
           additionalProperties: false
@@ -195168,6 +201506,134 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             SRP_UNCERTAINTY: {
               type: "number",
               description: "Uncertainty in the solar radiation pressure coefficient."
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer."
+            },
+            BUS_MODEL: {
+              type: "string",
+              description: "BUS_MODEL: the object's bus model."
+            },
+            DOCKED_WITH: {
+              type: "string",
+              description: "DOCKED_WITH: comma-separated names of the objects it is docked with."
+            },
+            INITIAL_WET_MASS: {
+              type: "number",
+              description: "INITIAL_WET_MASS in kg, NaN when not stated."
+            },
+            OEB_PARENT_FRAME: {
+              type: "string",
+              description: "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in."
+            },
+            OEB_PARENT_FRAME_EPOCH: {
+              type: "string",
+              description: "OEB_PARENT_FRAME_EPOCH."
+            },
+            AREA_MIN_FOR_PC: {
+              type: "number",
+              description: "AREA_MIN_FOR_PC in m**2, NaN when not stated."
+            },
+            AREA_MAX_FOR_PC: {
+              type: "number",
+              description: "AREA_MAX_FOR_PC in m**2, NaN when not stated."
+            },
+            AREA_TYP_FOR_PC: {
+              type: "number",
+              description: "AREA_TYP_FOR_PC in m**2, NaN when not stated."
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated."
+            },
+            RCS_MIN: {
+              type: "number",
+              description: "RCS_MIN in m**2, NaN when not stated."
+            },
+            RCS_MAX: {
+              type: "number",
+              description: "RCS_MAX in m**2, NaN when not stated."
+            },
+            VM_ABSOLUTE: {
+              type: "number",
+              description: "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT_MIN: {
+              type: "number",
+              description: "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT: {
+              type: "number",
+              description: "VM_APPARENT: apparent visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT_MAX: {
+              type: "number",
+              description: "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated."
+            },
+            REFLECTANCE: {
+              type: "number",
+              description: "REFLECTANCE: typical reflectivity, NaN when not stated."
+            },
+            ATT_CONTROL_MODE: {
+              type: "string",
+              description: "ATT_CONTROL_MODE."
+            },
+            ATT_ACTUATOR_TYPE: {
+              type: "string",
+              description: "ATT_ACTUATOR_TYPE."
+            },
+            ATT_KNOWLEDGE: {
+              type: "number",
+              description: "ATT_KNOWLEDGE in degrees, NaN when not stated."
+            },
+            ATT_CONTROL: {
+              type: "number",
+              description: "ATT_CONTROL in degrees, NaN when not stated."
+            },
+            ATT_POINTING: {
+              type: "number",
+              description: "ATT_POINTING in degrees, NaN when not stated."
+            },
+            AVG_MANEUVER_FREQ: {
+              type: "number",
+              description: "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated."
+            },
+            MAX_THRUST: {
+              type: "number",
+              description: "MAX_THRUST in N, NaN when not stated."
+            },
+            DV_BOL: {
+              type: "number",
+              description: "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated."
+            },
+            DV_REMAINING: {
+              type: "number",
+              description: "DV_REMAINING in km/s, NaN when not stated."
+            },
+            IXX: {
+              type: "number",
+              description: "IXX in kg*m**2, NaN when not stated."
+            },
+            IYY: {
+              type: "number",
+              description: "IYY in kg*m**2, NaN when not stated."
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ in kg*m**2, NaN when not stated."
+            },
+            IXY: {
+              type: "number",
+              description: "IXY in kg*m**2, NaN when not stated."
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ in kg*m**2, NaN when not stated."
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ in kg*m**2, NaN when not stated."
             }
           },
           additionalProperties: false
@@ -195264,6 +201730,80 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
             FIXED_GEOMAG_AP: {
               type: "number",
               description: "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP)."
+            },
+            ATMOSPHERIC_MODEL_NAME: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one."
+            },
+            EQUATORIAL_RADIUS: {
+              type: "number",
+              description: "EQUATORIAL_RADIUS in km, NaN when not stated."
+            },
+            CENTRAL_BODY_ROTATION: {
+              type: "number",
+              description: "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated."
+            },
+            OBLATE_FLATTENING: {
+              type: "number",
+              description: "OBLATE_FLATTENING, NaN when not stated."
+            },
+            REDUCTION_THEORY: {
+              type: "string",
+              description: "REDUCTION_THEORY."
+            },
+            ALBEDO_GRID_SIZE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "ALBEDO_GRID_SIZE."
+            },
+            SHADOW_MODEL: {
+              type: "string",
+              description: "SHADOW_MODEL."
+            },
+            SHADOW_BODIES: {
+              type: "string",
+              description: "SHADOW_BODIES."
+            },
+            SW_DATA_SOURCE: {
+              type: "string",
+              description: "SW_DATA_SOURCE: the space weather data source."
+            },
+            SW_DATA_EPOCH: {
+              type: "string",
+              description: "SW_DATA_EPOCH."
+            },
+            SW_INTERP_METHOD: {
+              type: "string",
+              description: "SW_INTERP_METHOD."
+            },
+            FIXED_GEOMAG_DST: {
+              type: "number",
+              description: "FIXED_GEOMAG_DST in nT, NaN when not stated."
+            },
+            FIXED_M10P7: {
+              type: "number",
+              description: "FIXED_M10P7, NaN when not stated."
+            },
+            FIXED_M10P7_MEAN: {
+              type: "number",
+              description: "FIXED_M10P7_MEAN, NaN when not stated."
+            },
+            FIXED_S10P7: {
+              type: "number",
+              description: "FIXED_S10P7, NaN when not stated."
+            },
+            FIXED_S10P7_MEAN: {
+              type: "number",
+              description: "FIXED_S10P7_MEAN, NaN when not stated."
+            },
+            FIXED_Y10P7: {
+              type: "number",
+              description: "FIXED_Y10P7, NaN when not stated."
+            },
+            FIXED_Y10P7_MEAN: {
+              type: "number",
+              description: "FIXED_Y10P7_MEAN, NaN when not stated."
             }
           },
           additionalProperties: false
@@ -195587,6 +202127,267 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 $ref: "#/definitions/OCMDynamicParameter"
               },
               description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+            },
+            DAYS_SINCE_FIRST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated."
+            },
+            DAYS_SINCE_LAST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_LAST_OBS, NaN when not stated."
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated."
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated."
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED."
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED."
+            },
+            MAXIMUM_OBS_GAP: {
+              type: "number",
+              description: "MAXIMUM_OBS_GAP in days, NaN when not stated."
+            },
+            OD_EPOCH_EIGMAJ: {
+              type: "number",
+              description: "OD_EPOCH_EIGMAJ in m, NaN when not stated."
+            },
+            OD_EPOCH_EIGINT: {
+              type: "number",
+              description: "OD_EPOCH_EIGINT in m, NaN when not stated."
+            },
+            OD_EPOCH_EIGMIN: {
+              type: "number",
+              description: "OD_EPOCH_EIGMIN in m, NaN when not stated."
+            },
+            OD_MAX_PRED_EIGMAJ: {
+              type: "number",
+              description: "OD_MAX_PRED_EIGMAJ in m, NaN when not stated."
+            },
+            OD_MIN_PRED_EIGMIN: {
+              type: "number",
+              description: "OD_MIN_PRED_EIGMIN in m, NaN when not stated."
+            },
+            OD_CONFIDENCE: {
+              type: "number",
+              description: "OD_CONFIDENCE in percent, NaN when not stated."
+            },
+            GDOP: {
+              type: "number",
+              description: "GDOP, NaN when not stated."
+            },
+            SOLVE_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SOLVE_N: the number of solved-for states."
+            },
+            SOLVE_STATES: {
+              type: "string",
+              description: "SOLVE_STATES: the solved-for states, as written."
+            },
+            CONSIDER_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CONSIDER_N: the number of consider parameters."
+            },
+            CONSIDER_PARAMS: {
+              type: "string",
+              description: "CONSIDER_PARAMS: the consider parameters, as written."
+            },
+            SENSORS_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSORS_N: the number of sensors."
+            },
+            SENSORS: {
+              type: "string",
+              description: "SENSORS: the sensors, as written."
+            },
+            COMMENT: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line."
+            }
+          },
+          additionalProperties: false
+        },
+        OCMTrajectoryBlock: {
+          type: "object",
+          description: "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            TRAJ_ID: {
+              type: "string",
+              description: "TRAJ_ID."
+            },
+            TRAJ_PREV_ID: {
+              type: "string",
+              description: "TRAJ_PREV_ID."
+            },
+            TRAJ_NEXT_ID: {
+              type: "string",
+              description: "TRAJ_NEXT_ID."
+            },
+            TRAJ_BASIS: {
+              type: "string",
+              description: "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER."
+            },
+            TRAJ_BASIS_ID: {
+              type: "string",
+              description: "TRAJ_BASIS_ID."
+            },
+            INTERPOLATION: {
+              type: "string",
+              description: "INTERPOLATION: the recommended interpolation method."
+            },
+            INTERPOLATION_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "INTERPOLATION_DEGREE."
+            },
+            PROPAGATOR: {
+              type: "string",
+              description: "PROPAGATOR."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME."
+            },
+            TRAJ_REF_FRAME: {
+              type: "string",
+              description: "TRAJ_REF_FRAME."
+            },
+            TRAJ_FRAME_EPOCH: {
+              type: "string",
+              description: "TRAJ_FRAME_EPOCH."
+            },
+            USEABLE_START_TIME: {
+              type: "string",
+              description: "USEABLE_START_TIME."
+            },
+            USEABLE_STOP_TIME: {
+              type: "string",
+              description: "USEABLE_STOP_TIME."
+            },
+            ORB_REVNUM: {
+              type: "number",
+              description: "ORB_REVNUM, NaN when not stated."
+            },
+            ORB_REVNUM_BASIS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated."
+            },
+            TRAJ_TYPE: {
+              type: "string",
+              description: "TRAJ_TYPE as written, for example CARTPV."
+            },
+            ORB_AVERAGING: {
+              type: "string",
+              description: "ORB_AVERAGING."
+            },
+            TRAJ_UNITS: {
+              type: "string",
+              description: "TRAJ_UNITS."
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written."
+            }
+          },
+          additionalProperties: false
+        },
+        OCMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID."
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID."
+            },
+            COV_NEXT_ID: {
+              type: "string",
+              description: "COV_NEXT_ID."
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER."
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME."
+            },
+            COV_FRAME_EPOCH: {
+              type: "string",
+              description: "COV_FRAME_EPOCH."
+            },
+            COV_SCALE_MIN: {
+              type: "number",
+              description: "COV_SCALE_MIN, NaN when not stated."
+            },
+            COV_SCALE_MAX: {
+              type: "number",
+              description: "COV_SCALE_MAX, NaN when not stated."
+            },
+            COV_CONFIDENCE: {
+              type: "number",
+              description: "COV_CONFIDENCE in percent, NaN when not stated."
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE as written, for example CARTPV."
+            },
+            COV_ORDERING: {
+              $ref: "#/definitions/covarianceOrdering",
+              description: "COV_ORDERING."
+            },
+            COV_UNITS: {
+              type: "string",
+              description: "COV_UNITS."
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written."
             }
           },
           additionalProperties: false
@@ -195757,6 +202558,20 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`
                 type: "string"
               },
               description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+            },
+            TRAJECTORY_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMTrajectoryBlock"
+              },
+              description: "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states."
+            },
+            COVARIANCE_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMCovarianceBlock"
+              },
+              description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
             }
           },
           additionalProperties: false
@@ -196231,13 +203046,29 @@ to the wallet, not to a published record. ABSENT from published records.`
                 type: "number"
               },
               description: "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]"
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,\nas written. A numeric designator is also OBJECT.NORAD_CAT_ID."
+            },
+            CATALOG_NAME: {
+              type: "string",
+              description: "CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in."
+            },
+            MANEUVERABLE: {
+              $ref: "#/definitions/cdmManeuverable",
+              description: "MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the\nsame fact as a flag, true for YES."
+            },
+            CD_AREA_OVER_MASS: {
+              type: "number",
+              description: "CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg."
             }
           },
           additionalProperties: false
         },
         CDM: {
           type: "object",
-          description: "Conjunction Data Message",
+          description: "Conjunction Data Message\n\nUnits of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,\nSCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part\nof each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and\nkm**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives\nMISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of\nCOVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust\nterms) are held as the message states them.",
           properties: {
             CCSDS_CDM_VERS: {
               type: "number",
@@ -196354,6 +203185,10 @@ to the wallet, not to a published record. ABSENT from published records.`
             OBJECT2_DATASOURCE: {
               $ref: "#/definitions/PNM",
               description: "Data Source for the positional information for Object 2"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message header and of its relative metadata and data\n(CCSDS 508.0-B-1), in message order, joined by a line feed."
             }
           },
           additionalProperties: false
@@ -200453,7 +207288,7 @@ assumptions".`
             },
             COMMENT: {
               type: "string",
-              description: "COMMENT (O)"
+              description: "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header."
             },
             EPOCH: {
               type: "string",
@@ -200579,6 +207414,36 @@ assumptions".`
             USER_DEFINED_MICROSECONDS: {
               type: "number",
               description: "USER_DEFINED_MICROSECONDS [O, units per ICD]"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message."
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OMMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        OMMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written, unit-less text"
             }
           },
           additionalProperties: false
@@ -212814,6 +219679,134 @@ to the wallet, not to a published record. ABSENT from published records.`
             SRP_UNCERTAINTY: {
               type: "number",
               description: "Uncertainty in the solar radiation pressure coefficient."
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer."
+            },
+            BUS_MODEL: {
+              type: "string",
+              description: "BUS_MODEL: the object's bus model."
+            },
+            DOCKED_WITH: {
+              type: "string",
+              description: "DOCKED_WITH: comma-separated names of the objects it is docked with."
+            },
+            INITIAL_WET_MASS: {
+              type: "number",
+              description: "INITIAL_WET_MASS in kg, NaN when not stated."
+            },
+            OEB_PARENT_FRAME: {
+              type: "string",
+              description: "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in."
+            },
+            OEB_PARENT_FRAME_EPOCH: {
+              type: "string",
+              description: "OEB_PARENT_FRAME_EPOCH."
+            },
+            AREA_MIN_FOR_PC: {
+              type: "number",
+              description: "AREA_MIN_FOR_PC in m**2, NaN when not stated."
+            },
+            AREA_MAX_FOR_PC: {
+              type: "number",
+              description: "AREA_MAX_FOR_PC in m**2, NaN when not stated."
+            },
+            AREA_TYP_FOR_PC: {
+              type: "number",
+              description: "AREA_TYP_FOR_PC in m**2, NaN when not stated."
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated."
+            },
+            RCS_MIN: {
+              type: "number",
+              description: "RCS_MIN in m**2, NaN when not stated."
+            },
+            RCS_MAX: {
+              type: "number",
+              description: "RCS_MAX in m**2, NaN when not stated."
+            },
+            VM_ABSOLUTE: {
+              type: "number",
+              description: "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT_MIN: {
+              type: "number",
+              description: "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT: {
+              type: "number",
+              description: "VM_APPARENT: apparent visual magnitude, NaN when not stated."
+            },
+            VM_APPARENT_MAX: {
+              type: "number",
+              description: "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated."
+            },
+            REFLECTANCE: {
+              type: "number",
+              description: "REFLECTANCE: typical reflectivity, NaN when not stated."
+            },
+            ATT_CONTROL_MODE: {
+              type: "string",
+              description: "ATT_CONTROL_MODE."
+            },
+            ATT_ACTUATOR_TYPE: {
+              type: "string",
+              description: "ATT_ACTUATOR_TYPE."
+            },
+            ATT_KNOWLEDGE: {
+              type: "number",
+              description: "ATT_KNOWLEDGE in degrees, NaN when not stated."
+            },
+            ATT_CONTROL: {
+              type: "number",
+              description: "ATT_CONTROL in degrees, NaN when not stated."
+            },
+            ATT_POINTING: {
+              type: "number",
+              description: "ATT_POINTING in degrees, NaN when not stated."
+            },
+            AVG_MANEUVER_FREQ: {
+              type: "number",
+              description: "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated."
+            },
+            MAX_THRUST: {
+              type: "number",
+              description: "MAX_THRUST in N, NaN when not stated."
+            },
+            DV_BOL: {
+              type: "number",
+              description: "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated."
+            },
+            DV_REMAINING: {
+              type: "number",
+              description: "DV_REMAINING in km/s, NaN when not stated."
+            },
+            IXX: {
+              type: "number",
+              description: "IXX in kg*m**2, NaN when not stated."
+            },
+            IYY: {
+              type: "number",
+              description: "IYY in kg*m**2, NaN when not stated."
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ in kg*m**2, NaN when not stated."
+            },
+            IXY: {
+              type: "number",
+              description: "IXY in kg*m**2, NaN when not stated."
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ in kg*m**2, NaN when not stated."
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ in kg*m**2, NaN when not stated."
             }
           },
           additionalProperties: false
@@ -212910,6 +219903,80 @@ to the wallet, not to a published record. ABSENT from published records.`
             FIXED_GEOMAG_AP: {
               type: "number",
               description: "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP)."
+            },
+            ATMOSPHERIC_MODEL_NAME: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one."
+            },
+            EQUATORIAL_RADIUS: {
+              type: "number",
+              description: "EQUATORIAL_RADIUS in km, NaN when not stated."
+            },
+            CENTRAL_BODY_ROTATION: {
+              type: "number",
+              description: "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated."
+            },
+            OBLATE_FLATTENING: {
+              type: "number",
+              description: "OBLATE_FLATTENING, NaN when not stated."
+            },
+            REDUCTION_THEORY: {
+              type: "string",
+              description: "REDUCTION_THEORY."
+            },
+            ALBEDO_GRID_SIZE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "ALBEDO_GRID_SIZE."
+            },
+            SHADOW_MODEL: {
+              type: "string",
+              description: "SHADOW_MODEL."
+            },
+            SHADOW_BODIES: {
+              type: "string",
+              description: "SHADOW_BODIES."
+            },
+            SW_DATA_SOURCE: {
+              type: "string",
+              description: "SW_DATA_SOURCE: the space weather data source."
+            },
+            SW_DATA_EPOCH: {
+              type: "string",
+              description: "SW_DATA_EPOCH."
+            },
+            SW_INTERP_METHOD: {
+              type: "string",
+              description: "SW_INTERP_METHOD."
+            },
+            FIXED_GEOMAG_DST: {
+              type: "number",
+              description: "FIXED_GEOMAG_DST in nT, NaN when not stated."
+            },
+            FIXED_M10P7: {
+              type: "number",
+              description: "FIXED_M10P7, NaN when not stated."
+            },
+            FIXED_M10P7_MEAN: {
+              type: "number",
+              description: "FIXED_M10P7_MEAN, NaN when not stated."
+            },
+            FIXED_S10P7: {
+              type: "number",
+              description: "FIXED_S10P7, NaN when not stated."
+            },
+            FIXED_S10P7_MEAN: {
+              type: "number",
+              description: "FIXED_S10P7_MEAN, NaN when not stated."
+            },
+            FIXED_Y10P7: {
+              type: "number",
+              description: "FIXED_Y10P7, NaN when not stated."
+            },
+            FIXED_Y10P7_MEAN: {
+              type: "number",
+              description: "FIXED_Y10P7_MEAN, NaN when not stated."
             }
           },
           additionalProperties: false
@@ -213233,6 +220300,267 @@ to the wallet, not to a published record. ABSENT from published records.`
                 $ref: "#/definitions/OCMDynamicParameter"
               },
               description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+            },
+            DAYS_SINCE_FIRST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated."
+            },
+            DAYS_SINCE_LAST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_LAST_OBS, NaN when not stated."
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated."
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated."
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED."
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED."
+            },
+            MAXIMUM_OBS_GAP: {
+              type: "number",
+              description: "MAXIMUM_OBS_GAP in days, NaN when not stated."
+            },
+            OD_EPOCH_EIGMAJ: {
+              type: "number",
+              description: "OD_EPOCH_EIGMAJ in m, NaN when not stated."
+            },
+            OD_EPOCH_EIGINT: {
+              type: "number",
+              description: "OD_EPOCH_EIGINT in m, NaN when not stated."
+            },
+            OD_EPOCH_EIGMIN: {
+              type: "number",
+              description: "OD_EPOCH_EIGMIN in m, NaN when not stated."
+            },
+            OD_MAX_PRED_EIGMAJ: {
+              type: "number",
+              description: "OD_MAX_PRED_EIGMAJ in m, NaN when not stated."
+            },
+            OD_MIN_PRED_EIGMIN: {
+              type: "number",
+              description: "OD_MIN_PRED_EIGMIN in m, NaN when not stated."
+            },
+            OD_CONFIDENCE: {
+              type: "number",
+              description: "OD_CONFIDENCE in percent, NaN when not stated."
+            },
+            GDOP: {
+              type: "number",
+              description: "GDOP, NaN when not stated."
+            },
+            SOLVE_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SOLVE_N: the number of solved-for states."
+            },
+            SOLVE_STATES: {
+              type: "string",
+              description: "SOLVE_STATES: the solved-for states, as written."
+            },
+            CONSIDER_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CONSIDER_N: the number of consider parameters."
+            },
+            CONSIDER_PARAMS: {
+              type: "string",
+              description: "CONSIDER_PARAMS: the consider parameters, as written."
+            },
+            SENSORS_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSORS_N: the number of sensors."
+            },
+            SENSORS: {
+              type: "string",
+              description: "SENSORS: the sensors, as written."
+            },
+            COMMENT: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line."
+            }
+          },
+          additionalProperties: false
+        },
+        OCMTrajectoryBlock: {
+          type: "object",
+          description: "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            TRAJ_ID: {
+              type: "string",
+              description: "TRAJ_ID."
+            },
+            TRAJ_PREV_ID: {
+              type: "string",
+              description: "TRAJ_PREV_ID."
+            },
+            TRAJ_NEXT_ID: {
+              type: "string",
+              description: "TRAJ_NEXT_ID."
+            },
+            TRAJ_BASIS: {
+              type: "string",
+              description: "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER."
+            },
+            TRAJ_BASIS_ID: {
+              type: "string",
+              description: "TRAJ_BASIS_ID."
+            },
+            INTERPOLATION: {
+              type: "string",
+              description: "INTERPOLATION: the recommended interpolation method."
+            },
+            INTERPOLATION_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "INTERPOLATION_DEGREE."
+            },
+            PROPAGATOR: {
+              type: "string",
+              description: "PROPAGATOR."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME."
+            },
+            TRAJ_REF_FRAME: {
+              type: "string",
+              description: "TRAJ_REF_FRAME."
+            },
+            TRAJ_FRAME_EPOCH: {
+              type: "string",
+              description: "TRAJ_FRAME_EPOCH."
+            },
+            USEABLE_START_TIME: {
+              type: "string",
+              description: "USEABLE_START_TIME."
+            },
+            USEABLE_STOP_TIME: {
+              type: "string",
+              description: "USEABLE_STOP_TIME."
+            },
+            ORB_REVNUM: {
+              type: "number",
+              description: "ORB_REVNUM, NaN when not stated."
+            },
+            ORB_REVNUM_BASIS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated."
+            },
+            TRAJ_TYPE: {
+              type: "string",
+              description: "TRAJ_TYPE as written, for example CARTPV."
+            },
+            ORB_AVERAGING: {
+              type: "string",
+              description: "ORB_AVERAGING."
+            },
+            TRAJ_UNITS: {
+              type: "string",
+              description: "TRAJ_UNITS."
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written."
+            }
+          },
+          additionalProperties: false
+        },
+        OCMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID."
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID."
+            },
+            COV_NEXT_ID: {
+              type: "string",
+              description: "COV_NEXT_ID."
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER."
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME."
+            },
+            COV_FRAME_EPOCH: {
+              type: "string",
+              description: "COV_FRAME_EPOCH."
+            },
+            COV_SCALE_MIN: {
+              type: "number",
+              description: "COV_SCALE_MIN, NaN when not stated."
+            },
+            COV_SCALE_MAX: {
+              type: "number",
+              description: "COV_SCALE_MAX, NaN when not stated."
+            },
+            COV_CONFIDENCE: {
+              type: "number",
+              description: "COV_CONFIDENCE in percent, NaN when not stated."
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE as written, for example CARTPV."
+            },
+            COV_ORDERING: {
+              $ref: "#/definitions/covarianceOrdering",
+              description: "COV_ORDERING."
+            },
+            COV_UNITS: {
+              type: "string",
+              description: "COV_UNITS."
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written."
             }
           },
           additionalProperties: false
@@ -213403,6 +220731,20 @@ to the wallet, not to a published record. ABSENT from published records.`
                 type: "string"
               },
               description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+            },
+            TRAJECTORY_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMTrajectoryBlock"
+              },
+              description: "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states."
+            },
+            COVARIANCE_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMCovarianceBlock"
+              },
+              description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
             }
           },
           additionalProperties: false
@@ -222633,6 +229975,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             IYZ: {
               type: "number",
               description: "Product of inertia YZ in kg*m^2"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),\njoined by a line feed."
             }
           },
           additionalProperties: false
@@ -222761,7 +230107,405 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             COMMENT: {
               type: "string",
-              description: "Additional comments"
+              description: "COMMENT lines of the message header, metadata and user-defined data\n(CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,\ncovariance, maneuver or determination block's own comments stay with it."
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat."
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message."
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.\nOBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH\nabove its EPOCH_TZERO, the epoch every relative time is measured from."
+            },
+            ORIGINATOR_POC: {
+              type: "string",
+              description: "ORIGINATOR_POC: point of contact at the originator."
+            },
+            ORIGINATOR_POSITION: {
+              type: "string",
+              description: "ORIGINATOR_POSITION: position of the point of contact."
+            },
+            ORIGINATOR_PHONE: {
+              type: "string",
+              description: "ORIGINATOR_PHONE: telephone number of the point of contact."
+            },
+            ORIGINATOR_EMAIL: {
+              type: "string",
+              description: "ORIGINATOR_EMAIL: email address of the point of contact."
+            },
+            ORIGINATOR_ADDRESS: {
+              type: "string",
+              description: "ORIGINATOR_ADDRESS: postal address of the point of contact."
+            },
+            ODM_MSG_LINK: {
+              type: "string",
+              description: "ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the orbit center, when the message states one."
+            },
+            ACM_DATA_ELEMENTS: {
+              type: "string",
+              description: "ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds."
+            },
+            START_TIME: {
+              type: "string",
+              description: "START_TIME: start of the total time span the message covers."
+            },
+            STOP_TIME: {
+              type: "string",
+              description: "STOP_TIME: end of the total time span the message covers."
+            },
+            TAIMUTC_AT_TZERO: {
+              type: "number",
+              description: "TAIMUTC_AT_TZERO in seconds, NaN when not stated."
+            },
+            NEXT_LEAP_EPOCH: {
+              type: "string",
+              description: "NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO."
+            },
+            NEXT_LEAP_TAIMUTC: {
+              type: "number",
+              description: "NEXT_LEAP_TAIMUTC in seconds, NaN when not stated."
+            },
+            ATT_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMAttitudeBlock"
+              },
+              description: "Attitude state time histories (ATT_START blocks), in message order."
+            },
+            COV_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMCovarianceBlock"
+              },
+              description: "Covariance time histories (COV_START blocks), in message order."
+            },
+            MAN_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMManeuverBlock"
+              },
+              description: "Maneuver specifications (MAN_START blocks), in message order."
+            },
+            DETERMINATION: {
+              $ref: "#/definitions/ACMDetermination",
+              description: "The attitude determination data (AD_START block), when the message has them."
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED parameter of the message, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        ACMAttitudeBlock: {
+          type: "object",
+          description: "One attitude state time history of an ACM (CCSDS 504.0-B-2 Table 5-4): the\nblock's keywords, then its data lines as TIMES (the first column of each line,\nelapsed seconds from EPOCH_TZERO or an epoch, as written) and VALUES (the other\ncolumns, NUMBER_STATES per line, row by row).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            ATT_ID: {
+              type: "string",
+              description: "ATT_ID."
+            },
+            ATT_PREV_ID: {
+              type: "string",
+              description: "ATT_PREV_ID."
+            },
+            ATT_BASIS: {
+              type: "string",
+              description: "ATT_BASIS: PREDICTED, DETERMINED_GND, DETERMINED_OBC or SIMULATED."
+            },
+            ATT_BASIS_ID: {
+              type: "string",
+              description: "ATT_BASIS_ID."
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the transformation starts from."
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the transformation ends in."
+            },
+            NUMBER_STATES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "NUMBER_STATES: the data columns on each line (attitude, then rate)."
+            },
+            ATT_TYPE: {
+              type: "string",
+              description: "ATT_TYPE: QUATERNION, EULER_ANGLES, DCM or ANGVEL."
+            },
+            EULER_ROT_SEQ: {
+              type: "string",
+              description: "EULER_ROT_SEQ, when ATT_TYPE is EULER_ANGLES."
+            },
+            RATE_TYPE: {
+              type: "string",
+              description: "RATE_TYPE: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS, when the lines carry rates."
+            },
+            TIMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The first column of each data line, as written."
+            },
+            VALUES: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The other columns of the data lines, NUMBER_STATES per line."
+            }
+          },
+          additionalProperties: false
+        },
+        ACMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an ACM (Table 5-6): the diagonal terms of the\ncovariance on each line, as TIMES and VALUES like ACMAttitudeBlock; every line\nhas the same number of values.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID."
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID."
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS."
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID."
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME."
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE: ANGLE, ANGLE_GYROBIAS, ANGLE_ANGVEL, QUATERNION, QUATERNION_GYROBIAS\nor QUATERNION_ANGVEL."
+            },
+            TIMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The first column of each data line, as written."
+            },
+            VALUES: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The diagonal terms of each line, row by row."
+            }
+          },
+          additionalProperties: false
+        },
+        ACMManeuverBlock: {
+          type: "object",
+          description: "One maneuver specification of an ACM (Table 5-7).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            MAN_ID: {
+              type: "string",
+              description: "MAN_ID."
+            },
+            MAN_PREV_ID: {
+              type: "string",
+              description: "MAN_PREV_ID."
+            },
+            MAN_PURPOSE: {
+              type: "string",
+              description: "MAN_PURPOSE: for example MOM_DESAT."
+            },
+            MAN_BEGIN_TIME: {
+              type: "number",
+              description: "MAN_BEGIN_TIME in seconds from EPOCH_TZERO."
+            },
+            MAN_END_TIME: {
+              type: "number",
+              description: "MAN_END_TIME in seconds from EPOCH_TZERO; NaN when the message states\nMAN_DURATION instead (a message states one of the two)."
+            },
+            MAN_DURATION: {
+              type: "number",
+              description: "MAN_DURATION in seconds; NaN when the message states MAN_END_TIME instead."
+            },
+            ACTUATOR_USED: {
+              type: "string",
+              description: "ACTUATOR_USED."
+            },
+            TARGET_MOMENTUM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "TARGET_MOMENTUM: three components in N*m*s; empty when not stated."
+            },
+            TARGET_MOM_FRAME: {
+              type: "string",
+              description: "TARGET_MOM_FRAME."
+            },
+            TARGET_ATTITUDE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "TARGET_ATTITUDE: the target attitude components; empty when not stated."
+            },
+            TARGET_SPINRATE: {
+              type: "number",
+              description: "TARGET_SPINRATE in deg/s, NaN when not stated."
+            }
+          },
+          additionalProperties: false
+        },
+        ACMDetermination: {
+          type: "object",
+          description: "The attitude determination data of an ACM (Table 5-8).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed."
+            },
+            AD_ID: {
+              type: "string",
+              description: "AD_ID."
+            },
+            AD_PREV_ID: {
+              type: "string",
+              description: "AD_PREV_ID."
+            },
+            AD_METHOD: {
+              type: "string",
+              description: "AD_METHOD: for example EKF, TRIAD or QUEST."
+            },
+            ATTITUDE_SOURCE: {
+              type: "string",
+              description: "ATTITUDE_SOURCE."
+            },
+            NUMBER_STATES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "NUMBER_STATES."
+            },
+            ATTITUDE_STATES: {
+              type: "string",
+              description: "ATTITUDE_STATES: QUATERNION, EULER_ANGLES, DCM or ANGVEL."
+            },
+            EULER_ROT_SEQ: {
+              type: "string",
+              description: "EULER_ROT_SEQ."
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE."
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A."
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B."
+            },
+            RATE_STATES: {
+              type: "string",
+              description: "RATE_STATES: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS."
+            },
+            SIGMA_U: {
+              type: "number",
+              description: "SIGMA_U in deg/s**1.5, NaN when not stated."
+            },
+            SIGMA_V: {
+              type: "number",
+              description: "SIGMA_V in deg/s**0.5, NaN when not stated."
+            },
+            RATE_PROCESS_NOISE_STDDEV: {
+              type: "number",
+              description: "RATE_PROCESS_NOISE_STDDEV in deg/s**1.5, NaN when not stated."
+            },
+            SENSORS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMSensor"
+              },
+              description: "The sensors, in message order."
+            }
+          },
+          additionalProperties: false
+        },
+        ACMSensor: {
+          type: "object",
+          description: "One sensor block of an ACM's attitude determination data.",
+          properties: {
+            SENSOR_NUMBER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSOR_NUMBER; it need not be sequential."
+            },
+            SENSOR_USED: {
+              type: "string",
+              description: "SENSOR_USED: for example AST, DSS or IMU."
+            },
+            NUMBER_SENSOR_NOISE_COVARIANCE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "NUMBER_SENSOR_NOISE_COVARIANCE."
+            },
+            SENSOR_NOISE_STDDEV: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "SENSOR_NOISE_STDDEV in deg: one value per noise covariance."
+            },
+            SENSOR_FREQUENCY: {
+              type: "number",
+              description: "SENSOR_FREQUENCY in Hz, NaN when not stated."
+            }
+          },
+          additionalProperties: false
+        },
+        ACMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an ACM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written"
             }
           },
           additionalProperties: false
@@ -246792,6 +254536,31 @@ var fbjson_default = {
             }
           }
         },
+        cdmManeuverable: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "YES",
+            "NO",
+            "NOT_APPLICABLE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            YES: {
+              value: 1
+            },
+            NO: {
+              value: 2
+            },
+            NOT_APPLICABLE: {
+              value: 3
+            }
+          }
+        },
         PNM: {
           type: "object",
           description: "Publish Notification Message.\n\nPNM is the compact network announcement for a published record, manifest, or\ndataset update. For dataset updates, FILE_ID is the complete canonical\nidentity for the published update and CID usually points to a small DPM\nmanifest or digest. The DPM carries the full verification contract:\nprovider identity, retrieval protocol, canonical query, result hash, Merkle\nroots, completeness-capable indexes, file_id partition key, and signature.\nLarge or paid dataset updates do not need to be published as globally\ndiscoverable IPFS files; a PNM may instead advertise a provider-mediated SDN\nquery protocol. In that mode the PNM is only the announcement. The DPM is\nthe signed commitment, and each provider response carries records plus\nMerkle proof material that the subscriber verifies against the DPM roots and\nthe announced FILE_ID before import.",
@@ -250087,13 +257856,48 @@ to the wallet, not to a published record. ABSENT from published records.`,
               },
               description: "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]",
               "x-flatbuffer-type": "[double]"
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,\nas written. A numeric designator is also OBJECT.NORAD_CAT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            CATALOG_NAME: {
+              type: "string",
+              description: "CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.",
+              "x-flatbuffer-type": "string"
+            },
+            MANEUVERABLE: {
+              $ref: "#/definitions/cdmManeuverable",
+              description: "MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the\nsame fact as a flag, true for YES.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                YES: {
+                  value: 1
+                },
+                NO: {
+                  value: 2
+                },
+                NOT_APPLICABLE: {
+                  value: 3
+                }
+              }
+            },
+            CD_AREA_OVER_MASS: {
+              type: "number",
+              description: "CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.",
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
         },
         CDM: {
           type: "object",
-          description: "Conjunction Data Message",
+          description: "Conjunction Data Message\n\nUnits of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,\nSCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part\nof each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and\nkm**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives\nMISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of\nCOVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust\nterms) are held as the message states them.",
           properties: {
             CCSDS_CDM_VERS: {
               type: "number",
@@ -250248,6 +258052,11 @@ to the wallet, not to a published record. ABSENT from published records.`,
               $ref: "#/definitions/PNM",
               description: "Data Source for the positional information for Object 2",
               "x-flatbuffer-type": "PNM"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message header and of its relative metadata and data\n(CCSDS 508.0-B-1), in message order, joined by a line feed.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -256594,6 +264403,20 @@ Decoding applies the inverses from the last back.`,
             "CCSDS_AEM_XML",
             "CCSDS_TDM_KVN",
             "CCSDS_TDM_XML",
+            "CCSDS_OMM_KVN",
+            "CCSDS_OMM_XML",
+            "CCSDS_OPM_KVN",
+            "CCSDS_OPM_XML",
+            "CCSDS_OCM_KVN",
+            "CCSDS_OCM_XML",
+            "CCSDS_CDM_KVN",
+            "CCSDS_CDM_XML",
+            "CCSDS_APM_KVN",
+            "CCSDS_APM_XML",
+            "CCSDS_ACM_KVN",
+            "CCSDS_ACM_XML",
+            "CCSDS_RDM_KVN",
+            "CCSDS_RDM_XML",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -256649,6 +264472,62 @@ Decoding applies the inverses from the last back.`,
             CCSDS_TDM_XML: {
               value: 12,
               description: "CCSDS Tracking Data Message, XML."
+            },
+            CCSDS_OMM_KVN: {
+              value: 13,
+              description: "CCSDS Orbit Mean-Elements Message, keyword-value notation."
+            },
+            CCSDS_OMM_XML: {
+              value: 14,
+              description: "CCSDS Orbit Mean-Elements Message, XML."
+            },
+            CCSDS_OPM_KVN: {
+              value: 15,
+              description: "CCSDS Orbit Parameter Message, keyword-value notation."
+            },
+            CCSDS_OPM_XML: {
+              value: 16,
+              description: "CCSDS Orbit Parameter Message, XML."
+            },
+            CCSDS_OCM_KVN: {
+              value: 17,
+              description: "CCSDS Orbit Comprehensive Message, keyword-value notation."
+            },
+            CCSDS_OCM_XML: {
+              value: 18,
+              description: "CCSDS Orbit Comprehensive Message, XML."
+            },
+            CCSDS_CDM_KVN: {
+              value: 19,
+              description: "CCSDS Conjunction Data Message, keyword-value notation."
+            },
+            CCSDS_CDM_XML: {
+              value: 20,
+              description: "CCSDS Conjunction Data Message, XML."
+            },
+            CCSDS_APM_KVN: {
+              value: 21,
+              description: "CCSDS Attitude Parameter Message, keyword-value notation."
+            },
+            CCSDS_APM_XML: {
+              value: 22,
+              description: "CCSDS Attitude Parameter Message, XML."
+            },
+            CCSDS_ACM_KVN: {
+              value: 23,
+              description: "CCSDS Attitude Comprehensive Message, keyword-value notation."
+            },
+            CCSDS_ACM_XML: {
+              value: 24,
+              description: "CCSDS Attitude Comprehensive Message, XML."
+            },
+            CCSDS_RDM_KVN: {
+              value: 25,
+              description: "CCSDS Reentry Data Message, keyword-value notation."
+            },
+            CCSDS_RDM_XML: {
+              value: 26,
+              description: "CCSDS Reentry Data Message, XML."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -257032,6 +264911,62 @@ Decoding applies the inverses from the last back.`,
                 CCSDS_TDM_XML: {
                   value: 12,
                   description: "CCSDS Tracking Data Message, XML."
+                },
+                CCSDS_OMM_KVN: {
+                  value: 13,
+                  description: "CCSDS Orbit Mean-Elements Message, keyword-value notation."
+                },
+                CCSDS_OMM_XML: {
+                  value: 14,
+                  description: "CCSDS Orbit Mean-Elements Message, XML."
+                },
+                CCSDS_OPM_KVN: {
+                  value: 15,
+                  description: "CCSDS Orbit Parameter Message, keyword-value notation."
+                },
+                CCSDS_OPM_XML: {
+                  value: 16,
+                  description: "CCSDS Orbit Parameter Message, XML."
+                },
+                CCSDS_OCM_KVN: {
+                  value: 17,
+                  description: "CCSDS Orbit Comprehensive Message, keyword-value notation."
+                },
+                CCSDS_OCM_XML: {
+                  value: 18,
+                  description: "CCSDS Orbit Comprehensive Message, XML."
+                },
+                CCSDS_CDM_KVN: {
+                  value: 19,
+                  description: "CCSDS Conjunction Data Message, keyword-value notation."
+                },
+                CCSDS_CDM_XML: {
+                  value: 20,
+                  description: "CCSDS Conjunction Data Message, XML."
+                },
+                CCSDS_APM_KVN: {
+                  value: 21,
+                  description: "CCSDS Attitude Parameter Message, keyword-value notation."
+                },
+                CCSDS_APM_XML: {
+                  value: 22,
+                  description: "CCSDS Attitude Parameter Message, XML."
+                },
+                CCSDS_ACM_KVN: {
+                  value: 23,
+                  description: "CCSDS Attitude Comprehensive Message, keyword-value notation."
+                },
+                CCSDS_ACM_XML: {
+                  value: 24,
+                  description: "CCSDS Attitude Comprehensive Message, XML."
+                },
+                CCSDS_RDM_KVN: {
+                  value: 25,
+                  description: "CCSDS Reentry Data Message, keyword-value notation."
+                },
+                CCSDS_RDM_XML: {
+                  value: 26,
+                  description: "CCSDS Reentry Data Message, XML."
                 },
                 PROVIDER_DEFINED: {
                   value: 255,
@@ -262632,6 +270567,119 @@ Decoding applies the inverses from the last back.`,
             DRAG_COEFF: {
               type: "number",
               "x-flatbuffer-type": "double"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata\nand data groups, in message order, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_EPOCH: {
+              type: "string",
+              description: "REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty\nwhen it is REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            COVARIANCE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:\nCX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,\nCX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.\nUnits km**2, km**2/s, km**2/s**2. Empty when the message states none.",
+              "x-flatbuffer-type": "[double]"
+            },
+            MANEUVERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPMManeuver"
+              },
+              description: "The message's maneuvers, in message order.",
+              "x-flatbuffer-type": "[OPMManeuver]"
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword of the message, in message order.",
+              "x-flatbuffer-type": "[OPMUserDefinedParameter]"
+            }
+          },
+          additionalProperties: false
+        },
+        OPMManeuver: {
+          type: "object",
+          description: "One maneuver of an OPM (CCSDS 502.0-B-3 Table 3-7).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this maneuver, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_EPOCH_IGNITION: {
+              type: "string",
+              description: "MAN_EPOCH_IGNITION: epoch of ignition.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_DURATION: {
+              type: "number",
+              description: "MAN_DURATION: duration of the burn in seconds; zero for an impulsive maneuver.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_DELTA_MASS: {
+              type: "number",
+              description: "MAN_DELTA_MASS: mass change during the maneuver in kg, negative or zero.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_REF_FRAME: {
+              type: "string",
+              description: "MAN_REF_FRAME: frame of MAN_DV_1..3 (for example RTN, TNW, or REF_FRAME's).",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_DV_1: {
+              type: "number",
+              description: "MAN_DV_1: first component of the velocity increment in km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_DV_2: {
+              type: "number",
+              description: "MAN_DV_2: second component of the velocity increment in km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_DV_3: {
+              type: "number",
+              description: "MAN_DV_3: third component of the velocity increment in km/s.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        OPMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OPM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+              "x-flatbuffer-type": "string"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -266216,6 +274264,420 @@ to the wallet, not to a published record. ABSENT from published records.`,
             QC: {
               type: "number",
               "x-flatbuffer-type": "double"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and\ndata groups, in message order, joined by a line feed. A state group's own\ncomments stay with it.",
+              "x-flatbuffer-type": "string"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the orbit center, when the message states one.",
+              "x-flatbuffer-type": "string"
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.",
+              "x-flatbuffer-type": "string"
+            },
+            QUATERNION_STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMQuaternionState"
+              },
+              description: "Quaternion states (QUAT_START block), in message order. Q1..QC above are the\nsingle frameless quaternion of the earlier form of this record; a message is\nread into and written from these lists.",
+              "x-flatbuffer-type": "[APMQuaternionState]"
+            },
+            EULER_ANGLE_STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMEulerAngleState"
+              },
+              description: "Euler angle states (EULER_START block), in message order.",
+              "x-flatbuffer-type": "[APMEulerAngleState]"
+            },
+            ANGULAR_VELOCITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMAngularVelocity"
+              },
+              description: "Angular velocities (ANGVEL_START block), in message order.",
+              "x-flatbuffer-type": "[APMAngularVelocity]"
+            },
+            SPIN_STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMSpinState"
+              },
+              description: "Spin states (SPIN_START block), in message order.",
+              "x-flatbuffer-type": "[APMSpinState]"
+            },
+            INERTIAS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMInertia"
+              },
+              description: "Inertia tensors (INERTIA_START block), in message order.",
+              "x-flatbuffer-type": "[APMInertia]"
+            },
+            MANEUVERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMManeuver"
+              },
+              description: "Attitude maneuvers (MAN_START block), in message order.",
+              "x-flatbuffer-type": "[APMManeuver]"
+            }
+          },
+          additionalProperties: false
+        },
+        APMQuaternionState: {
+          type: "object",
+          description: "A quaternion state of an APM (CCSDS 504.0-B-2 Table 3-3): rotation from\nREF_FRAME_A to REF_FRAME_B. The derivative is NaN when the message states none.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in.",
+              "x-flatbuffer-type": "string"
+            },
+            Q1: {
+              type: "number",
+              description: "Q1 (vector part, x).",
+              "x-flatbuffer-type": "double"
+            },
+            Q2: {
+              type: "number",
+              description: "Q2 (vector part, y).",
+              "x-flatbuffer-type": "double"
+            },
+            Q3: {
+              type: "number",
+              description: "Q3 (vector part, z).",
+              "x-flatbuffer-type": "double"
+            },
+            QC: {
+              type: "number",
+              description: "QC (scalar part).",
+              "x-flatbuffer-type": "double"
+            },
+            Q1_DOT: {
+              type: "number",
+              description: "Q1_DOT in 1/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            Q2_DOT: {
+              type: "number",
+              description: "Q2_DOT in 1/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            Q3_DOT: {
+              type: "number",
+              description: "Q3_DOT in 1/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            QC_DOT: {
+              type: "number",
+              description: "QC_DOT in 1/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
+          additionalProperties: false
+        },
+        APMEulerAngleState: {
+          type: "object",
+          description: "An Euler angle state of an APM (EULER_START block). Angles in degrees; a rate\nis NaN when the message states none.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in.",
+              "x-flatbuffer-type": "string"
+            },
+            EULER_ROT_SEQ: {
+              type: "string",
+              description: "EULER_ROT_SEQ: the rotation sequence, for example ZXZ.",
+              "x-flatbuffer-type": "string"
+            },
+            ANGLE_1: {
+              type: "number",
+              description: "ANGLE_1 in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            ANGLE_2: {
+              type: "number",
+              description: "ANGLE_2 in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            ANGLE_3: {
+              type: "number",
+              description: "ANGLE_3 in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            ANGLE_1_DOT: {
+              type: "number",
+              description: "ANGLE_1_DOT in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ANGLE_2_DOT: {
+              type: "number",
+              description: "ANGLE_2_DOT in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ANGLE_3_DOT: {
+              type: "number",
+              description: "ANGLE_3_DOT in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
+          additionalProperties: false
+        },
+        APMAngularVelocity: {
+          type: "object",
+          description: "An angular velocity of an APM (ANGVEL_START block), in deg/s.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in.",
+              "x-flatbuffer-type": "string"
+            },
+            ANGVEL_FRAME: {
+              type: "string",
+              description: "ANGVEL_FRAME: the frame the components are in.",
+              "x-flatbuffer-type": "string"
+            },
+            ANGVEL_X: {
+              type: "number",
+              description: "ANGVEL_X in deg/s.",
+              "x-flatbuffer-type": "double"
+            },
+            ANGVEL_Y: {
+              type: "number",
+              description: "ANGVEL_Y in deg/s.",
+              "x-flatbuffer-type": "double"
+            },
+            ANGVEL_Z: {
+              type: "number",
+              description: "ANGVEL_Z in deg/s.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        APMSpinState: {
+          type: "object",
+          description: "A spin state of an APM (SPIN_START block). The nutation terms come as either of\ntwo groups, nutation angle, period and phase or the momentum direction and the\nvelocity around it; those not stated are NaN.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in.",
+              "x-flatbuffer-type": "string"
+            },
+            SPIN_ALPHA: {
+              type: "number",
+              description: "SPIN_ALPHA: right ascension of the spin axis in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            SPIN_DELTA: {
+              type: "number",
+              description: "SPIN_DELTA: declination of the spin axis in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            SPIN_ANGLE: {
+              type: "number",
+              description: "SPIN_ANGLE: phase in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            SPIN_ANGLE_VEL: {
+              type: "number",
+              description: "SPIN_ANGLE_VEL: angular velocity in deg/s.",
+              "x-flatbuffer-type": "double"
+            },
+            NUTATION: {
+              type: "number",
+              description: "NUTATION: nutation angle in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NUTATION_PER: {
+              type: "number",
+              description: "NUTATION_PER: nutation period in seconds, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NUTATION_PHASE: {
+              type: "number",
+              description: "NUTATION_PHASE: nutation phase in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MOMENTUM_ALPHA: {
+              type: "number",
+              description: "MOMENTUM_ALPHA: right ascension of the angular momentum vector in degrees,\nNaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MOMENTUM_DELTA: {
+              type: "number",
+              description: "MOMENTUM_DELTA: declination of the angular momentum vector in degrees, NaN\nwhen not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NUTATION_VEL: {
+              type: "number",
+              description: "NUTATION_VEL: angular velocity around the momentum vector in deg/s, NaN when\nnot stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
+          additionalProperties: false
+        },
+        APMInertia: {
+          type: "object",
+          description: "An inertia tensor of an APM (INERTIA_START block), in kg*m**2.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            INERTIA_REF_FRAME: {
+              type: "string",
+              description: "INERTIA_REF_FRAME: the frame the tensor is in.",
+              "x-flatbuffer-type": "string"
+            },
+            IXX: {
+              type: "number",
+              description: "IXX: moment about X.",
+              "x-flatbuffer-type": "double"
+            },
+            IYY: {
+              type: "number",
+              description: "IYY: moment about Y.",
+              "x-flatbuffer-type": "double"
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ: moment about Z.",
+              "x-flatbuffer-type": "double"
+            },
+            IXY: {
+              type: "number",
+              description: "IXY: cross product X-Y.",
+              "x-flatbuffer-type": "double"
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ: cross product X-Z.",
+              "x-flatbuffer-type": "double"
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ: cross product Y-Z.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        APMManeuver: {
+          type: "object",
+          description: "An attitude maneuver of an APM (MAN_START block).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_EPOCH_START: {
+              type: "string",
+              description: "MAN_EPOCH_START: epoch of the start of the maneuver.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_DURATION: {
+              type: "number",
+              description: "MAN_DURATION in seconds.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_REF_FRAME: {
+              type: "string",
+              description: "MAN_REF_FRAME: the frame the torque is in.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_TOR_X: {
+              type: "number",
+              description: "MAN_TOR_X in N*m.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_TOR_Y: {
+              type: "number",
+              description: "MAN_TOR_Y in N*m.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_TOR_Z: {
+              type: "number",
+              description: "MAN_TOR_Z in N*m.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_DELTA_MASS: {
+              type: "number",
+              description: "MAN_DELTA_MASS in kg (negative or zero), NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -277316,6 +285778,16 @@ turned into a number.`,
               type: "number",
               description: "Covariance matrix [6,6] km**2/s**2",
               "x-flatbuffer-type": "double"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME.",
+              "x-flatbuffer-type": "RFM"
             }
           },
           additionalProperties: false
@@ -277563,6 +286035,16 @@ turned into a number.`,
               },
               description: "Array of ephemeris data blocks",
               "x-flatbuffer-type": "[ephemerisDataBlock]"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -278030,6 +286512,191 @@ turned into a number.`,
               type: "number",
               description: "Uncertainty in the solar radiation pressure coefficient.",
               "x-flatbuffer-type": "double"
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_MODEL: {
+              type: "string",
+              description: "BUS_MODEL: the object's bus model.",
+              "x-flatbuffer-type": "string"
+            },
+            DOCKED_WITH: {
+              type: "string",
+              description: "DOCKED_WITH: comma-separated names of the objects it is docked with.",
+              "x-flatbuffer-type": "string"
+            },
+            INITIAL_WET_MASS: {
+              type: "number",
+              description: "INITIAL_WET_MASS in kg, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OEB_PARENT_FRAME: {
+              type: "string",
+              description: "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.",
+              "x-flatbuffer-type": "string"
+            },
+            OEB_PARENT_FRAME_EPOCH: {
+              type: "string",
+              description: "OEB_PARENT_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_MIN_FOR_PC: {
+              type: "number",
+              description: "AREA_MIN_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_MAX_FOR_PC: {
+              type: "number",
+              description: "AREA_MAX_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_TYP_FOR_PC: {
+              type: "number",
+              description: "AREA_TYP_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS_MIN: {
+              type: "number",
+              description: "RCS_MIN in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS_MAX: {
+              type: "number",
+              description: "RCS_MAX in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_ABSOLUTE: {
+              type: "number",
+              description: "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT_MIN: {
+              type: "number",
+              description: "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT: {
+              type: "number",
+              description: "VM_APPARENT: apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT_MAX: {
+              type: "number",
+              description: "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REFLECTANCE: {
+              type: "number",
+              description: "REFLECTANCE: typical reflectivity, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_CONTROL_MODE: {
+              type: "string",
+              description: "ATT_CONTROL_MODE.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_ACTUATOR_TYPE: {
+              type: "string",
+              description: "ATT_ACTUATOR_TYPE.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_KNOWLEDGE: {
+              type: "number",
+              description: "ATT_KNOWLEDGE in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_CONTROL: {
+              type: "number",
+              description: "ATT_CONTROL in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_POINTING: {
+              type: "number",
+              description: "ATT_POINTING in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AVG_MANEUVER_FREQ: {
+              type: "number",
+              description: "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MAX_THRUST: {
+              type: "number",
+              description: "MAX_THRUST in N, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DV_BOL: {
+              type: "number",
+              description: "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DV_REMAINING: {
+              type: "number",
+              description: "DV_REMAINING in km/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXX: {
+              type: "number",
+              description: "IXX in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IYY: {
+              type: "number",
+              description: "IYY in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXY: {
+              type: "number",
+              description: "IXY in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -278146,6 +286813,108 @@ turned into a number.`,
               type: "number",
               description: "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).",
               "x-flatbuffer-type": "double"
+            },
+            ATMOSPHERIC_MODEL_NAME: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one.",
+              "x-flatbuffer-type": "string"
+            },
+            EQUATORIAL_RADIUS: {
+              type: "number",
+              description: "EQUATORIAL_RADIUS in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTRAL_BODY_ROTATION: {
+              type: "number",
+              description: "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBLATE_FLATTENING: {
+              type: "number",
+              description: "OBLATE_FLATTENING, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REDUCTION_THEORY: {
+              type: "string",
+              description: "REDUCTION_THEORY.",
+              "x-flatbuffer-type": "string"
+            },
+            ALBEDO_GRID_SIZE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "ALBEDO_GRID_SIZE.",
+              "x-flatbuffer-type": "uint"
+            },
+            SHADOW_MODEL: {
+              type: "string",
+              description: "SHADOW_MODEL.",
+              "x-flatbuffer-type": "string"
+            },
+            SHADOW_BODIES: {
+              type: "string",
+              description: "SHADOW_BODIES.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_DATA_SOURCE: {
+              type: "string",
+              description: "SW_DATA_SOURCE: the space weather data source.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_DATA_EPOCH: {
+              type: "string",
+              description: "SW_DATA_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_INTERP_METHOD: {
+              type: "string",
+              description: "SW_INTERP_METHOD.",
+              "x-flatbuffer-type": "string"
+            },
+            FIXED_GEOMAG_DST: {
+              type: "number",
+              description: "FIXED_GEOMAG_DST in nT, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_M10P7: {
+              type: "number",
+              description: "FIXED_M10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_M10P7_MEAN: {
+              type: "number",
+              description: "FIXED_M10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_S10P7: {
+              type: "number",
+              description: "FIXED_S10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_S10P7_MEAN: {
+              type: "number",
+              description: "FIXED_S10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_Y10P7: {
+              type: "number",
+              description: "FIXED_Y10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_Y10P7_MEAN: {
+              type: "number",
+              description: "FIXED_Y10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -278566,6 +287335,364 @@ turned into a number.`,
               },
               description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
+            },
+            DAYS_SINCE_FIRST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DAYS_SINCE_LAST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_LAST_OBS, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            MAXIMUM_OBS_GAP: {
+              type: "number",
+              description: "MAXIMUM_OBS_GAP in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGMAJ: {
+              type: "number",
+              description: "OD_EPOCH_EIGMAJ in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGINT: {
+              type: "number",
+              description: "OD_EPOCH_EIGINT in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGMIN: {
+              type: "number",
+              description: "OD_EPOCH_EIGMIN in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_MAX_PRED_EIGMAJ: {
+              type: "number",
+              description: "OD_MAX_PRED_EIGMAJ in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_MIN_PRED_EIGMIN: {
+              type: "number",
+              description: "OD_MIN_PRED_EIGMIN in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_CONFIDENCE: {
+              type: "number",
+              description: "OD_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            GDOP: {
+              type: "number",
+              description: "GDOP, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SOLVE_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SOLVE_N: the number of solved-for states.",
+              "x-flatbuffer-type": "uint"
+            },
+            SOLVE_STATES: {
+              type: "string",
+              description: "SOLVE_STATES: the solved-for states, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            CONSIDER_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CONSIDER_N: the number of consider parameters.",
+              "x-flatbuffer-type": "uint"
+            },
+            CONSIDER_PARAMS: {
+              type: "string",
+              description: "CONSIDER_PARAMS: the consider parameters, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            SENSORS_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSORS_N: the number of sensors.",
+              "x-flatbuffer-type": "uint"
+            },
+            SENSORS: {
+              type: "string",
+              description: "SENSORS: the sensors, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            COMMENT: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.",
+              "x-flatbuffer-type": "[string]"
+            }
+          },
+          additionalProperties: false
+        },
+        OCMTrajectoryBlock: {
+          type: "object",
+          description: "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_ID: {
+              type: "string",
+              description: "TRAJ_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_PREV_ID: {
+              type: "string",
+              description: "TRAJ_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_NEXT_ID: {
+              type: "string",
+              description: "TRAJ_NEXT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_BASIS: {
+              type: "string",
+              description: "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_BASIS_ID: {
+              type: "string",
+              description: "TRAJ_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            INTERPOLATION: {
+              type: "string",
+              description: "INTERPOLATION: the recommended interpolation method.",
+              "x-flatbuffer-type": "string"
+            },
+            INTERPOLATION_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "INTERPOLATION_DEGREE.",
+              "x-flatbuffer-type": "uint"
+            },
+            PROPAGATOR: {
+              type: "string",
+              description: "PROPAGATOR.",
+              "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_REF_FRAME: {
+              type: "string",
+              description: "TRAJ_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_FRAME_EPOCH: {
+              type: "string",
+              description: "TRAJ_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            USEABLE_START_TIME: {
+              type: "string",
+              description: "USEABLE_START_TIME.",
+              "x-flatbuffer-type": "string"
+            },
+            USEABLE_STOP_TIME: {
+              type: "string",
+              description: "USEABLE_STOP_TIME.",
+              "x-flatbuffer-type": "string"
+            },
+            ORB_REVNUM: {
+              type: "number",
+              description: "ORB_REVNUM, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ORB_REVNUM_BASIS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.",
+              "x-flatbuffer-type": "int",
+              "x-flatbuffer-default": "-1"
+            },
+            TRAJ_TYPE: {
+              type: "string",
+              description: "TRAJ_TYPE as written, for example CARTPV.",
+              "x-flatbuffer-type": "string"
+            },
+            ORB_AVERAGING: {
+              type: "string",
+              description: "ORB_AVERAGING.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_UNITS: {
+              type: "string",
+              description: "TRAJ_UNITS.",
+              "x-flatbuffer-type": "string"
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written.",
+              "x-flatbuffer-type": "[string]"
+            }
+          },
+          additionalProperties: false
+        },
+        OCMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_NEXT_ID: {
+              type: "string",
+              description: "COV_NEXT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_FRAME_EPOCH: {
+              type: "string",
+              description: "COV_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_SCALE_MIN: {
+              type: "number",
+              description: "COV_SCALE_MIN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_SCALE_MAX: {
+              type: "number",
+              description: "COV_SCALE_MAX, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_CONFIDENCE: {
+              type: "number",
+              description: "COV_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE as written, for example CARTPV.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ORDERING: {
+              $ref: "#/definitions/covarianceOrdering",
+              description: "COV_ORDERING.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                LTM: {
+                  value: 0,
+                  description: "Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values."
+                },
+                UTM: {
+                  value: 1,
+                  description: "Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values."
+                },
+                FULL: {
+                  value: 2,
+                  description: "The whole matrix row by row: N*N values."
+                },
+                LTMWCC: {
+                  value: 3,
+                  description: "The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places above the diagonal hold the correlation coefficients (covariance over the product of standard deviations)."
+                },
+                UTMWCC: {
+                  value: 4,
+                  description: "The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places below the diagonal hold the correlation coefficients."
+                }
+              },
+              "x-flatbuffer-default": "LTM"
+            },
+            COV_UNITS: {
+              type: "string",
+              description: "COV_UNITS.",
+              "x-flatbuffer-type": "string"
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written.",
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -278853,6 +287980,22 @@ turned into a number.`,
               },
               description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
               "x-flatbuffer-type": "[string]"
+            },
+            TRAJECTORY_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMTrajectoryBlock"
+              },
+              description: "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states.",
+              "x-flatbuffer-type": "[OCMTrajectoryBlock]"
+            },
+            COVARIANCE_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMCovarianceBlock"
+              },
+              description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line.",
+              "x-flatbuffer-type": "[OCMCovarianceBlock]"
             }
           },
           additionalProperties: false
@@ -314377,6 +323520,16 @@ verbatim what that source states about itself.`,
               type: "number",
               description: "Covariance matrix [6,6] km**2/s**2",
               "x-flatbuffer-type": "double"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME.",
+              "x-flatbuffer-type": "RFM"
             }
           },
           additionalProperties: false
@@ -314624,6 +323777,16 @@ verbatim what that source states about itself.`,
               },
               description: "Array of ephemeris data blocks",
               "x-flatbuffer-type": "[ephemerisDataBlock]"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -315091,6 +324254,191 @@ verbatim what that source states about itself.`,
               type: "number",
               description: "Uncertainty in the solar radiation pressure coefficient.",
               "x-flatbuffer-type": "double"
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_MODEL: {
+              type: "string",
+              description: "BUS_MODEL: the object's bus model.",
+              "x-flatbuffer-type": "string"
+            },
+            DOCKED_WITH: {
+              type: "string",
+              description: "DOCKED_WITH: comma-separated names of the objects it is docked with.",
+              "x-flatbuffer-type": "string"
+            },
+            INITIAL_WET_MASS: {
+              type: "number",
+              description: "INITIAL_WET_MASS in kg, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OEB_PARENT_FRAME: {
+              type: "string",
+              description: "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.",
+              "x-flatbuffer-type": "string"
+            },
+            OEB_PARENT_FRAME_EPOCH: {
+              type: "string",
+              description: "OEB_PARENT_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_MIN_FOR_PC: {
+              type: "number",
+              description: "AREA_MIN_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_MAX_FOR_PC: {
+              type: "number",
+              description: "AREA_MAX_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_TYP_FOR_PC: {
+              type: "number",
+              description: "AREA_TYP_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS_MIN: {
+              type: "number",
+              description: "RCS_MIN in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS_MAX: {
+              type: "number",
+              description: "RCS_MAX in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_ABSOLUTE: {
+              type: "number",
+              description: "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT_MIN: {
+              type: "number",
+              description: "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT: {
+              type: "number",
+              description: "VM_APPARENT: apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT_MAX: {
+              type: "number",
+              description: "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REFLECTANCE: {
+              type: "number",
+              description: "REFLECTANCE: typical reflectivity, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_CONTROL_MODE: {
+              type: "string",
+              description: "ATT_CONTROL_MODE.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_ACTUATOR_TYPE: {
+              type: "string",
+              description: "ATT_ACTUATOR_TYPE.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_KNOWLEDGE: {
+              type: "number",
+              description: "ATT_KNOWLEDGE in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_CONTROL: {
+              type: "number",
+              description: "ATT_CONTROL in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_POINTING: {
+              type: "number",
+              description: "ATT_POINTING in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AVG_MANEUVER_FREQ: {
+              type: "number",
+              description: "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MAX_THRUST: {
+              type: "number",
+              description: "MAX_THRUST in N, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DV_BOL: {
+              type: "number",
+              description: "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DV_REMAINING: {
+              type: "number",
+              description: "DV_REMAINING in km/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXX: {
+              type: "number",
+              description: "IXX in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IYY: {
+              type: "number",
+              description: "IYY in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXY: {
+              type: "number",
+              description: "IXY in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -315207,6 +324555,108 @@ verbatim what that source states about itself.`,
               type: "number",
               description: "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).",
               "x-flatbuffer-type": "double"
+            },
+            ATMOSPHERIC_MODEL_NAME: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one.",
+              "x-flatbuffer-type": "string"
+            },
+            EQUATORIAL_RADIUS: {
+              type: "number",
+              description: "EQUATORIAL_RADIUS in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTRAL_BODY_ROTATION: {
+              type: "number",
+              description: "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBLATE_FLATTENING: {
+              type: "number",
+              description: "OBLATE_FLATTENING, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REDUCTION_THEORY: {
+              type: "string",
+              description: "REDUCTION_THEORY.",
+              "x-flatbuffer-type": "string"
+            },
+            ALBEDO_GRID_SIZE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "ALBEDO_GRID_SIZE.",
+              "x-flatbuffer-type": "uint"
+            },
+            SHADOW_MODEL: {
+              type: "string",
+              description: "SHADOW_MODEL.",
+              "x-flatbuffer-type": "string"
+            },
+            SHADOW_BODIES: {
+              type: "string",
+              description: "SHADOW_BODIES.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_DATA_SOURCE: {
+              type: "string",
+              description: "SW_DATA_SOURCE: the space weather data source.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_DATA_EPOCH: {
+              type: "string",
+              description: "SW_DATA_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_INTERP_METHOD: {
+              type: "string",
+              description: "SW_INTERP_METHOD.",
+              "x-flatbuffer-type": "string"
+            },
+            FIXED_GEOMAG_DST: {
+              type: "number",
+              description: "FIXED_GEOMAG_DST in nT, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_M10P7: {
+              type: "number",
+              description: "FIXED_M10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_M10P7_MEAN: {
+              type: "number",
+              description: "FIXED_M10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_S10P7: {
+              type: "number",
+              description: "FIXED_S10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_S10P7_MEAN: {
+              type: "number",
+              description: "FIXED_S10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_Y10P7: {
+              type: "number",
+              description: "FIXED_Y10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_Y10P7_MEAN: {
+              type: "number",
+              description: "FIXED_Y10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -315627,6 +325077,364 @@ verbatim what that source states about itself.`,
               },
               description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
+            },
+            DAYS_SINCE_FIRST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DAYS_SINCE_LAST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_LAST_OBS, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            MAXIMUM_OBS_GAP: {
+              type: "number",
+              description: "MAXIMUM_OBS_GAP in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGMAJ: {
+              type: "number",
+              description: "OD_EPOCH_EIGMAJ in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGINT: {
+              type: "number",
+              description: "OD_EPOCH_EIGINT in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGMIN: {
+              type: "number",
+              description: "OD_EPOCH_EIGMIN in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_MAX_PRED_EIGMAJ: {
+              type: "number",
+              description: "OD_MAX_PRED_EIGMAJ in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_MIN_PRED_EIGMIN: {
+              type: "number",
+              description: "OD_MIN_PRED_EIGMIN in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_CONFIDENCE: {
+              type: "number",
+              description: "OD_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            GDOP: {
+              type: "number",
+              description: "GDOP, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SOLVE_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SOLVE_N: the number of solved-for states.",
+              "x-flatbuffer-type": "uint"
+            },
+            SOLVE_STATES: {
+              type: "string",
+              description: "SOLVE_STATES: the solved-for states, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            CONSIDER_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CONSIDER_N: the number of consider parameters.",
+              "x-flatbuffer-type": "uint"
+            },
+            CONSIDER_PARAMS: {
+              type: "string",
+              description: "CONSIDER_PARAMS: the consider parameters, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            SENSORS_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSORS_N: the number of sensors.",
+              "x-flatbuffer-type": "uint"
+            },
+            SENSORS: {
+              type: "string",
+              description: "SENSORS: the sensors, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            COMMENT: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.",
+              "x-flatbuffer-type": "[string]"
+            }
+          },
+          additionalProperties: false
+        },
+        OCMTrajectoryBlock: {
+          type: "object",
+          description: "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_ID: {
+              type: "string",
+              description: "TRAJ_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_PREV_ID: {
+              type: "string",
+              description: "TRAJ_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_NEXT_ID: {
+              type: "string",
+              description: "TRAJ_NEXT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_BASIS: {
+              type: "string",
+              description: "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_BASIS_ID: {
+              type: "string",
+              description: "TRAJ_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            INTERPOLATION: {
+              type: "string",
+              description: "INTERPOLATION: the recommended interpolation method.",
+              "x-flatbuffer-type": "string"
+            },
+            INTERPOLATION_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "INTERPOLATION_DEGREE.",
+              "x-flatbuffer-type": "uint"
+            },
+            PROPAGATOR: {
+              type: "string",
+              description: "PROPAGATOR.",
+              "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_REF_FRAME: {
+              type: "string",
+              description: "TRAJ_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_FRAME_EPOCH: {
+              type: "string",
+              description: "TRAJ_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            USEABLE_START_TIME: {
+              type: "string",
+              description: "USEABLE_START_TIME.",
+              "x-flatbuffer-type": "string"
+            },
+            USEABLE_STOP_TIME: {
+              type: "string",
+              description: "USEABLE_STOP_TIME.",
+              "x-flatbuffer-type": "string"
+            },
+            ORB_REVNUM: {
+              type: "number",
+              description: "ORB_REVNUM, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ORB_REVNUM_BASIS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.",
+              "x-flatbuffer-type": "int",
+              "x-flatbuffer-default": "-1"
+            },
+            TRAJ_TYPE: {
+              type: "string",
+              description: "TRAJ_TYPE as written, for example CARTPV.",
+              "x-flatbuffer-type": "string"
+            },
+            ORB_AVERAGING: {
+              type: "string",
+              description: "ORB_AVERAGING.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_UNITS: {
+              type: "string",
+              description: "TRAJ_UNITS.",
+              "x-flatbuffer-type": "string"
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written.",
+              "x-flatbuffer-type": "[string]"
+            }
+          },
+          additionalProperties: false
+        },
+        OCMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_NEXT_ID: {
+              type: "string",
+              description: "COV_NEXT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_FRAME_EPOCH: {
+              type: "string",
+              description: "COV_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_SCALE_MIN: {
+              type: "number",
+              description: "COV_SCALE_MIN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_SCALE_MAX: {
+              type: "number",
+              description: "COV_SCALE_MAX, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_CONFIDENCE: {
+              type: "number",
+              description: "COV_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE as written, for example CARTPV.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ORDERING: {
+              $ref: "#/definitions/covarianceOrdering",
+              description: "COV_ORDERING.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                LTM: {
+                  value: 0,
+                  description: "Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values."
+                },
+                UTM: {
+                  value: 1,
+                  description: "Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values."
+                },
+                FULL: {
+                  value: 2,
+                  description: "The whole matrix row by row: N*N values."
+                },
+                LTMWCC: {
+                  value: 3,
+                  description: "The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places above the diagonal hold the correlation coefficients (covariance over the product of standard deviations)."
+                },
+                UTMWCC: {
+                  value: 4,
+                  description: "The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places below the diagonal hold the correlation coefficients."
+                }
+              },
+              "x-flatbuffer-default": "LTM"
+            },
+            COV_UNITS: {
+              type: "string",
+              description: "COV_UNITS.",
+              "x-flatbuffer-type": "string"
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written.",
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -315914,6 +325722,22 @@ verbatim what that source states about itself.`,
               },
               description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
               "x-flatbuffer-type": "[string]"
+            },
+            TRAJECTORY_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMTrajectoryBlock"
+              },
+              description: "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states.",
+              "x-flatbuffer-type": "[OCMTrajectoryBlock]"
+            },
+            COVARIANCE_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMCovarianceBlock"
+              },
+              description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line.",
+              "x-flatbuffer-type": "[OCMCovarianceBlock]"
             }
           },
           additionalProperties: false
@@ -327560,7 +337384,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             COMMENT: {
               type: "string",
-              description: "COMMENT (O)",
+              description: "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header.",
               "x-flatbuffer-type": "string"
             },
             EPOCH: {
@@ -327740,6 +337564,41 @@ to the wallet, not to a published record. ABSENT from published records.`,
               type: "number",
               description: "USER_DEFINED_MICROSECONDS [O, units per ICD]",
               "x-flatbuffer-type": "double"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OMMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order.",
+              "x-flatbuffer-type": "[OMMUserDefinedParameter]"
+            }
+          },
+          additionalProperties: false
+        },
+        OMMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+              "x-flatbuffer-type": "string"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written, unit-less text",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -347215,6 +357074,31 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
             }
           }
         },
+        rdmControlledReentry: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "YES",
+            "NO",
+            "UNKNOWN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            YES: {
+              value: 1
+            },
+            NO: {
+              value: 2
+            },
+            UNKNOWN: {
+              value: 3
+            }
+          }
+        },
         reentryReason: {
           type: "string",
           enum: [
@@ -347548,7 +357432,492 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
             },
             COMMENT: {
               type: "string",
-              description: "Additional comments",
+              description: "COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and\ndata groups, in message order, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "The fields below, with the earlier ones that say so, are the keywords of\nCCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,\nNORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH\nNOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS\nWET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,\nREENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,\nSURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are\nnot keywords of the message.\nMESSAGE_ID: an identifier the originator makes unique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            CATALOG_NAME: {
+              type: "string",
+              description: "CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_OWNER: {
+              type: "string",
+              description: "OBJECT_OWNER.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_OPERATOR: {
+              type: "string",
+              description: "OBJECT_OPERATOR.",
+              "x-flatbuffer-type": "string"
+            },
+            CONTROLLED_REENTRY: {
+              $ref: "#/definitions/rdmControlledReentry",
+              description: "CONTROLLED_REENTRY: YES, NO or UNKNOWN.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                YES: {
+                  value: 1
+                },
+                NO: {
+                  value: 2
+                },
+                UNKNOWN: {
+                  value: 3
+                }
+              }
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the body being re-entered.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_TZERO: {
+              type: "string",
+              description: "EPOCH_TZERO: the epoch the message's relative times are measured from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME: {
+              type: "string",
+              description: "REF_FRAME: the frame of the state vector.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_EPOCH: {
+              type: "string",
+              description: "REF_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            EPHEMERIS_NAME: {
+              type: "string",
+              description: "EPHEMERIS_NAME.",
+              "x-flatbuffer-type": "string"
+            },
+            GRAVITY_MODEL: {
+              type: "string",
+              description: "GRAVITY_MODEL.",
+              "x-flatbuffer-type": "string"
+            },
+            ATMOSPHERIC_MODEL: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL.",
+              "x-flatbuffer-type": "string"
+            },
+            SOLAR_FLUX_PREDICTION: {
+              type: "string",
+              description: "SOLAR_FLUX_PREDICTION.",
+              "x-flatbuffer-type": "string"
+            },
+            N_BODY_PERTURBATIONS: {
+              type: "string",
+              description: "N_BODY_PERTURBATIONS.",
+              "x-flatbuffer-type": "string"
+            },
+            SOLAR_RAD_PRESSURE: {
+              type: "string",
+              description: "SOLAR_RAD_PRESSURE: a model name, or YES or NO.",
+              "x-flatbuffer-type": "string"
+            },
+            EARTH_TIDES: {
+              type: "string",
+              description: "EARTH_TIDES: a model name.",
+              "x-flatbuffer-type": "string"
+            },
+            INTRACK_THRUST: {
+              type: "string",
+              description: "INTRACK_THRUST: YES or NO.",
+              "x-flatbuffer-type": "string"
+            },
+            DRAG_PARAMETERS_SOURCE: {
+              type: "string",
+              description: "DRAG_PARAMETERS_SOURCE.",
+              "x-flatbuffer-type": "string"
+            },
+            DRAG_PARAMETERS_ALTITUDE: {
+              type: "number",
+              description: "DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REENTRY_UNCERTAINTY_METHOD: {
+              type: "string",
+              description: "REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.",
+              "x-flatbuffer-type": "string"
+            },
+            REENTRY_DISINTEGRATION: {
+              type: "string",
+              description: "REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACT_UNCERTAINTY_METHOD: {
+              type: "string",
+              description: "IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.",
+              "x-flatbuffer-type": "string"
+            },
+            PREVIOUS_MESSAGE_ID: {
+              type: "string",
+              description: "PREVIOUS_MESSAGE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            NEXT_MESSAGE_EPOCH: {
+              type: "string",
+              description: "NEXT_MESSAGE_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            ORBIT_LIFETIME: {
+              type: "number",
+              description: "ORBIT_LIFETIME in days.",
+              "x-flatbuffer-type": "double"
+            },
+            ORBIT_LIFETIME_WINDOW_START: {
+              type: "number",
+              description: "ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ORBIT_LIFETIME_WINDOW_END: {
+              type: "number",
+              description: "ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REENTRY_WINDOW_START: {
+              type: "string",
+              description: "REENTRY_WINDOW_START.",
+              "x-flatbuffer-type": "string"
+            },
+            REENTRY_WINDOW_END: {
+              type: "string",
+              description: "REENTRY_WINDOW_END.",
+              "x-flatbuffer-type": "string"
+            },
+            ORBIT_LIFETIME_CONFIDENCE_LEVEL: {
+              type: "number",
+              description: "ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_IMPACT: {
+              type: "number",
+              description: "PROBABILITY_OF_IMPACT, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_BURN_UP: {
+              type: "number",
+              description: "PROBABILITY_OF_BURN_UP, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_BREAK_UP: {
+              type: "number",
+              description: "PROBABILITY_OF_BREAK_UP, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_LAND_IMPACT: {
+              type: "number",
+              description: "PROBABILITY_OF_LAND_IMPACT, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_CASUALTY: {
+              type: "number",
+              description: "PROBABILITY_OF_CASUALTY, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NOMINAL_IMPACT_EPOCH: {
+              type: "string",
+              description: "NOMINAL_IMPACT_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACT_WINDOW_START: {
+              type: "string",
+              description: "IMPACT_WINDOW_START.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACT_WINDOW_END: {
+              type: "string",
+              description: "IMPACT_WINDOW_END.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACT_REF_FRAME: {
+              type: "string",
+              description: "IMPACT_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            NOMINAL_IMPACT_LON: {
+              type: "number",
+              description: "NOMINAL_IMPACT_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NOMINAL_IMPACT_LAT: {
+              type: "number",
+              description: "NOMINAL_IMPACT_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NOMINAL_IMPACT_ALT: {
+              type: "number",
+              description: "NOMINAL_IMPACT_ALT in metres, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_1_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_START_LON: {
+              type: "number",
+              description: "IMPACT_1_START_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_START_LAT: {
+              type: "number",
+              description: "IMPACT_1_START_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_STOP_LON: {
+              type: "number",
+              description: "IMPACT_1_STOP_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_1_STOP_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_1_CROSS_TRACK in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_2_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_START_LON: {
+              type: "number",
+              description: "IMPACT_2_START_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_START_LAT: {
+              type: "number",
+              description: "IMPACT_2_START_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_STOP_LON: {
+              type: "number",
+              description: "IMPACT_2_STOP_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_2_STOP_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_2_CROSS_TRACK in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_3_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_START_LON: {
+              type: "number",
+              description: "IMPACT_3_START_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_START_LAT: {
+              type: "number",
+              description: "IMPACT_3_START_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_STOP_LON: {
+              type: "number",
+              description: "IMPACT_3_STOP_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_3_STOP_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_3_CROSS_TRACK in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME: the frame of COVARIANCE.",
+              "x-flatbuffer-type": "string"
+            },
+            COVARIANCE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Position/velocity covariance matrix at the state vector's epoch, 6x6 lower\ntriangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,\nCX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,\nCY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,\nCZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.",
+              "x-flatbuffer-type": "[double]"
+            },
+            DRY_MASS: {
+              type: "number",
+              description: "WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HAZARDOUS_SUBSTANCES: {
+              type: "string",
+              description: "HAZARDOUS_SUBSTANCES.",
+              "x-flatbuffer-type": "string"
+            },
+            SOLAR_RAD_COEFF: {
+              type: "number",
+              description: "SOLAR_RAD_COEFF, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DRAG_COEFF: {
+              type: "number",
+              description: "DRAG_COEFF, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            THRUST_ACCELERATION: {
+              type: "number",
+              description: "THRUST_ACCELERATION in m/s**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TIME_LASTOB_START: {
+              type: "string",
+              description: "TIME_LASTOB_START.",
+              "x-flatbuffer-type": "string"
+            },
+            TIME_LASTOB_END: {
+              type: "string",
+              description: "TIME_LASTOB_END.",
+              "x-flatbuffer-type": "string"
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE.",
+              "x-flatbuffer-type": "uint"
+            },
+            TRACKS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            RESIDUALS_ACCEPTED: {
+              type: "number",
+              description: "RESIDUALS_ACCEPTED in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            WEIGHTED_RMS: {
+              type: "number",
+              description: "WEIGHTED_RMS, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/RDMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED keyword of the message, in message order.",
+              "x-flatbuffer-type": "[RDMUserDefinedParameter]"
+            }
+          },
+          additionalProperties: false
+        },
+        RDMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+              "x-flatbuffer-type": "string"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written",
               "x-flatbuffer-type": "string"
             }
           },
@@ -360395,6 +370764,16 @@ Decoding applies the inverses from the last back.`,
               type: "number",
               description: "Covariance matrix [6,6] km**2/s**2",
               "x-flatbuffer-type": "double"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME.",
+              "x-flatbuffer-type": "RFM"
             }
           },
           additionalProperties: false
@@ -360642,6 +371021,16 @@ Decoding applies the inverses from the last back.`,
               },
               description: "Array of ephemeris data blocks",
               "x-flatbuffer-type": "[ephemerisDataBlock]"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -365411,6 +375800,31 @@ Decoding applies the inverses from the last back.`,
             }
           }
         },
+        rdmControlledReentry: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "YES",
+            "NO",
+            "UNKNOWN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            YES: {
+              value: 1
+            },
+            NO: {
+              value: 2
+            },
+            UNKNOWN: {
+              value: 3
+            }
+          }
+        },
         reentryReason: {
           type: "string",
           enum: [
@@ -369567,6 +379981,16 @@ Decoding applies the inverses from the last back.`,
               type: "number",
               description: "Covariance matrix [6,6] km**2/s**2",
               "x-flatbuffer-type": "double"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME.",
+              "x-flatbuffer-type": "RFM"
             }
           },
           additionalProperties: false
@@ -369814,6 +380238,16 @@ Decoding applies the inverses from the last back.`,
               },
               description: "Array of ephemeris data blocks",
               "x-flatbuffer-type": "[ephemerisDataBlock]"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -370281,6 +380715,191 @@ Decoding applies the inverses from the last back.`,
               type: "number",
               description: "Uncertainty in the solar radiation pressure coefficient.",
               "x-flatbuffer-type": "double"
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_MODEL: {
+              type: "string",
+              description: "BUS_MODEL: the object's bus model.",
+              "x-flatbuffer-type": "string"
+            },
+            DOCKED_WITH: {
+              type: "string",
+              description: "DOCKED_WITH: comma-separated names of the objects it is docked with.",
+              "x-flatbuffer-type": "string"
+            },
+            INITIAL_WET_MASS: {
+              type: "number",
+              description: "INITIAL_WET_MASS in kg, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OEB_PARENT_FRAME: {
+              type: "string",
+              description: "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.",
+              "x-flatbuffer-type": "string"
+            },
+            OEB_PARENT_FRAME_EPOCH: {
+              type: "string",
+              description: "OEB_PARENT_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_MIN_FOR_PC: {
+              type: "number",
+              description: "AREA_MIN_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_MAX_FOR_PC: {
+              type: "number",
+              description: "AREA_MAX_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_TYP_FOR_PC: {
+              type: "number",
+              description: "AREA_TYP_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS_MIN: {
+              type: "number",
+              description: "RCS_MIN in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS_MAX: {
+              type: "number",
+              description: "RCS_MAX in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_ABSOLUTE: {
+              type: "number",
+              description: "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT_MIN: {
+              type: "number",
+              description: "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT: {
+              type: "number",
+              description: "VM_APPARENT: apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT_MAX: {
+              type: "number",
+              description: "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REFLECTANCE: {
+              type: "number",
+              description: "REFLECTANCE: typical reflectivity, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_CONTROL_MODE: {
+              type: "string",
+              description: "ATT_CONTROL_MODE.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_ACTUATOR_TYPE: {
+              type: "string",
+              description: "ATT_ACTUATOR_TYPE.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_KNOWLEDGE: {
+              type: "number",
+              description: "ATT_KNOWLEDGE in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_CONTROL: {
+              type: "number",
+              description: "ATT_CONTROL in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_POINTING: {
+              type: "number",
+              description: "ATT_POINTING in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AVG_MANEUVER_FREQ: {
+              type: "number",
+              description: "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MAX_THRUST: {
+              type: "number",
+              description: "MAX_THRUST in N, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DV_BOL: {
+              type: "number",
+              description: "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DV_REMAINING: {
+              type: "number",
+              description: "DV_REMAINING in km/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXX: {
+              type: "number",
+              description: "IXX in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IYY: {
+              type: "number",
+              description: "IYY in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXY: {
+              type: "number",
+              description: "IXY in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -370397,6 +381016,108 @@ Decoding applies the inverses from the last back.`,
               type: "number",
               description: "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).",
               "x-flatbuffer-type": "double"
+            },
+            ATMOSPHERIC_MODEL_NAME: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one.",
+              "x-flatbuffer-type": "string"
+            },
+            EQUATORIAL_RADIUS: {
+              type: "number",
+              description: "EQUATORIAL_RADIUS in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTRAL_BODY_ROTATION: {
+              type: "number",
+              description: "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBLATE_FLATTENING: {
+              type: "number",
+              description: "OBLATE_FLATTENING, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REDUCTION_THEORY: {
+              type: "string",
+              description: "REDUCTION_THEORY.",
+              "x-flatbuffer-type": "string"
+            },
+            ALBEDO_GRID_SIZE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "ALBEDO_GRID_SIZE.",
+              "x-flatbuffer-type": "uint"
+            },
+            SHADOW_MODEL: {
+              type: "string",
+              description: "SHADOW_MODEL.",
+              "x-flatbuffer-type": "string"
+            },
+            SHADOW_BODIES: {
+              type: "string",
+              description: "SHADOW_BODIES.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_DATA_SOURCE: {
+              type: "string",
+              description: "SW_DATA_SOURCE: the space weather data source.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_DATA_EPOCH: {
+              type: "string",
+              description: "SW_DATA_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_INTERP_METHOD: {
+              type: "string",
+              description: "SW_INTERP_METHOD.",
+              "x-flatbuffer-type": "string"
+            },
+            FIXED_GEOMAG_DST: {
+              type: "number",
+              description: "FIXED_GEOMAG_DST in nT, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_M10P7: {
+              type: "number",
+              description: "FIXED_M10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_M10P7_MEAN: {
+              type: "number",
+              description: "FIXED_M10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_S10P7: {
+              type: "number",
+              description: "FIXED_S10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_S10P7_MEAN: {
+              type: "number",
+              description: "FIXED_S10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_Y10P7: {
+              type: "number",
+              description: "FIXED_Y10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_Y10P7_MEAN: {
+              type: "number",
+              description: "FIXED_Y10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -370817,6 +381538,364 @@ Decoding applies the inverses from the last back.`,
               },
               description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
+            },
+            DAYS_SINCE_FIRST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DAYS_SINCE_LAST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_LAST_OBS, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            MAXIMUM_OBS_GAP: {
+              type: "number",
+              description: "MAXIMUM_OBS_GAP in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGMAJ: {
+              type: "number",
+              description: "OD_EPOCH_EIGMAJ in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGINT: {
+              type: "number",
+              description: "OD_EPOCH_EIGINT in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGMIN: {
+              type: "number",
+              description: "OD_EPOCH_EIGMIN in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_MAX_PRED_EIGMAJ: {
+              type: "number",
+              description: "OD_MAX_PRED_EIGMAJ in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_MIN_PRED_EIGMIN: {
+              type: "number",
+              description: "OD_MIN_PRED_EIGMIN in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_CONFIDENCE: {
+              type: "number",
+              description: "OD_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            GDOP: {
+              type: "number",
+              description: "GDOP, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SOLVE_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SOLVE_N: the number of solved-for states.",
+              "x-flatbuffer-type": "uint"
+            },
+            SOLVE_STATES: {
+              type: "string",
+              description: "SOLVE_STATES: the solved-for states, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            CONSIDER_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CONSIDER_N: the number of consider parameters.",
+              "x-flatbuffer-type": "uint"
+            },
+            CONSIDER_PARAMS: {
+              type: "string",
+              description: "CONSIDER_PARAMS: the consider parameters, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            SENSORS_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSORS_N: the number of sensors.",
+              "x-flatbuffer-type": "uint"
+            },
+            SENSORS: {
+              type: "string",
+              description: "SENSORS: the sensors, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            COMMENT: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.",
+              "x-flatbuffer-type": "[string]"
+            }
+          },
+          additionalProperties: false
+        },
+        OCMTrajectoryBlock: {
+          type: "object",
+          description: "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_ID: {
+              type: "string",
+              description: "TRAJ_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_PREV_ID: {
+              type: "string",
+              description: "TRAJ_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_NEXT_ID: {
+              type: "string",
+              description: "TRAJ_NEXT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_BASIS: {
+              type: "string",
+              description: "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_BASIS_ID: {
+              type: "string",
+              description: "TRAJ_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            INTERPOLATION: {
+              type: "string",
+              description: "INTERPOLATION: the recommended interpolation method.",
+              "x-flatbuffer-type": "string"
+            },
+            INTERPOLATION_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "INTERPOLATION_DEGREE.",
+              "x-flatbuffer-type": "uint"
+            },
+            PROPAGATOR: {
+              type: "string",
+              description: "PROPAGATOR.",
+              "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_REF_FRAME: {
+              type: "string",
+              description: "TRAJ_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_FRAME_EPOCH: {
+              type: "string",
+              description: "TRAJ_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            USEABLE_START_TIME: {
+              type: "string",
+              description: "USEABLE_START_TIME.",
+              "x-flatbuffer-type": "string"
+            },
+            USEABLE_STOP_TIME: {
+              type: "string",
+              description: "USEABLE_STOP_TIME.",
+              "x-flatbuffer-type": "string"
+            },
+            ORB_REVNUM: {
+              type: "number",
+              description: "ORB_REVNUM, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ORB_REVNUM_BASIS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.",
+              "x-flatbuffer-type": "int",
+              "x-flatbuffer-default": "-1"
+            },
+            TRAJ_TYPE: {
+              type: "string",
+              description: "TRAJ_TYPE as written, for example CARTPV.",
+              "x-flatbuffer-type": "string"
+            },
+            ORB_AVERAGING: {
+              type: "string",
+              description: "ORB_AVERAGING.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_UNITS: {
+              type: "string",
+              description: "TRAJ_UNITS.",
+              "x-flatbuffer-type": "string"
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written.",
+              "x-flatbuffer-type": "[string]"
+            }
+          },
+          additionalProperties: false
+        },
+        OCMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_NEXT_ID: {
+              type: "string",
+              description: "COV_NEXT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_FRAME_EPOCH: {
+              type: "string",
+              description: "COV_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_SCALE_MIN: {
+              type: "number",
+              description: "COV_SCALE_MIN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_SCALE_MAX: {
+              type: "number",
+              description: "COV_SCALE_MAX, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_CONFIDENCE: {
+              type: "number",
+              description: "COV_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE as written, for example CARTPV.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ORDERING: {
+              $ref: "#/definitions/covarianceOrdering",
+              description: "COV_ORDERING.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                LTM: {
+                  value: 0,
+                  description: "Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values."
+                },
+                UTM: {
+                  value: 1,
+                  description: "Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values."
+                },
+                FULL: {
+                  value: 2,
+                  description: "The whole matrix row by row: N*N values."
+                },
+                LTMWCC: {
+                  value: 3,
+                  description: "The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places above the diagonal hold the correlation coefficients (covariance over the product of standard deviations)."
+                },
+                UTMWCC: {
+                  value: 4,
+                  description: "The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places below the diagonal hold the correlation coefficients."
+                }
+              },
+              "x-flatbuffer-default": "LTM"
+            },
+            COV_UNITS: {
+              type: "string",
+              description: "COV_UNITS.",
+              "x-flatbuffer-type": "string"
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written.",
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -371104,6 +382183,22 @@ Decoding applies the inverses from the last back.`,
               },
               description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
               "x-flatbuffer-type": "[string]"
+            },
+            TRAJECTORY_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMTrajectoryBlock"
+              },
+              description: "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states.",
+              "x-flatbuffer-type": "[OCMTrajectoryBlock]"
+            },
+            COVARIANCE_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMCovarianceBlock"
+              },
+              description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line.",
+              "x-flatbuffer-type": "[OCMCovarianceBlock]"
             }
           },
           additionalProperties: false
@@ -371779,7 +382874,492 @@ Decoding applies the inverses from the last back.`,
             },
             COMMENT: {
               type: "string",
-              description: "Additional comments",
+              description: "COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and\ndata groups, in message order, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "The fields below, with the earlier ones that say so, are the keywords of\nCCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,\nNORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH\nNOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS\nWET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,\nREENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,\nSURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are\nnot keywords of the message.\nMESSAGE_ID: an identifier the originator makes unique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            CATALOG_NAME: {
+              type: "string",
+              description: "CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_OWNER: {
+              type: "string",
+              description: "OBJECT_OWNER.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_OPERATOR: {
+              type: "string",
+              description: "OBJECT_OPERATOR.",
+              "x-flatbuffer-type": "string"
+            },
+            CONTROLLED_REENTRY: {
+              $ref: "#/definitions/rdmControlledReentry",
+              description: "CONTROLLED_REENTRY: YES, NO or UNKNOWN.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                YES: {
+                  value: 1
+                },
+                NO: {
+                  value: 2
+                },
+                UNKNOWN: {
+                  value: 3
+                }
+              }
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the body being re-entered.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_TZERO: {
+              type: "string",
+              description: "EPOCH_TZERO: the epoch the message's relative times are measured from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME: {
+              type: "string",
+              description: "REF_FRAME: the frame of the state vector.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_EPOCH: {
+              type: "string",
+              description: "REF_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            EPHEMERIS_NAME: {
+              type: "string",
+              description: "EPHEMERIS_NAME.",
+              "x-flatbuffer-type": "string"
+            },
+            GRAVITY_MODEL: {
+              type: "string",
+              description: "GRAVITY_MODEL.",
+              "x-flatbuffer-type": "string"
+            },
+            ATMOSPHERIC_MODEL: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL.",
+              "x-flatbuffer-type": "string"
+            },
+            SOLAR_FLUX_PREDICTION: {
+              type: "string",
+              description: "SOLAR_FLUX_PREDICTION.",
+              "x-flatbuffer-type": "string"
+            },
+            N_BODY_PERTURBATIONS: {
+              type: "string",
+              description: "N_BODY_PERTURBATIONS.",
+              "x-flatbuffer-type": "string"
+            },
+            SOLAR_RAD_PRESSURE: {
+              type: "string",
+              description: "SOLAR_RAD_PRESSURE: a model name, or YES or NO.",
+              "x-flatbuffer-type": "string"
+            },
+            EARTH_TIDES: {
+              type: "string",
+              description: "EARTH_TIDES: a model name.",
+              "x-flatbuffer-type": "string"
+            },
+            INTRACK_THRUST: {
+              type: "string",
+              description: "INTRACK_THRUST: YES or NO.",
+              "x-flatbuffer-type": "string"
+            },
+            DRAG_PARAMETERS_SOURCE: {
+              type: "string",
+              description: "DRAG_PARAMETERS_SOURCE.",
+              "x-flatbuffer-type": "string"
+            },
+            DRAG_PARAMETERS_ALTITUDE: {
+              type: "number",
+              description: "DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REENTRY_UNCERTAINTY_METHOD: {
+              type: "string",
+              description: "REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.",
+              "x-flatbuffer-type": "string"
+            },
+            REENTRY_DISINTEGRATION: {
+              type: "string",
+              description: "REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACT_UNCERTAINTY_METHOD: {
+              type: "string",
+              description: "IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.",
+              "x-flatbuffer-type": "string"
+            },
+            PREVIOUS_MESSAGE_ID: {
+              type: "string",
+              description: "PREVIOUS_MESSAGE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            NEXT_MESSAGE_EPOCH: {
+              type: "string",
+              description: "NEXT_MESSAGE_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            ORBIT_LIFETIME: {
+              type: "number",
+              description: "ORBIT_LIFETIME in days.",
+              "x-flatbuffer-type": "double"
+            },
+            ORBIT_LIFETIME_WINDOW_START: {
+              type: "number",
+              description: "ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ORBIT_LIFETIME_WINDOW_END: {
+              type: "number",
+              description: "ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REENTRY_WINDOW_START: {
+              type: "string",
+              description: "REENTRY_WINDOW_START.",
+              "x-flatbuffer-type": "string"
+            },
+            REENTRY_WINDOW_END: {
+              type: "string",
+              description: "REENTRY_WINDOW_END.",
+              "x-flatbuffer-type": "string"
+            },
+            ORBIT_LIFETIME_CONFIDENCE_LEVEL: {
+              type: "number",
+              description: "ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_IMPACT: {
+              type: "number",
+              description: "PROBABILITY_OF_IMPACT, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_BURN_UP: {
+              type: "number",
+              description: "PROBABILITY_OF_BURN_UP, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_BREAK_UP: {
+              type: "number",
+              description: "PROBABILITY_OF_BREAK_UP, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_LAND_IMPACT: {
+              type: "number",
+              description: "PROBABILITY_OF_LAND_IMPACT, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_CASUALTY: {
+              type: "number",
+              description: "PROBABILITY_OF_CASUALTY, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NOMINAL_IMPACT_EPOCH: {
+              type: "string",
+              description: "NOMINAL_IMPACT_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACT_WINDOW_START: {
+              type: "string",
+              description: "IMPACT_WINDOW_START.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACT_WINDOW_END: {
+              type: "string",
+              description: "IMPACT_WINDOW_END.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACT_REF_FRAME: {
+              type: "string",
+              description: "IMPACT_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            NOMINAL_IMPACT_LON: {
+              type: "number",
+              description: "NOMINAL_IMPACT_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NOMINAL_IMPACT_LAT: {
+              type: "number",
+              description: "NOMINAL_IMPACT_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NOMINAL_IMPACT_ALT: {
+              type: "number",
+              description: "NOMINAL_IMPACT_ALT in metres, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_1_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_START_LON: {
+              type: "number",
+              description: "IMPACT_1_START_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_START_LAT: {
+              type: "number",
+              description: "IMPACT_1_START_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_STOP_LON: {
+              type: "number",
+              description: "IMPACT_1_STOP_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_1_STOP_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_1_CROSS_TRACK in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_2_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_START_LON: {
+              type: "number",
+              description: "IMPACT_2_START_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_START_LAT: {
+              type: "number",
+              description: "IMPACT_2_START_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_STOP_LON: {
+              type: "number",
+              description: "IMPACT_2_STOP_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_2_STOP_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_2_CROSS_TRACK in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_3_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_START_LON: {
+              type: "number",
+              description: "IMPACT_3_START_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_START_LAT: {
+              type: "number",
+              description: "IMPACT_3_START_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_STOP_LON: {
+              type: "number",
+              description: "IMPACT_3_STOP_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_3_STOP_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_3_CROSS_TRACK in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME: the frame of COVARIANCE.",
+              "x-flatbuffer-type": "string"
+            },
+            COVARIANCE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Position/velocity covariance matrix at the state vector's epoch, 6x6 lower\ntriangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,\nCX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,\nCY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,\nCZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.",
+              "x-flatbuffer-type": "[double]"
+            },
+            DRY_MASS: {
+              type: "number",
+              description: "WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HAZARDOUS_SUBSTANCES: {
+              type: "string",
+              description: "HAZARDOUS_SUBSTANCES.",
+              "x-flatbuffer-type": "string"
+            },
+            SOLAR_RAD_COEFF: {
+              type: "number",
+              description: "SOLAR_RAD_COEFF, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DRAG_COEFF: {
+              type: "number",
+              description: "DRAG_COEFF, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            THRUST_ACCELERATION: {
+              type: "number",
+              description: "THRUST_ACCELERATION in m/s**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TIME_LASTOB_START: {
+              type: "string",
+              description: "TIME_LASTOB_START.",
+              "x-flatbuffer-type": "string"
+            },
+            TIME_LASTOB_END: {
+              type: "string",
+              description: "TIME_LASTOB_END.",
+              "x-flatbuffer-type": "string"
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE.",
+              "x-flatbuffer-type": "uint"
+            },
+            TRACKS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            RESIDUALS_ACCEPTED: {
+              type: "number",
+              description: "RESIDUALS_ACCEPTED in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            WEIGHTED_RMS: {
+              type: "number",
+              description: "WEIGHTED_RMS, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/RDMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED keyword of the message, in message order.",
+              "x-flatbuffer-type": "[RDMUserDefinedParameter]"
+            }
+          },
+          additionalProperties: false
+        },
+        RDMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+              "x-flatbuffer-type": "string"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written",
               "x-flatbuffer-type": "string"
             }
           },
@@ -384554,6 +396134,31 @@ Decoding applies the inverses from the last back.`,
             }
           }
         },
+        cdmManeuverable: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "YES",
+            "NO",
+            "NOT_APPLICABLE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            YES: {
+              value: 1
+            },
+            NO: {
+              value: 2
+            },
+            NOT_APPLICABLE: {
+              value: 3
+            }
+          }
+        },
         cesVectorEncoding: {
           type: "string",
           enum: [
@@ -387336,6 +398941,20 @@ Decoding applies the inverses from the last back.`,
             "CCSDS_AEM_XML",
             "CCSDS_TDM_KVN",
             "CCSDS_TDM_XML",
+            "CCSDS_OMM_KVN",
+            "CCSDS_OMM_XML",
+            "CCSDS_OPM_KVN",
+            "CCSDS_OPM_XML",
+            "CCSDS_OCM_KVN",
+            "CCSDS_OCM_XML",
+            "CCSDS_CDM_KVN",
+            "CCSDS_CDM_XML",
+            "CCSDS_APM_KVN",
+            "CCSDS_APM_XML",
+            "CCSDS_ACM_KVN",
+            "CCSDS_ACM_XML",
+            "CCSDS_RDM_KVN",
+            "CCSDS_RDM_XML",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -387391,6 +399010,62 @@ Decoding applies the inverses from the last back.`,
             CCSDS_TDM_XML: {
               value: 12,
               description: "CCSDS Tracking Data Message, XML."
+            },
+            CCSDS_OMM_KVN: {
+              value: 13,
+              description: "CCSDS Orbit Mean-Elements Message, keyword-value notation."
+            },
+            CCSDS_OMM_XML: {
+              value: 14,
+              description: "CCSDS Orbit Mean-Elements Message, XML."
+            },
+            CCSDS_OPM_KVN: {
+              value: 15,
+              description: "CCSDS Orbit Parameter Message, keyword-value notation."
+            },
+            CCSDS_OPM_XML: {
+              value: 16,
+              description: "CCSDS Orbit Parameter Message, XML."
+            },
+            CCSDS_OCM_KVN: {
+              value: 17,
+              description: "CCSDS Orbit Comprehensive Message, keyword-value notation."
+            },
+            CCSDS_OCM_XML: {
+              value: 18,
+              description: "CCSDS Orbit Comprehensive Message, XML."
+            },
+            CCSDS_CDM_KVN: {
+              value: 19,
+              description: "CCSDS Conjunction Data Message, keyword-value notation."
+            },
+            CCSDS_CDM_XML: {
+              value: 20,
+              description: "CCSDS Conjunction Data Message, XML."
+            },
+            CCSDS_APM_KVN: {
+              value: 21,
+              description: "CCSDS Attitude Parameter Message, keyword-value notation."
+            },
+            CCSDS_APM_XML: {
+              value: 22,
+              description: "CCSDS Attitude Parameter Message, XML."
+            },
+            CCSDS_ACM_KVN: {
+              value: 23,
+              description: "CCSDS Attitude Comprehensive Message, keyword-value notation."
+            },
+            CCSDS_ACM_XML: {
+              value: 24,
+              description: "CCSDS Attitude Comprehensive Message, XML."
+            },
+            CCSDS_RDM_KVN: {
+              value: 25,
+              description: "CCSDS Reentry Data Message, keyword-value notation."
+            },
+            CCSDS_RDM_XML: {
+              value: 26,
+              description: "CCSDS Reentry Data Message, XML."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -397849,6 +409524,31 @@ Decoding applies the inverses from the last back.`,
             },
             SEMI_CONTROLLED: {
               value: 2
+            }
+          }
+        },
+        rdmControlledReentry: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "YES",
+            "NO",
+            "UNKNOWN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            YES: {
+              value: 1
+            },
+            NO: {
+              value: 2
+            },
+            UNKNOWN: {
+              value: 3
             }
           }
         },
@@ -409793,6 +421493,11 @@ Decoding applies the inverses from the last back.`,
               type: "number",
               description: "Product of inertia YZ in kg*m^2",
               "x-flatbuffer-type": "double"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),\njoined by a line feed.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -409971,7 +421676,492 @@ Decoding applies the inverses from the last back.`,
             },
             COMMENT: {
               type: "string",
-              description: "Additional comments",
+              description: "COMMENT lines of the message header, metadata and user-defined data\n(CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,\ncovariance, maneuver or determination block's own comments stay with it.",
+              "x-flatbuffer-type": "string"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.\nOBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH\nabove its EPOCH_TZERO, the epoch every relative time is measured from.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR_POC: {
+              type: "string",
+              description: "ORIGINATOR_POC: point of contact at the originator.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR_POSITION: {
+              type: "string",
+              description: "ORIGINATOR_POSITION: position of the point of contact.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR_PHONE: {
+              type: "string",
+              description: "ORIGINATOR_PHONE: telephone number of the point of contact.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR_EMAIL: {
+              type: "string",
+              description: "ORIGINATOR_EMAIL: email address of the point of contact.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR_ADDRESS: {
+              type: "string",
+              description: "ORIGINATOR_ADDRESS: postal address of the point of contact.",
+              "x-flatbuffer-type": "string"
+            },
+            ODM_MSG_LINK: {
+              type: "string",
+              description: "ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.",
+              "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the orbit center, when the message states one.",
+              "x-flatbuffer-type": "string"
+            },
+            ACM_DATA_ELEMENTS: {
+              type: "string",
+              description: "ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.",
+              "x-flatbuffer-type": "string"
+            },
+            START_TIME: {
+              type: "string",
+              description: "START_TIME: start of the total time span the message covers.",
+              "x-flatbuffer-type": "string"
+            },
+            STOP_TIME: {
+              type: "string",
+              description: "STOP_TIME: end of the total time span the message covers.",
+              "x-flatbuffer-type": "string"
+            },
+            TAIMUTC_AT_TZERO: {
+              type: "number",
+              description: "TAIMUTC_AT_TZERO in seconds, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NEXT_LEAP_EPOCH: {
+              type: "string",
+              description: "NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.",
+              "x-flatbuffer-type": "string"
+            },
+            NEXT_LEAP_TAIMUTC: {
+              type: "number",
+              description: "NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMAttitudeBlock"
+              },
+              description: "Attitude state time histories (ATT_START blocks), in message order.",
+              "x-flatbuffer-type": "[ACMAttitudeBlock]"
+            },
+            COV_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMCovarianceBlock"
+              },
+              description: "Covariance time histories (COV_START blocks), in message order.",
+              "x-flatbuffer-type": "[ACMCovarianceBlock]"
+            },
+            MAN_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMManeuverBlock"
+              },
+              description: "Maneuver specifications (MAN_START blocks), in message order.",
+              "x-flatbuffer-type": "[ACMManeuverBlock]"
+            },
+            DETERMINATION: {
+              $ref: "#/definitions/ACMDetermination",
+              description: "The attitude determination data (AD_START block), when the message has them.",
+              "x-flatbuffer-type": "ACMDetermination"
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED parameter of the message, in message order.",
+              "x-flatbuffer-type": "[ACMUserDefinedParameter]"
+            }
+          },
+          additionalProperties: false
+        },
+        ACMAttitudeBlock: {
+          type: "object",
+          description: "One attitude state time history of an ACM (CCSDS 504.0-B-2 Table 5-4): the\nblock's keywords, then its data lines as TIMES (the first column of each line,\nelapsed seconds from EPOCH_TZERO or an epoch, as written) and VALUES (the other\ncolumns, NUMBER_STATES per line, row by row).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_ID: {
+              type: "string",
+              description: "ATT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_PREV_ID: {
+              type: "string",
+              description: "ATT_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_BASIS: {
+              type: "string",
+              description: "ATT_BASIS: PREDICTED, DETERMINED_GND, DETERMINED_OBC or SIMULATED.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_BASIS_ID: {
+              type: "string",
+              description: "ATT_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the transformation starts from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the transformation ends in.",
+              "x-flatbuffer-type": "string"
+            },
+            NUMBER_STATES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "NUMBER_STATES: the data columns on each line (attitude, then rate).",
+              "x-flatbuffer-type": "uint"
+            },
+            ATT_TYPE: {
+              type: "string",
+              description: "ATT_TYPE: QUATERNION, EULER_ANGLES, DCM or ANGVEL.",
+              "x-flatbuffer-type": "string"
+            },
+            EULER_ROT_SEQ: {
+              type: "string",
+              description: "EULER_ROT_SEQ, when ATT_TYPE is EULER_ANGLES.",
+              "x-flatbuffer-type": "string"
+            },
+            RATE_TYPE: {
+              type: "string",
+              description: "RATE_TYPE: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS, when the lines carry rates.",
+              "x-flatbuffer-type": "string"
+            },
+            TIMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The first column of each data line, as written.",
+              "x-flatbuffer-type": "[string]"
+            },
+            VALUES: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The other columns of the data lines, NUMBER_STATES per line.",
+              "x-flatbuffer-type": "[double]"
+            }
+          },
+          additionalProperties: false
+        },
+        ACMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an ACM (Table 5-6): the diagonal terms of the\ncovariance on each line, as TIMES and VALUES like ACMAttitudeBlock; every line\nhas the same number of values.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE: ANGLE, ANGLE_GYROBIAS, ANGLE_ANGVEL, QUATERNION, QUATERNION_GYROBIAS\nor QUATERNION_ANGVEL.",
+              "x-flatbuffer-type": "string"
+            },
+            TIMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The first column of each data line, as written.",
+              "x-flatbuffer-type": "[string]"
+            },
+            VALUES: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The diagonal terms of each line, row by row.",
+              "x-flatbuffer-type": "[double]"
+            }
+          },
+          additionalProperties: false
+        },
+        ACMManeuverBlock: {
+          type: "object",
+          description: "One maneuver specification of an ACM (Table 5-7).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_ID: {
+              type: "string",
+              description: "MAN_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_PREV_ID: {
+              type: "string",
+              description: "MAN_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_PURPOSE: {
+              type: "string",
+              description: "MAN_PURPOSE: for example MOM_DESAT.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_BEGIN_TIME: {
+              type: "number",
+              description: "MAN_BEGIN_TIME in seconds from EPOCH_TZERO.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_END_TIME: {
+              type: "number",
+              description: "MAN_END_TIME in seconds from EPOCH_TZERO; NaN when the message states\nMAN_DURATION instead (a message states one of the two).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MAN_DURATION: {
+              type: "number",
+              description: "MAN_DURATION in seconds; NaN when the message states MAN_END_TIME instead.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ACTUATOR_USED: {
+              type: "string",
+              description: "ACTUATOR_USED.",
+              "x-flatbuffer-type": "string"
+            },
+            TARGET_MOMENTUM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "TARGET_MOMENTUM: three components in N*m*s; empty when not stated.",
+              "x-flatbuffer-type": "[double]"
+            },
+            TARGET_MOM_FRAME: {
+              type: "string",
+              description: "TARGET_MOM_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TARGET_ATTITUDE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "TARGET_ATTITUDE: the target attitude components; empty when not stated.",
+              "x-flatbuffer-type": "[double]"
+            },
+            TARGET_SPINRATE: {
+              type: "number",
+              description: "TARGET_SPINRATE in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
+          additionalProperties: false
+        },
+        ACMDetermination: {
+          type: "object",
+          description: "The attitude determination data of an ACM (Table 5-8).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            AD_ID: {
+              type: "string",
+              description: "AD_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            AD_PREV_ID: {
+              type: "string",
+              description: "AD_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            AD_METHOD: {
+              type: "string",
+              description: "AD_METHOD: for example EKF, TRIAD or QUEST.",
+              "x-flatbuffer-type": "string"
+            },
+            ATTITUDE_SOURCE: {
+              type: "string",
+              description: "ATTITUDE_SOURCE.",
+              "x-flatbuffer-type": "string"
+            },
+            NUMBER_STATES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "NUMBER_STATES.",
+              "x-flatbuffer-type": "uint"
+            },
+            ATTITUDE_STATES: {
+              type: "string",
+              description: "ATTITUDE_STATES: QUATERNION, EULER_ANGLES, DCM or ANGVEL.",
+              "x-flatbuffer-type": "string"
+            },
+            EULER_ROT_SEQ: {
+              type: "string",
+              description: "EULER_ROT_SEQ.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B.",
+              "x-flatbuffer-type": "string"
+            },
+            RATE_STATES: {
+              type: "string",
+              description: "RATE_STATES: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS.",
+              "x-flatbuffer-type": "string"
+            },
+            SIGMA_U: {
+              type: "number",
+              description: "SIGMA_U in deg/s**1.5, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SIGMA_V: {
+              type: "number",
+              description: "SIGMA_V in deg/s**0.5, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RATE_PROCESS_NOISE_STDDEV: {
+              type: "number",
+              description: "RATE_PROCESS_NOISE_STDDEV in deg/s**1.5, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SENSORS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMSensor"
+              },
+              description: "The sensors, in message order.",
+              "x-flatbuffer-type": "[ACMSensor]"
+            }
+          },
+          additionalProperties: false
+        },
+        ACMSensor: {
+          type: "object",
+          description: "One sensor block of an ACM's attitude determination data.",
+          properties: {
+            SENSOR_NUMBER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSOR_NUMBER; it need not be sequential.",
+              "x-flatbuffer-type": "uint"
+            },
+            SENSOR_USED: {
+              type: "string",
+              description: "SENSOR_USED: for example AST, DSS or IMU.",
+              "x-flatbuffer-type": "string"
+            },
+            NUMBER_SENSOR_NOISE_COVARIANCE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "NUMBER_SENSOR_NOISE_COVARIANCE.",
+              "x-flatbuffer-type": "uint"
+            },
+            SENSOR_NOISE_STDDEV: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "SENSOR_NOISE_STDDEV in deg: one value per noise covariance.",
+              "x-flatbuffer-type": "[double]"
+            },
+            SENSOR_FREQUENCY: {
+              type: "number",
+              description: "SENSOR_FREQUENCY in Hz, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
+          additionalProperties: false
+        },
+        ACMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an ACM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+              "x-flatbuffer-type": "string"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written",
               "x-flatbuffer-type": "string"
             }
           },
@@ -413089,6 +425279,420 @@ Decoding applies the inverses from the last back.`,
             QC: {
               type: "number",
               "x-flatbuffer-type": "double"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and\ndata groups, in message order, joined by a line feed. A state group's own\ncomments stay with it.",
+              "x-flatbuffer-type": "string"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the orbit center, when the message states one.",
+              "x-flatbuffer-type": "string"
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.",
+              "x-flatbuffer-type": "string"
+            },
+            QUATERNION_STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMQuaternionState"
+              },
+              description: "Quaternion states (QUAT_START block), in message order. Q1..QC above are the\nsingle frameless quaternion of the earlier form of this record; a message is\nread into and written from these lists.",
+              "x-flatbuffer-type": "[APMQuaternionState]"
+            },
+            EULER_ANGLE_STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMEulerAngleState"
+              },
+              description: "Euler angle states (EULER_START block), in message order.",
+              "x-flatbuffer-type": "[APMEulerAngleState]"
+            },
+            ANGULAR_VELOCITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMAngularVelocity"
+              },
+              description: "Angular velocities (ANGVEL_START block), in message order.",
+              "x-flatbuffer-type": "[APMAngularVelocity]"
+            },
+            SPIN_STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMSpinState"
+              },
+              description: "Spin states (SPIN_START block), in message order.",
+              "x-flatbuffer-type": "[APMSpinState]"
+            },
+            INERTIAS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMInertia"
+              },
+              description: "Inertia tensors (INERTIA_START block), in message order.",
+              "x-flatbuffer-type": "[APMInertia]"
+            },
+            MANEUVERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/APMManeuver"
+              },
+              description: "Attitude maneuvers (MAN_START block), in message order.",
+              "x-flatbuffer-type": "[APMManeuver]"
+            }
+          },
+          additionalProperties: false
+        },
+        APMQuaternionState: {
+          type: "object",
+          description: "A quaternion state of an APM (CCSDS 504.0-B-2 Table 3-3): rotation from\nREF_FRAME_A to REF_FRAME_B. The derivative is NaN when the message states none.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in.",
+              "x-flatbuffer-type": "string"
+            },
+            Q1: {
+              type: "number",
+              description: "Q1 (vector part, x).",
+              "x-flatbuffer-type": "double"
+            },
+            Q2: {
+              type: "number",
+              description: "Q2 (vector part, y).",
+              "x-flatbuffer-type": "double"
+            },
+            Q3: {
+              type: "number",
+              description: "Q3 (vector part, z).",
+              "x-flatbuffer-type": "double"
+            },
+            QC: {
+              type: "number",
+              description: "QC (scalar part).",
+              "x-flatbuffer-type": "double"
+            },
+            Q1_DOT: {
+              type: "number",
+              description: "Q1_DOT in 1/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            Q2_DOT: {
+              type: "number",
+              description: "Q2_DOT in 1/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            Q3_DOT: {
+              type: "number",
+              description: "Q3_DOT in 1/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            QC_DOT: {
+              type: "number",
+              description: "QC_DOT in 1/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
+          additionalProperties: false
+        },
+        APMEulerAngleState: {
+          type: "object",
+          description: "An Euler angle state of an APM (EULER_START block). Angles in degrees; a rate\nis NaN when the message states none.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in.",
+              "x-flatbuffer-type": "string"
+            },
+            EULER_ROT_SEQ: {
+              type: "string",
+              description: "EULER_ROT_SEQ: the rotation sequence, for example ZXZ.",
+              "x-flatbuffer-type": "string"
+            },
+            ANGLE_1: {
+              type: "number",
+              description: "ANGLE_1 in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            ANGLE_2: {
+              type: "number",
+              description: "ANGLE_2 in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            ANGLE_3: {
+              type: "number",
+              description: "ANGLE_3 in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            ANGLE_1_DOT: {
+              type: "number",
+              description: "ANGLE_1_DOT in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ANGLE_2_DOT: {
+              type: "number",
+              description: "ANGLE_2_DOT in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ANGLE_3_DOT: {
+              type: "number",
+              description: "ANGLE_3_DOT in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
+          additionalProperties: false
+        },
+        APMAngularVelocity: {
+          type: "object",
+          description: "An angular velocity of an APM (ANGVEL_START block), in deg/s.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in.",
+              "x-flatbuffer-type": "string"
+            },
+            ANGVEL_FRAME: {
+              type: "string",
+              description: "ANGVEL_FRAME: the frame the components are in.",
+              "x-flatbuffer-type": "string"
+            },
+            ANGVEL_X: {
+              type: "number",
+              description: "ANGVEL_X in deg/s.",
+              "x-flatbuffer-type": "double"
+            },
+            ANGVEL_Y: {
+              type: "number",
+              description: "ANGVEL_Y in deg/s.",
+              "x-flatbuffer-type": "double"
+            },
+            ANGVEL_Z: {
+              type: "number",
+              description: "ANGVEL_Z in deg/s.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        APMSpinState: {
+          type: "object",
+          description: "A spin state of an APM (SPIN_START block). The nutation terms come as either of\ntwo groups, nutation angle, period and phase or the momentum direction and the\nvelocity around it; those not stated are NaN.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the rotation starts from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the rotation ends in.",
+              "x-flatbuffer-type": "string"
+            },
+            SPIN_ALPHA: {
+              type: "number",
+              description: "SPIN_ALPHA: right ascension of the spin axis in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            SPIN_DELTA: {
+              type: "number",
+              description: "SPIN_DELTA: declination of the spin axis in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            SPIN_ANGLE: {
+              type: "number",
+              description: "SPIN_ANGLE: phase in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            SPIN_ANGLE_VEL: {
+              type: "number",
+              description: "SPIN_ANGLE_VEL: angular velocity in deg/s.",
+              "x-flatbuffer-type": "double"
+            },
+            NUTATION: {
+              type: "number",
+              description: "NUTATION: nutation angle in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NUTATION_PER: {
+              type: "number",
+              description: "NUTATION_PER: nutation period in seconds, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NUTATION_PHASE: {
+              type: "number",
+              description: "NUTATION_PHASE: nutation phase in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MOMENTUM_ALPHA: {
+              type: "number",
+              description: "MOMENTUM_ALPHA: right ascension of the angular momentum vector in degrees,\nNaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MOMENTUM_DELTA: {
+              type: "number",
+              description: "MOMENTUM_DELTA: declination of the angular momentum vector in degrees, NaN\nwhen not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NUTATION_VEL: {
+              type: "number",
+              description: "NUTATION_VEL: angular velocity around the momentum vector in deg/s, NaN when\nnot stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
+          additionalProperties: false
+        },
+        APMInertia: {
+          type: "object",
+          description: "An inertia tensor of an APM (INERTIA_START block), in kg*m**2.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            INERTIA_REF_FRAME: {
+              type: "string",
+              description: "INERTIA_REF_FRAME: the frame the tensor is in.",
+              "x-flatbuffer-type": "string"
+            },
+            IXX: {
+              type: "number",
+              description: "IXX: moment about X.",
+              "x-flatbuffer-type": "double"
+            },
+            IYY: {
+              type: "number",
+              description: "IYY: moment about Y.",
+              "x-flatbuffer-type": "double"
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ: moment about Z.",
+              "x-flatbuffer-type": "double"
+            },
+            IXY: {
+              type: "number",
+              description: "IXY: cross product X-Y.",
+              "x-flatbuffer-type": "double"
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ: cross product X-Z.",
+              "x-flatbuffer-type": "double"
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ: cross product Y-Z.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        APMManeuver: {
+          type: "object",
+          description: "An attitude maneuver of an APM (MAN_START block).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_EPOCH_START: {
+              type: "string",
+              description: "MAN_EPOCH_START: epoch of the start of the maneuver.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_DURATION: {
+              type: "number",
+              description: "MAN_DURATION in seconds.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_REF_FRAME: {
+              type: "string",
+              description: "MAN_REF_FRAME: the frame the torque is in.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_TOR_X: {
+              type: "number",
+              description: "MAN_TOR_X in N*m.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_TOR_Y: {
+              type: "number",
+              description: "MAN_TOR_Y in N*m.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_TOR_Z: {
+              type: "number",
+              description: "MAN_TOR_Z in N*m.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_DELTA_MASS: {
+              type: "number",
+              description: "MAN_DELTA_MASS in kg (negative or zero), NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -420992,13 +433596,48 @@ to the wallet, not to a published record. ABSENT from published records.`,
               },
               description: "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]",
               "x-flatbuffer-type": "[double]"
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,\nas written. A numeric designator is also OBJECT.NORAD_CAT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            CATALOG_NAME: {
+              type: "string",
+              description: "CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.",
+              "x-flatbuffer-type": "string"
+            },
+            MANEUVERABLE: {
+              $ref: "#/definitions/cdmManeuverable",
+              description: "MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the\nsame fact as a flag, true for YES.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                YES: {
+                  value: 1
+                },
+                NO: {
+                  value: 2
+                },
+                NOT_APPLICABLE: {
+                  value: 3
+                }
+              }
+            },
+            CD_AREA_OVER_MASS: {
+              type: "number",
+              description: "CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.",
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
         },
         CDM: {
           type: "object",
-          description: "Conjunction Data Message",
+          description: "Conjunction Data Message\n\nUnits of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,\nSCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part\nof each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and\nkm**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives\nMISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of\nCOVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust\nterms) are held as the message states them.",
           properties: {
             CCSDS_CDM_VERS: {
               type: "number",
@@ -421153,6 +433792,11 @@ to the wallet, not to a published record. ABSENT from published records.`,
               $ref: "#/definitions/PNM",
               description: "Data Source for the positional information for Object 2",
               "x-flatbuffer-type": "PNM"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message header and of its relative metadata and data\n(CCSDS 508.0-B-1), in message order, joined by a line feed.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -429084,6 +441728,62 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                   value: 12,
                   description: "CCSDS Tracking Data Message, XML."
                 },
+                CCSDS_OMM_KVN: {
+                  value: 13,
+                  description: "CCSDS Orbit Mean-Elements Message, keyword-value notation."
+                },
+                CCSDS_OMM_XML: {
+                  value: 14,
+                  description: "CCSDS Orbit Mean-Elements Message, XML."
+                },
+                CCSDS_OPM_KVN: {
+                  value: 15,
+                  description: "CCSDS Orbit Parameter Message, keyword-value notation."
+                },
+                CCSDS_OPM_XML: {
+                  value: 16,
+                  description: "CCSDS Orbit Parameter Message, XML."
+                },
+                CCSDS_OCM_KVN: {
+                  value: 17,
+                  description: "CCSDS Orbit Comprehensive Message, keyword-value notation."
+                },
+                CCSDS_OCM_XML: {
+                  value: 18,
+                  description: "CCSDS Orbit Comprehensive Message, XML."
+                },
+                CCSDS_CDM_KVN: {
+                  value: 19,
+                  description: "CCSDS Conjunction Data Message, keyword-value notation."
+                },
+                CCSDS_CDM_XML: {
+                  value: 20,
+                  description: "CCSDS Conjunction Data Message, XML."
+                },
+                CCSDS_APM_KVN: {
+                  value: 21,
+                  description: "CCSDS Attitude Parameter Message, keyword-value notation."
+                },
+                CCSDS_APM_XML: {
+                  value: 22,
+                  description: "CCSDS Attitude Parameter Message, XML."
+                },
+                CCSDS_ACM_KVN: {
+                  value: 23,
+                  description: "CCSDS Attitude Comprehensive Message, keyword-value notation."
+                },
+                CCSDS_ACM_XML: {
+                  value: 24,
+                  description: "CCSDS Attitude Comprehensive Message, XML."
+                },
+                CCSDS_RDM_KVN: {
+                  value: 25,
+                  description: "CCSDS Reentry Data Message, keyword-value notation."
+                },
+                CCSDS_RDM_XML: {
+                  value: 26,
+                  description: "CCSDS Reentry Data Message, XML."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -431772,7 +444472,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             },
             COMMENT: {
               type: "string",
-              description: "COMMENT (O)",
+              description: "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header.",
               "x-flatbuffer-type": "string"
             },
             EPOCH: {
@@ -431952,6 +444652,41 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               type: "number",
               description: "USER_DEFINED_MICROSECONDS [O, units per ICD]",
               "x-flatbuffer-type": "double"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OMMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order.",
+              "x-flatbuffer-type": "[OMMUserDefinedParameter]"
+            }
+          },
+          additionalProperties: false
+        },
+        OMMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+              "x-flatbuffer-type": "string"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written, unit-less text",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -432184,6 +444919,16 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               type: "number",
               description: "Covariance matrix [6,6] km**2/s**2",
               "x-flatbuffer-type": "double"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME.",
+              "x-flatbuffer-type": "RFM"
             }
           },
           additionalProperties: false
@@ -432431,6 +445176,16 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: "Array of ephemeris data blocks",
               "x-flatbuffer-type": "[ephemerisDataBlock]"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -432898,6 +445653,191 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               type: "number",
               description: "Uncertainty in the solar radiation pressure coefficient.",
               "x-flatbuffer-type": "double"
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_MODEL: {
+              type: "string",
+              description: "BUS_MODEL: the object's bus model.",
+              "x-flatbuffer-type": "string"
+            },
+            DOCKED_WITH: {
+              type: "string",
+              description: "DOCKED_WITH: comma-separated names of the objects it is docked with.",
+              "x-flatbuffer-type": "string"
+            },
+            INITIAL_WET_MASS: {
+              type: "number",
+              description: "INITIAL_WET_MASS in kg, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OEB_PARENT_FRAME: {
+              type: "string",
+              description: "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.",
+              "x-flatbuffer-type": "string"
+            },
+            OEB_PARENT_FRAME_EPOCH: {
+              type: "string",
+              description: "OEB_PARENT_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_MIN_FOR_PC: {
+              type: "number",
+              description: "AREA_MIN_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_MAX_FOR_PC: {
+              type: "number",
+              description: "AREA_MAX_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_TYP_FOR_PC: {
+              type: "number",
+              description: "AREA_TYP_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS_MIN: {
+              type: "number",
+              description: "RCS_MIN in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS_MAX: {
+              type: "number",
+              description: "RCS_MAX in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_ABSOLUTE: {
+              type: "number",
+              description: "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT_MIN: {
+              type: "number",
+              description: "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT: {
+              type: "number",
+              description: "VM_APPARENT: apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT_MAX: {
+              type: "number",
+              description: "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REFLECTANCE: {
+              type: "number",
+              description: "REFLECTANCE: typical reflectivity, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_CONTROL_MODE: {
+              type: "string",
+              description: "ATT_CONTROL_MODE.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_ACTUATOR_TYPE: {
+              type: "string",
+              description: "ATT_ACTUATOR_TYPE.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_KNOWLEDGE: {
+              type: "number",
+              description: "ATT_KNOWLEDGE in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_CONTROL: {
+              type: "number",
+              description: "ATT_CONTROL in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_POINTING: {
+              type: "number",
+              description: "ATT_POINTING in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AVG_MANEUVER_FREQ: {
+              type: "number",
+              description: "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MAX_THRUST: {
+              type: "number",
+              description: "MAX_THRUST in N, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DV_BOL: {
+              type: "number",
+              description: "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DV_REMAINING: {
+              type: "number",
+              description: "DV_REMAINING in km/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXX: {
+              type: "number",
+              description: "IXX in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IYY: {
+              type: "number",
+              description: "IYY in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXY: {
+              type: "number",
+              description: "IXY in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -433014,6 +445954,108 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               type: "number",
               description: "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).",
               "x-flatbuffer-type": "double"
+            },
+            ATMOSPHERIC_MODEL_NAME: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one.",
+              "x-flatbuffer-type": "string"
+            },
+            EQUATORIAL_RADIUS: {
+              type: "number",
+              description: "EQUATORIAL_RADIUS in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTRAL_BODY_ROTATION: {
+              type: "number",
+              description: "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBLATE_FLATTENING: {
+              type: "number",
+              description: "OBLATE_FLATTENING, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REDUCTION_THEORY: {
+              type: "string",
+              description: "REDUCTION_THEORY.",
+              "x-flatbuffer-type": "string"
+            },
+            ALBEDO_GRID_SIZE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "ALBEDO_GRID_SIZE.",
+              "x-flatbuffer-type": "uint"
+            },
+            SHADOW_MODEL: {
+              type: "string",
+              description: "SHADOW_MODEL.",
+              "x-flatbuffer-type": "string"
+            },
+            SHADOW_BODIES: {
+              type: "string",
+              description: "SHADOW_BODIES.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_DATA_SOURCE: {
+              type: "string",
+              description: "SW_DATA_SOURCE: the space weather data source.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_DATA_EPOCH: {
+              type: "string",
+              description: "SW_DATA_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_INTERP_METHOD: {
+              type: "string",
+              description: "SW_INTERP_METHOD.",
+              "x-flatbuffer-type": "string"
+            },
+            FIXED_GEOMAG_DST: {
+              type: "number",
+              description: "FIXED_GEOMAG_DST in nT, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_M10P7: {
+              type: "number",
+              description: "FIXED_M10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_M10P7_MEAN: {
+              type: "number",
+              description: "FIXED_M10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_S10P7: {
+              type: "number",
+              description: "FIXED_S10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_S10P7_MEAN: {
+              type: "number",
+              description: "FIXED_S10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_Y10P7: {
+              type: "number",
+              description: "FIXED_Y10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_Y10P7_MEAN: {
+              type: "number",
+              description: "FIXED_Y10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -433434,6 +446476,364 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
+            },
+            DAYS_SINCE_FIRST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DAYS_SINCE_LAST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_LAST_OBS, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            MAXIMUM_OBS_GAP: {
+              type: "number",
+              description: "MAXIMUM_OBS_GAP in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGMAJ: {
+              type: "number",
+              description: "OD_EPOCH_EIGMAJ in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGINT: {
+              type: "number",
+              description: "OD_EPOCH_EIGINT in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGMIN: {
+              type: "number",
+              description: "OD_EPOCH_EIGMIN in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_MAX_PRED_EIGMAJ: {
+              type: "number",
+              description: "OD_MAX_PRED_EIGMAJ in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_MIN_PRED_EIGMIN: {
+              type: "number",
+              description: "OD_MIN_PRED_EIGMIN in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_CONFIDENCE: {
+              type: "number",
+              description: "OD_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            GDOP: {
+              type: "number",
+              description: "GDOP, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SOLVE_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SOLVE_N: the number of solved-for states.",
+              "x-flatbuffer-type": "uint"
+            },
+            SOLVE_STATES: {
+              type: "string",
+              description: "SOLVE_STATES: the solved-for states, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            CONSIDER_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CONSIDER_N: the number of consider parameters.",
+              "x-flatbuffer-type": "uint"
+            },
+            CONSIDER_PARAMS: {
+              type: "string",
+              description: "CONSIDER_PARAMS: the consider parameters, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            SENSORS_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSORS_N: the number of sensors.",
+              "x-flatbuffer-type": "uint"
+            },
+            SENSORS: {
+              type: "string",
+              description: "SENSORS: the sensors, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            COMMENT: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.",
+              "x-flatbuffer-type": "[string]"
+            }
+          },
+          additionalProperties: false
+        },
+        OCMTrajectoryBlock: {
+          type: "object",
+          description: "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_ID: {
+              type: "string",
+              description: "TRAJ_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_PREV_ID: {
+              type: "string",
+              description: "TRAJ_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_NEXT_ID: {
+              type: "string",
+              description: "TRAJ_NEXT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_BASIS: {
+              type: "string",
+              description: "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_BASIS_ID: {
+              type: "string",
+              description: "TRAJ_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            INTERPOLATION: {
+              type: "string",
+              description: "INTERPOLATION: the recommended interpolation method.",
+              "x-flatbuffer-type": "string"
+            },
+            INTERPOLATION_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "INTERPOLATION_DEGREE.",
+              "x-flatbuffer-type": "uint"
+            },
+            PROPAGATOR: {
+              type: "string",
+              description: "PROPAGATOR.",
+              "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_REF_FRAME: {
+              type: "string",
+              description: "TRAJ_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_FRAME_EPOCH: {
+              type: "string",
+              description: "TRAJ_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            USEABLE_START_TIME: {
+              type: "string",
+              description: "USEABLE_START_TIME.",
+              "x-flatbuffer-type": "string"
+            },
+            USEABLE_STOP_TIME: {
+              type: "string",
+              description: "USEABLE_STOP_TIME.",
+              "x-flatbuffer-type": "string"
+            },
+            ORB_REVNUM: {
+              type: "number",
+              description: "ORB_REVNUM, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ORB_REVNUM_BASIS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.",
+              "x-flatbuffer-type": "int",
+              "x-flatbuffer-default": "-1"
+            },
+            TRAJ_TYPE: {
+              type: "string",
+              description: "TRAJ_TYPE as written, for example CARTPV.",
+              "x-flatbuffer-type": "string"
+            },
+            ORB_AVERAGING: {
+              type: "string",
+              description: "ORB_AVERAGING.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_UNITS: {
+              type: "string",
+              description: "TRAJ_UNITS.",
+              "x-flatbuffer-type": "string"
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written.",
+              "x-flatbuffer-type": "[string]"
+            }
+          },
+          additionalProperties: false
+        },
+        OCMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_NEXT_ID: {
+              type: "string",
+              description: "COV_NEXT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_FRAME_EPOCH: {
+              type: "string",
+              description: "COV_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_SCALE_MIN: {
+              type: "number",
+              description: "COV_SCALE_MIN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_SCALE_MAX: {
+              type: "number",
+              description: "COV_SCALE_MAX, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_CONFIDENCE: {
+              type: "number",
+              description: "COV_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE as written, for example CARTPV.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ORDERING: {
+              $ref: "#/definitions/covarianceOrdering",
+              description: "COV_ORDERING.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                LTM: {
+                  value: 0,
+                  description: "Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values."
+                },
+                UTM: {
+                  value: 1,
+                  description: "Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values."
+                },
+                FULL: {
+                  value: 2,
+                  description: "The whole matrix row by row: N*N values."
+                },
+                LTMWCC: {
+                  value: 3,
+                  description: "The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places above the diagonal hold the correlation coefficients (covariance over the product of standard deviations)."
+                },
+                UTMWCC: {
+                  value: 4,
+                  description: "The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places below the diagonal hold the correlation coefficients."
+                }
+              },
+              "x-flatbuffer-default": "LTM"
+            },
+            COV_UNITS: {
+              type: "string",
+              description: "COV_UNITS.",
+              "x-flatbuffer-type": "string"
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written.",
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -433721,6 +447121,22 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
               "x-flatbuffer-type": "[string]"
+            },
+            TRAJECTORY_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMTrajectoryBlock"
+              },
+              description: "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states.",
+              "x-flatbuffer-type": "[OCMTrajectoryBlock]"
+            },
+            COVARIANCE_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMCovarianceBlock"
+              },
+              description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line.",
+              "x-flatbuffer-type": "[OCMCovarianceBlock]"
             }
           },
           additionalProperties: false
@@ -467534,6 +480950,119 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
             DRAG_COEFF: {
               type: "number",
               "x-flatbuffer-type": "double"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata\nand data groups, in message order, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_EPOCH: {
+              type: "string",
+              description: "REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty\nwhen it is REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            COVARIANCE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:\nCX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,\nCX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.\nUnits km**2, km**2/s, km**2/s**2. Empty when the message states none.",
+              "x-flatbuffer-type": "[double]"
+            },
+            MANEUVERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPMManeuver"
+              },
+              description: "The message's maneuvers, in message order.",
+              "x-flatbuffer-type": "[OPMManeuver]"
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword of the message, in message order.",
+              "x-flatbuffer-type": "[OPMUserDefinedParameter]"
+            }
+          },
+          additionalProperties: false
+        },
+        OPMManeuver: {
+          type: "object",
+          description: "One maneuver of an OPM (CCSDS 502.0-B-3 Table 3-7).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this maneuver, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_EPOCH_IGNITION: {
+              type: "string",
+              description: "MAN_EPOCH_IGNITION: epoch of ignition.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_DURATION: {
+              type: "number",
+              description: "MAN_DURATION: duration of the burn in seconds; zero for an impulsive maneuver.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_DELTA_MASS: {
+              type: "number",
+              description: "MAN_DELTA_MASS: mass change during the maneuver in kg, negative or zero.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_REF_FRAME: {
+              type: "string",
+              description: "MAN_REF_FRAME: frame of MAN_DV_1..3 (for example RTN, TNW, or REF_FRAME's).",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_DV_1: {
+              type: "number",
+              description: "MAN_DV_1: first component of the velocity increment in km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_DV_2: {
+              type: "number",
+              description: "MAN_DV_2: second component of the velocity increment in km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_DV_3: {
+              type: "number",
+              description: "MAN_DV_3: third component of the velocity increment in km/s.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        OPMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OPM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+              "x-flatbuffer-type": "string"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -472161,7 +485690,492 @@ turned into a number.`,
             },
             COMMENT: {
               type: "string",
-              description: "Additional comments",
+              description: "COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and\ndata groups, in message order, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "The fields below, with the earlier ones that say so, are the keywords of\nCCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,\nNORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH\nNOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS\nWET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,\nREENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,\nSURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are\nnot keywords of the message.\nMESSAGE_ID: an identifier the originator makes unique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            CATALOG_NAME: {
+              type: "string",
+              description: "CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_OWNER: {
+              type: "string",
+              description: "OBJECT_OWNER.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_OPERATOR: {
+              type: "string",
+              description: "OBJECT_OPERATOR.",
+              "x-flatbuffer-type": "string"
+            },
+            CONTROLLED_REENTRY: {
+              $ref: "#/definitions/rdmControlledReentry",
+              description: "CONTROLLED_REENTRY: YES, NO or UNKNOWN.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                YES: {
+                  value: 1
+                },
+                NO: {
+                  value: 2
+                },
+                UNKNOWN: {
+                  value: 3
+                }
+              }
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the body being re-entered.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_TZERO: {
+              type: "string",
+              description: "EPOCH_TZERO: the epoch the message's relative times are measured from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME: {
+              type: "string",
+              description: "REF_FRAME: the frame of the state vector.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_EPOCH: {
+              type: "string",
+              description: "REF_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            EPHEMERIS_NAME: {
+              type: "string",
+              description: "EPHEMERIS_NAME.",
+              "x-flatbuffer-type": "string"
+            },
+            GRAVITY_MODEL: {
+              type: "string",
+              description: "GRAVITY_MODEL.",
+              "x-flatbuffer-type": "string"
+            },
+            ATMOSPHERIC_MODEL: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL.",
+              "x-flatbuffer-type": "string"
+            },
+            SOLAR_FLUX_PREDICTION: {
+              type: "string",
+              description: "SOLAR_FLUX_PREDICTION.",
+              "x-flatbuffer-type": "string"
+            },
+            N_BODY_PERTURBATIONS: {
+              type: "string",
+              description: "N_BODY_PERTURBATIONS.",
+              "x-flatbuffer-type": "string"
+            },
+            SOLAR_RAD_PRESSURE: {
+              type: "string",
+              description: "SOLAR_RAD_PRESSURE: a model name, or YES or NO.",
+              "x-flatbuffer-type": "string"
+            },
+            EARTH_TIDES: {
+              type: "string",
+              description: "EARTH_TIDES: a model name.",
+              "x-flatbuffer-type": "string"
+            },
+            INTRACK_THRUST: {
+              type: "string",
+              description: "INTRACK_THRUST: YES or NO.",
+              "x-flatbuffer-type": "string"
+            },
+            DRAG_PARAMETERS_SOURCE: {
+              type: "string",
+              description: "DRAG_PARAMETERS_SOURCE.",
+              "x-flatbuffer-type": "string"
+            },
+            DRAG_PARAMETERS_ALTITUDE: {
+              type: "number",
+              description: "DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REENTRY_UNCERTAINTY_METHOD: {
+              type: "string",
+              description: "REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.",
+              "x-flatbuffer-type": "string"
+            },
+            REENTRY_DISINTEGRATION: {
+              type: "string",
+              description: "REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACT_UNCERTAINTY_METHOD: {
+              type: "string",
+              description: "IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.",
+              "x-flatbuffer-type": "string"
+            },
+            PREVIOUS_MESSAGE_ID: {
+              type: "string",
+              description: "PREVIOUS_MESSAGE_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            NEXT_MESSAGE_EPOCH: {
+              type: "string",
+              description: "NEXT_MESSAGE_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            ORBIT_LIFETIME: {
+              type: "number",
+              description: "ORBIT_LIFETIME in days.",
+              "x-flatbuffer-type": "double"
+            },
+            ORBIT_LIFETIME_WINDOW_START: {
+              type: "number",
+              description: "ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ORBIT_LIFETIME_WINDOW_END: {
+              type: "number",
+              description: "ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REENTRY_WINDOW_START: {
+              type: "string",
+              description: "REENTRY_WINDOW_START.",
+              "x-flatbuffer-type": "string"
+            },
+            REENTRY_WINDOW_END: {
+              type: "string",
+              description: "REENTRY_WINDOW_END.",
+              "x-flatbuffer-type": "string"
+            },
+            ORBIT_LIFETIME_CONFIDENCE_LEVEL: {
+              type: "number",
+              description: "ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_IMPACT: {
+              type: "number",
+              description: "PROBABILITY_OF_IMPACT, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_BURN_UP: {
+              type: "number",
+              description: "PROBABILITY_OF_BURN_UP, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_BREAK_UP: {
+              type: "number",
+              description: "PROBABILITY_OF_BREAK_UP, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_LAND_IMPACT: {
+              type: "number",
+              description: "PROBABILITY_OF_LAND_IMPACT, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROBABILITY_OF_CASUALTY: {
+              type: "number",
+              description: "PROBABILITY_OF_CASUALTY, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NOMINAL_IMPACT_EPOCH: {
+              type: "string",
+              description: "NOMINAL_IMPACT_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACT_WINDOW_START: {
+              type: "string",
+              description: "IMPACT_WINDOW_START.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACT_WINDOW_END: {
+              type: "string",
+              description: "IMPACT_WINDOW_END.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACT_REF_FRAME: {
+              type: "string",
+              description: "IMPACT_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            NOMINAL_IMPACT_LON: {
+              type: "number",
+              description: "NOMINAL_IMPACT_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NOMINAL_IMPACT_LAT: {
+              type: "number",
+              description: "NOMINAL_IMPACT_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NOMINAL_IMPACT_ALT: {
+              type: "number",
+              description: "NOMINAL_IMPACT_ALT in metres, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_1_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_START_LON: {
+              type: "number",
+              description: "IMPACT_1_START_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_START_LAT: {
+              type: "number",
+              description: "IMPACT_1_START_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_STOP_LON: {
+              type: "number",
+              description: "IMPACT_1_STOP_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_1_STOP_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_1_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_1_CROSS_TRACK in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_2_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_START_LON: {
+              type: "number",
+              description: "IMPACT_2_START_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_START_LAT: {
+              type: "number",
+              description: "IMPACT_2_START_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_STOP_LON: {
+              type: "number",
+              description: "IMPACT_2_STOP_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_2_STOP_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_2_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_2_CROSS_TRACK in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_CONFIDENCE: {
+              type: "number",
+              description: "IMPACT_3_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_START_LON: {
+              type: "number",
+              description: "IMPACT_3_START_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_START_LAT: {
+              type: "number",
+              description: "IMPACT_3_START_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_STOP_LON: {
+              type: "number",
+              description: "IMPACT_3_STOP_LON in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_STOP_LAT: {
+              type: "number",
+              description: "IMPACT_3_STOP_LAT in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMPACT_3_CROSS_TRACK: {
+              type: "number",
+              description: "IMPACT_3_CROSS_TRACK in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME: the frame of COVARIANCE.",
+              "x-flatbuffer-type": "string"
+            },
+            COVARIANCE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Position/velocity covariance matrix at the state vector's epoch, 6x6 lower\ntriangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,\nCX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,\nCY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,\nCZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.",
+              "x-flatbuffer-type": "[double]"
+            },
+            DRY_MASS: {
+              type: "number",
+              description: "WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HAZARDOUS_SUBSTANCES: {
+              type: "string",
+              description: "HAZARDOUS_SUBSTANCES.",
+              "x-flatbuffer-type": "string"
+            },
+            SOLAR_RAD_COEFF: {
+              type: "number",
+              description: "SOLAR_RAD_COEFF, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DRAG_COEFF: {
+              type: "number",
+              description: "DRAG_COEFF, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            THRUST_ACCELERATION: {
+              type: "number",
+              description: "THRUST_ACCELERATION in m/s**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TIME_LASTOB_START: {
+              type: "string",
+              description: "TIME_LASTOB_START.",
+              "x-flatbuffer-type": "string"
+            },
+            TIME_LASTOB_END: {
+              type: "string",
+              description: "TIME_LASTOB_END.",
+              "x-flatbuffer-type": "string"
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE.",
+              "x-flatbuffer-type": "uint"
+            },
+            TRACKS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            RESIDUALS_ACCEPTED: {
+              type: "number",
+              description: "RESIDUALS_ACCEPTED in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            WEIGHTED_RMS: {
+              type: "number",
+              description: "WEIGHTED_RMS, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/RDMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED keyword of the message, in message order.",
+              "x-flatbuffer-type": "[RDMUserDefinedParameter]"
+            }
+          },
+          additionalProperties: false
+        },
+        RDMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+              "x-flatbuffer-type": "string"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written",
               "x-flatbuffer-type": "string"
             }
           },
@@ -521743,7 +535757,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             COMMENT: {
               type: "string",
-              description: "COMMENT (O)",
+              description: "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header.",
               "x-flatbuffer-type": "string"
             },
             EPOCH: {
@@ -521923,6 +535937,41 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "number",
               description: "USER_DEFINED_MICROSECONDS [O, units per ICD]",
               "x-flatbuffer-type": "double"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OMMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order.",
+              "x-flatbuffer-type": "[OMMUserDefinedParameter]"
+            }
+          },
+          additionalProperties: false
+        },
+        OMMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+              "x-flatbuffer-type": "string"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written, unit-less text",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -542446,6 +556495,20 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "CCSDS_AEM_XML",
             "CCSDS_TDM_KVN",
             "CCSDS_TDM_XML",
+            "CCSDS_OMM_KVN",
+            "CCSDS_OMM_XML",
+            "CCSDS_OPM_KVN",
+            "CCSDS_OPM_XML",
+            "CCSDS_OCM_KVN",
+            "CCSDS_OCM_XML",
+            "CCSDS_CDM_KVN",
+            "CCSDS_CDM_XML",
+            "CCSDS_APM_KVN",
+            "CCSDS_APM_XML",
+            "CCSDS_ACM_KVN",
+            "CCSDS_ACM_XML",
+            "CCSDS_RDM_KVN",
+            "CCSDS_RDM_XML",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -542501,6 +556564,62 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             CCSDS_TDM_XML: {
               value: 12,
               description: "CCSDS Tracking Data Message, XML."
+            },
+            CCSDS_OMM_KVN: {
+              value: 13,
+              description: "CCSDS Orbit Mean-Elements Message, keyword-value notation."
+            },
+            CCSDS_OMM_XML: {
+              value: 14,
+              description: "CCSDS Orbit Mean-Elements Message, XML."
+            },
+            CCSDS_OPM_KVN: {
+              value: 15,
+              description: "CCSDS Orbit Parameter Message, keyword-value notation."
+            },
+            CCSDS_OPM_XML: {
+              value: 16,
+              description: "CCSDS Orbit Parameter Message, XML."
+            },
+            CCSDS_OCM_KVN: {
+              value: 17,
+              description: "CCSDS Orbit Comprehensive Message, keyword-value notation."
+            },
+            CCSDS_OCM_XML: {
+              value: 18,
+              description: "CCSDS Orbit Comprehensive Message, XML."
+            },
+            CCSDS_CDM_KVN: {
+              value: 19,
+              description: "CCSDS Conjunction Data Message, keyword-value notation."
+            },
+            CCSDS_CDM_XML: {
+              value: 20,
+              description: "CCSDS Conjunction Data Message, XML."
+            },
+            CCSDS_APM_KVN: {
+              value: 21,
+              description: "CCSDS Attitude Parameter Message, keyword-value notation."
+            },
+            CCSDS_APM_XML: {
+              value: 22,
+              description: "CCSDS Attitude Parameter Message, XML."
+            },
+            CCSDS_ACM_KVN: {
+              value: 23,
+              description: "CCSDS Attitude Comprehensive Message, keyword-value notation."
+            },
+            CCSDS_ACM_XML: {
+              value: 24,
+              description: "CCSDS Attitude Comprehensive Message, XML."
+            },
+            CCSDS_RDM_KVN: {
+              value: 25,
+              description: "CCSDS Reentry Data Message, keyword-value notation."
+            },
+            CCSDS_RDM_XML: {
+              value: 26,
+              description: "CCSDS Reentry Data Message, XML."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -551959,6 +566078,62 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 CCSDS_TDM_XML: {
                   value: 12,
                   description: "CCSDS Tracking Data Message, XML."
+                },
+                CCSDS_OMM_KVN: {
+                  value: 13,
+                  description: "CCSDS Orbit Mean-Elements Message, keyword-value notation."
+                },
+                CCSDS_OMM_XML: {
+                  value: 14,
+                  description: "CCSDS Orbit Mean-Elements Message, XML."
+                },
+                CCSDS_OPM_KVN: {
+                  value: 15,
+                  description: "CCSDS Orbit Parameter Message, keyword-value notation."
+                },
+                CCSDS_OPM_XML: {
+                  value: 16,
+                  description: "CCSDS Orbit Parameter Message, XML."
+                },
+                CCSDS_OCM_KVN: {
+                  value: 17,
+                  description: "CCSDS Orbit Comprehensive Message, keyword-value notation."
+                },
+                CCSDS_OCM_XML: {
+                  value: 18,
+                  description: "CCSDS Orbit Comprehensive Message, XML."
+                },
+                CCSDS_CDM_KVN: {
+                  value: 19,
+                  description: "CCSDS Conjunction Data Message, keyword-value notation."
+                },
+                CCSDS_CDM_XML: {
+                  value: 20,
+                  description: "CCSDS Conjunction Data Message, XML."
+                },
+                CCSDS_APM_KVN: {
+                  value: 21,
+                  description: "CCSDS Attitude Parameter Message, keyword-value notation."
+                },
+                CCSDS_APM_XML: {
+                  value: 22,
+                  description: "CCSDS Attitude Parameter Message, XML."
+                },
+                CCSDS_ACM_KVN: {
+                  value: 23,
+                  description: "CCSDS Attitude Comprehensive Message, keyword-value notation."
+                },
+                CCSDS_ACM_XML: {
+                  value: 24,
+                  description: "CCSDS Attitude Comprehensive Message, XML."
+                },
+                CCSDS_RDM_KVN: {
+                  value: 25,
+                  description: "CCSDS Reentry Data Message, keyword-value notation."
+                },
+                CCSDS_RDM_XML: {
+                  value: 26,
+                  description: "CCSDS Reentry Data Message, XML."
                 },
                 PROVIDER_DEFINED: {
                   value: 255,
@@ -600754,6 +614929,20 @@ to the wallet, not to a published record. ABSENT from published records.`,
             "CCSDS_AEM_XML",
             "CCSDS_TDM_KVN",
             "CCSDS_TDM_XML",
+            "CCSDS_OMM_KVN",
+            "CCSDS_OMM_XML",
+            "CCSDS_OPM_KVN",
+            "CCSDS_OPM_XML",
+            "CCSDS_OCM_KVN",
+            "CCSDS_OCM_XML",
+            "CCSDS_CDM_KVN",
+            "CCSDS_CDM_XML",
+            "CCSDS_APM_KVN",
+            "CCSDS_APM_XML",
+            "CCSDS_ACM_KVN",
+            "CCSDS_ACM_XML",
+            "CCSDS_RDM_KVN",
+            "CCSDS_RDM_XML",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -600809,6 +614998,62 @@ to the wallet, not to a published record. ABSENT from published records.`,
             CCSDS_TDM_XML: {
               value: 12,
               description: "CCSDS Tracking Data Message, XML."
+            },
+            CCSDS_OMM_KVN: {
+              value: 13,
+              description: "CCSDS Orbit Mean-Elements Message, keyword-value notation."
+            },
+            CCSDS_OMM_XML: {
+              value: 14,
+              description: "CCSDS Orbit Mean-Elements Message, XML."
+            },
+            CCSDS_OPM_KVN: {
+              value: 15,
+              description: "CCSDS Orbit Parameter Message, keyword-value notation."
+            },
+            CCSDS_OPM_XML: {
+              value: 16,
+              description: "CCSDS Orbit Parameter Message, XML."
+            },
+            CCSDS_OCM_KVN: {
+              value: 17,
+              description: "CCSDS Orbit Comprehensive Message, keyword-value notation."
+            },
+            CCSDS_OCM_XML: {
+              value: 18,
+              description: "CCSDS Orbit Comprehensive Message, XML."
+            },
+            CCSDS_CDM_KVN: {
+              value: 19,
+              description: "CCSDS Conjunction Data Message, keyword-value notation."
+            },
+            CCSDS_CDM_XML: {
+              value: 20,
+              description: "CCSDS Conjunction Data Message, XML."
+            },
+            CCSDS_APM_KVN: {
+              value: 21,
+              description: "CCSDS Attitude Parameter Message, keyword-value notation."
+            },
+            CCSDS_APM_XML: {
+              value: 22,
+              description: "CCSDS Attitude Parameter Message, XML."
+            },
+            CCSDS_ACM_KVN: {
+              value: 23,
+              description: "CCSDS Attitude Comprehensive Message, keyword-value notation."
+            },
+            CCSDS_ACM_XML: {
+              value: 24,
+              description: "CCSDS Attitude Comprehensive Message, XML."
+            },
+            CCSDS_RDM_KVN: {
+              value: 25,
+              description: "CCSDS Reentry Data Message, keyword-value notation."
+            },
+            CCSDS_RDM_XML: {
+              value: 26,
+              description: "CCSDS Reentry Data Message, XML."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -601772,6 +616017,31 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             DEFAULT: {
               value: 1
+            }
+          }
+        },
+        cdmManeuverable: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "YES",
+            "NO",
+            "NOT_APPLICABLE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            YES: {
+              value: 1
+            },
+            NO: {
+              value: 2
+            },
+            NOT_APPLICABLE: {
+              value: 3
             }
           }
         },
@@ -610963,6 +625233,62 @@ to the wallet, not to a published record. ABSENT from published records.`,
                   value: 12,
                   description: "CCSDS Tracking Data Message, XML."
                 },
+                CCSDS_OMM_KVN: {
+                  value: 13,
+                  description: "CCSDS Orbit Mean-Elements Message, keyword-value notation."
+                },
+                CCSDS_OMM_XML: {
+                  value: 14,
+                  description: "CCSDS Orbit Mean-Elements Message, XML."
+                },
+                CCSDS_OPM_KVN: {
+                  value: 15,
+                  description: "CCSDS Orbit Parameter Message, keyword-value notation."
+                },
+                CCSDS_OPM_XML: {
+                  value: 16,
+                  description: "CCSDS Orbit Parameter Message, XML."
+                },
+                CCSDS_OCM_KVN: {
+                  value: 17,
+                  description: "CCSDS Orbit Comprehensive Message, keyword-value notation."
+                },
+                CCSDS_OCM_XML: {
+                  value: 18,
+                  description: "CCSDS Orbit Comprehensive Message, XML."
+                },
+                CCSDS_CDM_KVN: {
+                  value: 19,
+                  description: "CCSDS Conjunction Data Message, keyword-value notation."
+                },
+                CCSDS_CDM_XML: {
+                  value: 20,
+                  description: "CCSDS Conjunction Data Message, XML."
+                },
+                CCSDS_APM_KVN: {
+                  value: 21,
+                  description: "CCSDS Attitude Parameter Message, keyword-value notation."
+                },
+                CCSDS_APM_XML: {
+                  value: 22,
+                  description: "CCSDS Attitude Parameter Message, XML."
+                },
+                CCSDS_ACM_KVN: {
+                  value: 23,
+                  description: "CCSDS Attitude Comprehensive Message, keyword-value notation."
+                },
+                CCSDS_ACM_XML: {
+                  value: 24,
+                  description: "CCSDS Attitude Comprehensive Message, XML."
+                },
+                CCSDS_RDM_KVN: {
+                  value: 25,
+                  description: "CCSDS Reentry Data Message, keyword-value notation."
+                },
+                CCSDS_RDM_XML: {
+                  value: 26,
+                  description: "CCSDS Reentry Data Message, XML."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -613868,7 +628194,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
             },
             COMMENT: {
               type: "string",
-              description: "COMMENT (O)",
+              description: "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header.",
               "x-flatbuffer-type": "string"
             },
             EPOCH: {
@@ -614048,6 +628374,41 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               type: "number",
               description: "USER_DEFINED_MICROSECONDS [O, units per ICD]",
               "x-flatbuffer-type": "double"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OMMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order.",
+              "x-flatbuffer-type": "[OMMUserDefinedParameter]"
+            }
+          },
+          additionalProperties: false
+        },
+        OMMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+              "x-flatbuffer-type": "string"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written, unit-less text",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -614280,6 +628641,16 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               type: "number",
               description: "Covariance matrix [6,6] km**2/s**2",
               "x-flatbuffer-type": "double"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME.",
+              "x-flatbuffer-type": "RFM"
             }
           },
           additionalProperties: false
@@ -614527,6 +628898,16 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: "Array of ephemeris data blocks",
               "x-flatbuffer-type": "[ephemerisDataBlock]"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -615084,6 +629465,191 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               type: "number",
               description: "Uncertainty in the solar radiation pressure coefficient.",
               "x-flatbuffer-type": "double"
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_MODEL: {
+              type: "string",
+              description: "BUS_MODEL: the object's bus model.",
+              "x-flatbuffer-type": "string"
+            },
+            DOCKED_WITH: {
+              type: "string",
+              description: "DOCKED_WITH: comma-separated names of the objects it is docked with.",
+              "x-flatbuffer-type": "string"
+            },
+            INITIAL_WET_MASS: {
+              type: "number",
+              description: "INITIAL_WET_MASS in kg, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OEB_PARENT_FRAME: {
+              type: "string",
+              description: "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.",
+              "x-flatbuffer-type": "string"
+            },
+            OEB_PARENT_FRAME_EPOCH: {
+              type: "string",
+              description: "OEB_PARENT_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_MIN_FOR_PC: {
+              type: "number",
+              description: "AREA_MIN_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_MAX_FOR_PC: {
+              type: "number",
+              description: "AREA_MAX_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_TYP_FOR_PC: {
+              type: "number",
+              description: "AREA_TYP_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS_MIN: {
+              type: "number",
+              description: "RCS_MIN in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS_MAX: {
+              type: "number",
+              description: "RCS_MAX in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_ABSOLUTE: {
+              type: "number",
+              description: "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT_MIN: {
+              type: "number",
+              description: "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT: {
+              type: "number",
+              description: "VM_APPARENT: apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT_MAX: {
+              type: "number",
+              description: "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REFLECTANCE: {
+              type: "number",
+              description: "REFLECTANCE: typical reflectivity, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_CONTROL_MODE: {
+              type: "string",
+              description: "ATT_CONTROL_MODE.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_ACTUATOR_TYPE: {
+              type: "string",
+              description: "ATT_ACTUATOR_TYPE.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_KNOWLEDGE: {
+              type: "number",
+              description: "ATT_KNOWLEDGE in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_CONTROL: {
+              type: "number",
+              description: "ATT_CONTROL in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_POINTING: {
+              type: "number",
+              description: "ATT_POINTING in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AVG_MANEUVER_FREQ: {
+              type: "number",
+              description: "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MAX_THRUST: {
+              type: "number",
+              description: "MAX_THRUST in N, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DV_BOL: {
+              type: "number",
+              description: "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DV_REMAINING: {
+              type: "number",
+              description: "DV_REMAINING in km/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXX: {
+              type: "number",
+              description: "IXX in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IYY: {
+              type: "number",
+              description: "IYY in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXY: {
+              type: "number",
+              description: "IXY in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -615200,6 +629766,108 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               type: "number",
               description: "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).",
               "x-flatbuffer-type": "double"
+            },
+            ATMOSPHERIC_MODEL_NAME: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one.",
+              "x-flatbuffer-type": "string"
+            },
+            EQUATORIAL_RADIUS: {
+              type: "number",
+              description: "EQUATORIAL_RADIUS in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTRAL_BODY_ROTATION: {
+              type: "number",
+              description: "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBLATE_FLATTENING: {
+              type: "number",
+              description: "OBLATE_FLATTENING, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REDUCTION_THEORY: {
+              type: "string",
+              description: "REDUCTION_THEORY.",
+              "x-flatbuffer-type": "string"
+            },
+            ALBEDO_GRID_SIZE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "ALBEDO_GRID_SIZE.",
+              "x-flatbuffer-type": "uint"
+            },
+            SHADOW_MODEL: {
+              type: "string",
+              description: "SHADOW_MODEL.",
+              "x-flatbuffer-type": "string"
+            },
+            SHADOW_BODIES: {
+              type: "string",
+              description: "SHADOW_BODIES.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_DATA_SOURCE: {
+              type: "string",
+              description: "SW_DATA_SOURCE: the space weather data source.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_DATA_EPOCH: {
+              type: "string",
+              description: "SW_DATA_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_INTERP_METHOD: {
+              type: "string",
+              description: "SW_INTERP_METHOD.",
+              "x-flatbuffer-type": "string"
+            },
+            FIXED_GEOMAG_DST: {
+              type: "number",
+              description: "FIXED_GEOMAG_DST in nT, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_M10P7: {
+              type: "number",
+              description: "FIXED_M10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_M10P7_MEAN: {
+              type: "number",
+              description: "FIXED_M10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_S10P7: {
+              type: "number",
+              description: "FIXED_S10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_S10P7_MEAN: {
+              type: "number",
+              description: "FIXED_S10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_Y10P7: {
+              type: "number",
+              description: "FIXED_Y10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_Y10P7_MEAN: {
+              type: "number",
+              description: "FIXED_Y10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -615620,6 +630288,364 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
+            },
+            DAYS_SINCE_FIRST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DAYS_SINCE_LAST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_LAST_OBS, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            MAXIMUM_OBS_GAP: {
+              type: "number",
+              description: "MAXIMUM_OBS_GAP in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGMAJ: {
+              type: "number",
+              description: "OD_EPOCH_EIGMAJ in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGINT: {
+              type: "number",
+              description: "OD_EPOCH_EIGINT in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGMIN: {
+              type: "number",
+              description: "OD_EPOCH_EIGMIN in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_MAX_PRED_EIGMAJ: {
+              type: "number",
+              description: "OD_MAX_PRED_EIGMAJ in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_MIN_PRED_EIGMIN: {
+              type: "number",
+              description: "OD_MIN_PRED_EIGMIN in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_CONFIDENCE: {
+              type: "number",
+              description: "OD_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            GDOP: {
+              type: "number",
+              description: "GDOP, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SOLVE_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SOLVE_N: the number of solved-for states.",
+              "x-flatbuffer-type": "uint"
+            },
+            SOLVE_STATES: {
+              type: "string",
+              description: "SOLVE_STATES: the solved-for states, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            CONSIDER_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CONSIDER_N: the number of consider parameters.",
+              "x-flatbuffer-type": "uint"
+            },
+            CONSIDER_PARAMS: {
+              type: "string",
+              description: "CONSIDER_PARAMS: the consider parameters, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            SENSORS_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSORS_N: the number of sensors.",
+              "x-flatbuffer-type": "uint"
+            },
+            SENSORS: {
+              type: "string",
+              description: "SENSORS: the sensors, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            COMMENT: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.",
+              "x-flatbuffer-type": "[string]"
+            }
+          },
+          additionalProperties: false
+        },
+        OCMTrajectoryBlock: {
+          type: "object",
+          description: "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_ID: {
+              type: "string",
+              description: "TRAJ_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_PREV_ID: {
+              type: "string",
+              description: "TRAJ_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_NEXT_ID: {
+              type: "string",
+              description: "TRAJ_NEXT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_BASIS: {
+              type: "string",
+              description: "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_BASIS_ID: {
+              type: "string",
+              description: "TRAJ_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            INTERPOLATION: {
+              type: "string",
+              description: "INTERPOLATION: the recommended interpolation method.",
+              "x-flatbuffer-type": "string"
+            },
+            INTERPOLATION_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "INTERPOLATION_DEGREE.",
+              "x-flatbuffer-type": "uint"
+            },
+            PROPAGATOR: {
+              type: "string",
+              description: "PROPAGATOR.",
+              "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_REF_FRAME: {
+              type: "string",
+              description: "TRAJ_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_FRAME_EPOCH: {
+              type: "string",
+              description: "TRAJ_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            USEABLE_START_TIME: {
+              type: "string",
+              description: "USEABLE_START_TIME.",
+              "x-flatbuffer-type": "string"
+            },
+            USEABLE_STOP_TIME: {
+              type: "string",
+              description: "USEABLE_STOP_TIME.",
+              "x-flatbuffer-type": "string"
+            },
+            ORB_REVNUM: {
+              type: "number",
+              description: "ORB_REVNUM, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ORB_REVNUM_BASIS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.",
+              "x-flatbuffer-type": "int",
+              "x-flatbuffer-default": "-1"
+            },
+            TRAJ_TYPE: {
+              type: "string",
+              description: "TRAJ_TYPE as written, for example CARTPV.",
+              "x-flatbuffer-type": "string"
+            },
+            ORB_AVERAGING: {
+              type: "string",
+              description: "ORB_AVERAGING.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_UNITS: {
+              type: "string",
+              description: "TRAJ_UNITS.",
+              "x-flatbuffer-type": "string"
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written.",
+              "x-flatbuffer-type": "[string]"
+            }
+          },
+          additionalProperties: false
+        },
+        OCMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_NEXT_ID: {
+              type: "string",
+              description: "COV_NEXT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_FRAME_EPOCH: {
+              type: "string",
+              description: "COV_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_SCALE_MIN: {
+              type: "number",
+              description: "COV_SCALE_MIN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_SCALE_MAX: {
+              type: "number",
+              description: "COV_SCALE_MAX, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_CONFIDENCE: {
+              type: "number",
+              description: "COV_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE as written, for example CARTPV.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ORDERING: {
+              $ref: "#/definitions/covarianceOrdering",
+              description: "COV_ORDERING.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                LTM: {
+                  value: 0,
+                  description: "Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values."
+                },
+                UTM: {
+                  value: 1,
+                  description: "Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values."
+                },
+                FULL: {
+                  value: 2,
+                  description: "The whole matrix row by row: N*N values."
+                },
+                LTMWCC: {
+                  value: 3,
+                  description: "The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places above the diagonal hold the correlation coefficients (covariance over the product of standard deviations)."
+                },
+                UTMWCC: {
+                  value: 4,
+                  description: "The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places below the diagonal hold the correlation coefficients."
+                }
+              },
+              "x-flatbuffer-default": "LTM"
+            },
+            COV_UNITS: {
+              type: "string",
+              description: "COV_UNITS.",
+              "x-flatbuffer-type": "string"
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written.",
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -615907,6 +630933,22 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.`,
               },
               description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
               "x-flatbuffer-type": "[string]"
+            },
+            TRAJECTORY_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMTrajectoryBlock"
+              },
+              description: "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states.",
+              "x-flatbuffer-type": "[OCMTrajectoryBlock]"
+            },
+            COVARIANCE_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMCovarianceBlock"
+              },
+              description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line.",
+              "x-flatbuffer-type": "[OCMCovarianceBlock]"
             }
           },
           additionalProperties: false
@@ -616508,13 +631550,48 @@ to the wallet, not to a published record. ABSENT from published records.`,
               },
               description: "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]",
               "x-flatbuffer-type": "[double]"
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,\nas written. A numeric designator is also OBJECT.NORAD_CAT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            CATALOG_NAME: {
+              type: "string",
+              description: "CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.",
+              "x-flatbuffer-type": "string"
+            },
+            MANEUVERABLE: {
+              $ref: "#/definitions/cdmManeuverable",
+              description: "MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the\nsame fact as a flag, true for YES.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                YES: {
+                  value: 1
+                },
+                NO: {
+                  value: 2
+                },
+                NOT_APPLICABLE: {
+                  value: 3
+                }
+              }
+            },
+            CD_AREA_OVER_MASS: {
+              type: "number",
+              description: "CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.",
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
         },
         CDM: {
           type: "object",
-          description: "Conjunction Data Message",
+          description: "Conjunction Data Message\n\nUnits of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,\nSCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part\nof each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and\nkm**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives\nMISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of\nCOVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust\nterms) are held as the message states them.",
           properties: {
             CCSDS_CDM_VERS: {
               type: "number",
@@ -616669,6 +631746,11 @@ to the wallet, not to a published record. ABSENT from published records.`,
               $ref: "#/definitions/PNM",
               description: "Data Source for the positional information for Object 2",
               "x-flatbuffer-type": "PNM"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the message header and of its relative metadata and data\n(CCSDS 508.0-B-1), in message order, joined by a line feed.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -625389,7 +640471,7 @@ assumptions".`,
             },
             COMMENT: {
               type: "string",
-              description: "COMMENT (O)",
+              description: "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header.",
               "x-flatbuffer-type": "string"
             },
             EPOCH: {
@@ -625569,6 +640651,41 @@ assumptions".`,
               type: "number",
               description: "USER_DEFINED_MICROSECONDS [O, units per ICD]",
               "x-flatbuffer-type": "double"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OMMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order.",
+              "x-flatbuffer-type": "[OMMUserDefinedParameter]"
+            }
+          },
+          additionalProperties: false
+        },
+        OMMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+              "x-flatbuffer-type": "string"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written, unit-less text",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -652287,6 +667404,191 @@ to the wallet, not to a published record. ABSENT from published records.`,
               type: "number",
               description: "Uncertainty in the solar radiation pressure coefficient.",
               "x-flatbuffer-type": "double"
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_MODEL: {
+              type: "string",
+              description: "BUS_MODEL: the object's bus model.",
+              "x-flatbuffer-type": "string"
+            },
+            DOCKED_WITH: {
+              type: "string",
+              description: "DOCKED_WITH: comma-separated names of the objects it is docked with.",
+              "x-flatbuffer-type": "string"
+            },
+            INITIAL_WET_MASS: {
+              type: "number",
+              description: "INITIAL_WET_MASS in kg, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OEB_PARENT_FRAME: {
+              type: "string",
+              description: "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.",
+              "x-flatbuffer-type": "string"
+            },
+            OEB_PARENT_FRAME_EPOCH: {
+              type: "string",
+              description: "OEB_PARENT_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_MIN_FOR_PC: {
+              type: "number",
+              description: "AREA_MIN_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_MAX_FOR_PC: {
+              type: "number",
+              description: "AREA_MAX_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_TYP_FOR_PC: {
+              type: "number",
+              description: "AREA_TYP_FOR_PC in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS: {
+              type: "number",
+              description: "RCS in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS_MIN: {
+              type: "number",
+              description: "RCS_MIN in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RCS_MAX: {
+              type: "number",
+              description: "RCS_MAX in m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_ABSOLUTE: {
+              type: "number",
+              description: "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT_MIN: {
+              type: "number",
+              description: "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT: {
+              type: "number",
+              description: "VM_APPARENT: apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            VM_APPARENT_MAX: {
+              type: "number",
+              description: "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REFLECTANCE: {
+              type: "number",
+              description: "REFLECTANCE: typical reflectivity, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_CONTROL_MODE: {
+              type: "string",
+              description: "ATT_CONTROL_MODE.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_ACTUATOR_TYPE: {
+              type: "string",
+              description: "ATT_ACTUATOR_TYPE.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_KNOWLEDGE: {
+              type: "number",
+              description: "ATT_KNOWLEDGE in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_CONTROL: {
+              type: "number",
+              description: "ATT_CONTROL in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_POINTING: {
+              type: "number",
+              description: "ATT_POINTING in degrees, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AVG_MANEUVER_FREQ: {
+              type: "number",
+              description: "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MAX_THRUST: {
+              type: "number",
+              description: "MAX_THRUST in N, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DV_BOL: {
+              type: "number",
+              description: "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DV_REMAINING: {
+              type: "number",
+              description: "DV_REMAINING in km/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXX: {
+              type: "number",
+              description: "IXX in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IYY: {
+              type: "number",
+              description: "IYY in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IZZ: {
+              type: "number",
+              description: "IZZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXY: {
+              type: "number",
+              description: "IXY in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IXZ: {
+              type: "number",
+              description: "IXZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IYZ: {
+              type: "number",
+              description: "IYZ in kg*m**2, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -652403,6 +667705,108 @@ to the wallet, not to a published record. ABSENT from published records.`,
               type: "number",
               description: "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).",
               "x-flatbuffer-type": "double"
+            },
+            ATMOSPHERIC_MODEL_NAME: {
+              type: "string",
+              description: "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one.",
+              "x-flatbuffer-type": "string"
+            },
+            EQUATORIAL_RADIUS: {
+              type: "number",
+              description: "EQUATORIAL_RADIUS in km, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTRAL_BODY_ROTATION: {
+              type: "number",
+              description: "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBLATE_FLATTENING: {
+              type: "number",
+              description: "OBLATE_FLATTENING, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REDUCTION_THEORY: {
+              type: "string",
+              description: "REDUCTION_THEORY.",
+              "x-flatbuffer-type": "string"
+            },
+            ALBEDO_GRID_SIZE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "ALBEDO_GRID_SIZE.",
+              "x-flatbuffer-type": "uint"
+            },
+            SHADOW_MODEL: {
+              type: "string",
+              description: "SHADOW_MODEL.",
+              "x-flatbuffer-type": "string"
+            },
+            SHADOW_BODIES: {
+              type: "string",
+              description: "SHADOW_BODIES.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_DATA_SOURCE: {
+              type: "string",
+              description: "SW_DATA_SOURCE: the space weather data source.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_DATA_EPOCH: {
+              type: "string",
+              description: "SW_DATA_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            SW_INTERP_METHOD: {
+              type: "string",
+              description: "SW_INTERP_METHOD.",
+              "x-flatbuffer-type": "string"
+            },
+            FIXED_GEOMAG_DST: {
+              type: "number",
+              description: "FIXED_GEOMAG_DST in nT, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_M10P7: {
+              type: "number",
+              description: "FIXED_M10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_M10P7_MEAN: {
+              type: "number",
+              description: "FIXED_M10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_S10P7: {
+              type: "number",
+              description: "FIXED_S10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_S10P7_MEAN: {
+              type: "number",
+              description: "FIXED_S10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_Y10P7: {
+              type: "number",
+              description: "FIXED_Y10P7, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            FIXED_Y10P7_MEAN: {
+              type: "number",
+              description: "FIXED_Y10P7_MEAN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -652823,6 +668227,364 @@ to the wallet, not to a published record. ABSENT from published records.`,
               },
               description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
+            },
+            DAYS_SINCE_FIRST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DAYS_SINCE_LAST_OBS: {
+              type: "number",
+              description: "DAYS_SINCE_LAST_OBS, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RECOMMENDED_OD_SPAN: {
+              type: "number",
+              description: "RECOMMENDED_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "ACTUAL_OD_SPAN in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OBS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            TRACKS_AVAILABLE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.",
+              "x-flatbuffer-type": "uint"
+            },
+            MAXIMUM_OBS_GAP: {
+              type: "number",
+              description: "MAXIMUM_OBS_GAP in days, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGMAJ: {
+              type: "number",
+              description: "OD_EPOCH_EIGMAJ in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGINT: {
+              type: "number",
+              description: "OD_EPOCH_EIGINT in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_EPOCH_EIGMIN: {
+              type: "number",
+              description: "OD_EPOCH_EIGMIN in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_MAX_PRED_EIGMAJ: {
+              type: "number",
+              description: "OD_MAX_PRED_EIGMAJ in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_MIN_PRED_EIGMIN: {
+              type: "number",
+              description: "OD_MIN_PRED_EIGMIN in m, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            OD_CONFIDENCE: {
+              type: "number",
+              description: "OD_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            GDOP: {
+              type: "number",
+              description: "GDOP, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SOLVE_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SOLVE_N: the number of solved-for states.",
+              "x-flatbuffer-type": "uint"
+            },
+            SOLVE_STATES: {
+              type: "string",
+              description: "SOLVE_STATES: the solved-for states, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            CONSIDER_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CONSIDER_N: the number of consider parameters.",
+              "x-flatbuffer-type": "uint"
+            },
+            CONSIDER_PARAMS: {
+              type: "string",
+              description: "CONSIDER_PARAMS: the consider parameters, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            SENSORS_N: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSORS_N: the number of sensors.",
+              "x-flatbuffer-type": "uint"
+            },
+            SENSORS: {
+              type: "string",
+              description: "SENSORS: the sensors, as written.",
+              "x-flatbuffer-type": "string"
+            },
+            COMMENT: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.",
+              "x-flatbuffer-type": "[string]"
+            }
+          },
+          additionalProperties: false
+        },
+        OCMTrajectoryBlock: {
+          type: "object",
+          description: "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_ID: {
+              type: "string",
+              description: "TRAJ_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_PREV_ID: {
+              type: "string",
+              description: "TRAJ_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_NEXT_ID: {
+              type: "string",
+              description: "TRAJ_NEXT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_BASIS: {
+              type: "string",
+              description: "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_BASIS_ID: {
+              type: "string",
+              description: "TRAJ_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            INTERPOLATION: {
+              type: "string",
+              description: "INTERPOLATION: the recommended interpolation method.",
+              "x-flatbuffer-type": "string"
+            },
+            INTERPOLATION_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "INTERPOLATION_DEGREE.",
+              "x-flatbuffer-type": "uint"
+            },
+            PROPAGATOR: {
+              type: "string",
+              description: "PROPAGATOR.",
+              "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_REF_FRAME: {
+              type: "string",
+              description: "TRAJ_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_FRAME_EPOCH: {
+              type: "string",
+              description: "TRAJ_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            USEABLE_START_TIME: {
+              type: "string",
+              description: "USEABLE_START_TIME.",
+              "x-flatbuffer-type": "string"
+            },
+            USEABLE_STOP_TIME: {
+              type: "string",
+              description: "USEABLE_STOP_TIME.",
+              "x-flatbuffer-type": "string"
+            },
+            ORB_REVNUM: {
+              type: "number",
+              description: "ORB_REVNUM, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ORB_REVNUM_BASIS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.",
+              "x-flatbuffer-type": "int",
+              "x-flatbuffer-default": "-1"
+            },
+            TRAJ_TYPE: {
+              type: "string",
+              description: "TRAJ_TYPE as written, for example CARTPV.",
+              "x-flatbuffer-type": "string"
+            },
+            ORB_AVERAGING: {
+              type: "string",
+              description: "ORB_AVERAGING.",
+              "x-flatbuffer-type": "string"
+            },
+            TRAJ_UNITS: {
+              type: "string",
+              description: "TRAJ_UNITS.",
+              "x-flatbuffer-type": "string"
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written.",
+              "x-flatbuffer-type": "[string]"
+            }
+          },
+          additionalProperties: false
+        },
+        OCMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_NEXT_ID: {
+              type: "string",
+              description: "COV_NEXT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_FRAME_EPOCH: {
+              type: "string",
+              description: "COV_FRAME_EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_SCALE_MIN: {
+              type: "number",
+              description: "COV_SCALE_MIN, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_SCALE_MAX: {
+              type: "number",
+              description: "COV_SCALE_MAX, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_CONFIDENCE: {
+              type: "number",
+              description: "COV_CONFIDENCE in percent, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE as written, for example CARTPV.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ORDERING: {
+              $ref: "#/definitions/covarianceOrdering",
+              description: "COV_ORDERING.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                LTM: {
+                  value: 0,
+                  description: "Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values."
+                },
+                UTM: {
+                  value: 1,
+                  description: "Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values."
+                },
+                FULL: {
+                  value: 2,
+                  description: "The whole matrix row by row: N*N values."
+                },
+                LTMWCC: {
+                  value: 3,
+                  description: "The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places above the diagonal hold the correlation coefficients (covariance over the product of standard deviations)."
+                },
+                UTMWCC: {
+                  value: 4,
+                  description: "The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places below the diagonal hold the correlation coefficients."
+                }
+              },
+              "x-flatbuffer-default": "LTM"
+            },
+            COV_UNITS: {
+              type: "string",
+              description: "COV_UNITS.",
+              "x-flatbuffer-type": "string"
+            },
+            LINES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The data lines, as written.",
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -653110,6 +668872,22 @@ to the wallet, not to a published record. ABSENT from published records.`,
               },
               description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
               "x-flatbuffer-type": "[string]"
+            },
+            TRAJECTORY_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMTrajectoryBlock"
+              },
+              description: "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states.",
+              "x-flatbuffer-type": "[OCMTrajectoryBlock]"
+            },
+            COVARIANCE_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OCMCovarianceBlock"
+              },
+              description: "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line.",
+              "x-flatbuffer-type": "[OCMCovarianceBlock]"
             }
           },
           additionalProperties: false
@@ -671005,6 +686783,11 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "number",
               description: "Product of inertia YZ in kg*m^2",
               "x-flatbuffer-type": "double"
+            },
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),\njoined by a line feed.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -671183,7 +686966,492 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             COMMENT: {
               type: "string",
-              description: "Additional comments",
+              description: "COMMENT lines of the message header, metadata and user-defined data\n(CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,\ncovariance, maneuver or determination block's own comments stay with it.",
+              "x-flatbuffer-type": "string"
+            },
+            CLASSIFICATION: {
+              type: "string",
+              description: "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_ID: {
+              type: "string",
+              description: "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_DESIGNATOR: {
+              type: "string",
+              description: "OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.\nOBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH\nabove its EPOCH_TZERO, the epoch every relative time is measured from.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR_POC: {
+              type: "string",
+              description: "ORIGINATOR_POC: point of contact at the originator.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR_POSITION: {
+              type: "string",
+              description: "ORIGINATOR_POSITION: position of the point of contact.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR_PHONE: {
+              type: "string",
+              description: "ORIGINATOR_PHONE: telephone number of the point of contact.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR_EMAIL: {
+              type: "string",
+              description: "ORIGINATOR_EMAIL: email address of the point of contact.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR_ADDRESS: {
+              type: "string",
+              description: "ORIGINATOR_ADDRESS: postal address of the point of contact.",
+              "x-flatbuffer-type": "string"
+            },
+            ODM_MSG_LINK: {
+              type: "string",
+              description: "ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.",
+              "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "CENTER_NAME: the orbit center, when the message states one.",
+              "x-flatbuffer-type": "string"
+            },
+            ACM_DATA_ELEMENTS: {
+              type: "string",
+              description: "ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.",
+              "x-flatbuffer-type": "string"
+            },
+            START_TIME: {
+              type: "string",
+              description: "START_TIME: start of the total time span the message covers.",
+              "x-flatbuffer-type": "string"
+            },
+            STOP_TIME: {
+              type: "string",
+              description: "STOP_TIME: end of the total time span the message covers.",
+              "x-flatbuffer-type": "string"
+            },
+            TAIMUTC_AT_TZERO: {
+              type: "number",
+              description: "TAIMUTC_AT_TZERO in seconds, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            NEXT_LEAP_EPOCH: {
+              type: "string",
+              description: "NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.",
+              "x-flatbuffer-type": "string"
+            },
+            NEXT_LEAP_TAIMUTC: {
+              type: "number",
+              description: "NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ATT_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMAttitudeBlock"
+              },
+              description: "Attitude state time histories (ATT_START blocks), in message order.",
+              "x-flatbuffer-type": "[ACMAttitudeBlock]"
+            },
+            COV_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMCovarianceBlock"
+              },
+              description: "Covariance time histories (COV_START blocks), in message order.",
+              "x-flatbuffer-type": "[ACMCovarianceBlock]"
+            },
+            MAN_BLOCKS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMManeuverBlock"
+              },
+              description: "Maneuver specifications (MAN_START blocks), in message order.",
+              "x-flatbuffer-type": "[ACMManeuverBlock]"
+            },
+            DETERMINATION: {
+              $ref: "#/definitions/ACMDetermination",
+              description: "The attitude determination data (AD_START block), when the message has them.",
+              "x-flatbuffer-type": "ACMDetermination"
+            },
+            USER_DEFINED_PARAMETERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMUserDefinedParameter"
+              },
+              description: "Every USER_DEFINED parameter of the message, in message order.",
+              "x-flatbuffer-type": "[ACMUserDefinedParameter]"
+            }
+          },
+          additionalProperties: false
+        },
+        ACMAttitudeBlock: {
+          type: "object",
+          description: "One attitude state time history of an ACM (CCSDS 504.0-B-2 Table 5-4): the\nblock's keywords, then its data lines as TIMES (the first column of each line,\nelapsed seconds from EPOCH_TZERO or an epoch, as written) and VALUES (the other\ncolumns, NUMBER_STATES per line, row by row).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_ID: {
+              type: "string",
+              description: "ATT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_PREV_ID: {
+              type: "string",
+              description: "ATT_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_BASIS: {
+              type: "string",
+              description: "ATT_BASIS: PREDICTED, DETERMINED_GND, DETERMINED_OBC or SIMULATED.",
+              "x-flatbuffer-type": "string"
+            },
+            ATT_BASIS_ID: {
+              type: "string",
+              description: "ATT_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A: the frame the transformation starts from.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B: the frame the transformation ends in.",
+              "x-flatbuffer-type": "string"
+            },
+            NUMBER_STATES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "NUMBER_STATES: the data columns on each line (attitude, then rate).",
+              "x-flatbuffer-type": "uint"
+            },
+            ATT_TYPE: {
+              type: "string",
+              description: "ATT_TYPE: QUATERNION, EULER_ANGLES, DCM or ANGVEL.",
+              "x-flatbuffer-type": "string"
+            },
+            EULER_ROT_SEQ: {
+              type: "string",
+              description: "EULER_ROT_SEQ, when ATT_TYPE is EULER_ANGLES.",
+              "x-flatbuffer-type": "string"
+            },
+            RATE_TYPE: {
+              type: "string",
+              description: "RATE_TYPE: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS, when the lines carry rates.",
+              "x-flatbuffer-type": "string"
+            },
+            TIMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The first column of each data line, as written.",
+              "x-flatbuffer-type": "[string]"
+            },
+            VALUES: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The other columns of the data lines, NUMBER_STATES per line.",
+              "x-flatbuffer-type": "[double]"
+            }
+          },
+          additionalProperties: false
+        },
+        ACMCovarianceBlock: {
+          type: "object",
+          description: "One covariance time history of an ACM (Table 5-6): the diagonal terms of the\ncovariance on each line, as TIMES and VALUES like ACMAttitudeBlock; every line\nhas the same number of values.",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_ID: {
+              type: "string",
+              description: "COV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_PREV_ID: {
+              type: "string",
+              description: "COV_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS: {
+              type: "string",
+              description: "COV_BASIS.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_BASIS_ID: {
+              type: "string",
+              description: "COV_BASIS_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REF_FRAME: {
+              type: "string",
+              description: "COV_REF_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE: ANGLE, ANGLE_GYROBIAS, ANGLE_ANGVEL, QUATERNION, QUATERNION_GYROBIAS\nor QUATERNION_ANGVEL.",
+              "x-flatbuffer-type": "string"
+            },
+            TIMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "The first column of each data line, as written.",
+              "x-flatbuffer-type": "[string]"
+            },
+            VALUES: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The diagonal terms of each line, row by row.",
+              "x-flatbuffer-type": "[double]"
+            }
+          },
+          additionalProperties: false
+        },
+        ACMManeuverBlock: {
+          type: "object",
+          description: "One maneuver specification of an ACM (Table 5-7).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_ID: {
+              type: "string",
+              description: "MAN_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_PREV_ID: {
+              type: "string",
+              description: "MAN_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_PURPOSE: {
+              type: "string",
+              description: "MAN_PURPOSE: for example MOM_DESAT.",
+              "x-flatbuffer-type": "string"
+            },
+            MAN_BEGIN_TIME: {
+              type: "number",
+              description: "MAN_BEGIN_TIME in seconds from EPOCH_TZERO.",
+              "x-flatbuffer-type": "double"
+            },
+            MAN_END_TIME: {
+              type: "number",
+              description: "MAN_END_TIME in seconds from EPOCH_TZERO; NaN when the message states\nMAN_DURATION instead (a message states one of the two).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MAN_DURATION: {
+              type: "number",
+              description: "MAN_DURATION in seconds; NaN when the message states MAN_END_TIME instead.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ACTUATOR_USED: {
+              type: "string",
+              description: "ACTUATOR_USED.",
+              "x-flatbuffer-type": "string"
+            },
+            TARGET_MOMENTUM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "TARGET_MOMENTUM: three components in N*m*s; empty when not stated.",
+              "x-flatbuffer-type": "[double]"
+            },
+            TARGET_MOM_FRAME: {
+              type: "string",
+              description: "TARGET_MOM_FRAME.",
+              "x-flatbuffer-type": "string"
+            },
+            TARGET_ATTITUDE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "TARGET_ATTITUDE: the target attitude components; empty when not stated.",
+              "x-flatbuffer-type": "[double]"
+            },
+            TARGET_SPINRATE: {
+              type: "number",
+              description: "TARGET_SPINRATE in deg/s, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
+          additionalProperties: false
+        },
+        ACMDetermination: {
+          type: "object",
+          description: "The attitude determination data of an ACM (Table 5-8).",
+          properties: {
+            COMMENT: {
+              type: "string",
+              description: "COMMENT lines of this block, joined by a line feed.",
+              "x-flatbuffer-type": "string"
+            },
+            AD_ID: {
+              type: "string",
+              description: "AD_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            AD_PREV_ID: {
+              type: "string",
+              description: "AD_PREV_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            AD_METHOD: {
+              type: "string",
+              description: "AD_METHOD: for example EKF, TRIAD or QUEST.",
+              "x-flatbuffer-type": "string"
+            },
+            ATTITUDE_SOURCE: {
+              type: "string",
+              description: "ATTITUDE_SOURCE.",
+              "x-flatbuffer-type": "string"
+            },
+            NUMBER_STATES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "NUMBER_STATES.",
+              "x-flatbuffer-type": "uint"
+            },
+            ATTITUDE_STATES: {
+              type: "string",
+              description: "ATTITUDE_STATES: QUATERNION, EULER_ANGLES, DCM or ANGVEL.",
+              "x-flatbuffer-type": "string"
+            },
+            EULER_ROT_SEQ: {
+              type: "string",
+              description: "EULER_ROT_SEQ.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_TYPE: {
+              type: "string",
+              description: "COV_TYPE.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_A: {
+              type: "string",
+              description: "REF_FRAME_A.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME_B: {
+              type: "string",
+              description: "REF_FRAME_B.",
+              "x-flatbuffer-type": "string"
+            },
+            RATE_STATES: {
+              type: "string",
+              description: "RATE_STATES: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS.",
+              "x-flatbuffer-type": "string"
+            },
+            SIGMA_U: {
+              type: "number",
+              description: "SIGMA_U in deg/s**1.5, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SIGMA_V: {
+              type: "number",
+              description: "SIGMA_V in deg/s**0.5, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RATE_PROCESS_NOISE_STDDEV: {
+              type: "number",
+              description: "RATE_PROCESS_NOISE_STDDEV in deg/s**1.5, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SENSORS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACMSensor"
+              },
+              description: "The sensors, in message order.",
+              "x-flatbuffer-type": "[ACMSensor]"
+            }
+          },
+          additionalProperties: false
+        },
+        ACMSensor: {
+          type: "object",
+          description: "One sensor block of an ACM's attitude determination data.",
+          properties: {
+            SENSOR_NUMBER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "SENSOR_NUMBER; it need not be sequential.",
+              "x-flatbuffer-type": "uint"
+            },
+            SENSOR_USED: {
+              type: "string",
+              description: "SENSOR_USED: for example AST, DSS or IMU.",
+              "x-flatbuffer-type": "string"
+            },
+            NUMBER_SENSOR_NOISE_COVARIANCE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "NUMBER_SENSOR_NOISE_COVARIANCE.",
+              "x-flatbuffer-type": "uint"
+            },
+            SENSOR_NOISE_STDDEV: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "SENSOR_NOISE_STDDEV in deg: one value per noise covariance.",
+              "x-flatbuffer-type": "[double]"
+            },
+            SENSOR_FREQUENCY: {
+              type: "number",
+              description: "SENSOR_FREQUENCY in Hz, NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
+          additionalProperties: false
+        },
+        ACMUserDefinedParameter: {
+          type: "object",
+          description: "One USER_DEFINED_x keyword of an ACM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+          properties: {
+            PARAM_NAME: {
+              type: "string",
+              description: "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+              "x-flatbuffer-type": "string"
+            },
+            PARAM_VALUE: {
+              type: "string",
+              description: "The value as written",
               "x-flatbuffer-type": "string"
             }
           },
@@ -674439,7 +690707,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// node_modules/flatc-wasm/dist/flatc-wasm.js
+// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

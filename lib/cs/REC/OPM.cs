@@ -101,6 +101,69 @@ public struct OPM : IFlatbufferObject
   public double SOLAR_RAD_COEFF { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double DRAG_AREA { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double DRAG_COEFF { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+  /// and data groups, in message order, joined by a line feed.
+  public string COMMENT { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOMMENTBytes() { return __p.__vector_as_span<byte>(60, 1); }
+#else
+  public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(60); }
+#endif
+  public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(60); }
+  /// CLASSIFICATION of the message: the optional header keyword stating its
+  /// security classification or handling caveat.
+  public string CLASSIFICATION { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCLASSIFICATIONBytes() { return __p.__vector_as_span<byte>(62, 1); }
+#else
+  public ArraySegment<byte>? GetCLASSIFICATIONBytes() { return __p.__vector_as_arraysegment(62); }
+#endif
+  public byte[] GetCLASSIFICATIONArray() { return __p.__vector_as_array<byte>(62); }
+  /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  /// unique for this message.
+  public string MESSAGE_ID { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMESSAGE_IDBytes() { return __p.__vector_as_span<byte>(64, 1); }
+#else
+  public ArraySegment<byte>? GetMESSAGE_IDBytes() { return __p.__vector_as_arraysegment(64); }
+#endif
+  public byte[] GetMESSAGE_IDArray() { return __p.__vector_as_array<byte>(64); }
+  /// REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+  public string REF_FRAME_EPOCH { get { int o = __p.__offset(66); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREF_FRAME_EPOCHBytes() { return __p.__vector_as_span<byte>(66, 1); }
+#else
+  public ArraySegment<byte>? GetREF_FRAME_EPOCHBytes() { return __p.__vector_as_arraysegment(66); }
+#endif
+  public byte[] GetREF_FRAME_EPOCHArray() { return __p.__vector_as_array<byte>(66); }
+  /// COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+  /// when it is REF_FRAME.
+  public string COV_REF_FRAME { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOV_REF_FRAMEBytes() { return __p.__vector_as_span<byte>(68, 1); }
+#else
+  public ArraySegment<byte>? GetCOV_REF_FRAMEBytes() { return __p.__vector_as_arraysegment(68); }
+#endif
+  public byte[] GetCOV_REF_FRAMEArray() { return __p.__vector_as_array<byte>(68); }
+  /// Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+  /// CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+  /// CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  /// CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+  /// Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+  public double COVARIANCE(int j) { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int COVARIANCELength { get { int o = __p.__offset(70); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetCOVARIANCEBytes() { return __p.__vector_as_span<double>(70, 8); }
+#else
+  public ArraySegment<byte>? GetCOVARIANCEBytes() { return __p.__vector_as_arraysegment(70); }
+#endif
+  public double[] GetCOVARIANCEArray() { return __p.__vector_as_array<double>(70); }
+  /// The message's maneuvers, in message order.
+  public OPMManeuver? MANEUVERS(int j) { int o = __p.__offset(72); return o != 0 ? (OPMManeuver?)(new OPMManeuver()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int MANEUVERSLength { get { int o = __p.__offset(72); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Every USER_DEFINED_x keyword of the message, in message order.
+  public OPMUserDefinedParameter? USER_DEFINED_PARAMETERS(int j) { int o = __p.__offset(74); return o != 0 ? (OPMUserDefinedParameter?)(new OPMUserDefinedParameter()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int USER_DEFINED_PARAMETERSLength { get { int o = __p.__offset(74); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<OPM> CreateOPM(FlatBufferBuilder builder,
       StringOffset CCSDS_OPM_VERSOffset = default(StringOffset),
@@ -130,8 +193,16 @@ public struct OPM : IFlatbufferObject
       double SOLAR_RAD_AREA = 0.0,
       double SOLAR_RAD_COEFF = 0.0,
       double DRAG_AREA = 0.0,
-      double DRAG_COEFF = 0.0) {
-    builder.StartTable(28);
+      double DRAG_COEFF = 0.0,
+      StringOffset COMMENTOffset = default(StringOffset),
+      StringOffset CLASSIFICATIONOffset = default(StringOffset),
+      StringOffset MESSAGE_IDOffset = default(StringOffset),
+      StringOffset REF_FRAME_EPOCHOffset = default(StringOffset),
+      StringOffset COV_REF_FRAMEOffset = default(StringOffset),
+      VectorOffset COVARIANCEOffset = default(VectorOffset),
+      VectorOffset MANEUVERSOffset = default(VectorOffset),
+      VectorOffset USER_DEFINED_PARAMETERSOffset = default(VectorOffset)) {
+    builder.StartTable(36);
     OPM.AddDRAG_COEFF(builder, DRAG_COEFF);
     OPM.AddDRAG_AREA(builder, DRAG_AREA);
     OPM.AddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF);
@@ -151,6 +222,14 @@ public struct OPM : IFlatbufferObject
     OPM.AddZ(builder, Z);
     OPM.AddY(builder, Y);
     OPM.AddX(builder, X);
+    OPM.AddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERSOffset);
+    OPM.AddMANEUVERS(builder, MANEUVERSOffset);
+    OPM.AddCOVARIANCE(builder, COVARIANCEOffset);
+    OPM.AddCOV_REF_FRAME(builder, COV_REF_FRAMEOffset);
+    OPM.AddREF_FRAME_EPOCH(builder, REF_FRAME_EPOCHOffset);
+    OPM.AddMESSAGE_ID(builder, MESSAGE_IDOffset);
+    OPM.AddCLASSIFICATION(builder, CLASSIFICATIONOffset);
+    OPM.AddCOMMENT(builder, COMMENTOffset);
     OPM.AddEPOCH(builder, EPOCHOffset);
     OPM.AddTIME_SYSTEM(builder, TIME_SYSTEMOffset);
     OPM.AddREF_FRAME(builder, REF_FRAMEOffset);
@@ -163,7 +242,7 @@ public struct OPM : IFlatbufferObject
     return OPM.EndOPM(builder);
   }
 
-  public static void StartOPM(FlatBufferBuilder builder) { builder.StartTable(28); }
+  public static void StartOPM(FlatBufferBuilder builder) { builder.StartTable(36); }
   public static void AddCCSDS_OPM_VERS(FlatBufferBuilder builder, StringOffset CCSDS_OPM_VERSOffset) { builder.AddOffset(0, CCSDS_OPM_VERSOffset.Value, 0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -192,6 +271,29 @@ public struct OPM : IFlatbufferObject
   public static void AddSOLAR_RAD_COEFF(FlatBufferBuilder builder, double SOLAR_RAD_COEFF) { builder.AddDouble(25, SOLAR_RAD_COEFF, 0.0); }
   public static void AddDRAG_AREA(FlatBufferBuilder builder, double DRAG_AREA) { builder.AddDouble(26, DRAG_AREA, 0.0); }
   public static void AddDRAG_COEFF(FlatBufferBuilder builder, double DRAG_COEFF) { builder.AddDouble(27, DRAG_COEFF, 0.0); }
+  public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(28, COMMENTOffset.Value, 0); }
+  public static void AddCLASSIFICATION(FlatBufferBuilder builder, StringOffset CLASSIFICATIONOffset) { builder.AddOffset(29, CLASSIFICATIONOffset.Value, 0); }
+  public static void AddMESSAGE_ID(FlatBufferBuilder builder, StringOffset MESSAGE_IDOffset) { builder.AddOffset(30, MESSAGE_IDOffset.Value, 0); }
+  public static void AddREF_FRAME_EPOCH(FlatBufferBuilder builder, StringOffset REF_FRAME_EPOCHOffset) { builder.AddOffset(31, REF_FRAME_EPOCHOffset.Value, 0); }
+  public static void AddCOV_REF_FRAME(FlatBufferBuilder builder, StringOffset COV_REF_FRAMEOffset) { builder.AddOffset(32, COV_REF_FRAMEOffset.Value, 0); }
+  public static void AddCOVARIANCE(FlatBufferBuilder builder, VectorOffset COVARIANCEOffset) { builder.AddOffset(33, COVARIANCEOffset.Value, 0); }
+  public static VectorOffset CreateCOVARIANCEVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOVARIANCEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddMANEUVERS(FlatBufferBuilder builder, VectorOffset MANEUVERSOffset) { builder.AddOffset(34, MANEUVERSOffset.Value, 0); }
+  public static VectorOffset CreateMANEUVERSVector(FlatBufferBuilder builder, Offset<OPMManeuver>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateMANEUVERSVectorBlock(FlatBufferBuilder builder, Offset<OPMManeuver>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMANEUVERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OPMManeuver>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMANEUVERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OPMManeuver>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartMANEUVERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddUSER_DEFINED_PARAMETERS(FlatBufferBuilder builder, VectorOffset USER_DEFINED_PARAMETERSOffset) { builder.AddOffset(35, USER_DEFINED_PARAMETERSOffset.Value, 0); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder builder, Offset<OPMUserDefinedParameter>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, Offset<OPMUserDefinedParameter>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OPMUserDefinedParameter>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OPMUserDefinedParameter>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<OPM> EndOPM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OPM>(o);
@@ -232,6 +334,17 @@ public struct OPM : IFlatbufferObject
     _o.SOLAR_RAD_COEFF = this.SOLAR_RAD_COEFF;
     _o.DRAG_AREA = this.DRAG_AREA;
     _o.DRAG_COEFF = this.DRAG_COEFF;
+    _o.COMMENT = this.COMMENT;
+    _o.CLASSIFICATION = this.CLASSIFICATION;
+    _o.MESSAGE_ID = this.MESSAGE_ID;
+    _o.REF_FRAME_EPOCH = this.REF_FRAME_EPOCH;
+    _o.COV_REF_FRAME = this.COV_REF_FRAME;
+    _o.COVARIANCE = new List<double>();
+    for (var _j = 0; _j < this.COVARIANCELength; ++_j) {_o.COVARIANCE.Add(this.COVARIANCE(_j));}
+    _o.MANEUVERS = new List<OPMManeuverT>();
+    for (var _j = 0; _j < this.MANEUVERSLength; ++_j) {_o.MANEUVERS.Add(this.MANEUVERS(_j).HasValue ? this.MANEUVERS(_j).Value.UnPack() : null);}
+    _o.USER_DEFINED_PARAMETERS = new List<OPMUserDefinedParameterT>();
+    for (var _j = 0; _j < this.USER_DEFINED_PARAMETERSLength; ++_j) {_o.USER_DEFINED_PARAMETERS.Add(this.USER_DEFINED_PARAMETERS(_j).HasValue ? this.USER_DEFINED_PARAMETERS(_j).Value.UnPack() : null);}
   }
   public static Offset<OPM> Pack(FlatBufferBuilder builder, OPMT _o) {
     if (_o == null) return default(Offset<OPM>);
@@ -244,6 +357,28 @@ public struct OPM : IFlatbufferObject
     var _REF_FRAME = _o.REF_FRAME == null ? default(StringOffset) : builder.CreateString(_o.REF_FRAME);
     var _TIME_SYSTEM = _o.TIME_SYSTEM == null ? default(StringOffset) : builder.CreateString(_o.TIME_SYSTEM);
     var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
+    var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
+    var _CLASSIFICATION = _o.CLASSIFICATION == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION);
+    var _MESSAGE_ID = _o.MESSAGE_ID == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE_ID);
+    var _REF_FRAME_EPOCH = _o.REF_FRAME_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.REF_FRAME_EPOCH);
+    var _COV_REF_FRAME = _o.COV_REF_FRAME == null ? default(StringOffset) : builder.CreateString(_o.COV_REF_FRAME);
+    var _COVARIANCE = default(VectorOffset);
+    if (_o.COVARIANCE != null) {
+      var __COVARIANCE = _o.COVARIANCE.ToArray();
+      _COVARIANCE = CreateCOVARIANCEVector(builder, __COVARIANCE);
+    }
+    var _MANEUVERS = default(VectorOffset);
+    if (_o.MANEUVERS != null) {
+      var __MANEUVERS = new Offset<OPMManeuver>[_o.MANEUVERS.Count];
+      for (var _j = 0; _j < __MANEUVERS.Length; ++_j) { __MANEUVERS[_j] = OPMManeuver.Pack(builder, _o.MANEUVERS[_j]); }
+      _MANEUVERS = CreateMANEUVERSVector(builder, __MANEUVERS);
+    }
+    var _USER_DEFINED_PARAMETERS = default(VectorOffset);
+    if (_o.USER_DEFINED_PARAMETERS != null) {
+      var __USER_DEFINED_PARAMETERS = new Offset<OPMUserDefinedParameter>[_o.USER_DEFINED_PARAMETERS.Count];
+      for (var _j = 0; _j < __USER_DEFINED_PARAMETERS.Length; ++_j) { __USER_DEFINED_PARAMETERS[_j] = OPMUserDefinedParameter.Pack(builder, _o.USER_DEFINED_PARAMETERS[_j]); }
+      _USER_DEFINED_PARAMETERS = CreateUSER_DEFINED_PARAMETERSVector(builder, __USER_DEFINED_PARAMETERS);
+    }
     return CreateOPM(
       builder,
       _CCSDS_OPM_VERS,
@@ -273,7 +408,15 @@ public struct OPM : IFlatbufferObject
       _o.SOLAR_RAD_AREA,
       _o.SOLAR_RAD_COEFF,
       _o.DRAG_AREA,
-      _o.DRAG_COEFF);
+      _o.DRAG_COEFF,
+      _COMMENT,
+      _CLASSIFICATION,
+      _MESSAGE_ID,
+      _REF_FRAME_EPOCH,
+      _COV_REF_FRAME,
+      _COVARIANCE,
+      _MANEUVERS,
+      _USER_DEFINED_PARAMETERS);
   }
 }
 
@@ -307,6 +450,14 @@ public class OPMT
   public double SOLAR_RAD_COEFF { get; set; }
   public double DRAG_AREA { get; set; }
   public double DRAG_COEFF { get; set; }
+  public string COMMENT { get; set; }
+  public string CLASSIFICATION { get; set; }
+  public string MESSAGE_ID { get; set; }
+  public string REF_FRAME_EPOCH { get; set; }
+  public string COV_REF_FRAME { get; set; }
+  public List<double> COVARIANCE { get; set; }
+  public List<OPMManeuverT> MANEUVERS { get; set; }
+  public List<OPMUserDefinedParameterT> USER_DEFINED_PARAMETERS { get; set; }
 
   public OPMT() {
     this.CCSDS_OPM_VERS = null;
@@ -337,6 +488,14 @@ public class OPMT
     this.SOLAR_RAD_COEFF = 0.0;
     this.DRAG_AREA = 0.0;
     this.DRAG_COEFF = 0.0;
+    this.COMMENT = null;
+    this.CLASSIFICATION = null;
+    this.MESSAGE_ID = null;
+    this.REF_FRAME_EPOCH = null;
+    this.COV_REF_FRAME = null;
+    this.COVARIANCE = null;
+    this.MANEUVERS = null;
+    this.USER_DEFINED_PARAMETERS = null;
   }
   public static OPMT DeserializeFromBinary(byte[] fbBuffer) {
     return OPM.GetRootAsOPM(new ByteBuffer(fbBuffer)).UnPack();
@@ -382,6 +541,14 @@ static public class OPMVerify
       && verifier.VerifyField(tablePos, 54 /*SOLAR_RAD_COEFF*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 56 /*DRAG_AREA*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 58 /*DRAG_COEFF*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 60 /*COMMENT*/, false)
+      && verifier.VerifyString(tablePos, 62 /*CLASSIFICATION*/, false)
+      && verifier.VerifyString(tablePos, 64 /*MESSAGE_ID*/, false)
+      && verifier.VerifyString(tablePos, 66 /*REF_FRAME_EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 68 /*COV_REF_FRAME*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 70 /*COVARIANCE*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 72 /*MANEUVERS*/, OPMManeuverVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 74 /*USER_DEFINED_PARAMETERS*/, OPMUserDefinedParameterVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

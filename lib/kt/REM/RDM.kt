@@ -312,7 +312,8 @@ class RDM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Additional comments
+     * COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+     * data groups, in message order, joined by a line feed.
      */
     val comment : String?
         get() {
@@ -325,6 +326,873 @@ class RDM : Table() {
         }
     val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
     fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
+    /**
+     * The fields below, with the earlier ones that say so, are the keywords of
+     * CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+     * NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+     * NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+     * WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+     * REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+     * SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+     * not keywords of the message.
+     * MESSAGE_ID: an identifier the originator makes unique for this message.
+     */
+    val messageId : String?
+        get() {
+            val o = __offset(58)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val messageIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
+    fun messageIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
+    /**
+     * CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+     */
+    val catalogName : String?
+        get() {
+            val o = __offset(60)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val catalogNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun catalogNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+     */
+    val objectDesignator : String?
+        get() {
+            val o = __offset(62)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val objectDesignatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun objectDesignatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * OBJECT_OWNER.
+     */
+    val objectOwner : String?
+        get() {
+            val o = __offset(64)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val objectOwnerAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(64, 1)
+    fun objectOwnerInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 64, 1)
+    /**
+     * OBJECT_OPERATOR.
+     */
+    val objectOperator : String?
+        get() {
+            val o = __offset(66)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val objectOperatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(66, 1)
+    fun objectOperatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 66, 1)
+    /**
+     * CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+     */
+    val controlledReentry : Byte
+        get() {
+            val o = __offset(68)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * CENTER_NAME: the body being re-entered.
+     */
+    val centerName : String?
+        get() {
+            val o = __offset(70)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val centerNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(70, 1)
+    fun centerNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 70, 1)
+    /**
+     * EPOCH_TZERO: the epoch the message's relative times are measured from.
+     */
+    val epochTzero : String?
+        get() {
+            val o = __offset(72)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val epochTzeroAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(72, 1)
+    fun epochTzeroInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 72, 1)
+    /**
+     * REF_FRAME: the frame of the state vector.
+     */
+    val refFrame : String?
+        get() {
+            val o = __offset(74)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val refFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(74, 1)
+    fun refFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 74, 1)
+    /**
+     * REF_FRAME_EPOCH.
+     */
+    val refFrameEpoch : String?
+        get() {
+            val o = __offset(76)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val refFrameEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(76, 1)
+    fun refFrameEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 76, 1)
+    /**
+     * EPHEMERIS_NAME.
+     */
+    val ephemerisName : String?
+        get() {
+            val o = __offset(78)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val ephemerisNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(78, 1)
+    fun ephemerisNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 78, 1)
+    /**
+     * GRAVITY_MODEL.
+     */
+    val gravityModel : String?
+        get() {
+            val o = __offset(80)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val gravityModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(80, 1)
+    fun gravityModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 80, 1)
+    /**
+     * ATMOSPHERIC_MODEL.
+     */
+    val atmosphericModel : String?
+        get() {
+            val o = __offset(82)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val atmosphericModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(82, 1)
+    fun atmosphericModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 82, 1)
+    /**
+     * SOLAR_FLUX_PREDICTION.
+     */
+    val solarFluxPrediction : String?
+        get() {
+            val o = __offset(84)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val solarFluxPredictionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(84, 1)
+    fun solarFluxPredictionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 84, 1)
+    /**
+     * N_BODY_PERTURBATIONS.
+     */
+    val nBodyPerturbations : String?
+        get() {
+            val o = __offset(86)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val nBodyPerturbationsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(86, 1)
+    fun nBodyPerturbationsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 86, 1)
+    /**
+     * SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+     */
+    val solarRadPressure : String?
+        get() {
+            val o = __offset(88)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val solarRadPressureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(88, 1)
+    fun solarRadPressureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 88, 1)
+    /**
+     * EARTH_TIDES: a model name.
+     */
+    val earthTides : String?
+        get() {
+            val o = __offset(90)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val earthTidesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(90, 1)
+    fun earthTidesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 90, 1)
+    /**
+     * INTRACK_THRUST: YES or NO.
+     */
+    val intrackThrust : String?
+        get() {
+            val o = __offset(92)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val intrackThrustAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(92, 1)
+    fun intrackThrustInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 92, 1)
+    /**
+     * DRAG_PARAMETERS_SOURCE.
+     */
+    val dragParametersSource : String?
+        get() {
+            val o = __offset(94)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val dragParametersSourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(94, 1)
+    fun dragParametersSourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 94, 1)
+    /**
+     * DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+     */
+    val dragParametersAltitude : Double
+        get() {
+            val o = __offset(96)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+     */
+    val reentryUncertaintyMethod : String?
+        get() {
+            val o = __offset(98)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val reentryUncertaintyMethodAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(98, 1)
+    fun reentryUncertaintyMethodInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 98, 1)
+    /**
+     * REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+     */
+    val reentryDisintegration : String?
+        get() {
+            val o = __offset(100)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val reentryDisintegrationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(100, 1)
+    fun reentryDisintegrationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 100, 1)
+    /**
+     * IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+     */
+    val impactUncertaintyMethod : String?
+        get() {
+            val o = __offset(102)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val impactUncertaintyMethodAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(102, 1)
+    fun impactUncertaintyMethodInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 102, 1)
+    /**
+     * PREVIOUS_MESSAGE_ID.
+     */
+    val previousMessageId : String?
+        get() {
+            val o = __offset(104)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val previousMessageIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(104, 1)
+    fun previousMessageIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 104, 1)
+    /**
+     * NEXT_MESSAGE_EPOCH.
+     */
+    val nextMessageEpoch : String?
+        get() {
+            val o = __offset(106)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val nextMessageEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(106, 1)
+    fun nextMessageEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 106, 1)
+    /**
+     * ORBIT_LIFETIME in days.
+     */
+    val orbitLifetime : Double
+        get() {
+            val o = __offset(108)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+     */
+    val orbitLifetimeWindowStart : Double
+        get() {
+            val o = __offset(110)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+     */
+    val orbitLifetimeWindowEnd : Double
+        get() {
+            val o = __offset(112)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * REENTRY_WINDOW_START.
+     */
+    val reentryWindowStart : String?
+        get() {
+            val o = __offset(114)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val reentryWindowStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(114, 1)
+    fun reentryWindowStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 114, 1)
+    /**
+     * REENTRY_WINDOW_END.
+     */
+    val reentryWindowEnd : String?
+        get() {
+            val o = __offset(116)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val reentryWindowEndAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(116, 1)
+    fun reentryWindowEndInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 116, 1)
+    /**
+     * ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+     */
+    val orbitLifetimeConfidenceLevel : Double
+        get() {
+            val o = __offset(118)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * PROBABILITY_OF_IMPACT, NaN when not stated.
+     */
+    val probabilityOfImpact : Double
+        get() {
+            val o = __offset(120)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * PROBABILITY_OF_BURN_UP, NaN when not stated.
+     */
+    val probabilityOfBurnUp : Double
+        get() {
+            val o = __offset(122)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * PROBABILITY_OF_BREAK_UP, NaN when not stated.
+     */
+    val probabilityOfBreakUp : Double
+        get() {
+            val o = __offset(124)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+     */
+    val probabilityOfLandImpact : Double
+        get() {
+            val o = __offset(126)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * PROBABILITY_OF_CASUALTY, NaN when not stated.
+     */
+    val probabilityOfCasualty : Double
+        get() {
+            val o = __offset(128)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * NOMINAL_IMPACT_EPOCH.
+     */
+    val nominalImpactEpoch : String?
+        get() {
+            val o = __offset(130)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val nominalImpactEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(130, 1)
+    fun nominalImpactEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 130, 1)
+    /**
+     * IMPACT_WINDOW_START.
+     */
+    val impactWindowStart : String?
+        get() {
+            val o = __offset(132)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val impactWindowStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(132, 1)
+    fun impactWindowStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 132, 1)
+    /**
+     * IMPACT_WINDOW_END.
+     */
+    val impactWindowEnd : String?
+        get() {
+            val o = __offset(134)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val impactWindowEndAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(134, 1)
+    fun impactWindowEndInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 134, 1)
+    /**
+     * IMPACT_REF_FRAME.
+     */
+    val impactRefFrame : String?
+        get() {
+            val o = __offset(136)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val impactRefFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(136, 1)
+    fun impactRefFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 136, 1)
+    /**
+     * NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+     */
+    val nominalImpactLon : Double
+        get() {
+            val o = __offset(138)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+     */
+    val nominalImpactLat : Double
+        get() {
+            val o = __offset(140)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+     */
+    val nominalImpactAlt : Double
+        get() {
+            val o = __offset(142)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+     */
+    val impact1Confidence : Double
+        get() {
+            val o = __offset(144)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_1_START_LON in degrees, NaN when not stated.
+     */
+    val impact1StartLon : Double
+        get() {
+            val o = __offset(146)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_1_START_LAT in degrees, NaN when not stated.
+     */
+    val impact1StartLat : Double
+        get() {
+            val o = __offset(148)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_1_STOP_LON in degrees, NaN when not stated.
+     */
+    val impact1StopLon : Double
+        get() {
+            val o = __offset(150)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+     */
+    val impact1StopLat : Double
+        get() {
+            val o = __offset(152)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+     */
+    val impact1CrossTrack : Double
+        get() {
+            val o = __offset(154)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+     */
+    val impact2Confidence : Double
+        get() {
+            val o = __offset(156)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_2_START_LON in degrees, NaN when not stated.
+     */
+    val impact2StartLon : Double
+        get() {
+            val o = __offset(158)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_2_START_LAT in degrees, NaN when not stated.
+     */
+    val impact2StartLat : Double
+        get() {
+            val o = __offset(160)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_2_STOP_LON in degrees, NaN when not stated.
+     */
+    val impact2StopLon : Double
+        get() {
+            val o = __offset(162)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+     */
+    val impact2StopLat : Double
+        get() {
+            val o = __offset(164)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+     */
+    val impact2CrossTrack : Double
+        get() {
+            val o = __offset(166)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+     */
+    val impact3Confidence : Double
+        get() {
+            val o = __offset(168)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_3_START_LON in degrees, NaN when not stated.
+     */
+    val impact3StartLon : Double
+        get() {
+            val o = __offset(170)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_3_START_LAT in degrees, NaN when not stated.
+     */
+    val impact3StartLat : Double
+        get() {
+            val o = __offset(172)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_3_STOP_LON in degrees, NaN when not stated.
+     */
+    val impact3StopLon : Double
+        get() {
+            val o = __offset(174)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+     */
+    val impact3StopLat : Double
+        get() {
+            val o = __offset(176)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+     */
+    val impact3CrossTrack : Double
+        get() {
+            val o = __offset(178)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * COV_REF_FRAME: the frame of COVARIANCE.
+     */
+    val covRefFrame : String?
+        get() {
+            val o = __offset(180)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val covRefFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(180, 1)
+    fun covRefFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 180, 1)
+    /**
+     * Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+     * triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+     * CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+     * CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+     * CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+     */
+    fun covariance(j: Int) : Double {
+        val o = __offset(182)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val covarianceLength : Int
+        get() {
+            val o = __offset(182); return if (o != 0) __vector_len(o) else 0
+        }
+    val covarianceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(182, 8)
+    fun covarianceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 182, 8)
+    /**
+     * WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+     */
+    val dryMass : Double
+        get() {
+            val o = __offset(184)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * HAZARDOUS_SUBSTANCES.
+     */
+    val hazardousSubstances : String?
+        get() {
+            val o = __offset(186)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val hazardousSubstancesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(186, 1)
+    fun hazardousSubstancesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 186, 1)
+    /**
+     * SOLAR_RAD_COEFF, NaN when not stated.
+     */
+    val solarRadCoeff : Double
+        get() {
+            val o = __offset(188)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * DRAG_COEFF, NaN when not stated.
+     */
+    val dragCoeff : Double
+        get() {
+            val o = __offset(190)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * RCS in m**2, NaN when not stated.
+     */
+    val rcs : Double
+        get() {
+            val o = __offset(192)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * THRUST_ACCELERATION in m/s**2, NaN when not stated.
+     */
+    val thrustAcceleration : Double
+        get() {
+            val o = __offset(194)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * TIME_LASTOB_START.
+     */
+    val timeLastobStart : String?
+        get() {
+            val o = __offset(196)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val timeLastobStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(196, 1)
+    fun timeLastobStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 196, 1)
+    /**
+     * TIME_LASTOB_END.
+     */
+    val timeLastobEnd : String?
+        get() {
+            val o = __offset(198)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val timeLastobEndAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(198, 1)
+    fun timeLastobEndInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 198, 1)
+    /**
+     * RECOMMENDED_OD_SPAN in days, NaN when not stated.
+     */
+    val recommendedOdSpan : Double
+        get() {
+            val o = __offset(200)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * ACTUAL_OD_SPAN in days, NaN when not stated.
+     */
+    val actualOdSpan : Double
+        get() {
+            val o = __offset(202)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * OBS_AVAILABLE.
+     */
+    val obsAvailable : UInt
+        get() {
+            val o = __offset(204)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * OBS_USED.
+     */
+    val obsUsed : UInt
+        get() {
+            val o = __offset(206)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * TRACKS_AVAILABLE.
+     */
+    val tracksAvailable : UInt
+        get() {
+            val o = __offset(208)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * TRACKS_USED.
+     */
+    val tracksUsed : UInt
+        get() {
+            val o = __offset(210)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * RESIDUALS_ACCEPTED in percent, NaN when not stated.
+     */
+    val residualsAccepted : Double
+        get() {
+            val o = __offset(212)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * WEIGHTED_RMS, NaN when not stated.
+     */
+    val weightedRms : Double
+        get() {
+            val o = __offset(214)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Every USER_DEFINED keyword of the message, in message order.
+     */
+    fun userDefinedParameters(j: Int) : RDMUserDefinedParameter? = userDefinedParameters(RDMUserDefinedParameter(), j)
+    fun userDefinedParameters(obj: RDMUserDefinedParameter, j: Int) : RDMUserDefinedParameter? {
+        val o = __offset(216)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val userDefinedParametersLength : Int
+        get() {
+            val o = __offset(216); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRDM(_bb: ByteBuffer): RDM = getRootAsRDM(_bb, RDM())
@@ -333,8 +1201,48 @@ class RDM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RDM")
-        fun createRDM(builder: FlatBufferBuilder, ccsdsRdmVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectTypeOffset: Int, disposition: Byte, reason: Byte, reentryEpochOffset: Int, reentryEpochUnc: Double, reentryLatitude: Double, reentryLongitude: Double, reentryAltitude: Double, timeSystemOffset: Int, prevPredictionEpochOffset: Int, ballisticCoeff: Double, mass: Double, solarRadArea: Double, dragArea: Double, initialStateOffset: Int, impactPredictionsOffset: Int, survivingDebrisOffset: Int, casualtyExpectation: Double, numFragments: UInt, survivingMass: Double, commentOffset: Int) : Int {
-            builder.startTable(27)
+        fun createRDM(builder: FlatBufferBuilder, ccsdsRdmVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectTypeOffset: Int, disposition: Byte, reason: Byte, reentryEpochOffset: Int, reentryEpochUnc: Double, reentryLatitude: Double, reentryLongitude: Double, reentryAltitude: Double, timeSystemOffset: Int, prevPredictionEpochOffset: Int, ballisticCoeff: Double, mass: Double, solarRadArea: Double, dragArea: Double, initialStateOffset: Int, impactPredictionsOffset: Int, survivingDebrisOffset: Int, casualtyExpectation: Double, numFragments: UInt, survivingMass: Double, commentOffset: Int, messageIdOffset: Int, catalogNameOffset: Int, objectDesignatorOffset: Int, objectOwnerOffset: Int, objectOperatorOffset: Int, controlledReentry: Byte, centerNameOffset: Int, epochTzeroOffset: Int, refFrameOffset: Int, refFrameEpochOffset: Int, ephemerisNameOffset: Int, gravityModelOffset: Int, atmosphericModelOffset: Int, solarFluxPredictionOffset: Int, nBodyPerturbationsOffset: Int, solarRadPressureOffset: Int, earthTidesOffset: Int, intrackThrustOffset: Int, dragParametersSourceOffset: Int, dragParametersAltitude: Double, reentryUncertaintyMethodOffset: Int, reentryDisintegrationOffset: Int, impactUncertaintyMethodOffset: Int, previousMessageIdOffset: Int, nextMessageEpochOffset: Int, orbitLifetime: Double, orbitLifetimeWindowStart: Double, orbitLifetimeWindowEnd: Double, reentryWindowStartOffset: Int, reentryWindowEndOffset: Int, orbitLifetimeConfidenceLevel: Double, probabilityOfImpact: Double, probabilityOfBurnUp: Double, probabilityOfBreakUp: Double, probabilityOfLandImpact: Double, probabilityOfCasualty: Double, nominalImpactEpochOffset: Int, impactWindowStartOffset: Int, impactWindowEndOffset: Int, impactRefFrameOffset: Int, nominalImpactLon: Double, nominalImpactLat: Double, nominalImpactAlt: Double, impact1Confidence: Double, impact1StartLon: Double, impact1StartLat: Double, impact1StopLon: Double, impact1StopLat: Double, impact1CrossTrack: Double, impact2Confidence: Double, impact2StartLon: Double, impact2StartLat: Double, impact2StopLon: Double, impact2StopLat: Double, impact2CrossTrack: Double, impact3Confidence: Double, impact3StartLon: Double, impact3StartLat: Double, impact3StopLon: Double, impact3StopLat: Double, impact3CrossTrack: Double, covRefFrameOffset: Int, covarianceOffset: Int, dryMass: Double, hazardousSubstancesOffset: Int, solarRadCoeff: Double, dragCoeff: Double, rcs: Double, thrustAcceleration: Double, timeLastobStartOffset: Int, timeLastobEndOffset: Int, recommendedOdSpan: Double, actualOdSpan: Double, obsAvailable: UInt, obsUsed: UInt, tracksAvailable: UInt, tracksUsed: UInt, residualsAccepted: Double, weightedRms: Double, userDefinedParametersOffset: Int) : Int {
+            builder.startTable(107)
+            addWEIGHTEDRMS(builder, weightedRms)
+            addRESIDUALSACCEPTED(builder, residualsAccepted)
+            addACTUALODSPAN(builder, actualOdSpan)
+            addRECOMMENDEDODSPAN(builder, recommendedOdSpan)
+            addTHRUSTACCELERATION(builder, thrustAcceleration)
+            addRCS(builder, rcs)
+            addDRAGCOEFF(builder, dragCoeff)
+            addSOLARRADCOEFF(builder, solarRadCoeff)
+            addDRYMASS(builder, dryMass)
+            addIMPACT3CROSSTRACK(builder, impact3CrossTrack)
+            addIMPACT3STOPLAT(builder, impact3StopLat)
+            addIMPACT3STOPLON(builder, impact3StopLon)
+            addIMPACT3STARTLAT(builder, impact3StartLat)
+            addIMPACT3STARTLON(builder, impact3StartLon)
+            addIMPACT3CONFIDENCE(builder, impact3Confidence)
+            addIMPACT2CROSSTRACK(builder, impact2CrossTrack)
+            addIMPACT2STOPLAT(builder, impact2StopLat)
+            addIMPACT2STOPLON(builder, impact2StopLon)
+            addIMPACT2STARTLAT(builder, impact2StartLat)
+            addIMPACT2STARTLON(builder, impact2StartLon)
+            addIMPACT2CONFIDENCE(builder, impact2Confidence)
+            addIMPACT1CROSSTRACK(builder, impact1CrossTrack)
+            addIMPACT1STOPLAT(builder, impact1StopLat)
+            addIMPACT1STOPLON(builder, impact1StopLon)
+            addIMPACT1STARTLAT(builder, impact1StartLat)
+            addIMPACT1STARTLON(builder, impact1StartLon)
+            addIMPACT1CONFIDENCE(builder, impact1Confidence)
+            addNOMINALIMPACTALT(builder, nominalImpactAlt)
+            addNOMINALIMPACTLAT(builder, nominalImpactLat)
+            addNOMINALIMPACTLON(builder, nominalImpactLon)
+            addPROBABILITYOFCASUALTY(builder, probabilityOfCasualty)
+            addPROBABILITYOFLANDIMPACT(builder, probabilityOfLandImpact)
+            addPROBABILITYOFBREAKUP(builder, probabilityOfBreakUp)
+            addPROBABILITYOFBURNUP(builder, probabilityOfBurnUp)
+            addPROBABILITYOFIMPACT(builder, probabilityOfImpact)
+            addORBITLIFETIMECONFIDENCELEVEL(builder, orbitLifetimeConfidenceLevel)
+            addORBITLIFETIMEWINDOWEND(builder, orbitLifetimeWindowEnd)
+            addORBITLIFETIMEWINDOWSTART(builder, orbitLifetimeWindowStart)
+            addORBITLIFETIME(builder, orbitLifetime)
+            addDRAGPARAMETERSALTITUDE(builder, dragParametersAltitude)
             addSURVIVINGMASS(builder, survivingMass)
             addCASUALTYEXPECTATION(builder, casualtyExpectation)
             addDRAGAREA(builder, dragArea)
@@ -345,6 +1253,45 @@ class RDM : Table() {
             addREENTRYLONGITUDE(builder, reentryLongitude)
             addREENTRYLATITUDE(builder, reentryLatitude)
             addREENTRYEPOCHUNC(builder, reentryEpochUnc)
+            addUSERDEFINEDPARAMETERS(builder, userDefinedParametersOffset)
+            addTRACKSUSED(builder, tracksUsed)
+            addTRACKSAVAILABLE(builder, tracksAvailable)
+            addOBSUSED(builder, obsUsed)
+            addOBSAVAILABLE(builder, obsAvailable)
+            addTIMELASTOBEND(builder, timeLastobEndOffset)
+            addTIMELASTOBSTART(builder, timeLastobStartOffset)
+            addHAZARDOUSSUBSTANCES(builder, hazardousSubstancesOffset)
+            addCOVARIANCE(builder, covarianceOffset)
+            addCOVREFFRAME(builder, covRefFrameOffset)
+            addIMPACTREFFRAME(builder, impactRefFrameOffset)
+            addIMPACTWINDOWEND(builder, impactWindowEndOffset)
+            addIMPACTWINDOWSTART(builder, impactWindowStartOffset)
+            addNOMINALIMPACTEPOCH(builder, nominalImpactEpochOffset)
+            addREENTRYWINDOWEND(builder, reentryWindowEndOffset)
+            addREENTRYWINDOWSTART(builder, reentryWindowStartOffset)
+            addNEXTMESSAGEEPOCH(builder, nextMessageEpochOffset)
+            addPREVIOUSMESSAGEID(builder, previousMessageIdOffset)
+            addIMPACTUNCERTAINTYMETHOD(builder, impactUncertaintyMethodOffset)
+            addREENTRYDISINTEGRATION(builder, reentryDisintegrationOffset)
+            addREENTRYUNCERTAINTYMETHOD(builder, reentryUncertaintyMethodOffset)
+            addDRAGPARAMETERSSOURCE(builder, dragParametersSourceOffset)
+            addINTRACKTHRUST(builder, intrackThrustOffset)
+            addEARTHTIDES(builder, earthTidesOffset)
+            addSOLARRADPRESSURE(builder, solarRadPressureOffset)
+            addNBODYPERTURBATIONS(builder, nBodyPerturbationsOffset)
+            addSOLARFLUXPREDICTION(builder, solarFluxPredictionOffset)
+            addATMOSPHERICMODEL(builder, atmosphericModelOffset)
+            addGRAVITYMODEL(builder, gravityModelOffset)
+            addEPHEMERISNAME(builder, ephemerisNameOffset)
+            addREFFRAMEEPOCH(builder, refFrameEpochOffset)
+            addREFFRAME(builder, refFrameOffset)
+            addEPOCHTZERO(builder, epochTzeroOffset)
+            addCENTERNAME(builder, centerNameOffset)
+            addOBJECTOPERATOR(builder, objectOperatorOffset)
+            addOBJECTOWNER(builder, objectOwnerOffset)
+            addOBJECTDESIGNATOR(builder, objectDesignatorOffset)
+            addCATALOGNAME(builder, catalogNameOffset)
+            addMESSAGEID(builder, messageIdOffset)
             addCOMMENT(builder, commentOffset)
             addNUMFRAGMENTS(builder, numFragments)
             addSURVIVINGDEBRIS(builder, survivingDebrisOffset)
@@ -360,11 +1307,12 @@ class RDM : Table() {
             addORIGINATOR(builder, originatorOffset)
             addCREATIONDATE(builder, creationDateOffset)
             addCCSDSRDMVERS(builder, ccsdsRdmVersOffset)
+            addCONTROLLEDREENTRY(builder, controlledReentry)
             addREASON(builder, reason)
             addDISPOSITION(builder, disposition)
             return endRDM(builder)
         }
-        fun startRDM(builder: FlatBufferBuilder) = builder.startTable(27)
+        fun startRDM(builder: FlatBufferBuilder) = builder.startTable(107)
         fun addCCSDSRDMVERS(builder: FlatBufferBuilder, ccsdsRdmVers: Int) = builder.addOffset(0, ccsdsRdmVers, 0)
         fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -408,6 +1356,102 @@ class RDM : Table() {
         fun addNUMFRAGMENTS(builder: FlatBufferBuilder, numFragments: UInt) = builder.addInt(24, numFragments.toInt(), 0)
         fun addSURVIVINGMASS(builder: FlatBufferBuilder, survivingMass: Double) = builder.addDouble(25, survivingMass, 0.0)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(26, comment, 0)
+        fun addMESSAGEID(builder: FlatBufferBuilder, messageId: Int) = builder.addOffset(27, messageId, 0)
+        fun addCATALOGNAME(builder: FlatBufferBuilder, catalogName: Int) = builder.addOffset(28, catalogName, 0)
+        fun addOBJECTDESIGNATOR(builder: FlatBufferBuilder, objectDesignator: Int) = builder.addOffset(29, objectDesignator, 0)
+        fun addOBJECTOWNER(builder: FlatBufferBuilder, objectOwner: Int) = builder.addOffset(30, objectOwner, 0)
+        fun addOBJECTOPERATOR(builder: FlatBufferBuilder, objectOperator: Int) = builder.addOffset(31, objectOperator, 0)
+        fun addCONTROLLEDREENTRY(builder: FlatBufferBuilder, controlledReentry: Byte) = builder.addByte(32, controlledReentry, 0)
+        fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(33, centerName, 0)
+        fun addEPOCHTZERO(builder: FlatBufferBuilder, epochTzero: Int) = builder.addOffset(34, epochTzero, 0)
+        fun addREFFRAME(builder: FlatBufferBuilder, refFrame: Int) = builder.addOffset(35, refFrame, 0)
+        fun addREFFRAMEEPOCH(builder: FlatBufferBuilder, refFrameEpoch: Int) = builder.addOffset(36, refFrameEpoch, 0)
+        fun addEPHEMERISNAME(builder: FlatBufferBuilder, ephemerisName: Int) = builder.addOffset(37, ephemerisName, 0)
+        fun addGRAVITYMODEL(builder: FlatBufferBuilder, gravityModel: Int) = builder.addOffset(38, gravityModel, 0)
+        fun addATMOSPHERICMODEL(builder: FlatBufferBuilder, atmosphericModel: Int) = builder.addOffset(39, atmosphericModel, 0)
+        fun addSOLARFLUXPREDICTION(builder: FlatBufferBuilder, solarFluxPrediction: Int) = builder.addOffset(40, solarFluxPrediction, 0)
+        fun addNBODYPERTURBATIONS(builder: FlatBufferBuilder, nBodyPerturbations: Int) = builder.addOffset(41, nBodyPerturbations, 0)
+        fun addSOLARRADPRESSURE(builder: FlatBufferBuilder, solarRadPressure: Int) = builder.addOffset(42, solarRadPressure, 0)
+        fun addEARTHTIDES(builder: FlatBufferBuilder, earthTides: Int) = builder.addOffset(43, earthTides, 0)
+        fun addINTRACKTHRUST(builder: FlatBufferBuilder, intrackThrust: Int) = builder.addOffset(44, intrackThrust, 0)
+        fun addDRAGPARAMETERSSOURCE(builder: FlatBufferBuilder, dragParametersSource: Int) = builder.addOffset(45, dragParametersSource, 0)
+        fun addDRAGPARAMETERSALTITUDE(builder: FlatBufferBuilder, dragParametersAltitude: Double) = builder.addDouble(46, dragParametersAltitude, Double.NaN)
+        fun addREENTRYUNCERTAINTYMETHOD(builder: FlatBufferBuilder, reentryUncertaintyMethod: Int) = builder.addOffset(47, reentryUncertaintyMethod, 0)
+        fun addREENTRYDISINTEGRATION(builder: FlatBufferBuilder, reentryDisintegration: Int) = builder.addOffset(48, reentryDisintegration, 0)
+        fun addIMPACTUNCERTAINTYMETHOD(builder: FlatBufferBuilder, impactUncertaintyMethod: Int) = builder.addOffset(49, impactUncertaintyMethod, 0)
+        fun addPREVIOUSMESSAGEID(builder: FlatBufferBuilder, previousMessageId: Int) = builder.addOffset(50, previousMessageId, 0)
+        fun addNEXTMESSAGEEPOCH(builder: FlatBufferBuilder, nextMessageEpoch: Int) = builder.addOffset(51, nextMessageEpoch, 0)
+        fun addORBITLIFETIME(builder: FlatBufferBuilder, orbitLifetime: Double) = builder.addDouble(52, orbitLifetime, 0.0)
+        fun addORBITLIFETIMEWINDOWSTART(builder: FlatBufferBuilder, orbitLifetimeWindowStart: Double) = builder.addDouble(53, orbitLifetimeWindowStart, Double.NaN)
+        fun addORBITLIFETIMEWINDOWEND(builder: FlatBufferBuilder, orbitLifetimeWindowEnd: Double) = builder.addDouble(54, orbitLifetimeWindowEnd, Double.NaN)
+        fun addREENTRYWINDOWSTART(builder: FlatBufferBuilder, reentryWindowStart: Int) = builder.addOffset(55, reentryWindowStart, 0)
+        fun addREENTRYWINDOWEND(builder: FlatBufferBuilder, reentryWindowEnd: Int) = builder.addOffset(56, reentryWindowEnd, 0)
+        fun addORBITLIFETIMECONFIDENCELEVEL(builder: FlatBufferBuilder, orbitLifetimeConfidenceLevel: Double) = builder.addDouble(57, orbitLifetimeConfidenceLevel, Double.NaN)
+        fun addPROBABILITYOFIMPACT(builder: FlatBufferBuilder, probabilityOfImpact: Double) = builder.addDouble(58, probabilityOfImpact, Double.NaN)
+        fun addPROBABILITYOFBURNUP(builder: FlatBufferBuilder, probabilityOfBurnUp: Double) = builder.addDouble(59, probabilityOfBurnUp, Double.NaN)
+        fun addPROBABILITYOFBREAKUP(builder: FlatBufferBuilder, probabilityOfBreakUp: Double) = builder.addDouble(60, probabilityOfBreakUp, Double.NaN)
+        fun addPROBABILITYOFLANDIMPACT(builder: FlatBufferBuilder, probabilityOfLandImpact: Double) = builder.addDouble(61, probabilityOfLandImpact, Double.NaN)
+        fun addPROBABILITYOFCASUALTY(builder: FlatBufferBuilder, probabilityOfCasualty: Double) = builder.addDouble(62, probabilityOfCasualty, Double.NaN)
+        fun addNOMINALIMPACTEPOCH(builder: FlatBufferBuilder, nominalImpactEpoch: Int) = builder.addOffset(63, nominalImpactEpoch, 0)
+        fun addIMPACTWINDOWSTART(builder: FlatBufferBuilder, impactWindowStart: Int) = builder.addOffset(64, impactWindowStart, 0)
+        fun addIMPACTWINDOWEND(builder: FlatBufferBuilder, impactWindowEnd: Int) = builder.addOffset(65, impactWindowEnd, 0)
+        fun addIMPACTREFFRAME(builder: FlatBufferBuilder, impactRefFrame: Int) = builder.addOffset(66, impactRefFrame, 0)
+        fun addNOMINALIMPACTLON(builder: FlatBufferBuilder, nominalImpactLon: Double) = builder.addDouble(67, nominalImpactLon, Double.NaN)
+        fun addNOMINALIMPACTLAT(builder: FlatBufferBuilder, nominalImpactLat: Double) = builder.addDouble(68, nominalImpactLat, Double.NaN)
+        fun addNOMINALIMPACTALT(builder: FlatBufferBuilder, nominalImpactAlt: Double) = builder.addDouble(69, nominalImpactAlt, Double.NaN)
+        fun addIMPACT1CONFIDENCE(builder: FlatBufferBuilder, impact1Confidence: Double) = builder.addDouble(70, impact1Confidence, Double.NaN)
+        fun addIMPACT1STARTLON(builder: FlatBufferBuilder, impact1StartLon: Double) = builder.addDouble(71, impact1StartLon, Double.NaN)
+        fun addIMPACT1STARTLAT(builder: FlatBufferBuilder, impact1StartLat: Double) = builder.addDouble(72, impact1StartLat, Double.NaN)
+        fun addIMPACT1STOPLON(builder: FlatBufferBuilder, impact1StopLon: Double) = builder.addDouble(73, impact1StopLon, Double.NaN)
+        fun addIMPACT1STOPLAT(builder: FlatBufferBuilder, impact1StopLat: Double) = builder.addDouble(74, impact1StopLat, Double.NaN)
+        fun addIMPACT1CROSSTRACK(builder: FlatBufferBuilder, impact1CrossTrack: Double) = builder.addDouble(75, impact1CrossTrack, Double.NaN)
+        fun addIMPACT2CONFIDENCE(builder: FlatBufferBuilder, impact2Confidence: Double) = builder.addDouble(76, impact2Confidence, Double.NaN)
+        fun addIMPACT2STARTLON(builder: FlatBufferBuilder, impact2StartLon: Double) = builder.addDouble(77, impact2StartLon, Double.NaN)
+        fun addIMPACT2STARTLAT(builder: FlatBufferBuilder, impact2StartLat: Double) = builder.addDouble(78, impact2StartLat, Double.NaN)
+        fun addIMPACT2STOPLON(builder: FlatBufferBuilder, impact2StopLon: Double) = builder.addDouble(79, impact2StopLon, Double.NaN)
+        fun addIMPACT2STOPLAT(builder: FlatBufferBuilder, impact2StopLat: Double) = builder.addDouble(80, impact2StopLat, Double.NaN)
+        fun addIMPACT2CROSSTRACK(builder: FlatBufferBuilder, impact2CrossTrack: Double) = builder.addDouble(81, impact2CrossTrack, Double.NaN)
+        fun addIMPACT3CONFIDENCE(builder: FlatBufferBuilder, impact3Confidence: Double) = builder.addDouble(82, impact3Confidence, Double.NaN)
+        fun addIMPACT3STARTLON(builder: FlatBufferBuilder, impact3StartLon: Double) = builder.addDouble(83, impact3StartLon, Double.NaN)
+        fun addIMPACT3STARTLAT(builder: FlatBufferBuilder, impact3StartLat: Double) = builder.addDouble(84, impact3StartLat, Double.NaN)
+        fun addIMPACT3STOPLON(builder: FlatBufferBuilder, impact3StopLon: Double) = builder.addDouble(85, impact3StopLon, Double.NaN)
+        fun addIMPACT3STOPLAT(builder: FlatBufferBuilder, impact3StopLat: Double) = builder.addDouble(86, impact3StopLat, Double.NaN)
+        fun addIMPACT3CROSSTRACK(builder: FlatBufferBuilder, impact3CrossTrack: Double) = builder.addDouble(87, impact3CrossTrack, Double.NaN)
+        fun addCOVREFFRAME(builder: FlatBufferBuilder, covRefFrame: Int) = builder.addOffset(88, covRefFrame, 0)
+        fun addCOVARIANCE(builder: FlatBufferBuilder, covariance: Int) = builder.addOffset(89, covariance, 0)
+        fun createCovarianceVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovarianceVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addDRYMASS(builder: FlatBufferBuilder, dryMass: Double) = builder.addDouble(90, dryMass, Double.NaN)
+        fun addHAZARDOUSSUBSTANCES(builder: FlatBufferBuilder, hazardousSubstances: Int) = builder.addOffset(91, hazardousSubstances, 0)
+        fun addSOLARRADCOEFF(builder: FlatBufferBuilder, solarRadCoeff: Double) = builder.addDouble(92, solarRadCoeff, Double.NaN)
+        fun addDRAGCOEFF(builder: FlatBufferBuilder, dragCoeff: Double) = builder.addDouble(93, dragCoeff, Double.NaN)
+        fun addRCS(builder: FlatBufferBuilder, rcs: Double) = builder.addDouble(94, rcs, Double.NaN)
+        fun addTHRUSTACCELERATION(builder: FlatBufferBuilder, thrustAcceleration: Double) = builder.addDouble(95, thrustAcceleration, Double.NaN)
+        fun addTIMELASTOBSTART(builder: FlatBufferBuilder, timeLastobStart: Int) = builder.addOffset(96, timeLastobStart, 0)
+        fun addTIMELASTOBEND(builder: FlatBufferBuilder, timeLastobEnd: Int) = builder.addOffset(97, timeLastobEnd, 0)
+        fun addRECOMMENDEDODSPAN(builder: FlatBufferBuilder, recommendedOdSpan: Double) = builder.addDouble(98, recommendedOdSpan, Double.NaN)
+        fun addACTUALODSPAN(builder: FlatBufferBuilder, actualOdSpan: Double) = builder.addDouble(99, actualOdSpan, Double.NaN)
+        fun addOBSAVAILABLE(builder: FlatBufferBuilder, obsAvailable: UInt) = builder.addInt(100, obsAvailable.toInt(), 0)
+        fun addOBSUSED(builder: FlatBufferBuilder, obsUsed: UInt) = builder.addInt(101, obsUsed.toInt(), 0)
+        fun addTRACKSAVAILABLE(builder: FlatBufferBuilder, tracksAvailable: UInt) = builder.addInt(102, tracksAvailable.toInt(), 0)
+        fun addTRACKSUSED(builder: FlatBufferBuilder, tracksUsed: UInt) = builder.addInt(103, tracksUsed.toInt(), 0)
+        fun addRESIDUALSACCEPTED(builder: FlatBufferBuilder, residualsAccepted: Double) = builder.addDouble(104, residualsAccepted, Double.NaN)
+        fun addWEIGHTEDRMS(builder: FlatBufferBuilder, weightedRms: Double) = builder.addDouble(105, weightedRms, Double.NaN)
+        fun addUSERDEFINEDPARAMETERS(builder: FlatBufferBuilder, userDefinedParameters: Int) = builder.addOffset(106, userDefinedParameters, 0)
+        fun createUserDefinedParametersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startUserDefinedParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endRDM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

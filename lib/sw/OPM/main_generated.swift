@@ -49,6 +49,14 @@ public struct OPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let SOLAR_RAD_COEFF: VOffset = 54
     static let DRAG_AREA: VOffset = 56
     static let DRAG_COEFF: VOffset = 58
+    static let COMMENT: VOffset = 60
+    static let CLASSIFICATION: VOffset = 62
+    static let MESSAGE_ID: VOffset = 64
+    static let REF_FRAME_EPOCH: VOffset = 66
+    static let COV_REF_FRAME: VOffset = 68
+    static let COVARIANCE: VOffset = 70
+    static let MANEUVERS: VOffset = 72
+    static let USER_DEFINED_PARAMETERS: VOffset = 74
   }
 
   public var CCSDS_OPM_VERS: String? { let o = _accessor.offset(VT.CCSDS_OPM_VERS); return o == 0 ? nil : _accessor.string(at: o) }
@@ -88,7 +96,37 @@ public struct OPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var SOLAR_RAD_COEFF: Double { let o = _accessor.offset(VT.SOLAR_RAD_COEFF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var DRAG_AREA: Double { let o = _accessor.offset(VT.DRAG_AREA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var DRAG_COEFF: Double { let o = _accessor.offset(VT.DRAG_COEFF); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startOPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 28) }
+  ///  COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+  ///  and data groups, in message order, joined by a line feed.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  CLASSIFICATION of the message: the optional header keyword stating its
+  ///  security classification or handling caveat.
+  public var CLASSIFICATION: String? { let o = _accessor.offset(VT.CLASSIFICATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CLASSIFICATION) }
+  ///  MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  ///  unique for this message.
+  public var MESSAGE_ID: String? { let o = _accessor.offset(VT.MESSAGE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MESSAGE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE_ID) }
+  ///  REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+  public var REF_FRAME_EPOCH: String? { let o = _accessor.offset(VT.REF_FRAME_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REF_FRAME_EPOCH) }
+  ///  COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+  ///  when it is REF_FRAME.
+  public var COV_REF_FRAME: String? { let o = _accessor.offset(VT.COV_REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_REF_FRAME) }
+  ///  Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+  ///  CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+  ///  CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  ///  CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+  ///  Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+  public var COVARIANCE: FlatbufferVector<Double> { return _accessor.vector(at: VT.COVARIANCE, byteSize: 8) }
+  public func withUnsafePointerToCovariance<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COVARIANCE, body: body) }
+  ///  The message's maneuvers, in message order.
+  public var MANEUVERS: FlatbufferVector<OPMManeuver> { return _accessor.vector(at: VT.MANEUVERS, byteSize: 4) }
+  ///  Every USER_DEFINED_x keyword of the message, in message order.
+  public var USER_DEFINED_PARAMETERS: FlatbufferVector<OPMUserDefinedParameter> { return _accessor.vector(at: VT.USER_DEFINED_PARAMETERS, byteSize: 4) }
+  public static func startOPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 36) }
   public static func add(CCSDS_OPM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_OPM_VERS, at: VT.CCSDS_OPM_VERS) }
   public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
@@ -117,6 +155,14 @@ public struct OPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(SOLAR_RAD_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_COEFF, def: 0.0, at: VT.SOLAR_RAD_COEFF) }
   public static func add(DRAG_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_AREA, def: 0.0, at: VT.DRAG_AREA) }
   public static func add(DRAG_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_COEFF, def: 0.0, at: VT.DRAG_COEFF) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VT.CLASSIFICATION) }
+  public static func add(MESSAGE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_ID, at: VT.MESSAGE_ID) }
+  public static func add(REF_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME_EPOCH, at: VT.REF_FRAME_EPOCH) }
+  public static func add(COV_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REF_FRAME, at: VT.COV_REF_FRAME) }
+  public static func addVectorOf(COVARIANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE, at: VT.COVARIANCE) }
+  public static func addVectorOf(MANEUVERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANEUVERS, at: VT.MANEUVERS) }
+  public static func addVectorOf(USER_DEFINED_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_PARAMETERS, at: VT.USER_DEFINED_PARAMETERS) }
   public static func endOPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOPM(
     _ fbb: inout FlatBufferBuilder,
@@ -147,7 +193,15 @@ public struct OPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SOLAR_RAD_AREA: Double = 0.0,
     SOLAR_RAD_COEFF: Double = 0.0,
     DRAG_AREA: Double = 0.0,
-    DRAG_COEFF: Double = 0.0
+    DRAG_COEFF: Double = 0.0,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    CLASSIFICATIONOffset CLASSIFICATION: Offset = Offset(),
+    MESSAGE_IDOffset MESSAGE_ID: Offset = Offset(),
+    REF_FRAME_EPOCHOffset REF_FRAME_EPOCH: Offset = Offset(),
+    COV_REF_FRAMEOffset COV_REF_FRAME: Offset = Offset(),
+    COVARIANCEVectorOffset COVARIANCE: Offset = Offset(),
+    MANEUVERSVectorOffset MANEUVERS: Offset = Offset(),
+    USER_DEFINED_PARAMETERSVectorOffset USER_DEFINED_PARAMETERS: Offset = Offset()
   ) -> Offset {
     let __start = OPM.startOPM(&fbb)
     OPM.add(CCSDS_OPM_VERS: CCSDS_OPM_VERS, &fbb)
@@ -178,6 +232,14 @@ public struct OPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     OPM.add(SOLAR_RAD_COEFF: SOLAR_RAD_COEFF, &fbb)
     OPM.add(DRAG_AREA: DRAG_AREA, &fbb)
     OPM.add(DRAG_COEFF: DRAG_COEFF, &fbb)
+    OPM.add(COMMENT: COMMENT, &fbb)
+    OPM.add(CLASSIFICATION: CLASSIFICATION, &fbb)
+    OPM.add(MESSAGE_ID: MESSAGE_ID, &fbb)
+    OPM.add(REF_FRAME_EPOCH: REF_FRAME_EPOCH, &fbb)
+    OPM.add(COV_REF_FRAME: COV_REF_FRAME, &fbb)
+    OPM.addVectorOf(COVARIANCE: COVARIANCE, &fbb)
+    OPM.addVectorOf(MANEUVERS: MANEUVERS, &fbb)
+    OPM.addVectorOf(USER_DEFINED_PARAMETERS: USER_DEFINED_PARAMETERS, &fbb)
     return OPM.endOPM(&fbb, start: __start)
   }
 
@@ -211,6 +273,150 @@ public struct OPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.SOLAR_RAD_COEFF, fieldName: "SOLAR_RAD_COEFF", required: false, type: Double.self)
     try _v.visit(field: VT.DRAG_AREA, fieldName: "DRAG_AREA", required: false, type: Double.self)
     try _v.visit(field: VT.DRAG_COEFF, fieldName: "DRAG_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CLASSIFICATION, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MESSAGE_ID, fieldName: "MESSAGE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REF_FRAME_EPOCH, fieldName: "REF_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_REF_FRAME, fieldName: "COV_REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COVARIANCE, fieldName: "COVARIANCE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.MANEUVERS, fieldName: "MANEUVERS", required: false, type: ForwardOffset<Vector<ForwardOffset<OPMManeuver>, OPMManeuver>>.self)
+    try _v.visit(field: VT.USER_DEFINED_PARAMETERS, fieldName: "USER_DEFINED_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<OPMUserDefinedParameter>, OPMUserDefinedParameter>>.self)
+    _v.finish()
+  }
+}
+
+///  One maneuver of an OPM (CCSDS 502.0-B-3 Table 3-7).
+public struct OPMManeuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OPM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OPMManeuver.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let COMMENT: VOffset = 4
+    static let MAN_EPOCH_IGNITION: VOffset = 6
+    static let MAN_DURATION: VOffset = 8
+    static let MAN_DELTA_MASS: VOffset = 10
+    static let MAN_REF_FRAME: VOffset = 12
+    static let MAN_DV_1: VOffset = 14
+    static let MAN_DV_2: VOffset = 16
+    static let MAN_DV_3: VOffset = 18
+  }
+
+  ///  COMMENT lines of this maneuver, joined by a line feed.
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  ///  MAN_EPOCH_IGNITION: epoch of ignition.
+  public var MAN_EPOCH_IGNITION: String? { let o = _accessor.offset(VT.MAN_EPOCH_IGNITION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_EPOCH_IGNITIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_EPOCH_IGNITION) }
+  ///  MAN_DURATION: duration of the burn in seconds; zero for an impulsive maneuver.
+  public var MAN_DURATION: Double { let o = _accessor.offset(VT.MAN_DURATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MAN_DELTA_MASS: mass change during the maneuver in kg, negative or zero.
+  public var MAN_DELTA_MASS: Double { let o = _accessor.offset(VT.MAN_DELTA_MASS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MAN_REF_FRAME: frame of MAN_DV_1..3 (for example RTN, TNW, or REF_FRAME's).
+  public var MAN_REF_FRAME: String? { let o = _accessor.offset(VT.MAN_REF_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MAN_REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MAN_REF_FRAME) }
+  ///  MAN_DV_1: first component of the velocity increment in km/s.
+  public var MAN_DV_1: Double { let o = _accessor.offset(VT.MAN_DV_1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MAN_DV_2: second component of the velocity increment in km/s.
+  public var MAN_DV_2: Double { let o = _accessor.offset(VT.MAN_DV_2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MAN_DV_3: third component of the velocity increment in km/s.
+  public var MAN_DV_3: Double { let o = _accessor.offset(VT.MAN_DV_3); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startOPMManeuver(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func add(MAN_EPOCH_IGNITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_EPOCH_IGNITION, at: VT.MAN_EPOCH_IGNITION) }
+  public static func add(MAN_DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAN_DURATION, def: 0.0, at: VT.MAN_DURATION) }
+  public static func add(MAN_DELTA_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAN_DELTA_MASS, def: 0.0, at: VT.MAN_DELTA_MASS) }
+  public static func add(MAN_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAN_REF_FRAME, at: VT.MAN_REF_FRAME) }
+  public static func add(MAN_DV_1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAN_DV_1, def: 0.0, at: VT.MAN_DV_1) }
+  public static func add(MAN_DV_2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAN_DV_2, def: 0.0, at: VT.MAN_DV_2) }
+  public static func add(MAN_DV_3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAN_DV_3, def: 0.0, at: VT.MAN_DV_3) }
+  public static func endOPMManeuver(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOPMManeuver(
+    _ fbb: inout FlatBufferBuilder,
+    COMMENTOffset COMMENT: Offset = Offset(),
+    MAN_EPOCH_IGNITIONOffset MAN_EPOCH_IGNITION: Offset = Offset(),
+    MAN_DURATION: Double = 0.0,
+    MAN_DELTA_MASS: Double = 0.0,
+    MAN_REF_FRAMEOffset MAN_REF_FRAME: Offset = Offset(),
+    MAN_DV_1: Double = 0.0,
+    MAN_DV_2: Double = 0.0,
+    MAN_DV_3: Double = 0.0
+  ) -> Offset {
+    let __start = OPMManeuver.startOPMManeuver(&fbb)
+    OPMManeuver.add(COMMENT: COMMENT, &fbb)
+    OPMManeuver.add(MAN_EPOCH_IGNITION: MAN_EPOCH_IGNITION, &fbb)
+    OPMManeuver.add(MAN_DURATION: MAN_DURATION, &fbb)
+    OPMManeuver.add(MAN_DELTA_MASS: MAN_DELTA_MASS, &fbb)
+    OPMManeuver.add(MAN_REF_FRAME: MAN_REF_FRAME, &fbb)
+    OPMManeuver.add(MAN_DV_1: MAN_DV_1, &fbb)
+    OPMManeuver.add(MAN_DV_2: MAN_DV_2, &fbb)
+    OPMManeuver.add(MAN_DV_3: MAN_DV_3, &fbb)
+    return OPMManeuver.endOPMManeuver(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_EPOCH_IGNITION, fieldName: "MAN_EPOCH_IGNITION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_DURATION, fieldName: "MAN_DURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.MAN_DELTA_MASS, fieldName: "MAN_DELTA_MASS", required: false, type: Double.self)
+    try _v.visit(field: VT.MAN_REF_FRAME, fieldName: "MAN_REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MAN_DV_1, fieldName: "MAN_DV_1", required: false, type: Double.self)
+    try _v.visit(field: VT.MAN_DV_2, fieldName: "MAN_DV_2", required: false, type: Double.self)
+    try _v.visit(field: VT.MAN_DV_3, fieldName: "MAN_DV_3", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  One USER_DEFINED_x keyword of an OPM, or one USER_DEFINED element of its XML
+///  form: the parameter name (the x) and the value as written.
+public struct OPMUserDefinedParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OPM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OPMUserDefinedParameter.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PARAM_NAME: VOffset = 4
+    static let PARAM_VALUE: VOffset = 6
+  }
+
+  ///  x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  public var PARAM_NAME: String? { let o = _accessor.offset(VT.PARAM_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAM_NAME) }
+  ///  The value as written
+  public var PARAM_VALUE: String? { let o = _accessor.offset(VT.PARAM_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PARAM_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PARAM_VALUE) }
+  public static func startOPMUserDefinedParameter(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(PARAM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAM_NAME, at: VT.PARAM_NAME) }
+  public static func add(PARAM_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAM_VALUE, at: VT.PARAM_VALUE) }
+  public static func endOPMUserDefinedParameter(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOPMUserDefinedParameter(
+    _ fbb: inout FlatBufferBuilder,
+    PARAM_NAMEOffset PARAM_NAME: Offset = Offset(),
+    PARAM_VALUEOffset PARAM_VALUE: Offset = Offset()
+  ) -> Offset {
+    let __start = OPMUserDefinedParameter.startOPMUserDefinedParameter(&fbb)
+    OPMUserDefinedParameter.add(PARAM_NAME: PARAM_NAME, &fbb)
+    OPMUserDefinedParameter.add(PARAM_VALUE: PARAM_VALUE, &fbb)
+    return OPMUserDefinedParameter.endOPMUserDefinedParameter(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PARAM_NAME, fieldName: "PARAM_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARAM_VALUE, fieldName: "PARAM_VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

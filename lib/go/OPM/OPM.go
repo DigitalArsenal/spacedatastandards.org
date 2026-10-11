@@ -518,8 +518,200 @@ func (rcv *OPM) MutateDragCoeff(n float64) bool {
 	return rcv.MutateDRAG_COEFF(n)
 }
 
+/// COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+/// and data groups, in message order, joined by a line feed.
+func (rcv *OPM) COMMENT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OPM) Comment() []byte {
+	return rcv.COMMENT()
+}
+
+/// COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+/// and data groups, in message order, joined by a line feed.
+/// CLASSIFICATION of the message: the optional header keyword stating its
+/// security classification or handling caveat.
+func (rcv *OPM) CLASSIFICATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OPM) Classification() []byte {
+	return rcv.CLASSIFICATION()
+}
+
+/// CLASSIFICATION of the message: the optional header keyword stating its
+/// security classification or handling caveat.
+/// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+/// unique for this message.
+func (rcv *OPM) MESSAGE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OPM) MessageId() []byte {
+	return rcv.MESSAGE_ID()
+}
+
+/// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+/// unique for this message.
+/// REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+func (rcv *OPM) REF_FRAME_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OPM) RefFrameEpoch() []byte {
+	return rcv.REF_FRAME_EPOCH()
+}
+
+/// REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+/// COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+/// when it is REF_FRAME.
+func (rcv *OPM) COV_REF_FRAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OPM) CovRefFrame() []byte {
+	return rcv.COV_REF_FRAME()
+}
+
+/// COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+/// when it is REF_FRAME.
+/// Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+/// CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+/// CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+/// CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+/// Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+func (rcv *OPM) COVARIANCE(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *OPM) Covariance(j int) float64 {
+	return rcv.COVARIANCE(j)
+}
+
+func (rcv *OPM) COVARIANCELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OPM) CovarianceLength() int {
+	return rcv.COVARIANCELength()
+}
+
+/// Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+/// CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+/// CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+/// CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+/// Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+func (rcv *OPM) MutateCOVARIANCE(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *OPM) MutateCovariance(j int, n float64) bool {
+	return rcv.MutateCOVARIANCE(j, n)
+}
+
+/// The message's maneuvers, in message order.
+func (rcv *OPM) MANEUVERS(obj *OPMManeuver, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(OPMManeuver)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *OPM) Maneuvers(obj *OPMManeuver, j int) bool {
+	return rcv.MANEUVERS(obj, j)
+}
+
+func (rcv *OPM) MANEUVERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OPM) ManeuversLength() int {
+	return rcv.MANEUVERSLength()
+}
+
+/// The message's maneuvers, in message order.
+/// Every USER_DEFINED_x keyword of the message, in message order.
+func (rcv *OPM) USER_DEFINED_PARAMETERS(obj *OPMUserDefinedParameter, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(OPMUserDefinedParameter)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *OPM) UserDefinedParameters(obj *OPMUserDefinedParameter, j int) bool {
+	return rcv.USER_DEFINED_PARAMETERS(obj, j)
+}
+
+func (rcv *OPM) USER_DEFINED_PARAMETERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OPM) UserDefinedParametersLength() int {
+	return rcv.USER_DEFINED_PARAMETERSLength()
+}
+
+/// Every USER_DEFINED_x keyword of the message, in message order.
 func OPMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(28)
+	builder.StartObject(36)
 }
 func OPMAddCCSDS_OPM_VERS(builder *flatbuffers.Builder, CCSDS_OPM_VERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CCSDS_OPM_VERS), 0)
@@ -679,6 +871,72 @@ func OPMAddDRAG_COEFF(builder *flatbuffers.Builder, DRAG_COEFF float64) {
 }
 func OPMAddDragCoeff(builder *flatbuffers.Builder, DRAG_COEFF float64) {
 	OPMAddDRAG_COEFF(builder, DRAG_COEFF)
+}
+func OPMAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func OPMAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	OPMAddCOMMENT(builder, COMMENT)
+}
+func OPMAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(CLASSIFICATION), 0)
+}
+func OPMAddClassification(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	OPMAddCLASSIFICATION(builder, CLASSIFICATION)
+}
+func OPMAddMESSAGE_ID(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(MESSAGE_ID), 0)
+}
+func OPMAddMessageId(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	OPMAddMESSAGE_ID(builder, MESSAGE_ID)
+}
+func OPMAddREF_FRAME_EPOCH(builder *flatbuffers.Builder, REF_FRAME_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(REF_FRAME_EPOCH), 0)
+}
+func OPMAddRefFrameEpoch(builder *flatbuffers.Builder, REF_FRAME_EPOCH flatbuffers.UOffsetT) {
+	OPMAddREF_FRAME_EPOCH(builder, REF_FRAME_EPOCH)
+}
+func OPMAddCOV_REF_FRAME(builder *flatbuffers.Builder, COV_REF_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(COV_REF_FRAME), 0)
+}
+func OPMAddCovRefFrame(builder *flatbuffers.Builder, COV_REF_FRAME flatbuffers.UOffsetT) {
+	OPMAddCOV_REF_FRAME(builder, COV_REF_FRAME)
+}
+func OPMAddCOVARIANCE(builder *flatbuffers.Builder, COVARIANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(COVARIANCE), 0)
+}
+func OPMAddCovariance(builder *flatbuffers.Builder, COVARIANCE flatbuffers.UOffsetT) {
+	OPMAddCOVARIANCE(builder, COVARIANCE)
+}
+func OPMStartCOVARIANCEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func OPMStartCovarianceVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OPMStartCOVARIANCEVector(builder, numElems)
+}
+func OPMAddMANEUVERS(builder *flatbuffers.Builder, MANEUVERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(MANEUVERS), 0)
+}
+func OPMAddManeuvers(builder *flatbuffers.Builder, MANEUVERS flatbuffers.UOffsetT) {
+	OPMAddMANEUVERS(builder, MANEUVERS)
+}
+func OPMStartMANEUVERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OPMStartManeuversVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OPMStartMANEUVERSVector(builder, numElems)
+}
+func OPMAddUSER_DEFINED_PARAMETERS(builder *flatbuffers.Builder, USER_DEFINED_PARAMETERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(USER_DEFINED_PARAMETERS), 0)
+}
+func OPMAddUserDefinedParameters(builder *flatbuffers.Builder, USER_DEFINED_PARAMETERS flatbuffers.UOffsetT) {
+	OPMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
+}
+func OPMStartUSER_DEFINED_PARAMETERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OPMStartUserDefinedParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OPMStartUSER_DEFINED_PARAMETERSVector(builder, numElems)
 }
 func OPMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

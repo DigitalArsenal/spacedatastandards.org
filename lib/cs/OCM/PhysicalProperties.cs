@@ -71,6 +71,112 @@ public struct PhysicalProperties : IFlatbufferObject
   public double SOLAR_RAD_COEFF { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Uncertainty in the solar radiation pressure coefficient.
   public double SRP_UNCERTAINTY { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+  public string MANUFACTURER { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMANUFACTURERBytes() { return __p.__vector_as_span<byte>(46, 1); }
+#else
+  public ArraySegment<byte>? GetMANUFACTURERBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public byte[] GetMANUFACTURERArray() { return __p.__vector_as_array<byte>(46); }
+  /// BUS_MODEL: the object's bus model.
+  public string BUS_MODEL { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetBUS_MODELBytes() { return __p.__vector_as_span<byte>(48, 1); }
+#else
+  public ArraySegment<byte>? GetBUS_MODELBytes() { return __p.__vector_as_arraysegment(48); }
+#endif
+  public byte[] GetBUS_MODELArray() { return __p.__vector_as_array<byte>(48); }
+  /// DOCKED_WITH: comma-separated names of the objects it is docked with.
+  public string DOCKED_WITH { get { int o = __p.__offset(50); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDOCKED_WITHBytes() { return __p.__vector_as_span<byte>(50, 1); }
+#else
+  public ArraySegment<byte>? GetDOCKED_WITHBytes() { return __p.__vector_as_arraysegment(50); }
+#endif
+  public byte[] GetDOCKED_WITHArray() { return __p.__vector_as_array<byte>(50); }
+  /// INITIAL_WET_MASS in kg, NaN when not stated.
+  public double INITIAL_WET_MASS { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+  public string OEB_PARENT_FRAME { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOEB_PARENT_FRAMEBytes() { return __p.__vector_as_span<byte>(54, 1); }
+#else
+  public ArraySegment<byte>? GetOEB_PARENT_FRAMEBytes() { return __p.__vector_as_arraysegment(54); }
+#endif
+  public byte[] GetOEB_PARENT_FRAMEArray() { return __p.__vector_as_array<byte>(54); }
+  /// OEB_PARENT_FRAME_EPOCH.
+  public string OEB_PARENT_FRAME_EPOCH { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOEB_PARENT_FRAME_EPOCHBytes() { return __p.__vector_as_span<byte>(56, 1); }
+#else
+  public ArraySegment<byte>? GetOEB_PARENT_FRAME_EPOCHBytes() { return __p.__vector_as_arraysegment(56); }
+#endif
+  public byte[] GetOEB_PARENT_FRAME_EPOCHArray() { return __p.__vector_as_array<byte>(56); }
+  /// AREA_MIN_FOR_PC in m**2, NaN when not stated.
+  public double AREA_MIN_FOR_PC { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// AREA_MAX_FOR_PC in m**2, NaN when not stated.
+  public double AREA_MAX_FOR_PC { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// AREA_TYP_FOR_PC in m**2, NaN when not stated.
+  public double AREA_TYP_FOR_PC { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// RCS in m**2, NaN when not stated.
+  public double RCS { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// RCS_MIN in m**2, NaN when not stated.
+  public double RCS_MIN { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// RCS_MAX in m**2, NaN when not stated.
+  public double RCS_MAX { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+  public double VM_ABSOLUTE { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+  public double VM_APPARENT_MIN { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// VM_APPARENT: apparent visual magnitude, NaN when not stated.
+  public double VM_APPARENT { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+  public double VM_APPARENT_MAX { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// REFLECTANCE: typical reflectivity, NaN when not stated.
+  public double REFLECTANCE { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// ATT_CONTROL_MODE.
+  public string ATT_CONTROL_MODE { get { int o = __p.__offset(80); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetATT_CONTROL_MODEBytes() { return __p.__vector_as_span<byte>(80, 1); }
+#else
+  public ArraySegment<byte>? GetATT_CONTROL_MODEBytes() { return __p.__vector_as_arraysegment(80); }
+#endif
+  public byte[] GetATT_CONTROL_MODEArray() { return __p.__vector_as_array<byte>(80); }
+  /// ATT_ACTUATOR_TYPE.
+  public string ATT_ACTUATOR_TYPE { get { int o = __p.__offset(82); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetATT_ACTUATOR_TYPEBytes() { return __p.__vector_as_span<byte>(82, 1); }
+#else
+  public ArraySegment<byte>? GetATT_ACTUATOR_TYPEBytes() { return __p.__vector_as_arraysegment(82); }
+#endif
+  public byte[] GetATT_ACTUATOR_TYPEArray() { return __p.__vector_as_array<byte>(82); }
+  /// ATT_KNOWLEDGE in degrees, NaN when not stated.
+  public double ATT_KNOWLEDGE { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// ATT_CONTROL in degrees, NaN when not stated.
+  public double ATT_CONTROL { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// ATT_POINTING in degrees, NaN when not stated.
+  public double ATT_POINTING { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+  public double AVG_MANEUVER_FREQ { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// MAX_THRUST in N, NaN when not stated.
+  public double MAX_THRUST { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+  public double DV_BOL { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// DV_REMAINING in km/s, NaN when not stated.
+  public double DV_REMAINING { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IXX in kg*m**2, NaN when not stated.
+  public double IXX { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IYY in kg*m**2, NaN when not stated.
+  public double IYY { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IZZ in kg*m**2, NaN when not stated.
+  public double IZZ { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IXY in kg*m**2, NaN when not stated.
+  public double IXY { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IXZ in kg*m**2, NaN when not stated.
+  public double IXZ { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// IYZ in kg*m**2, NaN when not stated.
+  public double IYZ { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
 
   public static Offset<PhysicalProperties> CreatePhysicalProperties(FlatBufferBuilder builder,
       VectorOffset COMMENTOffset = default(VectorOffset),
@@ -93,8 +199,65 @@ public struct PhysicalProperties : IFlatbufferObject
       double DRAG_UNCERTAINTY = 0.0,
       double SRP_CONST_AREA = 0.0,
       double SOLAR_RAD_COEFF = 0.0,
-      double SRP_UNCERTAINTY = 0.0) {
-    builder.StartTable(21);
+      double SRP_UNCERTAINTY = 0.0,
+      StringOffset MANUFACTUREROffset = default(StringOffset),
+      StringOffset BUS_MODELOffset = default(StringOffset),
+      StringOffset DOCKED_WITHOffset = default(StringOffset),
+      double INITIAL_WET_MASS = Double.NaN,
+      StringOffset OEB_PARENT_FRAMEOffset = default(StringOffset),
+      StringOffset OEB_PARENT_FRAME_EPOCHOffset = default(StringOffset),
+      double AREA_MIN_FOR_PC = Double.NaN,
+      double AREA_MAX_FOR_PC = Double.NaN,
+      double AREA_TYP_FOR_PC = Double.NaN,
+      double RCS = Double.NaN,
+      double RCS_MIN = Double.NaN,
+      double RCS_MAX = Double.NaN,
+      double VM_ABSOLUTE = Double.NaN,
+      double VM_APPARENT_MIN = Double.NaN,
+      double VM_APPARENT = Double.NaN,
+      double VM_APPARENT_MAX = Double.NaN,
+      double REFLECTANCE = Double.NaN,
+      StringOffset ATT_CONTROL_MODEOffset = default(StringOffset),
+      StringOffset ATT_ACTUATOR_TYPEOffset = default(StringOffset),
+      double ATT_KNOWLEDGE = Double.NaN,
+      double ATT_CONTROL = Double.NaN,
+      double ATT_POINTING = Double.NaN,
+      double AVG_MANEUVER_FREQ = Double.NaN,
+      double MAX_THRUST = Double.NaN,
+      double DV_BOL = Double.NaN,
+      double DV_REMAINING = Double.NaN,
+      double IXX = Double.NaN,
+      double IYY = Double.NaN,
+      double IZZ = Double.NaN,
+      double IXY = Double.NaN,
+      double IXZ = Double.NaN,
+      double IYZ = Double.NaN) {
+    builder.StartTable(53);
+    PhysicalProperties.AddIYZ(builder, IYZ);
+    PhysicalProperties.AddIXZ(builder, IXZ);
+    PhysicalProperties.AddIXY(builder, IXY);
+    PhysicalProperties.AddIZZ(builder, IZZ);
+    PhysicalProperties.AddIYY(builder, IYY);
+    PhysicalProperties.AddIXX(builder, IXX);
+    PhysicalProperties.AddDV_REMAINING(builder, DV_REMAINING);
+    PhysicalProperties.AddDV_BOL(builder, DV_BOL);
+    PhysicalProperties.AddMAX_THRUST(builder, MAX_THRUST);
+    PhysicalProperties.AddAVG_MANEUVER_FREQ(builder, AVG_MANEUVER_FREQ);
+    PhysicalProperties.AddATT_POINTING(builder, ATT_POINTING);
+    PhysicalProperties.AddATT_CONTROL(builder, ATT_CONTROL);
+    PhysicalProperties.AddATT_KNOWLEDGE(builder, ATT_KNOWLEDGE);
+    PhysicalProperties.AddREFLECTANCE(builder, REFLECTANCE);
+    PhysicalProperties.AddVM_APPARENT_MAX(builder, VM_APPARENT_MAX);
+    PhysicalProperties.AddVM_APPARENT(builder, VM_APPARENT);
+    PhysicalProperties.AddVM_APPARENT_MIN(builder, VM_APPARENT_MIN);
+    PhysicalProperties.AddVM_ABSOLUTE(builder, VM_ABSOLUTE);
+    PhysicalProperties.AddRCS_MAX(builder, RCS_MAX);
+    PhysicalProperties.AddRCS_MIN(builder, RCS_MIN);
+    PhysicalProperties.AddRCS(builder, RCS);
+    PhysicalProperties.AddAREA_TYP_FOR_PC(builder, AREA_TYP_FOR_PC);
+    PhysicalProperties.AddAREA_MAX_FOR_PC(builder, AREA_MAX_FOR_PC);
+    PhysicalProperties.AddAREA_MIN_FOR_PC(builder, AREA_MIN_FOR_PC);
+    PhysicalProperties.AddINITIAL_WET_MASS(builder, INITIAL_WET_MASS);
     PhysicalProperties.AddSRP_UNCERTAINTY(builder, SRP_UNCERTAINTY);
     PhysicalProperties.AddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF);
     PhysicalProperties.AddSRP_CONST_AREA(builder, SRP_CONST_AREA);
@@ -113,13 +276,20 @@ public struct PhysicalProperties : IFlatbufferObject
     PhysicalProperties.AddOEB_Q1(builder, OEB_Q1);
     PhysicalProperties.AddDRY_MASS(builder, DRY_MASS);
     PhysicalProperties.AddWET_MASS(builder, WET_MASS);
+    PhysicalProperties.AddATT_ACTUATOR_TYPE(builder, ATT_ACTUATOR_TYPEOffset);
+    PhysicalProperties.AddATT_CONTROL_MODE(builder, ATT_CONTROL_MODEOffset);
+    PhysicalProperties.AddOEB_PARENT_FRAME_EPOCH(builder, OEB_PARENT_FRAME_EPOCHOffset);
+    PhysicalProperties.AddOEB_PARENT_FRAME(builder, OEB_PARENT_FRAMEOffset);
+    PhysicalProperties.AddDOCKED_WITH(builder, DOCKED_WITHOffset);
+    PhysicalProperties.AddBUS_MODEL(builder, BUS_MODELOffset);
+    PhysicalProperties.AddMANUFACTURER(builder, MANUFACTUREROffset);
     PhysicalProperties.AddAREA_UNITS(builder, AREA_UNITSOffset);
     PhysicalProperties.AddMASS_UNITS(builder, MASS_UNITSOffset);
     PhysicalProperties.AddCOMMENT(builder, COMMENTOffset);
     return PhysicalProperties.EndPhysicalProperties(builder);
   }
 
-  public static void StartPhysicalProperties(FlatBufferBuilder builder) { builder.StartTable(21); }
+  public static void StartPhysicalProperties(FlatBufferBuilder builder) { builder.StartTable(53); }
   public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static VectorOffset CreateCOMMENTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -146,6 +316,38 @@ public struct PhysicalProperties : IFlatbufferObject
   public static void AddSRP_CONST_AREA(FlatBufferBuilder builder, double SRP_CONST_AREA) { builder.AddDouble(18, SRP_CONST_AREA, 0.0); }
   public static void AddSOLAR_RAD_COEFF(FlatBufferBuilder builder, double SOLAR_RAD_COEFF) { builder.AddDouble(19, SOLAR_RAD_COEFF, 0.0); }
   public static void AddSRP_UNCERTAINTY(FlatBufferBuilder builder, double SRP_UNCERTAINTY) { builder.AddDouble(20, SRP_UNCERTAINTY, 0.0); }
+  public static void AddMANUFACTURER(FlatBufferBuilder builder, StringOffset MANUFACTUREROffset) { builder.AddOffset(21, MANUFACTUREROffset.Value, 0); }
+  public static void AddBUS_MODEL(FlatBufferBuilder builder, StringOffset BUS_MODELOffset) { builder.AddOffset(22, BUS_MODELOffset.Value, 0); }
+  public static void AddDOCKED_WITH(FlatBufferBuilder builder, StringOffset DOCKED_WITHOffset) { builder.AddOffset(23, DOCKED_WITHOffset.Value, 0); }
+  public static void AddINITIAL_WET_MASS(FlatBufferBuilder builder, double INITIAL_WET_MASS) { builder.AddDouble(24, INITIAL_WET_MASS, Double.NaN); }
+  public static void AddOEB_PARENT_FRAME(FlatBufferBuilder builder, StringOffset OEB_PARENT_FRAMEOffset) { builder.AddOffset(25, OEB_PARENT_FRAMEOffset.Value, 0); }
+  public static void AddOEB_PARENT_FRAME_EPOCH(FlatBufferBuilder builder, StringOffset OEB_PARENT_FRAME_EPOCHOffset) { builder.AddOffset(26, OEB_PARENT_FRAME_EPOCHOffset.Value, 0); }
+  public static void AddAREA_MIN_FOR_PC(FlatBufferBuilder builder, double AREA_MIN_FOR_PC) { builder.AddDouble(27, AREA_MIN_FOR_PC, Double.NaN); }
+  public static void AddAREA_MAX_FOR_PC(FlatBufferBuilder builder, double AREA_MAX_FOR_PC) { builder.AddDouble(28, AREA_MAX_FOR_PC, Double.NaN); }
+  public static void AddAREA_TYP_FOR_PC(FlatBufferBuilder builder, double AREA_TYP_FOR_PC) { builder.AddDouble(29, AREA_TYP_FOR_PC, Double.NaN); }
+  public static void AddRCS(FlatBufferBuilder builder, double RCS) { builder.AddDouble(30, RCS, Double.NaN); }
+  public static void AddRCS_MIN(FlatBufferBuilder builder, double RCS_MIN) { builder.AddDouble(31, RCS_MIN, Double.NaN); }
+  public static void AddRCS_MAX(FlatBufferBuilder builder, double RCS_MAX) { builder.AddDouble(32, RCS_MAX, Double.NaN); }
+  public static void AddVM_ABSOLUTE(FlatBufferBuilder builder, double VM_ABSOLUTE) { builder.AddDouble(33, VM_ABSOLUTE, Double.NaN); }
+  public static void AddVM_APPARENT_MIN(FlatBufferBuilder builder, double VM_APPARENT_MIN) { builder.AddDouble(34, VM_APPARENT_MIN, Double.NaN); }
+  public static void AddVM_APPARENT(FlatBufferBuilder builder, double VM_APPARENT) { builder.AddDouble(35, VM_APPARENT, Double.NaN); }
+  public static void AddVM_APPARENT_MAX(FlatBufferBuilder builder, double VM_APPARENT_MAX) { builder.AddDouble(36, VM_APPARENT_MAX, Double.NaN); }
+  public static void AddREFLECTANCE(FlatBufferBuilder builder, double REFLECTANCE) { builder.AddDouble(37, REFLECTANCE, Double.NaN); }
+  public static void AddATT_CONTROL_MODE(FlatBufferBuilder builder, StringOffset ATT_CONTROL_MODEOffset) { builder.AddOffset(38, ATT_CONTROL_MODEOffset.Value, 0); }
+  public static void AddATT_ACTUATOR_TYPE(FlatBufferBuilder builder, StringOffset ATT_ACTUATOR_TYPEOffset) { builder.AddOffset(39, ATT_ACTUATOR_TYPEOffset.Value, 0); }
+  public static void AddATT_KNOWLEDGE(FlatBufferBuilder builder, double ATT_KNOWLEDGE) { builder.AddDouble(40, ATT_KNOWLEDGE, Double.NaN); }
+  public static void AddATT_CONTROL(FlatBufferBuilder builder, double ATT_CONTROL) { builder.AddDouble(41, ATT_CONTROL, Double.NaN); }
+  public static void AddATT_POINTING(FlatBufferBuilder builder, double ATT_POINTING) { builder.AddDouble(42, ATT_POINTING, Double.NaN); }
+  public static void AddAVG_MANEUVER_FREQ(FlatBufferBuilder builder, double AVG_MANEUVER_FREQ) { builder.AddDouble(43, AVG_MANEUVER_FREQ, Double.NaN); }
+  public static void AddMAX_THRUST(FlatBufferBuilder builder, double MAX_THRUST) { builder.AddDouble(44, MAX_THRUST, Double.NaN); }
+  public static void AddDV_BOL(FlatBufferBuilder builder, double DV_BOL) { builder.AddDouble(45, DV_BOL, Double.NaN); }
+  public static void AddDV_REMAINING(FlatBufferBuilder builder, double DV_REMAINING) { builder.AddDouble(46, DV_REMAINING, Double.NaN); }
+  public static void AddIXX(FlatBufferBuilder builder, double IXX) { builder.AddDouble(47, IXX, Double.NaN); }
+  public static void AddIYY(FlatBufferBuilder builder, double IYY) { builder.AddDouble(48, IYY, Double.NaN); }
+  public static void AddIZZ(FlatBufferBuilder builder, double IZZ) { builder.AddDouble(49, IZZ, Double.NaN); }
+  public static void AddIXY(FlatBufferBuilder builder, double IXY) { builder.AddDouble(50, IXY, Double.NaN); }
+  public static void AddIXZ(FlatBufferBuilder builder, double IXZ) { builder.AddDouble(51, IXZ, Double.NaN); }
+  public static void AddIYZ(FlatBufferBuilder builder, double IYZ) { builder.AddDouble(52, IYZ, Double.NaN); }
   public static Offset<PhysicalProperties> EndPhysicalProperties(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PhysicalProperties>(o);
@@ -178,6 +380,38 @@ public struct PhysicalProperties : IFlatbufferObject
     _o.SRP_CONST_AREA = this.SRP_CONST_AREA;
     _o.SOLAR_RAD_COEFF = this.SOLAR_RAD_COEFF;
     _o.SRP_UNCERTAINTY = this.SRP_UNCERTAINTY;
+    _o.MANUFACTURER = this.MANUFACTURER;
+    _o.BUS_MODEL = this.BUS_MODEL;
+    _o.DOCKED_WITH = this.DOCKED_WITH;
+    _o.INITIAL_WET_MASS = this.INITIAL_WET_MASS;
+    _o.OEB_PARENT_FRAME = this.OEB_PARENT_FRAME;
+    _o.OEB_PARENT_FRAME_EPOCH = this.OEB_PARENT_FRAME_EPOCH;
+    _o.AREA_MIN_FOR_PC = this.AREA_MIN_FOR_PC;
+    _o.AREA_MAX_FOR_PC = this.AREA_MAX_FOR_PC;
+    _o.AREA_TYP_FOR_PC = this.AREA_TYP_FOR_PC;
+    _o.RCS = this.RCS;
+    _o.RCS_MIN = this.RCS_MIN;
+    _o.RCS_MAX = this.RCS_MAX;
+    _o.VM_ABSOLUTE = this.VM_ABSOLUTE;
+    _o.VM_APPARENT_MIN = this.VM_APPARENT_MIN;
+    _o.VM_APPARENT = this.VM_APPARENT;
+    _o.VM_APPARENT_MAX = this.VM_APPARENT_MAX;
+    _o.REFLECTANCE = this.REFLECTANCE;
+    _o.ATT_CONTROL_MODE = this.ATT_CONTROL_MODE;
+    _o.ATT_ACTUATOR_TYPE = this.ATT_ACTUATOR_TYPE;
+    _o.ATT_KNOWLEDGE = this.ATT_KNOWLEDGE;
+    _o.ATT_CONTROL = this.ATT_CONTROL;
+    _o.ATT_POINTING = this.ATT_POINTING;
+    _o.AVG_MANEUVER_FREQ = this.AVG_MANEUVER_FREQ;
+    _o.MAX_THRUST = this.MAX_THRUST;
+    _o.DV_BOL = this.DV_BOL;
+    _o.DV_REMAINING = this.DV_REMAINING;
+    _o.IXX = this.IXX;
+    _o.IYY = this.IYY;
+    _o.IZZ = this.IZZ;
+    _o.IXY = this.IXY;
+    _o.IXZ = this.IXZ;
+    _o.IYZ = this.IYZ;
   }
   public static Offset<PhysicalProperties> Pack(FlatBufferBuilder builder, PhysicalPropertiesT _o) {
     if (_o == null) return default(Offset<PhysicalProperties>);
@@ -189,6 +423,13 @@ public struct PhysicalProperties : IFlatbufferObject
     }
     var _MASS_UNITS = _o.MASS_UNITS == null ? default(StringOffset) : builder.CreateString(_o.MASS_UNITS);
     var _AREA_UNITS = _o.AREA_UNITS == null ? default(StringOffset) : builder.CreateString(_o.AREA_UNITS);
+    var _MANUFACTURER = _o.MANUFACTURER == null ? default(StringOffset) : builder.CreateString(_o.MANUFACTURER);
+    var _BUS_MODEL = _o.BUS_MODEL == null ? default(StringOffset) : builder.CreateString(_o.BUS_MODEL);
+    var _DOCKED_WITH = _o.DOCKED_WITH == null ? default(StringOffset) : builder.CreateString(_o.DOCKED_WITH);
+    var _OEB_PARENT_FRAME = _o.OEB_PARENT_FRAME == null ? default(StringOffset) : builder.CreateString(_o.OEB_PARENT_FRAME);
+    var _OEB_PARENT_FRAME_EPOCH = _o.OEB_PARENT_FRAME_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.OEB_PARENT_FRAME_EPOCH);
+    var _ATT_CONTROL_MODE = _o.ATT_CONTROL_MODE == null ? default(StringOffset) : builder.CreateString(_o.ATT_CONTROL_MODE);
+    var _ATT_ACTUATOR_TYPE = _o.ATT_ACTUATOR_TYPE == null ? default(StringOffset) : builder.CreateString(_o.ATT_ACTUATOR_TYPE);
     return CreatePhysicalProperties(
       builder,
       _COMMENT,
@@ -211,7 +452,39 @@ public struct PhysicalProperties : IFlatbufferObject
       _o.DRAG_UNCERTAINTY,
       _o.SRP_CONST_AREA,
       _o.SOLAR_RAD_COEFF,
-      _o.SRP_UNCERTAINTY);
+      _o.SRP_UNCERTAINTY,
+      _MANUFACTURER,
+      _BUS_MODEL,
+      _DOCKED_WITH,
+      _o.INITIAL_WET_MASS,
+      _OEB_PARENT_FRAME,
+      _OEB_PARENT_FRAME_EPOCH,
+      _o.AREA_MIN_FOR_PC,
+      _o.AREA_MAX_FOR_PC,
+      _o.AREA_TYP_FOR_PC,
+      _o.RCS,
+      _o.RCS_MIN,
+      _o.RCS_MAX,
+      _o.VM_ABSOLUTE,
+      _o.VM_APPARENT_MIN,
+      _o.VM_APPARENT,
+      _o.VM_APPARENT_MAX,
+      _o.REFLECTANCE,
+      _ATT_CONTROL_MODE,
+      _ATT_ACTUATOR_TYPE,
+      _o.ATT_KNOWLEDGE,
+      _o.ATT_CONTROL,
+      _o.ATT_POINTING,
+      _o.AVG_MANEUVER_FREQ,
+      _o.MAX_THRUST,
+      _o.DV_BOL,
+      _o.DV_REMAINING,
+      _o.IXX,
+      _o.IYY,
+      _o.IZZ,
+      _o.IXY,
+      _o.IXZ,
+      _o.IYZ);
   }
 }
 
@@ -238,6 +511,38 @@ public class PhysicalPropertiesT
   public double SRP_CONST_AREA { get; set; }
   public double SOLAR_RAD_COEFF { get; set; }
   public double SRP_UNCERTAINTY { get; set; }
+  public string MANUFACTURER { get; set; }
+  public string BUS_MODEL { get; set; }
+  public string DOCKED_WITH { get; set; }
+  public double INITIAL_WET_MASS { get; set; }
+  public string OEB_PARENT_FRAME { get; set; }
+  public string OEB_PARENT_FRAME_EPOCH { get; set; }
+  public double AREA_MIN_FOR_PC { get; set; }
+  public double AREA_MAX_FOR_PC { get; set; }
+  public double AREA_TYP_FOR_PC { get; set; }
+  public double RCS { get; set; }
+  public double RCS_MIN { get; set; }
+  public double RCS_MAX { get; set; }
+  public double VM_ABSOLUTE { get; set; }
+  public double VM_APPARENT_MIN { get; set; }
+  public double VM_APPARENT { get; set; }
+  public double VM_APPARENT_MAX { get; set; }
+  public double REFLECTANCE { get; set; }
+  public string ATT_CONTROL_MODE { get; set; }
+  public string ATT_ACTUATOR_TYPE { get; set; }
+  public double ATT_KNOWLEDGE { get; set; }
+  public double ATT_CONTROL { get; set; }
+  public double ATT_POINTING { get; set; }
+  public double AVG_MANEUVER_FREQ { get; set; }
+  public double MAX_THRUST { get; set; }
+  public double DV_BOL { get; set; }
+  public double DV_REMAINING { get; set; }
+  public double IXX { get; set; }
+  public double IYY { get; set; }
+  public double IZZ { get; set; }
+  public double IXY { get; set; }
+  public double IXZ { get; set; }
+  public double IYZ { get; set; }
 
   public PhysicalPropertiesT() {
     this.COMMENT = null;
@@ -261,6 +566,38 @@ public class PhysicalPropertiesT
     this.SRP_CONST_AREA = 0.0;
     this.SOLAR_RAD_COEFF = 0.0;
     this.SRP_UNCERTAINTY = 0.0;
+    this.MANUFACTURER = null;
+    this.BUS_MODEL = null;
+    this.DOCKED_WITH = null;
+    this.INITIAL_WET_MASS = Double.NaN;
+    this.OEB_PARENT_FRAME = null;
+    this.OEB_PARENT_FRAME_EPOCH = null;
+    this.AREA_MIN_FOR_PC = Double.NaN;
+    this.AREA_MAX_FOR_PC = Double.NaN;
+    this.AREA_TYP_FOR_PC = Double.NaN;
+    this.RCS = Double.NaN;
+    this.RCS_MIN = Double.NaN;
+    this.RCS_MAX = Double.NaN;
+    this.VM_ABSOLUTE = Double.NaN;
+    this.VM_APPARENT_MIN = Double.NaN;
+    this.VM_APPARENT = Double.NaN;
+    this.VM_APPARENT_MAX = Double.NaN;
+    this.REFLECTANCE = Double.NaN;
+    this.ATT_CONTROL_MODE = null;
+    this.ATT_ACTUATOR_TYPE = null;
+    this.ATT_KNOWLEDGE = Double.NaN;
+    this.ATT_CONTROL = Double.NaN;
+    this.ATT_POINTING = Double.NaN;
+    this.AVG_MANEUVER_FREQ = Double.NaN;
+    this.MAX_THRUST = Double.NaN;
+    this.DV_BOL = Double.NaN;
+    this.DV_REMAINING = Double.NaN;
+    this.IXX = Double.NaN;
+    this.IYY = Double.NaN;
+    this.IZZ = Double.NaN;
+    this.IXY = Double.NaN;
+    this.IXZ = Double.NaN;
+    this.IYZ = Double.NaN;
   }
 }
 
@@ -291,6 +628,38 @@ static public class PhysicalPropertiesVerify
       && verifier.VerifyField(tablePos, 40 /*SRP_CONST_AREA*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 42 /*SOLAR_RAD_COEFF*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 44 /*SRP_UNCERTAINTY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 46 /*MANUFACTURER*/, false)
+      && verifier.VerifyString(tablePos, 48 /*BUS_MODEL*/, false)
+      && verifier.VerifyString(tablePos, 50 /*DOCKED_WITH*/, false)
+      && verifier.VerifyField(tablePos, 52 /*INITIAL_WET_MASS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 54 /*OEB_PARENT_FRAME*/, false)
+      && verifier.VerifyString(tablePos, 56 /*OEB_PARENT_FRAME_EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 58 /*AREA_MIN_FOR_PC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 60 /*AREA_MAX_FOR_PC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 62 /*AREA_TYP_FOR_PC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 64 /*RCS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 66 /*RCS_MIN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 68 /*RCS_MAX*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 70 /*VM_ABSOLUTE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 72 /*VM_APPARENT_MIN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 74 /*VM_APPARENT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 76 /*VM_APPARENT_MAX*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 78 /*REFLECTANCE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 80 /*ATT_CONTROL_MODE*/, false)
+      && verifier.VerifyString(tablePos, 82 /*ATT_ACTUATOR_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 84 /*ATT_KNOWLEDGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 86 /*ATT_CONTROL*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 88 /*ATT_POINTING*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 90 /*AVG_MANEUVER_FREQ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 92 /*MAX_THRUST*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 94 /*DV_BOL*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 96 /*DV_REMAINING*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 98 /*IXX*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 100 /*IYY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 102 /*IZZ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 104 /*IXY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 106 /*IXZ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 108 /*IYZ*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

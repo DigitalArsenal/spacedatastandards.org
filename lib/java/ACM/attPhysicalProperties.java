@@ -87,6 +87,13 @@ public final class attPhysicalProperties extends com.google.flatbuffers.Table {
    * Product of inertia YZ in kg*m^2
    */
   public double IYZ() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+   * joined by a line feed.
+   */
+  public String COMMENT() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
 
   public static int createattPhysicalProperties(FlatBufferBuilder builder,
       double DRAG_COEFF,
@@ -102,8 +109,9 @@ public final class attPhysicalProperties extends com.google.flatbuffers.Table {
       double IZZ,
       double IXY,
       double IXZ,
-      double IYZ) {
-    builder.startTable(14);
+      double IYZ,
+      int COMMENTOffset) {
+    builder.startTable(15);
     attPhysicalProperties.addIyz(builder, IYZ);
     attPhysicalProperties.addIxz(builder, IXZ);
     attPhysicalProperties.addIxy(builder, IXY);
@@ -116,12 +124,13 @@ public final class attPhysicalProperties extends com.google.flatbuffers.Table {
     attPhysicalProperties.addDryMass(builder, DRY_MASS);
     attPhysicalProperties.addWetMass(builder, WET_MASS);
     attPhysicalProperties.addDragCoeff(builder, DRAG_COEFF);
+    attPhysicalProperties.addComment(builder, COMMENTOffset);
     attPhysicalProperties.addInertiaRefFrame(builder, INERTIA_REF_FRAMEOffset);
     attPhysicalProperties.addCpRefFrame(builder, CP_REF_FRAMEOffset);
     return attPhysicalProperties.endattPhysicalProperties(builder);
   }
 
-  public static void startattPhysicalProperties(FlatBufferBuilder builder) { builder.startTable(14); }
+  public static void startattPhysicalProperties(FlatBufferBuilder builder) { builder.startTable(15); }
   public static void addDragCoeff(FlatBufferBuilder builder, double DRAG_COEFF) { builder.addDouble(0, DRAG_COEFF, 0.0); }
   public static void addWetMass(FlatBufferBuilder builder, double WET_MASS) { builder.addDouble(1, WET_MASS, 0.0); }
   public static void addDryMass(FlatBufferBuilder builder, double DRY_MASS) { builder.addDouble(2, DRY_MASS, 0.0); }
@@ -136,6 +145,7 @@ public final class attPhysicalProperties extends com.google.flatbuffers.Table {
   public static void addIxy(FlatBufferBuilder builder, double IXY) { builder.addDouble(11, IXY, 0.0); }
   public static void addIxz(FlatBufferBuilder builder, double IXZ) { builder.addDouble(12, IXZ, 0.0); }
   public static void addIyz(FlatBufferBuilder builder, double IYZ) { builder.addDouble(13, IYZ, 0.0); }
+  public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(14, COMMENTOffset, 0); }
   public static int endattPhysicalProperties(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

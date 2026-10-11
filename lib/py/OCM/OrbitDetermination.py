@@ -326,8 +326,189 @@ class OrbitDetermination(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         return o == 0
 
+    # DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+    # OrbitDetermination
+    def DAYS_SINCE_FIRST_OBS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # DAYS_SINCE_LAST_OBS, NaN when not stated.
+    # OrbitDetermination
+    def DAYS_SINCE_LAST_OBS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # RECOMMENDED_OD_SPAN in days, NaN when not stated.
+    # OrbitDetermination
+    def RECOMMENDED_OD_SPAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # ACTUAL_OD_SPAN in days, NaN when not stated.
+    # OrbitDetermination
+    def ACTUAL_OD_SPAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+    # OrbitDetermination
+    def OBS_AVAILABLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+    # OrbitDetermination
+    def TRACKS_AVAILABLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # MAXIMUM_OBS_GAP in days, NaN when not stated.
+    # OrbitDetermination
+    def MAXIMUM_OBS_GAP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # OD_EPOCH_EIGMAJ in m, NaN when not stated.
+    # OrbitDetermination
+    def OD_EPOCH_EIGMAJ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # OD_EPOCH_EIGINT in m, NaN when not stated.
+    # OrbitDetermination
+    def OD_EPOCH_EIGINT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # OD_EPOCH_EIGMIN in m, NaN when not stated.
+    # OrbitDetermination
+    def OD_EPOCH_EIGMIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+    # OrbitDetermination
+    def OD_MAX_PRED_EIGMAJ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+    # OrbitDetermination
+    def OD_MIN_PRED_EIGMIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # OD_CONFIDENCE in percent, NaN when not stated.
+    # OrbitDetermination
+    def OD_CONFIDENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # GDOP, NaN when not stated.
+    # OrbitDetermination
+    def GDOP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # SOLVE_N: the number of solved-for states.
+    # OrbitDetermination
+    def SOLVE_N(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # SOLVE_STATES: the solved-for states, as written.
+    # OrbitDetermination
+    def SOLVE_STATES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CONSIDER_N: the number of consider parameters.
+    # OrbitDetermination
+    def CONSIDER_N(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # CONSIDER_PARAMS: the consider parameters, as written.
+    # OrbitDetermination
+    def CONSIDER_PARAMS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SENSORS_N: the number of sensors.
+    # OrbitDetermination
+    def SENSORS_N(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # SENSORS: the sensors, as written.
+    # OrbitDetermination
+    def SENSORS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+    # OrbitDetermination
+    def COMMENT(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # OrbitDetermination
+    def COMMENTLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OrbitDetermination
+    def COMMENTIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        return o == 0
+
 def OrbitDeterminationStart(builder):
-    builder.StartObject(26)
+    builder.StartObject(47)
 
 def Start(builder):
     OrbitDeterminationStart(builder)
@@ -556,6 +737,144 @@ def OrbitDeterminationCreateOD_DYNAMIC_PARAMETERSVector(builder, data):
 def CreateOD_DYNAMIC_PARAMETERSVector(builder, data):
     return OrbitDeterminationCreateOD_DYNAMIC_PARAMETERSVector(builder, data)
 
+def OrbitDeterminationAddDAYS_SINCE_FIRST_OBS(builder, DAYS_SINCE_FIRST_OBS):
+    builder.PrependFloat64Slot(26, DAYS_SINCE_FIRST_OBS, float('nan'))
+
+def AddDAYS_SINCE_FIRST_OBS(builder, DAYS_SINCE_FIRST_OBS):
+    OrbitDeterminationAddDAYS_SINCE_FIRST_OBS(builder, DAYS_SINCE_FIRST_OBS)
+
+def OrbitDeterminationAddDAYS_SINCE_LAST_OBS(builder, DAYS_SINCE_LAST_OBS):
+    builder.PrependFloat64Slot(27, DAYS_SINCE_LAST_OBS, float('nan'))
+
+def AddDAYS_SINCE_LAST_OBS(builder, DAYS_SINCE_LAST_OBS):
+    OrbitDeterminationAddDAYS_SINCE_LAST_OBS(builder, DAYS_SINCE_LAST_OBS)
+
+def OrbitDeterminationAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN):
+    builder.PrependFloat64Slot(28, RECOMMENDED_OD_SPAN, float('nan'))
+
+def AddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN):
+    OrbitDeterminationAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN)
+
+def OrbitDeterminationAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN):
+    builder.PrependFloat64Slot(29, ACTUAL_OD_SPAN, float('nan'))
+
+def AddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN):
+    OrbitDeterminationAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN)
+
+def OrbitDeterminationAddOBS_AVAILABLE(builder, OBS_AVAILABLE):
+    builder.PrependUint32Slot(30, OBS_AVAILABLE, 0)
+
+def AddOBS_AVAILABLE(builder, OBS_AVAILABLE):
+    OrbitDeterminationAddOBS_AVAILABLE(builder, OBS_AVAILABLE)
+
+def OrbitDeterminationAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE):
+    builder.PrependUint32Slot(31, TRACKS_AVAILABLE, 0)
+
+def AddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE):
+    OrbitDeterminationAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE)
+
+def OrbitDeterminationAddMAXIMUM_OBS_GAP(builder, MAXIMUM_OBS_GAP):
+    builder.PrependFloat64Slot(32, MAXIMUM_OBS_GAP, float('nan'))
+
+def AddMAXIMUM_OBS_GAP(builder, MAXIMUM_OBS_GAP):
+    OrbitDeterminationAddMAXIMUM_OBS_GAP(builder, MAXIMUM_OBS_GAP)
+
+def OrbitDeterminationAddOD_EPOCH_EIGMAJ(builder, OD_EPOCH_EIGMAJ):
+    builder.PrependFloat64Slot(33, OD_EPOCH_EIGMAJ, float('nan'))
+
+def AddOD_EPOCH_EIGMAJ(builder, OD_EPOCH_EIGMAJ):
+    OrbitDeterminationAddOD_EPOCH_EIGMAJ(builder, OD_EPOCH_EIGMAJ)
+
+def OrbitDeterminationAddOD_EPOCH_EIGINT(builder, OD_EPOCH_EIGINT):
+    builder.PrependFloat64Slot(34, OD_EPOCH_EIGINT, float('nan'))
+
+def AddOD_EPOCH_EIGINT(builder, OD_EPOCH_EIGINT):
+    OrbitDeterminationAddOD_EPOCH_EIGINT(builder, OD_EPOCH_EIGINT)
+
+def OrbitDeterminationAddOD_EPOCH_EIGMIN(builder, OD_EPOCH_EIGMIN):
+    builder.PrependFloat64Slot(35, OD_EPOCH_EIGMIN, float('nan'))
+
+def AddOD_EPOCH_EIGMIN(builder, OD_EPOCH_EIGMIN):
+    OrbitDeterminationAddOD_EPOCH_EIGMIN(builder, OD_EPOCH_EIGMIN)
+
+def OrbitDeterminationAddOD_MAX_PRED_EIGMAJ(builder, OD_MAX_PRED_EIGMAJ):
+    builder.PrependFloat64Slot(36, OD_MAX_PRED_EIGMAJ, float('nan'))
+
+def AddOD_MAX_PRED_EIGMAJ(builder, OD_MAX_PRED_EIGMAJ):
+    OrbitDeterminationAddOD_MAX_PRED_EIGMAJ(builder, OD_MAX_PRED_EIGMAJ)
+
+def OrbitDeterminationAddOD_MIN_PRED_EIGMIN(builder, OD_MIN_PRED_EIGMIN):
+    builder.PrependFloat64Slot(37, OD_MIN_PRED_EIGMIN, float('nan'))
+
+def AddOD_MIN_PRED_EIGMIN(builder, OD_MIN_PRED_EIGMIN):
+    OrbitDeterminationAddOD_MIN_PRED_EIGMIN(builder, OD_MIN_PRED_EIGMIN)
+
+def OrbitDeterminationAddOD_CONFIDENCE(builder, OD_CONFIDENCE):
+    builder.PrependFloat64Slot(38, OD_CONFIDENCE, float('nan'))
+
+def AddOD_CONFIDENCE(builder, OD_CONFIDENCE):
+    OrbitDeterminationAddOD_CONFIDENCE(builder, OD_CONFIDENCE)
+
+def OrbitDeterminationAddGDOP(builder, GDOP):
+    builder.PrependFloat64Slot(39, GDOP, float('nan'))
+
+def AddGDOP(builder, GDOP):
+    OrbitDeterminationAddGDOP(builder, GDOP)
+
+def OrbitDeterminationAddSOLVE_N(builder, SOLVE_N):
+    builder.PrependUint32Slot(40, SOLVE_N, 0)
+
+def AddSOLVE_N(builder, SOLVE_N):
+    OrbitDeterminationAddSOLVE_N(builder, SOLVE_N)
+
+def OrbitDeterminationAddSOLVE_STATES(builder, SOLVE_STATES):
+    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(SOLVE_STATES), 0)
+
+def AddSOLVE_STATES(builder, SOLVE_STATES):
+    OrbitDeterminationAddSOLVE_STATES(builder, SOLVE_STATES)
+
+def OrbitDeterminationAddCONSIDER_N(builder, CONSIDER_N):
+    builder.PrependUint32Slot(42, CONSIDER_N, 0)
+
+def AddCONSIDER_N(builder, CONSIDER_N):
+    OrbitDeterminationAddCONSIDER_N(builder, CONSIDER_N)
+
+def OrbitDeterminationAddCONSIDER_PARAMS(builder, CONSIDER_PARAMS):
+    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(CONSIDER_PARAMS), 0)
+
+def AddCONSIDER_PARAMS(builder, CONSIDER_PARAMS):
+    OrbitDeterminationAddCONSIDER_PARAMS(builder, CONSIDER_PARAMS)
+
+def OrbitDeterminationAddSENSORS_N(builder, SENSORS_N):
+    builder.PrependUint32Slot(44, SENSORS_N, 0)
+
+def AddSENSORS_N(builder, SENSORS_N):
+    OrbitDeterminationAddSENSORS_N(builder, SENSORS_N)
+
+def OrbitDeterminationAddSENSORS(builder, SENSORS):
+    builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(SENSORS), 0)
+
+def AddSENSORS(builder, SENSORS):
+    OrbitDeterminationAddSENSORS(builder, SENSORS)
+
+def OrbitDeterminationAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    OrbitDeterminationAddCOMMENT(builder, COMMENT)
+
+def OrbitDeterminationStartCOMMENTVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOMMENTVector(builder, numElems):
+    return OrbitDeterminationStartCOMMENTVector(builder, numElems)
+
+def OrbitDeterminationCreateCOMMENTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMENTVector(builder, data):
+    return OrbitDeterminationCreateCOMMENTVector(builder, data)
+
 def OrbitDeterminationEnd(builder):
     return builder.EndObject()
 
@@ -599,6 +918,27 @@ class OrbitDeterminationT(object):
         SEDR = 0.0,
         WEIGHTED_RMS = 0.0,
         OD_DYNAMIC_PARAMETERS = None,
+        DAYS_SINCE_FIRST_OBS = float('nan'),
+        DAYS_SINCE_LAST_OBS = float('nan'),
+        RECOMMENDED_OD_SPAN = float('nan'),
+        ACTUAL_OD_SPAN = float('nan'),
+        OBS_AVAILABLE = 0,
+        TRACKS_AVAILABLE = 0,
+        MAXIMUM_OBS_GAP = float('nan'),
+        OD_EPOCH_EIGMAJ = float('nan'),
+        OD_EPOCH_EIGINT = float('nan'),
+        OD_EPOCH_EIGMIN = float('nan'),
+        OD_MAX_PRED_EIGMAJ = float('nan'),
+        OD_MIN_PRED_EIGMIN = float('nan'),
+        OD_CONFIDENCE = float('nan'),
+        GDOP = float('nan'),
+        SOLVE_N = 0,
+        SOLVE_STATES = None,
+        CONSIDER_N = 0,
+        CONSIDER_PARAMS = None,
+        SENSORS_N = 0,
+        SENSORS = None,
+        COMMENT = None,
     ):
         self.OD_ID = OD_ID  # type: Optional[str]
         self.OD_PREV_ID = OD_PREV_ID  # type: Optional[str]
@@ -626,6 +966,27 @@ class OrbitDeterminationT(object):
         self.SEDR = SEDR  # type: float
         self.WEIGHTED_RMS = WEIGHTED_RMS  # type: float
         self.OD_DYNAMIC_PARAMETERS = OD_DYNAMIC_PARAMETERS  # type: Optional[List[OCMDynamicParameter.OCMDynamicParameterT]]
+        self.DAYS_SINCE_FIRST_OBS = DAYS_SINCE_FIRST_OBS  # type: float
+        self.DAYS_SINCE_LAST_OBS = DAYS_SINCE_LAST_OBS  # type: float
+        self.RECOMMENDED_OD_SPAN = RECOMMENDED_OD_SPAN  # type: float
+        self.ACTUAL_OD_SPAN = ACTUAL_OD_SPAN  # type: float
+        self.OBS_AVAILABLE = OBS_AVAILABLE  # type: int
+        self.TRACKS_AVAILABLE = TRACKS_AVAILABLE  # type: int
+        self.MAXIMUM_OBS_GAP = MAXIMUM_OBS_GAP  # type: float
+        self.OD_EPOCH_EIGMAJ = OD_EPOCH_EIGMAJ  # type: float
+        self.OD_EPOCH_EIGINT = OD_EPOCH_EIGINT  # type: float
+        self.OD_EPOCH_EIGMIN = OD_EPOCH_EIGMIN  # type: float
+        self.OD_MAX_PRED_EIGMAJ = OD_MAX_PRED_EIGMAJ  # type: float
+        self.OD_MIN_PRED_EIGMIN = OD_MIN_PRED_EIGMIN  # type: float
+        self.OD_CONFIDENCE = OD_CONFIDENCE  # type: float
+        self.GDOP = GDOP  # type: float
+        self.SOLVE_N = SOLVE_N  # type: int
+        self.SOLVE_STATES = SOLVE_STATES  # type: Optional[str]
+        self.CONSIDER_N = CONSIDER_N  # type: int
+        self.CONSIDER_PARAMS = CONSIDER_PARAMS  # type: Optional[str]
+        self.SENSORS_N = SENSORS_N  # type: int
+        self.SENSORS = SENSORS  # type: Optional[str]
+        self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -699,6 +1060,30 @@ class OrbitDeterminationT(object):
                 else:
                     oCMDynamicParameter_ = OCMDynamicParameter.OCMDynamicParameterT.InitFromObj(OrbitDetermination.OD_DYNAMIC_PARAMETERS(i))
                     self.OD_DYNAMIC_PARAMETERS.append(oCMDynamicParameter_)
+        self.DAYS_SINCE_FIRST_OBS = OrbitDetermination.DAYS_SINCE_FIRST_OBS()
+        self.DAYS_SINCE_LAST_OBS = OrbitDetermination.DAYS_SINCE_LAST_OBS()
+        self.RECOMMENDED_OD_SPAN = OrbitDetermination.RECOMMENDED_OD_SPAN()
+        self.ACTUAL_OD_SPAN = OrbitDetermination.ACTUAL_OD_SPAN()
+        self.OBS_AVAILABLE = OrbitDetermination.OBS_AVAILABLE()
+        self.TRACKS_AVAILABLE = OrbitDetermination.TRACKS_AVAILABLE()
+        self.MAXIMUM_OBS_GAP = OrbitDetermination.MAXIMUM_OBS_GAP()
+        self.OD_EPOCH_EIGMAJ = OrbitDetermination.OD_EPOCH_EIGMAJ()
+        self.OD_EPOCH_EIGINT = OrbitDetermination.OD_EPOCH_EIGINT()
+        self.OD_EPOCH_EIGMIN = OrbitDetermination.OD_EPOCH_EIGMIN()
+        self.OD_MAX_PRED_EIGMAJ = OrbitDetermination.OD_MAX_PRED_EIGMAJ()
+        self.OD_MIN_PRED_EIGMIN = OrbitDetermination.OD_MIN_PRED_EIGMIN()
+        self.OD_CONFIDENCE = OrbitDetermination.OD_CONFIDENCE()
+        self.GDOP = OrbitDetermination.GDOP()
+        self.SOLVE_N = OrbitDetermination.SOLVE_N()
+        self.SOLVE_STATES = OrbitDetermination.SOLVE_STATES()
+        self.CONSIDER_N = OrbitDetermination.CONSIDER_N()
+        self.CONSIDER_PARAMS = OrbitDetermination.CONSIDER_PARAMS()
+        self.SENSORS_N = OrbitDetermination.SENSORS_N()
+        self.SENSORS = OrbitDetermination.SENSORS()
+        if not OrbitDetermination.COMMENTIsNone():
+            self.COMMENT = []
+            for i in range(OrbitDetermination.COMMENTLength()):
+                self.COMMENT.append(OrbitDetermination.COMMENT(i))
 
     # OrbitDeterminationT
     def Pack(self, builder):
@@ -770,6 +1155,20 @@ class OrbitDeterminationT(object):
             for i in reversed(range(len(self.OD_DYNAMIC_PARAMETERS))):
                 builder.PrependUOffsetTRelative(OD_DYNAMIC_PARAMETERSlist[i])
             OD_DYNAMIC_PARAMETERS = builder.EndVector()
+        if self.SOLVE_STATES is not None:
+            SOLVE_STATES = builder.CreateString(self.SOLVE_STATES)
+        if self.CONSIDER_PARAMS is not None:
+            CONSIDER_PARAMS = builder.CreateString(self.CONSIDER_PARAMS)
+        if self.SENSORS is not None:
+            SENSORS = builder.CreateString(self.SENSORS)
+        if self.COMMENT is not None:
+            COMMENTlist = []
+            for i in range(len(self.COMMENT)):
+                COMMENTlist.append(builder.CreateString(self.COMMENT[i]))
+            OrbitDeterminationStartCOMMENTVector(builder, len(self.COMMENT))
+            for i in reversed(range(len(self.COMMENT))):
+                builder.PrependUOffsetTRelative(COMMENTlist[i])
+            COMMENT = builder.EndVector()
         OrbitDeterminationStart(builder)
         if self.OD_ID is not None:
             OrbitDeterminationAddOD_ID(builder, OD_ID)
@@ -816,5 +1215,30 @@ class OrbitDeterminationT(object):
         OrbitDeterminationAddWEIGHTED_RMS(builder, self.WEIGHTED_RMS)
         if self.OD_DYNAMIC_PARAMETERS is not None:
             OrbitDeterminationAddOD_DYNAMIC_PARAMETERS(builder, OD_DYNAMIC_PARAMETERS)
+        OrbitDeterminationAddDAYS_SINCE_FIRST_OBS(builder, self.DAYS_SINCE_FIRST_OBS)
+        OrbitDeterminationAddDAYS_SINCE_LAST_OBS(builder, self.DAYS_SINCE_LAST_OBS)
+        OrbitDeterminationAddRECOMMENDED_OD_SPAN(builder, self.RECOMMENDED_OD_SPAN)
+        OrbitDeterminationAddACTUAL_OD_SPAN(builder, self.ACTUAL_OD_SPAN)
+        OrbitDeterminationAddOBS_AVAILABLE(builder, self.OBS_AVAILABLE)
+        OrbitDeterminationAddTRACKS_AVAILABLE(builder, self.TRACKS_AVAILABLE)
+        OrbitDeterminationAddMAXIMUM_OBS_GAP(builder, self.MAXIMUM_OBS_GAP)
+        OrbitDeterminationAddOD_EPOCH_EIGMAJ(builder, self.OD_EPOCH_EIGMAJ)
+        OrbitDeterminationAddOD_EPOCH_EIGINT(builder, self.OD_EPOCH_EIGINT)
+        OrbitDeterminationAddOD_EPOCH_EIGMIN(builder, self.OD_EPOCH_EIGMIN)
+        OrbitDeterminationAddOD_MAX_PRED_EIGMAJ(builder, self.OD_MAX_PRED_EIGMAJ)
+        OrbitDeterminationAddOD_MIN_PRED_EIGMIN(builder, self.OD_MIN_PRED_EIGMIN)
+        OrbitDeterminationAddOD_CONFIDENCE(builder, self.OD_CONFIDENCE)
+        OrbitDeterminationAddGDOP(builder, self.GDOP)
+        OrbitDeterminationAddSOLVE_N(builder, self.SOLVE_N)
+        if self.SOLVE_STATES is not None:
+            OrbitDeterminationAddSOLVE_STATES(builder, SOLVE_STATES)
+        OrbitDeterminationAddCONSIDER_N(builder, self.CONSIDER_N)
+        if self.CONSIDER_PARAMS is not None:
+            OrbitDeterminationAddCONSIDER_PARAMS(builder, CONSIDER_PARAMS)
+        OrbitDeterminationAddSENSORS_N(builder, self.SENSORS_N)
+        if self.SENSORS is not None:
+            OrbitDeterminationAddSENSORS(builder, SENSORS)
+        if self.COMMENT is not None:
+            OrbitDeterminationAddCOMMENT(builder, COMMENT)
         OrbitDetermination = OrbitDeterminationEnd(builder)
         return OrbitDetermination

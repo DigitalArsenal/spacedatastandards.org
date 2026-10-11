@@ -334,8 +334,24 @@ func (rcv *attPhysicalProperties) MutateIyz(n float64) bool {
 	return rcv.MutateIYZ(n)
 }
 
+/// COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+/// joined by a line feed.
+func (rcv *attPhysicalProperties) COMMENT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *attPhysicalProperties) Comment() []byte {
+	return rcv.COMMENT()
+}
+
+/// COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),
+/// joined by a line feed.
 func attPhysicalPropertiesStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(15)
 }
 func attPhysicalPropertiesAddDRAG_COEFF(builder *flatbuffers.Builder, DRAG_COEFF float64) {
 	builder.PrependFloat64Slot(0, DRAG_COEFF, 0.0)
@@ -420,6 +436,12 @@ func attPhysicalPropertiesAddIYZ(builder *flatbuffers.Builder, IYZ float64) {
 }
 func attPhysicalPropertiesAddIyz(builder *flatbuffers.Builder, IYZ float64) {
 	attPhysicalPropertiesAddIYZ(builder, IYZ)
+}
+func attPhysicalPropertiesAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func attPhysicalPropertiesAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	attPhysicalPropertiesAddCOMMENT(builder, COMMENT)
 }
 func attPhysicalPropertiesEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -292,11 +292,745 @@ class RDM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Additional comments
+    /// COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+    /// data groups, in message order, joined by a line feed.
     public function getCOMMENT()
     {
         $o = $this->__offset(56);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// The fields below, with the earlier ones that say so, are the keywords of
+    /// CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+    /// NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+    /// NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+    /// WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+    /// REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+    /// SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+    /// not keywords of the message.
+    /// MESSAGE_ID: an identifier the originator makes unique for this message.
+    public function getMESSAGE_ID()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+    public function getCATALOG_NAME()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+    public function getOBJECT_DESIGNATOR()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// OBJECT_OWNER.
+    public function getOBJECT_OWNER()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// OBJECT_OPERATOR.
+    public function getOBJECT_OPERATOR()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+    /**
+     * @return sbyte
+     */
+    public function getCONTROLLED_REENTRY()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \rdmControlledReentry::UNSPECIFIED;
+    }
+
+    /// CENTER_NAME: the body being re-entered.
+    public function getCENTER_NAME()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// EPOCH_TZERO: the epoch the message's relative times are measured from.
+    public function getEPOCH_TZERO()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// REF_FRAME: the frame of the state vector.
+    public function getREF_FRAME()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// REF_FRAME_EPOCH.
+    public function getREF_FRAME_EPOCH()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// EPHEMERIS_NAME.
+    public function getEPHEMERIS_NAME()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// GRAVITY_MODEL.
+    public function getGRAVITY_MODEL()
+    {
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ATMOSPHERIC_MODEL.
+    public function getATMOSPHERIC_MODEL()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// SOLAR_FLUX_PREDICTION.
+    public function getSOLAR_FLUX_PREDICTION()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// N_BODY_PERTURBATIONS.
+    public function getN_BODY_PERTURBATIONS()
+    {
+        $o = $this->__offset(86);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+    public function getSOLAR_RAD_PRESSURE()
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// EARTH_TIDES: a model name.
+    public function getEARTH_TIDES()
+    {
+        $o = $this->__offset(90);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// INTRACK_THRUST: YES or NO.
+    public function getINTRACK_THRUST()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// DRAG_PARAMETERS_SOURCE.
+    public function getDRAG_PARAMETERS_SOURCE()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getDRAG_PARAMETERS_ALTITUDE()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+    public function getREENTRY_UNCERTAINTY_METHOD()
+    {
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+    public function getREENTRY_DISINTEGRATION()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+    public function getIMPACT_UNCERTAINTY_METHOD()
+    {
+        $o = $this->__offset(102);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// PREVIOUS_MESSAGE_ID.
+    public function getPREVIOUS_MESSAGE_ID()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// NEXT_MESSAGE_EPOCH.
+    public function getNEXT_MESSAGE_EPOCH()
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ORBIT_LIFETIME in days.
+    /**
+     * @return double
+     */
+    public function getORBIT_LIFETIME()
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getORBIT_LIFETIME_WINDOW_START()
+    {
+        $o = $this->__offset(110);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getORBIT_LIFETIME_WINDOW_END()
+    {
+        $o = $this->__offset(112);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// REENTRY_WINDOW_START.
+    public function getREENTRY_WINDOW_START()
+    {
+        $o = $this->__offset(114);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// REENTRY_WINDOW_END.
+    public function getREENTRY_WINDOW_END()
+    {
+        $o = $this->__offset(116);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getORBIT_LIFETIME_CONFIDENCE_LEVEL()
+    {
+        $o = $this->__offset(118);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// PROBABILITY_OF_IMPACT, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getPROBABILITY_OF_IMPACT()
+    {
+        $o = $this->__offset(120);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// PROBABILITY_OF_BURN_UP, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getPROBABILITY_OF_BURN_UP()
+    {
+        $o = $this->__offset(122);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// PROBABILITY_OF_BREAK_UP, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getPROBABILITY_OF_BREAK_UP()
+    {
+        $o = $this->__offset(124);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getPROBABILITY_OF_LAND_IMPACT()
+    {
+        $o = $this->__offset(126);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// PROBABILITY_OF_CASUALTY, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getPROBABILITY_OF_CASUALTY()
+    {
+        $o = $this->__offset(128);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// NOMINAL_IMPACT_EPOCH.
+    public function getNOMINAL_IMPACT_EPOCH()
+    {
+        $o = $this->__offset(130);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// IMPACT_WINDOW_START.
+    public function getIMPACT_WINDOW_START()
+    {
+        $o = $this->__offset(132);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// IMPACT_WINDOW_END.
+    public function getIMPACT_WINDOW_END()
+    {
+        $o = $this->__offset(134);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// IMPACT_REF_FRAME.
+    public function getIMPACT_REF_FRAME()
+    {
+        $o = $this->__offset(136);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getNOMINAL_IMPACT_LON()
+    {
+        $o = $this->__offset(138);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getNOMINAL_IMPACT_LAT()
+    {
+        $o = $this->__offset(140);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getNOMINAL_IMPACT_ALT()
+    {
+        $o = $this->__offset(142);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_1_CONFIDENCE()
+    {
+        $o = $this->__offset(144);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_1_START_LON in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_1_START_LON()
+    {
+        $o = $this->__offset(146);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_1_START_LAT in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_1_START_LAT()
+    {
+        $o = $this->__offset(148);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_1_STOP_LON in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_1_STOP_LON()
+    {
+        $o = $this->__offset(150);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_1_STOP_LAT()
+    {
+        $o = $this->__offset(152);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_1_CROSS_TRACK()
+    {
+        $o = $this->__offset(154);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_2_CONFIDENCE()
+    {
+        $o = $this->__offset(156);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_2_START_LON in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_2_START_LON()
+    {
+        $o = $this->__offset(158);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_2_START_LAT in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_2_START_LAT()
+    {
+        $o = $this->__offset(160);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_2_STOP_LON in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_2_STOP_LON()
+    {
+        $o = $this->__offset(162);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_2_STOP_LAT()
+    {
+        $o = $this->__offset(164);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_2_CROSS_TRACK()
+    {
+        $o = $this->__offset(166);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_3_CONFIDENCE()
+    {
+        $o = $this->__offset(168);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_3_START_LON in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_3_START_LON()
+    {
+        $o = $this->__offset(170);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_3_START_LAT in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_3_START_LAT()
+    {
+        $o = $this->__offset(172);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_3_STOP_LON in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_3_STOP_LON()
+    {
+        $o = $this->__offset(174);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_3_STOP_LAT()
+    {
+        $o = $this->__offset(176);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIMPACT_3_CROSS_TRACK()
+    {
+        $o = $this->__offset(178);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// COV_REF_FRAME: the frame of COVARIANCE.
+    public function getCOV_REF_FRAME()
+    {
+        $o = $this->__offset(180);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+    /// triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+    /// CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+    /// CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+    /// CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getCOVARIANCE($j)
+    {
+        $o = $this->__offset(182);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOVARIANCELength()
+    {
+        $o = $this->__offset(182);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getDRY_MASS()
+    {
+        $o = $this->__offset(184);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// HAZARDOUS_SUBSTANCES.
+    public function getHAZARDOUS_SUBSTANCES()
+    {
+        $o = $this->__offset(186);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// SOLAR_RAD_COEFF, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getSOLAR_RAD_COEFF()
+    {
+        $o = $this->__offset(188);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// DRAG_COEFF, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getDRAG_COEFF()
+    {
+        $o = $this->__offset(190);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// RCS in m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getRCS()
+    {
+        $o = $this->__offset(192);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// THRUST_ACCELERATION in m/s**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getTHRUST_ACCELERATION()
+    {
+        $o = $this->__offset(194);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// TIME_LASTOB_START.
+    public function getTIME_LASTOB_START()
+    {
+        $o = $this->__offset(196);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// TIME_LASTOB_END.
+    public function getTIME_LASTOB_END()
+    {
+        $o = $this->__offset(198);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getRECOMMENDED_OD_SPAN()
+    {
+        $o = $this->__offset(200);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// ACTUAL_OD_SPAN in days, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getACTUAL_OD_SPAN()
+    {
+        $o = $this->__offset(202);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// OBS_AVAILABLE.
+    /**
+     * @return uint
+     */
+    public function getOBS_AVAILABLE()
+    {
+        $o = $this->__offset(204);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// OBS_USED.
+    /**
+     * @return uint
+     */
+    public function getOBS_USED()
+    {
+        $o = $this->__offset(206);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// TRACKS_AVAILABLE.
+    /**
+     * @return uint
+     */
+    public function getTRACKS_AVAILABLE()
+    {
+        $o = $this->__offset(208);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// TRACKS_USED.
+    /**
+     * @return uint
+     */
+    public function getTRACKS_USED()
+    {
+        $o = $this->__offset(210);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// RESIDUALS_ACCEPTED in percent, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getRESIDUALS_ACCEPTED()
+    {
+        $o = $this->__offset(212);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// WEIGHTED_RMS, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getWEIGHTED_RMS()
+    {
+        $o = $this->__offset(214);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Every USER_DEFINED keyword of the message, in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getUSER_DEFINED_PARAMETERS($j)
+    {
+        $o = $this->__offset(216);
+        $obj = new RDMUserDefinedParameter();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUSER_DEFINED_PARAMETERSLength()
+    {
+        $o = $this->__offset(216);
+        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /**
@@ -305,16 +1039,16 @@ class RDM extends Table
      */
     public static function startRDM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(27);
+        $builder->StartObject(107);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RDM
      */
-    public static function createRDM(FlatBufferBuilder $builder, $CCSDS_RDM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $DISPOSITION, $REASON, $REENTRY_EPOCH, $REENTRY_EPOCH_UNC, $REENTRY_LATITUDE, $REENTRY_LONGITUDE, $REENTRY_ALTITUDE, $TIME_SYSTEM, $PREV_PREDICTION_EPOCH, $BALLISTIC_COEFF, $MASS, $SOLAR_RAD_AREA, $DRAG_AREA, $INITIAL_STATE, $IMPACT_PREDICTIONS, $SURVIVING_DEBRIS, $CASUALTY_EXPECTATION, $NUM_FRAGMENTS, $SURVIVING_MASS, $COMMENT)
+    public static function createRDM(FlatBufferBuilder $builder, $CCSDS_RDM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $DISPOSITION, $REASON, $REENTRY_EPOCH, $REENTRY_EPOCH_UNC, $REENTRY_LATITUDE, $REENTRY_LONGITUDE, $REENTRY_ALTITUDE, $TIME_SYSTEM, $PREV_PREDICTION_EPOCH, $BALLISTIC_COEFF, $MASS, $SOLAR_RAD_AREA, $DRAG_AREA, $INITIAL_STATE, $IMPACT_PREDICTIONS, $SURVIVING_DEBRIS, $CASUALTY_EXPECTATION, $NUM_FRAGMENTS, $SURVIVING_MASS, $COMMENT, $MESSAGE_ID, $CATALOG_NAME, $OBJECT_DESIGNATOR, $OBJECT_OWNER, $OBJECT_OPERATOR, $CONTROLLED_REENTRY, $CENTER_NAME, $EPOCH_TZERO, $REF_FRAME, $REF_FRAME_EPOCH, $EPHEMERIS_NAME, $GRAVITY_MODEL, $ATMOSPHERIC_MODEL, $SOLAR_FLUX_PREDICTION, $N_BODY_PERTURBATIONS, $SOLAR_RAD_PRESSURE, $EARTH_TIDES, $INTRACK_THRUST, $DRAG_PARAMETERS_SOURCE, $DRAG_PARAMETERS_ALTITUDE, $REENTRY_UNCERTAINTY_METHOD, $REENTRY_DISINTEGRATION, $IMPACT_UNCERTAINTY_METHOD, $PREVIOUS_MESSAGE_ID, $NEXT_MESSAGE_EPOCH, $ORBIT_LIFETIME, $ORBIT_LIFETIME_WINDOW_START, $ORBIT_LIFETIME_WINDOW_END, $REENTRY_WINDOW_START, $REENTRY_WINDOW_END, $ORBIT_LIFETIME_CONFIDENCE_LEVEL, $PROBABILITY_OF_IMPACT, $PROBABILITY_OF_BURN_UP, $PROBABILITY_OF_BREAK_UP, $PROBABILITY_OF_LAND_IMPACT, $PROBABILITY_OF_CASUALTY, $NOMINAL_IMPACT_EPOCH, $IMPACT_WINDOW_START, $IMPACT_WINDOW_END, $IMPACT_REF_FRAME, $NOMINAL_IMPACT_LON, $NOMINAL_IMPACT_LAT, $NOMINAL_IMPACT_ALT, $IMPACT_1_CONFIDENCE, $IMPACT_1_START_LON, $IMPACT_1_START_LAT, $IMPACT_1_STOP_LON, $IMPACT_1_STOP_LAT, $IMPACT_1_CROSS_TRACK, $IMPACT_2_CONFIDENCE, $IMPACT_2_START_LON, $IMPACT_2_START_LAT, $IMPACT_2_STOP_LON, $IMPACT_2_STOP_LAT, $IMPACT_2_CROSS_TRACK, $IMPACT_3_CONFIDENCE, $IMPACT_3_START_LON, $IMPACT_3_START_LAT, $IMPACT_3_STOP_LON, $IMPACT_3_STOP_LAT, $IMPACT_3_CROSS_TRACK, $COV_REF_FRAME, $COVARIANCE, $DRY_MASS, $HAZARDOUS_SUBSTANCES, $SOLAR_RAD_COEFF, $DRAG_COEFF, $RCS, $THRUST_ACCELERATION, $TIME_LASTOB_START, $TIME_LASTOB_END, $RECOMMENDED_OD_SPAN, $ACTUAL_OD_SPAN, $OBS_AVAILABLE, $OBS_USED, $TRACKS_AVAILABLE, $TRACKS_USED, $RESIDUALS_ACCEPTED, $WEIGHTED_RMS, $USER_DEFINED_PARAMETERS)
     {
-        $builder->startObject(27);
+        $builder->startObject(107);
         self::addCCSDS_RDM_VERS($builder, $CCSDS_RDM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -342,6 +1076,86 @@ class RDM extends Table
         self::addNUM_FRAGMENTS($builder, $NUM_FRAGMENTS);
         self::addSURVIVING_MASS($builder, $SURVIVING_MASS);
         self::addCOMMENT($builder, $COMMENT);
+        self::addMESSAGE_ID($builder, $MESSAGE_ID);
+        self::addCATALOG_NAME($builder, $CATALOG_NAME);
+        self::addOBJECT_DESIGNATOR($builder, $OBJECT_DESIGNATOR);
+        self::addOBJECT_OWNER($builder, $OBJECT_OWNER);
+        self::addOBJECT_OPERATOR($builder, $OBJECT_OPERATOR);
+        self::addCONTROLLED_REENTRY($builder, $CONTROLLED_REENTRY);
+        self::addCENTER_NAME($builder, $CENTER_NAME);
+        self::addEPOCH_TZERO($builder, $EPOCH_TZERO);
+        self::addREF_FRAME($builder, $REF_FRAME);
+        self::addREF_FRAME_EPOCH($builder, $REF_FRAME_EPOCH);
+        self::addEPHEMERIS_NAME($builder, $EPHEMERIS_NAME);
+        self::addGRAVITY_MODEL($builder, $GRAVITY_MODEL);
+        self::addATMOSPHERIC_MODEL($builder, $ATMOSPHERIC_MODEL);
+        self::addSOLAR_FLUX_PREDICTION($builder, $SOLAR_FLUX_PREDICTION);
+        self::addN_BODY_PERTURBATIONS($builder, $N_BODY_PERTURBATIONS);
+        self::addSOLAR_RAD_PRESSURE($builder, $SOLAR_RAD_PRESSURE);
+        self::addEARTH_TIDES($builder, $EARTH_TIDES);
+        self::addINTRACK_THRUST($builder, $INTRACK_THRUST);
+        self::addDRAG_PARAMETERS_SOURCE($builder, $DRAG_PARAMETERS_SOURCE);
+        self::addDRAG_PARAMETERS_ALTITUDE($builder, $DRAG_PARAMETERS_ALTITUDE);
+        self::addREENTRY_UNCERTAINTY_METHOD($builder, $REENTRY_UNCERTAINTY_METHOD);
+        self::addREENTRY_DISINTEGRATION($builder, $REENTRY_DISINTEGRATION);
+        self::addIMPACT_UNCERTAINTY_METHOD($builder, $IMPACT_UNCERTAINTY_METHOD);
+        self::addPREVIOUS_MESSAGE_ID($builder, $PREVIOUS_MESSAGE_ID);
+        self::addNEXT_MESSAGE_EPOCH($builder, $NEXT_MESSAGE_EPOCH);
+        self::addORBIT_LIFETIME($builder, $ORBIT_LIFETIME);
+        self::addORBIT_LIFETIME_WINDOW_START($builder, $ORBIT_LIFETIME_WINDOW_START);
+        self::addORBIT_LIFETIME_WINDOW_END($builder, $ORBIT_LIFETIME_WINDOW_END);
+        self::addREENTRY_WINDOW_START($builder, $REENTRY_WINDOW_START);
+        self::addREENTRY_WINDOW_END($builder, $REENTRY_WINDOW_END);
+        self::addORBIT_LIFETIME_CONFIDENCE_LEVEL($builder, $ORBIT_LIFETIME_CONFIDENCE_LEVEL);
+        self::addPROBABILITY_OF_IMPACT($builder, $PROBABILITY_OF_IMPACT);
+        self::addPROBABILITY_OF_BURN_UP($builder, $PROBABILITY_OF_BURN_UP);
+        self::addPROBABILITY_OF_BREAK_UP($builder, $PROBABILITY_OF_BREAK_UP);
+        self::addPROBABILITY_OF_LAND_IMPACT($builder, $PROBABILITY_OF_LAND_IMPACT);
+        self::addPROBABILITY_OF_CASUALTY($builder, $PROBABILITY_OF_CASUALTY);
+        self::addNOMINAL_IMPACT_EPOCH($builder, $NOMINAL_IMPACT_EPOCH);
+        self::addIMPACT_WINDOW_START($builder, $IMPACT_WINDOW_START);
+        self::addIMPACT_WINDOW_END($builder, $IMPACT_WINDOW_END);
+        self::addIMPACT_REF_FRAME($builder, $IMPACT_REF_FRAME);
+        self::addNOMINAL_IMPACT_LON($builder, $NOMINAL_IMPACT_LON);
+        self::addNOMINAL_IMPACT_LAT($builder, $NOMINAL_IMPACT_LAT);
+        self::addNOMINAL_IMPACT_ALT($builder, $NOMINAL_IMPACT_ALT);
+        self::addIMPACT_1_CONFIDENCE($builder, $IMPACT_1_CONFIDENCE);
+        self::addIMPACT_1_START_LON($builder, $IMPACT_1_START_LON);
+        self::addIMPACT_1_START_LAT($builder, $IMPACT_1_START_LAT);
+        self::addIMPACT_1_STOP_LON($builder, $IMPACT_1_STOP_LON);
+        self::addIMPACT_1_STOP_LAT($builder, $IMPACT_1_STOP_LAT);
+        self::addIMPACT_1_CROSS_TRACK($builder, $IMPACT_1_CROSS_TRACK);
+        self::addIMPACT_2_CONFIDENCE($builder, $IMPACT_2_CONFIDENCE);
+        self::addIMPACT_2_START_LON($builder, $IMPACT_2_START_LON);
+        self::addIMPACT_2_START_LAT($builder, $IMPACT_2_START_LAT);
+        self::addIMPACT_2_STOP_LON($builder, $IMPACT_2_STOP_LON);
+        self::addIMPACT_2_STOP_LAT($builder, $IMPACT_2_STOP_LAT);
+        self::addIMPACT_2_CROSS_TRACK($builder, $IMPACT_2_CROSS_TRACK);
+        self::addIMPACT_3_CONFIDENCE($builder, $IMPACT_3_CONFIDENCE);
+        self::addIMPACT_3_START_LON($builder, $IMPACT_3_START_LON);
+        self::addIMPACT_3_START_LAT($builder, $IMPACT_3_START_LAT);
+        self::addIMPACT_3_STOP_LON($builder, $IMPACT_3_STOP_LON);
+        self::addIMPACT_3_STOP_LAT($builder, $IMPACT_3_STOP_LAT);
+        self::addIMPACT_3_CROSS_TRACK($builder, $IMPACT_3_CROSS_TRACK);
+        self::addCOV_REF_FRAME($builder, $COV_REF_FRAME);
+        self::addCOVARIANCE($builder, $COVARIANCE);
+        self::addDRY_MASS($builder, $DRY_MASS);
+        self::addHAZARDOUS_SUBSTANCES($builder, $HAZARDOUS_SUBSTANCES);
+        self::addSOLAR_RAD_COEFF($builder, $SOLAR_RAD_COEFF);
+        self::addDRAG_COEFF($builder, $DRAG_COEFF);
+        self::addRCS($builder, $RCS);
+        self::addTHRUST_ACCELERATION($builder, $THRUST_ACCELERATION);
+        self::addTIME_LASTOB_START($builder, $TIME_LASTOB_START);
+        self::addTIME_LASTOB_END($builder, $TIME_LASTOB_END);
+        self::addRECOMMENDED_OD_SPAN($builder, $RECOMMENDED_OD_SPAN);
+        self::addACTUAL_OD_SPAN($builder, $ACTUAL_OD_SPAN);
+        self::addOBS_AVAILABLE($builder, $OBS_AVAILABLE);
+        self::addOBS_USED($builder, $OBS_USED);
+        self::addTRACKS_AVAILABLE($builder, $TRACKS_AVAILABLE);
+        self::addTRACKS_USED($builder, $TRACKS_USED);
+        self::addRESIDUALS_ACCEPTED($builder, $RESIDUALS_ACCEPTED);
+        self::addWEIGHTED_RMS($builder, $WEIGHTED_RMS);
+        self::addUSER_DEFINED_PARAMETERS($builder, $USER_DEFINED_PARAMETERS);
         $o = $builder->endObject();
         return $o;
     }
@@ -662,6 +1476,854 @@ class RDM extends Table
     public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
     {
         $builder->addOffsetX(26, $COMMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMESSAGE_ID(FlatBufferBuilder $builder, $MESSAGE_ID)
+    {
+        $builder->addOffsetX(27, $MESSAGE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCATALOG_NAME(FlatBufferBuilder $builder, $CATALOG_NAME)
+    {
+        $builder->addOffsetX(28, $CATALOG_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_DESIGNATOR(FlatBufferBuilder $builder, $OBJECT_DESIGNATOR)
+    {
+        $builder->addOffsetX(29, $OBJECT_DESIGNATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_OWNER(FlatBufferBuilder $builder, $OBJECT_OWNER)
+    {
+        $builder->addOffsetX(30, $OBJECT_OWNER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_OPERATOR(FlatBufferBuilder $builder, $OBJECT_OPERATOR)
+    {
+        $builder->addOffsetX(31, $OBJECT_OPERATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addCONTROLLED_REENTRY(FlatBufferBuilder $builder, $CONTROLLED_REENTRY)
+    {
+        $builder->addSbyteX(32, $CONTROLLED_REENTRY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCENTER_NAME(FlatBufferBuilder $builder, $CENTER_NAME)
+    {
+        $builder->addOffsetX(33, $CENTER_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPOCH_TZERO(FlatBufferBuilder $builder, $EPOCH_TZERO)
+    {
+        $builder->addOffsetX(34, $EPOCH_TZERO, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREF_FRAME(FlatBufferBuilder $builder, $REF_FRAME)
+    {
+        $builder->addOffsetX(35, $REF_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREF_FRAME_EPOCH(FlatBufferBuilder $builder, $REF_FRAME_EPOCH)
+    {
+        $builder->addOffsetX(36, $REF_FRAME_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPHEMERIS_NAME(FlatBufferBuilder $builder, $EPHEMERIS_NAME)
+    {
+        $builder->addOffsetX(37, $EPHEMERIS_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addGRAVITY_MODEL(FlatBufferBuilder $builder, $GRAVITY_MODEL)
+    {
+        $builder->addOffsetX(38, $GRAVITY_MODEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addATMOSPHERIC_MODEL(FlatBufferBuilder $builder, $ATMOSPHERIC_MODEL)
+    {
+        $builder->addOffsetX(39, $ATMOSPHERIC_MODEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSOLAR_FLUX_PREDICTION(FlatBufferBuilder $builder, $SOLAR_FLUX_PREDICTION)
+    {
+        $builder->addOffsetX(40, $SOLAR_FLUX_PREDICTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addN_BODY_PERTURBATIONS(FlatBufferBuilder $builder, $N_BODY_PERTURBATIONS)
+    {
+        $builder->addOffsetX(41, $N_BODY_PERTURBATIONS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSOLAR_RAD_PRESSURE(FlatBufferBuilder $builder, $SOLAR_RAD_PRESSURE)
+    {
+        $builder->addOffsetX(42, $SOLAR_RAD_PRESSURE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEARTH_TIDES(FlatBufferBuilder $builder, $EARTH_TIDES)
+    {
+        $builder->addOffsetX(43, $EARTH_TIDES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addINTRACK_THRUST(FlatBufferBuilder $builder, $INTRACK_THRUST)
+    {
+        $builder->addOffsetX(44, $INTRACK_THRUST, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDRAG_PARAMETERS_SOURCE(FlatBufferBuilder $builder, $DRAG_PARAMETERS_SOURCE)
+    {
+        $builder->addOffsetX(45, $DRAG_PARAMETERS_SOURCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDRAG_PARAMETERS_ALTITUDE(FlatBufferBuilder $builder, $DRAG_PARAMETERS_ALTITUDE)
+    {
+        $builder->addDoubleX(46, $DRAG_PARAMETERS_ALTITUDE, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREENTRY_UNCERTAINTY_METHOD(FlatBufferBuilder $builder, $REENTRY_UNCERTAINTY_METHOD)
+    {
+        $builder->addOffsetX(47, $REENTRY_UNCERTAINTY_METHOD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREENTRY_DISINTEGRATION(FlatBufferBuilder $builder, $REENTRY_DISINTEGRATION)
+    {
+        $builder->addOffsetX(48, $REENTRY_DISINTEGRATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addIMPACT_UNCERTAINTY_METHOD(FlatBufferBuilder $builder, $IMPACT_UNCERTAINTY_METHOD)
+    {
+        $builder->addOffsetX(49, $IMPACT_UNCERTAINTY_METHOD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPREVIOUS_MESSAGE_ID(FlatBufferBuilder $builder, $PREVIOUS_MESSAGE_ID)
+    {
+        $builder->addOffsetX(50, $PREVIOUS_MESSAGE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNEXT_MESSAGE_EPOCH(FlatBufferBuilder $builder, $NEXT_MESSAGE_EPOCH)
+    {
+        $builder->addOffsetX(51, $NEXT_MESSAGE_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addORBIT_LIFETIME(FlatBufferBuilder $builder, $ORBIT_LIFETIME)
+    {
+        $builder->addDoubleX(52, $ORBIT_LIFETIME, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addORBIT_LIFETIME_WINDOW_START(FlatBufferBuilder $builder, $ORBIT_LIFETIME_WINDOW_START)
+    {
+        $builder->addDoubleX(53, $ORBIT_LIFETIME_WINDOW_START, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addORBIT_LIFETIME_WINDOW_END(FlatBufferBuilder $builder, $ORBIT_LIFETIME_WINDOW_END)
+    {
+        $builder->addDoubleX(54, $ORBIT_LIFETIME_WINDOW_END, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREENTRY_WINDOW_START(FlatBufferBuilder $builder, $REENTRY_WINDOW_START)
+    {
+        $builder->addOffsetX(55, $REENTRY_WINDOW_START, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREENTRY_WINDOW_END(FlatBufferBuilder $builder, $REENTRY_WINDOW_END)
+    {
+        $builder->addOffsetX(56, $REENTRY_WINDOW_END, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addORBIT_LIFETIME_CONFIDENCE_LEVEL(FlatBufferBuilder $builder, $ORBIT_LIFETIME_CONFIDENCE_LEVEL)
+    {
+        $builder->addDoubleX(57, $ORBIT_LIFETIME_CONFIDENCE_LEVEL, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPROBABILITY_OF_IMPACT(FlatBufferBuilder $builder, $PROBABILITY_OF_IMPACT)
+    {
+        $builder->addDoubleX(58, $PROBABILITY_OF_IMPACT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPROBABILITY_OF_BURN_UP(FlatBufferBuilder $builder, $PROBABILITY_OF_BURN_UP)
+    {
+        $builder->addDoubleX(59, $PROBABILITY_OF_BURN_UP, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPROBABILITY_OF_BREAK_UP(FlatBufferBuilder $builder, $PROBABILITY_OF_BREAK_UP)
+    {
+        $builder->addDoubleX(60, $PROBABILITY_OF_BREAK_UP, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPROBABILITY_OF_LAND_IMPACT(FlatBufferBuilder $builder, $PROBABILITY_OF_LAND_IMPACT)
+    {
+        $builder->addDoubleX(61, $PROBABILITY_OF_LAND_IMPACT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPROBABILITY_OF_CASUALTY(FlatBufferBuilder $builder, $PROBABILITY_OF_CASUALTY)
+    {
+        $builder->addDoubleX(62, $PROBABILITY_OF_CASUALTY, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNOMINAL_IMPACT_EPOCH(FlatBufferBuilder $builder, $NOMINAL_IMPACT_EPOCH)
+    {
+        $builder->addOffsetX(63, $NOMINAL_IMPACT_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addIMPACT_WINDOW_START(FlatBufferBuilder $builder, $IMPACT_WINDOW_START)
+    {
+        $builder->addOffsetX(64, $IMPACT_WINDOW_START, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addIMPACT_WINDOW_END(FlatBufferBuilder $builder, $IMPACT_WINDOW_END)
+    {
+        $builder->addOffsetX(65, $IMPACT_WINDOW_END, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addIMPACT_REF_FRAME(FlatBufferBuilder $builder, $IMPACT_REF_FRAME)
+    {
+        $builder->addOffsetX(66, $IMPACT_REF_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addNOMINAL_IMPACT_LON(FlatBufferBuilder $builder, $NOMINAL_IMPACT_LON)
+    {
+        $builder->addDoubleX(67, $NOMINAL_IMPACT_LON, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addNOMINAL_IMPACT_LAT(FlatBufferBuilder $builder, $NOMINAL_IMPACT_LAT)
+    {
+        $builder->addDoubleX(68, $NOMINAL_IMPACT_LAT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addNOMINAL_IMPACT_ALT(FlatBufferBuilder $builder, $NOMINAL_IMPACT_ALT)
+    {
+        $builder->addDoubleX(69, $NOMINAL_IMPACT_ALT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_1_CONFIDENCE(FlatBufferBuilder $builder, $IMPACT_1_CONFIDENCE)
+    {
+        $builder->addDoubleX(70, $IMPACT_1_CONFIDENCE, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_1_START_LON(FlatBufferBuilder $builder, $IMPACT_1_START_LON)
+    {
+        $builder->addDoubleX(71, $IMPACT_1_START_LON, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_1_START_LAT(FlatBufferBuilder $builder, $IMPACT_1_START_LAT)
+    {
+        $builder->addDoubleX(72, $IMPACT_1_START_LAT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_1_STOP_LON(FlatBufferBuilder $builder, $IMPACT_1_STOP_LON)
+    {
+        $builder->addDoubleX(73, $IMPACT_1_STOP_LON, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_1_STOP_LAT(FlatBufferBuilder $builder, $IMPACT_1_STOP_LAT)
+    {
+        $builder->addDoubleX(74, $IMPACT_1_STOP_LAT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_1_CROSS_TRACK(FlatBufferBuilder $builder, $IMPACT_1_CROSS_TRACK)
+    {
+        $builder->addDoubleX(75, $IMPACT_1_CROSS_TRACK, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_2_CONFIDENCE(FlatBufferBuilder $builder, $IMPACT_2_CONFIDENCE)
+    {
+        $builder->addDoubleX(76, $IMPACT_2_CONFIDENCE, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_2_START_LON(FlatBufferBuilder $builder, $IMPACT_2_START_LON)
+    {
+        $builder->addDoubleX(77, $IMPACT_2_START_LON, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_2_START_LAT(FlatBufferBuilder $builder, $IMPACT_2_START_LAT)
+    {
+        $builder->addDoubleX(78, $IMPACT_2_START_LAT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_2_STOP_LON(FlatBufferBuilder $builder, $IMPACT_2_STOP_LON)
+    {
+        $builder->addDoubleX(79, $IMPACT_2_STOP_LON, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_2_STOP_LAT(FlatBufferBuilder $builder, $IMPACT_2_STOP_LAT)
+    {
+        $builder->addDoubleX(80, $IMPACT_2_STOP_LAT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_2_CROSS_TRACK(FlatBufferBuilder $builder, $IMPACT_2_CROSS_TRACK)
+    {
+        $builder->addDoubleX(81, $IMPACT_2_CROSS_TRACK, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_3_CONFIDENCE(FlatBufferBuilder $builder, $IMPACT_3_CONFIDENCE)
+    {
+        $builder->addDoubleX(82, $IMPACT_3_CONFIDENCE, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_3_START_LON(FlatBufferBuilder $builder, $IMPACT_3_START_LON)
+    {
+        $builder->addDoubleX(83, $IMPACT_3_START_LON, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_3_START_LAT(FlatBufferBuilder $builder, $IMPACT_3_START_LAT)
+    {
+        $builder->addDoubleX(84, $IMPACT_3_START_LAT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_3_STOP_LON(FlatBufferBuilder $builder, $IMPACT_3_STOP_LON)
+    {
+        $builder->addDoubleX(85, $IMPACT_3_STOP_LON, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_3_STOP_LAT(FlatBufferBuilder $builder, $IMPACT_3_STOP_LAT)
+    {
+        $builder->addDoubleX(86, $IMPACT_3_STOP_LAT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIMPACT_3_CROSS_TRACK(FlatBufferBuilder $builder, $IMPACT_3_CROSS_TRACK)
+    {
+        $builder->addDoubleX(87, $IMPACT_3_CROSS_TRACK, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOV_REF_FRAME(FlatBufferBuilder $builder, $COV_REF_FRAME)
+    {
+        $builder->addOffsetX(88, $COV_REF_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOVARIANCE(FlatBufferBuilder $builder, $COVARIANCE)
+    {
+        $builder->addOffsetX(89, $COVARIANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOVARIANCEVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOVARIANCEVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDRY_MASS(FlatBufferBuilder $builder, $DRY_MASS)
+    {
+        $builder->addDoubleX(90, $DRY_MASS, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addHAZARDOUS_SUBSTANCES(FlatBufferBuilder $builder, $HAZARDOUS_SUBSTANCES)
+    {
+        $builder->addOffsetX(91, $HAZARDOUS_SUBSTANCES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSOLAR_RAD_COEFF(FlatBufferBuilder $builder, $SOLAR_RAD_COEFF)
+    {
+        $builder->addDoubleX(92, $SOLAR_RAD_COEFF, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDRAG_COEFF(FlatBufferBuilder $builder, $DRAG_COEFF)
+    {
+        $builder->addDoubleX(93, $DRAG_COEFF, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRCS(FlatBufferBuilder $builder, $RCS)
+    {
+        $builder->addDoubleX(94, $RCS, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTHRUST_ACCELERATION(FlatBufferBuilder $builder, $THRUST_ACCELERATION)
+    {
+        $builder->addDoubleX(95, $THRUST_ACCELERATION, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTIME_LASTOB_START(FlatBufferBuilder $builder, $TIME_LASTOB_START)
+    {
+        $builder->addOffsetX(96, $TIME_LASTOB_START, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTIME_LASTOB_END(FlatBufferBuilder $builder, $TIME_LASTOB_END)
+    {
+        $builder->addOffsetX(97, $TIME_LASTOB_END, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRECOMMENDED_OD_SPAN(FlatBufferBuilder $builder, $RECOMMENDED_OD_SPAN)
+    {
+        $builder->addDoubleX(98, $RECOMMENDED_OD_SPAN, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addACTUAL_OD_SPAN(FlatBufferBuilder $builder, $ACTUAL_OD_SPAN)
+    {
+        $builder->addDoubleX(99, $ACTUAL_OD_SPAN, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addOBS_AVAILABLE(FlatBufferBuilder $builder, $OBS_AVAILABLE)
+    {
+        $builder->addUintX(100, $OBS_AVAILABLE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addOBS_USED(FlatBufferBuilder $builder, $OBS_USED)
+    {
+        $builder->addUintX(101, $OBS_USED, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addTRACKS_AVAILABLE(FlatBufferBuilder $builder, $TRACKS_AVAILABLE)
+    {
+        $builder->addUintX(102, $TRACKS_AVAILABLE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addTRACKS_USED(FlatBufferBuilder $builder, $TRACKS_USED)
+    {
+        $builder->addUintX(103, $TRACKS_USED, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRESIDUALS_ACCEPTED(FlatBufferBuilder $builder, $RESIDUALS_ACCEPTED)
+    {
+        $builder->addDoubleX(104, $RESIDUALS_ACCEPTED, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addWEIGHTED_RMS(FlatBufferBuilder $builder, $WEIGHTED_RMS)
+    {
+        $builder->addDoubleX(105, $WEIGHTED_RMS, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addUSER_DEFINED_PARAMETERS(FlatBufferBuilder $builder, $USER_DEFINED_PARAMETERS)
+    {
+        $builder->addOffsetX(106, $USER_DEFINED_PARAMETERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

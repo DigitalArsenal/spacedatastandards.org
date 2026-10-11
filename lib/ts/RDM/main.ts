@@ -3,6 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export * from './RDM.js';
+export * from './rdmControlledReentry.js';
+export * from './RDMUserDefinedParameter.js';
 export * from './reentryDisposition.js';
 export * from './reentryImpact.js';
 export * from './reentryReason.js';

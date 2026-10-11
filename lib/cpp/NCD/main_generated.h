@@ -73,6 +73,34 @@ enum ncdContainerFormat : uint8_t {
   ncdContainerFormat_CCSDS_TDM_KVN = 11,
   /// CCSDS Tracking Data Message, XML.
   ncdContainerFormat_CCSDS_TDM_XML = 12,
+  /// CCSDS Orbit Mean-Elements Message, keyword-value notation.
+  ncdContainerFormat_CCSDS_OMM_KVN = 13,
+  /// CCSDS Orbit Mean-Elements Message, XML.
+  ncdContainerFormat_CCSDS_OMM_XML = 14,
+  /// CCSDS Orbit Parameter Message, keyword-value notation.
+  ncdContainerFormat_CCSDS_OPM_KVN = 15,
+  /// CCSDS Orbit Parameter Message, XML.
+  ncdContainerFormat_CCSDS_OPM_XML = 16,
+  /// CCSDS Orbit Comprehensive Message, keyword-value notation.
+  ncdContainerFormat_CCSDS_OCM_KVN = 17,
+  /// CCSDS Orbit Comprehensive Message, XML.
+  ncdContainerFormat_CCSDS_OCM_XML = 18,
+  /// CCSDS Conjunction Data Message, keyword-value notation.
+  ncdContainerFormat_CCSDS_CDM_KVN = 19,
+  /// CCSDS Conjunction Data Message, XML.
+  ncdContainerFormat_CCSDS_CDM_XML = 20,
+  /// CCSDS Attitude Parameter Message, keyword-value notation.
+  ncdContainerFormat_CCSDS_APM_KVN = 21,
+  /// CCSDS Attitude Parameter Message, XML.
+  ncdContainerFormat_CCSDS_APM_XML = 22,
+  /// CCSDS Attitude Comprehensive Message, keyword-value notation.
+  ncdContainerFormat_CCSDS_ACM_KVN = 23,
+  /// CCSDS Attitude Comprehensive Message, XML.
+  ncdContainerFormat_CCSDS_ACM_XML = 24,
+  /// CCSDS Reentry Data Message, keyword-value notation.
+  ncdContainerFormat_CCSDS_RDM_KVN = 25,
+  /// CCSDS Reentry Data Message, XML.
+  ncdContainerFormat_CCSDS_RDM_XML = 26,
   /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
   /// which; a producer never reuses a neighbouring member instead.
   ncdContainerFormat_PROVIDER_DEFINED = 255,
@@ -80,7 +108,7 @@ enum ncdContainerFormat : uint8_t {
   ncdContainerFormat_MAX = ncdContainerFormat_PROVIDER_DEFINED
 };
 
-inline const ncdContainerFormat (&EnumValuesncdContainerFormat())[14] {
+inline const ncdContainerFormat (&EnumValuesncdContainerFormat())[28] {
   static const ncdContainerFormat values[] = {
     ncdContainerFormat_UNSPECIFIED,
     ncdContainerFormat_SPK_DAF,
@@ -95,6 +123,20 @@ inline const ncdContainerFormat (&EnumValuesncdContainerFormat())[14] {
     ncdContainerFormat_CCSDS_AEM_XML,
     ncdContainerFormat_CCSDS_TDM_KVN,
     ncdContainerFormat_CCSDS_TDM_XML,
+    ncdContainerFormat_CCSDS_OMM_KVN,
+    ncdContainerFormat_CCSDS_OMM_XML,
+    ncdContainerFormat_CCSDS_OPM_KVN,
+    ncdContainerFormat_CCSDS_OPM_XML,
+    ncdContainerFormat_CCSDS_OCM_KVN,
+    ncdContainerFormat_CCSDS_OCM_XML,
+    ncdContainerFormat_CCSDS_CDM_KVN,
+    ncdContainerFormat_CCSDS_CDM_XML,
+    ncdContainerFormat_CCSDS_APM_KVN,
+    ncdContainerFormat_CCSDS_APM_XML,
+    ncdContainerFormat_CCSDS_ACM_KVN,
+    ncdContainerFormat_CCSDS_ACM_XML,
+    ncdContainerFormat_CCSDS_RDM_KVN,
+    ncdContainerFormat_CCSDS_RDM_XML,
     ncdContainerFormat_PROVIDER_DEFINED
   };
   return values;
@@ -115,6 +157,20 @@ inline const char *EnumNamencdContainerFormat(ncdContainerFormat e) {
     case ncdContainerFormat_CCSDS_AEM_XML: return "CCSDS_AEM_XML";
     case ncdContainerFormat_CCSDS_TDM_KVN: return "CCSDS_TDM_KVN";
     case ncdContainerFormat_CCSDS_TDM_XML: return "CCSDS_TDM_XML";
+    case ncdContainerFormat_CCSDS_OMM_KVN: return "CCSDS_OMM_KVN";
+    case ncdContainerFormat_CCSDS_OMM_XML: return "CCSDS_OMM_XML";
+    case ncdContainerFormat_CCSDS_OPM_KVN: return "CCSDS_OPM_KVN";
+    case ncdContainerFormat_CCSDS_OPM_XML: return "CCSDS_OPM_XML";
+    case ncdContainerFormat_CCSDS_OCM_KVN: return "CCSDS_OCM_KVN";
+    case ncdContainerFormat_CCSDS_OCM_XML: return "CCSDS_OCM_XML";
+    case ncdContainerFormat_CCSDS_CDM_KVN: return "CCSDS_CDM_KVN";
+    case ncdContainerFormat_CCSDS_CDM_XML: return "CCSDS_CDM_XML";
+    case ncdContainerFormat_CCSDS_APM_KVN: return "CCSDS_APM_KVN";
+    case ncdContainerFormat_CCSDS_APM_XML: return "CCSDS_APM_XML";
+    case ncdContainerFormat_CCSDS_ACM_KVN: return "CCSDS_ACM_KVN";
+    case ncdContainerFormat_CCSDS_ACM_XML: return "CCSDS_ACM_XML";
+    case ncdContainerFormat_CCSDS_RDM_KVN: return "CCSDS_RDM_KVN";
+    case ncdContainerFormat_CCSDS_RDM_XML: return "CCSDS_RDM_XML";
     case ncdContainerFormat_PROVIDER_DEFINED: return "PROVIDER_DEFINED";
     default: return "";
   }

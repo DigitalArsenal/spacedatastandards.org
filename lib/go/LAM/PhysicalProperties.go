@@ -4,6 +4,7 @@ package LAM
 
 import (
 	flatbuffers "github.com/google/flatbuffers/go"
+	"math"
 )
 
 type PhysicalProperties struct {
@@ -492,8 +493,656 @@ func (rcv *PhysicalProperties) MutateSrpUncertainty(n float64) bool {
 	return rcv.MutateSRP_UNCERTAINTY(n)
 }
 
+/// MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+func (rcv *PhysicalProperties) MANUFACTURER() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PhysicalProperties) Manufacturer() []byte {
+	return rcv.MANUFACTURER()
+}
+
+/// MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+/// BUS_MODEL: the object's bus model.
+func (rcv *PhysicalProperties) BUS_MODEL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PhysicalProperties) BusModel() []byte {
+	return rcv.BUS_MODEL()
+}
+
+/// BUS_MODEL: the object's bus model.
+/// DOCKED_WITH: comma-separated names of the objects it is docked with.
+func (rcv *PhysicalProperties) DOCKED_WITH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PhysicalProperties) DockedWith() []byte {
+	return rcv.DOCKED_WITH()
+}
+
+/// DOCKED_WITH: comma-separated names of the objects it is docked with.
+/// INITIAL_WET_MASS in kg, NaN when not stated.
+func (rcv *PhysicalProperties) INITIAL_WET_MASS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) InitialWetMass() float64 {
+	return rcv.INITIAL_WET_MASS()
+}
+
+/// INITIAL_WET_MASS in kg, NaN when not stated.
+func (rcv *PhysicalProperties) MutateINITIAL_WET_MASS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *PhysicalProperties) MutateInitialWetMass(n float64) bool {
+	return rcv.MutateINITIAL_WET_MASS(n)
+}
+
+/// OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+func (rcv *PhysicalProperties) OEB_PARENT_FRAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PhysicalProperties) OebParentFrame() []byte {
+	return rcv.OEB_PARENT_FRAME()
+}
+
+/// OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+/// OEB_PARENT_FRAME_EPOCH.
+func (rcv *PhysicalProperties) OEB_PARENT_FRAME_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PhysicalProperties) OebParentFrameEpoch() []byte {
+	return rcv.OEB_PARENT_FRAME_EPOCH()
+}
+
+/// OEB_PARENT_FRAME_EPOCH.
+/// AREA_MIN_FOR_PC in m**2, NaN when not stated.
+func (rcv *PhysicalProperties) AREA_MIN_FOR_PC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) AreaMinForPc() float64 {
+	return rcv.AREA_MIN_FOR_PC()
+}
+
+/// AREA_MIN_FOR_PC in m**2, NaN when not stated.
+func (rcv *PhysicalProperties) MutateAREA_MIN_FOR_PC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *PhysicalProperties) MutateAreaMinForPc(n float64) bool {
+	return rcv.MutateAREA_MIN_FOR_PC(n)
+}
+
+/// AREA_MAX_FOR_PC in m**2, NaN when not stated.
+func (rcv *PhysicalProperties) AREA_MAX_FOR_PC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) AreaMaxForPc() float64 {
+	return rcv.AREA_MAX_FOR_PC()
+}
+
+/// AREA_MAX_FOR_PC in m**2, NaN when not stated.
+func (rcv *PhysicalProperties) MutateAREA_MAX_FOR_PC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+func (rcv *PhysicalProperties) MutateAreaMaxForPc(n float64) bool {
+	return rcv.MutateAREA_MAX_FOR_PC(n)
+}
+
+/// AREA_TYP_FOR_PC in m**2, NaN when not stated.
+func (rcv *PhysicalProperties) AREA_TYP_FOR_PC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) AreaTypForPc() float64 {
+	return rcv.AREA_TYP_FOR_PC()
+}
+
+/// AREA_TYP_FOR_PC in m**2, NaN when not stated.
+func (rcv *PhysicalProperties) MutateAREA_TYP_FOR_PC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *PhysicalProperties) MutateAreaTypForPc(n float64) bool {
+	return rcv.MutateAREA_TYP_FOR_PC(n)
+}
+
+/// RCS in m**2, NaN when not stated.
+func (rcv *PhysicalProperties) RCS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) Rcs() float64 {
+	return rcv.RCS()
+}
+
+/// RCS in m**2, NaN when not stated.
+func (rcv *PhysicalProperties) MutateRCS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *PhysicalProperties) MutateRcs(n float64) bool {
+	return rcv.MutateRCS(n)
+}
+
+/// RCS_MIN in m**2, NaN when not stated.
+func (rcv *PhysicalProperties) RCS_MIN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) RcsMin() float64 {
+	return rcv.RCS_MIN()
+}
+
+/// RCS_MIN in m**2, NaN when not stated.
+func (rcv *PhysicalProperties) MutateRCS_MIN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *PhysicalProperties) MutateRcsMin(n float64) bool {
+	return rcv.MutateRCS_MIN(n)
+}
+
+/// RCS_MAX in m**2, NaN when not stated.
+func (rcv *PhysicalProperties) RCS_MAX() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) RcsMax() float64 {
+	return rcv.RCS_MAX()
+}
+
+/// RCS_MAX in m**2, NaN when not stated.
+func (rcv *PhysicalProperties) MutateRCS_MAX(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(68, n)
+}
+
+func (rcv *PhysicalProperties) MutateRcsMax(n float64) bool {
+	return rcv.MutateRCS_MAX(n)
+}
+
+/// VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+func (rcv *PhysicalProperties) VM_ABSOLUTE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) VmAbsolute() float64 {
+	return rcv.VM_ABSOLUTE()
+}
+
+/// VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+func (rcv *PhysicalProperties) MutateVM_ABSOLUTE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(70, n)
+}
+
+func (rcv *PhysicalProperties) MutateVmAbsolute(n float64) bool {
+	return rcv.MutateVM_ABSOLUTE(n)
+}
+
+/// VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+func (rcv *PhysicalProperties) VM_APPARENT_MIN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) VmApparentMin() float64 {
+	return rcv.VM_APPARENT_MIN()
+}
+
+/// VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+func (rcv *PhysicalProperties) MutateVM_APPARENT_MIN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(72, n)
+}
+
+func (rcv *PhysicalProperties) MutateVmApparentMin(n float64) bool {
+	return rcv.MutateVM_APPARENT_MIN(n)
+}
+
+/// VM_APPARENT: apparent visual magnitude, NaN when not stated.
+func (rcv *PhysicalProperties) VM_APPARENT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) VmApparent() float64 {
+	return rcv.VM_APPARENT()
+}
+
+/// VM_APPARENT: apparent visual magnitude, NaN when not stated.
+func (rcv *PhysicalProperties) MutateVM_APPARENT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(74, n)
+}
+
+func (rcv *PhysicalProperties) MutateVmApparent(n float64) bool {
+	return rcv.MutateVM_APPARENT(n)
+}
+
+/// VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+func (rcv *PhysicalProperties) VM_APPARENT_MAX() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) VmApparentMax() float64 {
+	return rcv.VM_APPARENT_MAX()
+}
+
+/// VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+func (rcv *PhysicalProperties) MutateVM_APPARENT_MAX(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(76, n)
+}
+
+func (rcv *PhysicalProperties) MutateVmApparentMax(n float64) bool {
+	return rcv.MutateVM_APPARENT_MAX(n)
+}
+
+/// REFLECTANCE: typical reflectivity, NaN when not stated.
+func (rcv *PhysicalProperties) REFLECTANCE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) Reflectance() float64 {
+	return rcv.REFLECTANCE()
+}
+
+/// REFLECTANCE: typical reflectivity, NaN when not stated.
+func (rcv *PhysicalProperties) MutateREFLECTANCE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(78, n)
+}
+
+func (rcv *PhysicalProperties) MutateReflectance(n float64) bool {
+	return rcv.MutateREFLECTANCE(n)
+}
+
+/// ATT_CONTROL_MODE.
+func (rcv *PhysicalProperties) ATT_CONTROL_MODE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PhysicalProperties) AttControlMode() []byte {
+	return rcv.ATT_CONTROL_MODE()
+}
+
+/// ATT_CONTROL_MODE.
+/// ATT_ACTUATOR_TYPE.
+func (rcv *PhysicalProperties) ATT_ACTUATOR_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PhysicalProperties) AttActuatorType() []byte {
+	return rcv.ATT_ACTUATOR_TYPE()
+}
+
+/// ATT_ACTUATOR_TYPE.
+/// ATT_KNOWLEDGE in degrees, NaN when not stated.
+func (rcv *PhysicalProperties) ATT_KNOWLEDGE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) AttKnowledge() float64 {
+	return rcv.ATT_KNOWLEDGE()
+}
+
+/// ATT_KNOWLEDGE in degrees, NaN when not stated.
+func (rcv *PhysicalProperties) MutateATT_KNOWLEDGE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(84, n)
+}
+
+func (rcv *PhysicalProperties) MutateAttKnowledge(n float64) bool {
+	return rcv.MutateATT_KNOWLEDGE(n)
+}
+
+/// ATT_CONTROL in degrees, NaN when not stated.
+func (rcv *PhysicalProperties) ATT_CONTROL() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) AttControl() float64 {
+	return rcv.ATT_CONTROL()
+}
+
+/// ATT_CONTROL in degrees, NaN when not stated.
+func (rcv *PhysicalProperties) MutateATT_CONTROL(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(86, n)
+}
+
+func (rcv *PhysicalProperties) MutateAttControl(n float64) bool {
+	return rcv.MutateATT_CONTROL(n)
+}
+
+/// ATT_POINTING in degrees, NaN when not stated.
+func (rcv *PhysicalProperties) ATT_POINTING() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) AttPointing() float64 {
+	return rcv.ATT_POINTING()
+}
+
+/// ATT_POINTING in degrees, NaN when not stated.
+func (rcv *PhysicalProperties) MutateATT_POINTING(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(88, n)
+}
+
+func (rcv *PhysicalProperties) MutateAttPointing(n float64) bool {
+	return rcv.MutateATT_POINTING(n)
+}
+
+/// AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+func (rcv *PhysicalProperties) AVG_MANEUVER_FREQ() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) AvgManeuverFreq() float64 {
+	return rcv.AVG_MANEUVER_FREQ()
+}
+
+/// AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+func (rcv *PhysicalProperties) MutateAVG_MANEUVER_FREQ(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(90, n)
+}
+
+func (rcv *PhysicalProperties) MutateAvgManeuverFreq(n float64) bool {
+	return rcv.MutateAVG_MANEUVER_FREQ(n)
+}
+
+/// MAX_THRUST in N, NaN when not stated.
+func (rcv *PhysicalProperties) MAX_THRUST() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) MaxThrust() float64 {
+	return rcv.MAX_THRUST()
+}
+
+/// MAX_THRUST in N, NaN when not stated.
+func (rcv *PhysicalProperties) MutateMAX_THRUST(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(92, n)
+}
+
+func (rcv *PhysicalProperties) MutateMaxThrust(n float64) bool {
+	return rcv.MutateMAX_THRUST(n)
+}
+
+/// DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+func (rcv *PhysicalProperties) DV_BOL() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) DvBol() float64 {
+	return rcv.DV_BOL()
+}
+
+/// DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+func (rcv *PhysicalProperties) MutateDV_BOL(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(94, n)
+}
+
+func (rcv *PhysicalProperties) MutateDvBol(n float64) bool {
+	return rcv.MutateDV_BOL(n)
+}
+
+/// DV_REMAINING in km/s, NaN when not stated.
+func (rcv *PhysicalProperties) DV_REMAINING() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) DvRemaining() float64 {
+	return rcv.DV_REMAINING()
+}
+
+/// DV_REMAINING in km/s, NaN when not stated.
+func (rcv *PhysicalProperties) MutateDV_REMAINING(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(96, n)
+}
+
+func (rcv *PhysicalProperties) MutateDvRemaining(n float64) bool {
+	return rcv.MutateDV_REMAINING(n)
+}
+
+/// IXX in kg*m**2, NaN when not stated.
+func (rcv *PhysicalProperties) IXX() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) Ixx() float64 {
+	return rcv.IXX()
+}
+
+/// IXX in kg*m**2, NaN when not stated.
+func (rcv *PhysicalProperties) MutateIXX(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(98, n)
+}
+
+func (rcv *PhysicalProperties) MutateIxx(n float64) bool {
+	return rcv.MutateIXX(n)
+}
+
+/// IYY in kg*m**2, NaN when not stated.
+func (rcv *PhysicalProperties) IYY() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) Iyy() float64 {
+	return rcv.IYY()
+}
+
+/// IYY in kg*m**2, NaN when not stated.
+func (rcv *PhysicalProperties) MutateIYY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(100, n)
+}
+
+func (rcv *PhysicalProperties) MutateIyy(n float64) bool {
+	return rcv.MutateIYY(n)
+}
+
+/// IZZ in kg*m**2, NaN when not stated.
+func (rcv *PhysicalProperties) IZZ() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) Izz() float64 {
+	return rcv.IZZ()
+}
+
+/// IZZ in kg*m**2, NaN when not stated.
+func (rcv *PhysicalProperties) MutateIZZ(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(102, n)
+}
+
+func (rcv *PhysicalProperties) MutateIzz(n float64) bool {
+	return rcv.MutateIZZ(n)
+}
+
+/// IXY in kg*m**2, NaN when not stated.
+func (rcv *PhysicalProperties) IXY() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) Ixy() float64 {
+	return rcv.IXY()
+}
+
+/// IXY in kg*m**2, NaN when not stated.
+func (rcv *PhysicalProperties) MutateIXY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(104, n)
+}
+
+func (rcv *PhysicalProperties) MutateIxy(n float64) bool {
+	return rcv.MutateIXY(n)
+}
+
+/// IXZ in kg*m**2, NaN when not stated.
+func (rcv *PhysicalProperties) IXZ() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) Ixz() float64 {
+	return rcv.IXZ()
+}
+
+/// IXZ in kg*m**2, NaN when not stated.
+func (rcv *PhysicalProperties) MutateIXZ(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(106, n)
+}
+
+func (rcv *PhysicalProperties) MutateIxz(n float64) bool {
+	return rcv.MutateIXZ(n)
+}
+
+/// IYZ in kg*m**2, NaN when not stated.
+func (rcv *PhysicalProperties) IYZ() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PhysicalProperties) Iyz() float64 {
+	return rcv.IYZ()
+}
+
+/// IYZ in kg*m**2, NaN when not stated.
+func (rcv *PhysicalProperties) MutateIYZ(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(108, n)
+}
+
+func (rcv *PhysicalProperties) MutateIyz(n float64) bool {
+	return rcv.MutateIYZ(n)
+}
+
 func PhysicalPropertiesStart(builder *flatbuffers.Builder) {
-	builder.StartObject(21)
+	builder.StartObject(53)
 }
 func PhysicalPropertiesAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -626,6 +1275,198 @@ func PhysicalPropertiesAddSRP_UNCERTAINTY(builder *flatbuffers.Builder, SRP_UNCE
 }
 func PhysicalPropertiesAddSrpUncertainty(builder *flatbuffers.Builder, SRP_UNCERTAINTY float64) {
 	PhysicalPropertiesAddSRP_UNCERTAINTY(builder, SRP_UNCERTAINTY)
+}
+func PhysicalPropertiesAddMANUFACTURER(builder *flatbuffers.Builder, MANUFACTURER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(MANUFACTURER), 0)
+}
+func PhysicalPropertiesAddManufacturer(builder *flatbuffers.Builder, MANUFACTURER flatbuffers.UOffsetT) {
+	PhysicalPropertiesAddMANUFACTURER(builder, MANUFACTURER)
+}
+func PhysicalPropertiesAddBUS_MODEL(builder *flatbuffers.Builder, BUS_MODEL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(BUS_MODEL), 0)
+}
+func PhysicalPropertiesAddBusModel(builder *flatbuffers.Builder, BUS_MODEL flatbuffers.UOffsetT) {
+	PhysicalPropertiesAddBUS_MODEL(builder, BUS_MODEL)
+}
+func PhysicalPropertiesAddDOCKED_WITH(builder *flatbuffers.Builder, DOCKED_WITH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(DOCKED_WITH), 0)
+}
+func PhysicalPropertiesAddDockedWith(builder *flatbuffers.Builder, DOCKED_WITH flatbuffers.UOffsetT) {
+	PhysicalPropertiesAddDOCKED_WITH(builder, DOCKED_WITH)
+}
+func PhysicalPropertiesAddINITIAL_WET_MASS(builder *flatbuffers.Builder, INITIAL_WET_MASS float64) {
+	builder.PrependFloat64Slot(24, INITIAL_WET_MASS, float64(math.NaN()))
+}
+func PhysicalPropertiesAddInitialWetMass(builder *flatbuffers.Builder, INITIAL_WET_MASS float64) {
+	PhysicalPropertiesAddINITIAL_WET_MASS(builder, INITIAL_WET_MASS)
+}
+func PhysicalPropertiesAddOEB_PARENT_FRAME(builder *flatbuffers.Builder, OEB_PARENT_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(OEB_PARENT_FRAME), 0)
+}
+func PhysicalPropertiesAddOebParentFrame(builder *flatbuffers.Builder, OEB_PARENT_FRAME flatbuffers.UOffsetT) {
+	PhysicalPropertiesAddOEB_PARENT_FRAME(builder, OEB_PARENT_FRAME)
+}
+func PhysicalPropertiesAddOEB_PARENT_FRAME_EPOCH(builder *flatbuffers.Builder, OEB_PARENT_FRAME_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(OEB_PARENT_FRAME_EPOCH), 0)
+}
+func PhysicalPropertiesAddOebParentFrameEpoch(builder *flatbuffers.Builder, OEB_PARENT_FRAME_EPOCH flatbuffers.UOffsetT) {
+	PhysicalPropertiesAddOEB_PARENT_FRAME_EPOCH(builder, OEB_PARENT_FRAME_EPOCH)
+}
+func PhysicalPropertiesAddAREA_MIN_FOR_PC(builder *flatbuffers.Builder, AREA_MIN_FOR_PC float64) {
+	builder.PrependFloat64Slot(27, AREA_MIN_FOR_PC, float64(math.NaN()))
+}
+func PhysicalPropertiesAddAreaMinForPc(builder *flatbuffers.Builder, AREA_MIN_FOR_PC float64) {
+	PhysicalPropertiesAddAREA_MIN_FOR_PC(builder, AREA_MIN_FOR_PC)
+}
+func PhysicalPropertiesAddAREA_MAX_FOR_PC(builder *flatbuffers.Builder, AREA_MAX_FOR_PC float64) {
+	builder.PrependFloat64Slot(28, AREA_MAX_FOR_PC, float64(math.NaN()))
+}
+func PhysicalPropertiesAddAreaMaxForPc(builder *flatbuffers.Builder, AREA_MAX_FOR_PC float64) {
+	PhysicalPropertiesAddAREA_MAX_FOR_PC(builder, AREA_MAX_FOR_PC)
+}
+func PhysicalPropertiesAddAREA_TYP_FOR_PC(builder *flatbuffers.Builder, AREA_TYP_FOR_PC float64) {
+	builder.PrependFloat64Slot(29, AREA_TYP_FOR_PC, float64(math.NaN()))
+}
+func PhysicalPropertiesAddAreaTypForPc(builder *flatbuffers.Builder, AREA_TYP_FOR_PC float64) {
+	PhysicalPropertiesAddAREA_TYP_FOR_PC(builder, AREA_TYP_FOR_PC)
+}
+func PhysicalPropertiesAddRCS(builder *flatbuffers.Builder, RCS float64) {
+	builder.PrependFloat64Slot(30, RCS, float64(math.NaN()))
+}
+func PhysicalPropertiesAddRcs(builder *flatbuffers.Builder, RCS float64) {
+	PhysicalPropertiesAddRCS(builder, RCS)
+}
+func PhysicalPropertiesAddRCS_MIN(builder *flatbuffers.Builder, RCS_MIN float64) {
+	builder.PrependFloat64Slot(31, RCS_MIN, float64(math.NaN()))
+}
+func PhysicalPropertiesAddRcsMin(builder *flatbuffers.Builder, RCS_MIN float64) {
+	PhysicalPropertiesAddRCS_MIN(builder, RCS_MIN)
+}
+func PhysicalPropertiesAddRCS_MAX(builder *flatbuffers.Builder, RCS_MAX float64) {
+	builder.PrependFloat64Slot(32, RCS_MAX, float64(math.NaN()))
+}
+func PhysicalPropertiesAddRcsMax(builder *flatbuffers.Builder, RCS_MAX float64) {
+	PhysicalPropertiesAddRCS_MAX(builder, RCS_MAX)
+}
+func PhysicalPropertiesAddVM_ABSOLUTE(builder *flatbuffers.Builder, VM_ABSOLUTE float64) {
+	builder.PrependFloat64Slot(33, VM_ABSOLUTE, float64(math.NaN()))
+}
+func PhysicalPropertiesAddVmAbsolute(builder *flatbuffers.Builder, VM_ABSOLUTE float64) {
+	PhysicalPropertiesAddVM_ABSOLUTE(builder, VM_ABSOLUTE)
+}
+func PhysicalPropertiesAddVM_APPARENT_MIN(builder *flatbuffers.Builder, VM_APPARENT_MIN float64) {
+	builder.PrependFloat64Slot(34, VM_APPARENT_MIN, float64(math.NaN()))
+}
+func PhysicalPropertiesAddVmApparentMin(builder *flatbuffers.Builder, VM_APPARENT_MIN float64) {
+	PhysicalPropertiesAddVM_APPARENT_MIN(builder, VM_APPARENT_MIN)
+}
+func PhysicalPropertiesAddVM_APPARENT(builder *flatbuffers.Builder, VM_APPARENT float64) {
+	builder.PrependFloat64Slot(35, VM_APPARENT, float64(math.NaN()))
+}
+func PhysicalPropertiesAddVmApparent(builder *flatbuffers.Builder, VM_APPARENT float64) {
+	PhysicalPropertiesAddVM_APPARENT(builder, VM_APPARENT)
+}
+func PhysicalPropertiesAddVM_APPARENT_MAX(builder *flatbuffers.Builder, VM_APPARENT_MAX float64) {
+	builder.PrependFloat64Slot(36, VM_APPARENT_MAX, float64(math.NaN()))
+}
+func PhysicalPropertiesAddVmApparentMax(builder *flatbuffers.Builder, VM_APPARENT_MAX float64) {
+	PhysicalPropertiesAddVM_APPARENT_MAX(builder, VM_APPARENT_MAX)
+}
+func PhysicalPropertiesAddREFLECTANCE(builder *flatbuffers.Builder, REFLECTANCE float64) {
+	builder.PrependFloat64Slot(37, REFLECTANCE, float64(math.NaN()))
+}
+func PhysicalPropertiesAddReflectance(builder *flatbuffers.Builder, REFLECTANCE float64) {
+	PhysicalPropertiesAddREFLECTANCE(builder, REFLECTANCE)
+}
+func PhysicalPropertiesAddATT_CONTROL_MODE(builder *flatbuffers.Builder, ATT_CONTROL_MODE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(ATT_CONTROL_MODE), 0)
+}
+func PhysicalPropertiesAddAttControlMode(builder *flatbuffers.Builder, ATT_CONTROL_MODE flatbuffers.UOffsetT) {
+	PhysicalPropertiesAddATT_CONTROL_MODE(builder, ATT_CONTROL_MODE)
+}
+func PhysicalPropertiesAddATT_ACTUATOR_TYPE(builder *flatbuffers.Builder, ATT_ACTUATOR_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(ATT_ACTUATOR_TYPE), 0)
+}
+func PhysicalPropertiesAddAttActuatorType(builder *flatbuffers.Builder, ATT_ACTUATOR_TYPE flatbuffers.UOffsetT) {
+	PhysicalPropertiesAddATT_ACTUATOR_TYPE(builder, ATT_ACTUATOR_TYPE)
+}
+func PhysicalPropertiesAddATT_KNOWLEDGE(builder *flatbuffers.Builder, ATT_KNOWLEDGE float64) {
+	builder.PrependFloat64Slot(40, ATT_KNOWLEDGE, float64(math.NaN()))
+}
+func PhysicalPropertiesAddAttKnowledge(builder *flatbuffers.Builder, ATT_KNOWLEDGE float64) {
+	PhysicalPropertiesAddATT_KNOWLEDGE(builder, ATT_KNOWLEDGE)
+}
+func PhysicalPropertiesAddATT_CONTROL(builder *flatbuffers.Builder, ATT_CONTROL float64) {
+	builder.PrependFloat64Slot(41, ATT_CONTROL, float64(math.NaN()))
+}
+func PhysicalPropertiesAddAttControl(builder *flatbuffers.Builder, ATT_CONTROL float64) {
+	PhysicalPropertiesAddATT_CONTROL(builder, ATT_CONTROL)
+}
+func PhysicalPropertiesAddATT_POINTING(builder *flatbuffers.Builder, ATT_POINTING float64) {
+	builder.PrependFloat64Slot(42, ATT_POINTING, float64(math.NaN()))
+}
+func PhysicalPropertiesAddAttPointing(builder *flatbuffers.Builder, ATT_POINTING float64) {
+	PhysicalPropertiesAddATT_POINTING(builder, ATT_POINTING)
+}
+func PhysicalPropertiesAddAVG_MANEUVER_FREQ(builder *flatbuffers.Builder, AVG_MANEUVER_FREQ float64) {
+	builder.PrependFloat64Slot(43, AVG_MANEUVER_FREQ, float64(math.NaN()))
+}
+func PhysicalPropertiesAddAvgManeuverFreq(builder *flatbuffers.Builder, AVG_MANEUVER_FREQ float64) {
+	PhysicalPropertiesAddAVG_MANEUVER_FREQ(builder, AVG_MANEUVER_FREQ)
+}
+func PhysicalPropertiesAddMAX_THRUST(builder *flatbuffers.Builder, MAX_THRUST float64) {
+	builder.PrependFloat64Slot(44, MAX_THRUST, float64(math.NaN()))
+}
+func PhysicalPropertiesAddMaxThrust(builder *flatbuffers.Builder, MAX_THRUST float64) {
+	PhysicalPropertiesAddMAX_THRUST(builder, MAX_THRUST)
+}
+func PhysicalPropertiesAddDV_BOL(builder *flatbuffers.Builder, DV_BOL float64) {
+	builder.PrependFloat64Slot(45, DV_BOL, float64(math.NaN()))
+}
+func PhysicalPropertiesAddDvBol(builder *flatbuffers.Builder, DV_BOL float64) {
+	PhysicalPropertiesAddDV_BOL(builder, DV_BOL)
+}
+func PhysicalPropertiesAddDV_REMAINING(builder *flatbuffers.Builder, DV_REMAINING float64) {
+	builder.PrependFloat64Slot(46, DV_REMAINING, float64(math.NaN()))
+}
+func PhysicalPropertiesAddDvRemaining(builder *flatbuffers.Builder, DV_REMAINING float64) {
+	PhysicalPropertiesAddDV_REMAINING(builder, DV_REMAINING)
+}
+func PhysicalPropertiesAddIXX(builder *flatbuffers.Builder, IXX float64) {
+	builder.PrependFloat64Slot(47, IXX, float64(math.NaN()))
+}
+func PhysicalPropertiesAddIxx(builder *flatbuffers.Builder, IXX float64) {
+	PhysicalPropertiesAddIXX(builder, IXX)
+}
+func PhysicalPropertiesAddIYY(builder *flatbuffers.Builder, IYY float64) {
+	builder.PrependFloat64Slot(48, IYY, float64(math.NaN()))
+}
+func PhysicalPropertiesAddIyy(builder *flatbuffers.Builder, IYY float64) {
+	PhysicalPropertiesAddIYY(builder, IYY)
+}
+func PhysicalPropertiesAddIZZ(builder *flatbuffers.Builder, IZZ float64) {
+	builder.PrependFloat64Slot(49, IZZ, float64(math.NaN()))
+}
+func PhysicalPropertiesAddIzz(builder *flatbuffers.Builder, IZZ float64) {
+	PhysicalPropertiesAddIZZ(builder, IZZ)
+}
+func PhysicalPropertiesAddIXY(builder *flatbuffers.Builder, IXY float64) {
+	builder.PrependFloat64Slot(50, IXY, float64(math.NaN()))
+}
+func PhysicalPropertiesAddIxy(builder *flatbuffers.Builder, IXY float64) {
+	PhysicalPropertiesAddIXY(builder, IXY)
+}
+func PhysicalPropertiesAddIXZ(builder *flatbuffers.Builder, IXZ float64) {
+	builder.PrependFloat64Slot(51, IXZ, float64(math.NaN()))
+}
+func PhysicalPropertiesAddIxz(builder *flatbuffers.Builder, IXZ float64) {
+	PhysicalPropertiesAddIXZ(builder, IXZ)
+}
+func PhysicalPropertiesAddIYZ(builder *flatbuffers.Builder, IYZ float64) {
+	builder.PrependFloat64Slot(52, IYZ, float64(math.NaN()))
+}
+func PhysicalPropertiesAddIyz(builder *flatbuffers.Builder, IYZ float64) {
+	PhysicalPropertiesAddIYZ(builder, IYZ)
 }
 func PhysicalPropertiesEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

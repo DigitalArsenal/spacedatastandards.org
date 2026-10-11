@@ -213,6 +213,304 @@ class PhysicalProperties : Table() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+     */
+    val manufacturer : String?
+        get() {
+            val o = __offset(46)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val manufacturerAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
+    fun manufacturerInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
+    /**
+     * BUS_MODEL: the object's bus model.
+     */
+    val busModel : String?
+        get() {
+            val o = __offset(48)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val busModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun busModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
+    /**
+     * DOCKED_WITH: comma-separated names of the objects it is docked with.
+     */
+    val dockedWith : String?
+        get() {
+            val o = __offset(50)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val dockedWithAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
+    fun dockedWithInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
+    /**
+     * INITIAL_WET_MASS in kg, NaN when not stated.
+     */
+    val initialWetMass : Double
+        get() {
+            val o = __offset(52)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+     */
+    val oebParentFrame : String?
+        get() {
+            val o = __offset(54)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val oebParentFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(54, 1)
+    fun oebParentFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 54, 1)
+    /**
+     * OEB_PARENT_FRAME_EPOCH.
+     */
+    val oebParentFrameEpoch : String?
+        get() {
+            val o = __offset(56)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val oebParentFrameEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
+    fun oebParentFrameEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
+    /**
+     * AREA_MIN_FOR_PC in m**2, NaN when not stated.
+     */
+    val areaMinForPc : Double
+        get() {
+            val o = __offset(58)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * AREA_MAX_FOR_PC in m**2, NaN when not stated.
+     */
+    val areaMaxForPc : Double
+        get() {
+            val o = __offset(60)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * AREA_TYP_FOR_PC in m**2, NaN when not stated.
+     */
+    val areaTypForPc : Double
+        get() {
+            val o = __offset(62)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * RCS in m**2, NaN when not stated.
+     */
+    val rcs : Double
+        get() {
+            val o = __offset(64)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * RCS_MIN in m**2, NaN when not stated.
+     */
+    val rcsMin : Double
+        get() {
+            val o = __offset(66)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * RCS_MAX in m**2, NaN when not stated.
+     */
+    val rcsMax : Double
+        get() {
+            val o = __offset(68)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+     */
+    val vmAbsolute : Double
+        get() {
+            val o = __offset(70)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+     */
+    val vmApparentMin : Double
+        get() {
+            val o = __offset(72)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * VM_APPARENT: apparent visual magnitude, NaN when not stated.
+     */
+    val vmApparent : Double
+        get() {
+            val o = __offset(74)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+     */
+    val vmApparentMax : Double
+        get() {
+            val o = __offset(76)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * REFLECTANCE: typical reflectivity, NaN when not stated.
+     */
+    val reflectance : Double
+        get() {
+            val o = __offset(78)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * ATT_CONTROL_MODE.
+     */
+    val attControlMode : String?
+        get() {
+            val o = __offset(80)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val attControlModeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(80, 1)
+    fun attControlModeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 80, 1)
+    /**
+     * ATT_ACTUATOR_TYPE.
+     */
+    val attActuatorType : String?
+        get() {
+            val o = __offset(82)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val attActuatorTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(82, 1)
+    fun attActuatorTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 82, 1)
+    /**
+     * ATT_KNOWLEDGE in degrees, NaN when not stated.
+     */
+    val attKnowledge : Double
+        get() {
+            val o = __offset(84)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * ATT_CONTROL in degrees, NaN when not stated.
+     */
+    val attControl : Double
+        get() {
+            val o = __offset(86)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * ATT_POINTING in degrees, NaN when not stated.
+     */
+    val attPointing : Double
+        get() {
+            val o = __offset(88)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+     */
+    val avgManeuverFreq : Double
+        get() {
+            val o = __offset(90)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * MAX_THRUST in N, NaN when not stated.
+     */
+    val maxThrust : Double
+        get() {
+            val o = __offset(92)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+     */
+    val dvBol : Double
+        get() {
+            val o = __offset(94)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * DV_REMAINING in km/s, NaN when not stated.
+     */
+    val dvRemaining : Double
+        get() {
+            val o = __offset(96)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IXX in kg*m**2, NaN when not stated.
+     */
+    val ixx : Double
+        get() {
+            val o = __offset(98)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IYY in kg*m**2, NaN when not stated.
+     */
+    val iyy : Double
+        get() {
+            val o = __offset(100)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IZZ in kg*m**2, NaN when not stated.
+     */
+    val izz : Double
+        get() {
+            val o = __offset(102)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IXY in kg*m**2, NaN when not stated.
+     */
+    val ixy : Double
+        get() {
+            val o = __offset(104)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IXZ in kg*m**2, NaN when not stated.
+     */
+    val ixz : Double
+        get() {
+            val o = __offset(106)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * IYZ in kg*m**2, NaN when not stated.
+     */
+    val iyz : Double
+        get() {
+            val o = __offset(108)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPhysicalProperties(_bb: ByteBuffer): PhysicalProperties = getRootAsPhysicalProperties(_bb, PhysicalProperties())
@@ -220,8 +518,33 @@ class PhysicalProperties : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPhysicalProperties(builder: FlatBufferBuilder, commentOffset: Int, wetMass: Double, dryMass: Double, massUnitsOffset: Int, oebQ1: Double, oebQ2: Double, oebQ3: Double, oebQc: Double, oebMax: Double, oebInt: Double, oebMin: Double, areaAlongOebMax: Double, areaAlongOebInt: Double, areaAlongOebMin: Double, areaUnitsOffset: Int, dragConstArea: Double, dragCoeffNom: Double, dragUncertainty: Double, srpConstArea: Double, solarRadCoeff: Double, srpUncertainty: Double) : Int {
-            builder.startTable(21)
+        fun createPhysicalProperties(builder: FlatBufferBuilder, commentOffset: Int, wetMass: Double, dryMass: Double, massUnitsOffset: Int, oebQ1: Double, oebQ2: Double, oebQ3: Double, oebQc: Double, oebMax: Double, oebInt: Double, oebMin: Double, areaAlongOebMax: Double, areaAlongOebInt: Double, areaAlongOebMin: Double, areaUnitsOffset: Int, dragConstArea: Double, dragCoeffNom: Double, dragUncertainty: Double, srpConstArea: Double, solarRadCoeff: Double, srpUncertainty: Double, manufacturerOffset: Int, busModelOffset: Int, dockedWithOffset: Int, initialWetMass: Double, oebParentFrameOffset: Int, oebParentFrameEpochOffset: Int, areaMinForPc: Double, areaMaxForPc: Double, areaTypForPc: Double, rcs: Double, rcsMin: Double, rcsMax: Double, vmAbsolute: Double, vmApparentMin: Double, vmApparent: Double, vmApparentMax: Double, reflectance: Double, attControlModeOffset: Int, attActuatorTypeOffset: Int, attKnowledge: Double, attControl: Double, attPointing: Double, avgManeuverFreq: Double, maxThrust: Double, dvBol: Double, dvRemaining: Double, ixx: Double, iyy: Double, izz: Double, ixy: Double, ixz: Double, iyz: Double) : Int {
+            builder.startTable(53)
+            addIYZ(builder, iyz)
+            addIXZ(builder, ixz)
+            addIXY(builder, ixy)
+            addIZZ(builder, izz)
+            addIYY(builder, iyy)
+            addIXX(builder, ixx)
+            addDVREMAINING(builder, dvRemaining)
+            addDVBOL(builder, dvBol)
+            addMAXTHRUST(builder, maxThrust)
+            addAVGMANEUVERFREQ(builder, avgManeuverFreq)
+            addATTPOINTING(builder, attPointing)
+            addATTCONTROL(builder, attControl)
+            addATTKNOWLEDGE(builder, attKnowledge)
+            addREFLECTANCE(builder, reflectance)
+            addVMAPPARENTMAX(builder, vmApparentMax)
+            addVMAPPARENT(builder, vmApparent)
+            addVMAPPARENTMIN(builder, vmApparentMin)
+            addVMABSOLUTE(builder, vmAbsolute)
+            addRCSMAX(builder, rcsMax)
+            addRCSMIN(builder, rcsMin)
+            addRCS(builder, rcs)
+            addAREATYPFORPC(builder, areaTypForPc)
+            addAREAMAXFORPC(builder, areaMaxForPc)
+            addAREAMINFORPC(builder, areaMinForPc)
+            addINITIALWETMASS(builder, initialWetMass)
             addSRPUNCERTAINTY(builder, srpUncertainty)
             addSOLARRADCOEFF(builder, solarRadCoeff)
             addSRPCONSTAREA(builder, srpConstArea)
@@ -240,12 +563,19 @@ class PhysicalProperties : Table() {
             addOEBQ1(builder, oebQ1)
             addDRYMASS(builder, dryMass)
             addWETMASS(builder, wetMass)
+            addATTACTUATORTYPE(builder, attActuatorTypeOffset)
+            addATTCONTROLMODE(builder, attControlModeOffset)
+            addOEBPARENTFRAMEEPOCH(builder, oebParentFrameEpochOffset)
+            addOEBPARENTFRAME(builder, oebParentFrameOffset)
+            addDOCKEDWITH(builder, dockedWithOffset)
+            addBUSMODEL(builder, busModelOffset)
+            addMANUFACTURER(builder, manufacturerOffset)
             addAREAUNITS(builder, areaUnitsOffset)
             addMASSUNITS(builder, massUnitsOffset)
             addCOMMENT(builder, commentOffset)
             return endPhysicalProperties(builder)
         }
-        fun startPhysicalProperties(builder: FlatBufferBuilder) = builder.startTable(21)
+        fun startPhysicalProperties(builder: FlatBufferBuilder) = builder.startTable(53)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -275,6 +605,38 @@ class PhysicalProperties : Table() {
         fun addSRPCONSTAREA(builder: FlatBufferBuilder, srpConstArea: Double) = builder.addDouble(18, srpConstArea, 0.0)
         fun addSOLARRADCOEFF(builder: FlatBufferBuilder, solarRadCoeff: Double) = builder.addDouble(19, solarRadCoeff, 0.0)
         fun addSRPUNCERTAINTY(builder: FlatBufferBuilder, srpUncertainty: Double) = builder.addDouble(20, srpUncertainty, 0.0)
+        fun addMANUFACTURER(builder: FlatBufferBuilder, manufacturer: Int) = builder.addOffset(21, manufacturer, 0)
+        fun addBUSMODEL(builder: FlatBufferBuilder, busModel: Int) = builder.addOffset(22, busModel, 0)
+        fun addDOCKEDWITH(builder: FlatBufferBuilder, dockedWith: Int) = builder.addOffset(23, dockedWith, 0)
+        fun addINITIALWETMASS(builder: FlatBufferBuilder, initialWetMass: Double) = builder.addDouble(24, initialWetMass, Double.NaN)
+        fun addOEBPARENTFRAME(builder: FlatBufferBuilder, oebParentFrame: Int) = builder.addOffset(25, oebParentFrame, 0)
+        fun addOEBPARENTFRAMEEPOCH(builder: FlatBufferBuilder, oebParentFrameEpoch: Int) = builder.addOffset(26, oebParentFrameEpoch, 0)
+        fun addAREAMINFORPC(builder: FlatBufferBuilder, areaMinForPc: Double) = builder.addDouble(27, areaMinForPc, Double.NaN)
+        fun addAREAMAXFORPC(builder: FlatBufferBuilder, areaMaxForPc: Double) = builder.addDouble(28, areaMaxForPc, Double.NaN)
+        fun addAREATYPFORPC(builder: FlatBufferBuilder, areaTypForPc: Double) = builder.addDouble(29, areaTypForPc, Double.NaN)
+        fun addRCS(builder: FlatBufferBuilder, rcs: Double) = builder.addDouble(30, rcs, Double.NaN)
+        fun addRCSMIN(builder: FlatBufferBuilder, rcsMin: Double) = builder.addDouble(31, rcsMin, Double.NaN)
+        fun addRCSMAX(builder: FlatBufferBuilder, rcsMax: Double) = builder.addDouble(32, rcsMax, Double.NaN)
+        fun addVMABSOLUTE(builder: FlatBufferBuilder, vmAbsolute: Double) = builder.addDouble(33, vmAbsolute, Double.NaN)
+        fun addVMAPPARENTMIN(builder: FlatBufferBuilder, vmApparentMin: Double) = builder.addDouble(34, vmApparentMin, Double.NaN)
+        fun addVMAPPARENT(builder: FlatBufferBuilder, vmApparent: Double) = builder.addDouble(35, vmApparent, Double.NaN)
+        fun addVMAPPARENTMAX(builder: FlatBufferBuilder, vmApparentMax: Double) = builder.addDouble(36, vmApparentMax, Double.NaN)
+        fun addREFLECTANCE(builder: FlatBufferBuilder, reflectance: Double) = builder.addDouble(37, reflectance, Double.NaN)
+        fun addATTCONTROLMODE(builder: FlatBufferBuilder, attControlMode: Int) = builder.addOffset(38, attControlMode, 0)
+        fun addATTACTUATORTYPE(builder: FlatBufferBuilder, attActuatorType: Int) = builder.addOffset(39, attActuatorType, 0)
+        fun addATTKNOWLEDGE(builder: FlatBufferBuilder, attKnowledge: Double) = builder.addDouble(40, attKnowledge, Double.NaN)
+        fun addATTCONTROL(builder: FlatBufferBuilder, attControl: Double) = builder.addDouble(41, attControl, Double.NaN)
+        fun addATTPOINTING(builder: FlatBufferBuilder, attPointing: Double) = builder.addDouble(42, attPointing, Double.NaN)
+        fun addAVGMANEUVERFREQ(builder: FlatBufferBuilder, avgManeuverFreq: Double) = builder.addDouble(43, avgManeuverFreq, Double.NaN)
+        fun addMAXTHRUST(builder: FlatBufferBuilder, maxThrust: Double) = builder.addDouble(44, maxThrust, Double.NaN)
+        fun addDVBOL(builder: FlatBufferBuilder, dvBol: Double) = builder.addDouble(45, dvBol, Double.NaN)
+        fun addDVREMAINING(builder: FlatBufferBuilder, dvRemaining: Double) = builder.addDouble(46, dvRemaining, Double.NaN)
+        fun addIXX(builder: FlatBufferBuilder, ixx: Double) = builder.addDouble(47, ixx, Double.NaN)
+        fun addIYY(builder: FlatBufferBuilder, iyy: Double) = builder.addDouble(48, iyy, Double.NaN)
+        fun addIZZ(builder: FlatBufferBuilder, izz: Double) = builder.addDouble(49, izz, Double.NaN)
+        fun addIXY(builder: FlatBufferBuilder, ixy: Double) = builder.addDouble(50, ixy, Double.NaN)
+        fun addIXZ(builder: FlatBufferBuilder, ixz: Double) = builder.addDouble(51, ixz, Double.NaN)
+        fun addIYZ(builder: FlatBufferBuilder, iyz: Double) = builder.addDouble(52, iyz, Double.NaN)
         fun endPhysicalProperties(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -430,6 +430,42 @@ class OCM : Table() {
         get() {
             val o = __offset(60); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+     * blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+     * them above state the first block's CARTPV or CARTPVA states.
+     */
+    fun trajectoryBlocks(j: Int) : OCMTrajectoryBlock? = trajectoryBlocks(OCMTrajectoryBlock(), j)
+    fun trajectoryBlocks(obj: OCMTrajectoryBlock, j: Int) : OCMTrajectoryBlock? {
+        val o = __offset(62)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val trajectoryBlocksLength : Int
+        get() {
+            val o = __offset(62); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Every covariance time history of the message (COV_START blocks), in message
+     * order. COVARIANCE_DATA and the fields that go with it above state the first
+     * block when it is one line.
+     */
+    fun covarianceBlocks(j: Int) : OCMCovarianceBlock? = covarianceBlocks(OCMCovarianceBlock(), j)
+    fun covarianceBlocks(obj: OCMCovarianceBlock, j: Int) : OCMCovarianceBlock? {
+        val o = __offset(64)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val covarianceBlocksLength : Int
+        get() {
+            val o = __offset(64); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOCM(_bb: ByteBuffer): OCM = getRootAsOCM(_bb, OCM())
@@ -438,9 +474,11 @@ class OCM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OCM")
-        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int, stateEpochsOffset: Int, covTypeOffset: Int, covOrdering: Byte, covSize: UByte, covParametersOffset: Int, covUnitsOffset: Int) : Int {
-            builder.startTable(29)
+        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int, stateEpochsOffset: Int, covTypeOffset: Int, covOrdering: Byte, covSize: UByte, covParametersOffset: Int, covUnitsOffset: Int, trajectoryBlocksOffset: Int, covarianceBlocksOffset: Int) : Int {
+            builder.startTable(31)
             addSTATESTEPSIZE(builder, stateStepSize)
+            addCOVARIANCEBLOCKS(builder, covarianceBlocksOffset)
+            addTRAJECTORYBLOCKS(builder, trajectoryBlocksOffset)
             addCOVUNITS(builder, covUnitsOffset)
             addCOVPARAMETERS(builder, covParametersOffset)
             addCOVTYPE(builder, covTypeOffset)
@@ -471,7 +509,7 @@ class OCM : Table() {
             addTRAJTYPE(builder, trajType)
             return endOCM(builder)
         }
-        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(29)
+        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(31)
         fun addHEADER(builder: FlatBufferBuilder, header: Int) = builder.addOffset(0, header, 0)
         fun addMETADATA(builder: FlatBufferBuilder, metadata: Int) = builder.addOffset(1, metadata, 0)
         fun addTRAJTYPE(builder: FlatBufferBuilder, trajType: Byte) = builder.addByte(2, trajType, 0)
@@ -573,6 +611,24 @@ class OCM : Table() {
             return builder.endVector()
         }
         fun startCovUnitsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addTRAJECTORYBLOCKS(builder: FlatBufferBuilder, trajectoryBlocks: Int) = builder.addOffset(29, trajectoryBlocks, 0)
+        fun createTrajectoryBlocksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startTrajectoryBlocksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addCOVARIANCEBLOCKS(builder: FlatBufferBuilder, covarianceBlocks: Int) = builder.addOffset(30, covarianceBlocks, 0)
+        fun createCovarianceBlocksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovarianceBlocksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endOCM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

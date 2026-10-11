@@ -84,6 +84,44 @@ inline const char *EnumNamecovarianceAlgorithm(covarianceAlgorithm e) {
   return EnumNamescovarianceAlgorithm()[index];
 }
 
+/// MANEUVERABLE of a CDM object (CCSDS 508.0-B-1): whether it can maneuver.
+/// UNSPECIFIED is the zero value: the record does not state it.
+enum cdmManeuverable : int8_t {
+  cdmManeuverable_UNSPECIFIED = 0,
+  cdmManeuverable_YES = 1,
+  cdmManeuverable_NO = 2,
+  cdmManeuverable_NOT_APPLICABLE = 3,
+  cdmManeuverable_MIN = cdmManeuverable_UNSPECIFIED,
+  cdmManeuverable_MAX = cdmManeuverable_NOT_APPLICABLE
+};
+
+inline const cdmManeuverable (&EnumValuescdmManeuverable())[4] {
+  static const cdmManeuverable values[] = {
+    cdmManeuverable_UNSPECIFIED,
+    cdmManeuverable_YES,
+    cdmManeuverable_NO,
+    cdmManeuverable_NOT_APPLICABLE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamescdmManeuverable() {
+  static const char * const names[5] = {
+    "UNSPECIFIED",
+    "YES",
+    "NO",
+    "NOT_APPLICABLE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamecdmManeuverable(cdmManeuverable e) {
+  if (::flatbuffers::IsOutRange(e, cdmManeuverable_UNSPECIFIED, cdmManeuverable_NOT_APPLICABLE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamescdmManeuverable()[index];
+}
+
 struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CDMObjectBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -123,7 +161,11 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_X_DOT = 70,
     VT_Y_DOT = 72,
     VT_Z_DOT = 74,
-    VT_COVARIANCE = 76
+    VT_COVARIANCE = 76,
+    VT_OBJECT_DESIGNATOR = 78,
+    VT_CATALOG_NAME = 80,
+    VT_MANEUVERABLE = 82,
+    VT_CD_AREA_OVER_MASS = 84
   };
   /// A comment
   const ::flatbuffers::String *COMMENT() const {
@@ -278,6 +320,24 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<double> *COVARIANCE() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COVARIANCE);
   }
+  /// OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+  /// as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+  const ::flatbuffers::String *OBJECT_DESIGNATOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_DESIGNATOR);
+  }
+  /// CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+  const ::flatbuffers::String *CATALOG_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CATALOG_NAME);
+  }
+  /// MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+  /// same fact as a flag, true for YES.
+  cdmManeuverable MANEUVERABLE() const {
+    return static_cast<cdmManeuverable>(GetField<int8_t>(VT_MANEUVERABLE, 0));
+  }
+  /// CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+  double CD_AREA_OVER_MASS() const {
+    return GetField<double>(VT_CD_AREA_OVER_MASS, 0.0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -331,6 +391,12 @@ struct CDMObject FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_Z_DOT, 8) &&
            VerifyOffset(verifier, VT_COVARIANCE) &&
            verifier.VerifyVector(COVARIANCE()) &&
+           VerifyOffset(verifier, VT_OBJECT_DESIGNATOR) &&
+           verifier.VerifyString(OBJECT_DESIGNATOR()) &&
+           VerifyOffset(verifier, VT_CATALOG_NAME) &&
+           verifier.VerifyString(CATALOG_NAME()) &&
+           VerifyField<int8_t>(verifier, VT_MANEUVERABLE, 1) &&
+           VerifyField<double>(verifier, VT_CD_AREA_OVER_MASS, 8) &&
            verifier.EndTable();
   }
 };
@@ -450,6 +516,18 @@ struct CDMObjectBuilder {
   void add_COVARIANCE(::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE) {
     fbb_.AddOffset(CDMObject::VT_COVARIANCE, COVARIANCE);
   }
+  void add_OBJECT_DESIGNATOR(::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR) {
+    fbb_.AddOffset(CDMObject::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
+  }
+  void add_CATALOG_NAME(::flatbuffers::Offset<::flatbuffers::String> CATALOG_NAME) {
+    fbb_.AddOffset(CDMObject::VT_CATALOG_NAME, CATALOG_NAME);
+  }
+  void add_MANEUVERABLE(cdmManeuverable MANEUVERABLE) {
+    fbb_.AddElement<int8_t>(CDMObject::VT_MANEUVERABLE, static_cast<int8_t>(MANEUVERABLE), 0);
+  }
+  void add_CD_AREA_OVER_MASS(double CD_AREA_OVER_MASS) {
+    fbb_.AddElement<double>(CDMObject::VT_CD_AREA_OVER_MASS, CD_AREA_OVER_MASS, 0.0);
+  }
   explicit CDMObjectBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -499,8 +577,13 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
     double X_DOT = 0.0,
     double Y_DOT = 0.0,
     double Z_DOT = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CATALOG_NAME = 0,
+    cdmManeuverable MANEUVERABLE = cdmManeuverable_UNSPECIFIED,
+    double CD_AREA_OVER_MASS = 0.0) {
   CDMObjectBuilder builder_(_fbb);
+  builder_.add_CD_AREA_OVER_MASS(CD_AREA_OVER_MASS);
   builder_.add_Z_DOT(Z_DOT);
   builder_.add_Y_DOT(Y_DOT);
   builder_.add_X_DOT(X_DOT);
@@ -517,6 +600,8 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
   builder_.add_RESIDUALS_ACCEPTED(RESIDUALS_ACCEPTED);
   builder_.add_ACTUAL_OD_SPAN(ACTUAL_OD_SPAN);
   builder_.add_RECOMMENDED_OD_SPAN(RECOMMENDED_OD_SPAN);
+  builder_.add_CATALOG_NAME(CATALOG_NAME);
+  builder_.add_OBJECT_DESIGNATOR(OBJECT_DESIGNATOR);
   builder_.add_COVARIANCE(COVARIANCE);
   builder_.add_TRACKS_USED(TRACKS_USED);
   builder_.add_TRACKS_AVAILABLE(TRACKS_AVAILABLE);
@@ -534,6 +619,7 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObject(
   builder_.add_POC(POC);
   builder_.add_OBJECT(OBJECT);
   builder_.add_COMMENT(COMMENT);
+  builder_.add_MANEUVERABLE(MANEUVERABLE);
   builder_.add_INTRACK_THRUST(INTRACK_THRUST);
   builder_.add_EARTH_TIDES(EARTH_TIDES);
   builder_.add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE);
@@ -579,7 +665,11 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
     double X_DOT = 0.0,
     double Y_DOT = 0.0,
     double Z_DOT = 0.0,
-    const std::vector<double> *COVARIANCE = nullptr) {
+    const std::vector<double> *COVARIANCE = nullptr,
+    const char *OBJECT_DESIGNATOR = nullptr,
+    const char *CATALOG_NAME = nullptr,
+    cdmManeuverable MANEUVERABLE = cdmManeuverable_UNSPECIFIED,
+    double CD_AREA_OVER_MASS = 0.0) {
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
   auto OPERATOR_CONTACT_POSITION__ = OPERATOR_CONTACT_POSITION ? _fbb.CreateString(OPERATOR_CONTACT_POSITION) : 0;
   auto OPERATOR_ORGANIZATION__ = OPERATOR_ORGANIZATION ? _fbb.CreateString(OPERATOR_ORGANIZATION) : 0;
@@ -590,6 +680,8 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
   auto TIME_LASTOB_START__ = TIME_LASTOB_START ? _fbb.CreateString(TIME_LASTOB_START) : 0;
   auto TIME_LASTOB_END__ = TIME_LASTOB_END ? _fbb.CreateString(TIME_LASTOB_END) : 0;
   auto COVARIANCE__ = COVARIANCE ? _fbb.CreateVector<double>(*COVARIANCE) : 0;
+  auto OBJECT_DESIGNATOR__ = OBJECT_DESIGNATOR ? _fbb.CreateString(OBJECT_DESIGNATOR) : 0;
+  auto CATALOG_NAME__ = CATALOG_NAME ? _fbb.CreateString(CATALOG_NAME) : 0;
   return CreateCDMObject(
       _fbb,
       COMMENT__,
@@ -628,10 +720,22 @@ inline ::flatbuffers::Offset<CDMObject> CreateCDMObjectDirect(
       X_DOT,
       Y_DOT,
       Z_DOT,
-      COVARIANCE__);
+      COVARIANCE__,
+      OBJECT_DESIGNATOR__,
+      CATALOG_NAME__,
+      MANEUVERABLE,
+      CD_AREA_OVER_MASS);
 }
 
 /// Conjunction Data Message
+///
+/// Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+/// SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+/// of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+/// km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+/// MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+/// COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+/// terms) are held as the message states them.
 struct CDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CDMBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -663,7 +767,8 @@ struct CDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_OBJECT1 = 54,
     VT_OBJECT2 = 56,
     VT_OBJECT1_DATASOURCE = 58,
-    VT_OBJECT2_DATASOURCE = 60
+    VT_OBJECT2_DATASOURCE = 60,
+    VT_COMMENT = 62
   };
   /// The version of the CCSDS CDM standard used
   double CCSDS_CDM_VERS() const {
@@ -781,6 +886,11 @@ struct CDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const PNM *OBJECT2_DATASOURCE() const {
     return GetPointer<const PNM *>(VT_OBJECT2_DATASOURCE);
   }
+  /// COMMENT lines of the message header and of its relative metadata and data
+  /// (CCSDS 508.0-B-1), in message order, joined by a line feed.
+  const ::flatbuffers::String *COMMENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -828,6 +938,8 @@ struct CDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(OBJECT1_DATASOURCE()) &&
            VerifyOffset(verifier, VT_OBJECT2_DATASOURCE) &&
            verifier.VerifyTable(OBJECT2_DATASOURCE()) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyString(COMMENT()) &&
            verifier.EndTable();
   }
 };
@@ -923,6 +1035,9 @@ struct CDMBuilder {
   void add_OBJECT2_DATASOURCE(::flatbuffers::Offset<PNM> OBJECT2_DATASOURCE) {
     fbb_.AddOffset(CDM::VT_OBJECT2_DATASOURCE, OBJECT2_DATASOURCE);
   }
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
+    fbb_.AddOffset(CDM::VT_COMMENT, COMMENT);
+  }
   explicit CDMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -964,7 +1079,8 @@ inline ::flatbuffers::Offset<CDM> CreateCDM(
     ::flatbuffers::Offset<CDMObject> OBJECT1 = 0,
     ::flatbuffers::Offset<CDMObject> OBJECT2 = 0,
     ::flatbuffers::Offset<PNM> OBJECT1_DATASOURCE = 0,
-    ::flatbuffers::Offset<PNM> OBJECT2_DATASOURCE = 0) {
+    ::flatbuffers::Offset<PNM> OBJECT2_DATASOURCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0) {
   CDMBuilder builder_(_fbb);
   builder_.add_COLLISION_PROBABILITY(COLLISION_PROBABILITY);
   builder_.add_SCREEN_VOLUME_Z(SCREEN_VOLUME_Z);
@@ -979,6 +1095,7 @@ inline ::flatbuffers::Offset<CDM> CreateCDM(
   builder_.add_RELATIVE_SPEED(RELATIVE_SPEED);
   builder_.add_MISS_DISTANCE(MISS_DISTANCE);
   builder_.add_CCSDS_CDM_VERS(CCSDS_CDM_VERS);
+  builder_.add_COMMENT(COMMENT);
   builder_.add_OBJECT2_DATASOURCE(OBJECT2_DATASOURCE);
   builder_.add_OBJECT1_DATASOURCE(OBJECT1_DATASOURCE);
   builder_.add_OBJECT2(OBJECT2);
@@ -1028,7 +1145,8 @@ inline ::flatbuffers::Offset<CDM> CreateCDMDirect(
     ::flatbuffers::Offset<CDMObject> OBJECT1 = 0,
     ::flatbuffers::Offset<CDMObject> OBJECT2 = 0,
     ::flatbuffers::Offset<PNM> OBJECT1_DATASOURCE = 0,
-    ::flatbuffers::Offset<PNM> OBJECT2_DATASOURCE = 0) {
+    ::flatbuffers::Offset<PNM> OBJECT2_DATASOURCE = 0,
+    const char *COMMENT = nullptr) {
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
   auto MESSAGE_FOR__ = MESSAGE_FOR ? _fbb.CreateString(MESSAGE_FOR) : 0;
@@ -1039,6 +1157,7 @@ inline ::flatbuffers::Offset<CDM> CreateCDMDirect(
   auto SCREEN_ENTRY_TIME__ = SCREEN_ENTRY_TIME ? _fbb.CreateString(SCREEN_ENTRY_TIME) : 0;
   auto SCREEN_EXIT_TIME__ = SCREEN_EXIT_TIME ? _fbb.CreateString(SCREEN_EXIT_TIME) : 0;
   auto COLLISION_PROBABILITY_METHOD__ = COLLISION_PROBABILITY_METHOD ? _fbb.CreateString(COLLISION_PROBABILITY_METHOD) : 0;
+  auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
   return CreateCDM(
       _fbb,
       CCSDS_CDM_VERS,
@@ -1069,7 +1188,8 @@ inline ::flatbuffers::Offset<CDM> CreateCDMDirect(
       OBJECT1,
       OBJECT2,
       OBJECT1_DATASOURCE,
-      OBJECT2_DATASOURCE);
+      OBJECT2_DATASOURCE,
+      COMMENT__);
 }
 
 inline const CDM *GetCDM(const void *buf) {

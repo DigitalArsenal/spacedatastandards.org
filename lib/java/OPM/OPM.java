@@ -74,6 +74,69 @@ public final class OPM extends com.google.flatbuffers.Table {
   public double SOLAR_RAD_COEFF() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double DRAG_AREA() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double DRAG_COEFF() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+   * and data groups, in message order, joined by a line feed.
+   */
+  public String COMMENT() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * CLASSIFICATION of the message: the optional header keyword stating its
+   * security classification or handling caveat.
+   */
+  public String CLASSIFICATION() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CLASSIFICATIONAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer CLASSIFICATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * MESSAGE_ID: the optional header keyword, an identifier the originator makes
+   * unique for this message.
+   */
+  public String MESSAGE_ID() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MESSAGE_IDAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
+  public ByteBuffer MESSAGE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
+  /**
+   * REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+   */
+  public String REF_FRAME_EPOCH() { int o = __offset(66); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REF_FRAME_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(66, 1); }
+  public ByteBuffer REF_FRAME_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 66, 1); }
+  /**
+   * COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+   * when it is REF_FRAME.
+   */
+  public String COV_REF_FRAME() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COV_REF_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
+  public ByteBuffer COV_REF_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
+  /**
+   * Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+   * CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+   * CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+   * CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+   * Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+   */
+  public double COVARIANCE(int j) { int o = __offset(70); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int COVARIANCELength() { int o = __offset(70); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector covarianceVector() { return covarianceVector(new DoubleVector()); }
+  public DoubleVector covarianceVector(DoubleVector obj) { int o = __offset(70); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer COVARIANCEAsByteBuffer() { return __vector_as_bytebuffer(70, 8); }
+  public ByteBuffer COVARIANCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 8); }
+  /**
+   * The message's maneuvers, in message order.
+   */
+  public OPMManeuver MANEUVERS(int j) { return MANEUVERS(new OPMManeuver(), j); }
+  public OPMManeuver MANEUVERS(OPMManeuver obj, int j) { int o = __offset(72); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int MANEUVERSLength() { int o = __offset(72); return o != 0 ? __vector_len(o) : 0; }
+  public OPMManeuver.Vector maneuversVector() { return maneuversVector(new OPMManeuver.Vector()); }
+  public OPMManeuver.Vector maneuversVector(OPMManeuver.Vector obj) { int o = __offset(72); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Every USER_DEFINED_x keyword of the message, in message order.
+   */
+  public OPMUserDefinedParameter USER_DEFINED_PARAMETERS(int j) { return USER_DEFINED_PARAMETERS(new OPMUserDefinedParameter(), j); }
+  public OPMUserDefinedParameter USER_DEFINED_PARAMETERS(OPMUserDefinedParameter obj, int j) { int o = __offset(74); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int USER_DEFINED_PARAMETERSLength() { int o = __offset(74); return o != 0 ? __vector_len(o) : 0; }
+  public OPMUserDefinedParameter.Vector userDefinedParametersVector() { return userDefinedParametersVector(new OPMUserDefinedParameter.Vector()); }
+  public OPMUserDefinedParameter.Vector userDefinedParametersVector(OPMUserDefinedParameter.Vector obj) { int o = __offset(74); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createOPM(FlatBufferBuilder builder,
       int CCSDS_OPM_VERSOffset,
@@ -103,8 +166,16 @@ public final class OPM extends com.google.flatbuffers.Table {
       double SOLAR_RAD_AREA,
       double SOLAR_RAD_COEFF,
       double DRAG_AREA,
-      double DRAG_COEFF) {
-    builder.startTable(28);
+      double DRAG_COEFF,
+      int COMMENTOffset,
+      int CLASSIFICATIONOffset,
+      int MESSAGE_IDOffset,
+      int REF_FRAME_EPOCHOffset,
+      int COV_REF_FRAMEOffset,
+      int COVARIANCEOffset,
+      int MANEUVERSOffset,
+      int USER_DEFINED_PARAMETERSOffset) {
+    builder.startTable(36);
     OPM.addDragCoeff(builder, DRAG_COEFF);
     OPM.addDragArea(builder, DRAG_AREA);
     OPM.addSolarRadCoeff(builder, SOLAR_RAD_COEFF);
@@ -124,6 +195,14 @@ public final class OPM extends com.google.flatbuffers.Table {
     OPM.addZ(builder, Z);
     OPM.addY(builder, Y);
     OPM.addX(builder, X);
+    OPM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERSOffset);
+    OPM.addManeuvers(builder, MANEUVERSOffset);
+    OPM.addCovariance(builder, COVARIANCEOffset);
+    OPM.addCovRefFrame(builder, COV_REF_FRAMEOffset);
+    OPM.addRefFrameEpoch(builder, REF_FRAME_EPOCHOffset);
+    OPM.addMessageId(builder, MESSAGE_IDOffset);
+    OPM.addClassification(builder, CLASSIFICATIONOffset);
+    OPM.addComment(builder, COMMENTOffset);
     OPM.addEpoch(builder, EPOCHOffset);
     OPM.addTimeSystem(builder, TIME_SYSTEMOffset);
     OPM.addRefFrame(builder, REF_FRAMEOffset);
@@ -136,7 +215,7 @@ public final class OPM extends com.google.flatbuffers.Table {
     return OPM.endOPM(builder);
   }
 
-  public static void startOPM(FlatBufferBuilder builder) { builder.startTable(28); }
+  public static void startOPM(FlatBufferBuilder builder) { builder.startTable(36); }
   public static void addCcsdsOpmVers(FlatBufferBuilder builder, int CCSDS_OPM_VERSOffset) { builder.addOffset(0, CCSDS_OPM_VERSOffset, 0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -165,6 +244,20 @@ public final class OPM extends com.google.flatbuffers.Table {
   public static void addSolarRadCoeff(FlatBufferBuilder builder, double SOLAR_RAD_COEFF) { builder.addDouble(25, SOLAR_RAD_COEFF, 0.0); }
   public static void addDragArea(FlatBufferBuilder builder, double DRAG_AREA) { builder.addDouble(26, DRAG_AREA, 0.0); }
   public static void addDragCoeff(FlatBufferBuilder builder, double DRAG_COEFF) { builder.addDouble(27, DRAG_COEFF, 0.0); }
+  public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(28, COMMENTOffset, 0); }
+  public static void addClassification(FlatBufferBuilder builder, int CLASSIFICATIONOffset) { builder.addOffset(29, CLASSIFICATIONOffset, 0); }
+  public static void addMessageId(FlatBufferBuilder builder, int MESSAGE_IDOffset) { builder.addOffset(30, MESSAGE_IDOffset, 0); }
+  public static void addRefFrameEpoch(FlatBufferBuilder builder, int REF_FRAME_EPOCHOffset) { builder.addOffset(31, REF_FRAME_EPOCHOffset, 0); }
+  public static void addCovRefFrame(FlatBufferBuilder builder, int COV_REF_FRAMEOffset) { builder.addOffset(32, COV_REF_FRAMEOffset, 0); }
+  public static void addCovariance(FlatBufferBuilder builder, int COVARIANCEOffset) { builder.addOffset(33, COVARIANCEOffset, 0); }
+  public static int createCovarianceVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startCovarianceVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addManeuvers(FlatBufferBuilder builder, int MANEUVERSOffset) { builder.addOffset(34, MANEUVERSOffset, 0); }
+  public static int createManeuversVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startManeuversVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addUserDefinedParameters(FlatBufferBuilder builder, int USER_DEFINED_PARAMETERSOffset) { builder.addOffset(35, USER_DEFINED_PARAMETERSOffset, 0); }
+  public static int createUserDefinedParametersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startUserDefinedParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endOPM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

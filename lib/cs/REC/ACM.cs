@@ -96,7 +96,9 @@ public struct ACM : IFlatbufferObject
   public int MANEUVERSLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Maneuverability status
   public maneuverableFlag MANEUVERABLE { get { int o = __p.__offset(28); return o != 0 ? (maneuverableFlag)__p.bb.GetSbyte(o + __p.bb_pos) : maneuverableFlag.YES; } }
-  /// Additional comments
+  /// COMMENT lines of the message header, metadata and user-defined data
+  /// (CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,
+  /// covariance, maneuver or determination block's own comments stay with it.
   public string COMMENT { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCOMMENTBytes() { return __p.__vector_as_span<byte>(30, 1); }
@@ -104,6 +106,140 @@ public struct ACM : IFlatbufferObject
   public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
   public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(30); }
+  /// CLASSIFICATION of the message: the optional header keyword stating its
+  /// security classification or handling caveat.
+  public string CLASSIFICATION { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCLASSIFICATIONBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetCLASSIFICATIONBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetCLASSIFICATIONArray() { return __p.__vector_as_array<byte>(32); }
+  /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  /// unique for this message.
+  public string MESSAGE_ID { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMESSAGE_IDBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetMESSAGE_IDBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetMESSAGE_IDArray() { return __p.__vector_as_array<byte>(34); }
+  /// OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.
+  /// OBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH
+  /// above its EPOCH_TZERO, the epoch every relative time is measured from.
+  public string OBJECT_DESIGNATOR { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_span<byte>(36, 1); }
+#else
+  public ArraySegment<byte>? GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public byte[] GetOBJECT_DESIGNATORArray() { return __p.__vector_as_array<byte>(36); }
+  /// ORIGINATOR_POC: point of contact at the originator.
+  public string ORIGINATOR_POC { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetORIGINATOR_POCBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetORIGINATOR_POCBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetORIGINATOR_POCArray() { return __p.__vector_as_array<byte>(38); }
+  /// ORIGINATOR_POSITION: position of the point of contact.
+  public string ORIGINATOR_POSITION { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetORIGINATOR_POSITIONBytes() { return __p.__vector_as_span<byte>(40, 1); }
+#else
+  public ArraySegment<byte>? GetORIGINATOR_POSITIONBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public byte[] GetORIGINATOR_POSITIONArray() { return __p.__vector_as_array<byte>(40); }
+  /// ORIGINATOR_PHONE: telephone number of the point of contact.
+  public string ORIGINATOR_PHONE { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetORIGINATOR_PHONEBytes() { return __p.__vector_as_span<byte>(42, 1); }
+#else
+  public ArraySegment<byte>? GetORIGINATOR_PHONEBytes() { return __p.__vector_as_arraysegment(42); }
+#endif
+  public byte[] GetORIGINATOR_PHONEArray() { return __p.__vector_as_array<byte>(42); }
+  /// ORIGINATOR_EMAIL: email address of the point of contact.
+  public string ORIGINATOR_EMAIL { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetORIGINATOR_EMAILBytes() { return __p.__vector_as_span<byte>(44, 1); }
+#else
+  public ArraySegment<byte>? GetORIGINATOR_EMAILBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public byte[] GetORIGINATOR_EMAILArray() { return __p.__vector_as_array<byte>(44); }
+  /// ORIGINATOR_ADDRESS: postal address of the point of contact.
+  public string ORIGINATOR_ADDRESS { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetORIGINATOR_ADDRESSBytes() { return __p.__vector_as_span<byte>(46, 1); }
+#else
+  public ArraySegment<byte>? GetORIGINATOR_ADDRESSBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public byte[] GetORIGINATOR_ADDRESSArray() { return __p.__vector_as_array<byte>(46); }
+  /// ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with.
+  public string ODM_MSG_LINK { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetODM_MSG_LINKBytes() { return __p.__vector_as_span<byte>(48, 1); }
+#else
+  public ArraySegment<byte>? GetODM_MSG_LINKBytes() { return __p.__vector_as_arraysegment(48); }
+#endif
+  public byte[] GetODM_MSG_LINKArray() { return __p.__vector_as_array<byte>(48); }
+  /// CENTER_NAME: the orbit center, when the message states one.
+  public string CENTER_NAME { get { int o = __p.__offset(50); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCENTER_NAMEBytes() { return __p.__vector_as_span<byte>(50, 1); }
+#else
+  public ArraySegment<byte>? GetCENTER_NAMEBytes() { return __p.__vector_as_arraysegment(50); }
+#endif
+  public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(50); }
+  /// ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds.
+  public string ACM_DATA_ELEMENTS { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetACM_DATA_ELEMENTSBytes() { return __p.__vector_as_span<byte>(52, 1); }
+#else
+  public ArraySegment<byte>? GetACM_DATA_ELEMENTSBytes() { return __p.__vector_as_arraysegment(52); }
+#endif
+  public byte[] GetACM_DATA_ELEMENTSArray() { return __p.__vector_as_array<byte>(52); }
+  /// START_TIME: start of the total time span the message covers.
+  public string START_TIME { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSTART_TIMEBytes() { return __p.__vector_as_span<byte>(54, 1); }
+#else
+  public ArraySegment<byte>? GetSTART_TIMEBytes() { return __p.__vector_as_arraysegment(54); }
+#endif
+  public byte[] GetSTART_TIMEArray() { return __p.__vector_as_array<byte>(54); }
+  /// STOP_TIME: end of the total time span the message covers.
+  public string STOP_TIME { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSTOP_TIMEBytes() { return __p.__vector_as_span<byte>(56, 1); }
+#else
+  public ArraySegment<byte>? GetSTOP_TIMEBytes() { return __p.__vector_as_arraysegment(56); }
+#endif
+  public byte[] GetSTOP_TIMEArray() { return __p.__vector_as_array<byte>(56); }
+  /// TAIMUTC_AT_TZERO in seconds, NaN when not stated.
+  public double TAIMUTC_AT_TZERO { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO.
+  public string NEXT_LEAP_EPOCH { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNEXT_LEAP_EPOCHBytes() { return __p.__vector_as_span<byte>(60, 1); }
+#else
+  public ArraySegment<byte>? GetNEXT_LEAP_EPOCHBytes() { return __p.__vector_as_arraysegment(60); }
+#endif
+  public byte[] GetNEXT_LEAP_EPOCHArray() { return __p.__vector_as_array<byte>(60); }
+  /// NEXT_LEAP_TAIMUTC in seconds, NaN when not stated.
+  public double NEXT_LEAP_TAIMUTC { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Attitude state time histories (ATT_START blocks), in message order.
+  public ACMAttitudeBlock? ATT_BLOCKS(int j) { int o = __p.__offset(64); return o != 0 ? (ACMAttitudeBlock?)(new ACMAttitudeBlock()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int ATT_BLOCKSLength { get { int o = __p.__offset(64); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Covariance time histories (COV_START blocks), in message order.
+  public ACMCovarianceBlock? COV_BLOCKS(int j) { int o = __p.__offset(66); return o != 0 ? (ACMCovarianceBlock?)(new ACMCovarianceBlock()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int COV_BLOCKSLength { get { int o = __p.__offset(66); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Maneuver specifications (MAN_START blocks), in message order.
+  public ACMManeuverBlock? MAN_BLOCKS(int j) { int o = __p.__offset(68); return o != 0 ? (ACMManeuverBlock?)(new ACMManeuverBlock()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int MAN_BLOCKSLength { get { int o = __p.__offset(68); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// The attitude determination data (AD_START block), when the message has them.
+  public ACMDetermination? DETERMINATION { get { int o = __p.__offset(70); return o != 0 ? (ACMDetermination?)(new ACMDetermination()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Every USER_DEFINED parameter of the message, in message order.
+  public ACMUserDefinedParameter? USER_DEFINED_PARAMETERS(int j) { int o = __p.__offset(72); return o != 0 ? (ACMUserDefinedParameter?)(new ACMUserDefinedParameter()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int USER_DEFINED_PARAMETERSLength { get { int o = __p.__offset(72); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<ACM> CreateACM(FlatBufferBuilder builder,
       StringOffset CCSDS_ACM_VERSOffset = default(StringOffset),
@@ -119,8 +255,50 @@ public struct ACM : IFlatbufferObject
       VectorOffset COV_DATAOffset = default(VectorOffset),
       VectorOffset MANEUVERSOffset = default(VectorOffset),
       maneuverableFlag MANEUVERABLE = maneuverableFlag.YES,
-      StringOffset COMMENTOffset = default(StringOffset)) {
-    builder.StartTable(14);
+      StringOffset COMMENTOffset = default(StringOffset),
+      StringOffset CLASSIFICATIONOffset = default(StringOffset),
+      StringOffset MESSAGE_IDOffset = default(StringOffset),
+      StringOffset OBJECT_DESIGNATOROffset = default(StringOffset),
+      StringOffset ORIGINATOR_POCOffset = default(StringOffset),
+      StringOffset ORIGINATOR_POSITIONOffset = default(StringOffset),
+      StringOffset ORIGINATOR_PHONEOffset = default(StringOffset),
+      StringOffset ORIGINATOR_EMAILOffset = default(StringOffset),
+      StringOffset ORIGINATOR_ADDRESSOffset = default(StringOffset),
+      StringOffset ODM_MSG_LINKOffset = default(StringOffset),
+      StringOffset CENTER_NAMEOffset = default(StringOffset),
+      StringOffset ACM_DATA_ELEMENTSOffset = default(StringOffset),
+      StringOffset START_TIMEOffset = default(StringOffset),
+      StringOffset STOP_TIMEOffset = default(StringOffset),
+      double TAIMUTC_AT_TZERO = Double.NaN,
+      StringOffset NEXT_LEAP_EPOCHOffset = default(StringOffset),
+      double NEXT_LEAP_TAIMUTC = Double.NaN,
+      VectorOffset ATT_BLOCKSOffset = default(VectorOffset),
+      VectorOffset COV_BLOCKSOffset = default(VectorOffset),
+      VectorOffset MAN_BLOCKSOffset = default(VectorOffset),
+      Offset<ACMDetermination> DETERMINATIONOffset = default(Offset<ACMDetermination>),
+      VectorOffset USER_DEFINED_PARAMETERSOffset = default(VectorOffset)) {
+    builder.StartTable(35);
+    ACM.AddNEXT_LEAP_TAIMUTC(builder, NEXT_LEAP_TAIMUTC);
+    ACM.AddTAIMUTC_AT_TZERO(builder, TAIMUTC_AT_TZERO);
+    ACM.AddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERSOffset);
+    ACM.AddDETERMINATION(builder, DETERMINATIONOffset);
+    ACM.AddMAN_BLOCKS(builder, MAN_BLOCKSOffset);
+    ACM.AddCOV_BLOCKS(builder, COV_BLOCKSOffset);
+    ACM.AddATT_BLOCKS(builder, ATT_BLOCKSOffset);
+    ACM.AddNEXT_LEAP_EPOCH(builder, NEXT_LEAP_EPOCHOffset);
+    ACM.AddSTOP_TIME(builder, STOP_TIMEOffset);
+    ACM.AddSTART_TIME(builder, START_TIMEOffset);
+    ACM.AddACM_DATA_ELEMENTS(builder, ACM_DATA_ELEMENTSOffset);
+    ACM.AddCENTER_NAME(builder, CENTER_NAMEOffset);
+    ACM.AddODM_MSG_LINK(builder, ODM_MSG_LINKOffset);
+    ACM.AddORIGINATOR_ADDRESS(builder, ORIGINATOR_ADDRESSOffset);
+    ACM.AddORIGINATOR_EMAIL(builder, ORIGINATOR_EMAILOffset);
+    ACM.AddORIGINATOR_PHONE(builder, ORIGINATOR_PHONEOffset);
+    ACM.AddORIGINATOR_POSITION(builder, ORIGINATOR_POSITIONOffset);
+    ACM.AddORIGINATOR_POC(builder, ORIGINATOR_POCOffset);
+    ACM.AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOROffset);
+    ACM.AddMESSAGE_ID(builder, MESSAGE_IDOffset);
+    ACM.AddCLASSIFICATION(builder, CLASSIFICATIONOffset);
     ACM.AddCOMMENT(builder, COMMENTOffset);
     ACM.AddMANEUVERS(builder, MANEUVERSOffset);
     ACM.AddCOV_DATA(builder, COV_DATAOffset);
@@ -138,7 +316,7 @@ public struct ACM : IFlatbufferObject
     return ACM.EndACM(builder);
   }
 
-  public static void StartACM(FlatBufferBuilder builder) { builder.StartTable(14); }
+  public static void StartACM(FlatBufferBuilder builder) { builder.StartTable(35); }
   public static void AddCCSDS_ACM_VERS(FlatBufferBuilder builder, StringOffset CCSDS_ACM_VERSOffset) { builder.AddOffset(0, CCSDS_ACM_VERSOffset.Value, 0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -168,6 +346,47 @@ public struct ACM : IFlatbufferObject
   public static void StartMANEUVERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddMANEUVERABLE(FlatBufferBuilder builder, maneuverableFlag MANEUVERABLE) { builder.AddSbyte(12, (sbyte)MANEUVERABLE, 0); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(13, COMMENTOffset.Value, 0); }
+  public static void AddCLASSIFICATION(FlatBufferBuilder builder, StringOffset CLASSIFICATIONOffset) { builder.AddOffset(14, CLASSIFICATIONOffset.Value, 0); }
+  public static void AddMESSAGE_ID(FlatBufferBuilder builder, StringOffset MESSAGE_IDOffset) { builder.AddOffset(15, MESSAGE_IDOffset.Value, 0); }
+  public static void AddOBJECT_DESIGNATOR(FlatBufferBuilder builder, StringOffset OBJECT_DESIGNATOROffset) { builder.AddOffset(16, OBJECT_DESIGNATOROffset.Value, 0); }
+  public static void AddORIGINATOR_POC(FlatBufferBuilder builder, StringOffset ORIGINATOR_POCOffset) { builder.AddOffset(17, ORIGINATOR_POCOffset.Value, 0); }
+  public static void AddORIGINATOR_POSITION(FlatBufferBuilder builder, StringOffset ORIGINATOR_POSITIONOffset) { builder.AddOffset(18, ORIGINATOR_POSITIONOffset.Value, 0); }
+  public static void AddORIGINATOR_PHONE(FlatBufferBuilder builder, StringOffset ORIGINATOR_PHONEOffset) { builder.AddOffset(19, ORIGINATOR_PHONEOffset.Value, 0); }
+  public static void AddORIGINATOR_EMAIL(FlatBufferBuilder builder, StringOffset ORIGINATOR_EMAILOffset) { builder.AddOffset(20, ORIGINATOR_EMAILOffset.Value, 0); }
+  public static void AddORIGINATOR_ADDRESS(FlatBufferBuilder builder, StringOffset ORIGINATOR_ADDRESSOffset) { builder.AddOffset(21, ORIGINATOR_ADDRESSOffset.Value, 0); }
+  public static void AddODM_MSG_LINK(FlatBufferBuilder builder, StringOffset ODM_MSG_LINKOffset) { builder.AddOffset(22, ODM_MSG_LINKOffset.Value, 0); }
+  public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(23, CENTER_NAMEOffset.Value, 0); }
+  public static void AddACM_DATA_ELEMENTS(FlatBufferBuilder builder, StringOffset ACM_DATA_ELEMENTSOffset) { builder.AddOffset(24, ACM_DATA_ELEMENTSOffset.Value, 0); }
+  public static void AddSTART_TIME(FlatBufferBuilder builder, StringOffset START_TIMEOffset) { builder.AddOffset(25, START_TIMEOffset.Value, 0); }
+  public static void AddSTOP_TIME(FlatBufferBuilder builder, StringOffset STOP_TIMEOffset) { builder.AddOffset(26, STOP_TIMEOffset.Value, 0); }
+  public static void AddTAIMUTC_AT_TZERO(FlatBufferBuilder builder, double TAIMUTC_AT_TZERO) { builder.AddDouble(27, TAIMUTC_AT_TZERO, Double.NaN); }
+  public static void AddNEXT_LEAP_EPOCH(FlatBufferBuilder builder, StringOffset NEXT_LEAP_EPOCHOffset) { builder.AddOffset(28, NEXT_LEAP_EPOCHOffset.Value, 0); }
+  public static void AddNEXT_LEAP_TAIMUTC(FlatBufferBuilder builder, double NEXT_LEAP_TAIMUTC) { builder.AddDouble(29, NEXT_LEAP_TAIMUTC, Double.NaN); }
+  public static void AddATT_BLOCKS(FlatBufferBuilder builder, VectorOffset ATT_BLOCKSOffset) { builder.AddOffset(30, ATT_BLOCKSOffset.Value, 0); }
+  public static VectorOffset CreateATT_BLOCKSVector(FlatBufferBuilder builder, Offset<ACMAttitudeBlock>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateATT_BLOCKSVectorBlock(FlatBufferBuilder builder, Offset<ACMAttitudeBlock>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateATT_BLOCKSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACMAttitudeBlock>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateATT_BLOCKSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACMAttitudeBlock>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartATT_BLOCKSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCOV_BLOCKS(FlatBufferBuilder builder, VectorOffset COV_BLOCKSOffset) { builder.AddOffset(31, COV_BLOCKSOffset.Value, 0); }
+  public static VectorOffset CreateCOV_BLOCKSVector(FlatBufferBuilder builder, Offset<ACMCovarianceBlock>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_BLOCKSVectorBlock(FlatBufferBuilder builder, Offset<ACMCovarianceBlock>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_BLOCKSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACMCovarianceBlock>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_BLOCKSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACMCovarianceBlock>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOV_BLOCKSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMAN_BLOCKS(FlatBufferBuilder builder, VectorOffset MAN_BLOCKSOffset) { builder.AddOffset(32, MAN_BLOCKSOffset.Value, 0); }
+  public static VectorOffset CreateMAN_BLOCKSVector(FlatBufferBuilder builder, Offset<ACMManeuverBlock>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateMAN_BLOCKSVectorBlock(FlatBufferBuilder builder, Offset<ACMManeuverBlock>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMAN_BLOCKSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACMManeuverBlock>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMAN_BLOCKSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACMManeuverBlock>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartMAN_BLOCKSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddDETERMINATION(FlatBufferBuilder builder, Offset<ACMDetermination> DETERMINATIONOffset) { builder.AddOffset(33, DETERMINATIONOffset.Value, 0); }
+  public static void AddUSER_DEFINED_PARAMETERS(FlatBufferBuilder builder, VectorOffset USER_DEFINED_PARAMETERSOffset) { builder.AddOffset(34, USER_DEFINED_PARAMETERSOffset.Value, 0); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder builder, Offset<ACMUserDefinedParameter>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, Offset<ACMUserDefinedParameter>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACMUserDefinedParameter>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUSER_DEFINED_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACMUserDefinedParameter>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<ACM> EndACM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACM>(o);
@@ -197,6 +416,31 @@ public struct ACM : IFlatbufferObject
     for (var _j = 0; _j < this.MANEUVERSLength; ++_j) {_o.MANEUVERS.Add(this.MANEUVERS(_j).HasValue ? this.MANEUVERS(_j).Value.UnPack() : null);}
     _o.MANEUVERABLE = this.MANEUVERABLE;
     _o.COMMENT = this.COMMENT;
+    _o.CLASSIFICATION = this.CLASSIFICATION;
+    _o.MESSAGE_ID = this.MESSAGE_ID;
+    _o.OBJECT_DESIGNATOR = this.OBJECT_DESIGNATOR;
+    _o.ORIGINATOR_POC = this.ORIGINATOR_POC;
+    _o.ORIGINATOR_POSITION = this.ORIGINATOR_POSITION;
+    _o.ORIGINATOR_PHONE = this.ORIGINATOR_PHONE;
+    _o.ORIGINATOR_EMAIL = this.ORIGINATOR_EMAIL;
+    _o.ORIGINATOR_ADDRESS = this.ORIGINATOR_ADDRESS;
+    _o.ODM_MSG_LINK = this.ODM_MSG_LINK;
+    _o.CENTER_NAME = this.CENTER_NAME;
+    _o.ACM_DATA_ELEMENTS = this.ACM_DATA_ELEMENTS;
+    _o.START_TIME = this.START_TIME;
+    _o.STOP_TIME = this.STOP_TIME;
+    _o.TAIMUTC_AT_TZERO = this.TAIMUTC_AT_TZERO;
+    _o.NEXT_LEAP_EPOCH = this.NEXT_LEAP_EPOCH;
+    _o.NEXT_LEAP_TAIMUTC = this.NEXT_LEAP_TAIMUTC;
+    _o.ATT_BLOCKS = new List<ACMAttitudeBlockT>();
+    for (var _j = 0; _j < this.ATT_BLOCKSLength; ++_j) {_o.ATT_BLOCKS.Add(this.ATT_BLOCKS(_j).HasValue ? this.ATT_BLOCKS(_j).Value.UnPack() : null);}
+    _o.COV_BLOCKS = new List<ACMCovarianceBlockT>();
+    for (var _j = 0; _j < this.COV_BLOCKSLength; ++_j) {_o.COV_BLOCKS.Add(this.COV_BLOCKS(_j).HasValue ? this.COV_BLOCKS(_j).Value.UnPack() : null);}
+    _o.MAN_BLOCKS = new List<ACMManeuverBlockT>();
+    for (var _j = 0; _j < this.MAN_BLOCKSLength; ++_j) {_o.MAN_BLOCKS.Add(this.MAN_BLOCKS(_j).HasValue ? this.MAN_BLOCKS(_j).Value.UnPack() : null);}
+    _o.DETERMINATION = this.DETERMINATION.HasValue ? this.DETERMINATION.Value.UnPack() : null;
+    _o.USER_DEFINED_PARAMETERS = new List<ACMUserDefinedParameterT>();
+    for (var _j = 0; _j < this.USER_DEFINED_PARAMETERSLength; ++_j) {_o.USER_DEFINED_PARAMETERS.Add(this.USER_DEFINED_PARAMETERS(_j).HasValue ? this.USER_DEFINED_PARAMETERS(_j).Value.UnPack() : null);}
   }
   public static Offset<ACM> Pack(FlatBufferBuilder builder, ACMT _o) {
     if (_o == null) return default(Offset<ACM>);
@@ -228,6 +472,45 @@ public struct ACM : IFlatbufferObject
       _MANEUVERS = CreateMANEUVERSVector(builder, __MANEUVERS);
     }
     var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
+    var _CLASSIFICATION = _o.CLASSIFICATION == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION);
+    var _MESSAGE_ID = _o.MESSAGE_ID == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE_ID);
+    var _OBJECT_DESIGNATOR = _o.OBJECT_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_DESIGNATOR);
+    var _ORIGINATOR_POC = _o.ORIGINATOR_POC == null ? default(StringOffset) : builder.CreateString(_o.ORIGINATOR_POC);
+    var _ORIGINATOR_POSITION = _o.ORIGINATOR_POSITION == null ? default(StringOffset) : builder.CreateString(_o.ORIGINATOR_POSITION);
+    var _ORIGINATOR_PHONE = _o.ORIGINATOR_PHONE == null ? default(StringOffset) : builder.CreateString(_o.ORIGINATOR_PHONE);
+    var _ORIGINATOR_EMAIL = _o.ORIGINATOR_EMAIL == null ? default(StringOffset) : builder.CreateString(_o.ORIGINATOR_EMAIL);
+    var _ORIGINATOR_ADDRESS = _o.ORIGINATOR_ADDRESS == null ? default(StringOffset) : builder.CreateString(_o.ORIGINATOR_ADDRESS);
+    var _ODM_MSG_LINK = _o.ODM_MSG_LINK == null ? default(StringOffset) : builder.CreateString(_o.ODM_MSG_LINK);
+    var _CENTER_NAME = _o.CENTER_NAME == null ? default(StringOffset) : builder.CreateString(_o.CENTER_NAME);
+    var _ACM_DATA_ELEMENTS = _o.ACM_DATA_ELEMENTS == null ? default(StringOffset) : builder.CreateString(_o.ACM_DATA_ELEMENTS);
+    var _START_TIME = _o.START_TIME == null ? default(StringOffset) : builder.CreateString(_o.START_TIME);
+    var _STOP_TIME = _o.STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.STOP_TIME);
+    var _NEXT_LEAP_EPOCH = _o.NEXT_LEAP_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.NEXT_LEAP_EPOCH);
+    var _ATT_BLOCKS = default(VectorOffset);
+    if (_o.ATT_BLOCKS != null) {
+      var __ATT_BLOCKS = new Offset<ACMAttitudeBlock>[_o.ATT_BLOCKS.Count];
+      for (var _j = 0; _j < __ATT_BLOCKS.Length; ++_j) { __ATT_BLOCKS[_j] = ACMAttitudeBlock.Pack(builder, _o.ATT_BLOCKS[_j]); }
+      _ATT_BLOCKS = CreateATT_BLOCKSVector(builder, __ATT_BLOCKS);
+    }
+    var _COV_BLOCKS = default(VectorOffset);
+    if (_o.COV_BLOCKS != null) {
+      var __COV_BLOCKS = new Offset<ACMCovarianceBlock>[_o.COV_BLOCKS.Count];
+      for (var _j = 0; _j < __COV_BLOCKS.Length; ++_j) { __COV_BLOCKS[_j] = ACMCovarianceBlock.Pack(builder, _o.COV_BLOCKS[_j]); }
+      _COV_BLOCKS = CreateCOV_BLOCKSVector(builder, __COV_BLOCKS);
+    }
+    var _MAN_BLOCKS = default(VectorOffset);
+    if (_o.MAN_BLOCKS != null) {
+      var __MAN_BLOCKS = new Offset<ACMManeuverBlock>[_o.MAN_BLOCKS.Count];
+      for (var _j = 0; _j < __MAN_BLOCKS.Length; ++_j) { __MAN_BLOCKS[_j] = ACMManeuverBlock.Pack(builder, _o.MAN_BLOCKS[_j]); }
+      _MAN_BLOCKS = CreateMAN_BLOCKSVector(builder, __MAN_BLOCKS);
+    }
+    var _DETERMINATION = _o.DETERMINATION == null ? default(Offset<ACMDetermination>) : ACMDetermination.Pack(builder, _o.DETERMINATION);
+    var _USER_DEFINED_PARAMETERS = default(VectorOffset);
+    if (_o.USER_DEFINED_PARAMETERS != null) {
+      var __USER_DEFINED_PARAMETERS = new Offset<ACMUserDefinedParameter>[_o.USER_DEFINED_PARAMETERS.Count];
+      for (var _j = 0; _j < __USER_DEFINED_PARAMETERS.Length; ++_j) { __USER_DEFINED_PARAMETERS[_j] = ACMUserDefinedParameter.Pack(builder, _o.USER_DEFINED_PARAMETERS[_j]); }
+      _USER_DEFINED_PARAMETERS = CreateUSER_DEFINED_PARAMETERSVector(builder, __USER_DEFINED_PARAMETERS);
+    }
     return CreateACM(
       builder,
       _CCSDS_ACM_VERS,
@@ -243,7 +526,28 @@ public struct ACM : IFlatbufferObject
       _COV_DATA,
       _MANEUVERS,
       _o.MANEUVERABLE,
-      _COMMENT);
+      _COMMENT,
+      _CLASSIFICATION,
+      _MESSAGE_ID,
+      _OBJECT_DESIGNATOR,
+      _ORIGINATOR_POC,
+      _ORIGINATOR_POSITION,
+      _ORIGINATOR_PHONE,
+      _ORIGINATOR_EMAIL,
+      _ORIGINATOR_ADDRESS,
+      _ODM_MSG_LINK,
+      _CENTER_NAME,
+      _ACM_DATA_ELEMENTS,
+      _START_TIME,
+      _STOP_TIME,
+      _o.TAIMUTC_AT_TZERO,
+      _NEXT_LEAP_EPOCH,
+      _o.NEXT_LEAP_TAIMUTC,
+      _ATT_BLOCKS,
+      _COV_BLOCKS,
+      _MAN_BLOCKS,
+      _DETERMINATION,
+      _USER_DEFINED_PARAMETERS);
   }
 }
 
@@ -263,6 +567,27 @@ public class ACMT
   public List<attManeuverT> MANEUVERS { get; set; }
   public maneuverableFlag MANEUVERABLE { get; set; }
   public string COMMENT { get; set; }
+  public string CLASSIFICATION { get; set; }
+  public string MESSAGE_ID { get; set; }
+  public string OBJECT_DESIGNATOR { get; set; }
+  public string ORIGINATOR_POC { get; set; }
+  public string ORIGINATOR_POSITION { get; set; }
+  public string ORIGINATOR_PHONE { get; set; }
+  public string ORIGINATOR_EMAIL { get; set; }
+  public string ORIGINATOR_ADDRESS { get; set; }
+  public string ODM_MSG_LINK { get; set; }
+  public string CENTER_NAME { get; set; }
+  public string ACM_DATA_ELEMENTS { get; set; }
+  public string START_TIME { get; set; }
+  public string STOP_TIME { get; set; }
+  public double TAIMUTC_AT_TZERO { get; set; }
+  public string NEXT_LEAP_EPOCH { get; set; }
+  public double NEXT_LEAP_TAIMUTC { get; set; }
+  public List<ACMAttitudeBlockT> ATT_BLOCKS { get; set; }
+  public List<ACMCovarianceBlockT> COV_BLOCKS { get; set; }
+  public List<ACMManeuverBlockT> MAN_BLOCKS { get; set; }
+  public ACMDeterminationT DETERMINATION { get; set; }
+  public List<ACMUserDefinedParameterT> USER_DEFINED_PARAMETERS { get; set; }
 
   public ACMT() {
     this.CCSDS_ACM_VERS = null;
@@ -279,6 +604,27 @@ public class ACMT
     this.MANEUVERS = null;
     this.MANEUVERABLE = maneuverableFlag.YES;
     this.COMMENT = null;
+    this.CLASSIFICATION = null;
+    this.MESSAGE_ID = null;
+    this.OBJECT_DESIGNATOR = null;
+    this.ORIGINATOR_POC = null;
+    this.ORIGINATOR_POSITION = null;
+    this.ORIGINATOR_PHONE = null;
+    this.ORIGINATOR_EMAIL = null;
+    this.ORIGINATOR_ADDRESS = null;
+    this.ODM_MSG_LINK = null;
+    this.CENTER_NAME = null;
+    this.ACM_DATA_ELEMENTS = null;
+    this.START_TIME = null;
+    this.STOP_TIME = null;
+    this.TAIMUTC_AT_TZERO = Double.NaN;
+    this.NEXT_LEAP_EPOCH = null;
+    this.NEXT_LEAP_TAIMUTC = Double.NaN;
+    this.ATT_BLOCKS = null;
+    this.COV_BLOCKS = null;
+    this.MAN_BLOCKS = null;
+    this.DETERMINATION = null;
+    this.USER_DEFINED_PARAMETERS = null;
   }
   public static ACMT DeserializeFromBinary(byte[] fbBuffer) {
     return ACM.GetRootAsACM(new ByteBuffer(fbBuffer)).UnPack();
@@ -310,6 +656,27 @@ static public class ACMVerify
       && verifier.VerifyVectorOfTables(tablePos, 26 /*MANEUVERS*/, attManeuverVerify.Verify, false)
       && verifier.VerifyField(tablePos, 28 /*MANEUVERABLE*/, 1 /*maneuverableFlag*/, 1, false)
       && verifier.VerifyString(tablePos, 30 /*COMMENT*/, false)
+      && verifier.VerifyString(tablePos, 32 /*CLASSIFICATION*/, false)
+      && verifier.VerifyString(tablePos, 34 /*MESSAGE_ID*/, false)
+      && verifier.VerifyString(tablePos, 36 /*OBJECT_DESIGNATOR*/, false)
+      && verifier.VerifyString(tablePos, 38 /*ORIGINATOR_POC*/, false)
+      && verifier.VerifyString(tablePos, 40 /*ORIGINATOR_POSITION*/, false)
+      && verifier.VerifyString(tablePos, 42 /*ORIGINATOR_PHONE*/, false)
+      && verifier.VerifyString(tablePos, 44 /*ORIGINATOR_EMAIL*/, false)
+      && verifier.VerifyString(tablePos, 46 /*ORIGINATOR_ADDRESS*/, false)
+      && verifier.VerifyString(tablePos, 48 /*ODM_MSG_LINK*/, false)
+      && verifier.VerifyString(tablePos, 50 /*CENTER_NAME*/, false)
+      && verifier.VerifyString(tablePos, 52 /*ACM_DATA_ELEMENTS*/, false)
+      && verifier.VerifyString(tablePos, 54 /*START_TIME*/, false)
+      && verifier.VerifyString(tablePos, 56 /*STOP_TIME*/, false)
+      && verifier.VerifyField(tablePos, 58 /*TAIMUTC_AT_TZERO*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 60 /*NEXT_LEAP_EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 62 /*NEXT_LEAP_TAIMUTC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfTables(tablePos, 64 /*ATT_BLOCKS*/, ACMAttitudeBlockVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 66 /*COV_BLOCKS*/, ACMCovarianceBlockVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 68 /*MAN_BLOCKS*/, ACMManeuverBlockVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 70 /*DETERMINATION*/, ACMDeterminationVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 72 /*USER_DEFINED_PARAMETERS*/, ACMUserDefinedParameterVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

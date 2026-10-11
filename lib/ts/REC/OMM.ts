@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { OMMUserDefinedParameter, OMMUserDefinedParameterT } from './OMMUserDefinedParameter.js';
 import { RFM, RFMT } from './RFM.js';
 import { ephemerisFormat } from './ephemerisFormat.js';
 import { meanElementSource } from './meanElementSource.js';
@@ -129,7 +130,10 @@ MEAN_ELEMENT_THEORY():meanElementSource {
 }
 
 /**
- * COMMENT (O)
+ * COMMENT (O): every COMMENT line of the message, in message order, joined by
+ * a line feed. A message states comments in its header, its metadata and each
+ * data group; this field holds them all, so a message written from the record
+ * states them together in its header.
  */
 COMMENT():string|null
 COMMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -396,8 +400,45 @@ USER_DEFINED_MICROSECONDS():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword
+ * that states its security classification or handling caveat. Not
+ * CLASSIFICATION_TYPE, which is the TLE element set's U, C or S.
+ */
+CLASSIFICATION():string|null
+CLASSIFICATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CLASSIFICATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the
+ * originator makes unique for this message.
+ */
+MESSAGE_ID():string|null
+MESSAGE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MESSAGE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the
+ * message that has no dedicated field above, in message order.
+ */
+USER_DEFINED_PARAMETERS(index: number, obj?:OMMUserDefinedParameter):OMMUserDefinedParameter|null {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? (obj || new OMMUserDefinedParameter()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+userDefinedParametersLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startOMM(builder:flatbuffers.Builder) {
-  builder.startObject(40);
+  builder.startObject(43);
 }
 
 static addCcsdsOmmVers(builder:flatbuffers.Builder, CCSDS_OMM_VERS:number) {
@@ -577,6 +618,30 @@ static addUserDefinedMicroseconds(builder:flatbuffers.Builder, USER_DEFINED_MICR
   builder.addFieldFloat64(39, USER_DEFINED_MICROSECONDS, 0.0);
 }
 
+static addClassification(builder:flatbuffers.Builder, CLASSIFICATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(40, CLASSIFICATIONOffset, 0);
+}
+
+static addMessageId(builder:flatbuffers.Builder, MESSAGE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(41, MESSAGE_IDOffset, 0);
+}
+
+static addUserDefinedParameters(builder:flatbuffers.Builder, USER_DEFINED_PARAMETERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(42, USER_DEFINED_PARAMETERSOffset, 0);
+}
+
+static createUserDefinedParametersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startUserDefinedParametersVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endOMM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -632,7 +697,10 @@ unpack(): OMMT {
     this.USER_DEFINED_OBJECT_DESIGNATOR(),
     this.USER_DEFINED_EARTH_MODEL(),
     this.USER_DEFINED_EPOCH_TIMESTAMP(),
-    this.USER_DEFINED_MICROSECONDS()
+    this.USER_DEFINED_MICROSECONDS(),
+    this.CLASSIFICATION(),
+    this.MESSAGE_ID(),
+    this.bb!.createObjList<OMMUserDefinedParameter, OMMUserDefinedParameterT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength())
   );
 }
 
@@ -678,6 +746,9 @@ unpackTo(_o: OMMT): void {
   _o.USER_DEFINED_EARTH_MODEL = this.USER_DEFINED_EARTH_MODEL();
   _o.USER_DEFINED_EPOCH_TIMESTAMP = this.USER_DEFINED_EPOCH_TIMESTAMP();
   _o.USER_DEFINED_MICROSECONDS = this.USER_DEFINED_MICROSECONDS();
+  _o.CLASSIFICATION = this.CLASSIFICATION();
+  _o.MESSAGE_ID = this.MESSAGE_ID();
+  _o.USER_DEFINED_PARAMETERS = this.bb!.createObjList<OMMUserDefinedParameter, OMMUserDefinedParameterT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength());
 }
 }
 
@@ -722,7 +793,10 @@ constructor(
   public USER_DEFINED_OBJECT_DESIGNATOR: string|Uint8Array|null = null,
   public USER_DEFINED_EARTH_MODEL: string|Uint8Array|null = null,
   public USER_DEFINED_EPOCH_TIMESTAMP: number = 0.0,
-  public USER_DEFINED_MICROSECONDS: number = 0.0
+  public USER_DEFINED_MICROSECONDS: number = 0.0,
+  public CLASSIFICATION: string|Uint8Array|null = null,
+  public MESSAGE_ID: string|Uint8Array|null = null,
+  public USER_DEFINED_PARAMETERS: (OMMUserDefinedParameterT)[] = []
 ){}
 
 
@@ -741,6 +815,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COVARIANCE = OMM.createCovarianceVector(builder, this.COVARIANCE);
   const USER_DEFINED_OBJECT_DESIGNATOR = (this.USER_DEFINED_OBJECT_DESIGNATOR !== null ? builder.createString(this.USER_DEFINED_OBJECT_DESIGNATOR!) : 0);
   const USER_DEFINED_EARTH_MODEL = (this.USER_DEFINED_EARTH_MODEL !== null ? builder.createString(this.USER_DEFINED_EARTH_MODEL!) : 0);
+  const CLASSIFICATION = (this.CLASSIFICATION !== null ? builder.createString(this.CLASSIFICATION!) : 0);
+  const MESSAGE_ID = (this.MESSAGE_ID !== null ? builder.createString(this.MESSAGE_ID!) : 0);
+  const USER_DEFINED_PARAMETERS = OMM.createUserDefinedParametersVector(builder, builder.createObjectOffsetList(this.USER_DEFINED_PARAMETERS));
 
   OMM.startOMM(builder);
   OMM.addCcsdsOmmVers(builder, this.CCSDS_OMM_VERS);
@@ -783,6 +860,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OMM.addUserDefinedEarthModel(builder, USER_DEFINED_EARTH_MODEL);
   OMM.addUserDefinedEpochTimestamp(builder, this.USER_DEFINED_EPOCH_TIMESTAMP);
   OMM.addUserDefinedMicroseconds(builder, this.USER_DEFINED_MICROSECONDS);
+  OMM.addClassification(builder, CLASSIFICATION);
+  OMM.addMessageId(builder, MESSAGE_ID);
+  OMM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERS);
 
   return OMM.endOMM(builder);
 }

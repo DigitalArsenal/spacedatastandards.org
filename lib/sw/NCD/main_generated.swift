@@ -56,6 +56,34 @@ public enum ncdContainerFormat: UInt8, FlatbuffersVectorInitializable, Enum, Ver
   case ccsdsTdmKvn = 11
   ///  CCSDS Tracking Data Message, XML.
   case ccsdsTdmXml = 12
+  ///  CCSDS Orbit Mean-Elements Message, keyword-value notation.
+  case ccsdsOmmKvn = 13
+  ///  CCSDS Orbit Mean-Elements Message, XML.
+  case ccsdsOmmXml = 14
+  ///  CCSDS Orbit Parameter Message, keyword-value notation.
+  case ccsdsOpmKvn = 15
+  ///  CCSDS Orbit Parameter Message, XML.
+  case ccsdsOpmXml = 16
+  ///  CCSDS Orbit Comprehensive Message, keyword-value notation.
+  case ccsdsOcmKvn = 17
+  ///  CCSDS Orbit Comprehensive Message, XML.
+  case ccsdsOcmXml = 18
+  ///  CCSDS Conjunction Data Message, keyword-value notation.
+  case ccsdsCdmKvn = 19
+  ///  CCSDS Conjunction Data Message, XML.
+  case ccsdsCdmXml = 20
+  ///  CCSDS Attitude Parameter Message, keyword-value notation.
+  case ccsdsApmKvn = 21
+  ///  CCSDS Attitude Parameter Message, XML.
+  case ccsdsApmXml = 22
+  ///  CCSDS Attitude Comprehensive Message, keyword-value notation.
+  case ccsdsAcmKvn = 23
+  ///  CCSDS Attitude Comprehensive Message, XML.
+  case ccsdsAcmXml = 24
+  ///  CCSDS Reentry Data Message, keyword-value notation.
+  case ccsdsRdmKvn = 25
+  ///  CCSDS Reentry Data Message, XML.
+  case ccsdsRdmXml = 26
   ///  A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
   ///  which; a producer never reuses a neighbouring member instead.
   case providerDefined = 255

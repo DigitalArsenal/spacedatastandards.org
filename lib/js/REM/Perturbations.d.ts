@@ -101,6 +101,86 @@ export declare class Perturbations implements flatbuffers.IUnpackableObject<Pert
      * time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
      */
     FIXED_GEOMAG_AP(): number;
+    /**
+     * ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+     * above is the model family when the text names one.
+     */
+    ATMOSPHERIC_MODEL_NAME(): string | null;
+    ATMOSPHERIC_MODEL_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * EQUATORIAL_RADIUS in km, NaN when not stated.
+     */
+    EQUATORIAL_RADIUS(): number;
+    /**
+     * CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+     */
+    CENTRAL_BODY_ROTATION(): number;
+    /**
+     * OBLATE_FLATTENING, NaN when not stated.
+     */
+    OBLATE_FLATTENING(): number;
+    /**
+     * REDUCTION_THEORY.
+     */
+    REDUCTION_THEORY(): string | null;
+    REDUCTION_THEORY(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * ALBEDO_GRID_SIZE.
+     */
+    ALBEDO_GRID_SIZE(): number;
+    /**
+     * SHADOW_MODEL.
+     */
+    SHADOW_MODEL(): string | null;
+    SHADOW_MODEL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * SHADOW_BODIES.
+     */
+    SHADOW_BODIES(): string | null;
+    SHADOW_BODIES(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * SW_DATA_SOURCE: the space weather data source.
+     */
+    SW_DATA_SOURCE(): string | null;
+    SW_DATA_SOURCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * SW_DATA_EPOCH.
+     */
+    SW_DATA_EPOCH(): string | null;
+    SW_DATA_EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * SW_INTERP_METHOD.
+     */
+    SW_INTERP_METHOD(): string | null;
+    SW_INTERP_METHOD(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * FIXED_GEOMAG_DST in nT, NaN when not stated.
+     */
+    FIXED_GEOMAG_DST(): number;
+    /**
+     * FIXED_M10P7, NaN when not stated.
+     */
+    FIXED_M10P7(): number;
+    /**
+     * FIXED_M10P7_MEAN, NaN when not stated.
+     */
+    FIXED_M10P7_MEAN(): number;
+    /**
+     * FIXED_S10P7, NaN when not stated.
+     */
+    FIXED_S10P7(): number;
+    /**
+     * FIXED_S10P7_MEAN, NaN when not stated.
+     */
+    FIXED_S10P7_MEAN(): number;
+    /**
+     * FIXED_Y10P7, NaN when not stated.
+     */
+    FIXED_Y10P7(): number;
+    /**
+     * FIXED_Y10P7_MEAN, NaN when not stated.
+     */
+    FIXED_Y10P7_MEAN(): number;
     static startPerturbations(builder: flatbuffers.Builder): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static createCommentVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
@@ -126,6 +206,24 @@ export declare class Perturbations implements flatbuffers.IUnpackableObject<Pert
     static addFixedF10P7(builder: flatbuffers.Builder, FIXED_F10P7: number): void;
     static addFixedF10P7Mean(builder: flatbuffers.Builder, FIXED_F10P7_MEAN: number): void;
     static addFixedGeomagAp(builder: flatbuffers.Builder, FIXED_GEOMAG_AP: number): void;
+    static addAtmosphericModelName(builder: flatbuffers.Builder, ATMOSPHERIC_MODEL_NAMEOffset: flatbuffers.Offset): void;
+    static addEquatorialRadius(builder: flatbuffers.Builder, EQUATORIAL_RADIUS: number): void;
+    static addCentralBodyRotation(builder: flatbuffers.Builder, CENTRAL_BODY_ROTATION: number): void;
+    static addOblateFlattening(builder: flatbuffers.Builder, OBLATE_FLATTENING: number): void;
+    static addReductionTheory(builder: flatbuffers.Builder, REDUCTION_THEORYOffset: flatbuffers.Offset): void;
+    static addAlbedoGridSize(builder: flatbuffers.Builder, ALBEDO_GRID_SIZE: number): void;
+    static addShadowModel(builder: flatbuffers.Builder, SHADOW_MODELOffset: flatbuffers.Offset): void;
+    static addShadowBodies(builder: flatbuffers.Builder, SHADOW_BODIESOffset: flatbuffers.Offset): void;
+    static addSwDataSource(builder: flatbuffers.Builder, SW_DATA_SOURCEOffset: flatbuffers.Offset): void;
+    static addSwDataEpoch(builder: flatbuffers.Builder, SW_DATA_EPOCHOffset: flatbuffers.Offset): void;
+    static addSwInterpMethod(builder: flatbuffers.Builder, SW_INTERP_METHODOffset: flatbuffers.Offset): void;
+    static addFixedGeomagDst(builder: flatbuffers.Builder, FIXED_GEOMAG_DST: number): void;
+    static addFixedM10P7(builder: flatbuffers.Builder, FIXED_M10P7: number): void;
+    static addFixedM10P7Mean(builder: flatbuffers.Builder, FIXED_M10P7_MEAN: number): void;
+    static addFixedS10P7(builder: flatbuffers.Builder, FIXED_S10P7: number): void;
+    static addFixedS10P7Mean(builder: flatbuffers.Builder, FIXED_S10P7_MEAN: number): void;
+    static addFixedY10P7(builder: flatbuffers.Builder, FIXED_Y10P7: number): void;
+    static addFixedY10P7Mean(builder: flatbuffers.Builder, FIXED_Y10P7_MEAN: number): void;
     static endPerturbations(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PerturbationsT;
     unpackTo(_o: PerturbationsT): void;
@@ -151,7 +249,25 @@ export declare class PerturbationsT implements flatbuffers.IGeneratedObject {
     FIXED_F10P7: number;
     FIXED_F10P7_MEAN: number;
     FIXED_GEOMAG_AP: number;
-    constructor(COMMENT?: (string)[], ATMOSPHERIC_MODEL?: ATMT | null, GRAVITY_MODEL?: string | Uint8Array | null, GRAVITY_DEGREE?: number, GRAVITY_ORDER?: number, GM?: number, N_BODY_PERTURBATIONS?: (string)[], OCEAN_TIDES_MODEL?: string | Uint8Array | null, SOLID_TIDES_MODEL?: string | Uint8Array | null, ATMOSPHERIC_TIDES_MODEL?: string | Uint8Array | null, GEOPOTENTIAL_MODEL?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: string | Uint8Array | null, ALBEDO?: string | Uint8Array | null, THERMAL?: string | Uint8Array | null, RELATIVITY?: string | Uint8Array | null, ATMOSPHERIC_DRAG?: string | Uint8Array | null, FIXED_GEOMAG_KP?: number, FIXED_F10P7?: number, FIXED_F10P7_MEAN?: number, FIXED_GEOMAG_AP?: number);
+    ATMOSPHERIC_MODEL_NAME: string | Uint8Array | null;
+    EQUATORIAL_RADIUS: number;
+    CENTRAL_BODY_ROTATION: number;
+    OBLATE_FLATTENING: number;
+    REDUCTION_THEORY: string | Uint8Array | null;
+    ALBEDO_GRID_SIZE: number;
+    SHADOW_MODEL: string | Uint8Array | null;
+    SHADOW_BODIES: string | Uint8Array | null;
+    SW_DATA_SOURCE: string | Uint8Array | null;
+    SW_DATA_EPOCH: string | Uint8Array | null;
+    SW_INTERP_METHOD: string | Uint8Array | null;
+    FIXED_GEOMAG_DST: number;
+    FIXED_M10P7: number;
+    FIXED_M10P7_MEAN: number;
+    FIXED_S10P7: number;
+    FIXED_S10P7_MEAN: number;
+    FIXED_Y10P7: number;
+    FIXED_Y10P7_MEAN: number;
+    constructor(COMMENT?: (string)[], ATMOSPHERIC_MODEL?: ATMT | null, GRAVITY_MODEL?: string | Uint8Array | null, GRAVITY_DEGREE?: number, GRAVITY_ORDER?: number, GM?: number, N_BODY_PERTURBATIONS?: (string)[], OCEAN_TIDES_MODEL?: string | Uint8Array | null, SOLID_TIDES_MODEL?: string | Uint8Array | null, ATMOSPHERIC_TIDES_MODEL?: string | Uint8Array | null, GEOPOTENTIAL_MODEL?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: string | Uint8Array | null, ALBEDO?: string | Uint8Array | null, THERMAL?: string | Uint8Array | null, RELATIVITY?: string | Uint8Array | null, ATMOSPHERIC_DRAG?: string | Uint8Array | null, FIXED_GEOMAG_KP?: number, FIXED_F10P7?: number, FIXED_F10P7_MEAN?: number, FIXED_GEOMAG_AP?: number, ATMOSPHERIC_MODEL_NAME?: string | Uint8Array | null, EQUATORIAL_RADIUS?: number, CENTRAL_BODY_ROTATION?: number, OBLATE_FLATTENING?: number, REDUCTION_THEORY?: string | Uint8Array | null, ALBEDO_GRID_SIZE?: number, SHADOW_MODEL?: string | Uint8Array | null, SHADOW_BODIES?: string | Uint8Array | null, SW_DATA_SOURCE?: string | Uint8Array | null, SW_DATA_EPOCH?: string | Uint8Array | null, SW_INTERP_METHOD?: string | Uint8Array | null, FIXED_GEOMAG_DST?: number, FIXED_M10P7?: number, FIXED_M10P7_MEAN?: number, FIXED_S10P7?: number, FIXED_S10P7_MEAN?: number, FIXED_Y10P7?: number, FIXED_Y10P7_MEAN?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=Perturbations.d.ts.map

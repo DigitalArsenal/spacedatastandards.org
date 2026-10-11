@@ -6105,6 +6105,16 @@
           "type": "number",
           "description": "Covariance matrix [6,6] km**2/s**2",
           "x-flatbuffer-type": "double"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "COMMENT lines of this covariance matrix (CCSDS 502.0-B-3), joined by a line feed.",
+          "x-flatbuffer-type": "string"
+        },
+        "COV_REFERENCE_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "COV_REF_FRAME of this matrix (CCSDS 502.0-B-3): the frame the matrix\nis expressed in, when it differs from the block's COV_REFERENCE_FRAME.",
+          "x-flatbuffer-type": "RFM"
         }
       },
       "additionalProperties": false
@@ -6352,6 +6362,16 @@
           },
           "description": "Array of ephemeris data blocks",
           "x-flatbuffer-type": "[ephemerisDataBlock]"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.",
+          "x-flatbuffer-type": "string"
+        },
+        "MESSAGE_ID": {
+          "type": "string",
+          "description": "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

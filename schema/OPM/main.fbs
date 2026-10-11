@@ -1,5 +1,5 @@
-// Hash: 69c179e20f32f2326222df05a60d3c6f89af21308075b7fc6b6a66a2cd949efa
-// Version: 0.0.2
+// Hash: 696b17942ff05c9ec0c7d1766f7ad39a39c5145bd9a3b08e02a329a46310fd5a
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 /// Orbit Parameter Message
 table OPM {
@@ -31,6 +31,60 @@ table OPM {
   SOLAR_RAD_COEFF:double;
   DRAG_AREA:double;
   DRAG_COEFF:double;
+
+  /// COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+  /// and data groups, in message order, joined by a line feed.
+  COMMENT:string;
+  /// CLASSIFICATION of the message: the optional header keyword stating its
+  /// security classification or handling caveat.
+  CLASSIFICATION:string;
+  /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+  /// unique for this message.
+  MESSAGE_ID:string;
+  /// REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+  REF_FRAME_EPOCH:string;
+  /// COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+  /// when it is REF_FRAME.
+  COV_REF_FRAME:string;
+  /// Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+  /// CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+  /// CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+  /// CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+  /// Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+  COVARIANCE:[double];
+  /// The message's maneuvers, in message order.
+  MANEUVERS:[OPMManeuver];
+  /// Every USER_DEFINED_x keyword of the message, in message order.
+  USER_DEFINED_PARAMETERS:[OPMUserDefinedParameter];
+}
+
+/// One maneuver of an OPM (CCSDS 502.0-B-3 Table 3-7).
+table OPMManeuver {
+  /// COMMENT lines of this maneuver, joined by a line feed.
+  COMMENT:string;
+  /// MAN_EPOCH_IGNITION: epoch of ignition.
+  MAN_EPOCH_IGNITION:string;
+  /// MAN_DURATION: duration of the burn in seconds; zero for an impulsive maneuver.
+  MAN_DURATION:double;
+  /// MAN_DELTA_MASS: mass change during the maneuver in kg, negative or zero.
+  MAN_DELTA_MASS:double;
+  /// MAN_REF_FRAME: frame of MAN_DV_1..3 (for example RTN, TNW, or REF_FRAME's).
+  MAN_REF_FRAME:string;
+  /// MAN_DV_1: first component of the velocity increment in km/s.
+  MAN_DV_1:double;
+  /// MAN_DV_2: second component of the velocity increment in km/s.
+  MAN_DV_2:double;
+  /// MAN_DV_3: third component of the velocity increment in km/s.
+  MAN_DV_3:double;
+}
+
+/// One USER_DEFINED_x keyword of an OPM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+table OPMUserDefinedParameter {
+  /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  PARAM_NAME:string;
+  /// The value as written
+  PARAM_VALUE:string;
 }
 
 root_type OPM;

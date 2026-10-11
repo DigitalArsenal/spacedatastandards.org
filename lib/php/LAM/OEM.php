@@ -93,27 +93,44 @@ class OEM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.
+    public function getCOMMENT()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator
+    /// makes unique for this message.
+    public function getMESSAGE_ID()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOEM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(5);
+        $builder->StartObject(7);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OEM
      */
-    public static function createOEM(FlatBufferBuilder $builder, $CLASSIFICATION, $CCSDS_OEM_VERS, $CREATION_DATE, $ORIGINATOR, $EPHEMERIS_DATA_BLOCK)
+    public static function createOEM(FlatBufferBuilder $builder, $CLASSIFICATION, $CCSDS_OEM_VERS, $CREATION_DATE, $ORIGINATOR, $EPHEMERIS_DATA_BLOCK, $COMMENT, $MESSAGE_ID)
     {
-        $builder->startObject(5);
+        $builder->startObject(7);
         self::addCLASSIFICATION($builder, $CLASSIFICATION);
         self::addCCSDS_OEM_VERS($builder, $CCSDS_OEM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
         self::addEPHEMERIS_DATA_BLOCK($builder, $EPHEMERIS_DATA_BLOCK);
+        self::addCOMMENT($builder, $COMMENT);
+        self::addMESSAGE_ID($builder, $MESSAGE_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -190,6 +207,26 @@ class OEM extends Table
     public static function startEPHEMERIS_DATA_BLOCKVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
+    {
+        $builder->addOffsetX(5, $COMMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMESSAGE_ID(FlatBufferBuilder $builder, $MESSAGE_ID)
+    {
+        $builder->addOffsetX(6, $MESSAGE_ID, 0);
     }
 
     /**

@@ -18,6 +18,14 @@ import kotlin.math.sign
 
 /**
  * Conjunction Data Message
+ *
+ * Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+ * SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+ * of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+ * km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+ * MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+ * COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+ * terms) are held as the message states them.
  */
 @Suppress("unused")
 class CDM : Table() {
@@ -341,6 +349,21 @@ class CDM : Table() {
             null
         }
     }
+    /**
+     * COMMENT lines of the message header and of its relative metadata and data
+     * (CCSDS 508.0-B-1), in message order, joined by a line feed.
+     */
+    val comment : String?
+        get() {
+            val o = __offset(62)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCDM(_bb: ByteBuffer): CDM = getRootAsCDM(_bb, CDM())
@@ -349,8 +372,8 @@ class CDM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CDM")
-        fun createCDM(builder: FlatBufferBuilder, ccsdsCdmVers: Double, creationDateOffset: Int, originatorOffset: Int, messageForOffset: Int, messageIdOffset: Int, tcaOffset: Int, missDistance: Double, relativeSpeed: Double, relativePositionR: Double, relativePositionT: Double, relativePositionN: Double, relativeVelocityR: Double, relativeVelocityT: Double, relativeVelocityN: Double, startScreenPeriodOffset: Int, stopScreenPeriodOffset: Int, screenVolumeFrameOffset: Int, screenVolumeShape: Byte, screenVolumeX: Double, screenVolumeY: Double, screenVolumeZ: Double, screenEntryTimeOffset: Int, screenExitTimeOffset: Int, collisionProbability: Double, collisionProbabilityMethodOffset: Int, object1Offset: Int, object2Offset: Int, object1DatasourceOffset: Int, object2DatasourceOffset: Int) : Int {
-            builder.startTable(29)
+        fun createCDM(builder: FlatBufferBuilder, ccsdsCdmVers: Double, creationDateOffset: Int, originatorOffset: Int, messageForOffset: Int, messageIdOffset: Int, tcaOffset: Int, missDistance: Double, relativeSpeed: Double, relativePositionR: Double, relativePositionT: Double, relativePositionN: Double, relativeVelocityR: Double, relativeVelocityT: Double, relativeVelocityN: Double, startScreenPeriodOffset: Int, stopScreenPeriodOffset: Int, screenVolumeFrameOffset: Int, screenVolumeShape: Byte, screenVolumeX: Double, screenVolumeY: Double, screenVolumeZ: Double, screenEntryTimeOffset: Int, screenExitTimeOffset: Int, collisionProbability: Double, collisionProbabilityMethodOffset: Int, object1Offset: Int, object2Offset: Int, object1DatasourceOffset: Int, object2DatasourceOffset: Int, commentOffset: Int) : Int {
+            builder.startTable(30)
             addCOLLISIONPROBABILITY(builder, collisionProbability)
             addSCREENVOLUMEZ(builder, screenVolumeZ)
             addSCREENVOLUMEY(builder, screenVolumeY)
@@ -364,6 +387,7 @@ class CDM : Table() {
             addRELATIVESPEED(builder, relativeSpeed)
             addMISSDISTANCE(builder, missDistance)
             addCCSDSCDMVERS(builder, ccsdsCdmVers)
+            addCOMMENT(builder, commentOffset)
             addOBJECT2DATASOURCE(builder, object2DatasourceOffset)
             addOBJECT1DATASOURCE(builder, object1DatasourceOffset)
             addOBJECT2(builder, object2Offset)
@@ -382,7 +406,7 @@ class CDM : Table() {
             addSCREENVOLUMESHAPE(builder, screenVolumeShape)
             return endCDM(builder)
         }
-        fun startCDM(builder: FlatBufferBuilder) = builder.startTable(29)
+        fun startCDM(builder: FlatBufferBuilder) = builder.startTable(30)
         fun addCCSDSCDMVERS(builder: FlatBufferBuilder, ccsdsCdmVers: Double) = builder.addDouble(0, ccsdsCdmVers, 0.0)
         fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -412,6 +436,7 @@ class CDM : Table() {
         fun addOBJECT2(builder: FlatBufferBuilder, object2: Int) = builder.addOffset(26, object2, 0)
         fun addOBJECT1DATASOURCE(builder: FlatBufferBuilder, object1Datasource: Int) = builder.addOffset(27, object1Datasource, 0)
         fun addOBJECT2DATASOURCE(builder: FlatBufferBuilder, object2Datasource: Int) = builder.addOffset(28, object2Datasource, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(29, comment, 0)
         fun endCDM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

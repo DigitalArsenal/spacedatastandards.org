@@ -266,22 +266,125 @@ class OPM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// COMMENT lines of the message (CCSDS 502.0-B-3), from its header, metadata
+    /// and data groups, in message order, joined by a line feed.
+    public function getCOMMENT()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CLASSIFICATION of the message: the optional header keyword stating its
+    /// security classification or handling caveat.
+    public function getCLASSIFICATION()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// MESSAGE_ID: the optional header keyword, an identifier the originator makes
+    /// unique for this message.
+    public function getMESSAGE_ID()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// REF_FRAME_EPOCH: epoch of REF_FRAME when the frame is defined at one.
+    public function getREF_FRAME_EPOCH()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// COV_REF_FRAME: the frame of COVARIANCE (CCSDS 502.0-B-3 Table 3-6); empty
+    /// when it is REF_FRAME.
+    public function getCOV_REF_FRAME()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Position/velocity covariance matrix, 6x6 lower triangle by rows, 21 values:
+    /// CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X, CX_DOT_Y, CX_DOT_Z,
+    /// CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,
+    /// CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT.
+    /// Units km**2, km**2/s, km**2/s**2. Empty when the message states none.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getCOVARIANCE($j)
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOVARIANCELength()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// The message's maneuvers, in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getMANEUVERS($j)
+    {
+        $o = $this->__offset(72);
+        $obj = new OPMManeuver();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMANEUVERSLength()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Every USER_DEFINED_x keyword of the message, in message order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getUSER_DEFINED_PARAMETERS($j)
+    {
+        $o = $this->__offset(74);
+        $obj = new OPMUserDefinedParameter();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUSER_DEFINED_PARAMETERSLength()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOPM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(28);
+        $builder->StartObject(36);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OPM
      */
-    public static function createOPM(FlatBufferBuilder $builder, $CCSDS_OPM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REF_FRAME, $TIME_SYSTEM, $EPOCH, $X, $Y, $Z, $X_DOT, $Y_DOT, $Z_DOT, $SEMI_MAJOR_AXIS, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $TRUE_ANOMALY, $MEAN_ANOMALY, $GM, $MASS, $SOLAR_RAD_AREA, $SOLAR_RAD_COEFF, $DRAG_AREA, $DRAG_COEFF)
+    public static function createOPM(FlatBufferBuilder $builder, $CCSDS_OPM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REF_FRAME, $TIME_SYSTEM, $EPOCH, $X, $Y, $Z, $X_DOT, $Y_DOT, $Z_DOT, $SEMI_MAJOR_AXIS, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $TRUE_ANOMALY, $MEAN_ANOMALY, $GM, $MASS, $SOLAR_RAD_AREA, $SOLAR_RAD_COEFF, $DRAG_AREA, $DRAG_COEFF, $COMMENT, $CLASSIFICATION, $MESSAGE_ID, $REF_FRAME_EPOCH, $COV_REF_FRAME, $COVARIANCE, $MANEUVERS, $USER_DEFINED_PARAMETERS)
     {
-        $builder->startObject(28);
+        $builder->startObject(36);
         self::addCCSDS_OPM_VERS($builder, $CCSDS_OPM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -310,6 +413,14 @@ class OPM extends Table
         self::addSOLAR_RAD_COEFF($builder, $SOLAR_RAD_COEFF);
         self::addDRAG_AREA($builder, $DRAG_AREA);
         self::addDRAG_COEFF($builder, $DRAG_COEFF);
+        self::addCOMMENT($builder, $COMMENT);
+        self::addCLASSIFICATION($builder, $CLASSIFICATION);
+        self::addMESSAGE_ID($builder, $MESSAGE_ID);
+        self::addREF_FRAME_EPOCH($builder, $REF_FRAME_EPOCH);
+        self::addCOV_REF_FRAME($builder, $COV_REF_FRAME);
+        self::addCOVARIANCE($builder, $COVARIANCE);
+        self::addMANEUVERS($builder, $MANEUVERS);
+        self::addUSER_DEFINED_PARAMETERS($builder, $USER_DEFINED_PARAMETERS);
         $o = $builder->endObject();
         return $o;
     }
@@ -592,6 +703,158 @@ class OPM extends Table
     public static function addDRAG_COEFF(FlatBufferBuilder $builder, $DRAG_COEFF)
     {
         $builder->addDoubleX(27, $DRAG_COEFF, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
+    {
+        $builder->addOffsetX(28, $COMMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCLASSIFICATION(FlatBufferBuilder $builder, $CLASSIFICATION)
+    {
+        $builder->addOffsetX(29, $CLASSIFICATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMESSAGE_ID(FlatBufferBuilder $builder, $MESSAGE_ID)
+    {
+        $builder->addOffsetX(30, $MESSAGE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREF_FRAME_EPOCH(FlatBufferBuilder $builder, $REF_FRAME_EPOCH)
+    {
+        $builder->addOffsetX(31, $REF_FRAME_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOV_REF_FRAME(FlatBufferBuilder $builder, $COV_REF_FRAME)
+    {
+        $builder->addOffsetX(32, $COV_REF_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOVARIANCE(FlatBufferBuilder $builder, $COVARIANCE)
+    {
+        $builder->addOffsetX(33, $COVARIANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOVARIANCEVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOVARIANCEVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMANEUVERS(FlatBufferBuilder $builder, $MANEUVERS)
+    {
+        $builder->addOffsetX(34, $MANEUVERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createMANEUVERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startMANEUVERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addUSER_DEFINED_PARAMETERS(FlatBufferBuilder $builder, $USER_DEFINED_PARAMETERS)
+    {
+        $builder->addOffsetX(35, $USER_DEFINED_PARAMETERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

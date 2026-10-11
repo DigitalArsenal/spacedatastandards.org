@@ -1,10 +1,19 @@
-// Hash: 9a425c8ea5da3d0c597c7ef01b8d7f05d6f7fc64c9feaf67b29d42c97487404e
-// Version: 0.0.3
+// Hash: 6476591a3309ef2e7b7b6f93e070bcfc82e7bf8b97c40f30702c7ad5de1d4780
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 enum reentryDisposition : byte {
   CONTROLLED,
   UNCONTROLLED,
   SEMI_CONTROLLED
+}
+
+/// CONTROLLED_REENTRY of an RDM (CCSDS 508.1-B-1): whether the re-entry is
+/// controlled. UNSPECIFIED is the zero value: the record does not state it.
+enum rdmControlledReentry : byte {
+  UNSPECIFIED = 0,
+  YES = 1,
+  NO = 2,
+  UNKNOWN = 3
 }
 
 enum reentryReason : byte {
@@ -122,8 +131,198 @@ table RDM {
   NUM_FRAGMENTS:uint;
   /// Total surviving mass in kg
   SURVIVING_MASS:double;
-  /// Additional comments
+  /// COMMENT lines of the message (CCSDS 508.1-B-1), from its header, metadata and
+  /// data groups, in message order, joined by a line feed.
   COMMENT:string;
+
+  /// The fields below, with the earlier ones that say so, are the keywords of
+  /// CCSDS 508.1-B-1. Of the earlier ones OBJECT_ID is INTERNATIONAL_DESIGNATOR,
+  /// NORAD_CAT_ID the OBJECT_DESIGNATOR when it is a catalog number, REENTRY_EPOCH
+  /// NOMINAL_REENTRY_EPOCH, PREV_PREDICTION_EPOCH PREVIOUS_MESSAGE_EPOCH, MASS
+  /// WET_MASS, and INITIAL_STATE the state vector; DISPOSITION, REASON,
+  /// REENTRY_EPOCH_UNC, REENTRY_LATITUDE, REENTRY_LONGITUDE, IMPACT_PREDICTIONS,
+  /// SURVIVING_DEBRIS, CASUALTY_EXPECTATION, NUM_FRAGMENTS and SURVIVING_MASS are
+  /// not keywords of the message.
+
+  /// MESSAGE_ID: an identifier the originator makes unique for this message.
+  MESSAGE_ID:string;
+  /// CATALOG_NAME: the satellite catalog OBJECT_DESIGNATOR is in.
+  CATALOG_NAME:string;
+  /// OBJECT_DESIGNATOR: the object's identifier in CATALOG_NAME, as written.
+  OBJECT_DESIGNATOR:string;
+  /// OBJECT_OWNER.
+  OBJECT_OWNER:string;
+  /// OBJECT_OPERATOR.
+  OBJECT_OPERATOR:string;
+  /// CONTROLLED_REENTRY: YES, NO or UNKNOWN.
+  CONTROLLED_REENTRY:rdmControlledReentry;
+  /// CENTER_NAME: the body being re-entered.
+  CENTER_NAME:string;
+  /// EPOCH_TZERO: the epoch the message's relative times are measured from.
+  EPOCH_TZERO:string;
+  /// REF_FRAME: the frame of the state vector.
+  REF_FRAME:string;
+  /// REF_FRAME_EPOCH.
+  REF_FRAME_EPOCH:string;
+  /// EPHEMERIS_NAME.
+  EPHEMERIS_NAME:string;
+  /// GRAVITY_MODEL.
+  GRAVITY_MODEL:string;
+  /// ATMOSPHERIC_MODEL.
+  ATMOSPHERIC_MODEL:string;
+  /// SOLAR_FLUX_PREDICTION.
+  SOLAR_FLUX_PREDICTION:string;
+  /// N_BODY_PERTURBATIONS.
+  N_BODY_PERTURBATIONS:string;
+  /// SOLAR_RAD_PRESSURE: a model name, or YES or NO.
+  SOLAR_RAD_PRESSURE:string;
+  /// EARTH_TIDES: a model name.
+  EARTH_TIDES:string;
+  /// INTRACK_THRUST: YES or NO.
+  INTRACK_THRUST:string;
+  /// DRAG_PARAMETERS_SOURCE.
+  DRAG_PARAMETERS_SOURCE:string;
+  /// DRAG_PARAMETERS_ALTITUDE in km, NaN when not stated.
+  DRAG_PARAMETERS_ALTITUDE:double = nan;
+  /// REENTRY_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+  REENTRY_UNCERTAINTY_METHOD:string;
+  /// REENTRY_DISINTEGRATION: NONE, MASS-LOSS, BREAK-UP or MASS-LOSS + BREAK-UP.
+  REENTRY_DISINTEGRATION:string;
+  /// IMPACT_UNCERTAINTY_METHOD: NONE, ANALYTICAL, STOCHASTIC or EMPIRICAL.
+  IMPACT_UNCERTAINTY_METHOD:string;
+  /// PREVIOUS_MESSAGE_ID.
+  PREVIOUS_MESSAGE_ID:string;
+  /// NEXT_MESSAGE_EPOCH.
+  NEXT_MESSAGE_EPOCH:string;
+
+  /// ORBIT_LIFETIME in days.
+  ORBIT_LIFETIME:double;
+  /// ORBIT_LIFETIME_WINDOW_START in days, NaN when not stated.
+  ORBIT_LIFETIME_WINDOW_START:double = nan;
+  /// ORBIT_LIFETIME_WINDOW_END in days, NaN when not stated.
+  ORBIT_LIFETIME_WINDOW_END:double = nan;
+  /// REENTRY_WINDOW_START.
+  REENTRY_WINDOW_START:string;
+  /// REENTRY_WINDOW_END.
+  REENTRY_WINDOW_END:string;
+  /// ORBIT_LIFETIME_CONFIDENCE_LEVEL in percent, NaN when not stated.
+  ORBIT_LIFETIME_CONFIDENCE_LEVEL:double = nan;
+
+  /// PROBABILITY_OF_IMPACT, NaN when not stated.
+  PROBABILITY_OF_IMPACT:double = nan;
+  /// PROBABILITY_OF_BURN_UP, NaN when not stated.
+  PROBABILITY_OF_BURN_UP:double = nan;
+  /// PROBABILITY_OF_BREAK_UP, NaN when not stated.
+  PROBABILITY_OF_BREAK_UP:double = nan;
+  /// PROBABILITY_OF_LAND_IMPACT, NaN when not stated.
+  PROBABILITY_OF_LAND_IMPACT:double = nan;
+  /// PROBABILITY_OF_CASUALTY, NaN when not stated.
+  PROBABILITY_OF_CASUALTY:double = nan;
+  /// NOMINAL_IMPACT_EPOCH.
+  NOMINAL_IMPACT_EPOCH:string;
+  /// IMPACT_WINDOW_START.
+  IMPACT_WINDOW_START:string;
+  /// IMPACT_WINDOW_END.
+  IMPACT_WINDOW_END:string;
+  /// IMPACT_REF_FRAME.
+  IMPACT_REF_FRAME:string;
+  /// NOMINAL_IMPACT_LON in degrees, NaN when not stated.
+  NOMINAL_IMPACT_LON:double = nan;
+  /// NOMINAL_IMPACT_LAT in degrees, NaN when not stated.
+  NOMINAL_IMPACT_LAT:double = nan;
+  /// NOMINAL_IMPACT_ALT in metres, NaN when not stated.
+  NOMINAL_IMPACT_ALT:double = nan;
+  /// IMPACT_1_CONFIDENCE in percent, NaN when not stated.
+  IMPACT_1_CONFIDENCE:double = nan;
+  /// IMPACT_1_START_LON in degrees, NaN when not stated.
+  IMPACT_1_START_LON:double = nan;
+  /// IMPACT_1_START_LAT in degrees, NaN when not stated.
+  IMPACT_1_START_LAT:double = nan;
+  /// IMPACT_1_STOP_LON in degrees, NaN when not stated.
+  IMPACT_1_STOP_LON:double = nan;
+  /// IMPACT_1_STOP_LAT in degrees, NaN when not stated.
+  IMPACT_1_STOP_LAT:double = nan;
+  /// IMPACT_1_CROSS_TRACK in km, NaN when not stated.
+  IMPACT_1_CROSS_TRACK:double = nan;
+  /// IMPACT_2_CONFIDENCE in percent, NaN when not stated.
+  IMPACT_2_CONFIDENCE:double = nan;
+  /// IMPACT_2_START_LON in degrees, NaN when not stated.
+  IMPACT_2_START_LON:double = nan;
+  /// IMPACT_2_START_LAT in degrees, NaN when not stated.
+  IMPACT_2_START_LAT:double = nan;
+  /// IMPACT_2_STOP_LON in degrees, NaN when not stated.
+  IMPACT_2_STOP_LON:double = nan;
+  /// IMPACT_2_STOP_LAT in degrees, NaN when not stated.
+  IMPACT_2_STOP_LAT:double = nan;
+  /// IMPACT_2_CROSS_TRACK in km, NaN when not stated.
+  IMPACT_2_CROSS_TRACK:double = nan;
+  /// IMPACT_3_CONFIDENCE in percent, NaN when not stated.
+  IMPACT_3_CONFIDENCE:double = nan;
+  /// IMPACT_3_START_LON in degrees, NaN when not stated.
+  IMPACT_3_START_LON:double = nan;
+  /// IMPACT_3_START_LAT in degrees, NaN when not stated.
+  IMPACT_3_START_LAT:double = nan;
+  /// IMPACT_3_STOP_LON in degrees, NaN when not stated.
+  IMPACT_3_STOP_LON:double = nan;
+  /// IMPACT_3_STOP_LAT in degrees, NaN when not stated.
+  IMPACT_3_STOP_LAT:double = nan;
+  /// IMPACT_3_CROSS_TRACK in km, NaN when not stated.
+  IMPACT_3_CROSS_TRACK:double = nan;
+
+  /// COV_REF_FRAME: the frame of COVARIANCE.
+  COV_REF_FRAME:string;
+  /// Position/velocity covariance matrix at the state vector's epoch, 6x6 lower
+  /// triangle by rows, 21 values (CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z, CX_DOT_X,
+  /// CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT, CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT,
+  /// CY_DOT_Y_DOT, CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT,
+  /// CZ_DOT_Z_DOT) in km**2, km**2/s and km**2/s**2. Empty when not stated.
+  COVARIANCE:[double];
+
+  /// WET_MASS above is MASS; DRY_MASS in kg, NaN when not stated.
+  DRY_MASS:double = nan;
+  /// HAZARDOUS_SUBSTANCES.
+  HAZARDOUS_SUBSTANCES:string;
+  /// SOLAR_RAD_COEFF, NaN when not stated.
+  SOLAR_RAD_COEFF:double = nan;
+  /// DRAG_COEFF, NaN when not stated.
+  DRAG_COEFF:double = nan;
+  /// RCS in m**2, NaN when not stated.
+  RCS:double = nan;
+  /// THRUST_ACCELERATION in m/s**2, NaN when not stated.
+  THRUST_ACCELERATION:double = nan;
+
+  /// TIME_LASTOB_START.
+  TIME_LASTOB_START:string;
+  /// TIME_LASTOB_END.
+  TIME_LASTOB_END:string;
+  /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+  RECOMMENDED_OD_SPAN:double = nan;
+  /// ACTUAL_OD_SPAN in days, NaN when not stated.
+  ACTUAL_OD_SPAN:double = nan;
+  /// OBS_AVAILABLE.
+  OBS_AVAILABLE:uint;
+  /// OBS_USED.
+  OBS_USED:uint;
+  /// TRACKS_AVAILABLE.
+  TRACKS_AVAILABLE:uint;
+  /// TRACKS_USED.
+  TRACKS_USED:uint;
+  /// RESIDUALS_ACCEPTED in percent, NaN when not stated.
+  RESIDUALS_ACCEPTED:double = nan;
+  /// WEIGHTED_RMS, NaN when not stated.
+  WEIGHTED_RMS:double = nan;
+
+  /// Every USER_DEFINED keyword of the message, in message order.
+  USER_DEFINED_PARAMETERS:[RDMUserDefinedParameter];
+}
+
+/// One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML
+/// form: the parameter name (the x) and the value as written.
+table RDMUserDefinedParameter {
+  /// x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)
+  PARAM_NAME:string;
+  /// The value as written
+  PARAM_VALUE:string;
 }
 
 root_type RDM;

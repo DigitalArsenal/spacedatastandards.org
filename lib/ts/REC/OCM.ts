@@ -7,6 +7,8 @@ import * as flatbuffers from 'flatbuffers';
 import { Header, HeaderT } from './Header.js';
 import { Maneuver, ManeuverT } from './Maneuver.js';
 import { Metadata, MetadataT } from './Metadata.js';
+import { OCMCovarianceBlock, OCMCovarianceBlockT } from './OCMCovarianceBlock.js';
+import { OCMTrajectoryBlock, OCMTrajectoryBlockT } from './OCMTrajectoryBlock.js';
 import { OrbitDetermination, OrbitDeterminationT } from './OrbitDetermination.js';
 import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalElementRecord.js';
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
@@ -383,8 +385,38 @@ covUnitsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+ * blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+ * them above state the first block's CARTPV or CARTPVA states.
+ */
+TRAJECTORY_BLOCKS(index: number, obj?:OCMTrajectoryBlock):OCMTrajectoryBlock|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? (obj || new OCMTrajectoryBlock()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+trajectoryBlocksLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Every covariance time history of the message (COV_START blocks), in message
+ * order. COVARIANCE_DATA and the fields that go with it above state the first
+ * block when it is one line.
+ */
+COVARIANCE_BLOCKS(index: number, obj?:OCMCovarianceBlock):OCMCovarianceBlock|null {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? (obj || new OCMCovarianceBlock()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+covarianceBlocksLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startOCM(builder:flatbuffers.Builder) {
-  builder.startObject(29);
+  builder.startObject(31);
 }
 
 static addHeader(builder:flatbuffers.Builder, HEADEROffset:flatbuffers.Offset) {
@@ -621,6 +653,38 @@ static startCovUnitsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addTrajectoryBlocks(builder:flatbuffers.Builder, TRAJECTORY_BLOCKSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, TRAJECTORY_BLOCKSOffset, 0);
+}
+
+static createTrajectoryBlocksVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startTrajectoryBlocksVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addCovarianceBlocks(builder:flatbuffers.Builder, COVARIANCE_BLOCKSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(30, COVARIANCE_BLOCKSOffset, 0);
+}
+
+static createCovarianceBlocksVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovarianceBlocksVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endOCM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -665,7 +729,9 @@ unpack(): OCMT {
     this.COV_ORDERING(),
     this.COV_SIZE(),
     this.bb!.createScalarList<string>(this.COV_PARAMETERS.bind(this), this.covParametersLength()),
-    this.bb!.createScalarList<string>(this.COV_UNITS.bind(this), this.covUnitsLength())
+    this.bb!.createScalarList<string>(this.COV_UNITS.bind(this), this.covUnitsLength()),
+    this.bb!.createObjList<OCMTrajectoryBlock, OCMTrajectoryBlockT>(this.TRAJECTORY_BLOCKS.bind(this), this.trajectoryBlocksLength()),
+    this.bb!.createObjList<OCMCovarianceBlock, OCMCovarianceBlockT>(this.COVARIANCE_BLOCKS.bind(this), this.covarianceBlocksLength())
   );
 }
 
@@ -700,6 +766,8 @@ unpackTo(_o: OCMT): void {
   _o.COV_SIZE = this.COV_SIZE();
   _o.COV_PARAMETERS = this.bb!.createScalarList<string>(this.COV_PARAMETERS.bind(this), this.covParametersLength());
   _o.COV_UNITS = this.bb!.createScalarList<string>(this.COV_UNITS.bind(this), this.covUnitsLength());
+  _o.TRAJECTORY_BLOCKS = this.bb!.createObjList<OCMTrajectoryBlock, OCMTrajectoryBlockT>(this.TRAJECTORY_BLOCKS.bind(this), this.trajectoryBlocksLength());
+  _o.COVARIANCE_BLOCKS = this.bb!.createObjList<OCMCovarianceBlock, OCMCovarianceBlockT>(this.COVARIANCE_BLOCKS.bind(this), this.covarianceBlocksLength());
 }
 }
 
@@ -733,7 +801,9 @@ constructor(
   public COV_ORDERING: covarianceOrdering = covarianceOrdering.LTM,
   public COV_SIZE: number = 6,
   public COV_PARAMETERS: (string)[] = [],
-  public COV_UNITS: (string)[] = []
+  public COV_UNITS: (string)[] = [],
+  public TRAJECTORY_BLOCKS: (OCMTrajectoryBlockT)[] = [],
+  public COVARIANCE_BLOCKS: (OCMCovarianceBlockT)[] = []
 ){}
 
 
@@ -760,6 +830,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COV_TYPE = (this.COV_TYPE !== null ? builder.createString(this.COV_TYPE!) : 0);
   const COV_PARAMETERS = OCM.createCovParametersVector(builder, builder.createObjectOffsetList(this.COV_PARAMETERS));
   const COV_UNITS = OCM.createCovUnitsVector(builder, builder.createObjectOffsetList(this.COV_UNITS));
+  const TRAJECTORY_BLOCKS = OCM.createTrajectoryBlocksVector(builder, builder.createObjectOffsetList(this.TRAJECTORY_BLOCKS));
+  const COVARIANCE_BLOCKS = OCM.createCovarianceBlocksVector(builder, builder.createObjectOffsetList(this.COVARIANCE_BLOCKS));
 
   OCM.startOCM(builder);
   OCM.addHeader(builder, HEADER);
@@ -791,6 +863,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OCM.addCovSize(builder, this.COV_SIZE);
   OCM.addCovParameters(builder, COV_PARAMETERS);
   OCM.addCovUnits(builder, COV_UNITS);
+  OCM.addTrajectoryBlocks(builder, TRAJECTORY_BLOCKS);
+  OCM.addCovarianceBlocks(builder, COVARIANCE_BLOCKS);
 
   return OCM.endOCM(builder);
 }

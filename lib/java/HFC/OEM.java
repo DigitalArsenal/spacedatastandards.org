@@ -59,15 +59,32 @@ public final class OEM extends com.google.flatbuffers.Table {
   public int EPHEMERIS_DATA_BLOCKLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }
   public ephemerisDataBlock.Vector ephemerisDataBlockVector() { return ephemerisDataBlockVector(new ephemerisDataBlock.Vector()); }
   public ephemerisDataBlock.Vector ephemerisDataBlockVector(ephemerisDataBlock.Vector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.
+   */
+  public String COMMENT() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator
+   * makes unique for this message.
+   */
+  public String MESSAGE_ID() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MESSAGE_IDAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer MESSAGE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
 
   public static int createOEM(FlatBufferBuilder builder,
       int CLASSIFICATIONOffset,
       double CCSDS_OEM_VERS,
       int CREATION_DATEOffset,
       int ORIGINATOROffset,
-      int EPHEMERIS_DATA_BLOCKOffset) {
-    builder.startTable(5);
+      int EPHEMERIS_DATA_BLOCKOffset,
+      int COMMENTOffset,
+      int MESSAGE_IDOffset) {
+    builder.startTable(7);
     OEM.addCcsdsOemVers(builder, CCSDS_OEM_VERS);
+    OEM.addMessageId(builder, MESSAGE_IDOffset);
+    OEM.addComment(builder, COMMENTOffset);
     OEM.addEphemerisDataBlock(builder, EPHEMERIS_DATA_BLOCKOffset);
     OEM.addOriginator(builder, ORIGINATOROffset);
     OEM.addCreationDate(builder, CREATION_DATEOffset);
@@ -75,7 +92,7 @@ public final class OEM extends com.google.flatbuffers.Table {
     return OEM.endOEM(builder);
   }
 
-  public static void startOEM(FlatBufferBuilder builder) { builder.startTable(5); }
+  public static void startOEM(FlatBufferBuilder builder) { builder.startTable(7); }
   public static void addClassification(FlatBufferBuilder builder, int CLASSIFICATIONOffset) { builder.addOffset(0, CLASSIFICATIONOffset, 0); }
   public static void addCcsdsOemVers(FlatBufferBuilder builder, double CCSDS_OEM_VERS) { builder.addDouble(1, CCSDS_OEM_VERS, 0.0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(2, CREATION_DATEOffset, 0); }
@@ -83,6 +100,8 @@ public final class OEM extends com.google.flatbuffers.Table {
   public static void addEphemerisDataBlock(FlatBufferBuilder builder, int EPHEMERIS_DATA_BLOCKOffset) { builder.addOffset(4, EPHEMERIS_DATA_BLOCKOffset, 0); }
   public static int createEphemerisDataBlockVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startEphemerisDataBlockVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(5, COMMENTOffset, 0); }
+  public static void addMessageId(FlatBufferBuilder builder, int MESSAGE_IDOffset) { builder.addOffset(6, MESSAGE_IDOffset, 0); }
   public static int endOEM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

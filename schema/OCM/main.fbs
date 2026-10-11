@@ -1,5 +1,5 @@
-// Hash: 89387c660ecc1dd8f098990ce2b32b6ebba4ca881617ab2f52c624c1285386a6
-// Version: 2.1.6
+// Hash: c334c75a3a9e57a8e7a956eee0c03113b66e753033daa04844c9c0038aa83305
+// Version: 2.1.7
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../PPE/main.fbs";
@@ -255,6 +255,70 @@ table PhysicalProperties {
   SOLAR_RAD_COEFF: double;
   /// Uncertainty in the solar radiation pressure coefficient.
   SRP_UNCERTAINTY: double;
+  /// MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+  MANUFACTURER: string;
+  /// BUS_MODEL: the object's bus model.
+  BUS_MODEL: string;
+  /// DOCKED_WITH: comma-separated names of the objects it is docked with.
+  DOCKED_WITH: string;
+  /// INITIAL_WET_MASS in kg, NaN when not stated.
+  INITIAL_WET_MASS: double = nan;
+  /// OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+  OEB_PARENT_FRAME: string;
+  /// OEB_PARENT_FRAME_EPOCH.
+  OEB_PARENT_FRAME_EPOCH: string;
+  /// AREA_MIN_FOR_PC in m**2, NaN when not stated.
+  AREA_MIN_FOR_PC: double = nan;
+  /// AREA_MAX_FOR_PC in m**2, NaN when not stated.
+  AREA_MAX_FOR_PC: double = nan;
+  /// AREA_TYP_FOR_PC in m**2, NaN when not stated.
+  AREA_TYP_FOR_PC: double = nan;
+  /// RCS in m**2, NaN when not stated.
+  RCS: double = nan;
+  /// RCS_MIN in m**2, NaN when not stated.
+  RCS_MIN: double = nan;
+  /// RCS_MAX in m**2, NaN when not stated.
+  RCS_MAX: double = nan;
+  /// VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+  VM_ABSOLUTE: double = nan;
+  /// VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+  VM_APPARENT_MIN: double = nan;
+  /// VM_APPARENT: apparent visual magnitude, NaN when not stated.
+  VM_APPARENT: double = nan;
+  /// VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+  VM_APPARENT_MAX: double = nan;
+  /// REFLECTANCE: typical reflectivity, NaN when not stated.
+  REFLECTANCE: double = nan;
+  /// ATT_CONTROL_MODE.
+  ATT_CONTROL_MODE: string;
+  /// ATT_ACTUATOR_TYPE.
+  ATT_ACTUATOR_TYPE: string;
+  /// ATT_KNOWLEDGE in degrees, NaN when not stated.
+  ATT_KNOWLEDGE: double = nan;
+  /// ATT_CONTROL in degrees, NaN when not stated.
+  ATT_CONTROL: double = nan;
+  /// ATT_POINTING in degrees, NaN when not stated.
+  ATT_POINTING: double = nan;
+  /// AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+  AVG_MANEUVER_FREQ: double = nan;
+  /// MAX_THRUST in N, NaN when not stated.
+  MAX_THRUST: double = nan;
+  /// DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+  DV_BOL: double = nan;
+  /// DV_REMAINING in km/s, NaN when not stated.
+  DV_REMAINING: double = nan;
+  /// IXX in kg*m**2, NaN when not stated.
+  IXX: double = nan;
+  /// IYY in kg*m**2, NaN when not stated.
+  IYY: double = nan;
+  /// IZZ in kg*m**2, NaN when not stated.
+  IZZ: double = nan;
+  /// IXY in kg*m**2, NaN when not stated.
+  IXY: double = nan;
+  /// IXZ in kg*m**2, NaN when not stated.
+  IXZ: double = nan;
+  /// IYZ in kg*m**2, NaN when not stated.
+  IYZ: double = nan;
 }
 
 table Perturbations {
@@ -299,6 +363,43 @@ table Perturbations {
   /// Fixed (time-invariant) geomagnetic index ap used in place of the normal
   /// time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
   FIXED_GEOMAG_AP: double;
+  /// ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+  /// above is the model family when the text names one.
+  ATMOSPHERIC_MODEL_NAME: string;
+  /// EQUATORIAL_RADIUS in km, NaN when not stated.
+  EQUATORIAL_RADIUS: double = nan;
+  /// CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+  CENTRAL_BODY_ROTATION: double = nan;
+  /// OBLATE_FLATTENING, NaN when not stated.
+  OBLATE_FLATTENING: double = nan;
+  /// REDUCTION_THEORY.
+  REDUCTION_THEORY: string;
+  /// ALBEDO_GRID_SIZE.
+  ALBEDO_GRID_SIZE: uint;
+  /// SHADOW_MODEL.
+  SHADOW_MODEL: string;
+  /// SHADOW_BODIES.
+  SHADOW_BODIES: string;
+  /// SW_DATA_SOURCE: the space weather data source.
+  SW_DATA_SOURCE: string;
+  /// SW_DATA_EPOCH.
+  SW_DATA_EPOCH: string;
+  /// SW_INTERP_METHOD.
+  SW_INTERP_METHOD: string;
+  /// FIXED_GEOMAG_DST in nT, NaN when not stated.
+  FIXED_GEOMAG_DST: double = nan;
+  /// FIXED_M10P7, NaN when not stated.
+  FIXED_M10P7: double = nan;
+  /// FIXED_M10P7_MEAN, NaN when not stated.
+  FIXED_M10P7_MEAN: double = nan;
+  /// FIXED_S10P7, NaN when not stated.
+  FIXED_S10P7: double = nan;
+  /// FIXED_S10P7_MEAN, NaN when not stated.
+  FIXED_S10P7_MEAN: double = nan;
+  /// FIXED_Y10P7, NaN when not stated.
+  FIXED_Y10P7: double = nan;
+  /// FIXED_Y10P7_MEAN, NaN when not stated.
+  FIXED_Y10P7_MEAN: double = nan;
 }
 
 table Maneuver {
@@ -499,6 +600,132 @@ table OrbitDetermination {
   /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
   /// COV_PARAMETERS names in the covariance are entries of this list.
   OD_DYNAMIC_PARAMETERS: [OCMDynamicParameter];
+  /// DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+  DAYS_SINCE_FIRST_OBS: double = nan;
+  /// DAYS_SINCE_LAST_OBS, NaN when not stated.
+  DAYS_SINCE_LAST_OBS: double = nan;
+  /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+  RECOMMENDED_OD_SPAN: double = nan;
+  /// ACTUAL_OD_SPAN in days, NaN when not stated.
+  ACTUAL_OD_SPAN: double = nan;
+  /// OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+  OBS_AVAILABLE: uint;
+  /// TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+  TRACKS_AVAILABLE: uint;
+  /// MAXIMUM_OBS_GAP in days, NaN when not stated.
+  MAXIMUM_OBS_GAP: double = nan;
+  /// OD_EPOCH_EIGMAJ in m, NaN when not stated.
+  OD_EPOCH_EIGMAJ: double = nan;
+  /// OD_EPOCH_EIGINT in m, NaN when not stated.
+  OD_EPOCH_EIGINT: double = nan;
+  /// OD_EPOCH_EIGMIN in m, NaN when not stated.
+  OD_EPOCH_EIGMIN: double = nan;
+  /// OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+  OD_MAX_PRED_EIGMAJ: double = nan;
+  /// OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+  OD_MIN_PRED_EIGMIN: double = nan;
+  /// OD_CONFIDENCE in percent, NaN when not stated.
+  OD_CONFIDENCE: double = nan;
+  /// GDOP, NaN when not stated.
+  GDOP: double = nan;
+  /// SOLVE_N: the number of solved-for states.
+  SOLVE_N: uint;
+  /// SOLVE_STATES: the solved-for states, as written.
+  SOLVE_STATES: string;
+  /// CONSIDER_N: the number of consider parameters.
+  CONSIDER_N: uint;
+  /// CONSIDER_PARAMS: the consider parameters, as written.
+  CONSIDER_PARAMS: string;
+  /// SENSORS_N: the number of sensors.
+  SENSORS_N: uint;
+  /// SENSORS: the sensors, as written.
+  SENSORS: string;
+  /// COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+  COMMENT: [string];
+}
+
+/// One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):
+/// the block's keywords, and its data lines as written (a time tag, then the
+/// numbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state
+/// the first block's CARTPV or CARTPVA states for the modules that read those.
+table OCMTrajectoryBlock {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT: string;
+  /// TRAJ_ID.
+  TRAJ_ID: string;
+  /// TRAJ_PREV_ID.
+  TRAJ_PREV_ID: string;
+  /// TRAJ_NEXT_ID.
+  TRAJ_NEXT_ID: string;
+  /// TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.
+  TRAJ_BASIS: string;
+  /// TRAJ_BASIS_ID.
+  TRAJ_BASIS_ID: string;
+  /// INTERPOLATION: the recommended interpolation method.
+  INTERPOLATION: string;
+  /// INTERPOLATION_DEGREE.
+  INTERPOLATION_DEGREE: uint;
+  /// PROPAGATOR.
+  PROPAGATOR: string;
+  /// CENTER_NAME.
+  CENTER_NAME: string;
+  /// TRAJ_REF_FRAME.
+  TRAJ_REF_FRAME: string;
+  /// TRAJ_FRAME_EPOCH.
+  TRAJ_FRAME_EPOCH: string;
+  /// USEABLE_START_TIME.
+  USEABLE_START_TIME: string;
+  /// USEABLE_STOP_TIME.
+  USEABLE_STOP_TIME: string;
+  /// ORB_REVNUM, NaN when not stated.
+  ORB_REVNUM: double = nan;
+  /// ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.
+  ORB_REVNUM_BASIS: int = -1;
+  /// TRAJ_TYPE as written, for example CARTPV.
+  TRAJ_TYPE: string;
+  /// ORB_AVERAGING.
+  ORB_AVERAGING: string;
+  /// TRAJ_UNITS.
+  TRAJ_UNITS: string;
+  /// The data lines, as written.
+  LINES: [string];
+}
+
+/// One covariance time history of an OCM (Table 6-6): the block's keywords and its
+/// data lines as written (a time tag, then the covariance in COV_ORDERING). The
+/// single-covariance fields of the OCM above state the first block when it is one
+/// line.
+table OCMCovarianceBlock {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT: string;
+  /// COV_ID.
+  COV_ID: string;
+  /// COV_PREV_ID.
+  COV_PREV_ID: string;
+  /// COV_NEXT_ID.
+  COV_NEXT_ID: string;
+  /// COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.
+  COV_BASIS: string;
+  /// COV_BASIS_ID.
+  COV_BASIS_ID: string;
+  /// COV_REF_FRAME.
+  COV_REF_FRAME: string;
+  /// COV_FRAME_EPOCH.
+  COV_FRAME_EPOCH: string;
+  /// COV_SCALE_MIN, NaN when not stated.
+  COV_SCALE_MIN: double = nan;
+  /// COV_SCALE_MAX, NaN when not stated.
+  COV_SCALE_MAX: double = nan;
+  /// COV_CONFIDENCE in percent, NaN when not stated.
+  COV_CONFIDENCE: double = nan;
+  /// COV_TYPE as written, for example CARTPV.
+  COV_TYPE: string;
+  /// COV_ORDERING.
+  COV_ORDERING: covarianceOrdering = LTM;
+  /// COV_UNITS.
+  COV_UNITS: string;
+  /// The data lines, as written.
+  LINES: [string];
 }
 
 table UserDefinedParameters {
@@ -610,6 +837,14 @@ table OCM {
   /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
   /// dimensionless one.
   COV_UNITS: [string];
+  /// Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+  /// blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+  /// them above state the first block's CARTPV or CARTPVA states.
+  TRAJECTORY_BLOCKS: [OCMTrajectoryBlock];
+  /// Every covariance time history of the message (COV_START blocks), in message
+  /// order. COVARIANCE_DATA and the fields that go with it above state the first
+  /// block when it is one line.
+  COVARIANCE_BLOCKS: [OCMCovarianceBlock];
 }
 
 root_type OCM;

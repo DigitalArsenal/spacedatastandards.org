@@ -171,6 +171,10 @@
         "IYZ" : {
                 "type" : "number",
                 "description" : "Product of inertia YZ in kg*m^2"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of the physical characteristics block (CCSDS 504.0-B-2),\njoined by a line feed."
               }
       },
       "additionalProperties" : false
@@ -287,7 +291,361 @@
               },
         "COMMENT" : {
                 "type" : "string",
-                "description" : "Additional comments"
+                "description" : "COMMENT lines of the message header, metadata and user-defined data\n(CCSDS 504.0-B-2), in message order, joined by a line feed. A time history,\ncovariance, maneuver or determination block's own comments stay with it."
+              },
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "CLASSIFICATION of the message: the optional header keyword stating its\nsecurity classification or handling caveat."
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "MESSAGE_ID: the optional header keyword, an identifier the originator makes\nunique for this message."
+              },
+        "OBJECT_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "OBJECT_DESIGNATOR (CCSDS 504.0-B-2): the object's identifier in CATALOG_NAME.\nOBJECT_ID above holds the INTERNATIONAL_DESIGNATOR of the message and EPOCH\nabove its EPOCH_TZERO, the epoch every relative time is measured from."
+              },
+        "ORIGINATOR_POC" : {
+                "type" : "string",
+                "description" : "ORIGINATOR_POC: point of contact at the originator."
+              },
+        "ORIGINATOR_POSITION" : {
+                "type" : "string",
+                "description" : "ORIGINATOR_POSITION: position of the point of contact."
+              },
+        "ORIGINATOR_PHONE" : {
+                "type" : "string",
+                "description" : "ORIGINATOR_PHONE: telephone number of the point of contact."
+              },
+        "ORIGINATOR_EMAIL" : {
+                "type" : "string",
+                "description" : "ORIGINATOR_EMAIL: email address of the point of contact."
+              },
+        "ORIGINATOR_ADDRESS" : {
+                "type" : "string",
+                "description" : "ORIGINATOR_ADDRESS: postal address of the point of contact."
+              },
+        "ODM_MSG_LINK" : {
+                "type" : "string",
+                "description" : "ODM_MSG_LINK: the identifier of the Orbit Data Message this attitude goes with."
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "CENTER_NAME: the orbit center, when the message states one."
+              },
+        "ACM_DATA_ELEMENTS" : {
+                "type" : "string",
+                "description" : "ACM_DATA_ELEMENTS: comma-separated list of the data blocks the message holds."
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "START_TIME: start of the total time span the message covers."
+              },
+        "STOP_TIME" : {
+                "type" : "string",
+                "description" : "STOP_TIME: end of the total time span the message covers."
+              },
+        "TAIMUTC_AT_TZERO" : {
+                "type" : "number",
+                "description" : "TAIMUTC_AT_TZERO in seconds, NaN when not stated."
+              },
+        "NEXT_LEAP_EPOCH" : {
+                "type" : "string",
+                "description" : "NEXT_LEAP_EPOCH: epoch of the next leap second after EPOCH_TZERO."
+              },
+        "NEXT_LEAP_TAIMUTC" : {
+                "type" : "number",
+                "description" : "NEXT_LEAP_TAIMUTC in seconds, NaN when not stated."
+              },
+        "ATT_BLOCKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACMAttitudeBlock"},
+                "description" : "Attitude state time histories (ATT_START blocks), in message order."
+              },
+        "COV_BLOCKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACMCovarianceBlock"},
+                "description" : "Covariance time histories (COV_START blocks), in message order."
+              },
+        "MAN_BLOCKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACMManeuverBlock"},
+                "description" : "Maneuver specifications (MAN_START blocks), in message order."
+              },
+        "DETERMINATION" : {
+                "$ref" : "#/definitions/ACMDetermination",
+                "description" : "The attitude determination data (AD_START block), when the message has them."
+              },
+        "USER_DEFINED_PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACMUserDefinedParameter"},
+                "description" : "Every USER_DEFINED parameter of the message, in message order."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACMAttitudeBlock" : {
+      "type" : "object",
+      "description" : "One attitude state time history of an ACM (CCSDS 504.0-B-2 Table 5-4): the\nblock's keywords, then its data lines as TIMES (the first column of each line,\nelapsed seconds from EPOCH_TZERO or an epoch, as written) and VALUES (the other\ncolumns, NUMBER_STATES per line, row by row).",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of this block, joined by a line feed."
+              },
+        "ATT_ID" : {
+                "type" : "string",
+                "description" : "ATT_ID."
+              },
+        "ATT_PREV_ID" : {
+                "type" : "string",
+                "description" : "ATT_PREV_ID."
+              },
+        "ATT_BASIS" : {
+                "type" : "string",
+                "description" : "ATT_BASIS: PREDICTED, DETERMINED_GND, DETERMINED_OBC or SIMULATED."
+              },
+        "ATT_BASIS_ID" : {
+                "type" : "string",
+                "description" : "ATT_BASIS_ID."
+              },
+        "REF_FRAME_A" : {
+                "type" : "string",
+                "description" : "REF_FRAME_A: the frame the transformation starts from."
+              },
+        "REF_FRAME_B" : {
+                "type" : "string",
+                "description" : "REF_FRAME_B: the frame the transformation ends in."
+              },
+        "NUMBER_STATES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NUMBER_STATES: the data columns on each line (attitude, then rate)."
+              },
+        "ATT_TYPE" : {
+                "type" : "string",
+                "description" : "ATT_TYPE: QUATERNION, EULER_ANGLES, DCM or ANGVEL."
+              },
+        "EULER_ROT_SEQ" : {
+                "type" : "string",
+                "description" : "EULER_ROT_SEQ, when ATT_TYPE is EULER_ANGLES."
+              },
+        "RATE_TYPE" : {
+                "type" : "string",
+                "description" : "RATE_TYPE: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS, when the lines carry rates."
+              },
+        "TIMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The first column of each data line, as written."
+              },
+        "VALUES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "The other columns of the data lines, NUMBER_STATES per line."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACMCovarianceBlock" : {
+      "type" : "object",
+      "description" : "One covariance time history of an ACM (Table 5-6): the diagonal terms of the\ncovariance on each line, as TIMES and VALUES like ACMAttitudeBlock; every line\nhas the same number of values.",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of this block, joined by a line feed."
+              },
+        "COV_ID" : {
+                "type" : "string",
+                "description" : "COV_ID."
+              },
+        "COV_PREV_ID" : {
+                "type" : "string",
+                "description" : "COV_PREV_ID."
+              },
+        "COV_BASIS" : {
+                "type" : "string",
+                "description" : "COV_BASIS."
+              },
+        "COV_BASIS_ID" : {
+                "type" : "string",
+                "description" : "COV_BASIS_ID."
+              },
+        "COV_REF_FRAME" : {
+                "type" : "string",
+                "description" : "COV_REF_FRAME."
+              },
+        "COV_TYPE" : {
+                "type" : "string",
+                "description" : "COV_TYPE: ANGLE, ANGLE_GYROBIAS, ANGLE_ANGVEL, QUATERNION, QUATERNION_GYROBIAS\nor QUATERNION_ANGVEL."
+              },
+        "TIMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The first column of each data line, as written."
+              },
+        "VALUES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "The diagonal terms of each line, row by row."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACMManeuverBlock" : {
+      "type" : "object",
+      "description" : "One maneuver specification of an ACM (Table 5-7).",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of this block, joined by a line feed."
+              },
+        "MAN_ID" : {
+                "type" : "string",
+                "description" : "MAN_ID."
+              },
+        "MAN_PREV_ID" : {
+                "type" : "string",
+                "description" : "MAN_PREV_ID."
+              },
+        "MAN_PURPOSE" : {
+                "type" : "string",
+                "description" : "MAN_PURPOSE: for example MOM_DESAT."
+              },
+        "MAN_BEGIN_TIME" : {
+                "type" : "number",
+                "description" : "MAN_BEGIN_TIME in seconds from EPOCH_TZERO."
+              },
+        "MAN_END_TIME" : {
+                "type" : "number",
+                "description" : "MAN_END_TIME in seconds from EPOCH_TZERO; NaN when the message states\nMAN_DURATION instead (a message states one of the two)."
+              },
+        "MAN_DURATION" : {
+                "type" : "number",
+                "description" : "MAN_DURATION in seconds; NaN when the message states MAN_END_TIME instead."
+              },
+        "ACTUATOR_USED" : {
+                "type" : "string",
+                "description" : "ACTUATOR_USED."
+              },
+        "TARGET_MOMENTUM" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "TARGET_MOMENTUM: three components in N*m*s; empty when not stated."
+              },
+        "TARGET_MOM_FRAME" : {
+                "type" : "string",
+                "description" : "TARGET_MOM_FRAME."
+              },
+        "TARGET_ATTITUDE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "TARGET_ATTITUDE: the target attitude components; empty when not stated."
+              },
+        "TARGET_SPINRATE" : {
+                "type" : "number",
+                "description" : "TARGET_SPINRATE in deg/s, NaN when not stated."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACMDetermination" : {
+      "type" : "object",
+      "description" : "The attitude determination data of an ACM (Table 5-8).",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of this block, joined by a line feed."
+              },
+        "AD_ID" : {
+                "type" : "string",
+                "description" : "AD_ID."
+              },
+        "AD_PREV_ID" : {
+                "type" : "string",
+                "description" : "AD_PREV_ID."
+              },
+        "AD_METHOD" : {
+                "type" : "string",
+                "description" : "AD_METHOD: for example EKF, TRIAD or QUEST."
+              },
+        "ATTITUDE_SOURCE" : {
+                "type" : "string",
+                "description" : "ATTITUDE_SOURCE."
+              },
+        "NUMBER_STATES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NUMBER_STATES."
+              },
+        "ATTITUDE_STATES" : {
+                "type" : "string",
+                "description" : "ATTITUDE_STATES: QUATERNION, EULER_ANGLES, DCM or ANGVEL."
+              },
+        "EULER_ROT_SEQ" : {
+                "type" : "string",
+                "description" : "EULER_ROT_SEQ."
+              },
+        "COV_TYPE" : {
+                "type" : "string",
+                "description" : "COV_TYPE."
+              },
+        "REF_FRAME_A" : {
+                "type" : "string",
+                "description" : "REF_FRAME_A."
+              },
+        "REF_FRAME_B" : {
+                "type" : "string",
+                "description" : "REF_FRAME_B."
+              },
+        "RATE_STATES" : {
+                "type" : "string",
+                "description" : "RATE_STATES: ANGVEL, Q_DOT, EULER_RATE or GYRO_BIAS."
+              },
+        "SIGMA_U" : {
+                "type" : "number",
+                "description" : "SIGMA_U in deg/s**1.5, NaN when not stated."
+              },
+        "SIGMA_V" : {
+                "type" : "number",
+                "description" : "SIGMA_V in deg/s**0.5, NaN when not stated."
+              },
+        "RATE_PROCESS_NOISE_STDDEV" : {
+                "type" : "number",
+                "description" : "RATE_PROCESS_NOISE_STDDEV in deg/s**1.5, NaN when not stated."
+              },
+        "SENSORS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ACMSensor"},
+                "description" : "The sensors, in message order."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACMSensor" : {
+      "type" : "object",
+      "description" : "One sensor block of an ACM's attitude determination data.",
+      "properties" : {
+        "SENSOR_NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "SENSOR_NUMBER; it need not be sequential."
+              },
+        "SENSOR_USED" : {
+                "type" : "string",
+                "description" : "SENSOR_USED: for example AST, DSS or IMU."
+              },
+        "NUMBER_SENSOR_NOISE_COVARIANCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NUMBER_SENSOR_NOISE_COVARIANCE."
+              },
+        "SENSOR_NOISE_STDDEV" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "SENSOR_NOISE_STDDEV in deg: one value per noise covariance."
+              },
+        "SENSOR_FREQUENCY" : {
+                "type" : "number",
+                "description" : "SENSOR_FREQUENCY in Hz, NaN when not stated."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ACMUserDefinedParameter" : {
+      "type" : "object",
+      "description" : "One USER_DEFINED_x keyword of an ACM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+      "properties" : {
+        "PARAM_NAME" : {
+                "type" : "string",
+                "description" : "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+              },
+        "PARAM_VALUE" : {
+                "type" : "string",
+                "description" : "The value as written"
               }
       },
       "additionalProperties" : false

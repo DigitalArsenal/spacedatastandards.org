@@ -361,8 +361,42 @@ class CDMObject(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         return o == 0
 
+    # OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+    # as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+    # CDMObject
+    def OBJECT_DESIGNATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+    # CDMObject
+    def CATALOG_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+    # same fact as a flag, true for YES.
+    # CDMObject
+    def MANEUVERABLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+    # CDMObject
+    def CD_AREA_OVER_MASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def CDMObjectStart(builder):
-    builder.StartObject(37)
+    builder.StartObject(41)
 
 def Start(builder):
     CDMObjectStart(builder)
@@ -605,6 +639,30 @@ def CDMObjectCreateCOVARIANCEVector(builder, data):
 def CreateCOVARIANCEVector(builder, data):
     return CDMObjectCreateCOVARIANCEVector(builder, data)
 
+def CDMObjectAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_DESIGNATOR), 0)
+
+def AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    CDMObjectAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+
+def CDMObjectAddCATALOG_NAME(builder, CATALOG_NAME):
+    builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(CATALOG_NAME), 0)
+
+def AddCATALOG_NAME(builder, CATALOG_NAME):
+    CDMObjectAddCATALOG_NAME(builder, CATALOG_NAME)
+
+def CDMObjectAddMANEUVERABLE(builder, MANEUVERABLE):
+    builder.PrependInt8Slot(39, MANEUVERABLE, 0)
+
+def AddMANEUVERABLE(builder, MANEUVERABLE):
+    CDMObjectAddMANEUVERABLE(builder, MANEUVERABLE)
+
+def CDMObjectAddCD_AREA_OVER_MASS(builder, CD_AREA_OVER_MASS):
+    builder.PrependFloat64Slot(40, CD_AREA_OVER_MASS, 0.0)
+
+def AddCD_AREA_OVER_MASS(builder, CD_AREA_OVER_MASS):
+    CDMObjectAddCD_AREA_OVER_MASS(builder, CD_AREA_OVER_MASS)
+
 def CDMObjectEnd(builder):
     return builder.EndObject()
 
@@ -661,6 +719,10 @@ class CDMObjectT(object):
         Y_DOT = 0.0,
         Z_DOT = 0.0,
         COVARIANCE = None,
+        OBJECT_DESIGNATOR = None,
+        CATALOG_NAME = None,
+        MANEUVERABLE = 0,
+        CD_AREA_OVER_MASS = 0.0,
     ):
         self.COMMENT = COMMENT  # type: Optional[str]
         self.OBJECT = OBJECT  # type: Optional[CAT.CATT]
@@ -699,6 +761,10 @@ class CDMObjectT(object):
         self.Y_DOT = Y_DOT  # type: float
         self.Z_DOT = Z_DOT  # type: float
         self.COVARIANCE = COVARIANCE  # type: Optional[List[float]]
+        self.OBJECT_DESIGNATOR = OBJECT_DESIGNATOR  # type: Optional[str]
+        self.CATALOG_NAME = CATALOG_NAME  # type: Optional[str]
+        self.MANEUVERABLE = MANEUVERABLE  # type: int
+        self.CD_AREA_OVER_MASS = CD_AREA_OVER_MASS  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -767,6 +833,10 @@ class CDMObjectT(object):
                     self.COVARIANCE.append(CDMObject.COVARIANCE(i))
             else:
                 self.COVARIANCE = CDMObject.COVARIANCEAsNumpy()
+        self.OBJECT_DESIGNATOR = CDMObject.OBJECT_DESIGNATOR()
+        self.CATALOG_NAME = CDMObject.CATALOG_NAME()
+        self.MANEUVERABLE = CDMObject.MANEUVERABLE()
+        self.CD_AREA_OVER_MASS = CDMObject.CD_AREA_OVER_MASS()
 
     # CDMObjectT
     def Pack(self, builder):
@@ -802,6 +872,10 @@ class CDMObjectT(object):
                 for i in reversed(range(len(self.COVARIANCE))):
                     builder.PrependFloat64(self.COVARIANCE[i])
                 COVARIANCE = builder.EndVector()
+        if self.OBJECT_DESIGNATOR is not None:
+            OBJECT_DESIGNATOR = builder.CreateString(self.OBJECT_DESIGNATOR)
+        if self.CATALOG_NAME is not None:
+            CATALOG_NAME = builder.CreateString(self.CATALOG_NAME)
         CDMObjectStart(builder)
         if self.COMMENT is not None:
             CDMObjectAddCOMMENT(builder, COMMENT)
@@ -853,5 +927,11 @@ class CDMObjectT(object):
         CDMObjectAddZ_DOT(builder, self.Z_DOT)
         if self.COVARIANCE is not None:
             CDMObjectAddCOVARIANCE(builder, COVARIANCE)
+        if self.OBJECT_DESIGNATOR is not None:
+            CDMObjectAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+        if self.CATALOG_NAME is not None:
+            CDMObjectAddCATALOG_NAME(builder, CATALOG_NAME)
+        CDMObjectAddMANEUVERABLE(builder, self.MANEUVERABLE)
+        CDMObjectAddCD_AREA_OVER_MASS(builder, self.CD_AREA_OVER_MASS)
         CDMObject = CDMObjectEnd(builder)
         return CDMObject

@@ -254,22 +254,321 @@ class PhysicalProperties extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+    public function getMANUFACTURER()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// BUS_MODEL: the object's bus model.
+    public function getBUS_MODEL()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// DOCKED_WITH: comma-separated names of the objects it is docked with.
+    public function getDOCKED_WITH()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// INITIAL_WET_MASS in kg, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getINITIAL_WET_MASS()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+    public function getOEB_PARENT_FRAME()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// OEB_PARENT_FRAME_EPOCH.
+    public function getOEB_PARENT_FRAME_EPOCH()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// AREA_MIN_FOR_PC in m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getAREA_MIN_FOR_PC()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// AREA_MAX_FOR_PC in m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getAREA_MAX_FOR_PC()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// AREA_TYP_FOR_PC in m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getAREA_TYP_FOR_PC()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// RCS in m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getRCS()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// RCS_MIN in m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getRCS_MIN()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// RCS_MAX in m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getRCS_MAX()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getVM_ABSOLUTE()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getVM_APPARENT_MIN()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// VM_APPARENT: apparent visual magnitude, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getVM_APPARENT()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getVM_APPARENT_MAX()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// REFLECTANCE: typical reflectivity, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getREFLECTANCE()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// ATT_CONTROL_MODE.
+    public function getATT_CONTROL_MODE()
+    {
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ATT_ACTUATOR_TYPE.
+    public function getATT_ACTUATOR_TYPE()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ATT_KNOWLEDGE in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getATT_KNOWLEDGE()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// ATT_CONTROL in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getATT_CONTROL()
+    {
+        $o = $this->__offset(86);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// ATT_POINTING in degrees, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getATT_POINTING()
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getAVG_MANEUVER_FREQ()
+    {
+        $o = $this->__offset(90);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// MAX_THRUST in N, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getMAX_THRUST()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getDV_BOL()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// DV_REMAINING in km/s, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getDV_REMAINING()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IXX in kg*m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIXX()
+    {
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IYY in kg*m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIYY()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IZZ in kg*m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIZZ()
+    {
+        $o = $this->__offset(102);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IXY in kg*m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIXY()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IXZ in kg*m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIXZ()
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// IYZ in kg*m**2, NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getIYZ()
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPhysicalProperties(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(21);
+        $builder->StartObject(53);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PhysicalProperties
      */
-    public static function createPhysicalProperties(FlatBufferBuilder $builder, $COMMENT, $WET_MASS, $DRY_MASS, $MASS_UNITS, $OEB_Q1, $OEB_Q2, $OEB_Q3, $OEB_QC, $OEB_MAX, $OEB_INT, $OEB_MIN, $AREA_ALONG_OEB_MAX, $AREA_ALONG_OEB_INT, $AREA_ALONG_OEB_MIN, $AREA_UNITS, $DRAG_CONST_AREA, $DRAG_COEFF_NOM, $DRAG_UNCERTAINTY, $SRP_CONST_AREA, $SOLAR_RAD_COEFF, $SRP_UNCERTAINTY)
+    public static function createPhysicalProperties(FlatBufferBuilder $builder, $COMMENT, $WET_MASS, $DRY_MASS, $MASS_UNITS, $OEB_Q1, $OEB_Q2, $OEB_Q3, $OEB_QC, $OEB_MAX, $OEB_INT, $OEB_MIN, $AREA_ALONG_OEB_MAX, $AREA_ALONG_OEB_INT, $AREA_ALONG_OEB_MIN, $AREA_UNITS, $DRAG_CONST_AREA, $DRAG_COEFF_NOM, $DRAG_UNCERTAINTY, $SRP_CONST_AREA, $SOLAR_RAD_COEFF, $SRP_UNCERTAINTY, $MANUFACTURER, $BUS_MODEL, $DOCKED_WITH, $INITIAL_WET_MASS, $OEB_PARENT_FRAME, $OEB_PARENT_FRAME_EPOCH, $AREA_MIN_FOR_PC, $AREA_MAX_FOR_PC, $AREA_TYP_FOR_PC, $RCS, $RCS_MIN, $RCS_MAX, $VM_ABSOLUTE, $VM_APPARENT_MIN, $VM_APPARENT, $VM_APPARENT_MAX, $REFLECTANCE, $ATT_CONTROL_MODE, $ATT_ACTUATOR_TYPE, $ATT_KNOWLEDGE, $ATT_CONTROL, $ATT_POINTING, $AVG_MANEUVER_FREQ, $MAX_THRUST, $DV_BOL, $DV_REMAINING, $IXX, $IYY, $IZZ, $IXY, $IXZ, $IYZ)
     {
-        $builder->startObject(21);
+        $builder->startObject(53);
         self::addCOMMENT($builder, $COMMENT);
         self::addWET_MASS($builder, $WET_MASS);
         self::addDRY_MASS($builder, $DRY_MASS);
@@ -291,6 +590,38 @@ class PhysicalProperties extends Table
         self::addSRP_CONST_AREA($builder, $SRP_CONST_AREA);
         self::addSOLAR_RAD_COEFF($builder, $SOLAR_RAD_COEFF);
         self::addSRP_UNCERTAINTY($builder, $SRP_UNCERTAINTY);
+        self::addMANUFACTURER($builder, $MANUFACTURER);
+        self::addBUS_MODEL($builder, $BUS_MODEL);
+        self::addDOCKED_WITH($builder, $DOCKED_WITH);
+        self::addINITIAL_WET_MASS($builder, $INITIAL_WET_MASS);
+        self::addOEB_PARENT_FRAME($builder, $OEB_PARENT_FRAME);
+        self::addOEB_PARENT_FRAME_EPOCH($builder, $OEB_PARENT_FRAME_EPOCH);
+        self::addAREA_MIN_FOR_PC($builder, $AREA_MIN_FOR_PC);
+        self::addAREA_MAX_FOR_PC($builder, $AREA_MAX_FOR_PC);
+        self::addAREA_TYP_FOR_PC($builder, $AREA_TYP_FOR_PC);
+        self::addRCS($builder, $RCS);
+        self::addRCS_MIN($builder, $RCS_MIN);
+        self::addRCS_MAX($builder, $RCS_MAX);
+        self::addVM_ABSOLUTE($builder, $VM_ABSOLUTE);
+        self::addVM_APPARENT_MIN($builder, $VM_APPARENT_MIN);
+        self::addVM_APPARENT($builder, $VM_APPARENT);
+        self::addVM_APPARENT_MAX($builder, $VM_APPARENT_MAX);
+        self::addREFLECTANCE($builder, $REFLECTANCE);
+        self::addATT_CONTROL_MODE($builder, $ATT_CONTROL_MODE);
+        self::addATT_ACTUATOR_TYPE($builder, $ATT_ACTUATOR_TYPE);
+        self::addATT_KNOWLEDGE($builder, $ATT_KNOWLEDGE);
+        self::addATT_CONTROL($builder, $ATT_CONTROL);
+        self::addATT_POINTING($builder, $ATT_POINTING);
+        self::addAVG_MANEUVER_FREQ($builder, $AVG_MANEUVER_FREQ);
+        self::addMAX_THRUST($builder, $MAX_THRUST);
+        self::addDV_BOL($builder, $DV_BOL);
+        self::addDV_REMAINING($builder, $DV_REMAINING);
+        self::addIXX($builder, $IXX);
+        self::addIYY($builder, $IYY);
+        self::addIZZ($builder, $IZZ);
+        self::addIXY($builder, $IXY);
+        self::addIXZ($builder, $IXZ);
+        self::addIYZ($builder, $IYZ);
         $o = $builder->endObject();
         return $o;
     }
@@ -527,6 +858,326 @@ class PhysicalProperties extends Table
     public static function addSRP_UNCERTAINTY(FlatBufferBuilder $builder, $SRP_UNCERTAINTY)
     {
         $builder->addDoubleX(20, $SRP_UNCERTAINTY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMANUFACTURER(FlatBufferBuilder $builder, $MANUFACTURER)
+    {
+        $builder->addOffsetX(21, $MANUFACTURER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addBUS_MODEL(FlatBufferBuilder $builder, $BUS_MODEL)
+    {
+        $builder->addOffsetX(22, $BUS_MODEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDOCKED_WITH(FlatBufferBuilder $builder, $DOCKED_WITH)
+    {
+        $builder->addOffsetX(23, $DOCKED_WITH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addINITIAL_WET_MASS(FlatBufferBuilder $builder, $INITIAL_WET_MASS)
+    {
+        $builder->addDoubleX(24, $INITIAL_WET_MASS, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOEB_PARENT_FRAME(FlatBufferBuilder $builder, $OEB_PARENT_FRAME)
+    {
+        $builder->addOffsetX(25, $OEB_PARENT_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOEB_PARENT_FRAME_EPOCH(FlatBufferBuilder $builder, $OEB_PARENT_FRAME_EPOCH)
+    {
+        $builder->addOffsetX(26, $OEB_PARENT_FRAME_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAREA_MIN_FOR_PC(FlatBufferBuilder $builder, $AREA_MIN_FOR_PC)
+    {
+        $builder->addDoubleX(27, $AREA_MIN_FOR_PC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAREA_MAX_FOR_PC(FlatBufferBuilder $builder, $AREA_MAX_FOR_PC)
+    {
+        $builder->addDoubleX(28, $AREA_MAX_FOR_PC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAREA_TYP_FOR_PC(FlatBufferBuilder $builder, $AREA_TYP_FOR_PC)
+    {
+        $builder->addDoubleX(29, $AREA_TYP_FOR_PC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRCS(FlatBufferBuilder $builder, $RCS)
+    {
+        $builder->addDoubleX(30, $RCS, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRCS_MIN(FlatBufferBuilder $builder, $RCS_MIN)
+    {
+        $builder->addDoubleX(31, $RCS_MIN, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRCS_MAX(FlatBufferBuilder $builder, $RCS_MAX)
+    {
+        $builder->addDoubleX(32, $RCS_MAX, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addVM_ABSOLUTE(FlatBufferBuilder $builder, $VM_ABSOLUTE)
+    {
+        $builder->addDoubleX(33, $VM_ABSOLUTE, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addVM_APPARENT_MIN(FlatBufferBuilder $builder, $VM_APPARENT_MIN)
+    {
+        $builder->addDoubleX(34, $VM_APPARENT_MIN, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addVM_APPARENT(FlatBufferBuilder $builder, $VM_APPARENT)
+    {
+        $builder->addDoubleX(35, $VM_APPARENT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addVM_APPARENT_MAX(FlatBufferBuilder $builder, $VM_APPARENT_MAX)
+    {
+        $builder->addDoubleX(36, $VM_APPARENT_MAX, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addREFLECTANCE(FlatBufferBuilder $builder, $REFLECTANCE)
+    {
+        $builder->addDoubleX(37, $REFLECTANCE, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addATT_CONTROL_MODE(FlatBufferBuilder $builder, $ATT_CONTROL_MODE)
+    {
+        $builder->addOffsetX(38, $ATT_CONTROL_MODE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addATT_ACTUATOR_TYPE(FlatBufferBuilder $builder, $ATT_ACTUATOR_TYPE)
+    {
+        $builder->addOffsetX(39, $ATT_ACTUATOR_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addATT_KNOWLEDGE(FlatBufferBuilder $builder, $ATT_KNOWLEDGE)
+    {
+        $builder->addDoubleX(40, $ATT_KNOWLEDGE, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addATT_CONTROL(FlatBufferBuilder $builder, $ATT_CONTROL)
+    {
+        $builder->addDoubleX(41, $ATT_CONTROL, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addATT_POINTING(FlatBufferBuilder $builder, $ATT_POINTING)
+    {
+        $builder->addDoubleX(42, $ATT_POINTING, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAVG_MANEUVER_FREQ(FlatBufferBuilder $builder, $AVG_MANEUVER_FREQ)
+    {
+        $builder->addDoubleX(43, $AVG_MANEUVER_FREQ, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMAX_THRUST(FlatBufferBuilder $builder, $MAX_THRUST)
+    {
+        $builder->addDoubleX(44, $MAX_THRUST, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDV_BOL(FlatBufferBuilder $builder, $DV_BOL)
+    {
+        $builder->addDoubleX(45, $DV_BOL, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDV_REMAINING(FlatBufferBuilder $builder, $DV_REMAINING)
+    {
+        $builder->addDoubleX(46, $DV_REMAINING, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIXX(FlatBufferBuilder $builder, $IXX)
+    {
+        $builder->addDoubleX(47, $IXX, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIYY(FlatBufferBuilder $builder, $IYY)
+    {
+        $builder->addDoubleX(48, $IYY, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIZZ(FlatBufferBuilder $builder, $IZZ)
+    {
+        $builder->addDoubleX(49, $IZZ, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIXY(FlatBufferBuilder $builder, $IXY)
+    {
+        $builder->addDoubleX(50, $IXY, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIXZ(FlatBufferBuilder $builder, $IXZ)
+    {
+        $builder->addDoubleX(51, $IXZ, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIYZ(FlatBufferBuilder $builder, $IYZ)
+    {
+        $builder->addDoubleX(52, $IYZ, NAN);
     }
 
     /**

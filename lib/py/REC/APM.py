@@ -99,8 +99,210 @@ class APM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # COMMENT lines of the message (CCSDS 504.0-B-2) from its header, metadata and
+    # data groups, in message order, joined by a line feed. A state group's own
+    # comments stay with it.
+    # APM
+    def COMMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CLASSIFICATION of the message: the optional header keyword stating its
+    # security classification or handling caveat.
+    # APM
+    def CLASSIFICATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # MESSAGE_ID: the optional header keyword, an identifier the originator makes
+    # unique for this message.
+    # APM
+    def MESSAGE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CENTER_NAME: the orbit center, when the message states one.
+    # APM
+    def CENTER_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # TIME_SYSTEM: the time system EPOCH and the maneuver epochs are in.
+    # APM
+    def TIME_SYSTEM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Quaternion states (QUAT_START block), in message order. Q1..QC above are the
+    # single frameless quaternion of the earlier form of this record; a message is
+    # read into and written from these lists.
+    # APM
+    def QUATERNION_STATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from APMQuaternionState import APMQuaternionState
+            obj = APMQuaternionState()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # APM
+    def QUATERNION_STATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # APM
+    def QUATERNION_STATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        return o == 0
+
+    # Euler angle states (EULER_START block), in message order.
+    # APM
+    def EULER_ANGLE_STATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from APMEulerAngleState import APMEulerAngleState
+            obj = APMEulerAngleState()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # APM
+    def EULER_ANGLE_STATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # APM
+    def EULER_ANGLE_STATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        return o == 0
+
+    # Angular velocities (ANGVEL_START block), in message order.
+    # APM
+    def ANGULAR_VELOCITIES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from APMAngularVelocity import APMAngularVelocity
+            obj = APMAngularVelocity()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # APM
+    def ANGULAR_VELOCITIESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # APM
+    def ANGULAR_VELOCITIESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        return o == 0
+
+    # Spin states (SPIN_START block), in message order.
+    # APM
+    def SPIN_STATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from APMSpinState import APMSpinState
+            obj = APMSpinState()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # APM
+    def SPIN_STATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # APM
+    def SPIN_STATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        return o == 0
+
+    # Inertia tensors (INERTIA_START block), in message order.
+    # APM
+    def INERTIAS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from APMInertia import APMInertia
+            obj = APMInertia()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # APM
+    def INERTIASLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # APM
+    def INERTIASIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        return o == 0
+
+    # Attitude maneuvers (MAN_START block), in message order.
+    # APM
+    def MANEUVERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from APMManeuver import APMManeuver
+            obj = APMManeuver()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # APM
+    def MANEUVERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # APM
+    def MANEUVERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        return o == 0
+
 def APMStart(builder):
-    builder.StartObject(10)
+    builder.StartObject(21)
 
 def Start(builder):
     APMStart(builder)
@@ -165,12 +367,160 @@ def APMAddQC(builder, QC):
 def AddQC(builder, QC):
     APMAddQC(builder, QC)
 
+def APMAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    APMAddCOMMENT(builder, COMMENT)
+
+def APMAddCLASSIFICATION(builder, CLASSIFICATION):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
+def AddCLASSIFICATION(builder, CLASSIFICATION):
+    APMAddCLASSIFICATION(builder, CLASSIFICATION)
+
+def APMAddMESSAGE_ID(builder, MESSAGE_ID):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_ID), 0)
+
+def AddMESSAGE_ID(builder, MESSAGE_ID):
+    APMAddMESSAGE_ID(builder, MESSAGE_ID)
+
+def APMAddCENTER_NAME(builder, CENTER_NAME):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
+
+def AddCENTER_NAME(builder, CENTER_NAME):
+    APMAddCENTER_NAME(builder, CENTER_NAME)
+
+def APMAddTIME_SYSTEM(builder, TIME_SYSTEM):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_SYSTEM), 0)
+
+def AddTIME_SYSTEM(builder, TIME_SYSTEM):
+    APMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+
+def APMAddQUATERNION_STATES(builder, QUATERNION_STATES):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(QUATERNION_STATES), 0)
+
+def AddQUATERNION_STATES(builder, QUATERNION_STATES):
+    APMAddQUATERNION_STATES(builder, QUATERNION_STATES)
+
+def APMStartQUATERNION_STATESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartQUATERNION_STATESVector(builder, numElems):
+    return APMStartQUATERNION_STATESVector(builder, numElems)
+
+def APMCreateQUATERNION_STATESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateQUATERNION_STATESVector(builder, data):
+    return APMCreateQUATERNION_STATESVector(builder, data)
+
+def APMAddEULER_ANGLE_STATES(builder, EULER_ANGLE_STATES):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(EULER_ANGLE_STATES), 0)
+
+def AddEULER_ANGLE_STATES(builder, EULER_ANGLE_STATES):
+    APMAddEULER_ANGLE_STATES(builder, EULER_ANGLE_STATES)
+
+def APMStartEULER_ANGLE_STATESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartEULER_ANGLE_STATESVector(builder, numElems):
+    return APMStartEULER_ANGLE_STATESVector(builder, numElems)
+
+def APMCreateEULER_ANGLE_STATESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEULER_ANGLE_STATESVector(builder, data):
+    return APMCreateEULER_ANGLE_STATESVector(builder, data)
+
+def APMAddANGULAR_VELOCITIES(builder, ANGULAR_VELOCITIES):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(ANGULAR_VELOCITIES), 0)
+
+def AddANGULAR_VELOCITIES(builder, ANGULAR_VELOCITIES):
+    APMAddANGULAR_VELOCITIES(builder, ANGULAR_VELOCITIES)
+
+def APMStartANGULAR_VELOCITIESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartANGULAR_VELOCITIESVector(builder, numElems):
+    return APMStartANGULAR_VELOCITIESVector(builder, numElems)
+
+def APMCreateANGULAR_VELOCITIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateANGULAR_VELOCITIESVector(builder, data):
+    return APMCreateANGULAR_VELOCITIESVector(builder, data)
+
+def APMAddSPIN_STATES(builder, SPIN_STATES):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(SPIN_STATES), 0)
+
+def AddSPIN_STATES(builder, SPIN_STATES):
+    APMAddSPIN_STATES(builder, SPIN_STATES)
+
+def APMStartSPIN_STATESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSPIN_STATESVector(builder, numElems):
+    return APMStartSPIN_STATESVector(builder, numElems)
+
+def APMCreateSPIN_STATESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSPIN_STATESVector(builder, data):
+    return APMCreateSPIN_STATESVector(builder, data)
+
+def APMAddINERTIAS(builder, INERTIAS):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(INERTIAS), 0)
+
+def AddINERTIAS(builder, INERTIAS):
+    APMAddINERTIAS(builder, INERTIAS)
+
+def APMStartINERTIASVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartINERTIASVector(builder, numElems):
+    return APMStartINERTIASVector(builder, numElems)
+
+def APMCreateINERTIASVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateINERTIASVector(builder, data):
+    return APMCreateINERTIASVector(builder, data)
+
+def APMAddMANEUVERS(builder, MANEUVERS):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVERS), 0)
+
+def AddMANEUVERS(builder, MANEUVERS):
+    APMAddMANEUVERS(builder, MANEUVERS)
+
+def APMStartMANEUVERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMANEUVERSVector(builder, numElems):
+    return APMStartMANEUVERSVector(builder, numElems)
+
+def APMCreateMANEUVERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMANEUVERSVector(builder, data):
+    return APMCreateMANEUVERSVector(builder, data)
+
 def APMEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return APMEnd(builder)
 
+import APMAngularVelocity
+import APMEulerAngleState
+import APMInertia
+import APMManeuver
+import APMQuaternionState
+import APMSpinState
+try:
+    from typing import List
+except:
+    pass
 
 class APMT(object):
 
@@ -187,6 +537,17 @@ class APMT(object):
         Q2 = 0.0,
         Q3 = 0.0,
         QC = 0.0,
+        COMMENT = None,
+        CLASSIFICATION = None,
+        MESSAGE_ID = None,
+        CENTER_NAME = None,
+        TIME_SYSTEM = None,
+        QUATERNION_STATES = None,
+        EULER_ANGLE_STATES = None,
+        ANGULAR_VELOCITIES = None,
+        SPIN_STATES = None,
+        INERTIAS = None,
+        MANEUVERS = None,
     ):
         self.CCSDS_APM_VERS = CCSDS_APM_VERS  # type: Optional[str]
         self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
@@ -198,6 +559,17 @@ class APMT(object):
         self.Q2 = Q2  # type: float
         self.Q3 = Q3  # type: float
         self.QC = QC  # type: float
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
+        self.MESSAGE_ID = MESSAGE_ID  # type: Optional[str]
+        self.CENTER_NAME = CENTER_NAME  # type: Optional[str]
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: Optional[str]
+        self.QUATERNION_STATES = QUATERNION_STATES  # type: Optional[List[APMQuaternionState.APMQuaternionStateT]]
+        self.EULER_ANGLE_STATES = EULER_ANGLE_STATES  # type: Optional[List[APMEulerAngleState.APMEulerAngleStateT]]
+        self.ANGULAR_VELOCITIES = ANGULAR_VELOCITIES  # type: Optional[List[APMAngularVelocity.APMAngularVelocityT]]
+        self.SPIN_STATES = SPIN_STATES  # type: Optional[List[APMSpinState.APMSpinStateT]]
+        self.INERTIAS = INERTIAS  # type: Optional[List[APMInertia.APMInertiaT]]
+        self.MANEUVERS = MANEUVERS  # type: Optional[List[APMManeuver.APMManeuverT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -230,6 +602,59 @@ class APMT(object):
         self.Q2 = APM.Q2()
         self.Q3 = APM.Q3()
         self.QC = APM.QC()
+        self.COMMENT = APM.COMMENT()
+        self.CLASSIFICATION = APM.CLASSIFICATION()
+        self.MESSAGE_ID = APM.MESSAGE_ID()
+        self.CENTER_NAME = APM.CENTER_NAME()
+        self.TIME_SYSTEM = APM.TIME_SYSTEM()
+        if not APM.QUATERNION_STATESIsNone():
+            self.QUATERNION_STATES = []
+            for i in range(APM.QUATERNION_STATESLength()):
+                if APM.QUATERNION_STATES(i) is None:
+                    self.QUATERNION_STATES.append(None)
+                else:
+                    aPMQuaternionState_ = APMQuaternionState.APMQuaternionStateT.InitFromObj(APM.QUATERNION_STATES(i))
+                    self.QUATERNION_STATES.append(aPMQuaternionState_)
+        if not APM.EULER_ANGLE_STATESIsNone():
+            self.EULER_ANGLE_STATES = []
+            for i in range(APM.EULER_ANGLE_STATESLength()):
+                if APM.EULER_ANGLE_STATES(i) is None:
+                    self.EULER_ANGLE_STATES.append(None)
+                else:
+                    aPMEulerAngleState_ = APMEulerAngleState.APMEulerAngleStateT.InitFromObj(APM.EULER_ANGLE_STATES(i))
+                    self.EULER_ANGLE_STATES.append(aPMEulerAngleState_)
+        if not APM.ANGULAR_VELOCITIESIsNone():
+            self.ANGULAR_VELOCITIES = []
+            for i in range(APM.ANGULAR_VELOCITIESLength()):
+                if APM.ANGULAR_VELOCITIES(i) is None:
+                    self.ANGULAR_VELOCITIES.append(None)
+                else:
+                    aPMAngularVelocity_ = APMAngularVelocity.APMAngularVelocityT.InitFromObj(APM.ANGULAR_VELOCITIES(i))
+                    self.ANGULAR_VELOCITIES.append(aPMAngularVelocity_)
+        if not APM.SPIN_STATESIsNone():
+            self.SPIN_STATES = []
+            for i in range(APM.SPIN_STATESLength()):
+                if APM.SPIN_STATES(i) is None:
+                    self.SPIN_STATES.append(None)
+                else:
+                    aPMSpinState_ = APMSpinState.APMSpinStateT.InitFromObj(APM.SPIN_STATES(i))
+                    self.SPIN_STATES.append(aPMSpinState_)
+        if not APM.INERTIASIsNone():
+            self.INERTIAS = []
+            for i in range(APM.INERTIASLength()):
+                if APM.INERTIAS(i) is None:
+                    self.INERTIAS.append(None)
+                else:
+                    aPMInertia_ = APMInertia.APMInertiaT.InitFromObj(APM.INERTIAS(i))
+                    self.INERTIAS.append(aPMInertia_)
+        if not APM.MANEUVERSIsNone():
+            self.MANEUVERS = []
+            for i in range(APM.MANEUVERSLength()):
+                if APM.MANEUVERS(i) is None:
+                    self.MANEUVERS.append(None)
+                else:
+                    aPMManeuver_ = APMManeuver.APMManeuverT.InitFromObj(APM.MANEUVERS(i))
+                    self.MANEUVERS.append(aPMManeuver_)
 
     # APMT
     def Pack(self, builder):
@@ -245,6 +670,64 @@ class APMT(object):
             OBJECT_ID = builder.CreateString(self.OBJECT_ID)
         if self.EPOCH is not None:
             EPOCH = builder.CreateString(self.EPOCH)
+        if self.COMMENT is not None:
+            COMMENT = builder.CreateString(self.COMMENT)
+        if self.CLASSIFICATION is not None:
+            CLASSIFICATION = builder.CreateString(self.CLASSIFICATION)
+        if self.MESSAGE_ID is not None:
+            MESSAGE_ID = builder.CreateString(self.MESSAGE_ID)
+        if self.CENTER_NAME is not None:
+            CENTER_NAME = builder.CreateString(self.CENTER_NAME)
+        if self.TIME_SYSTEM is not None:
+            TIME_SYSTEM = builder.CreateString(self.TIME_SYSTEM)
+        if self.QUATERNION_STATES is not None:
+            QUATERNION_STATESlist = []
+            for i in range(len(self.QUATERNION_STATES)):
+                QUATERNION_STATESlist.append(self.QUATERNION_STATES[i].Pack(builder))
+            APMStartQUATERNION_STATESVector(builder, len(self.QUATERNION_STATES))
+            for i in reversed(range(len(self.QUATERNION_STATES))):
+                builder.PrependUOffsetTRelative(QUATERNION_STATESlist[i])
+            QUATERNION_STATES = builder.EndVector()
+        if self.EULER_ANGLE_STATES is not None:
+            EULER_ANGLE_STATESlist = []
+            for i in range(len(self.EULER_ANGLE_STATES)):
+                EULER_ANGLE_STATESlist.append(self.EULER_ANGLE_STATES[i].Pack(builder))
+            APMStartEULER_ANGLE_STATESVector(builder, len(self.EULER_ANGLE_STATES))
+            for i in reversed(range(len(self.EULER_ANGLE_STATES))):
+                builder.PrependUOffsetTRelative(EULER_ANGLE_STATESlist[i])
+            EULER_ANGLE_STATES = builder.EndVector()
+        if self.ANGULAR_VELOCITIES is not None:
+            ANGULAR_VELOCITIESlist = []
+            for i in range(len(self.ANGULAR_VELOCITIES)):
+                ANGULAR_VELOCITIESlist.append(self.ANGULAR_VELOCITIES[i].Pack(builder))
+            APMStartANGULAR_VELOCITIESVector(builder, len(self.ANGULAR_VELOCITIES))
+            for i in reversed(range(len(self.ANGULAR_VELOCITIES))):
+                builder.PrependUOffsetTRelative(ANGULAR_VELOCITIESlist[i])
+            ANGULAR_VELOCITIES = builder.EndVector()
+        if self.SPIN_STATES is not None:
+            SPIN_STATESlist = []
+            for i in range(len(self.SPIN_STATES)):
+                SPIN_STATESlist.append(self.SPIN_STATES[i].Pack(builder))
+            APMStartSPIN_STATESVector(builder, len(self.SPIN_STATES))
+            for i in reversed(range(len(self.SPIN_STATES))):
+                builder.PrependUOffsetTRelative(SPIN_STATESlist[i])
+            SPIN_STATES = builder.EndVector()
+        if self.INERTIAS is not None:
+            INERTIASlist = []
+            for i in range(len(self.INERTIAS)):
+                INERTIASlist.append(self.INERTIAS[i].Pack(builder))
+            APMStartINERTIASVector(builder, len(self.INERTIAS))
+            for i in reversed(range(len(self.INERTIAS))):
+                builder.PrependUOffsetTRelative(INERTIASlist[i])
+            INERTIAS = builder.EndVector()
+        if self.MANEUVERS is not None:
+            MANEUVERSlist = []
+            for i in range(len(self.MANEUVERS)):
+                MANEUVERSlist.append(self.MANEUVERS[i].Pack(builder))
+            APMStartMANEUVERSVector(builder, len(self.MANEUVERS))
+            for i in reversed(range(len(self.MANEUVERS))):
+                builder.PrependUOffsetTRelative(MANEUVERSlist[i])
+            MANEUVERS = builder.EndVector()
         APMStart(builder)
         if self.CCSDS_APM_VERS is not None:
             APMAddCCSDS_APM_VERS(builder, CCSDS_APM_VERS)
@@ -262,5 +745,27 @@ class APMT(object):
         APMAddQ2(builder, self.Q2)
         APMAddQ3(builder, self.Q3)
         APMAddQC(builder, self.QC)
+        if self.COMMENT is not None:
+            APMAddCOMMENT(builder, COMMENT)
+        if self.CLASSIFICATION is not None:
+            APMAddCLASSIFICATION(builder, CLASSIFICATION)
+        if self.MESSAGE_ID is not None:
+            APMAddMESSAGE_ID(builder, MESSAGE_ID)
+        if self.CENTER_NAME is not None:
+            APMAddCENTER_NAME(builder, CENTER_NAME)
+        if self.TIME_SYSTEM is not None:
+            APMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+        if self.QUATERNION_STATES is not None:
+            APMAddQUATERNION_STATES(builder, QUATERNION_STATES)
+        if self.EULER_ANGLE_STATES is not None:
+            APMAddEULER_ANGLE_STATES(builder, EULER_ANGLE_STATES)
+        if self.ANGULAR_VELOCITIES is not None:
+            APMAddANGULAR_VELOCITIES(builder, ANGULAR_VELOCITIES)
+        if self.SPIN_STATES is not None:
+            APMAddSPIN_STATES(builder, SPIN_STATES)
+        if self.INERTIAS is not None:
+            APMAddINERTIAS(builder, INERTIAS)
+        if self.MANEUVERS is not None:
+            APMAddMANEUVERS(builder, MANEUVERS)
         APM = APMEnd(builder)
         return APM
